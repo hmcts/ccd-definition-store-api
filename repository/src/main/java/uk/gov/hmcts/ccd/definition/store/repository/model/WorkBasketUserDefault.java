@@ -1,0 +1,66 @@
+package uk.gov.hmcts.ccd.definition.store.repository.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
+
+@ApiModel(description = "")
+public class WorkBasketUserDefault implements Serializable {
+
+    private String userIDAMId;
+    private String workBasketDefaultJurisdiction;
+    private String workBasketDefaultCaseType;
+    private String workBasketDefaultState;
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("id")
+    public String getUserIDAMId() {
+        return userIDAMId;
+    }
+
+    public void setUserIDAMId(String userIDAMId) {
+        this.userIDAMId = userIDAMId;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("work_basket_default_jurisdiction")
+    public String getWorkBasketDefaultJurisdiction() {
+        return workBasketDefaultJurisdiction;
+    }
+
+    public void setWorkBasketDefaultJurisdiction(String workBasketDefaultJurisdiction) {
+        this.workBasketDefaultJurisdiction = workBasketDefaultJurisdiction;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("work_basket_default_case_type")
+    public String getWorkBasketDefaultCaseType() {
+        return workBasketDefaultCaseType;
+    }
+
+    public void setWorkBasketDefaultCaseType(String workBasketDefaultCaseType) {
+        this.workBasketDefaultCaseType = workBasketDefaultCaseType;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("work_basket_default_state")
+    public String getWorkBasketDefaultState() {
+        return workBasketDefaultState;
+    }
+
+    public void setWorkBasketDefaultState(String workBasketDefaultState) {
+        this.workBasketDefaultState = workBasketDefaultState;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkBasketUserDefault{" +
+            "userIDAMId='" + userIDAMId + '\'' +
+            ", workBasketDefaultJurisdiction='" + workBasketDefaultJurisdiction + '\'' +
+            ", workBasketDefaultCaseType='" + workBasketDefaultCaseType + '\'' +
+            ", workBasketDefaultState='" + workBasketDefaultState + '\'' +
+            '}';
+    }
+}

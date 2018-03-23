@@ -1,0 +1,33 @@
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        html.enabled false
+    }
+
+    doLast {
+        // test coverage does not apply to this module; use 'application' module to substitute as a place holder
+        def report = file("../application/${jacoco.reportsDir}/test/jacocoTestReport.xml")
+    }
+}
+
+dependencies {
+    compile project(':application')
+    compile project(':excel-importer')
+    compile project(':rest-api')
+    testCompile "org.springframework.boot:spring-boot-starter-web"
+    testCompile "org.springframework.boot:spring-boot-starter-actuator"
+    testCompile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
+    testCompile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
+    testCompile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    testCompile "org.postgresql:postgresql"
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+}
+
+// To help obscure gradle problem
+sourceSets {
+    test {
+        java {
+            include '../excel-importer/src/main/java/**'
+        }
+    }
+}

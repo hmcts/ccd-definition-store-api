@@ -1,0 +1,46 @@
+---
+version: '3'
+
+services:
+  ccd-definition-store-api:
+    build:
+      context: .
+    image: docker.artifactory.reform.hmcts.net/ccd/ccd-definition-store-api
+    environment:
+      - DEFINITION_STORE_DB_HOST=ccd-definition-store-database
+      - DEFINITION_STORE_DB_PORT=5432
+      - DEFINITION_STORE_DB_USERNAME
+      - DEFINITION_STORE_DB_PASSWORD
+      - DEFINITION_STORE_IDAM_KEY
+      - DEFINITION_STORE_S2S_AUTHORISED_SERVICES=ccd_data,ccd_gw
+      - USER_PROFILE_HOST
+      - IDAM_USER_URL
+      - IDAM_S2S_URL
+      - REFORM_SERVICE_NAME=ccd-definition-store-api
+      - REFORM_TEAM=ccd
+      - REFORM_ENVIRONMENT=local
+    ports:
+      - 4451:4451
+    depends_on:
+      - ccd-definition-store-database
+    links:
+      - ccd-definition-store-database
+
+  ccd-definition-store-database:
+    build:
+      context: docker/database
+    image: docker.artifactory.reform.hmcts.net/ccd/ccd-definition-store-database
+    healthcheck:
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    environment:
+      - DEFINITION_STORE_DB_USERNAME
+      - DEFINITION_STORE_DB_PASSWORD
+    ports:
+      - 5451:5432
+    volumes:
+      - ccd-definition-store-database-data:/var/lib/postgresql/data
+
+volumes:
+  ccd-definition-store-database-data:

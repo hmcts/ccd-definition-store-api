@@ -1,0 +1,24 @@
+ext.applicationName = 'case-definition-store-api'
+
+jar {
+    baseName = "${applicationName}"
+    manifest {
+        attributes 'Implementation-Title': "${applicationName}",
+                'Implementation-Version': project.version
+    }
+}
+
+dependencies {
+    compile project(':rest-api'), project(':excel-importer')
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
+    compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
+    compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.7'
+    runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.0'
+    runtime "org.liquibase:liquibase-core"
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testCompile "io.rest-assured:rest-assured:3.0.6"
+    testCompile "org.exparity:hamcrest-date:2.0.4"
+}

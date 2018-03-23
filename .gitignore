@@ -1,0 +1,35 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+.classpath
+.project
+.settings/
+target/
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# ide generated files
+*.sublime-project
+*.sublime-workspace
+
+# IntelliJ IDEA files
+.idea/
+*.iml
+/core-case-data/case-definition-api/target
+/core-case-data/case-definition-api-client/target
+
+.DS_Store
+
+application/src/test/resources/test-local-override.properties
+
+.gradle/
+build/
+**/out/
+**/build/

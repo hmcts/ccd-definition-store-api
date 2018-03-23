@@ -1,0 +1,22 @@
+jar {
+    baseName = 'definition-store-excel-importer'
+}
+
+evaluationDependsOn(':domain')
+
+compileTestJava.dependsOn tasks.getByPath(':domain:testClasses')
+
+dependencies {
+    compile project(':domain')
+    compile project(':rest-api')
+
+    // need these for command line to pass in the gradle version,
+    // intellij does not need the next 2 lines though
+    testCompile project(path: ':domain', configuration: 'testOutput')
+    testCompile project(":domain").sourceSets.main.output
+
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.apache.commons:commons-collections4:4.1"
+    compile "org.apache.poi:poi-ooxml:3.16"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+}

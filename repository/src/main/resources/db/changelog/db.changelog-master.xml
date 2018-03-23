@@ -1,0 +1,34 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="db/changelog/db.changelog-0.0.1.xml"/>
+    <include file="db/changelog/db.changelog-0.0.2.xml"/>
+    <include file="db/changelog/db.changelog-0.0.3.xml"/>
+    <include file="db/changelog/db.changelog-0.0.4.xml"/>
+    <include file="db/changelog/db.changelog-0.0.5.xml"/>
+    <include file="db/changelog/db.changelog-0.0.6.xml"/>
+    <include file="db/changelog/db.changelog-0.0.7.xml"/>
+    <include file="db/changelog/db.changelog-0.0.8.xml"/>
+    <include file="db/changelog/db.changelog-0.0.9.xml"/>
+    <include file="db/changelog/db.changelog-0.0.10.xml"/>
+    <include file="db/changelog/db.changelog-0.0.11.xml"/>
+    <include file="db/changelog/db.changelog-0.0.12.xml"/>
+    <include file="db/changelog/db.changelog-0.0.13.xml"/>
+    <include file="db/changelog/db.changelog-0.0.14.xml"/>
+    <include file="db/changelog/db.changelog-0.0.15.xml"/>
+    <include file="db/changelog/db.changelog-0.0.16.xml"/>
+    <include file="db/changelog/db.changelog-0.0.17.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1074.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1117.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1166.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1298.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1290.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1305.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1323.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1345.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1501.xml"/>
+    <include file="db/changelog/db.changelog-rdm-1303.xml"/>
+
+</databaseChangeLog>

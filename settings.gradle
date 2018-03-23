@@ -1,0 +1,9 @@
+rootProject.name = 'case-definition-store-api'
+
+include 'repository'
+include 'domain'
+include 'rest-api'
+include 'excel-importer'
+include 'application'
+include 'aat'
+include 'integration-tests'

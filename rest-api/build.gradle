@@ -1,0 +1,19 @@
+jar {
+    baseName = 'definition-store-rest-api'
+}
+
+ext {
+    limits = [ // test coverage success criteria, same in pom.xml
+        'class' : 9
+    ]
+}
+
+dependencies {
+    compile project(':domain')
+    testCompile project(path: ':domain', configuration: 'testOutput')
+    testCompile project(":domain").sourceSets.main.output
+    testCompile project(":repository").sourceSets.main.output
+    compile "org.springframework.boot:spring-boot-starter-web"
+    testCompile "org.springframework.boot:spring-boot-test"
+    testCompile "org.assertj:assertj-core"
+}

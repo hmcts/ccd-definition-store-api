@@ -1,0 +1,103 @@
+package uk.gov.hmcts.ccd.definition.store.excel.parser;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.ReferenceUtils;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
+
+import static java.util.stream.Collectors.reducing;
+import static java.util.stream.Collectors.toList;
+
+/**
+ * Parses Field types defined as part of tab `FixedLists`.
+ * Because the spreadsheet doesn't specify if a list is intended to be used as a fixed list type or multi-select list type,
+ * at the moment both version of the type will be created.
+ */
+public class ListFieldTypeParser {
+
+    private static final Logger logger = LoggerFactory.getLogger(ListFieldTypeParser.class);
+
+    private static final String FIXED_LIST_TYPE = "FixedList";
+    private static final String MULTI_LIST_TYPE = "MultiSelectList";
+    private final ParseContext parseContext;
+    private final FieldTypeEntity fixedListBaseType;
+    private final FieldTypeEntity multiListBaseType;
+
+    public ListFieldTypeParser(ParseContext parseContext) {
+        this.parseContext = parseContext;
+        fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException("No base type found for: " + FIXED_LIST_TYPE));
+        multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException("No base type found for: " + MULTI_LIST_TYPE));
+    }
+
+    /**
+     * Extract list types from `FixedLists` tab.
+     * Because the intent of the list is currently unknown, each list is extracted once as `FixedList` and once as `MultiSelectList`.
+     *
+     * @param definitionSheets
+     */
+    public ParseResult<FieldTypeEntity> parse(Map<String, DefinitionSheet> definitionSheets) {
+        logger.debug("List types parsing...");
+
+        final Map<String, List<DefinitionDataItem>> fixedListsDataItems = definitionSheets.get(SheetName.FIXED_LISTS.getName()).groupDataItemsById();
+
+        logger.debug("List types parsing: {} list types detected", fixedListsDataItems.size());
+
+        // TODO Check for already existing types with same identity
+        ParseResult<FieldTypeEntity> result = fixedListsDataItems.entrySet().stream().map(this::parseListType).reduce(new ParseResult(), (res, listTypeParseResult) -> res.add(listTypeParseResult));
+
+        logger.info("List types parsing: OK: {} types parsed", result.getAllResults().size());
+
+        return result;
+    }
+
+    private ParseResult<FieldTypeEntity> parseListType(Map.Entry<String, List<DefinitionDataItem>> listDataItems) {
+        final ParseResult<FieldTypeEntity> result = new ParseResult<>();
+
+        final List<DefinitionDataItem> elements = listDataItems.getValue();
+
+        // Add as FixedList
+        final List<FieldTypeListItemEntity> fixedListItems = elements.stream()
+                                                                .map(this::parseListItem)
+                                                                .collect(toList());
+
+        final FieldTypeEntity fixedListType = new FieldTypeEntity();
+        fixedListType.setBaseFieldType(fixedListBaseType);
+        fixedListType.setReference(ReferenceUtils.listReference(FIXED_LIST_TYPE, listDataItems.getKey()));
+        fixedListType.setJurisdiction(parseContext.getJurisdiction());
+        fixedListType.addListItems(fixedListItems);
+        parseContext.addToAllTypes(fixedListType);
+        result.addNew(fixedListType);
+
+        // Add as MultiSelectList
+        final List<FieldTypeListItemEntity> multiListItems = elements.stream()
+                                                                     .map(this::parseListItem)
+                                                                     .collect(toList());
+
+        final FieldTypeEntity multiListType = new FieldTypeEntity();
+        multiListType.setBaseFieldType(multiListBaseType);
+        multiListType.setReference(ReferenceUtils.listReference(MULTI_LIST_TYPE, listDataItems.getKey()));
+        multiListType.setJurisdiction(parseContext.getJurisdiction());
+        multiListType.addListItems(multiListItems);
+        parseContext.addToAllTypes(multiListType);
+        result.addNew(multiListType);
+
+        return result;
+    }
+
+    private FieldTypeListItemEntity parseListItem(DefinitionDataItem element) {
+        final FieldTypeListItemEntity listItem = new FieldTypeListItemEntity();
+        listItem.setValue(element.getString(ColumnName.LIST_ELEMENT_CODE));
+        listItem.setLabel(element.getString(ColumnName.LIST_ELEMENT));
+        return listItem;
+    }
+
+}
