@@ -1,5 +1,6 @@
 package uk.gov.hmcts.net.ccd.definition.store.rest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
@@ -9,25 +10,30 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 import java.io.InputStream;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-public class DisplayApiControllerEndpointIT extends BaseTest {
+public class MultipleControllersEndpointIT extends BaseTest {
     private static final String WIZARD_PAGE_STRUCTURE_URL_1 = "/api/display/wizard-page-structure/case-types/%s/event-triggers/%s";
+    private static final String ROLES_URL = "/api/user-roles/%s";
     private static final String WORKBASKET_INPUT_DEFINITION_URL = "/api/display/work-basket-input-definition/%s";
+    private static final String JURISDICTIONS_URL = "/api/data/jurisdictions";
 
+    // To be @Nested - DisplayAPI Controller
     @Test
     public void shouldReturnThreeWorkbasketInputFieldsForTestAddressBookCase() throws Exception {
         givenUserProfileReturnsSuccess();
@@ -109,6 +115,46 @@ public class DisplayApiControllerEndpointIT extends BaseTest {
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("id", containsString("createCaseContactPage")))),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("wizardPageFields",
                 hasItem(Matchers.hasProperty("caseFieldId", containsString("ContectEmail"))))))
+        );
+    }
+
+    // To be @Nested - UserRoleController
+    @Test
+    public void shouldReturnUserRolesForDefinedRoles() throws Exception {
+        givenUserProfileReturnsSuccess();
+        final String URL = String.format(ROLES_URL, "CaseWorker1,CaseWorker2,CaseWorker3,Fatih,Andreij, Mario");
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+        final List<UserRole> userRoles = mapper.readValue(result.getResponse().getContentAsString(), TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+        assertThat(userRoles, hasSize(6));
+    }
+
+    // To be @Nested - CaseDefinition Controller
+    @Test
+    public void shouldReturnJurisdictions() throws Exception {
+        givenUserProfileReturnsSuccess();
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
+        MockMultipartFile file = new MockMultipartFile("file", inputStream);
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andReturn();
+        assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+        final String URL = JURISDICTIONS_URL + "?ids=TEST";
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+
+        List<Jurisdiction> jurisdictions = mapper.readValue(result.getResponse().getContentAsString(),
+            TypeFactory.defaultInstance().constructType(new TypeReference<List<Jurisdiction>>(){}));
+
+        assertAll(
+            () -> assertThat(jurisdictions, hasSize(1)),
+            () -> assertThat(jurisdictions, hasItem(allOf(hasProperty("id", is("TEST")),
+                hasProperty("name", is("Test")),
+                hasProperty("name", is("Test"))
+            )))
         );
     }
 }

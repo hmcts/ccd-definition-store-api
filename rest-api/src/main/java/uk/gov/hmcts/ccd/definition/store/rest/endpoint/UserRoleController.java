@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.domain.service.UserRoleService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
 import javax.validation.constraints.NotNull;
 import java.util.Base64;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.RESET_CONTENT;
@@ -55,5 +56,15 @@ class UserRoleController {
     UserRole userRoleGet(@RequestParam("role") @NotNull byte[] roleBase64EncodedBytes) {
         final String role = new String(Base64.getDecoder().decode(roleBase64EncodedBytes));
         return userRoleService.getRole(role);
+    }
+
+    @RequestMapping(value = "/user-roles/{roles}", method = RequestMethod.GET, produces = {"application/json"})
+    @ApiOperation(value = "Get user role definitions given as comma separated values", notes = "", response = UserRole.class, responseContainer = "List")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "User Role Response is returned"),
+    })
+    public List<UserRole> getUserRoles(
+        @ApiParam(value = "Roles", required = true) @PathVariable("roles") List<String> roles) {
+        return this.userRoleService.getRoles(roles);
     }
 }
