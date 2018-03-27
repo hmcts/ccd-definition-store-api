@@ -9,7 +9,9 @@ jar {
 }
 
 dependencies {
-    compile project(':rest-api'), project(':excel-importer')
+    compile project(':app-insights')
+    compile project(':rest-api')
+    compile project(':excel-importer')
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
@@ -21,4 +23,5 @@ dependencies {
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testCompile "io.rest-assured:rest-assured:3.0.6"
     testCompile "org.exparity:hamcrest-date:2.0.4"
+    testCompile project(":app-insights").sourceSets.main.output
 }

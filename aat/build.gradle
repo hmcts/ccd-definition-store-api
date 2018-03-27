@@ -24,14 +24,15 @@ sourceSets {
     }
 }
 
-task functional(type: Test) {
-    group = 'Delivery pipeline'
-    description = 'Executes functional tests against an AAT CCD Definition Store Instance'
-    setTestClassesDirs(sourceSets.aat.output.classesDirs)
-    setClasspath(sourceSets.aat.runtimeClasspath)
-    include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
-    useJUnitPlatform()
-}
+// FIXME Should that be here or in the parent?
+//task functional(type: Test) {
+//    group = 'Delivery pipeline'
+//    description = 'Executes functional tests against an AAT CCD Definition Store Instance'
+//    setTestClassesDirs(sourceSets.aat.output.classesDirs)
+//    setClasspath(sourceSets.aat.runtimeClasspath)
+//    include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
+//    useJUnitPlatform()
+//}
 
 
 

@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 class ControllerExceptionHandler {
 
     private static final String EXCEPTION_THROWN = "Exception thrown ";
-    private static Logger LOG = LoggerFactory.getLogger(ControllerExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(code = NOT_FOUND)

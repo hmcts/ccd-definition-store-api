@@ -31,6 +31,7 @@ ext {
 }
 
 dependencies {
+    compile project(':app-insights')
     compile (project(':repository')) {
         exclude group: 'org.mapstruct', module: 'mapstruct'
     }
@@ -41,6 +42,7 @@ dependencies {
     // https://youtrack.jetbrains.com/issue/IDEA-150621
     // See http://mapstruct.org/documentation/ide-support/
     compile "org.mapstruct:mapstruct-processor:${orgMapstructVersion}", optional
+    testCompile project(":app-insights").sourceSets.main.output
 }
 
 idea {

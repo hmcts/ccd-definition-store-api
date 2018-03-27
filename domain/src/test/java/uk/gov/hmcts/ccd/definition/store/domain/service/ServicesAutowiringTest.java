@@ -20,7 +20,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import uk.gov.hmcts.ccd.definition.store.AppInsights;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCrudValidatorImpl;
@@ -193,6 +195,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
     @ComponentScan(basePackages = {"uk.gov.hmcts.ccd.definition.store.domain"}
     )
     public static class Config {
+
+        @Bean
+        @Primary
+        public AppInsights appInsights() {
+            return mock(AppInsights.class);
+        }
 
         @Bean
         @Primary

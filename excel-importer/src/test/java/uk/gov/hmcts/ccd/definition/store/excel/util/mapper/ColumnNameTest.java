@@ -19,6 +19,17 @@ public class ColumnNameTest {
 
     }
 
+    @Test
+    public void testRequiredColumnsForCaseEventToFields() {
+
+        assertRequired(
+            SheetName.CASE_EVENT_TO_FIELDS,
+            Arrays.asList(ColumnName.CASE_FIELD_ID, ColumnName.CASE_TYPE_ID,
+                ColumnName.CASE_EVENT_ID, ColumnName.PAGE_ID)
+        );
+
+    }
+
     private void assertRequired(SheetName sheetName, List<ColumnName> requiredColumns) {
         for(ColumnName columnName : ColumnName.values()) {
             boolean required

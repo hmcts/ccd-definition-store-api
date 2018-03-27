@@ -1,0 +1,12 @@
+#!groovy
+
+@Library("Infrastructure")
+
+def type = "java"
+
+def product = "ccd"
+
+def app = "definition-store-api"
+
+withPipeline(type, product, app) {
+}

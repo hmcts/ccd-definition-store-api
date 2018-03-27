@@ -1,5 +1,6 @@
 rootProject.name = 'case-definition-store-api'
 
+include 'app-insights'
 include 'repository'
 include 'domain'
 include 'rest-api'

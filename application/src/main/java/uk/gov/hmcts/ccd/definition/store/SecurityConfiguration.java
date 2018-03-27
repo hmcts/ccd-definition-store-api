@@ -37,7 +37,10 @@ public class SecurityConfiguration
                                    "/webjars/springfox-swagger-ui/**",
                                    "/swagger-resources/**",
                                    "/v2/**",
-                                   "/status/**");
+                                   "/health",
+                                   "/status/health",
+                                   "/",
+                                   "/loggers/**");
     }
 
     @Override
