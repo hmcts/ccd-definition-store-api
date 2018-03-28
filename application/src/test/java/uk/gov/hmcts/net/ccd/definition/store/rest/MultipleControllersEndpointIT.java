@@ -10,7 +10,10 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 import java.io.InputStream;
@@ -20,15 +23,15 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.*;
 
 public class MultipleControllersEndpointIT extends BaseTest {
-    private static final String WIZARD_PAGE_STRUCTURE_URL_1 = "/api/display/wizard-page-structure/case-types/%s/event-triggers/%s";
+    private static final String WIZARD_PAGE_STRUCTURE_URL_1 =
+        "/api/display/wizard-page-structure/case-types/%s/event-triggers/%s";
     private static final String ROLES_URL = "/api/user-roles/%s";
     private static final String WORKBASKET_INPUT_DEFINITION_URL = "/api/display/work-basket-input-definition/%s";
     private static final String JURISDICTIONS_URL = "/api/data/jurisdictions";
@@ -51,12 +54,16 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
             .andReturn();
 
-        final WorkbasketInputDefinition workbasketInputDefinition = mapper.readValue(result.getResponse().getContentAsString(), TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
+        final WorkbasketInputDefinition workbasketInputDefinition = mapper.readValue(result.getResponse()
+            .getContentAsString(), TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
         assertAll(
             () -> assertThat(workbasketInputDefinition.getFields(), hasSize(3)),
-            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(Matchers.hasProperty("label", containsString("First Name")))),
-            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(Matchers.hasProperty("label", containsString("Last Name")))),
-            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(Matchers.hasProperty("label", containsString("Address"))))
+            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(Matchers.hasProperty("label",
+                containsString("First Name")))),
+            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(Matchers.hasProperty("label",
+                containsString("Last Name")))),
+            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(Matchers.hasProperty("label",
+                containsString("Address"))))
         );
     }
 
@@ -80,12 +87,16 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(jsonPath("$.wizard_pages").isArray())
             .andReturn();
 
-        WizardPageCollection wizardPageCollection = mapper.readValue(result.getResponse().getContentAsString(), TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
+        WizardPageCollection wizardPageCollection = mapper.readValue(result.getResponse().getContentAsString(),
+            TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
         assertAll(
             () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(3)),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label", containsString("Personal Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label", containsString("Address Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label", containsString("A Label"))))
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label",
+                containsString("Personal Information")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label",
+                containsString("Address Information")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label",
+                containsString("A Label"))))
         );
     }
 
@@ -108,11 +119,14 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(jsonPath("$.event_id").value(EVENT_TYPE))
             .andExpect(jsonPath("$.wizard_pages").isArray())
             .andReturn();
-        final WizardPageCollection wizardPageCollection = mapper.readValue(result.getResponse().getContentAsString(), TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
+        final WizardPageCollection wizardPageCollection = mapper.readValue(result.getResponse().getContentAsString(),
+            TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
         assertAll(
             () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(1)),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label", containsString("Contact Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("id", containsString("createCaseContactPage")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label",
+                containsString("Contact Information")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("id", containsString
+                ("createCaseContactPage")))),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("wizardPageFields",
                 hasItem(Matchers.hasProperty("caseFieldId", containsString("ContectEmail"))))))
         );
@@ -121,13 +135,19 @@ public class MultipleControllersEndpointIT extends BaseTest {
     // To be @Nested - UserRoleController
     @Test
     public void shouldReturnUserRolesForDefinedRoles() throws Exception {
-        givenUserProfileReturnsSuccess();
-        final String URL = String.format(ROLES_URL, "CaseWorker1,CaseWorker2,CaseWorker3,Fatih,Andreij, Mario");
+        final String URL = String.format(ROLES_URL, "CaseWorker1,CaseWorker2,CaseWorker3,Fatih,Andrzej,Mario");
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
-        final List<UserRole> userRoles = mapper.readValue(result.getResponse().getContentAsString(), TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
-        assertThat(userRoles, hasSize(6));
+        final List<UserRole> userRoles = mapper.readValue(result.getResponse().getContentAsString(),
+            TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+            }));
+        assertAll(
+            () -> assertThat(userRoles, hasSize(3)),
+            () -> assertThat(userRoles.get(0).getSecurityClassification(), is(PUBLIC)),
+            () -> assertThat(userRoles.get(1).getSecurityClassification(), is(PRIVATE)),
+            () -> assertThat(userRoles.get(2).getSecurityClassification(), is(RESTRICTED))
+        );
     }
 
     // To be @Nested - CaseDefinition Controller
@@ -147,14 +167,16 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andReturn();
 
         List<Jurisdiction> jurisdictions = mapper.readValue(result.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(new TypeReference<List<Jurisdiction>>(){}));
+            TypeFactory.defaultInstance().constructType(new TypeReference<List<Jurisdiction>>() {
+            }));
 
         assertAll(
             () -> assertThat(jurisdictions, hasSize(1)),
-            () -> assertThat(jurisdictions, hasItem(allOf(hasProperty("id", is("TEST")),
-                hasProperty("name", is("Test")),
-                hasProperty("name", is("Test"))
-            )))
+            () -> assertThat(jurisdictions, hasItem(
+                allOf(
+                    hasProperty("id", is("TEST")),
+                    hasProperty("name", is("Test"))
+                )))
         );
     }
 }
