@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -38,9 +40,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.UPDATE;
 
 class UserRoleControllerTest {
+
     private static final String URL_API_USER_ROLE = "/api/user-role";
+    private static final UriTemplate URL_TEMPLATE = new UriTemplate(URL_API_USER_ROLE + "?role={role}");
     private static final String URL_API_USER_ROLES = "/api/user-roles/role1,role2";
-    private static final UriTemplate URI_TEMPLATE = new UriTemplate(URL_API_USER_ROLE + "?role={role}");
     private static final String ROLE_DEFINED = "@<\"*#$%^\\/";
     private static final String ROLE1 = "role1";
     private static final String ROLE2 = "role2";
@@ -51,7 +54,6 @@ class UserRoleControllerTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private MockMvc mockMvc;
-
     private Map<String, Object> uriVariables;
 
     @InjectMocks
@@ -69,142 +71,161 @@ class UserRoleControllerTest {
         uriVariables = new HashMap<>();
     }
 
-    @Test
-    void shouldGetRole_whenRoleExists() throws Exception {
-        uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
-        final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -6);
+    @Nested
+    @DisplayName("Get Role Tests")
+    class GetRoleTests {
+        @Test
+        @DisplayName("Should successfully return role")
+        void successWhenRoleExists() throws Exception {
 
-        when(userRoleService.getRole(ROLE_DEFINED)).thenReturn(mockUserRole);
+            uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
+            final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -6);
 
-        final MvcResult mvcResult = mockMvc.perform(
-            get(URI_TEMPLATE.expand(uriVariables)))
-            .andExpect(status().isOk())
-            .andReturn();
+            when(userRoleService.getRole(ROLE_DEFINED)).thenReturn(mockUserRole);
 
-        final UserRole userRole = MAPPER.readValue(mvcResult.getResponse().getContentAsString(), UserRole.class);
+            final MvcResult mvcResult = mockMvc.perform(
+                get(URL_TEMPLATE.expand(uriVariables)))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        assertAll(
-            () -> assertThat(userRole.getId(), is(-6)),
-            () -> assertThat(userRole.getRole(), is(ROLE_DEFINED)),
-            () -> assertThat(userRole.getSecurityClassification(), is(mockUserRole.getSecurityClassification()))
-        );
+            final UserRole userRole = MAPPER.readValue(mvcResult.getResponse().getContentAsString(), UserRole.class);
+            assertAll(
+                () -> assertThat(userRole.getId(), is(-6)),
+                () -> assertThat(userRole.getRole(), is(ROLE_DEFINED)),
+                () -> assertThat(userRole.getSecurityClassification(), is(mockUserRole.getSecurityClassification()))
+            );
+        }
+
+        @Test
+        @DisplayName("Should have not found status when role does not exist")
+        void shouldHaveStatusNotFound_whenRoleDoesNotExist() throws Throwable {
+            uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
+
+            when(userRoleService.getRole(ROLE_DEFINED))
+                .thenThrow(new NotFoundException("Role '" + ROLE_DEFINED + "' is not found"));
+
+            mockMvc.perform(
+                get(URL_TEMPLATE.expand(uriVariables)))
+                .andExpect(status().isNotFound());
+        }
     }
 
-    @Test
-    void shouldGetRoles_whenRolesExists() throws Exception {
-        final UserRole mockUserRole = buildUserRole(ROLE1, 1);
-        final UserRole mockUserRole2 = buildUserRole(ROLE2, 2);
-        List<UserRole> roles = Arrays.asList(mockUserRole, mockUserRole2);
-        List<String> roleNames = Arrays.asList("role1","role2");
-        when(userRoleService.getRoles(roleNames)).thenReturn(roles);
+    @Nested
+    @DisplayName("Get Roles Tests")
+    class GetRolesTests {
+        @Test
+        void shouldGetRoles_whenRolesExists() throws Exception {
+            final UserRole mockUserRole = buildUserRole(ROLE1, 1);
+            final UserRole mockUserRole2 = buildUserRole(ROLE2, 2);
+            List<UserRole> roles = Arrays.asList(mockUserRole, mockUserRole2);
+            List<String> roleNames = Arrays.asList("role1","role2");
+            when(userRoleService.getRoles(roleNames)).thenReturn(roles);
 
-        final MvcResult mvcResult = mockMvc.perform(
-            get(URL_API_USER_ROLES))
-            .andExpect(status().isOk())
-            .andReturn();
+            final MvcResult mvcResult = mockMvc.perform(
+                get(URL_API_USER_ROLES))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+            final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
 
-        assertAll(
-            () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
-            () -> assertThat(userRoles.size(), is(2)),
-            () -> assertThat(userRoles.get(0).getId(), is(1)),
-            () -> assertThat(userRoles.get(0).getRole(), is(ROLE1)),
-            () -> assertThat(userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
-            () -> assertThat(userRoles.get(1).getId(), is(2)),
-            () -> assertThat(userRoles.get(1).getRole(), is(ROLE2)),
-            () -> assertThat(userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
-        );
+            assertAll(
+                () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
+                () -> assertThat(userRoles.size(), is(2)),
+                () -> assertThat(userRoles.get(0).getId(), is(1)),
+                () -> assertThat(userRoles.get(0).getRole(), is(ROLE1)),
+                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
+                () -> assertThat(userRoles.get(1).getId(), is(2)),
+                () -> assertThat(userRoles.get(1).getRole(), is(ROLE2)),
+                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
+            );
+        }
+
+        @Test
+        void shouldGetEmptyRoles_whenNoRolesExists() throws Exception {
+            List<String> roleNames = Arrays.asList("role1","role2");
+            when(userRoleService.getRoles(roleNames)).thenReturn(Collections.EMPTY_LIST);
+
+            final MvcResult mvcResult = mockMvc.perform(
+                get(URL_API_USER_ROLES))
+                .andExpect(status().isOk())
+                .andReturn();
+
+            final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+
+            assertAll(
+                () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
+                () -> assertThat(userRoles.size(), is(0))
+            );
+        }
     }
 
-    @Test
-    void shouldGetEmptyRoles_whenNoRolesExists() throws Exception {
-        List<String> roleNames = Arrays.asList("role1","role2");
-        when(userRoleService.getRoles(roleNames)).thenReturn(Collections.EMPTY_LIST);
+    @Nested
+    @DisplayName("Put Role Tests")
+    class PutRoleTests {
 
-        final MvcResult mvcResult = mockMvc.perform(
-            get(URL_API_USER_ROLES))
-            .andExpect(status().isOk())
-            .andReturn();
+        @Test
+        @DisplayName("Should have conflict status when role is updated but object optimistic lock exception is thrown")
+        void shouldHaveStatusConflict_whenUserRoleIsUpdatedThrowObjectOptimisticLockingFailureException()
+            throws Throwable {
 
-        final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+            final UserRole argument = buildUserRole(ROLE_DEFINED);
+            when(userRoleService.saveRole(isA(UserRole.class)))
+                .thenThrow(new ObjectOptimisticLockingFailureException("Object updated already", 1));
 
-        assertAll(
-            () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
-            () -> assertThat(userRoles.size(), is(0))
-        );
-    }
+            mockMvc.perform(
+                put(URL_API_USER_ROLE)
+                    .contentType(CONTENT_TYPE)
+                    .content(MAPPER.writeValueAsBytes(argument)))
+                .andExpect(status().isConflict())
+            ;
+        }
 
-    @Test
-    void shouldHaveStatusNotFound_whenRoleDoesNotExist() throws Throwable {
-        uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
+        @Test
+        @DisplayName("Should have conflict status when role is updated but optimistic lock exception is thrown")
+        void shouldHaveStatusConflict_whenUserRoleIsUpdatedThrowOptimisticLockException() throws Throwable {
+            final UserRole argument = buildUserRole(ROLE_DEFINED);
+            when(userRoleService.saveRole(isA(UserRole.class)))
+                .thenThrow(new OptimisticLockException("Object updated already"));
 
-        when(userRoleService.getRole(ROLE_DEFINED))
-            .thenThrow(new NotFoundException("Role '" + ROLE_DEFINED + "' is not found"));
+            mockMvc.perform(
+                put(URL_API_USER_ROLE)
+                    .contentType(CONTENT_TYPE)
+                    .content(MAPPER.writeValueAsBytes(argument)))
+                .andExpect(status().isConflict())
+            ;
+        }
 
-        mockMvc.perform(
-            get(URI_TEMPLATE.expand(uriVariables)))
-            .andExpect(status().isNotFound());
-    }
+        @Test
+        @DisplayName("Should have server error status when role is updated but persistence exception is thrown")
+        void shouldHaveStatus500_whenUserRoleIsUpdatedWithPersistenceException() throws Throwable {
+            final UserRole argument = buildUserRole(ROLE_DEFINED);
+            when(userRoleService.saveRole(isA(UserRole.class)))
+                .thenThrow(new PersistenceException("something funny in the database"));
 
-    @Test
-    void shouldHaveStatusConflict_whenUserRoleIsUpdatedThrowOptimsticLockException() throws Throwable {
-        final UserRole argument = buildUserRole(ROLE_DEFINED);
-        when(userRoleService.saveRole(isA(UserRole.class)))
-            .thenThrow(new OptimisticLockException("Object updated already"));
+            mockMvc.perform(
+                put(URL_API_USER_ROLE)
+                    .contentType(CONTENT_TYPE)
+                    .content(MAPPER.writeValueAsBytes(argument)))
+                .andExpect(status().isInternalServerError())
+            ;
+        }
 
-        mockMvc.perform(
-            put(URL_API_USER_ROLE)
-                .contentType(CONTENT_TYPE)
-                .content(MAPPER.writeValueAsBytes(argument)))
-            .andExpect(status().isConflict())
-        ;
-    }
+        @Test
+        @DisplayName("Should have reset content status when role is updated successfully")
+        void shouldHaveStatusResetContent_whenPutSuccessfully() throws Exception {
+            final UserRole argument = buildUserRole(ROLE_DEFINED);
+            final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -7);
+            when(userRoleService.saveRole(isA(UserRole.class))).thenReturn(new ServiceResponse<>(mockUserRole, UPDATE));
 
-    @Test
-    void shouldHaveStatusConflict_whenUserRoleIsUpdatedThrowObjectOptimisticLockingFailureException()
-        throws Throwable {
-
-        final UserRole argument = buildUserRole(ROLE_DEFINED);
-        when(userRoleService.saveRole(isA(UserRole.class)))
-            .thenThrow(new ObjectOptimisticLockingFailureException("Object updated already", 1));
-
-        mockMvc.perform(
-            put(URL_API_USER_ROLE)
-                .contentType(CONTENT_TYPE)
-                .content(MAPPER.writeValueAsBytes(argument)))
-            .andExpect(status().isConflict())
-        ;
-    }
-
-    @Test
-    void shouldHaveStatus500_whenUserRoleIsUpdatedWithPersistenceException() throws Throwable {
-        final UserRole argument = buildUserRole(ROLE_DEFINED);
-        when(userRoleService.saveRole(isA(UserRole.class)))
-            .thenThrow(new PersistenceException("something funny in the database"));
-
-        mockMvc.perform(
-            put(URL_API_USER_ROLE)
-                .contentType(CONTENT_TYPE)
-                .content(MAPPER.writeValueAsBytes(argument)))
-            .andExpect(status().isInternalServerError())
-        ;
-    }
-
-    @Test
-    void shouldHaveStatusResetContent_whenPutSuccessfully() throws Exception {
-        final UserRole argument = buildUserRole(ROLE_DEFINED);
-        final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -7);
-        when(userRoleService.saveRole(isA(UserRole.class))).thenReturn(new ServiceResponse<>(mockUserRole, UPDATE));
-
-        mockMvc.perform(
-            put(URL_API_USER_ROLE)
-                .contentType(CONTENT_TYPE)
-                .content(MAPPER.writeValueAsBytes(argument)))
-            .andExpect(status().isResetContent())
-        ;
+            mockMvc.perform(
+                put(URL_API_USER_ROLE)
+                    .contentType(CONTENT_TYPE)
+                    .content(MAPPER.writeValueAsBytes(argument)))
+                .andExpect(status().isResetContent())
+            ;
+        }
     }
 
     private UserRole buildUserRole(final String role) {
