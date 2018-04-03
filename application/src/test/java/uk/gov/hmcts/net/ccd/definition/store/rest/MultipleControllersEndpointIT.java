@@ -135,7 +135,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     // To be @Nested - UserRoleController
     @Test
     public void shouldReturnUserRolesForDefinedRoles() throws Exception {
-        final String URL = String.format(ROLES_URL, "CaseWorker1,CaseWorker2,CaseWorker3,Fatih,Andrzej,Mario");
+        final String URL = String.format(ROLES_URL, "CaseWorker1,CaseWorker2,CaseWorker3,Nayab,Fatih,Andrzej,Mario");
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
@@ -150,6 +150,19 @@ public class MultipleControllersEndpointIT extends BaseTest {
         );
     }
 
+    @Test
+    public void shouldReturnNoUserRolesWhenUndefinedRolesQueried() throws Exception {
+        final String URL = String.format(ROLES_URL, "Nayab,Fatih,Andrzej,Mario");
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+        final List<UserRole> userRoles = mapper.readValue(result.getResponse().getContentAsString(),
+            TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+            }));
+        assertAll(
+            () -> assertThat(userRoles, hasSize(0))
+        );
+    }
     // To be @Nested - CaseDefinition Controller
     @Test
     public void shouldReturnJurisdictions() throws Exception {
