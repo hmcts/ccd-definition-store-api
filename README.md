@@ -1,4 +1,4 @@
-# Case definition store
+# Case definition store [![Build Status](https://travis-ci.org/hmcts/ccd-definition-store-api.svg?branch=master)](https://travis-ci.org/hmcts/ccd-definition-store-api)
 
 Validation and persistence of definitions for field types, jurisdictions, case types and associated display elements.
 
