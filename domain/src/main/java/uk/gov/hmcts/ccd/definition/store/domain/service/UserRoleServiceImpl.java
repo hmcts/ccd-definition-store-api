@@ -8,8 +8,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.UPDATE;
 import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toEntity;
@@ -46,6 +48,14 @@ public class UserRoleServiceImpl implements UserRoleService {
             roleFound = false;
         }
         return new ServiceResponse<>(toModel(repository.save(entity)), roleFound ? UPDATE : CREATE);
+    }
+
+    @Override
+    public List<UserRole> getRoles(List<String> roles) {
+        final List<UserRoleEntity> userRoles = repository.findByRoleIn(roles);
+        return userRoles.stream()
+            .map(userRoleEntity -> toModel(userRoleEntity))
+            .collect(toList());
     }
 
     private LocalDate parseDate(String date) {

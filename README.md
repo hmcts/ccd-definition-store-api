@@ -23,6 +23,7 @@ The following environment variables are required:
 |------|---------|-------------|
 | DEFINITION_STORE_DB_USERNAME | - | Username for database |
 | DEFINITION_STORE_DB_PASSWORD | - | Password for database |
+| DEFINITION_STORE_DB_USE_SSL | - | set to `true` if SSL is to be enabled. `false` recommended for local environments. |
 | DEFINITION_STORE_IDAM_KEY | - | Definition store's IDAM S2S micro-service secret key. This must match the IDAM instance it's being run against. |
 | DEFINITION_STORE_S2S_AUTHORISED_SERVICES | ccd_data,ccd_gw | Authorised micro-service names for S2S calls |
 | IDAM_USER_URL | - | Base URL for IdAM's User API service (idam-app). `http://localhost:4501` for the dockerised local instance or tunneled `dev` instance. |
