@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+
+    <suppress>
+        <notes><![CDATA[
+     Does not apply as we're not using the XmlMapper.
+     ]]></notes>
+        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
+        <cpe>cpe:/a:fasterxml:jackson-databind</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   Does not apply as we're not using the XmlMapper.
+   ]]></notes>
+        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
+        <cpe>cpe:/a:fasterxml:jackson</cpe>
+    </suppress>
+    <suppress>
+        <gav regex="true">^org\.postgresql:postgresql:.*$</gav>
+        <cpe>cpe:/a:postgresql:postgresql</cpe>
+    </suppress>
+    <suppress>
+        <notes>See https://github.com/jeremylong/DependencyCheck/issues/1146 for Embedded Tomcat</notes>
+        <cve>CVE-2017-12617</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            Introduced by service-token-generator-spring-2.1.0.jar
+        </notes>
+        <cve>CVE-2016-9878</cve>
+    </suppress>
+</suppressions>
