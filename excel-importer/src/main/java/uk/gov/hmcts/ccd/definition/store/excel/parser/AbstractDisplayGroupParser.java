@@ -32,7 +32,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     protected ColumnName displayGroupOrder;
     protected ColumnName displayGroupFieldDisplayOrder;
     protected SheetName sheetName;
-    protected Optional<ColumnName> showConditionColumn = Optional.empty();
+    protected Optional<ColumnName> groupShowConditionColumn = Optional.empty();
+    protected Optional<ColumnName> fieldShowConditionColumn = Optional.empty();
     protected Optional<ColumnName> columnId = Optional.empty();
     protected boolean displayGroupItemMandatory;
 
@@ -127,11 +128,16 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
             .collect(toList());
 
         group.addDisplayGroupCaseFields(groupCaseFields);
-        this.showConditionColumn.ifPresent(column -> {
-            String showCondition = sample.getString(column);
-            group.setShowCondition(parseShowCondition(showCondition));
-        });
+        this.groupShowConditionColumn.ifPresent(column -> parseGroupShowCondition(column, group, groupDefinition.getValue()));
         return ParseResult.Entry.createNew(group);
+    }
+
+    private void parseGroupShowCondition(ColumnName column, DisplayGroupEntity group, List<DefinitionDataItem> groupDefinition) {
+        if (groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).count() > 1) {
+            throw new MapperException(String.format("Please provide single condition in TabShowCondition column in CaseTypeTab for the tab %s", group.getReference()));
+        }
+        Optional<DefinitionDataItem> definitionDataItemOpt = groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).findFirst();
+        definitionDataItemOpt.ifPresent(ddi -> group.setShowCondition(parseShowCondition(ddi.getString(column))));
     }
 
     protected DisplayGroupCaseFieldEntity parseGroupCaseField(CaseTypeEntity caseType, DefinitionDataItem groupCaseFieldDefinition) {
@@ -142,9 +148,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         groupCaseField.setLiveFrom(groupCaseFieldDefinition.getLocalDate(ColumnName.LIVE_FROM));
         groupCaseField.setLiveTo(groupCaseFieldDefinition.getLocalDate(ColumnName.LIVE_TO));
         groupCaseField.setOrder(groupCaseFieldDefinition.getInteger(this.displayGroupFieldDisplayOrder));
-        this.columnId.ifPresent(cId ->
-            groupCaseField.setColumnNumber(groupCaseFieldDefinition.getInteger(cId))
-        );
+        this.columnId.ifPresent(cId -> groupCaseField.setColumnNumber(groupCaseFieldDefinition.getInteger(cId)));
+        this.fieldShowConditionColumn.ifPresent(sC -> groupCaseField.setShowCondition(groupCaseFieldDefinition.getString(sC)));
 
         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(groupCaseField, groupCaseFieldDefinition);
 

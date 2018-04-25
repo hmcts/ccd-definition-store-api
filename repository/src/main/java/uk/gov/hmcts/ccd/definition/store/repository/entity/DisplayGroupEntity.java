@@ -142,4 +142,9 @@ public class DisplayGroupEntity implements Serializable {
     public String getShowCondition() {
         return showCondition;
     }
+
+    public boolean hasField(String fieldReference) {
+        return displayGroupCaseFields.stream().anyMatch(dgcf -> dgcf.getCaseField().getReference().equals(fieldReference));
+    }
+
 }

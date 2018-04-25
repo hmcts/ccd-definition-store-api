@@ -34,6 +34,9 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
     @Column(name = "page_column_no")
     private Integer columnNumber;
 
+    @Column(name = "show_condition")
+    private String showCondition;
+
     public LocalDate getLiveFrom() {
         return liveFrom;
     }
@@ -80,5 +83,13 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
 
     public void setColumnNumber(Integer columnNumber) {
         this.columnNumber = columnNumber;
+    }
+
+    public void setShowCondition(String showCondition) {
+        this.showCondition = showCondition;
+    }
+
+    public String getShowCondition() {
+        return showCondition;
     }
 }

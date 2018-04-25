@@ -22,10 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldInvalidShowConditionError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield
     .ComplexFieldShowConditionReferencesInvalidFieldError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupColumnNumberValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionField;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityInvalidShowConditionError;
@@ -316,7 +313,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(DisplayGroupInvalidShowConditionField error) {
+    public String createErrorMessage(DisplayGroupInvalidShowConditionFieldForEvent error) {
         return newMessageIfDefinitionExists(error,
                                             error.getDisplayGroup(),
                                             def -> String.format(
@@ -327,6 +324,37 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                                                 def.getSheetName(),
                                                 error.getShowConditionField(),
                                                 error.getDisplayGroup().getEvent().getReference()));
+    }
+
+    @Override
+    public String createErrorMessage(DisplayGroupInvalidShowConditionFieldForTab error) {
+        return newMessageIfDefinitionExists(error,
+                                            error.getDisplayGroup(),
+                                            error.getShowConditionField() != null ?
+                                                def -> String.format(
+                                                    "Invalid show condition '%s' for display group '%s' on tab '%s': " +
+                                                        "unknown field '%s'",
+                                                    def.getString(ColumnName.TAB_SHOW_CONDITION),
+                                                    error.getDisplayGroup().getReference(),
+                                                    def.getSheetName(),
+                                                    error.getShowConditionField()) :
+                                                def ->  error.getDefaultMessage());
+    }
+
+    @Override
+    public String createErrorMessage(DisplayGroupInvalidShowConditionFieldForTabField error) {
+        return newMessageIfDefinitionExists(error,
+                                            error.getDisplayGroupCaseField(),
+                                            error.getShowConditionField() != null ?
+                                                def -> String.format(
+                                                    "Invalid show condition '%s' for display group case field '%s' on tab '%s': " +
+                                                        "unknown field '%s'",
+                                                    def.getString(ColumnName.FIELD_SHOW_CONDITION),
+                                                    error.getDisplayGroupCaseField().getCaseField().getReference(),
+                                                    def.getSheetName(),
+                                                    error.getShowConditionField()) :
+                                                def ->  error.getDefaultMessage()
+        );
     }
 
     @Override

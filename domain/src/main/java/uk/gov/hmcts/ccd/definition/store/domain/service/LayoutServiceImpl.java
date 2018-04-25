@@ -51,7 +51,7 @@ public class LayoutServiceImpl implements LayoutService {
         ValidationResult result = new ValidationResult();
         for (DisplayGroupEntity displayGroup : displayGroups) {
             for (DisplayGroupValidator validator : displayGroupValidators) {
-                result.merge(validator.validate(displayGroup));
+                result.merge(validator.validate(displayGroup, displayGroups));
             }
         }
 

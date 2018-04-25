@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class DisplayGroupCaseFieldsValidatorImpl implements DisplayGroupValidato
     }
 
     @Override
-    public ValidationResult validate(DisplayGroupEntity displayGroup) {
+    public ValidationResult validate(DisplayGroupEntity displayGroup, Collection<DisplayGroupEntity> allDisplayGroups) {
         ValidationResult vr = new ValidationResult();
         for (DisplayGroupCaseFieldEntity e : displayGroup.getDisplayGroupCaseFields()) {
             for (DisplayGroupCaseFieldValidator v : validators) {

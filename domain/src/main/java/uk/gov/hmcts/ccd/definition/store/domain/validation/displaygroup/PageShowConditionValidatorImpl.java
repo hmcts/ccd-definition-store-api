@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -25,7 +26,7 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
     }
 
     @Override
-    public ValidationResult validate(DisplayGroupEntity displayGroup) {
+    public ValidationResult validate(DisplayGroupEntity displayGroup, Collection<DisplayGroupEntity> allDisplayGroups) {
         ValidationResult validationResult = new ValidationResult();
 
         if (preconditions(displayGroup)) {
@@ -39,7 +40,7 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
 
             String showConditionField = showCondition.getField();
             if (!displayGroup.getEvent().hasField(showConditionField)) {
-                validationResult.addError(new DisplayGroupInvalidShowConditionField(showConditionField, displayGroup));
+                validationResult.addError(new DisplayGroupInvalidShowConditionFieldForEvent(showConditionField, displayGroup));
             }
         }
         return validationResult;

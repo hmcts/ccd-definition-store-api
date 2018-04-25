@@ -10,6 +10,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,7 +23,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
+import java.util.List;
+
 public class PageShowConditionValidatorImplTest {
+    private static final List<DisplayGroupEntity> UNUSED_DISPLAY_GROUPS = Lists.newArrayList();
 
     @Mock
     private ShowConditionParser mockShowConditionParser;
@@ -42,7 +46,7 @@ public class PageShowConditionValidatorImplTest {
         displayGroup.setShowCondition(null);
         displayGroup.setType(DisplayGroupType.PAGE);
 
-        testObj.validate(displayGroup);
+        testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
         verify(mockShowConditionParser, never()).parseShowCondition(anyString());
     }
@@ -53,7 +57,7 @@ public class PageShowConditionValidatorImplTest {
         displayGroup.setShowCondition("");
         displayGroup.setType(DisplayGroupType.PAGE);
 
-        testObj.validate(displayGroup);
+        testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
         verify(mockShowConditionParser, never()).parseShowCondition(anyString());
     }
@@ -64,7 +68,7 @@ public class PageShowConditionValidatorImplTest {
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.TAB);
 
-        testObj.validate(displayGroup);
+        testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
         verify(mockShowConditionParser, never()).parseShowCondition(anyString());
     }
@@ -81,7 +85,7 @@ public class PageShowConditionValidatorImplTest {
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
                 .thenReturn(validParsedShowCondition);
 
-        ValidationResult result = testObj.validate(displayGroup);
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
         assertThat(result.isValid(), is(true));
     }
@@ -94,7 +98,7 @@ public class PageShowConditionValidatorImplTest {
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
                 .thenThrow(new InvalidShowConditionException("someShowCondition"));
 
-        ValidationResult result = testObj.validate(displayGroup);
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors(), hasSize(1));
@@ -113,11 +117,11 @@ public class PageShowConditionValidatorImplTest {
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
                 .thenReturn(sc);
 
-        ValidationResult result = testObj.validate(displayGroup);
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors(), hasSize(1));
-        assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionField.class));
+        assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionFieldForEvent.class));
     }
 
 

@@ -4,23 +4,34 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 
-public class DisplayGroupInvalidShowConditionField extends ValidationError {
+public class DisplayGroupInvalidShowConditionFieldForTab extends ValidationError {
 
     private String showConditionField;
     private DisplayGroupEntity displayGroup;
 
-    public DisplayGroupInvalidShowConditionField(String showConditionField, DisplayGroupEntity displayGroup) {
+    public DisplayGroupInvalidShowConditionFieldForTab(String showConditionField, DisplayGroupEntity displayGroup) {
         super(
                 String.format(
-                        "Invalid show condition '%s' for display group '%s': unknown field '%s' for event '%s'",
+                        "Invalid show condition '%s' for display group '%s': unknown field '%s'",
                         displayGroup.getShowCondition(),
                         displayGroup.getReference(),
-                        showConditionField,
-                        displayGroup.getEvent().getReference()
+                        showConditionField
                 )
         );
 
         this.showConditionField = showConditionField;
+        this.displayGroup = displayGroup;
+    }
+
+    public DisplayGroupInvalidShowConditionFieldForTab(DisplayGroupEntity displayGroup) {
+        super(
+                String.format(
+                        "Unable to parse show condition '%s' for display group '%s'",
+                        displayGroup.getShowCondition(),
+                        displayGroup.getReference()
+                )
+        );
+
         this.displayGroup = displayGroup;
     }
 
