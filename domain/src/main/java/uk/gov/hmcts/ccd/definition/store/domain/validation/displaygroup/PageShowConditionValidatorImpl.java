@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Predicate;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +9,10 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParse
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 @Component
 public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
@@ -26,7 +25,7 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
     }
 
     @Override
-    public ValidationResult validate(DisplayGroupEntity displayGroup, Collection<DisplayGroupEntity> allDisplayGroups) {
+    public ValidationResult validate(DisplayGroupEntity displayGroup, List<DisplayGroupEntity> allDisplayGroups) {
         ValidationResult validationResult = new ValidationResult();
 
         if (preconditions(displayGroup)) {
