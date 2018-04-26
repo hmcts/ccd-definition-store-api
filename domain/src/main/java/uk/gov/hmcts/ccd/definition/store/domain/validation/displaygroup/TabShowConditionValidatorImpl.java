@@ -28,7 +28,7 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
     }
 
     @Override
-    public ValidationResult validate(DisplayGroupEntity thisDisplayGroup, Collection<DisplayGroupEntity> allDisplayGroups) {
+    public ValidationResult validate(DisplayGroupEntity thisDisplayGroup, List<DisplayGroupEntity> allDisplayGroups) {
         ValidationResult validationResult = new ValidationResult();
         List allTabDisplayGroups = getAllTabDisplayGroups(thisDisplayGroup, allDisplayGroups);
 
