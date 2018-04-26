@@ -96,6 +96,6 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
     }
 
     private boolean isAllDisplayGroupCaseFieldsShowConditionBlank(DisplayGroupEntity dg) {
-        return dg.getDisplayGroupCaseFields().stream().allMatch(DisplayGroupCaseFieldEntity::hasShowCondition);
+        return dg.getDisplayGroupCaseFields().stream().noneMatch(DisplayGroupCaseFieldEntity::hasShowCondition);
     }
 }
