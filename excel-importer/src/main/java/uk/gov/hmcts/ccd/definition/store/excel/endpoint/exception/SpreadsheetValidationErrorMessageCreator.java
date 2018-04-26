@@ -313,7 +313,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(DisplayGroupInvalidShowConditionFieldForEvent error) {
+    public String createErrorMessage(DisplayGroupInvalidEventFieldShowCondition error) {
         return newMessageIfDefinitionExists(error,
                                             error.getDisplayGroup(),
                                             def -> String.format(
@@ -327,7 +327,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(DisplayGroupInvalidShowConditionFieldForTab error) {
+    public String createErrorMessage(DisplayGroupInvalidTabShowCondition error) {
         return newMessageIfDefinitionExists(error,
                                             error.getDisplayGroup(),
                                             error.getShowConditionField() != null ?
@@ -342,7 +342,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(DisplayGroupInvalidShowConditionFieldForTabField error) {
+    public String createErrorMessage(DisplayGroupInvalidTabFieldShowCondition error) {
         return newMessageIfDefinitionExists(error,
                                             error.getDisplayGroupCaseField(),
                                             error.getShowConditionField() != null ?

@@ -40,7 +40,7 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
 
             String showConditionField = showCondition.getField();
             if (!displayGroup.getEvent().hasField(showConditionField)) {
-                validationResult.addError(new DisplayGroupInvalidShowConditionFieldForEvent(showConditionField, displayGroup));
+                validationResult.addError(new DisplayGroupInvalidEventFieldShowCondition(showConditionField, displayGroup));
             }
         }
         return validationResult;

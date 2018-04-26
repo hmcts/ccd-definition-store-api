@@ -80,11 +80,11 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(DisplayGroupInvalidShowConditionError displayGroupInvalidShowConditionError);
 
-    String createErrorMessage(DisplayGroupInvalidShowConditionFieldForEvent displayGroupInvalidShowConditionFieldForEvent);
+    String createErrorMessage(DisplayGroupInvalidEventFieldShowCondition displayGroupInvalidEventFieldShowCondition);
 
-    String createErrorMessage(DisplayGroupInvalidShowConditionFieldForTab displayGroupInvalidShowConditionFieldForTab);
+    String createErrorMessage(DisplayGroupInvalidTabShowCondition displayGroupInvalidTabShowCondition);
 
-    String createErrorMessage(DisplayGroupInvalidShowConditionFieldForTabField displayGroupInvalidShowConditionFieldForTabField);
+    String createErrorMessage(DisplayGroupInvalidTabFieldShowCondition displayGroupInvalidTabFieldShowCondition);
 
     String createErrorMessage(ComplexFieldInvalidShowConditionError error);
 

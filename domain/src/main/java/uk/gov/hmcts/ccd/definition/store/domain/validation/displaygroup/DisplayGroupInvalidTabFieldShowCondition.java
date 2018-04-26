@@ -4,12 +4,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 
-public class DisplayGroupInvalidShowConditionFieldForTabField extends ValidationError {
+public class DisplayGroupInvalidTabFieldShowCondition extends ValidationError {
 
     private String showConditionField;
     private DisplayGroupCaseFieldEntity displayGroupCaseField;
 
-    public DisplayGroupInvalidShowConditionFieldForTabField(String showConditionField, DisplayGroupCaseFieldEntity displayGroupCaseField) {
+    public DisplayGroupInvalidTabFieldShowCondition(String showConditionField, DisplayGroupCaseFieldEntity displayGroupCaseField) {
         super(
                 String.format(
                         "Invalid show condition '%s' for display group case field '%s': unknown field '%s'",
@@ -23,7 +23,7 @@ public class DisplayGroupInvalidShowConditionFieldForTabField extends Validation
         this.displayGroupCaseField = displayGroupCaseField;
     }
 
-    public DisplayGroupInvalidShowConditionFieldForTabField(DisplayGroupCaseFieldEntity displayGroupCaseField) {
+    public DisplayGroupInvalidTabFieldShowCondition(DisplayGroupCaseFieldEntity displayGroupCaseField) {
         super(
                 String.format(
                         "Unable to parse show condition '%s' for display group '%s'",

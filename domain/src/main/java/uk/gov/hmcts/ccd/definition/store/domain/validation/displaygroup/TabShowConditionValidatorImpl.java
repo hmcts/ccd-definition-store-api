@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,14 +37,14 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
             try {
                 showCondition = showConditionParser.parseShowCondition(thisDisplayGroup.getShowCondition());
             } catch (InvalidShowConditionException e) {
-                validationResult.addError(new DisplayGroupInvalidShowConditionFieldForTab(thisDisplayGroup));
+                validationResult.addError(new DisplayGroupInvalidTabShowCondition(thisDisplayGroup));
                 return validationResult;
             }
 
             String showConditionField = showCondition.getField();
 
             if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)) {
-                validationResult.addError(new DisplayGroupInvalidShowConditionFieldForTab(showConditionField, thisDisplayGroup));
+                validationResult.addError(new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
             }
         }
 
@@ -56,14 +55,14 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                     try {
                         showCondition = showConditionParser.parseShowCondition(caseField.getShowCondition());
                     } catch (InvalidShowConditionException e) {
-                        validationResult.addError(new DisplayGroupInvalidShowConditionFieldForTabField(caseField));
+                        validationResult.addError(new DisplayGroupInvalidTabFieldShowCondition(caseField));
                         return validationResult;
                     }
 
                     String showConditionField = showCondition.getField();
 
                     if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)) {
-                        validationResult.addError(new DisplayGroupInvalidShowConditionFieldForTabField(showConditionField, caseField));
+                        validationResult.addError(new DisplayGroupInvalidTabFieldShowCondition(showConditionField, caseField));
                     }
                 }
             }

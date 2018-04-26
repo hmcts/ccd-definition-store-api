@@ -121,7 +121,7 @@ public class PageShowConditionValidatorImplTest {
 
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors(), hasSize(1));
-        assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionFieldForEvent.class));
+        assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidEventFieldShowCondition.class));
     }
 
 

@@ -13,7 +13,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParse
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -165,7 +164,7 @@ public class TabShowConditionValidatorImplTest {
 
             assertThat(result.isValid(), is(false));
             assertThat(result.getValidationErrors(), hasSize(1));
-            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionFieldForTabField.class));
+            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabFieldShowCondition.class));
         }
 
         @Test
@@ -193,7 +192,7 @@ public class TabShowConditionValidatorImplTest {
 
             assertThat(result.isValid(), is(false));
             assertThat(result.getValidationErrors(), hasSize(1));
-            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionFieldForTabField.class));
+            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabFieldShowCondition.class));
         }
 
 
@@ -230,7 +229,7 @@ public class TabShowConditionValidatorImplTest {
 
             assertThat(result.isValid(), is(false));
             assertThat(result.getValidationErrors(), hasSize(1));
-            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionFieldForTabField.class));
+            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabFieldShowCondition.class));
         }
     }
 
@@ -341,7 +340,7 @@ public class TabShowConditionValidatorImplTest {
 
             assertThat(result.isValid(), is(false));
             assertThat(result.getValidationErrors(), hasSize(1));
-            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionFieldForTab.class));
+            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabShowCondition.class));
         }
 
         @Test
@@ -365,7 +364,7 @@ public class TabShowConditionValidatorImplTest {
 
             assertThat(result.isValid(), is(false));
             assertThat(result.getValidationErrors(), hasSize(1));
-            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionFieldForTab.class));
+            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabShowCondition.class));
         }
 
         @Test
@@ -397,7 +396,7 @@ public class TabShowConditionValidatorImplTest {
 
             assertThat(result.isValid(), is(false));
             assertThat(result.getValidationErrors(), hasSize(1));
-            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionFieldForTab.class));
+            assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabShowCondition.class));
         }
     }
 

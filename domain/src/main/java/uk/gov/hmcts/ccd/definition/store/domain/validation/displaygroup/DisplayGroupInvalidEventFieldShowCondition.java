@@ -4,12 +4,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 
-public class DisplayGroupInvalidShowConditionFieldForEvent extends ValidationError {
+public class DisplayGroupInvalidEventFieldShowCondition extends ValidationError {
 
     private String showConditionField;
     private DisplayGroupEntity displayGroup;
 
-    public DisplayGroupInvalidShowConditionFieldForEvent(String showConditionField, DisplayGroupEntity displayGroup) {
+    public DisplayGroupInvalidEventFieldShowCondition(String showConditionField, DisplayGroupEntity displayGroup) {
         super(
                 String.format(
                         "Invalid show condition '%s' for display group '%s': unknown field '%s' for event '%s'",
