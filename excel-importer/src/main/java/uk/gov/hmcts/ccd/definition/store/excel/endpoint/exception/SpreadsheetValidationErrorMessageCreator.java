@@ -332,7 +332,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                                             error.getDisplayGroup(),
                                             error.getShowConditionField() != null ?
                                                 def -> String.format(
-                                                    "Invalid show condition '%s' for display group '%s' on tab '%s': " +
+                                                    "Invalid show condition '%s' for tab '%s' on spreadsheet tab '%s': " +
                                                         "unknown field '%s'",
                                                     def.getString(ColumnName.TAB_SHOW_CONDITION),
                                                     error.getDisplayGroup().getReference(),
@@ -347,7 +347,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                                             error.getDisplayGroupCaseField(),
                                             error.getShowConditionField() != null ?
                                                 def -> String.format(
-                                                    "Invalid show condition '%s' for display group case field '%s' on tab '%s': " +
+                                                    "Invalid show condition '%s' for tab field '%s' on spreadsheet tab '%s': " +
                                                         "unknown field '%s'",
                                                     def.getString(ColumnName.FIELD_SHOW_CONDITION),
                                                     error.getDisplayGroupCaseField().getCaseField().getReference(),
