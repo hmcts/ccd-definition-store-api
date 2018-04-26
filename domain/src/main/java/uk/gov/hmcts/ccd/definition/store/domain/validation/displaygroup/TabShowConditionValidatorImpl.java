@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
@@ -82,14 +81,14 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
         return tabDisplayGroups.stream().filter(tdg -> tdg.hasField(showConditionField)).findFirst().isPresent();
     }
 
-    public boolean tabPreconditions(DisplayGroupEntity displayGroup) {
+    private boolean tabPreconditions(DisplayGroupEntity displayGroup) {
         List<Predicate<DisplayGroupEntity>> preconditions = new ArrayList<>();
-        preconditions.add(dg -> !StringUtils.isBlank(dg.getShowCondition()));
+        preconditions.add(DisplayGroupEntity::hasShowCondition);
         preconditions.add(dg -> dg.getType() == DisplayGroupType.TAB);
         return preconditions.stream().allMatch(p -> p.test(displayGroup));
     }
 
-    public boolean tabFieldsPreconditions(DisplayGroupEntity displayGroup) {
+    private boolean tabFieldsPreconditions(DisplayGroupEntity displayGroup) {
         List<Predicate<DisplayGroupEntity>> preconditions = new ArrayList<>();
         preconditions.add(dg -> !isAllDisplayGroupCaseFieldsShowConditionBlank(dg));
         preconditions.add(dg -> dg.getType() == DisplayGroupType.TAB);
@@ -97,6 +96,6 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
     }
 
     private boolean isAllDisplayGroupCaseFieldsShowConditionBlank(DisplayGroupEntity dg) {
-        return dg.getDisplayGroupCaseFields().stream().allMatch(dgcf -> StringUtils.isBlank(dgcf.getShowCondition()));
+        return dg.getDisplayGroupCaseFields().stream().allMatch(DisplayGroupCaseFieldEntity::hasShowCondition);
     }
 }

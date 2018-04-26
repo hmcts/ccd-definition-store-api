@@ -12,7 +12,7 @@ public class DisplayGroupInvalidTabFieldShowCondition extends ValidationError {
     public DisplayGroupInvalidTabFieldShowCondition(String showConditionField, DisplayGroupCaseFieldEntity displayGroupCaseField) {
         super(
                 String.format(
-                        "Invalid show condition '%s' for display group case field '%s': unknown field '%s'",
+                        "Invalid show condition '%s' for tab field '%s': unknown field '%s'",
                         displayGroupCaseField.getShowCondition(),
                         displayGroupCaseField.getCaseField().getReference(),
                         showConditionField
@@ -26,7 +26,7 @@ public class DisplayGroupInvalidTabFieldShowCondition extends ValidationError {
     public DisplayGroupInvalidTabFieldShowCondition(DisplayGroupCaseFieldEntity displayGroupCaseField) {
         super(
                 String.format(
-                        "Unable to parse show condition '%s' for display group '%s'",
+                        "Unable to parse show condition '%s' for tab field '%s'",
                         displayGroupCaseField.getShowCondition(),
                         displayGroupCaseField.getCaseField().getReference()
                 )
