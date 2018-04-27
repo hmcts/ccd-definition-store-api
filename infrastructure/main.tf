@@ -39,3 +39,14 @@ module "postgres-case-definition-store" {
   env                 = "${var.env}"
   postgresql_user     = "ccd"
 }
+
+module "definition-store-vault" {
+  source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
+  name                = "ccd-definition-${var.env}" // Max 24 characters
+  product             = "${var.product}"
+  env                 = "${var.env}"
+  tenant_id           = "${var.tenant_id}"
+  object_id           = "${var.jenkins_AAD_objectId}"
+  resource_group_name = "${module.case-definition-store-api.resource_group_name}"
+  product_group_object_id = "be8b3850-998a-4a66-8578-da268b8abd6b"
+}
