@@ -381,34 +381,12 @@ dependencies {
     compile project(':application')
 }
 
-sourceSets {
-    aat {
-        java {
-            srcDir('src/aat/java')
-            compileClasspath += main.output
-            runtimeClasspath += main.output
-        }
-        resources {
-            srcDir('src/aat/resources')
-        }
-    }
-}
-
 task smoke(type: Test) {
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
     logger.quiet("!!!! Smoke test stage to be configured !!!!")
 }
 
-task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-
-    group = 'Delivery pipeline'
-    description = 'Executes functional tests against the User Profile instance'
-    setTestClassesDirs(sourceSets.aat.output.classesDirs)
-    setClasspath(sourceSets.aat.runtimeClasspath)
-    include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
-    useJUnitPlatform()
-}
+task functional(type: Test, dependsOn: ":aat:functional")
 
 task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
 

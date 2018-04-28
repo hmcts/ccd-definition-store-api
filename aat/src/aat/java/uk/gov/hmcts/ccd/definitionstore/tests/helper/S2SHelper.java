@@ -12,7 +12,7 @@ public class S2SHelper {
     private final String baseUrl;
     private final HashMap<String, String> services = new HashMap<>();
     private final GoogleTotpAuthenticator authenticator = new GoogleTotpAuthenticator();
-    private final HttpClient httpClient = HttpClients.createDefault();
+    private final HttpClient httpClient = HttpClients.createSystem();
 
     public S2SHelper(String baseUrl) {
         this.baseUrl = baseUrl;
