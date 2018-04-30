@@ -47,7 +47,8 @@ public enum AATHelper {
         return System.getenv("CCD_DS_SERVICE_NAME");
     }
 
-    public String getDatastoreServiceSecret() { return System.getenv("CCD_DS_SERVICE_SECRET");
+    public String getDatastoreServiceSecret() {
+        return System.getenv("CCD_DS_SERVICE_SECRET");
     }
 
     public String getGatewayServiceName() {
