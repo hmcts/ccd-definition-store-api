@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -100,7 +102,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
             item.addAttribute(ColumnName.PAGE_FIELD_DISPLAY_ORDER.toString(), 1.0);
 
             caseEventToFieldsSheet.addDataItem(item);
-            final ParseResult<DisplayGroupEntity> parseResult = wizardPageParser.parseAll(definitionSheets);
+            wizardPageParser.parseAll(definitionSheets);
         } catch (MapperException ex) {
             Assertions.assertThat(ex).hasMessageContaining(
                 "Couldn't find the column PageID in the sheet CaseEventToFields");
@@ -175,6 +177,60 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
         final ParseResult<DisplayGroupEntity> parseResult = wizardPageParser.parseAll(definitionSheets);
         assertThat(parseResult.getAllResults().size(), is(2));
+    }
+
+    @Test
+    public void shouldFailIfTwoPageShowConditionsForSameEventPageID() throws InvalidShowConditionException {
+
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition("someShowCondition")).willReturn(PARSED_SHOW_CONDITION);
+
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CASE_EVENT_ID.toString(), "SomeEvent");
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item.addAttribute(ColumnName.PAGE_ID.toString(), "Name");
+        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+
+        final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item2.addAttribute(ColumnName.CASE_EVENT_ID.toString(), "SomeEvent");
+        item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
+        item2.addAttribute(ColumnName.PAGE_ID.toString(), "Name");
+        item2.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+
+        caseEventToFieldsSheet.addDataItem(item);
+        caseEventToFieldsSheet.addDataItem(item2);
+
+        MapperException result = assertThrows(MapperException.class, () -> wizardPageParser.parseAll(definitionSheets));
+        assertThat(result.getMessage(), equalTo("Please provide single condition in PageShowCondition column in CaseEventToFields for the tab SomeEventName"));
+    }
+
+    @Test
+    public void shouldFailIfTwoTabShowConditionsForSameTab() throws InvalidShowConditionException {
+
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition("someShowCondition")).willReturn(PARSED_SHOW_CONDITION);
+
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item.addAttribute(ColumnName.TAB_ID.toString(), "Name");
+        item.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), "someShowCondition");
+
+        final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
+        item2.addAttribute(ColumnName.TAB_ID.toString(), "Name");
+        item2.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), "someShowCondition");
+
+        definitionSheet.addDataItem(item);
+        definitionSheet.addDataItem(item2);
+
+        MapperException result = assertThrows(MapperException.class, () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(result.getMessage(), equalTo("Please provide single condition in TabShowCondition column in CaseTypeTab for the tab Name"));
     }
 
     @Test
