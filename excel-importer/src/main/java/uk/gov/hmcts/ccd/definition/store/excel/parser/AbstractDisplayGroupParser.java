@@ -134,7 +134,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
 
     private void parseGroupShowCondition(ColumnName column, DisplayGroupEntity group, List<DefinitionDataItem> groupDefinition) {
         if (groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).count() > 1) {
-            throw new MapperException(String.format("Please provide single condition in TabShowCondition column in CaseTypeTab for the tab %s", group.getReference()));
+            throw new MapperException(String.format("Please provide single condition in %s column in %s for the tab %s", column, groupDefinition.get(0).getSheetName(), group.getReference()));
         }
         Optional<DefinitionDataItem> definitionDataItemOpt = groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).findFirst();
         definitionDataItemOpt.ifPresent(ddi -> group.setShowCondition(parseShowCondition(ddi.getString(column))));
