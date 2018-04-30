@@ -381,19 +381,12 @@ dependencies {
     compile project(':application')
 }
 
-//test {
-//    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-//}
-//
 task smoke(type: Test) {
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
     logger.quiet("!!!! Smoke test stage to be configured !!!!")
 }
 
-task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-    logger.quiet("!!!! Functional Test stage to be configured !!!!")
-}
+task functional(type: Test, dependsOn: ":aat:functional")
 
 task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
 
