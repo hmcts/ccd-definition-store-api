@@ -26,6 +26,13 @@ module "case-definition-store-api" {
     DEFINITION_STORE_DB_NAME = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_database : module.definition-store-db.postgresql_database}"
     DEFINITION_STORE_DB_USERNAME = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.user_name : module.definition-store-db.user_name}"
     DEFINITION_STORE_DB_PASSWORD = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_password : module.definition-store-db.postgresql_password}"
+
+    UK_DB_HOST = "${module.definition-store-db.host_name}"
+    UK_DB_PORT = "${module.definition-store-db.postgresql_listen_port}"
+    UK_DB_NAME = "${module.definition-store-db.postgresql_database}"
+    UK_DB_USERNAME = "${module.definition-store-db.user_name}"
+    UK_DB_PASSWORD = "${module.definition-store-db.postgresql_password}"
+
     IDAM_USER_URL = "${var.idam_api_url}"
     IDAM_S2S_URL = "${var.s2s_url}"
     DEFINITION_STORE_IDAM_KEY = "${data.vault_generic_secret.definition_store_item_key.data["value"]}"
