@@ -18,7 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupColumnNumberValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionField;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidEventFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
@@ -649,7 +649,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals(
                 "Invalid show condition 'sc' for display group 'dg' on tab 'CaseEventToFields': unknown field 'field' for event 'event'",
                 classUnderTest.createErrorMessage(
-                        new DisplayGroupInvalidShowConditionField("field", displayGroupEntity))
+                        new DisplayGroupInvalidEventFieldShowCondition("field", displayGroupEntity))
         );
     }
 
@@ -668,7 +668,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals(
                 "Invalid show condition 'sc' for display group 'dg': unknown field 'field' for event 'event'",
                 classUnderTest.createErrorMessage(
-                        new DisplayGroupInvalidShowConditionField("field", displayGroupEntity))
+                        new DisplayGroupInvalidEventFieldShowCondition("field", displayGroupEntity))
         );
     }
 
