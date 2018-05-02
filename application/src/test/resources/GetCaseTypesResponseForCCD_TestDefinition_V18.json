@@ -63,7 +63,8 @@
       "update" : false,
       "delete" : false
     } ],
-    "show_summary" : true
+    "show_summary" : true,
+    "end_button_label": "Save"
   }, {
     "id" : "enterCaseIntoLegacy",
     "name" : "Enter into legacy system",
@@ -111,7 +112,8 @@
       "update" : false,
       "delete" : false
     } ],
-    "show_summary" : false
+    "show_summary" : false,
+    "end_button_label": "Create Draft"
   }, {
     "id" : "stopCase",
     "name" : "Put the case on hold",
@@ -140,7 +142,8 @@
       "update" : false,
       "delete" : false
     } ],
-    "show_summary" : false
+    "show_summary" : false,
+    "end_button_label": null
   } ],
   "states" : [ {
     "id" : "CaseCreated",

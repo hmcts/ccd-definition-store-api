@@ -84,6 +84,7 @@ public class EventParser {
         event.setDescription(eventDefinition.getString(ColumnName.DESCRIPTION));
         event.setOrder(eventDefinition.getInteger(ColumnName.DISPLAY_ORDER));
         event.setShowSummary(eventDefinition.getBoolean(ColumnName.SHOW_SUMMARY));
+        event.setEndButtonLabel(eventDefinition.getString(ColumnName.END_BUTTON_LABEL));
 
         SecurityClassificationColumn securityClassificationColumn = eventDefinition.getSecurityClassification();
         event.setSecurityClassification(securityClassificationColumn.getSecurityClassification());
