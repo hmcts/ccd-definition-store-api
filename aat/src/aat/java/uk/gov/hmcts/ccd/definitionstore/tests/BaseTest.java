@@ -14,13 +14,17 @@ public abstract class BaseTest {
     protected BaseTest(AATHelper aat) {
         this.aat = aat;
         RestAssured.baseURI = aat.getTestUrl();
+        RestAssured.useRelaxedHTTPSValidation();
     }
 
     protected Supplier<RequestSpecification> asAutoTestImporter() {
 
+//        final AuthenticatedUser caseworker = aat.getIdamHelper()
+//                                                .authenticate(aat.getImporterAutoTestEmail(),
+//                                                              aat.getImporterAutoTestPassword());
+
         final AuthenticatedUser caseworker = aat.getIdamHelper()
-                                                .authenticate(aat.getImporterAutoTestEmail(),
-                                                              aat.getImporterAutoTestPassword());
+                                                .authenticate("ccd-import");
 
 
         final String s2sToken = aat.getS2SHelper()
@@ -33,9 +37,12 @@ public abstract class BaseTest {
 
     protected Supplier<RequestSpecification> asAutoTestCaseworkerWithUser() {
 
+//        final AuthenticatedUser caseworker = aat.getIdamHelper()
+//                                                .authenticate(aat.getCaseworkerAutoTestEmail(),
+//                                                              aat.getCaseworkerAutoTestPassword());
+
         final AuthenticatedUser caseworker = aat.getIdamHelper()
-            .authenticate(aat.getCaseworkerAutoTestEmail(),
-                aat.getCaseworkerAutoTestPassword());
+                                                .authenticate("caseworker-autotest1");
 
         final String s2sToken = aat.getS2SHelper()
             .getToken(aat.getDatastoreServiceName(), aat.getDatastoreServiceSecret());
@@ -47,9 +54,12 @@ public abstract class BaseTest {
 
     protected Supplier<RequestSpecification> asAutoTestCaseworker() {
 
+//        final AuthenticatedUser caseworker = aat.getIdamHelper()
+//                                                .authenticate(aat.getCaseworkerAutoTestEmail(),
+//                                                              aat.getCaseworkerAutoTestPassword());
+
         final AuthenticatedUser caseworker = aat.getIdamHelper()
-            .authenticate(aat.getCaseworkerAutoTestEmail(),
-                aat.getCaseworkerAutoTestPassword());
+                                                .authenticate("caseworker-autotest1");
 
         final String s2sToken = aat.getS2SHelper()
             .getToken(aat.getDatastoreServiceName(), aat.getDatastoreServiceSecret());
