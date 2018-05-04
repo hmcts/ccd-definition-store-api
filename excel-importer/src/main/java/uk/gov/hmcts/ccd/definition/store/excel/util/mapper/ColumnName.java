@@ -47,6 +47,7 @@ public enum ColumnName {
     SECURITY_CLASSIFICATION("SecurityClassification"),
     FIELD_SHOW_CONDITION("FieldShowCondition"),
     PAGE_SHOW_CONDITION("PageShowCondition"),
+    TAB_SHOW_CONDITION("TabShowCondition"),
     SHOW_SUMMARY("ShowSummary"),
     SHOW_SUMMARY_CHANGE_OPTION("ShowSummaryChangeOption"),
     STATE_ID("CaseStateID"),

@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -142,4 +144,13 @@ public class DisplayGroupEntity implements Serializable {
     public String getShowCondition() {
         return showCondition;
     }
+
+    public boolean hasShowCondition() {
+        return !StringUtils.isBlank(showCondition);
+    }
+
+    public boolean hasField(String fieldReference) {
+        return displayGroupCaseFields.stream().anyMatch(dgcf -> dgcf.getCaseField().getReference().equals(fieldReference));
+    }
+
 }
