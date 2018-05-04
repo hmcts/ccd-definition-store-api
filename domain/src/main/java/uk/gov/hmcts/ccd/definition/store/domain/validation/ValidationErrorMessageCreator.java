@@ -17,10 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldInvalidShowConditionError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield
     .ComplexFieldShowConditionReferencesInvalidFieldError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupColumnNumberValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionField;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityInvalidShowConditionError;
@@ -83,7 +80,11 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(DisplayGroupInvalidShowConditionError displayGroupInvalidShowConditionError);
 
-    String createErrorMessage(DisplayGroupInvalidShowConditionField displayGroupInvalidShowConditionField);
+    String createErrorMessage(DisplayGroupInvalidEventFieldShowCondition displayGroupInvalidEventFieldShowCondition);
+
+    String createErrorMessage(DisplayGroupInvalidTabShowCondition displayGroupInvalidTabShowCondition);
+
+    String createErrorMessage(DisplayGroupInvalidTabFieldShowCondition displayGroupInvalidTabFieldShowCondition);
 
     String createErrorMessage(ComplexFieldInvalidShowConditionError error);
 

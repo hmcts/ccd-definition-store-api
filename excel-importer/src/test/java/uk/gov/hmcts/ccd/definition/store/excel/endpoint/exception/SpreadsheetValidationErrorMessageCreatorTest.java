@@ -13,12 +13,9 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.Authori
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype
-    .CaseTypeEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.*;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupColumnNumberValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionField;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
@@ -633,7 +630,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_DisplayGroupInvalidShowConditionField_customMessageReturned() {
+    public void entityExistsInRegistry_DisplayGroupInvalidEventShowConditionField_customMessageReturned() {
 
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setReference("dg");
@@ -649,12 +646,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals(
                 "Invalid show condition 'sc' for display group 'dg' on tab 'CaseEventToFields': unknown field 'field' for event 'event'",
                 classUnderTest.createErrorMessage(
-                        new DisplayGroupInvalidShowConditionField("field", displayGroupEntity))
+                        new DisplayGroupInvalidEventFieldShowCondition("field", displayGroupEntity))
         );
     }
 
     @Test
-    public void entityNotInRegistry_DisplayGroupInvalidShowConditionField_defaultMessageReturned() {
+    public void entityNotInRegistry_DisplayGroupInvalidEventShowConditionField_defaultMessageReturned() {
 
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setReference("dg");
@@ -668,7 +665,101 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals(
                 "Invalid show condition 'sc' for display group 'dg': unknown field 'field' for event 'event'",
                 classUnderTest.createErrorMessage(
-                        new DisplayGroupInvalidShowConditionField("field", displayGroupEntity))
+                        new DisplayGroupInvalidEventFieldShowCondition("field", displayGroupEntity))
+        );
+    }
+
+    @Test
+    public void entityExistsInRegistry_DisplayGroupInvalidTabShowConditionField_customMessageReturned() {
+
+        DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
+        displayGroupCaseFieldEntity.setCaseField(caseFieldEntity("dg", SecurityClassification.PUBLIC));
+        displayGroupCaseFieldEntity.setShowCondition("sc");
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_TYPE_TAB.toString());
+        when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn("sc");
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupCaseFieldEntity))).thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals(
+                "Invalid show condition 'sc' for tab field 'dg' on spreadsheet tab 'CaseTypeTab': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabFieldShowCondition("field", displayGroupCaseFieldEntity))
+        );
+    }
+
+    @Test
+    public void entityNotInRegistry_DisplayGroupInvalidTabShowConditionField_defaultMessageReturned() {
+
+        DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
+        displayGroupCaseFieldEntity.setCaseField(caseFieldEntity("dg", SecurityClassification.PUBLIC));
+        displayGroupCaseFieldEntity.setShowCondition("sc");
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_TYPE_TAB.toString());
+
+        assertEquals(
+                "Invalid show condition 'sc' for tab field 'dg': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabFieldShowCondition("field", displayGroupCaseFieldEntity))
+        );
+    }
+
+    @Test
+    public void entityNotInRegistry_DisplayGroupInvalidTabShowConditionField_defaultMessageWhenNoShowCondition() {
+
+        DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
+        displayGroupCaseFieldEntity.setCaseField(caseFieldEntity("dg", SecurityClassification.PUBLIC));
+
+        assertEquals(
+                "Invalid show condition 'null' for tab field 'dg': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabFieldShowCondition("field", displayGroupCaseFieldEntity))
+        );
+    }
+
+    @Test
+    public void entityExistsInRegistry_DisplayGroupInvalidTabShowCondition_customMessageReturned() {
+
+        DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
+        displayGroupEntity.setShowCondition("sc");
+        displayGroupEntity.setReference("dg");
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_TYPE_TAB.toString());
+        when(definitionDataItem.getString(eq(ColumnName.TAB_SHOW_CONDITION))).thenReturn("sc");
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupEntity))).thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals(
+                "Invalid show condition 'sc' for tab 'dg' on spreadsheet tab 'CaseTypeTab': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabShowCondition("field", displayGroupEntity))
+        );
+    }
+
+    @Test
+    public void entityNotInRegistry_DisplayGroupInvalidTabShowCondition_defaultMessageReturned() {
+
+        DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
+        displayGroupEntity.setShowCondition("sc");
+        displayGroupEntity.setReference("dg");
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_TYPE_TAB.toString());
+
+        assertEquals(
+                "Invalid show condition 'sc' for tab 'dg': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabShowCondition("field", displayGroupEntity))
+        );
+    }
+
+    @Test
+    public void entityNotInRegistry_DisplayGroupInvalidTabShowCondition_defaultMessageWhenNoShowCondition() {
+
+        DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
+        displayGroupEntity.setReference("dg");
+
+        assertEquals(
+                "Invalid show condition 'null' for tab 'dg': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabShowCondition("field", displayGroupEntity))
         );
     }
 
