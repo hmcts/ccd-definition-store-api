@@ -3,7 +3,12 @@ provider "vault" {
 }
 
 locals {
-  env_ase_url = "${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
+  aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
+
+  local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
+  local_ase = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "core-compute-aat" : "core-compute-saat" : local.aseName}"
+
+  env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
 }
 
 data "vault_generic_secret" "definition_store_item_key" {
@@ -25,7 +30,7 @@ module "case-definition-store-api" {
     DEFINITION_STORE_DB_USERNAME = "${module.postgres-case-definition-store.user_name}"
     DEFINITION_STORE_DB_PASSWORD = "${module.postgres-case-definition-store.postgresql_password}"
     IDAM_USER_URL = "${var.idam_api_url}"
-    IDAM_S2S_URL = "${var.s2s_url}"
+    IDAM_S2S_URL = "http://rpe-service-auth-provider-${local.env_ase_url}"
     DEFINITION_STORE_IDAM_KEY = "${data.vault_generic_secret.definition_store_item_key.data["value"]}"
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
   }
