@@ -2,7 +2,7 @@ dependencies {
     compile "org.hibernate:hibernate-core:${hibernateVersion}"
     compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
     compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
-    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.7'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.9'
     testCompile 'io.github.openfeign:feign-jackson:9.5.1'
     testCompile "org.exparity:hamcrest-date:2.0.4"
     testCompile "io.rest-assured:rest-assured:3.0.6"
