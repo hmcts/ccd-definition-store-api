@@ -61,4 +61,16 @@
         <notes>ssl related</notes>
         <cve>CVE-2016-4970</cve>
     </suppress>
+    <suppress>
+        <notes>Related to running tomcat as a service</notes>
+        <cve>CVE-2016-5425</cve>
+    </suppress>
+    <suppress>
+        <notes>Related to running tomcat as a service</notes>
+        <cve>CVE-2016-6325</cve>
+    </suppress>
+    <suppress>
+        <notes>SSL and tomcat as a service related</notes>
+        <cve>CVE-2017-6056</cve>
+    </suppress>
 </suppressions>
