@@ -5,7 +5,7 @@ services:
   ccd-definition-store-api:
     build:
       context: .
-    image: docker.artifactory.reform.hmcts.net/ccd/ccd-definition-store-api
+    image: hmcts/ccd-definition-store-api
     environment:
       - DEFINITION_STORE_DB_HOST=ccd-definition-store-database
       - DEFINITION_STORE_DB_PORT=5432
@@ -29,7 +29,7 @@ services:
   ccd-definition-store-database:
     build:
       context: docker/database
-    image: docker.artifactory.reform.hmcts.net/ccd/ccd-definition-store-database
+    image: hmcts/ccd-definition-store-database
     healthcheck:
       interval: 10s
       timeout: 10s
