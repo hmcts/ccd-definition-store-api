@@ -14,7 +14,7 @@ dependencies {
     }
     compile "org.projectlombok:lombok"
     compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
-    compile "uk.gov.hmcts.auth.provider.service:service-token-generator-spring:1.0.5"
+    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
     compile "commons-beanutils:commons-beanutils"
     compile "org.apache.commons:commons-lang3:3.5"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"

@@ -2,13 +2,12 @@ dependencies {
     compile "org.hibernate:hibernate-core:${hibernateVersion}"
     compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
     compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
+    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.7'
     testCompile 'io.github.openfeign:feign-jackson:9.5.1'
     testCompile "org.exparity:hamcrest-date:2.0.4"
     testCompile "io.rest-assured:rest-assured:3.0.6"
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-    compile "uk.gov.hmcts.auth.totp:totp:1.0.1"
-    compile "uk.gov.hmcts.auth.provider.service:service-token-generator:1.0.5"
 }
 
 sourceSets {
