@@ -43,7 +43,6 @@
     </suppress>
     <suppress>
         <notes>SSL related</notes>
-        <gav regex="true">^io\.reactivex:rxnetty:.*$</gav>
         <cve>CVE-2014-3488</cve>
     </suppress>
     <suppress>
