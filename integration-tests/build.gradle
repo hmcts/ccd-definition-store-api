@@ -19,7 +19,7 @@ dependencies {
     testCompile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
     testCompile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     testCompile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
-    testCompile "org.postgresql:postgresql"
+    testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 }
 
