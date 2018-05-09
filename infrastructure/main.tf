@@ -12,10 +12,16 @@ locals {
 
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 
+  // Vault name
   previewVaultName = "${var.product}-${var.component}"
   # preview env contains pr number prefix, other envs need a suffix
   nonPreviewVaultName = "${local.previewVaultName}-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
+
+  // Vault URI
+  previewVaultUri = "https://ccd-profile-aat.vault.azure.net/"
+  nonPreviewVaultUri = "${module.definition-store-vault.key_vault_uri}"
+  vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
 
 data "vault_generic_secret" "definition_store_item_key" {

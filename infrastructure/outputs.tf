@@ -1,5 +1,5 @@
 output "vaultUri" {
-  value = "${module.definition-store-vault.key_vault_uri}"
+  value = "${local.vaultUri}"
 }
 
 output "vaultName" {
