@@ -13,7 +13,7 @@ locals {
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 
   // Vault name
-  previewVaultName = "${var.product}-${var.component}"
+  previewVaultName = "${var.product}-definition"
   # preview env contains pr number prefix, other envs need a suffix
   nonPreviewVaultName = "${local.previewVaultName}-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
