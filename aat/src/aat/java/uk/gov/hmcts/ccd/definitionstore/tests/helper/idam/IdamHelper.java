@@ -42,9 +42,6 @@ public class IdamHelper {
             try {
                 final Response tokenResponse = idamApi.testingLease(role);
                 final String accessToken = (String) defaultDecoder.decode(tokenResponse, String.class);
-
-                System.out.println(accessToken);
-
                 final IdamApi.IdamUser user = idamApi.getUser(accessToken);
                 return new AuthenticatedUser(user.getId(), "", accessToken, user.getRoles());
             } catch (IOException exception) {
