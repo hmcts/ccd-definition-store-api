@@ -1,6 +1,9 @@
 variable "product" {
   type    = "string"
-  default = "ccd"
+}
+
+variable "component" {
+  type    = "string"
 }
 
 variable "location" {

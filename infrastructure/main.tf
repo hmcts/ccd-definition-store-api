@@ -11,6 +11,11 @@ locals {
   env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
 
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
+
+  previewVaultName = "${var.product}-${var.component}"
+  # preview env contains pr number prefix, other envs need a suffix
+  nonPreviewVaultName = "${local.previewVaultName}-${var.env}"
+  vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 }
 
 data "vault_generic_secret" "definition_store_item_key" {
@@ -49,7 +54,7 @@ module "postgres-case-definition-store" {
 
 module "definition-store-vault" {
   source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-  name                = "ccd-definition-${var.env}" // Max 24 characters
+  name                = "${local.vaultName}" // Max 24 characters
   product             = "${var.product}"
   env                 = "${var.env}"
   tenant_id           = "${var.tenant_id}"

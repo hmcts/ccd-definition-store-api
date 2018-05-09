@@ -3,7 +3,7 @@ output "vaultUri" {
 }
 
 output "vaultName" {
-  value = "${module.definition-store-vault.key_vault_name}"
+  value = "${local.vaultName}"
 }
 
 output "idam_url" {
