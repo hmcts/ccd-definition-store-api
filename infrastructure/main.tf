@@ -19,7 +19,7 @@ locals {
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
   // Vault URI
-  previewVaultUri = "https://ccd-profile-aat.vault.azure.net/"
+  previewVaultUri = "https://ccd-definition-aat.vault.azure.net/"
   nonPreviewVaultUri = "${module.definition-store-vault.key_vault_uri}"
   vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
