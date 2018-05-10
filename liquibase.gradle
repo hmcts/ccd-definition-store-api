@@ -18,7 +18,6 @@ task liquibaseDiffChangelog(type: JavaExec) {
     main = "liquibase.integration.commandline.Main"
 
     args "--changeLogFile=" + "$projectDir/repository/src/main/resources/db/changelog/db.changelog-diff-" + buildTimestamp() + ".xml"
-//    args "--referenceUrl=hibernate:spring:uk.gov.hmcts.ccd.definition.store.repository,uk.gov.hmcts.ccd.definition.store.repository.entity?dialect=uk.gov.hmcts.ccd.definition.store.repository.NewPostgreSQL94Dialect"
     args "--referenceUrl=hibernate:spring:uk.gov.hmcts.ccd.definition.store.repository?dialect=uk.gov.hmcts.ccd.definition.store.repository.NewPostgreSQL94Dialect"
     args "--username=" + liquibaseProps.getProperty('username')
     args "--password=" + liquibaseProps.getProperty('password')
