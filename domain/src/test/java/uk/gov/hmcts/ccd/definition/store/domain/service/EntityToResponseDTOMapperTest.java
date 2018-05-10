@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
@@ -18,6 +19,7 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -37,6 +39,31 @@ public class EntityToResponseDTOMapperTest {
     @BeforeEach
     public void setUpSpy() throws Exception {
         spyOnClassUnderTest = spy(classUnderTest);
+    }
+
+    @Nested
+    @DisplayName("")
+    class MapEventCaseFieldEntity {
+
+        @Test
+        public void testMapEventCaseFieldEntity() throws Exception {
+            EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
+            eventCaseFieldEntity.setShowCondition("PersonFirstName=\"John\"");
+            eventCaseFieldEntity.setShowSummaryChangeOption(true);
+            eventCaseFieldEntity.setShowSummaryContentOption(2);
+            eventCaseFieldEntity.setDisplayContext(DisplayContext.MANDATORY);
+
+            CaseEventField caseEventField = spyOnClassUnderTest.map(
+                eventCaseFieldEntity
+            );
+
+            assertAll(
+                () -> assertEquals(caseEventField.getDisplayContext(), eventCaseFieldEntity.getDisplayContext().name()),
+                () -> assertEquals(caseEventField.getShowCondition(), eventCaseFieldEntity.getShowCondition()),
+                () -> assertEquals(caseEventField.getShowSummaryChangeOption(), eventCaseFieldEntity.getShowSummaryChangeOption()),
+                () -> assertEquals(caseEventField.getShowSummaryContentOption(), eventCaseFieldEntity.getShowSummaryContentOption())
+            );
+        }
     }
 
     @Nested
