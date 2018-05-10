@@ -2,15 +2,12 @@
 @Library("Infrastructure") _
 
 properties([
-    parameters([
-        string(name: 'PRODUCT_NAME', defaultValue: 'ccd', description: ''),
-        string(name: 'APP', defaultValue: 'definition-store-api', description: ''),
-        string(name: 'TYPE', defaultValue: 'java', description: ''),
-        string(name: 'ENVIRONMENT', defaultValue: 'sandbox', description: 'Environment where code should be build and deployed'),
-        choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod', description: 'Azure subscriptions available to build in')
-    ]),
-    [$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/ccd-definition-store-api'],
-    pipelineTriggers([[$class: 'GitHubPushTrigger']])
+  parameters([
+    choice(name: 'ENVIRONMENT', choices: 'saat\nsprod', description: 'Environment where code should be build and deployed')
+  ]),
+  pipelineTriggers([[$class: 'GitHubPushTrigger']])
 ])
 
-withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {}
+withParameterizedPipeline('java', 'ccd', 'definition-store-api', params.ENVIRONMENT, 'sandbox') {
+
+}
