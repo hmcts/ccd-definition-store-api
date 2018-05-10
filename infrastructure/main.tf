@@ -3,7 +3,21 @@ provider "vault" {
 }
 
 locals {
-  env_ase_url = "${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
+  aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
+  local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
+  local_ase = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "core-compute-aat" : "core-compute-saat" : local.aseName}"
+  env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
+
+  // Vault name
+  previewVaultName = "${var.product}-definition"
+  # preview env contains pr number prefix, other envs need a suffix
+  nonPreviewVaultName = "${local.previewVaultName}-${var.env}"
+  vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
+
+  // Vault URI
+  previewVaultUri = "https://ccd-definition-aat.vault.azure.net/"
+  nonPreviewVaultUri = "${module.definition-store-vault.key_vault_uri}"
+  vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
 
 data "vault_generic_secret" "definition_store_item_key" {
@@ -42,7 +56,7 @@ module "postgres-case-definition-store" {
 
 module "definition-store-vault" {
   source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-  name                = "ccd-definition-${var.env}" // Max 24 characters
+  name                = "${local.vaultName}" // Max 24 characters
   product             = "${var.product}"
   env                 = "${var.env}"
   tenant_id           = "${var.tenant_id}"
