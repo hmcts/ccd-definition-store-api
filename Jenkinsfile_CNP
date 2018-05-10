@@ -31,4 +31,5 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 
 withPipeline(type, product, app) {
     loadVaultSecrets(secrets)
+    enableDbMigration()
 }

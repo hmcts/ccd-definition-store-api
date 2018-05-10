@@ -1,3 +1,7 @@
+output "microserviceName" {
+  value = "${local.app_full_name}"
+}
+
 output "vaultUri" {
   value = "${module.definition-store-vault.key_vault_uri}"
 }
