@@ -9,8 +9,9 @@ locals {
   env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
 
   // Vault name
-  previewVaultName = "ccd-definition-preview"
-  nonPreviewVaultName = "ccd-definition-${var.env}"
+  previewVaultName = "${var.product}-definition"
+  # preview env contains pr number prefix, other envs need a suffix
+  nonPreviewVaultName = "${local.previewVaultName}-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
   // Vault URI
