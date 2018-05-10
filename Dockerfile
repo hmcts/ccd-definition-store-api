@@ -6,4 +6,4 @@ HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" curl --s
 
 EXPOSE 4451
 
-CMD java ${JAVA_OPTS} -Dspring.config.location=/application.properties -Djava.security.egd=file:/dev/./urandom -jar /app.jar
+CMD java ${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -jar /app.jar

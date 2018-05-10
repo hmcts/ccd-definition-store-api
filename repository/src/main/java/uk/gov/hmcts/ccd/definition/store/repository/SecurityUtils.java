@@ -1,12 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
-import uk.gov.hmcts.auth.provider.service.token.ServiceTokenGenerator;
 import uk.gov.hmcts.reform.auth.checker.spring.useronly.UserDetails;
+import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -14,16 +13,15 @@ import javax.inject.Singleton;
 @Singleton
 public class SecurityUtils {
 
-    private final ServiceTokenGenerator serviceTokenGenerator;
+    private final AuthTokenGenerator authTokenGenerator;
 
-    @Inject
-    public SecurityUtils(@Qualifier("cachedServiceTokenGenerator") final ServiceTokenGenerator serviceTokenGenerator) {
-        this.serviceTokenGenerator = serviceTokenGenerator;
+    @Autowired
+    public SecurityUtils(final AuthTokenGenerator authTokenGenerator) {
+        this.authTokenGenerator = authTokenGenerator;
     }
-
     public HttpHeaders authorizationHeaders() {
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("ServiceAuthorization", serviceTokenGenerator.generate());
+        headers.add("ServiceAuthorization", authTokenGenerator.generate());
         return headers;
     }
 
