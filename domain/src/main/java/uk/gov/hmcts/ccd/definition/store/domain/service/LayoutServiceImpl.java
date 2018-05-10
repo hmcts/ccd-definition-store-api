@@ -11,7 +11,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
-import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -33,7 +32,7 @@ public class LayoutServiceImpl implements LayoutService {
     }
 
     @Override
-    public void createGenerics(Collection<GenericLayoutEntity> genericLayouts) {
+    public void createGenerics(List<GenericLayoutEntity> genericLayouts) {
         ValidationResult result = new ValidationResult();
         for (GenericLayoutEntity genericLayoutEntity : genericLayouts) {
             for (GenericLayoutValidator validator : genericLayoutValidators) {
@@ -47,11 +46,11 @@ public class LayoutServiceImpl implements LayoutService {
     }
 
     @Override
-    public void createDisplayGroups(Collection<DisplayGroupEntity> displayGroups) {
+    public void createDisplayGroups(List<DisplayGroupEntity> displayGroups) {
         ValidationResult result = new ValidationResult();
         for (DisplayGroupEntity displayGroup : displayGroups) {
             for (DisplayGroupValidator validator : displayGroupValidators) {
-                result.merge(validator.validate(displayGroup));
+                result.merge(validator.validate(displayGroup, displayGroups));
             }
         }
 
