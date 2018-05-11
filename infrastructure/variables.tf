@@ -1,6 +1,9 @@
 variable "product" {
   type    = "string"
-  default = "ccd"
+}
+
+variable "component" {
+  type    = "string"
 }
 
 variable "location" {
@@ -34,9 +37,3 @@ variable "vault_section" {
 variable "idam_api_url" {
   default = "http://betaDevBccidamAppLB.reform.hmcts.net"
 }
-
-variable "s2s_url" {
-  default = "http://betaDevBccidamS2SLB.reform.hmcts.net"
-}
-
-
