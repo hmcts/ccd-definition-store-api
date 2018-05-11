@@ -3,11 +3,11 @@ output "microserviceName" {
 }
 
 output "vaultUri" {
-  value = "${module.definition-store-vault.key_vault_uri}"
+  value = "${local.vaultUri}"
 }
 
 output "vaultName" {
-  value = "${module.definition-store-vault.key_vault_name}"
+  value = "${local.vaultName}"
 }
 
 output "idam_url" {
@@ -15,5 +15,5 @@ output "idam_url" {
 }
 
 output "s2s_url" {
-  value = "${var.s2s_url}"
+  value = "${local.s2s_url}"
 }

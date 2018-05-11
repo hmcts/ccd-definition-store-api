@@ -3,16 +3,26 @@ provider "vault" {
 }
 
 locals {
+
   app_full_name = "${var.product}-${var.component}"
-  env_ase_url = "${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
+
+  aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
+
+  local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
+  local_ase = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "core-compute-aat" : "core-compute-saat" : local.aseName}"
+
+  env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
+
+  s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 
   // Vault name
-  previewVaultName = "ccd-profile-preview"
-  nonPreviewVaultName = "ccd-profile-${var.env}"
+  previewVaultName = "${var.product}-definition"
+  # preview env contains pr number prefix, other envs need a suffix
+  nonPreviewVaultName = "${local.previewVaultName}-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
   // Vault URI
-  previewVaultUri = "https://ccd-profile-aat.vault.azure.net/"
+  previewVaultUri = "https://ccd-definition-aat.vault.azure.net/"
   nonPreviewVaultUri = "${module.definition-store-vault.key_vault_uri}"
   vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
@@ -45,7 +55,7 @@ module "case-definition-store-api" {
     ENABLE_DB_MIGRATE = "false"
 
     IDAM_USER_URL = "${var.idam_api_url}"
-    IDAM_S2S_URL = "${var.s2s_url}"
+    IDAM_S2S_URL = "${local.s2s_url}"
     DEFINITION_STORE_IDAM_KEY = "${data.vault_generic_secret.definition_store_item_key.data["value"]}"
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
   }
@@ -74,7 +84,7 @@ module "definition-store-db" {
 
 module "definition-store-vault" {
   source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-  name                = "ccd-definition-${var.env}" // Max 24 characters
+  name                = "${local.vaultName}" // Max 24 characters
   product             = "${var.product}"
   env                 = "${var.env}"
   tenant_id           = "${var.tenant_id}"

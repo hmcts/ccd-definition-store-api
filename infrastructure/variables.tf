@@ -1,6 +1,5 @@
 variable "product" {
   type    = "string"
-  default = "ccd"
 }
 
 variable "component" {
@@ -63,5 +62,3 @@ variable "use_uk_db" {
 variable "s2s_url" {
   default = "http://betaDevBccidamS2SLB.reform.hmcts.net"
 }
-
-
