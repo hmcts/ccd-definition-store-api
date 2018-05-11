@@ -104,7 +104,7 @@ resource "azurerm_key_vault_secret" "POSTGRES-USER" {
 
 resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
   name = "${local.app_full_name}-POSTGRES-PASS"
-  value = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_password : module.definition-store-db.postgresql_passworde}"
+  value = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_password : module.definition-store-db.postgresql_password}"
   vault_uri = "${module.definition-store-vault.key_vault_uri}"
 }
 
