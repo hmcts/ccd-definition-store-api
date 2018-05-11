@@ -20,7 +20,7 @@ public class WizardPageParser extends AbstractDisplayGroupParser {
         this.displayGroupType = DisplayGroupType.PAGE;
         this.displayGroupItemMandatory = false;
         this.sheetName = SheetName.CASE_EVENT_TO_FIELDS;
-        this.showConditionColumn = Optional.of(ColumnName.PAGE_SHOW_CONDITION);
+        this.groupShowConditionColumn = Optional.of(ColumnName.PAGE_SHOW_CONDITION);
         this.columnId = Optional.of(ColumnName.PAGE_COLUMN);
     }
 }

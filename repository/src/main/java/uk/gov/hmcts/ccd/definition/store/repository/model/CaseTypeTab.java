@@ -14,6 +14,7 @@ public class CaseTypeTab {
     private String label = null;
     private Integer order = null;
     private List<CaseTypeTabField> tabFields = new ArrayList<>();
+    private String showCondition;
 
     @ApiModelProperty(value = "")
     @JsonProperty("id")
@@ -52,5 +53,15 @@ public class CaseTypeTab {
 
     public void setTabFields(List<CaseTypeTabField> tabFields) {
         this.tabFields = tabFields;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("show_condition")
+    public String getShowCondition() {
+        return showCondition;
+    }
+
+    public void setShowCondition(String showCondition) {
+        this.showCondition = showCondition;
     }
 }

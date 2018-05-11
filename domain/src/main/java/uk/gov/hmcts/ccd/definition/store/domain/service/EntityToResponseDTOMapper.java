@@ -99,9 +99,11 @@ public interface EntityToResponseDTOMapper {
     CaseField map(ComplexFieldEntity complexFieldEntity);
 
     @Mapping(source = "displayGroupEntity.reference", target = "id")
+    @Mapping(source = "displayGroupEntity.showCondition", target = "showCondition")
     @Mapping(source = "displayGroupEntity.displayGroupCaseFields", target = "tabFields")
     CaseTypeTab map(DisplayGroupEntity displayGroupEntity);
 
+    @Mapping(source = "displayGroupCaseFieldEntity.showCondition", target = "showCondition")
     CaseTypeTabField map(DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity);
 
     @Mapping(source = "searchInputCaseFieldEntity.caseField.reference", target = "caseFieldId")

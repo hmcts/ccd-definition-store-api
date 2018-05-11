@@ -45,6 +45,14 @@ public class DisplayApiControllerTest {
     }
 
     @Test
+    public void  shouldReturnTabStructure(){
+        CaseTabCollection caseTabCollection = new CaseTabCollection();
+        when(displayService.findTabStructureForCaseType("XXX")).thenReturn(caseTabCollection);
+        subject.displayTabStructureIdGet("XXX");
+        verify(displayService, times(1)).findTabStructureForCaseType("XXX");
+    }
+
+    @Test
     public void  getWorkBasketItemResultDisplay(){
         WorkBasketResult workBasketResult = new WorkBasketResult();
         when(displayService.findWorkBasketDefinitionForCaseType("XXX")).thenReturn(workBasketResult);

@@ -12,6 +12,9 @@ public class AccessControlList {
 
     private Boolean delete;
 
+    public AccessControlList() {
+    }
+
     public AccessControlList(String role,
                              Boolean create,
                              Boolean read,
