@@ -19,8 +19,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 
+import java.util.List;
+
 public class DisplayGroupCaseFieldsValidatorImplTest {
 
+    private static final List<DisplayGroupEntity> UNUSED_DISPLAY_GROUPS = Lists.newArrayList();
     DisplayGroupEntity displayGroup;
     DisplayGroupCaseFieldsValidatorImpl testObj;
 
@@ -47,7 +50,7 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
         when(validator1.validate(anyObject())).thenReturn(new ValidationResult(ve1));
         when(validator2.validate(anyObject())).thenReturn(new ValidationResult(ve2));
 
-        ValidationResult result = testObj.validate(displayGroup);
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
         verify(validator1).validate(e1);
         verify(validator1).validate(e2);
@@ -65,7 +68,7 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
         when(validator1.validate(anyObject())).thenReturn(ValidationResult.SUCCESS);
         when(validator2.validate(anyObject())).thenReturn(ValidationResult.SUCCESS);
 
-        ValidationResult result = testObj.validate(displayGroup);
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
         assertThat(result.isValid(), is(true));
     }

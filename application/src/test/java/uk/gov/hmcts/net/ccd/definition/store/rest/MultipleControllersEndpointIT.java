@@ -10,10 +10,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
-import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 import java.io.InputStream;
@@ -22,6 +19,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -32,6 +30,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 public class MultipleControllersEndpointIT extends BaseTest {
     private static final String WIZARD_PAGE_STRUCTURE_URL_1 =
         "/api/display/wizard-page-structure/case-types/%s/event-triggers/%s";
+    private static final String TABS_STRUCTURE_URL =
+        "/api/display/tab-structure/%s";
     private static final String ROLES_URL = "/api/user-roles/%s";
     private static final String WORKBASKET_INPUT_DEFINITION_URL = "/api/display/work-basket-input-definition/%s";
     private static final String JURISDICTIONS_URL = "/api/data/jurisdictions";
@@ -58,12 +58,46 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .getContentAsString(), TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
         assertAll(
             () -> assertThat(workbasketInputDefinition.getFields(), hasSize(3)),
-            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(Matchers.hasProperty("label",
-                containsString("First Name")))),
-            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(Matchers.hasProperty("label",
-                containsString("Last Name")))),
-            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(Matchers.hasProperty("label",
-                containsString("Address"))))
+            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
+                                                                                        containsString("First Name")))),
+            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
+                                                                                        containsString("Last Name")))),
+            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
+                                                                                        containsString("Address"))))
+        );
+    }
+
+    @Test
+    public void shouldReturnTabsForTestAddressBookCase() throws Exception {
+        givenUserProfileReturnsSuccess();
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
+        MockMultipartFile file = new MockMultipartFile("file", inputStream);
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+                                                  .file(file)
+                                                  .header(AUTHORIZATION, "Bearer testUser"))
+            .andReturn();
+        assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+        final String CASE_TYPE = "TestAddressBookCase";
+        final String URL = String.format(TABS_STRUCTURE_URL, CASE_TYPE);
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
+            .andExpect(jsonPath("$.tabs").isArray())
+            .andReturn();
+
+        CaseTabCollection caseTabCollection = mapper.readValue(result.getResponse().getContentAsString(),
+                                                               TypeFactory.defaultInstance().constructType(CaseTabCollection.class));
+        assertAll(
+            () -> assertThat(caseTabCollection.getTabs(), hasSize(2)),
+            () -> assertThat(caseTabCollection.getTabs(), hasItem(allOf(hasProperty("showCondition", containsString("PersonLastName=\"Sparrow\"")),
+                                                                        hasProperty("id", containsString("NameTab")),
+                                                                        hasProperty("label", containsString("Name"))))),
+            () -> {
+                assertThat(caseTabCollection.getTabs().stream().filter(t -> t.getId().equals("NameTab")).findFirst().get(),
+                               hasProperty("tabFields", hasItem(allOf(
+                                   hasProperty("showCondition", containsString("PersonFirstName=\"Jack\"")),
+                                   hasProperty("caseField", hasProperty("id", containsString("PersonLastName")))))));
+            }
         );
     }
 
@@ -91,12 +125,12 @@ public class MultipleControllersEndpointIT extends BaseTest {
             TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
         assertAll(
             () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(3)),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label",
-                containsString("Personal Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label",
-                containsString("Address Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label",
-                containsString("A Label"))))
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
+                                                                                        containsString("Personal Information")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
+                                                                                        containsString("Address Information")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
+                                                                                        containsString("A Label"))))
         );
     }
 
@@ -123,12 +157,12 @@ public class MultipleControllersEndpointIT extends BaseTest {
             TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
         assertAll(
             () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(1)),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("label",
-                containsString("Contact Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("id", containsString
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
+                                                                                        containsString("Contact Information")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("id", containsString
                 ("createCaseContactPage")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(Matchers.hasProperty("wizardPageFields",
-                hasItem(Matchers.hasProperty("caseFieldId", containsString("ContectEmail"))))))
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("wizardPageFields",
+                                                                                        hasItem(hasProperty("caseFieldId", containsString("ContectEmail"))))))
         );
     }
 

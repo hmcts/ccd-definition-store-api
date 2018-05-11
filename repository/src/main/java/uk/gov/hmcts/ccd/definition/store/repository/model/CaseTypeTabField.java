@@ -8,6 +8,8 @@ public class CaseTypeTabField {
 
     private CaseField caseField = null;
     private Integer order = null;
+    private String showCondition = null;
+
 
     @JsonProperty("case_field")
     public CaseField getCaseField() {
@@ -25,5 +27,14 @@ public class CaseTypeTabField {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    @JsonProperty("show_condition")
+    public String getShowCondition() {
+        return showCondition;
+    }
+
+    public void setShowCondition(String showCondition) {
+        this.showCondition = showCondition;
     }
 }

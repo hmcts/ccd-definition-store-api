@@ -28,7 +28,7 @@ public abstract class BaseTest {
 
 
         final String s2sToken = aat.getS2SHelper()
-                                   .getToken(aat.getGatewayServiceName(), aat.getGatewayServiceSecret());
+                                   .getToken();
 
         return () -> RestAssured.given()
                           .header("Authorization", "Bearer " + caseworker.getAccessToken())
@@ -45,7 +45,7 @@ public abstract class BaseTest {
                                                 .authenticate("caseworker-autotest1");
 
         final String s2sToken = aat.getS2SHelper()
-            .getToken(aat.getDatastoreServiceName(), aat.getDatastoreServiceSecret());
+            .getToken();
         return () -> RestAssured.given()
             .header("Authorization", "Bearer " + caseworker.getAccessToken())
             .header("ServiceAuthorization", s2sToken)
@@ -62,7 +62,7 @@ public abstract class BaseTest {
                                                 .authenticate("caseworker-autotest1");
 
         final String s2sToken = aat.getS2SHelper()
-            .getToken(aat.getDatastoreServiceName(), aat.getDatastoreServiceSecret());
+            .getToken();
         return () -> RestAssured.given()
             .header("Authorization", "Bearer " + caseworker.getAccessToken())
             .header("ServiceAuthorization", s2sToken);

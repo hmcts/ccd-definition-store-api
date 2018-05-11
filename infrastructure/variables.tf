@@ -58,13 +58,3 @@ variable "use_uk_db" {
 variable "idam_api_url" {
   default = "http://betaDevBccidamAppLB.reform.hmcts.net"
 }
-
-////////////////////////////////
-// S2S
-////////////////////////////////
-
-variable "s2s_url" {
-  default = "http://betaDevBccidamS2SLB.reform.hmcts.net"
-}
-
-

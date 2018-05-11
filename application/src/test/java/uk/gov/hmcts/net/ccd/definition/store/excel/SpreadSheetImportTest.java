@@ -102,34 +102,6 @@ public class SpreadSheetImportTest extends BaseTest {
      */
     @Test
     @Transactional
-    public void importValidDefinitionFileUserProfileNotResponding() throws Exception {
-
-        final InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
-        final MockMultipartFile file = new MockMultipartFile("file", inputStream);
-
-        // Given WorkBasketUserDefaultService is not getting a response
-
-        // when I import a definition file
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                               .file(file)
-                                               .header(AUTHORIZATION, "Bearer testUser")).andReturn();
-
-        assertResponseCode(result, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-
-        // Check the error response message.
-        assertThat("Incorrect HTTP response",
-                   result.getResponse().getContentAsString(),
-                   allOf(containsString("Problem updating user profile"), containsString("404 Not Found")));
-    }
-
-    /**
-     * API test when user profile app fails to respond.
-     *
-     * @throws Exception
-     *         On error running test
-     */
-    @Test
-    @Transactional
     public void importValidDefinitionFileUserProfileHas403Response() throws Exception {
 
         final InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
@@ -495,8 +467,47 @@ public class SpreadSheetImportTest extends BaseTest {
 
         List<Map<String, Object>> caseTypeDisplayGroup = jdbcTemplate.queryForList(
             "SELECT * FROM display_group WHERE case_type_id = ? AND type = 'TAB'",
-            caseTypesId.get("TestComplexAddressBookCase"));
+            caseTypesId.get("TestAddressBookCase"));
         assertThat(caseTypeDisplayGroup,
+                   allOf(hasItem(allOf(hasColumn("reference", "NameTab"),
+                                       hasColumn("label", "Name"),
+                                       hasColumn("display_order", 1),
+                                       hasColumn("show_condition", "PersonLastName=\"Sparrow\""))
+
+                         ),
+                         hasItem(allOf(hasColumn("reference", "AddressTab"),
+                                       hasColumn("label", "Address"),
+                                       hasColumn("display_order", 2)))));
+
+
+        Map<Object, Object> caseFieldIds = getIdsByReference(
+            "SELECT reference, id FROM case_field where case_type_id = ?",
+            "TestAddressBookCase");
+        Map<Object, Object> displayGroupsId = getIdsByReference(
+            "SELECT reference, id FROM display_group where case_type_id = ?",
+            "TestAddressBookCase");
+
+        List<Map<String, Object>> displayGroupsFields = jdbcTemplate.queryForList(
+            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id "
+                + "AND dg.type = 'TAB' AND case_type_id = ?", caseTypesId.get("TestAddressBookCase"));
+
+        assertThat(displayGroupsFields, hasSize(3));
+        assertThat(displayGroupsFields,
+                   allOf(hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("NameTab")),
+                                       hasColumn("display_order", 2),
+                                       hasColumn("show_condition", "PersonFirstName=\"Jack\""),
+                                       hasColumn("case_field_id", caseFieldIds.get("PersonLastName")))),
+                         hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("NameTab")),
+                                       hasColumn("display_order", 1),
+                                       hasColumn("case_field_id", caseFieldIds.get("PersonFirstName")))),
+                         hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("AddressTab")),
+                                       hasColumn("display_order", 1),
+                                       hasColumn("case_field_id", caseFieldIds.get("PersonAddress"))))));
+
+        List<Map<String, Object>> complexCaseTypeDisplayGroup = jdbcTemplate.queryForList(
+            "SELECT * FROM display_group WHERE case_type_id = ? AND type = 'TAB'",
+            caseTypesId.get("TestComplexAddressBookCase"));
+        assertThat(complexCaseTypeDisplayGroup,
                    allOf(hasItem(allOf(hasColumn("reference", "NameTab"),
                                        hasColumn("label", "Name"),
                                        hasColumn("display_order", 1))
@@ -506,27 +517,27 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("label", "Details"),
                                        hasColumn("display_order", 3)))));
 
-        Map<Object, Object> caseFieldIds = getIdsByReference(
+        Map<Object, Object> complexCaseFieldIds = getIdsByReference(
             "SELECT reference, id FROM case_field where case_type_id = ?",
             "TestComplexAddressBookCase");
-        Map<Object, Object> displayGroupsId = getIdsByReference(
+        Map<Object, Object> complexDisplayGroupsId = getIdsByReference(
             "SELECT reference, id FROM display_group where case_type_id = ?",
             "TestComplexAddressBookCase");
 
-        List<Map<String, Object>> displayGroupsFields = jdbcTemplate.queryForList(
+        List<Map<String, Object>> complexDisplayGroupsFields = jdbcTemplate.queryForList(
             "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id "
-                + "AND dg.type = 'TAB';");
-        assertThat(displayGroupsFields, hasSize(13));
-        assertThat(displayGroupsFields,
-                   allOf(hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("NameTab")),
+                + "AND dg.type = 'TAB'  AND case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
+        assertThat(complexDisplayGroupsFields, hasSize(10));
+        assertThat(complexDisplayGroupsFields,
+                   allOf(hasItem(allOf(hasColumn("display_group_id", complexDisplayGroupsId.get("NameTab")),
                                        hasColumn("display_order", 1),
-                                       hasColumn("case_field_id", caseFieldIds.get("PersonFirstName")))),
-                         hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("NameTab")),
+                                       hasColumn("case_field_id", complexCaseFieldIds.get("PersonFirstName")))),
+                         hasItem(allOf(hasColumn("display_group_id", complexDisplayGroupsId.get("NameTab")),
                                        hasColumn("display_order", 2),
-                                       hasColumn("case_field_id", caseFieldIds.get("PersonLastName")))),
-                         hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("ContectEmail")),
+                                       hasColumn("case_field_id", complexCaseFieldIds.get("PersonLastName")))),
+                         hasItem(allOf(hasColumn("display_group_id", complexDisplayGroupsId.get("ContectEmail")),
                                        hasColumn("display_order", 4),
-                                       hasColumn("case_field_id", caseFieldIds.get("ContectEmail"))))));
+                                       hasColumn("case_field_id", complexCaseFieldIds.get("ContectEmail"))))));
 
     }
 
@@ -541,7 +552,7 @@ public class SpreadSheetImportTest extends BaseTest {
         assertThat(caseTypeDisplayGroup,
                    allOf(hasItem(allOf(hasColumn("reference", "createCaseInfoPage"),
                                        hasColumn("label", "Required Information1"),
-                                       hasColumn("show_condition", "HasOtherInfo=\"Yes\""),
+                                       hasColumn("show_condition", "HasOtherInfo=\"No\""),
                                        hasColumn("display_order", 2))),
                          hasItem(allOf(hasColumn("reference", "enterCaseIntoLegacyPage1"),
                                        hasColumn("label", "A Label"),
