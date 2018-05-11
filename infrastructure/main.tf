@@ -30,6 +30,10 @@ data "vault_generic_secret" "definition_store_item_key" {
   path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-definition"
 }
 
+data "vault_generic_secret" "gateway_idam_key" {
+  path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-gw"
+}
+
 module "case-definition-store-api" {
   source   = "git@github.com:contino/moj-module-webapp?ref=master"
   product  = "${local.app_full_name}"
@@ -126,3 +130,8 @@ resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   vault_uri = "${module.definition-store-vault.key_vault_uri}"
 }
 
+resource "azurerm_key_vault_secret" "gw_s2s_key" {
+  name = "microserviceGatewaySecret"
+  value = "${data.vault_generic_secret.gateway_idam_key.data["value"]}"
+  vault_uri = "${module.definition-store-vault.key_vault_uri}"
+}
