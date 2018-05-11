@@ -25,13 +25,6 @@
     </suppress>
     <suppress>
         <notes>
-            Introduced by service-token-generator-spring-2.1.0.jar
-        </notes>
-        <cve>CVE-2016-9878</cve>
-    </suppress>
-
-    <suppress>
-        <notes>
             Introduced by Spring 4.3.13.RELEASE; Upgrade to Spring Boot 1.5.12 or Spring Boot 2 to resolve.
         </notes>
         <cve>CVE-2018-1199</cve>
@@ -47,5 +40,22 @@
             Only affect PATCH requests, those are not supported by CCD APIs.
         </notes>
         <cve>CVE-2017-8046</cve>
+    </suppress>
+    <suppress>
+        <notes>SSL related</notes>
+        <cve>CVE-2014-3488</cve>
+    </suppress>
+    <suppress>
+        <notes>cookie related</notes>
+        <cve>CVE-2015-2156</cve>
+    </suppress>
+    <suppress>
+        <notes>ssl related</notes>
+        <cve>CVE-2016-4970</cve>
+    </suppress>
+    <suppress>
+        <notes>suppress false positives</notes>
+        <gav regex="true">^org\.apache\.tomcat:tomcat-annotations-api:.*$</gav>
+        <cpe>cpe:/a:apache:tomcat</cpe>
     </suppress>
 </suppressions>
