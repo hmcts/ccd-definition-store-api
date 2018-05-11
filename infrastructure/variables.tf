@@ -60,23 +60,6 @@ variable "idam_api_url" {
 }
 
 ////////////////////////////////
-// Database
-////////////////////////////////
-
-variable "postgresql_user" {
-  default = "ccd"
-}
-
-variable "database_name" {
-  default = "ccd_definition"
-}
-
-variable "use_uk_db" {
-  type = "string"
-  default = "false"
-}
-
-////////////////////////////////
 // S2S
 ////////////////////////////////
 
