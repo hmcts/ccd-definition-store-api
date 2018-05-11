@@ -102,34 +102,6 @@ public class SpreadSheetImportTest extends BaseTest {
      */
     @Test
     @Transactional
-    public void importValidDefinitionFileUserProfileNotResponding() throws Exception {
-
-        final InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
-        final MockMultipartFile file = new MockMultipartFile("file", inputStream);
-
-        // Given WorkBasketUserDefaultService is not getting a response
-
-        // when I import a definition file
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                               .file(file)
-                                               .header(AUTHORIZATION, "Bearer testUser")).andReturn();
-
-        assertResponseCode(result, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-
-        // Check the error response message.
-        assertThat("Incorrect HTTP response",
-                   result.getResponse().getContentAsString(),
-                   allOf(containsString("Problem updating user profile"), containsString("404 Not Found")));
-    }
-
-    /**
-     * API test when user profile app fails to respond.
-     *
-     * @throws Exception
-     *         On error running test
-     */
-    @Test
-    @Transactional
     public void importValidDefinitionFileUserProfileHas403Response() throws Exception {
 
         final InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();

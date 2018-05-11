@@ -1,8 +1,8 @@
 // until https://github.com/gradle/gradle/issues/867 is 'resolved'
 // see also https://github.com/nebula-plugins/gradle-extra-configurations-plugin
 plugins {
-    id 'nebula.optional-base' version '3.0.3'
-    id 'nebula.provided-base' version '3.0.3'
+    id 'nebula.optional-base' version '3.3.0'
+    id 'nebula.provided-base' version '3.3.0'
 }
 
 apply plugin: 'nebula.optional-base'
