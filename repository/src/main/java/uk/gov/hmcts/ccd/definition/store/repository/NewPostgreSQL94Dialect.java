@@ -7,7 +7,8 @@ import java.sql.Types;
 public class NewPostgreSQL94Dialect extends PostgreSQL94Dialect {
 
     public NewPostgreSQL94Dialect() {
-        this.registerColumnType(Types.JAVA_OBJECT, "jsonb");
+        registerColumnType(Types.JAVA_OBJECT, "jsonb");
+        registerColumnType(Types.NULL, "null");  // need for gradle task `liquibaseDiffChangelog`
     }
 
 }

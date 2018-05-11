@@ -9,13 +9,6 @@ def product = "ccd"
 def app = "definition-store-api"
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret('importerAutoTest1Email', 'CCD_IMPORT_AUTOTEST_EMAIL'),
-    secret('importerAutoTest1Password', 'CCD_IMPORT_AUTOTEST_PASSWORD'),
-    secret('caseworkerAutoTest1Email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
-    secret('caseworkerAutoTest1Password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
-    secret('microserviceDataStoreName', 'CCD_DS_SERVICE_NAME'),
-    secret('microserviceDataStoreSecret', 'CCD_DS_SERVICE_SECRET'),
-    secret('microserviceGatewayName', 'CCD_GW_SERVICE_NAME'),
     secret('microserviceGatewaySecret', 'CCD_GW_SERVICE_SECRET'),
 ]
 
@@ -31,4 +24,6 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 
 withPipeline(type, product, app) {
     loadVaultSecrets(secrets)
+    enableDbMigration()
+    enableSlackNotifications('#ccd-notifications')
 }
