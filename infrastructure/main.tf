@@ -30,6 +30,10 @@ data "vault_generic_secret" "definition_store_item_key" {
   path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-definition"
 }
 
+data "vault_generic_secret" "gateway_idam_key" {
+  path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-gw"
+}
+
 module "case-definition-store-api" {
   source   = "git@github.com:contino/moj-module-webapp?ref=master"
   product  = "${local.app_full_name}"
@@ -88,4 +92,10 @@ module "definition-store-vault" {
   object_id           = "${var.jenkins_AAD_objectId}"
   resource_group_name = "${module.case-definition-store-api.resource_group_name}"
   product_group_object_id = "be8b3850-998a-4a66-8578-da268b8abd6b"
+}
+
+resource "azurerm_key_vault_secret" "gw_s2s_key" {
+  name = "microserviceGatewaySecret"
+  value = "${data.vault_generic_secret.gateway_idam_key.data["value"]}"
+  vault_uri = "${module.definition-store-vault.key_vault_uri}"
 }
