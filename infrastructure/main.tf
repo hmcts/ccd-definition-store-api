@@ -4,6 +4,7 @@ provider "vault" {
 
 locals {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   app_full_name = "${var.product}-${var.component}"
 
@@ -11,6 +12,10 @@ locals {
   app_full_name = "${var.product}-${var.component}"
 
 >>>>>>> babe3c93f46d310ba9f0464cf8fe32bc2a3b2630
+=======
+  app_full_name = "${var.product}-${var.component}"
+
+>>>>>>> 1030633d75fa2e506d68dbc3973bfed88c2287ff
   aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
 
   local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
