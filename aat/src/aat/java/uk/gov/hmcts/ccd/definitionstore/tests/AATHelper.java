@@ -27,30 +27,6 @@ public enum AATHelper {
         return System.getenv("S2S_URL");
     }
 
-    public String getImporterAutoTestEmail() {
-        return System.getenv("CCD_IMPORT_AUTOTEST_EMAIL");
-    }
-
-    public String getImporterAutoTestPassword() {
-        return System.getenv("CCD_IMPORT_AUTOTEST_PASSWORD");
-    }
-
-    public String getCaseworkerAutoTestEmail() {
-        return System.getenv("CCD_CASEWORKER_AUTOTEST_EMAIL");
-    }
-
-    public String getCaseworkerAutoTestPassword() {
-        return System.getenv("CCD_CASEWORKER_AUTOTEST_PASSWORD");
-    }
-
-    public String getDatastoreServiceName() {
-        return System.getenv("CCD_DS_SERVICE_NAME");
-    }
-
-    public String getDatastoreServiceSecret() {
-        return System.getenv("CCD_DS_SERVICE_SECRET");
-    }
-
     public String getGatewayServiceName() {
         return System.getenv("CCD_GW_SERVICE_NAME");
     }
