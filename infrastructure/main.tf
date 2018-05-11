@@ -3,7 +3,6 @@ provider "vault" {
 }
 
 locals {
-
   app_full_name = "${var.product}-${var.component}"
 
   aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
@@ -33,18 +32,18 @@ data "vault_generic_secret" "definition_store_item_key" {
 
 module "case-definition-store-api" {
   source   = "git@github.com:contino/moj-module-webapp?ref=master"
-  product  = "${var.product}-definition-store-api"
+  product  = "${local.app_full_name}"
   location = "${var.location}"
   env      = "${var.env}"
   ilbIp    = "${var.ilbIp}"
   subscription = "${var.subscription}"
 
   app_settings = {
-    DEFINITION_STORE_DB_HOST = "${module.postgres-case-definition-store.host_name}"
-    DEFINITION_STORE_DB_PORT = "${module.postgres-case-definition-store.postgresql_listen_port}"
-    DEFINITION_STORE_DB_NAME = "${module.postgres-case-definition-store.postgresql_database}"
-    DEFINITION_STORE_DB_USERNAME = "${module.postgres-case-definition-store.user_name}"
-    DEFINITION_STORE_DB_PASSWORD = "${module.postgres-case-definition-store.postgresql_password}"
+    DEFINITION_STORE_DB_HOST = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.host_name : module.definition-store-db.host_name}"
+    DEFINITION_STORE_DB_PORT = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_listen_port : module.definition-store-db.postgresql_listen_port}"
+    DEFINITION_STORE_DB_NAME = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_database : module.definition-store-db.postgresql_database}"
+    DEFINITION_STORE_DB_USERNAME = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.user_name : module.definition-store-db.user_name}"
+    DEFINITION_STORE_DB_PASSWORD = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_password : module.definition-store-db.postgresql_password}"
 
     UK_DB_HOST = "${module.definition-store-db.host_name}"
     UK_DB_PORT = "${module.definition-store-db.postgresql_listen_port}"
