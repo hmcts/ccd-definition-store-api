@@ -28,6 +28,7 @@ public class CaseEvent implements HasAcls {
     private SecurityClassification securityClassification;
     private List<AccessControlList> acls = new ArrayList<>();
     private Boolean showSummary = null;
+    private Boolean showEventNotes = null;
 
     /**
      **/
@@ -209,5 +210,17 @@ public class CaseEvent implements HasAcls {
 
     public void setShowSummary(final Boolean showSummary) {
         this.showSummary = showSummary;
+    }
+
+    /**
+     */
+    @ApiModelProperty(value = "")
+    @JsonProperty("show_event_notes")
+    public Boolean getShowEventNotes() {
+        return showEventNotes;
+    }
+
+    public void setShowEventNotes(Boolean showEventNotes) {
+        this.showEventNotes = showEventNotes;
     }
 }

@@ -100,6 +100,9 @@ public class EventEntity implements Serializable {
     @JoinColumn(name = "event_id")
     private final List<EventUserRoleEntity> eventUserRoles = new ArrayList<>();
 
+    @Column(name = "show_event_notes")
+    private Boolean showEventNotes;
+
     public String getName() {
         return name;
     }
@@ -256,5 +259,13 @@ public class EventEntity implements Serializable {
 
     public boolean hasField(String fieldReference) {
         return eventCaseFields.stream().anyMatch(ecf -> ecf.getCaseField().getReference().equals(fieldReference));
+    }
+
+    public Boolean getShowEventNotes() {
+        return showEventNotes;
+    }
+
+    public void setShowEventNotes(Boolean showEventNotes) {
+        this.showEventNotes = showEventNotes;
     }
 }
