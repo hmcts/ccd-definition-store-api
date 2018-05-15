@@ -143,7 +143,7 @@
       "delete" : false
     } ],
     "show_summary" : false,
-    "show_event_notes" : true
+    "show_event_notes" : null
   } ],
   "states" : [ {
     "id" : "CaseCreated",
