@@ -4,7 +4,7 @@
 
     <changeSet id="rdm-2054" author="andrzej.folga@hmcts.net" runInTransaction="false">
         <addColumn tableName="event">
-            <column name="show_event_fields" type="boolean"/>
+            <column name="show_event_notes" type="boolean"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>
