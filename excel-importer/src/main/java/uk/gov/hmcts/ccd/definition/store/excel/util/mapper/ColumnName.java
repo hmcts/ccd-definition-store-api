@@ -49,6 +49,7 @@ public enum ColumnName {
     PAGE_SHOW_CONDITION("PageShowCondition"),
     TAB_SHOW_CONDITION("TabShowCondition"),
     SHOW_SUMMARY("ShowSummary"),
+    SHOW_EVENT_NOTES("ShowEventNotes"),
     SHOW_SUMMARY_CHANGE_OPTION("ShowSummaryChangeOption"),
     SHOW_SUMMARY_CONTENT_OPTION("ShowSummaryContentOption"),
     STATE_ID("CaseStateID"),

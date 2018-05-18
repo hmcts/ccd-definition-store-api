@@ -42,7 +42,7 @@ public class EntityToResponseDTOMapperTest {
     }
 
     @Nested
-    @DisplayName("")
+    @DisplayName("Should return a CaseEventField which matches the EventCaseFieldEntity")
     class MapEventCaseFieldEntity {
 
         @Test
@@ -62,6 +62,25 @@ public class EntityToResponseDTOMapperTest {
                 () -> assertEquals(caseEventField.getShowCondition(), eventCaseFieldEntity.getShowCondition()),
                 () -> assertEquals(caseEventField.getShowSummaryChangeOption(), eventCaseFieldEntity.getShowSummaryChangeOption()),
                 () -> assertEquals(caseEventField.getShowSummaryContentOption(), eventCaseFieldEntity.getShowSummaryContentOption())
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("Should return a CaseEventField which matches the EventCaseFieldEntity")
+    class MapEventEntity {
+
+        @Test
+        public void shouldMapToCaseEvent() throws Exception {
+            EventEntity eventEntity = new EventEntity();
+            eventEntity.setShowEventNotes(true);
+
+            CaseEvent caseEvent = spyOnClassUnderTest.map(
+                eventEntity
+            );
+
+            assertAll(
+                () -> assertEquals(eventEntity.getShowEventNotes(), caseEvent.getShowEventNotes())
             );
         }
     }
