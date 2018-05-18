@@ -18,6 +18,7 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -37,6 +38,25 @@ public class EntityToResponseDTOMapperTest {
     @BeforeEach
     public void setUpSpy() throws Exception {
         spyOnClassUnderTest = spy(classUnderTest);
+    }
+
+    @Nested
+    @DisplayName("")
+    class MapEventEntity {
+
+        @Test
+        public void shouldMapToCaseEvent() throws Exception {
+            EventEntity eventEntity = new EventEntity();
+            eventEntity.setShowEventNotes(true);
+
+            CaseEvent caseEvent = spyOnClassUnderTest.map(
+                eventEntity
+            );
+
+            assertAll(
+                () -> assertEquals(eventEntity.getShowEventNotes(), caseEvent.getShowEventNotes())
+            );
+        }
     }
 
     @Nested

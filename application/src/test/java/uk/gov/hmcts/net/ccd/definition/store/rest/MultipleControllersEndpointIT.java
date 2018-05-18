@@ -35,6 +35,36 @@ public class MultipleControllersEndpointIT extends BaseTest {
     private static final String ROLES_URL = "/api/user-roles/%s";
     private static final String WORKBASKET_INPUT_DEFINITION_URL = "/api/display/work-basket-input-definition/%s";
     private static final String JURISDICTIONS_URL = "/api/data/jurisdictions";
+    private static final String CASE_TYPE_URL = "/api/data/case-type/%s";
+
+    @Test
+    public void shouldReturnCaseType() throws Exception {
+        givenUserProfileReturnsSuccess();
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
+        MockMultipartFile file = new MockMultipartFile("file", inputStream);
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+                                                  .file(file)
+                                                  .header(AUTHORIZATION, "Bearer testUser"))
+            .andReturn();
+        assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+        final String CASE_TYPE = "TestAddressBookCase";
+        final String URL = String.format(CASE_TYPE_URL, CASE_TYPE);
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(jsonPath("$.id").value(CASE_TYPE))
+            .andReturn();
+
+        final CaseType caseType = mapper.readValue(result.getResponse()
+                                                       .getContentAsString(), TypeFactory.defaultInstance().constructType(CaseType.class));
+        assertAll(
+            () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("createCase")).findFirst().get(),
+                             hasProperty("showEventNotes", equalTo(true))),
+            () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                             hasProperty("showEventNotes", equalTo(false))),
+            () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("stopCase")).findFirst().get(),
+                             hasProperty("showEventNotes", nullValue()))
+        );
+    }
 
     // To be @Nested - DisplayAPI Controller
     @Test

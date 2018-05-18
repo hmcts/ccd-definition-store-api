@@ -64,6 +64,7 @@
       "delete" : false
     } ],
     "show_summary" : true,
+    "show_event_notes" : true,
     "end_button_label": "Save"
   }, {
     "id" : "enterCaseIntoLegacy",
@@ -113,6 +114,7 @@
       "delete" : false
     } ],
     "show_summary" : false,
+    "show_event_notes" : false,
     "end_button_label": "Create Draft"
   }, {
     "id" : "stopCase",
@@ -143,6 +145,7 @@
       "delete" : false
     } ],
     "show_summary" : false,
+    "show_event_notes" : null,
     "end_button_label": null
   } ],
   "states" : [ {
