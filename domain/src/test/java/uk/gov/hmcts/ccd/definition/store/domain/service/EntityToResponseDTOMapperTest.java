@@ -58,10 +58,10 @@ public class EntityToResponseDTOMapperTest {
             );
 
             assertAll(
-                () -> assertEquals(caseEventField.getDisplayContext(), eventCaseFieldEntity.getDisplayContext().name()),
-                () -> assertEquals(caseEventField.getShowCondition(), eventCaseFieldEntity.getShowCondition()),
-                () -> assertEquals(caseEventField.getShowSummaryChangeOption(), eventCaseFieldEntity.getShowSummaryChangeOption()),
-                () -> assertEquals(caseEventField.getShowSummaryContentOption(), eventCaseFieldEntity.getShowSummaryContentOption())
+                () -> assertEquals("displayContext", eventCaseFieldEntity.getDisplayContext().name(), caseEventField.getDisplayContext()),
+                () -> assertEquals("showCondition", eventCaseFieldEntity.getShowCondition(), caseEventField.getShowCondition()),
+                () -> assertEquals("showSummaryChangeOption", eventCaseFieldEntity.getShowSummaryChangeOption(), caseEventField.getShowSummaryChangeOption()),
+                () -> assertEquals("showSummaryContentOption", eventCaseFieldEntity.getShowSummaryContentOption(), caseEventField.getShowSummaryContentOption())
             );
         }
     }

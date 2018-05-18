@@ -64,7 +64,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
             () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
                              hasProperty("caseFields", hasItem(allOf(
                                  hasProperty("showSummaryContentOption", equalTo(1)),
-                                 hasProperty("caseFieldId", containsString("PersonLastName"))))))
+                                 hasProperty("caseFieldId", containsString("PersonLastName")))))),
             () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("createCase")).findFirst().get(),
                              hasProperty("showEventNotes", equalTo(true))),
             () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
