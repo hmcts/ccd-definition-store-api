@@ -68,17 +68,6 @@
                         and jurisdiction_id is null)" />
         </insert>
 
-        <insert tableName="complex_field">
-            <column name="reference" value="BalanceDue" />
-            <column name="label" value="Balance Due" />
-            <column name="security_classification" value="PUBLIC" />
-            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'MoneyGBP' and version = 1 and jurisdiction_id is null)" />
-            <column name="complex_field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Fee'
-                        and version = 1
-                        and jurisdiction_id is null)" />
-        </insert>
-
         <insert tableName="field_type">
             <column name="created_at" value="${now}" />
             <column name="reference" value="FeesList" />
