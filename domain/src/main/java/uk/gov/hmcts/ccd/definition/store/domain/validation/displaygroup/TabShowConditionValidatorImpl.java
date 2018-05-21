@@ -78,7 +78,7 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
     }
 
     private boolean isInTabDisplayGroups(List<DisplayGroupEntity> tabDisplayGroups, String showConditionField) {
-        return tabDisplayGroups.stream().filter(tdg -> tdg.hasField(showConditionField)).findFirst().isPresent();
+        return tabDisplayGroups.stream().anyMatch(tdg -> tdg.hasField(showConditionField));
     }
 
     private boolean tabPreconditions(DisplayGroupEntity displayGroup) {
