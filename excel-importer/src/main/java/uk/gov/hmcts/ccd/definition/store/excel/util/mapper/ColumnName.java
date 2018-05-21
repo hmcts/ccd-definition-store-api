@@ -20,6 +20,7 @@ public enum ColumnName {
     DISPLAY_ORDER("DisplayOrder"),
     DISPLAY_CONTEXT("DisplayContext"),
     ELEMENT_LABEL("ElementLabel"),
+    END_BUTTON_LABEL("EndButtonLabel"),
     FIELD_TYPE("FieldType"),
     FIELD_TYPE_PARAMETER("FieldTypeParameter"),
     HINT_TEXT("HintText"),

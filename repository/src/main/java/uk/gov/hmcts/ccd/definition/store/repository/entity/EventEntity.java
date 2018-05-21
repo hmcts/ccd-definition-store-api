@@ -62,6 +62,9 @@ public class EventEntity implements Serializable {
     @Column(name = "show_summary")
     private Boolean showSummary;
 
+    @Column(name = "end_button_label")
+    private String endButtonLabel;
+
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "post_state_id")
     private StateEntity postState;
@@ -177,6 +180,14 @@ public class EventEntity implements Serializable {
 
     public void setShowSummary(final Boolean showSummary) {
         this.showSummary = showSummary;
+    }
+
+    public String getEndButtonLabel() {
+        return endButtonLabel;
+    }
+
+    public void setEndButtonLabel(String endButtonLabel) {
+        this.endButtonLabel = endButtonLabel;
     }
 
     public CaseTypeEntity getCaseType() {

@@ -291,6 +291,7 @@ public class EntityToResponseDTOMapperTest {
             assertNull(caseEvent.getSecurityClassification());
             assertTrue(caseEvent.getAcls().isEmpty());
             assertNull(caseEvent.getShowSummary());
+            assertNull(caseEvent.getEndButtonLabel());
 
             assertEquals(1, caseEvent.getPreStates().size());
             assertThat(caseEvent.getPreStates(), hasItems("*"));
@@ -391,6 +392,7 @@ public class EntityToResponseDTOMapperTest {
             eventEntity.setOrder(69);
             eventEntity.setSecurityClassification(SecurityClassification.RESTRICTED);
             eventEntity.setShowSummary(Boolean.TRUE);
+            eventEntity.setEndButtonLabel("Create Draft");
 
             Integer startTimeout1 = 691;
             Integer startTimeout2 = 692;
@@ -451,6 +453,7 @@ public class EntityToResponseDTOMapperTest {
             assertEquals(eventEntity.getSecurityClassification(), caseEvent.getSecurityClassification());
             assertAcls(eventEntity.getEventUserRoles(), caseEvent.getAcls());
             assertEquals(eventEntity.getShowSummary(), caseEvent.getShowSummary());
+            assertEquals(eventEntity.getEndButtonLabel(), caseEvent.getEndButtonLabel());
 
             return caseEvent;
 

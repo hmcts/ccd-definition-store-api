@@ -29,6 +29,7 @@ public class CaseEvent implements HasAcls {
     private List<AccessControlList> acls = new ArrayList<>();
     private Boolean showSummary = null;
     private Boolean showEventNotes = null;
+    private String endButtonLabel = null;
 
     /**
      **/
@@ -222,5 +223,15 @@ public class CaseEvent implements HasAcls {
 
     public void setShowEventNotes(Boolean showEventNotes) {
         this.showEventNotes = showEventNotes;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("end_button_label")
+    public String getEndButtonLabel() {
+        return endButtonLabel;
+    }
+
+    public void setEndButtonLabel(final String endButtonLabel) {
+        this.endButtonLabel = endButtonLabel;
     }
 }
