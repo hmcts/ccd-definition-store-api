@@ -18,6 +18,7 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -37,6 +38,25 @@ public class EntityToResponseDTOMapperTest {
     @BeforeEach
     public void setUpSpy() throws Exception {
         spyOnClassUnderTest = spy(classUnderTest);
+    }
+
+    @Nested
+    @DisplayName("")
+    class MapEventEntity {
+
+        @Test
+        public void shouldMapToCaseEvent() throws Exception {
+            EventEntity eventEntity = new EventEntity();
+            eventEntity.setShowEventNotes(true);
+
+            CaseEvent caseEvent = spyOnClassUnderTest.map(
+                eventEntity
+            );
+
+            assertAll(
+                () -> assertEquals(eventEntity.getShowEventNotes(), caseEvent.getShowEventNotes())
+            );
+        }
     }
 
     @Nested
@@ -271,6 +291,7 @@ public class EntityToResponseDTOMapperTest {
             assertNull(caseEvent.getSecurityClassification());
             assertTrue(caseEvent.getAcls().isEmpty());
             assertNull(caseEvent.getShowSummary());
+            assertNull(caseEvent.getEndButtonLabel());
 
             assertEquals(1, caseEvent.getPreStates().size());
             assertThat(caseEvent.getPreStates(), hasItems("*"));
@@ -371,6 +392,7 @@ public class EntityToResponseDTOMapperTest {
             eventEntity.setOrder(69);
             eventEntity.setSecurityClassification(SecurityClassification.RESTRICTED);
             eventEntity.setShowSummary(Boolean.TRUE);
+            eventEntity.setEndButtonLabel("Create Draft");
 
             Integer startTimeout1 = 691;
             Integer startTimeout2 = 692;
@@ -431,6 +453,7 @@ public class EntityToResponseDTOMapperTest {
             assertEquals(eventEntity.getSecurityClassification(), caseEvent.getSecurityClassification());
             assertAcls(eventEntity.getEventUserRoles(), caseEvent.getAcls());
             assertEquals(eventEntity.getShowSummary(), caseEvent.getShowSummary());
+            assertEquals(eventEntity.getEndButtonLabel(), caseEvent.getEndButtonLabel());
 
             return caseEvent;
 
