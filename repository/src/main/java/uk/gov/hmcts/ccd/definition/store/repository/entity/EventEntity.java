@@ -62,6 +62,9 @@ public class EventEntity implements Serializable {
     @Column(name = "show_summary")
     private Boolean showSummary;
 
+    @Column(name = "end_button_label")
+    private String endButtonLabel;
+
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "post_state_id")
     private StateEntity postState;
@@ -99,6 +102,9 @@ public class EventEntity implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "event_id")
     private final List<EventUserRoleEntity> eventUserRoles = new ArrayList<>();
+
+    @Column(name = "show_event_notes")
+    private Boolean showEventNotes;
 
     public String getName() {
         return name;
@@ -174,6 +180,14 @@ public class EventEntity implements Serializable {
 
     public void setShowSummary(final Boolean showSummary) {
         this.showSummary = showSummary;
+    }
+
+    public String getEndButtonLabel() {
+        return endButtonLabel;
+    }
+
+    public void setEndButtonLabel(String endButtonLabel) {
+        this.endButtonLabel = endButtonLabel;
     }
 
     public CaseTypeEntity getCaseType() {
@@ -256,5 +270,13 @@ public class EventEntity implements Serializable {
 
     public boolean hasField(String fieldReference) {
         return eventCaseFields.stream().anyMatch(ecf -> ecf.getCaseField().getReference().equals(fieldReference));
+    }
+
+    public Boolean getShowEventNotes() {
+        return showEventNotes;
+    }
+
+    public void setShowEventNotes(Boolean showEventNotes) {
+        this.showEventNotes = showEventNotes;
     }
 }
