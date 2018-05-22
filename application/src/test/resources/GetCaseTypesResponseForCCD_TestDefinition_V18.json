@@ -67,7 +67,8 @@
       "delete" : false
     } ],
     "show_summary" : true,
-    "show_event_notes" : true
+    "show_event_notes" : true,
+    "end_button_label": "Save"
   }, {
     "id" : "enterCaseIntoLegacy",
     "name" : "Enter into legacy system",
@@ -121,7 +122,8 @@
       "delete" : false
     } ],
     "show_summary" : false,
-    "show_event_notes" : false
+    "show_event_notes" : false,
+    "end_button_label": "Create Draft"
   }, {
     "id" : "stopCase",
     "name" : "Put the case on hold",
@@ -151,7 +153,8 @@
       "delete" : false
     } ],
     "show_summary" : false,
-    "show_event_notes" : null
+    "show_event_notes" : null,
+    "end_button_label": null
   } ],
   "states" : [ {
     "id" : "CaseCreated",

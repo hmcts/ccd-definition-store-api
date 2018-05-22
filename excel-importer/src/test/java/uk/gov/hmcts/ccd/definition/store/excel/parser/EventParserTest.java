@@ -220,6 +220,7 @@ public class EventParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.ID.toString(), EVENT_ID);
         item.addAttribute(ColumnName.NAME.toString(), "event name");
         item.addAttribute(ColumnName.DESCRIPTION.toString(), "event Description");
+        item.addAttribute(ColumnName.END_BUTTON_LABEL.toString(), "End Button Label");
         return item;
     }
 
