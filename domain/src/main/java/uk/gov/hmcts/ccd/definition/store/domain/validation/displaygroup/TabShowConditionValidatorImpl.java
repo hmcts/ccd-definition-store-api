@@ -29,7 +29,7 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
     @Override
     public ValidationResult validate(DisplayGroupEntity thisDisplayGroup, List<DisplayGroupEntity> allDisplayGroups) {
         ValidationResult validationResult = new ValidationResult();
-        List allTabDisplayGroups = getAllTabDisplayGroups(thisDisplayGroup, allDisplayGroups);
+        List<DisplayGroupEntity> allTabDisplayGroups = getAllTabDisplayGroups(thisDisplayGroup, allDisplayGroups);
 
         if (tabPreconditions(thisDisplayGroup)) {
             ShowCondition showCondition;
@@ -69,7 +69,7 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
         return validationResult;
     }
 
-    private List getAllTabDisplayGroups(DisplayGroupEntity thisDisplayGroup, Collection<DisplayGroupEntity> allDisplayGroups) {
+    private List<DisplayGroupEntity> getAllTabDisplayGroups(DisplayGroupEntity thisDisplayGroup, Collection<DisplayGroupEntity> allDisplayGroups) {
         return allDisplayGroups
             .stream()
             .filter(dg -> dg.getType() == DisplayGroupType.TAB)
