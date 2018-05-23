@@ -27,7 +27,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="PaymentTotal" />
-            <column name="label" value="Payment Total" />
+            <column name="label" value="Total" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type where reference = 'MoneyGBP' and version = 1 and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
