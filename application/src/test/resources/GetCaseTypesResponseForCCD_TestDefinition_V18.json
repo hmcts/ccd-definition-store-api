@@ -1186,10 +1186,10 @@
           "label" : "Payment Reference",
           "hint_text" : null,
           "field_type" : {
-            "id" : "TextMax150",
+            "id" : "Text",
             "type" : "Text",
             "min" : null,
-            "max" : "150",
+            "max" : null,
             "regular_expression" : null,
             "fixed_list_items" : [ ],
             "complex_fields" : [ ],
@@ -1202,9 +1202,9 @@
           "acls" : null,
           "show_condition" : null
         }, {
-          "id" : "Total",
+          "id" : "PaymentTotal",
           "case_type_id" : null,
-          "label" : "Total",
+          "label" : "PaymentTotal",
           "hint_text" : null,
           "field_type" : {
             "id" : "MoneyGBP",
@@ -1248,10 +1248,10 @@
                 "label" : "Fee Code",
                 "hint_text" : null,
                 "field_type" : {
-                  "id" : "TextMax50",
+                  "id" : "Text",
                   "type" : "Text",
                   "min" : null,
-                  "max" : "50",
+                  "max" : null,
                   "regular_expression" : null,
                   "fixed_list_items" : [ ],
                   "complex_fields" : [ ],
