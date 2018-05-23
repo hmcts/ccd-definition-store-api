@@ -1204,7 +1204,7 @@
         }, {
           "id" : "PaymentTotal",
           "case_type_id" : null,
-          "label" : "PaymentTotal",
+          "label" : "Total",
           "hint_text" : null,
           "field_type" : {
             "id" : "MoneyGBP",
