@@ -20,6 +20,10 @@ public class ValidationResult implements Serializable {
         this.validationErrors.add(error);
     }
 
+    public void addErrors(List<ValidationError> errors) {
+        this.validationErrors.addAll(errors);
+    }
+
     public boolean isValid() {
         return validationErrors.isEmpty();
     }
