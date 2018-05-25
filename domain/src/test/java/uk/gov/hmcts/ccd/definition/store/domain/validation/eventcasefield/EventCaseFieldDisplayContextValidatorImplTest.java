@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 public class EventCaseFieldDisplayContextValidatorImplTest {
 
     @Mock
-    private FieldTypeToDisplayContextValidator entityToDefinitionDataItemRegistry;
+    private FieldTypeToDisplayContextValidator fieldTypeToDisplayContextValidator;
 
     @InjectMocks
     private EventCaseFieldDisplayContextValidatorImpl classUnderTest;
@@ -33,8 +33,8 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        classUnderTest = new EventCaseFieldDisplayContextValidatorImpl(Lists.newArrayList(entityToDefinitionDataItemRegistry));
-        when(entityToDefinitionDataItemRegistry.validate(anyObject())).thenReturn(Optional.empty());
+        classUnderTest = new EventCaseFieldDisplayContextValidatorImpl(Lists.newArrayList(fieldTypeToDisplayContextValidator));
+        when(fieldTypeToDisplayContextValidator.validate(anyObject())).thenReturn(Optional.empty());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
     public void CaseFieldEntityFieldTypeToDisplayContextFiresWhenFieldTypeToDisplayContextValidationFails() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
         eventCaseFieldEntity.setDisplayContext(aDisplayContext());
-        when(entityToDefinitionDataItemRegistry.validate(anyObject())).thenReturn(getErrorOpt(eventCaseFieldEntity));
+        when(fieldTypeToDisplayContextValidator.validate(anyObject())).thenReturn(getErrorOpt(eventCaseFieldEntity));
 
         ValidationResult validationResult
             = classUnderTest.validate(eventCaseFieldEntity, null);
