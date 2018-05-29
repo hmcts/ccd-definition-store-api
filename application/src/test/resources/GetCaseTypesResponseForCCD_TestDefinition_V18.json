@@ -1258,7 +1258,7 @@
             }, {
               "id" : "FeeDescription",
               "case_type_id" : null,
-              "label" : "Fee Code",
+              "label" : "Fee Description",
               "hint_text" : null,
               "field_type" : {
                 "id" : "Text",

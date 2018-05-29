@@ -59,7 +59,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="FeeDescription" />
-            <column name="label" value="Fee Code" />
+            <column name="label" value="Fee Description" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
