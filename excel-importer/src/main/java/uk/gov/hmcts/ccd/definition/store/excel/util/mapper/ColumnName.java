@@ -52,6 +52,7 @@ public enum ColumnName {
     SHOW_SUMMARY("ShowSummary"),
     SHOW_EVENT_NOTES("ShowEventNotes"),
     SHOW_SUMMARY_CHANGE_OPTION("ShowSummaryChangeOption"),
+    SHOW_SUMMARY_CONTENT_OPTION("ShowSummaryContentOption"),
     STATE_ID("CaseStateID"),
     TAB_ID("TabID"),
     TAB_LABEL("TabLabel"),
