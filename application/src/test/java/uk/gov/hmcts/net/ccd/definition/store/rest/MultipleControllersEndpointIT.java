@@ -92,9 +92,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
             .andReturn();
 
-        final WorkbasketInputDefinition workbasketInputDefinition = mapper.readValue(result.getResponse()
-                                                                                         .getContentAsString(),
-                                                                                     TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
+        final WorkbasketInputDefinition workbasketInputDefinition = mapper.readValue(result.getResponse().getContentAsString(),
+                                                                                 TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
         assertAll(
             () -> assertThat(workbasketInputDefinition.getFields(), hasSize(3)),
             () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
