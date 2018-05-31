@@ -368,8 +368,8 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn(is("reference"), startsWith("Alliases-")))),
                          hasItem(allOf(hasColumn("base_field_type_id", fieldTypesId.get("Text")),
                                        hasColumn(is("collection_field_type_id"), nullValue()),
-                                       hasColumn("minimum", "3.0"),
-                                       hasColumn("maximum", "20.0"),
+                                       hasColumn("minimum", "3"),
+                                       hasColumn("maximum", "20"),
                                        hasColumn(is("reference"), startsWith("PersonLastNameWithValidation-"))))));
     }
 

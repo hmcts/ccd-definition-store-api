@@ -286,8 +286,8 @@
     "field_type" : {
       "id" : "PersonLastNameWithValidation-<GUID-REMOVED>",
       "type" : "Text",
-      "min" : "3.0",
-      "max" : "20.0",
+      "min" : "3",
+      "max" : "20",
       "regular_expression" : null,
       "fixed_list_items" : [ ],
       "complex_fields" : [ ],
