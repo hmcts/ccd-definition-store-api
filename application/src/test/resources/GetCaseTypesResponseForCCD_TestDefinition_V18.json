@@ -23,17 +23,20 @@
       "case_field_id" : "HasOtherInfo",
       "display_context" : "OPTIONAL",
       "show_condition" : null,
-      "show_summary_change_option" : null
+      "show_summary_change_option" : null,
+      "show_summary_content_option" : null
     }, {
       "case_field_id" : "PersonFirstName",
       "display_context" : "MANDATORY",
       "show_condition" : null,
-      "show_summary_change_option" : false
+      "show_summary_change_option" : false,
+      "show_summary_content_option" : null
     }, {
       "case_field_id" : "PersonLastNameWithValidation",
       "display_context" : "OPTIONAL",
       "show_condition" : null,
-      "show_summary_change_option" : true
+      "show_summary_change_option" : true,
+      "show_summary_content_option" : null
     } ],
     "pre_states" : [ ],
     "post_state" : "CaseCreated",
@@ -75,27 +78,32 @@
       "case_field_id" : "PersonFirstName",
       "display_context" : "READONLY",
       "show_condition" : null,
-      "show_summary_change_option" : true
+      "show_summary_change_option" : true,
+      "show_summary_content_option" : 2
     }, {
       "case_field_id" : "PersonLastName",
       "display_context" : "OPTIONAL",
       "show_condition" : null,
-      "show_summary_change_option" : null
+      "show_summary_change_option" : null,
+      "show_summary_content_option" : 1
     }, {
       "case_field_id" : "PersonAddress",
       "display_context" : "OPTIONAL",
       "show_condition" : null,
-      "show_summary_change_option" : true
+      "show_summary_change_option" : true,
+      "show_summary_content_option" : null
     }, {
       "case_field_id" : "PersonHasSecondAddress",
       "display_context" : "OPTIONAL",
       "show_condition" : null,
-      "show_summary_change_option" : false
+      "show_summary_change_option" : false,
+      "show_summary_content_option" : null
     }, {
       "case_field_id" : "PersonSecondAddress",
       "display_context" : "OPTIONAL",
       "show_condition" : "PersonHasSecondAddress=\"Yes\"",
-      "show_summary_change_option" : null
+      "show_summary_change_option" : null,
+      "show_summary_content_option" : null
     } ],
     "pre_states" : [ "CaseCreated" ],
     "post_state" : "CaseEnteredIntoLegacy",
