@@ -110,7 +110,7 @@ public class SpreadsheetParser {
     }
 
     private String formatNumberAsString(Cell cell) {
-        //we need to format a numeric cell as a string to prevent integers to be interpreted as decimals
+        //we need to format a numeric cell as a string to prevent integers from being interpreted as decimals
         return cellFormatter.formatCellValue(cell);
     }
 }
