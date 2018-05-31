@@ -85,7 +85,7 @@ You can connect to the database at `http://localhost:5451` with the username and
 
 ## Modules
 
-The application is structured as a Maven multi-module project. The modules are:
+The application is structured as a multi-module project. The modules are:
 
 ### repository
 
