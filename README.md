@@ -40,12 +40,12 @@ The following environment variables are required:
 
 ### Building
 
-The project uses [Maven](https://maven.apache.org/). 
+The project uses [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html). 
 
 To build project please execute the following command:
 
 ```bash
-mvn install
+./gradlew clean build
 ```
 
 ### Running
