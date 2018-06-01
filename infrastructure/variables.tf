@@ -19,6 +19,10 @@ variable "subscription" {
   type = "string"
 }
 
+variable "capacity" {
+  default = "1"
+}
+
 variable "ilbIp"{}
 
 variable "tenant_id" {
