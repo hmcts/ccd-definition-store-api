@@ -11,6 +11,7 @@ public class CaseEventField {
     private String displayContext = null;
     private String showCondition;
     private Boolean showSummaryChangeOption = null;
+    private Integer showSummaryContentOption = null;
 
     /**
      * Foriegn key to CaseField.id
@@ -52,7 +53,8 @@ public class CaseEventField {
     }
 
     /**
-     */
+     * whether field is shown with the change option
+     **/
     @ApiModelProperty(value = "")
     @JsonProperty("show_summary_change_option")
     public Boolean getShowSummaryChangeOption() {
@@ -61,5 +63,18 @@ public class CaseEventField {
 
     public void setShowSummaryChangeOption(final Boolean showSummaryChangeOption) {
         this.showSummaryChangeOption = showSummaryChangeOption;
+    }
+
+    /**
+     * whether field is shown and if so in what order on the read only section of the final submit page of an event
+     **/
+    @ApiModelProperty(value = "")
+    @JsonProperty("show_summary_content_option")
+    public Integer getShowSummaryContentOption() {
+        return showSummaryContentOption;
+    }
+
+    public void setShowSummaryContentOption(Integer showSummaryContentOption) {
+        this.showSummaryContentOption = showSummaryContentOption;
     }
 }
