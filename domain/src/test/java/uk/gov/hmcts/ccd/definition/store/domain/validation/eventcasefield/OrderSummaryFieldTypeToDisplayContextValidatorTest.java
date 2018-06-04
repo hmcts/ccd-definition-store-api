@@ -34,7 +34,8 @@ public class OrderSummaryFieldTypeToDisplayContextValidatorTest {
 
         assertAll(
             () -> assertThat(validationError.isPresent(), is(true)),
-            () -> assertThat(validationError.get(), hasProperty("defaultMessage", equalTo("OrderSummary field type can only be configured with 'READONLY' DisplayContext")))
+            () -> assertThat(validationError.get(),
+                             hasProperty("defaultMessage", equalTo("OrderSummary field type can only be configured with 'READONLY' DisplayContext")))
         );
     }
 
@@ -52,7 +53,8 @@ public class OrderSummaryFieldTypeToDisplayContextValidatorTest {
 
         assertAll(
             () -> assertThat(validationError.isPresent(), is(true)),
-            () -> assertThat(validationError.get(), hasProperty("defaultMessage", equalTo("OrderSummary field type can only be configured with 'READONLY' DisplayContext")))
+            () -> assertThat(validationError.get(),
+                             hasProperty("defaultMessage", equalTo("OrderSummary field type can only be configured with 'READONLY' DisplayContext")))
         );
     }
 

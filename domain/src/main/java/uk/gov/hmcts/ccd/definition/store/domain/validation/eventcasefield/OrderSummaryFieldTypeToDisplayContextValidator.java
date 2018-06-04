@@ -14,8 +14,9 @@ public class OrderSummaryFieldTypeToDisplayContextValidator implements FieldType
     @Override
     public Optional<ValidationError> validate(EventCaseFieldEntity eventCaseFieldEntity) {
         if (isOrderSummaryType(eventCaseFieldEntity) && !isValid(eventCaseFieldEntity)) {
-            return Optional.of(new EventCaseFieldDisplayContextValidatorImpl.ValidationError("OrderSummary field type can only be configured with 'READONLY' DisplayContext",
-                                                                                 eventCaseFieldEntity));
+            return Optional.of(new EventCaseFieldDisplayContextValidatorImpl.ValidationError(
+                "OrderSummary field type can only be configured with 'READONLY' DisplayContext",
+                eventCaseFieldEntity));
         }
         return Optional.empty();
     }

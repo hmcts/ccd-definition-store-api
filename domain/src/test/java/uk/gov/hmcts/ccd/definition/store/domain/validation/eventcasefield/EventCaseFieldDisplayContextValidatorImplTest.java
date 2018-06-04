@@ -38,7 +38,7 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
     }
 
     @Test
-    public void CaseFieldEntityDisplayContextMustHaveValueValidationErrorFiresWhenDisplayContextDoesNotExist() {
+    public void shouldFireValidationErrorWhenDisplayContextDoesNotExist() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
 
         ValidationResult validationResult
@@ -47,21 +47,21 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
         assertAll(
             () -> assertFalse(validationResult.isValid()),
             () -> assertEquals(1, validationResult.getValidationErrors().size()),
-            () -> assertTrue(validationResult.getValidationErrors().get(0) instanceof
-                                 EventCaseFieldDisplayContextValidatorImpl.ValidationError),
+            () -> assertTrue(validationResult.getValidationErrors().get(0)
+                                 instanceof EventCaseFieldDisplayContextValidatorImpl.ValidationError),
             () -> assertEquals(
                 eventCaseFieldEntity,
                 ((EventCaseFieldDisplayContextValidatorImpl.ValidationError) validationResult.getValidationErrors().get(0))
                     .getEntity()
             ),
             () -> assertThat(validationResult.getValidationErrors().get(0),
-                             hasProperty("defaultMessage", equalTo("Couldn't find the column DisplayContext or " +
-                                                                       "incorrect value specified for DisplayContext. Allowed values are 'READONLY','MANDATORY' or 'OPTIONAL'")))
+                             hasProperty("defaultMessage", equalTo("Couldn't find the column DisplayContext or "
+                                   + "incorrect value specified for DisplayContext. Allowed values are 'READONLY','MANDATORY' or 'OPTIONAL'")))
         );
     }
 
     @Test
-    public void CaseFieldEntityDisplayContextMustHaveValueValidationErrorDoesNotFireWhenDisplayContextExists() {
+    public void shouldNotFireValidationErrorWhenDisplayContextExists() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
         eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);
 
@@ -75,7 +75,7 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
     }
 
     @Test
-    public void CaseFieldEntityFieldTypeToDisplayContextDoesNotFireWhenFieldTypeToDisplayContextValidationPasses() {
+    public void shouldNotFireValidationErrorWhenFieldTypeToDisplayContextValidationPasses() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
         eventCaseFieldEntity.setDisplayContext(aDisplayContext());
 
@@ -89,7 +89,7 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
     }
 
     @Test
-    public void CaseFieldEntityFieldTypeToDisplayContextFiresWhenFieldTypeToDisplayContextValidationFails() {
+    public void shouldFireValidationErrorWhenDisplayContextValidationFails() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
         eventCaseFieldEntity.setDisplayContext(aDisplayContext());
         when(fieldTypeToDisplayContextValidator.validate(anyObject())).thenReturn(getErrorOpt(eventCaseFieldEntity));
