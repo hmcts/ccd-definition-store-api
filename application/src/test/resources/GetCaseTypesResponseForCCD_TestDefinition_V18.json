@@ -29,7 +29,8 @@
       "case_field_id" : "PersonOrderSummary",
       "display_context" : "READONLY",
       "show_condition" : null,
-      "show_summary_change_option" : true
+      "show_summary_change_option" : true,
+      "show_summary_content_option" : null
     }, {
       "case_field_id" : "PersonFirstName",
       "display_context" : "MANDATORY",
