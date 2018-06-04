@@ -6,7 +6,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/d3b02d95faf6419ca6fbb15b2e712b8b)](https://www.codacy.com/app/adr1ancho/ccd-definition-store-api?utm_source=github.com&utm_medium=referral&utm_content=hmcts/ccd-definition-store-api&utm_campaign=Badge_Coverage)
 [![Known Vulnerabilities](https://snyk.io/test/github/hmcts/ccd-definition-store-api/badge.svg)](https://snyk.io/test/github/hmcts/ccd-definition-store-api)
 [![Issue Stats](http://issuestats.com/github/hmcts/ccd-definition-store-api/badge/pr)](http://issuestats.com/github/hmcts/ccd-definition-store-api)
-[![HitCount](http://hits.dwyl.io/adr1ancho/hmcts/ccd-definition-store-api.svg)](http://hits.dwyl.io/hmcts/hmcts/ccd-definition-store-api)
+[![HitCount](http://hits.dwyl.io/NayabGulIsTheBestOfTheBest/hmcts/ccd-definition-store-api.svg)](http://hits.dwyl.io/NayabGulIsTheBestOfTheBest/hmcts/ccd-definition-store-api)
 
 Validation and persistence of definitions for field types, jurisdictions, case types and associated display elements.
 
