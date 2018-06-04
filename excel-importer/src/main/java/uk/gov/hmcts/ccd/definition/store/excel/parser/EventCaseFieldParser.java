@@ -34,7 +34,7 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
         eventCaseField.setShowCondition(this.parseShowCondition(eventCaseFieldDefinition.getString(ColumnName.FIELD_SHOW_CONDITION)));
 
         eventCaseField.setShowSummaryChangeOption(eventCaseFieldDefinition.getBoolean(ColumnName.SHOW_SUMMARY_CHANGE_OPTION));
-
+        eventCaseField.setShowSummaryContentOption(eventCaseFieldDefinition.getInteger(ColumnName.SHOW_SUMMARY_CONTENT_OPTION));
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(eventCaseField, eventCaseFieldDefinition);
 
         return eventCaseField;

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
@@ -41,7 +42,32 @@ public class EntityToResponseDTOMapperTest {
     }
 
     @Nested
-    @DisplayName("")
+    @DisplayName("Should return a CaseEventField which matches the EventCaseFieldEntity")
+    class MapEventCaseFieldEntity {
+
+        @Test
+        public void testMapEventCaseFieldEntity() throws Exception {
+            EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
+            eventCaseFieldEntity.setShowCondition("PersonFirstName=\"John\"");
+            eventCaseFieldEntity.setShowSummaryChangeOption(true);
+            eventCaseFieldEntity.setShowSummaryContentOption(2);
+            eventCaseFieldEntity.setDisplayContext(DisplayContext.MANDATORY);
+
+            CaseEventField caseEventField = spyOnClassUnderTest.map(
+                eventCaseFieldEntity
+            );
+
+            assertAll(
+                () -> assertEquals("displayContext", eventCaseFieldEntity.getDisplayContext().name(), caseEventField.getDisplayContext()),
+                () -> assertEquals("showCondition", eventCaseFieldEntity.getShowCondition(), caseEventField.getShowCondition()),
+                () -> assertEquals("showSummaryChangeOption", eventCaseFieldEntity.getShowSummaryChangeOption(), caseEventField.getShowSummaryChangeOption()),
+                () -> assertEquals("showSummaryContentOption", eventCaseFieldEntity.getShowSummaryContentOption(), caseEventField.getShowSummaryContentOption())
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("Should return a CaseEventField which matches the EventCaseFieldEntity")
     class MapEventEntity {
 
         @Test

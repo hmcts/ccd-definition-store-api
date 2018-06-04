@@ -1,4 +1,11 @@
-# Case definition store [![Build Status](https://travis-ci.org/hmcts/ccd-definition-store-api.svg?branch=master)](https://travis-ci.org/hmcts/ccd-definition-store-api)
+# Case definition store
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/hmcts/ccd-definition-store-api.svg?branch=master)](https://travis-ci.org/hmcts/ccd-definition-store-api)
+[![codecov](https://codecov.io/gh/hmcts/ccd-user-profile-api/branch/master/graph/badge.svg)](https://codecov.io/gh/hmcts/ccd-definition_store-api)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d3b02d95faf6419ca6fbb15b2e712b8b)](https://www.codacy.com/app/adr1ancho/ccd-definition-store-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hmcts/ccd-definition-store-api&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/d3b02d95faf6419ca6fbb15b2e712b8b)](https://www.codacy.com/app/HMCTS/ccd-definition_store-api)
+[![Known Vulnerabilities](https://snyk.io/test/github/hmcts/ccd-definition-store-api/badge.svg)](https://snyk.io/test/github/hmcts/ccd-definition_store-api)
+
 
 Validation and persistence of definitions for field types, jurisdictions, case types and associated display elements.
 

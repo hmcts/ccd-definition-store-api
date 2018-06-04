@@ -37,7 +37,10 @@ public class EventCaseFieldEntity implements Serializable {
     private String showCondition;
 
     @Column(name = "show_summary_change_option")
-    private Boolean ShowSummaryChangeOption;
+    private Boolean showSummaryChangeOption;
+
+    @Column(name = "show_summary_content_option")
+    private Integer showSummaryContentOption;
 
     public DisplayContext getDisplayContext() {
         return displayContext;
@@ -72,10 +75,18 @@ public class EventCaseFieldEntity implements Serializable {
     }
 
     public Boolean getShowSummaryChangeOption() {
-        return ShowSummaryChangeOption;
+        return showSummaryChangeOption;
     }
 
     public void setShowSummaryChangeOption(final Boolean showSummaryChangeOption) {
-        ShowSummaryChangeOption = showSummaryChangeOption;
+        this.showSummaryChangeOption = showSummaryChangeOption;
+    }
+
+    public Integer getShowSummaryContentOption() {
+        return showSummaryContentOption;
+    }
+
+    public void setShowSummaryContentOption(Integer showSummaryContentOption) {
+        this.showSummaryContentOption = showSummaryContentOption;
     }
 }
