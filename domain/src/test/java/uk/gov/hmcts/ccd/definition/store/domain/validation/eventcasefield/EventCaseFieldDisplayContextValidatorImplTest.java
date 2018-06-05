@@ -19,7 +19,10 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class EventCaseFieldDisplayContextValidatorImplTest {
@@ -56,7 +59,8 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
             ),
             () -> assertThat(validationResult.getValidationErrors().get(0),
                              hasProperty("defaultMessage", equalTo("Couldn't find the column DisplayContext or "
-                                   + "incorrect value specified for DisplayContext. Allowed values are 'READONLY','MANDATORY' or 'OPTIONAL'")))
+                                   + "incorrect value specified for DisplayContext. Allowed values are 'READONLY','MANDATORY' or 'OPTIONAL'"))),
+            () -> verify(fieldTypeToDisplayContextValidator, never()).validate(any(EventCaseFieldEntity.class))
         );
     }
 

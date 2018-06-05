@@ -31,8 +31,9 @@ public class EventCaseFieldDisplayContextValidatorImpl implements EventCaseField
             validationResult.addError(new ValidationError("Couldn't find the column DisplayContext or " +
                 "incorrect value specified for DisplayContext. Allowed values are 'READONLY','MANDATORY' or 'OPTIONAL'",
                 eventCaseFieldEntity));
+        } else {
+            validationResult.addErrors(validateAndGetErrors(eventCaseFieldEntity));
         }
-        validationResult.addErrors(validateAndGetErrors(eventCaseFieldEntity));
         return validationResult;
     }
 

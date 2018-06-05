@@ -59,7 +59,26 @@ public class OrderSummaryFieldTypeToDisplayContextValidatorTest {
     }
 
     @Test
-    public void shouldReturnNullIfFieldTypeReadonly() throws Exception {
+    public void shouldReturnValidationErrorIfFieldTypeEmpty() throws Exception {
+        EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
+        eventCaseFieldEntity.setDisplayContext(DisplayContext.MANDATORY);
+        CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+        FieldTypeEntity fieldType = new FieldTypeEntity();
+        fieldType.setReference(BASE_ORDER_SUMMARY);
+        caseFieldEntity.setFieldType(fieldType);
+        eventCaseFieldEntity.setCaseField(caseFieldEntity);
+
+        Optional<ValidationError> validationError = classUnderTest.validate(eventCaseFieldEntity);
+
+        assertAll(
+            () -> assertThat(validationError.isPresent(), is(true)),
+            () -> assertThat(validationError.get(),
+                             hasProperty("defaultMessage", equalTo("OrderSummary field type can only be configured with 'READONLY' DisplayContext")))
+        );
+    }
+
+    @Test
+    public void shouldReturnEmptyIfFieldTypeReadonly() throws Exception {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setDisplayContext(DisplayContext.READONLY);
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
