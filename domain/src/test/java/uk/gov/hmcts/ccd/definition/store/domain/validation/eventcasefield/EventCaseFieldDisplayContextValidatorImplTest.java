@@ -77,7 +77,7 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
     @Test
     public void shouldNotFireValidationErrorWhenFieldTypeToDisplayContextValidationPasses() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
-        eventCaseFieldEntity.setDisplayContext(aDisplayContext());
+        eventCaseFieldEntity.setDisplayContext(anDisplayContext());
 
         ValidationResult validationResult
             = classUnderTest.validate(eventCaseFieldEntity, null);
@@ -91,7 +91,7 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
     @Test
     public void shouldFireValidationErrorWhenDisplayContextValidationFails() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
-        eventCaseFieldEntity.setDisplayContext(aDisplayContext());
+        eventCaseFieldEntity.setDisplayContext(anDisplayContext());
         when(fieldTypeToDisplayContextValidator.validate(anyObject())).thenReturn(getErrorOpt(eventCaseFieldEntity));
 
         ValidationResult validationResult
@@ -100,8 +100,8 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
         assertAll(
             () -> assertFalse(validationResult.isValid()),
             () -> assertEquals(1, validationResult.getValidationErrors().size()),
-            () -> assertTrue(validationResult.getValidationErrors().get(0) instanceof
-                                 EventCaseFieldDisplayContextValidatorImpl.ValidationError),
+            () -> assertTrue(validationResult.getValidationErrors().get(0)
+                             instanceof EventCaseFieldDisplayContextValidatorImpl.ValidationError),
             () -> assertEquals(
                 eventCaseFieldEntity,
                 ((EventCaseFieldDisplayContextValidatorImpl.ValidationError) validationResult.getValidationErrors().get(0))
@@ -111,7 +111,7 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
         );
     }
 
-    private DisplayContext aDisplayContext() {
+    private DisplayContext anDisplayContext() {
         return DisplayContext.READONLY;
     }
 
