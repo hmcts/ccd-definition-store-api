@@ -9,7 +9,12 @@ def product = "ccd"
 def app = "definition-store-api"
 
 List<LinkedHashMap<String, Object>> secrets = [
+    secret('importerAutoTest1Email', 'CCD_IMPORT_AUTOTEST_EMAIL'),
+    secret('importerAutoTest1Password', 'CCD_IMPORT_AUTOTEST_PASSWORD'),
+    secret('caseworkerAutoTest1Email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
+    secret('caseworkerAutoTest1Password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
     secret('microserviceGatewaySecret', 'CCD_GW_SERVICE_SECRET'),
+    secret('gatewayOAuth2ClientSecret', 'OAUTH2_CLIENT_SECRET'),
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
