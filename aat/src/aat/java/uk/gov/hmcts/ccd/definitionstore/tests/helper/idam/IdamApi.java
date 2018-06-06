@@ -13,7 +13,7 @@ public interface IdamApi {
         + "?response_type={response_type}"
         + "&client_id={client_id}"
         + "&redirect_uri={redirect_uri}")
-    @Headers("Authorization: {authorization}")
+    @Headers({"Authorization: {authorization}", "Content-Length: 0"})
     AuthenticateUserResponse authenticateUser(@Param("authorization") String authorization,
                                               @Param("response_type") String responseType,
                                               @Param("client_id") String clientId,
