@@ -38,6 +38,12 @@ variable "vault_section" {
   default = "test"
 }
 
+variable "frontend_url" {
+  type = "string"
+  default = ""
+  description = "Optional front end URL to use for building redirect URI"
+}
+
 ////////////////////////////////
 // Database
 ////////////////////////////////
