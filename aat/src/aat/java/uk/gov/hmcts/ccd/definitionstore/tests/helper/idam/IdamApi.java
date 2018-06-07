@@ -10,13 +10,8 @@ import java.util.List;
 
 public interface IdamApi {
 
-//    @RequestLine("POST /oauth2/authorize"
-//        + "?response_type={response_type}"
-//        + "&client_id={client_id}"
-//        + "&redirect_uri={redirect_uri}")
     @RequestLine("POST /oauth2/authorize")
     @Headers({"Authorization: {authorization}", "Content-Type: application/x-www-form-urlencoded"})
-    @Body("client_id={client_id}&response_type={response_type}&redirect_uri={redirect_uri}")
     AuthenticateUserResponse authenticateUser(@Param("authorization") String authorization,
                                               @Param("response_type") String responseType,
                                               @Param("client_id") String clientId,
