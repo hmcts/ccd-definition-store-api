@@ -51,11 +51,11 @@ module "case-definition-store-api" {
   subscription = "${var.subscription}"
 
   app_settings = {
-    DEFINITION_STORE_DB_HOST = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.host_name : module.definition-store-db.host_name}"
-    DEFINITION_STORE_DB_PORT = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_listen_port : module.definition-store-db.postgresql_listen_port}"
-    DEFINITION_STORE_DB_NAME = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_database : module.definition-store-db.postgresql_database}"
-    DEFINITION_STORE_DB_USERNAME = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.user_name : module.definition-store-db.user_name}"
-    DEFINITION_STORE_DB_PASSWORD = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_password : module.definition-store-db.postgresql_password}"
+    DEFINITION_STORE_DB_HOST = "${module.definition-store-db.host_name}"
+    DEFINITION_STORE_DB_PORT = "${module.definition-store-db.postgresql_listen_port}"
+    DEFINITION_STORE_DB_NAME = "${module.definition-store-db.postgresql_database}"
+    DEFINITION_STORE_DB_USERNAME = "${module.definition-store-db.user_name}"
+    DEFINITION_STORE_DB_PASSWORD = "${module.definition-store-db.postgresql_password}"
 
     UK_DB_HOST = "${module.definition-store-db.host_name}"
     UK_DB_PORT = "${module.definition-store-db.postgresql_listen_port}"
@@ -110,31 +110,31 @@ module "definition-store-vault" {
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
   name = "${local.app_full_name}-POSTGRES-USER"
-  value = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.user_name : module.definition-store-db.user_name}"
+  value = "${module.definition-store-db.user_name}"
   vault_uri = "${module.definition-store-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
   name = "${local.app_full_name}-POSTGRES-PASS"
-  value = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_password : module.definition-store-db.postgresql_password}"
+  value = "${module.definition-store-db.postgresql_password}"
   vault_uri = "${module.definition-store-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
   name = "${local.app_full_name}-POSTGRES-HOST"
-  value = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.host_name : module.definition-store-db.host_name}"
+  value = "${module.definition-store-db.host_name}"
   vault_uri = "${module.definition-store-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
   name = "${local.app_full_name}-POSTGRES-PORT"
-  value = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_listen_port : module.definition-store-db.postgresql_listen_port}"
+  value = "${module.definition-store-db.postgresql_listen_port}"
   vault_uri = "${module.definition-store-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   name = "${local.app_full_name}-POSTGRES-DATABASE"
-  value = "${var.use_uk_db != "true" ? module.postgres-case-definition-store.postgresql_database : module.definition-store-db.postgresql_database}"
+  value = "${module.definition-store-db.postgresql_database}"
   vault_uri = "${module.definition-store-vault.key_vault_uri}"
 }
 
