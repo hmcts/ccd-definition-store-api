@@ -57,12 +57,6 @@ module "case-definition-store-api" {
     DEFINITION_STORE_DB_USERNAME = "${module.definition-store-db.user_name}"
     DEFINITION_STORE_DB_PASSWORD = "${module.definition-store-db.postgresql_password}"
 
-    UK_DB_HOST = "${module.definition-store-db.host_name}"
-    UK_DB_PORT = "${module.definition-store-db.postgresql_listen_port}"
-    UK_DB_NAME = "${module.definition-store-db.postgresql_database}"
-    UK_DB_USERNAME = "${module.definition-store-db.user_name}"
-    UK_DB_PASSWORD = "${module.definition-store-db.postgresql_password}"
-
     ENABLE_DB_MIGRATE = "false"
 
     IDAM_USER_URL = "${var.idam_api_url}"
