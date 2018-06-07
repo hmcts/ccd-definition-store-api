@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.helper.idam;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import feign.Body;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
