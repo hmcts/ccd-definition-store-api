@@ -389,6 +389,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
+    public String createErrorMessage(EventEntityCanSaveDraftValidatorImpl.ValidationError error) {
+        return withWorkSheetName(error);
+    }
+
+    @Override
     public String createErrorMessage(DisplayGroupColumnNumberValidator.ValidationError error) {
         return withWorkSheetName(error);
     }

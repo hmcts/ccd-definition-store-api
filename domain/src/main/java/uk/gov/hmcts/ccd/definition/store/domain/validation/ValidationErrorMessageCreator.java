@@ -101,4 +101,6 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(UserProfileValidatorImpl.ValidationError error);
 
     String createErrorMessage(EventCaseFieldDisplayContextValidatorImpl.ValidationError error);
+
+    String createErrorMessage(EventEntityCanSaveDraftValidatorImpl.ValidationError error);
 }
