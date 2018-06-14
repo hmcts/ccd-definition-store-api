@@ -106,6 +106,7 @@ allprojects {
         compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.9'
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testCompile 'io.github.openfeign:feign-jackson:9.7.0'
+        testCompile 'io.github.openfeign.form:feign-form:3.3.0'
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
