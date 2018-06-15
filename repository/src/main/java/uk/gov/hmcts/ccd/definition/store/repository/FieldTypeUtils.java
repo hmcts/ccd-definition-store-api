@@ -11,6 +11,7 @@ public class FieldTypeUtils {
     public static final String BASE_EMAIL = "Email";
     public static final String BASE_YES_OR_NO = "YesOrNo";
     public static final String BASE_DATE = "Date";
+    public static final String BASE_DATE_TIME = "DateTime";
     public static final String BASE_POST_CODE = "Postcode";
     public static final String BASE_MONEY_GBP = "MoneyGBP";
     public static final String BASE_PHONE_UK = "PhoneUK";

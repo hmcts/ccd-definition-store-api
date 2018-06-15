@@ -572,7 +572,7 @@ public class SpreadSheetImportTest extends BaseTest {
         List<Map<String, Object>> displayGroupsFields = jdbcTemplate.queryForList(
             "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id "
                 + "AND dg.type = 'PAGE';");
-        assertThat(displayGroupsFields, hasSize(9));
+        assertThat(displayGroupsFields, hasSize(10));
         assertThat(displayGroupsFields,
                    allOf(hasItem(allOf(hasColumn("display_group_id",
                                                  displayGroupsId.get("enterCaseIntoLegacyPersonPage")),
@@ -584,7 +584,10 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("case_field_id", caseFieldIds.get("PersonLastName")))),
                          hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("createCaseInfoPage")),
                                        hasColumn("display_order", 1),
-                                       hasColumn("case_field_id", caseFieldIds.get("PersonFirstName"))))));
+                                       hasColumn("case_field_id", caseFieldIds.get("PersonFirstName")))),
+                         hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("createCasePage1")),
+                                       hasColumn("display_order", 1),
+                                       hasColumn("case_field_id", caseFieldIds.get("PersonOrderSummary"))))));
     }
 
     private Map<Object, Object> getIdsByReference(String query) {

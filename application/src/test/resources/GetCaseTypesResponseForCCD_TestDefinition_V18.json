@@ -26,6 +26,12 @@
       "show_summary_change_option" : null,
       "show_summary_content_option" : null
     }, {
+      "case_field_id" : "PersonOrderSummary",
+      "display_context" : "READONLY",
+      "show_condition" : null,
+      "show_summary_change_option" : true,
+      "show_summary_content_option" : null
+    }, {
       "case_field_id" : "PersonFirstName",
       "display_context" : "MANDATORY",
       "show_condition" : null,
@@ -40,8 +46,8 @@
     } ],
     "pre_states" : [ ],
     "post_state" : "CaseCreated",
-    "callback_url_about_to_start_event" : null,
-    "retries_timeout_about_to_start_event" : [ ],
+    "callback_url_about_to_start_event" : "http://localhost:8080/about_to_start",
+    "retries_timeout_about_to_start_event" : [ 5, 10, 15 ],
     "callback_url_about_to_submit_event" : null,
     "retries_timeout_url_about_to_submit_event" : [ ],
     "callback_url_submitted_event" : null,
@@ -1183,6 +1189,189 @@
     "live_from" : "2017-01-01",
     "live_until" : null,
     "acls" : [ ],
+    "show_condition" : null
+  }, {
+    "id" : "PersonOrderSummary",
+    "case_type_id" : "TestAddressBookCase",
+    "label" : "Order Summary",
+    "hint_text" : null,
+    "field_type" : {
+      "id" : "OrderSummary",
+      "type" : "Complex",
+      "min" : null,
+      "max" : null,
+      "regular_expression" : null,
+      "fixed_list_items" : [ ],
+      "complex_fields" : [ {
+        "id" : "PaymentReference",
+        "case_type_id" : null,
+        "label" : "Payment Reference",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentTotal",
+        "case_type_id" : null,
+        "label" : "Total",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "MoneyGBP",
+          "type" : "MoneyGBP",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "Fees",
+        "case_type_id" : null,
+        "label" : "Fees",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "FeesList",
+          "type" : "Collection",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : {
+            "id" : "Fee",
+            "type" : "Complex",
+            "min" : null,
+            "max" : null,
+            "regular_expression" : null,
+            "fixed_list_items" : [ ],
+            "complex_fields" : [ {
+              "id" : "FeeCode",
+              "case_type_id" : null,
+              "label" : "Fee Code",
+              "hint_text" : null,
+              "field_type" : {
+                "id" : "Text",
+                "type" : "Text",
+                "min" : null,
+                "max" : null,
+                "regular_expression" : null,
+                "fixed_list_items" : [ ],
+                "complex_fields" : [ ],
+                "collection_field_type" : null
+              },
+              "hidden" : null,
+              "security_classification" : "PUBLIC",
+              "live_from" : null,
+              "live_until" : null,
+              "acls" : null,
+              "show_condition" : null
+            }, {
+              "id" : "FeeDescription",
+              "case_type_id" : null,
+              "label" : "Fee Description",
+              "hint_text" : null,
+              "field_type" : {
+                "id" : "Text",
+                "type" : "Text",
+                "min" : null,
+                "max" : null,
+                "regular_expression" : null,
+                "fixed_list_items" : [ ],
+                "complex_fields" : [ ],
+                "collection_field_type" : null
+              },
+              "hidden" : null,
+              "security_classification" : "PUBLIC",
+              "live_from" : null,
+              "live_until" : null,
+              "acls" : null,
+              "show_condition" : null
+            }, {
+              "id" : "FeeAmount",
+              "case_type_id" : null,
+              "label" : "Fee Amount",
+              "hint_text" : null,
+              "field_type" : {
+                "id" : "MoneyGBP",
+                "type" : "MoneyGBP",
+                "min" : null,
+                "max" : null,
+                "regular_expression" : null,
+                "fixed_list_items" : [ ],
+                "complex_fields" : [ ],
+                "collection_field_type" : null
+              },
+              "hidden" : null,
+              "security_classification" : "PUBLIC",
+              "live_from" : null,
+              "live_until" : null,
+              "acls" : null,
+              "show_condition" : null
+            }, {
+              "id" : "FeeVersion",
+              "case_type_id" : null,
+              "label" : "Fee Version",
+              "hint_text" : null,
+              "field_type" : {
+                "id" : "Text",
+                "type" : "Text",
+                "min" : null,
+                "max" : null,
+                "regular_expression" : null,
+                "fixed_list_items" : [ ],
+                "complex_fields" : [ ],
+                "collection_field_type" : null
+              },
+              "hidden" : null,
+              "security_classification" : "PUBLIC",
+              "live_from" : null,
+              "live_until" : null,
+              "acls" : null,
+              "show_condition" : null
+            } ],
+            "collection_field_type" : null
+          }
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      } ],
+      "collection_field_type" : null
+    },
+    "hidden" : null,
+    "security_classification" : "PRIVATE",
+    "live_from" : "2017-01-01",
+    "live_until" : null,
+    "acls" : [ {
+      "role" : "CaseWorker3",
+      "create" : true,
+      "read" : true,
+      "update" : true,
+      "delete" : false
+    } ],
     "show_condition" : null
   } ],
   "printable_document_url" : null,
