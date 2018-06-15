@@ -68,7 +68,7 @@
     } ],
     "show_summary" : true,
     "show_event_notes" : true,
-    "end_button_label": "Save"
+    "end_button_label" : "Save"
   }, {
     "id" : "enterCaseIntoLegacy",
     "name" : "Enter into legacy system",
@@ -123,7 +123,7 @@
     } ],
     "show_summary" : false,
     "show_event_notes" : false,
-    "end_button_label": "Create Draft"
+    "end_button_label" : "Create Draft"
   }, {
     "id" : "stopCase",
     "name" : "Put the case on hold",
@@ -154,71 +154,62 @@
     } ],
     "show_summary" : false,
     "show_event_notes" : null,
-    "end_button_label": null
+    "end_button_label" : null
   } ],
   "states" : [ {
     "id" : "CaseCreated",
     "name" : "Case created",
     "description" : null,
     "order" : 1,
-    "acls": [
-      {
-        "role": "CaseWorker1",
-        "create": false,
-        "read": true,
-        "update": false,
-        "delete": false
-      },
-      {
-        "role": "CaseWorker3",
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": false
-      }
-    ]
+    "acls" : [ {
+      "role" : "CaseWorker1",
+      "create" : false,
+      "read" : true,
+      "update" : false,
+      "delete" : false
+    }, {
+      "role" : "CaseWorker3",
+      "create" : true,
+      "read" : true,
+      "update" : false,
+      "delete" : false
+    } ]
   }, {
     "id" : "CaseEnteredIntoLegacy",
     "name" : "Case has been Entered into Legacy",
     "description" : null,
     "order" : 2,
-    "acls": [
-      {
-        "role": "CaseWorker1",
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": false
-      },
-      {
-        "role": "CaseWorker2",
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": false
-      }
-    ]
+    "acls" : [ {
+      "role" : "CaseWorker1",
+      "create" : true,
+      "read" : true,
+      "update" : false,
+      "delete" : false
+    }, {
+      "role" : "CaseWorker2",
+      "create" : true,
+      "read" : true,
+      "update" : false,
+      "delete" : false
+    } ]
   }, {
     "id" : "CaseStopped",
     "name" : "Put case on hold",
     "description" : null,
     "order" : 3,
-    "acls": [
-      {
-        "role": "CaseWorker2",
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": false
-      },
-      {
-        "role": "CaseWorker3",
-        "create": true,
-        "read": false,
-        "update": false,
-        "delete": false
-      }
-    ]
+    "acls" : [ {
+      "role" : "CaseWorker2",
+      "create" : true,
+      "read" : true,
+      "update" : false,
+      "delete" : false
+    }, {
+      "role" : "CaseWorker3",
+      "create" : true,
+      "read" : false,
+      "update" : false,
+      "delete" : false
+    } ]
   } ],
   "acls" : [ {
     "role" : "CaseWorker1",
@@ -1164,6 +1155,27 @@
         "acls" : null,
         "show_condition" : null
       } ],
+      "collection_field_type" : null
+    },
+    "hidden" : null,
+    "security_classification" : "PRIVATE",
+    "live_from" : "2017-01-01",
+    "live_until" : null,
+    "acls" : [ ],
+    "show_condition" : null
+  }, {
+    "id" : "PersonCasePaymentHistoryViewer",
+    "case_type_id" : "TestAddressBookCase",
+    "label" : "Case Payment History",
+    "hint_text" : null,
+    "field_type" : {
+      "id" : "CasePaymentHistoryViewer",
+      "type" : "CasePaymentHistoryViewer",
+      "min" : null,
+      "max" : null,
+      "regular_expression" : null,
+      "fixed_list_items" : [ ],
+      "complex_fields" : [ ],
       "collection_field_type" : null
     },
     "hidden" : null,
