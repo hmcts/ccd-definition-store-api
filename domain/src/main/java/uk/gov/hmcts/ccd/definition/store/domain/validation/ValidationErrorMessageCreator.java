@@ -19,11 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield
     .ComplexFieldShowConditionReferencesInvalidFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield
-    .EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.LabelTypeCannotBeEditableValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityUserRoleValidatorImpl;
@@ -68,6 +64,8 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(EventEntityInvalidUserRoleValidationError eventEntityInvalidUserRoleValidationError);
 
     String createErrorMessage(LabelTypeCannotBeEditableValidationError labelTypeCannotBeEditableValidationError);
+
+    String createErrorMessage(OrderSummaryTypeCannotBeEditableValidationError orderSummaryTypeCannotBeEditableValidationError);
 
     String createErrorMessage(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
                                   eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);

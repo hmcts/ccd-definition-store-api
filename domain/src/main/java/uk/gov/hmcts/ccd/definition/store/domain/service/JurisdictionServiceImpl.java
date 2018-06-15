@@ -1,12 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import static java.util.stream.Collectors.toList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -14,6 +11,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class JurisdictionServiceImpl implements JurisdictionService {
