@@ -17,13 +17,9 @@ public class FieldTypeUtils {
     public static final String BASE_TEXT_AREA = "TextArea";
     public static final String BASE_DOCUMENT = "Document";
     public static final String BASE_LABEL = "Label";
-    public static final String BASE_ORDER_SUMMARY = "OrderSummary";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference) || BASE_MULTI_SELECT_LIST.equals(baseTypeReference);
     }
 
-    public static Boolean isOrderSummary(String baseTypeReference) {
-        return BASE_ORDER_SUMMARY.equals(baseTypeReference);
-    }
 }
