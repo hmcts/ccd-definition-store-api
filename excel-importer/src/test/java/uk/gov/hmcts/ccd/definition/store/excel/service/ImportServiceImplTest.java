@@ -76,6 +76,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity emailBaseType;
     private FieldTypeEntity yesNoBaseType;
     private FieldTypeEntity dateBaseType;
+    private FieldTypeEntity dateTimeBaseType;
     private FieldTypeEntity postCodeBaseType;
     private FieldTypeEntity moneyGBPBaseType;
     private FieldTypeEntity phoneUKBaseType;
@@ -109,6 +110,7 @@ public class ImportServiceImplTest {
         emailBaseType = buildBaseType(BASE_EMAIL);
         yesNoBaseType = buildBaseType(BASE_YES_OR_NO);
         dateBaseType = buildBaseType(BASE_DATE);
+        dateTimeBaseType = buildBaseType(BASE_DATE_TIME);
         postCodeBaseType = buildBaseType(BASE_POST_CODE);
         moneyGBPBaseType = buildBaseType(BASE_MONEY_GBP);
         phoneUKBaseType = buildBaseType(BASE_PHONE_UK);
@@ -146,6 +148,7 @@ public class ImportServiceImplTest {
                                                                         emailBaseType,
                                                                         yesNoBaseType,
                                                                         dateBaseType,
+                                                                        dateTimeBaseType,
                                                                         postCodeBaseType,
                                                                         moneyGBPBaseType,
                                                                         phoneUKBaseType,
