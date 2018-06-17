@@ -4,13 +4,13 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
-public class LabelTypeCannotBeEditableValidationError extends ValidationError {
+public class CasePaymentHistoryViewerTypeCannotBeEditableValidationError extends ValidationError {
 
     private EventCaseFieldEntity eventCaseFieldEntity;
 
-    public LabelTypeCannotBeEditableValidationError(EventCaseFieldEntity eventCaseFieldEntity) {
+    public CasePaymentHistoryViewerTypeCannotBeEditableValidationError(EventCaseFieldEntity eventCaseFieldEntity) {
         super(String.format(
-                "'%s' is Label type and cannot be editable for event with reference '%s'",
+                "'%s' is CasePaymentHistoryViewer type and cannot be editable for event with reference '%s'",
                 eventCaseFieldEntity.getCaseField().getReference(),
                 eventCaseFieldEntity.getEvent().getReference()
                 )

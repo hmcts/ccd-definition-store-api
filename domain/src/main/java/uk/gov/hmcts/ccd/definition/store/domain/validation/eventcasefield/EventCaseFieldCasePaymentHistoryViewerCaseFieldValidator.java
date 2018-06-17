@@ -6,18 +6,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 @Component
-public class EventCaseFieldLabelCaseFieldValidator implements EventCaseFieldEntityValidator {
+public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator implements EventCaseFieldEntityValidator {
 
     @Override
     public ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
         ValidationResult validationResult = new ValidationResult();
 
-        if ("Label".equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference())
+        if ("CasePaymentHistoryViewer".equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference())
                 && null != eventCaseFieldEntity.getDisplayContext()
                 && !eventCaseFieldEntity.getDisplayContext().equals(DisplayContext.READONLY)) {
             validationResult.addError(
-                new LabelTypeCannotBeEditableValidationError(eventCaseFieldEntity)
+                new CasePaymentHistoryViewerTypeCannotBeEditableValidationError(eventCaseFieldEntity)
             );
         }
 

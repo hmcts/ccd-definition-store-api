@@ -255,6 +255,18 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                              SheetName.CASE_EVENT_TO_FIELDS.getName());
     }
 
+    public String createErrorMessage(CasePaymentHistoryViewerTypeCannotBeEditableValidationError
+                                         casePaymentHistoryViewerTypeCannotBeEditableValidationError) {
+        return String.format("%s is CasePaymentHistoryViewer type and cannot be editable for the %s in the tab %s",
+                             casePaymentHistoryViewerTypeCannotBeEditableValidationError.getEventCaseFieldEntity()
+                                 .getCaseField()
+                                 .getReference(),
+                             casePaymentHistoryViewerTypeCannotBeEditableValidationError.getEventCaseFieldEntity()
+                                 .getEvent()
+                                 .getReference(),
+                             SheetName.CASE_EVENT_TO_FIELDS.getName());
+    }
+
     public String createErrorMessage(OrderSummaryTypeCannotBeEditableValidationError
                                          orderSummaryTypeCannotBeEditableValidationError) {
         return String.format("%s is OrderSummary type and cannot be editable for the %s in the tab %s",

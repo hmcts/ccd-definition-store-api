@@ -65,6 +65,8 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(LabelTypeCannotBeEditableValidationError labelTypeCannotBeEditableValidationError);
 
+    String createErrorMessage(CasePaymentHistoryViewerTypeCannotBeEditableValidationError casePaymentHistoryViewerTypeCannotBeEditableValidationError);
+
     String createErrorMessage(OrderSummaryTypeCannotBeEditableValidationError orderSummaryTypeCannotBeEditableValidationError);
 
     String createErrorMessage(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
