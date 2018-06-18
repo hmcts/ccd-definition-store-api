@@ -25,7 +25,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
         new EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator();
 
     @Test
-    public void shouldPassValidationIfFieldIsNotLabelType() {
+    public void shouldPassValidationIfFieldIsNotCasePaymentHistoryViewer() {
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotCasePaymentHistoryViewer"), null, DisplayContext.READONLY), null).isValid());
         assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotCasePaymentHistoryViewer"), null, DisplayContext.OPTIONAL), null).isValid());
@@ -63,7 +63,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
                              hasItem(
                                  hasProperty("defaultMessage",
                                              equalTo(
-                                                 "'CasePaymentHistoryViewer' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                                                 "'%s' is CasePaymentHistoryViewer type and cannot be editable for event with reference '%s'"))))
         );
     }
 
@@ -81,7 +81,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
                              hasItem(
                                  hasProperty("defaultMessage",
                                              equalTo(
-                                                 "'CasePaymentHistoryViewer' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                                                 "'%s' is CasePaymentHistoryViewer type and cannot be editable for event with reference '%s'"))))
         );
     }
 
