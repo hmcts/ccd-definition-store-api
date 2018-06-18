@@ -9,6 +9,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -45,8 +49,9 @@ public class EventCaseFieldLabelCaseFieldValidatorTest {
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
         ValidationError validationError = validationResult.getValidationErrors().get(0);
-        assertTrue(validationError instanceof LabelTypeCannotBeEditableValidationError);
-        assertTrue(((LabelTypeCannotBeEditableValidationError)validationError).getEventCaseFieldEntity() == eventCaseFieldEntity);
+        assertThat(validationResult.getValidationErrors(),
+                         hasItem(
+                             hasProperty("defaultMessage", equalTo("'Label' is Label type and cannot be editable for event with reference 'Event Reference'"))));
 
     }
 
@@ -67,6 +72,7 @@ public class EventCaseFieldLabelCaseFieldValidatorTest {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(fieldType);
         caseFieldEntity.setFieldType(fieldTypeEntity);
+        caseFieldEntity.setReference(fieldType);
         return caseFieldEntity;
     }
 

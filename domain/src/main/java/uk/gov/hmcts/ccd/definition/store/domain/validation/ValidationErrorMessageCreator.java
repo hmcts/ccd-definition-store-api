@@ -63,12 +63,6 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(EventEntityInvalidUserRoleValidationError eventEntityInvalidUserRoleValidationError);
 
-    String createErrorMessage(LabelTypeCannotBeEditableValidationError labelTypeCannotBeEditableValidationError);
-
-    String createErrorMessage(CasePaymentHistoryViewerTypeCannotBeEditableValidationError casePaymentHistoryViewerTypeCannotBeEditableValidationError);
-
-    String createErrorMessage(OrderSummaryTypeCannotBeEditableValidationError orderSummaryTypeCannotBeEditableValidationError);
-
     String createErrorMessage(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
                                   eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
 
@@ -101,4 +95,11 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(UserProfileValidatorImpl.ValidationError error);
 
     String createErrorMessage(EventCaseFieldDisplayContextValidatorImpl.ValidationError error);
+
+    String createErrorMessage(EventCaseFieldLabelCaseFieldValidator.ValidationError validationError);
+
+    String createErrorMessage(EventCaseFieldOrderSummaryCaseFieldValidator.ValidationError validationError);
+
+    String createErrorMessage(EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError validationError);
+
 }

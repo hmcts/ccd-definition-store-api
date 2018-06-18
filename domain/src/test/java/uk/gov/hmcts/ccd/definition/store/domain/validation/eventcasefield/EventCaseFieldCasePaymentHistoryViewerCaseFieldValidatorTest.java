@@ -63,7 +63,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
                              hasItem(
                                  hasProperty("defaultMessage",
                                              equalTo(
-                                                 "'%s' is CasePaymentHistoryViewer type and cannot be editable for event with reference '%s'"))))
+                                                 "'" + CASE_PAYMENT_HISTORY_VIEWER + "' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
         );
     }
 
@@ -81,7 +81,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
                              hasItem(
                                  hasProperty("defaultMessage",
                                              equalTo(
-                                                 "'%s' is CasePaymentHistoryViewer type and cannot be editable for event with reference '%s'"))))
+                                                 "'" + CASE_PAYMENT_HISTORY_VIEWER + "' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
         );
     }
 

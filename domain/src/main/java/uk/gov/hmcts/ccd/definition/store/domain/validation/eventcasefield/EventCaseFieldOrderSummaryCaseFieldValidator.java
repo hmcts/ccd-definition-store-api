@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
@@ -14,10 +16,16 @@ public class EventCaseFieldOrderSummaryCaseFieldValidator implements EventCaseFi
         ValidationResult validationResult = new ValidationResult();
 
         if (isOrderSummaryType(eventCaseFieldEntity)
-                && !isEmptyDisplayContext(eventCaseFieldEntity)
-                && !isReadOnlyDisplayContext(eventCaseFieldEntity)) {
+            && !isEmptyDisplayContext(eventCaseFieldEntity)
+            && !isReadOnlyDisplayContext(eventCaseFieldEntity)) {
             validationResult.addError(
-                new OrderSummaryTypeCannotBeEditableValidationError(eventCaseFieldEntity)
+                new EventCaseFieldOrderSummaryCaseFieldValidator.ValidationError(
+                    String.format(
+                        "'%s' is OrderSummary type and cannot be editable for event with reference '%s'",
+                        eventCaseFieldEntity.getCaseField() != null ? eventCaseFieldEntity.getCaseField().getReference() : "",
+                        eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""
+                    ),
+                    eventCaseFieldEntity)
             );
         }
 
@@ -36,4 +44,14 @@ public class EventCaseFieldOrderSummaryCaseFieldValidator implements EventCaseFi
         return "OrderSummary".equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
     }
 
+    public static class ValidationError extends SimpleValidationError<EventCaseFieldEntity> {
+        public ValidationError(String defaultMessage, EventCaseFieldEntity entity) {
+            super(defaultMessage, entity);
+        }
+
+        @Override
+        public String createMessage(ValidationErrorMessageCreator validationErrorMessageCreator) {
+            return validationErrorMessageCreator.createErrorMessage(this);
+        }
+    }
 }

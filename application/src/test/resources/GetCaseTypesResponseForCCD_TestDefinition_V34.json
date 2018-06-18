@@ -1377,7 +1377,13 @@
     "security_classification" : "PRIVATE",
     "live_from" : "2017-01-01",
     "live_until" : null,
-    "acls" : [ ],
+    "acls" : [ {
+      "role" : "CaseWorker3",
+      "create" : true,
+      "read" : true,
+      "update" : true,
+      "delete" : false
+    } ],
     "show_condition" : null
   } ],
   "printable_document_url" : null,
