@@ -52,28 +52,36 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
     @Test
     public void shouldReturnValidationErrorIfFieldTypeOptional() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER), event("Event Reference"), DisplayContext.OPTIONAL), null);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER),
+                                                                                         event("Event Reference"),
+                                                                                         DisplayContext.OPTIONAL), null);
 
         assertAll(
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
                              hasItem(
-                                 hasProperty("defaultMessage", equalTo("'CasePaymentHistoryViewer' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                                 hasProperty("defaultMessage",
+                                             equalTo(
+                                                 "'CasePaymentHistoryViewer' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
         );
     }
 
     @Test
     public void shouldReturnValidationErrorIfFieldTypeMandatory() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER), event("Event Reference"), DisplayContext.MANDATORY), null);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER),
+                                                                                         event("Event Reference"),
+                                                                                         DisplayContext.MANDATORY), null);
 
         assertAll(
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
                              hasItem(
-                                 hasProperty("defaultMessage", equalTo("'CasePaymentHistoryViewer' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                                 hasProperty("defaultMessage",
+                                             equalTo(
+                                                 "'CasePaymentHistoryViewer' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
         );
     }
 
