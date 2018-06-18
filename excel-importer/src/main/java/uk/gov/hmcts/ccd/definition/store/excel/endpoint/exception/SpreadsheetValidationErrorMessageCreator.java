@@ -24,11 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield
     .ComplexFieldShowConditionReferencesInvalidFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield
-    .EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.LabelTypeCannotBeEditableValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityUserRoleValidatorImpl;
@@ -254,6 +250,18 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                                  .getCaseField()
                                  .getReference(),
                              labelTypeCannotBeEditableValidationError.getEventCaseFieldEntity()
+                                 .getEvent()
+                                 .getReference(),
+                             SheetName.CASE_EVENT_TO_FIELDS.getName());
+    }
+
+    public String createErrorMessage(OrderSummaryTypeCannotBeEditableValidationError
+                                         orderSummaryTypeCannotBeEditableValidationError) {
+        return String.format("%s is OrderSummary type and cannot be editable for the %s in the tab %s",
+                             orderSummaryTypeCannotBeEditableValidationError.getEventCaseFieldEntity()
+                                 .getCaseField()
+                                 .getReference(),
+                             orderSummaryTypeCannotBeEditableValidationError.getEventCaseFieldEntity()
                                  .getEvent()
                                  .getReference(),
                              SheetName.CASE_EVENT_TO_FIELDS.getName());

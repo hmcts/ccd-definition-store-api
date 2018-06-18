@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class EventCaseFieldDisplayContextValidatorImplTest {
 
     @Test
-    public void CaseFieldEntityDisplayContextMustHaveValueValidationErrorFiresWhenDisplayContextDoesntExist() {
+    public void shouldFireValidationErrorWhenDisplayContextDoesNotExist() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
         ValidationResult validationResult
             = new EventCaseFieldDisplayContextValidatorImpl().validate(eventCaseFieldEntity, null);
@@ -21,7 +21,7 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
         assertEquals(1, validationResult.getValidationErrors().size());
 
         assertTrue(validationResult.getValidationErrors().get(0) instanceof
-            EventCaseFieldDisplayContextValidatorImpl.ValidationError);
+                       EventCaseFieldDisplayContextValidatorImpl.ValidationError);
 
         assertEquals(
             eventCaseFieldEntity,
@@ -31,7 +31,7 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
     }
 
     @Test
-    public void CaseFieldEntityDisplayContextMustHaveValueValidationErrorDoesNotFiresWhenDisplayContextExists() {
+    public void shouldNotFireValidationErrorWhenDisplayContextExists() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
         eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);
         ValidationResult validationResult
