@@ -22,6 +22,6 @@ public interface FieldTypeRepository extends VersionedDefinitionRepository<Field
     @Query(FIND_BASE_TYPES_QUERY + " and entity.reference = :reference")
     Optional<FieldTypeEntity> findBaseType(@Param("reference") String reference);
 
-    @Query("select entity from FieldTypeEntity entity where entity.reference in ('AddressGlobal','AddressUK','AddressGlobalUK')")
+    @Query("select entity from FieldTypeEntity entity where entity.reference in ('AddressGlobal','AddressUK','AddressGlobalUK','OrderSummary')")
     List<FieldTypeEntity> findPredefinedComplexTypes();
 }
