@@ -32,10 +32,6 @@ public class EventCaseFieldOrderSummaryCaseFieldValidator implements EventCaseFi
         return validationResult;
     }
 
-    private boolean isReadOnlyDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {
-        return eventCaseFieldEntity.getDisplayContext().equals(DisplayContext.READONLY);
-    }
-
     private boolean isOrderSummaryType(EventCaseFieldEntity eventCaseFieldEntity) {
         return "OrderSummary".equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
     }

@@ -33,10 +33,6 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator implements
         return validationResult;
     }
 
-    private boolean isReadOnlyDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {
-        return eventCaseFieldEntity.getDisplayContext().equals(DisplayContext.READONLY);
-    }
-
     private boolean isCasePaymentHistoryViewer(EventCaseFieldEntity eventCaseFieldEntity) {
         return BASE_CASE_PAYMENT_HISTORY_VIEWER.equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
     }

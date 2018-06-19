@@ -32,10 +32,6 @@ public class EventCaseFieldLabelCaseFieldValidator implements EventCaseFieldEnti
         return validationResult;
     }
 
-    private boolean isReadOnlyDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {
-        return eventCaseFieldEntity.getDisplayContext().equals(DisplayContext.READONLY);
-    }
-
     private boolean isLabelType(EventCaseFieldEntity eventCaseFieldEntity) {
         return "Label".equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
     }
