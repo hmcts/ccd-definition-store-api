@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_PAYMENT_HISTORY_VIEWER;
@@ -32,6 +31,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator implements
 
         return validationResult;
     }
+
 
     private boolean isCasePaymentHistoryViewer(EventCaseFieldEntity eventCaseFieldEntity) {
         return BASE_CASE_PAYMENT_HISTORY_VIEWER.equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
