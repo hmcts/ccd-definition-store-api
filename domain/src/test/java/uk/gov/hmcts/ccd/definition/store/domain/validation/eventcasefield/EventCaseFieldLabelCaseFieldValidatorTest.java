@@ -35,7 +35,6 @@ public class EventCaseFieldLabelCaseFieldValidatorTest {
     public void fieldIsLabelType_validationPassesWhenFieldIsReadOnly() {
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("Label"), null, DisplayContext.READONLY), null).isValid());
-        ;
 
     }
 

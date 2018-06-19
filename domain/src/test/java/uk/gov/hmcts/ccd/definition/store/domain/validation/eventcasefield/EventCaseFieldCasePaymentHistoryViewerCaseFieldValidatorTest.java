@@ -81,7 +81,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
             () -> assertThat(validationResult.getValidationErrors(),
                              hasItem(
                                  hasProperty("defaultMessage",
-                                     equalTo("'"+ CASE_PAYMENT_HISTORY_VIEWER
+                                     equalTo("'" + CASE_PAYMENT_HISTORY_VIEWER
                                                  + "' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
         );
     }
