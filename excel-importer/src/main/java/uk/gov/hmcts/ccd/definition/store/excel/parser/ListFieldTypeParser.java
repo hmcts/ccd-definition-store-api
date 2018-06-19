@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -14,7 +10,9 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 
-import static java.util.stream.Collectors.reducing;
+import java.util.List;
+import java.util.Map;
+
 import static java.util.stream.Collectors.toList;
 
 /**

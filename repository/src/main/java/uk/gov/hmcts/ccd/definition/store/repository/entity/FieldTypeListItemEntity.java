@@ -24,6 +24,10 @@ public class FieldTypeListItemEntity implements Serializable {
     @JoinColumn(name = "field_type_id", nullable = false)
     private FieldTypeEntity fieldType;
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getValue() {
         return value;
     }
