@@ -36,10 +36,6 @@ public class EventCaseFieldOrderSummaryCaseFieldValidator implements EventCaseFi
         return eventCaseFieldEntity.getDisplayContext().equals(DisplayContext.READONLY);
     }
 
-    private boolean isEmptyDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {
-        return null == eventCaseFieldEntity.getDisplayContext();
-    }
-
     private boolean isOrderSummaryType(EventCaseFieldEntity eventCaseFieldEntity) {
         return "OrderSummary".equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
     }

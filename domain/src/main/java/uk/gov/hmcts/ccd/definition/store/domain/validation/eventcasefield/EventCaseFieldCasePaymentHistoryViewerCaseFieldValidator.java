@@ -37,10 +37,6 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator implements
         return eventCaseFieldEntity.getDisplayContext().equals(DisplayContext.READONLY);
     }
 
-    private boolean isEmptyDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {
-        return null == eventCaseFieldEntity.getDisplayContext();
-    }
-
     private boolean isCasePaymentHistoryViewer(EventCaseFieldEntity eventCaseFieldEntity) {
         return BASE_CASE_PAYMENT_HISTORY_VIEWER.equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
     }

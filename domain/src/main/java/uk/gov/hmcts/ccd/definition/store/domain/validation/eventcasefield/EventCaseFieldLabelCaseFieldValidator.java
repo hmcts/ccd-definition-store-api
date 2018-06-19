@@ -36,10 +36,6 @@ public class EventCaseFieldLabelCaseFieldValidator implements EventCaseFieldEnti
         return eventCaseFieldEntity.getDisplayContext().equals(DisplayContext.READONLY);
     }
 
-    private boolean isEmptyDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {
-        return null == eventCaseFieldEntity.getDisplayContext();
-    }
-
     private boolean isLabelType(EventCaseFieldEntity eventCaseFieldEntity) {
         return "Label".equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
     }

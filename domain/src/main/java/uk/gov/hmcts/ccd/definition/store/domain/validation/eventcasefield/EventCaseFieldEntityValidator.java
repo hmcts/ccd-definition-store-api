@@ -8,4 +8,7 @@ public interface EventCaseFieldEntityValidator {
     ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
                               EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext);
 
+    default boolean isEmptyDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {
+        return null == eventCaseFieldEntity.getDisplayContext();
+    }
 }
