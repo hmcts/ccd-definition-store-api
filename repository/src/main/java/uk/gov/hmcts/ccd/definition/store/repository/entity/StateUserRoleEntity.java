@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
 
 @Table(name = "state_user_role")
 @Entity

@@ -35,6 +35,10 @@ public abstract class GenericLayoutEntity implements Serializable {
     @Column(name = "display_order")
     private Integer order;
 
+    public Integer getId() {
+        return id;
+    }
+
     public LocalDate getLiveFrom() {
         return liveFrom;
     }
