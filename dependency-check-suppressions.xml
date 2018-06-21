@@ -58,6 +58,11 @@
         <cve>CVE-2018-10054</cve>
     </suppress>
     <suppress>
+        <notes>tomcat embed is not used in production</notes>
+        <gav regex="true">^.*tomcat-embed-.*$</gav>
+        <cpe>cpe:/a:apache:tomcat</cpe>
+    </suppress>
+    <suppress>
         <notes>suppress false positives</notes>
         <gav regex="true">^org\.apache\.tomcat:tomcat-annotations-api:.*$</gav>
         <cpe>cpe:/a:apache:tomcat</cpe>
