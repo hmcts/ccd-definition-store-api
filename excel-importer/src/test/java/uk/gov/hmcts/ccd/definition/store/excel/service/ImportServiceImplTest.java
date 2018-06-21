@@ -12,7 +12,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidationContextFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
@@ -44,8 +43,6 @@ public class ImportServiceImplTest {
 
     @Mock
     private FieldTypeService fieldTypeService;
-
-    private FieldTypeValidationContextFactory fieldTypevalidationContextFactory;
 
     @Mock
     private SpreadsheetValidator spreadsheetValidator;
@@ -84,6 +81,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity collectionBaseType;
     private FieldTypeEntity documentBaseType;
     private FieldTypeEntity labelBaseType;
+    private FieldTypeEntity casePaymentHistoryViewerBaseType;
 
     @Before
     public void setup() {
@@ -118,6 +116,7 @@ public class ImportServiceImplTest {
         collectionBaseType = buildBaseType(BASE_COLLECTION);
         documentBaseType = buildBaseType(BASE_DOCUMENT);
         labelBaseType = buildBaseType(BASE_LABEL);
+        casePaymentHistoryViewerBaseType = buildBaseType(BASE_CASE_PAYMENT_HISTORY_VIEWER);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
     }
@@ -155,7 +154,8 @@ public class ImportServiceImplTest {
                                                                         textAreaBaseType,
                                                                         collectionBaseType,
                                                                         documentBaseType,
-                                                                        labelBaseType));
+                                                                        labelBaseType,
+                                                                        casePaymentHistoryViewerBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
 
         final InputStream inputStream = ClassLoader.getSystemResourceAsStream(GOOD_FILE);

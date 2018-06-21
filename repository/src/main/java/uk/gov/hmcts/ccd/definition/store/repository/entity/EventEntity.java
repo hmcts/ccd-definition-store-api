@@ -109,6 +109,10 @@ public class EventEntity implements Serializable {
     @Column(name = "can_save_draft")
     private Boolean canSaveDraft;
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
