@@ -9,5 +9,10 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
 script:
-- "./gradlew build"
-- "./gradlew codeCoverageReport"
+  - "./gradlew build"
+  - "./gradlew codeCoverageReport"
+env:
+  global:
+    - CODACY_PROJECT_TOKEN=e9c07f97fad84186826f873f384a6112
+after_success:
+  - "bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'"
