@@ -10,7 +10,7 @@ cache:
   - "$HOME/.gradle/wrapper/"
 script:
   - "./gradlew build"
-  - "./gradlew codeCoverageReport"
+  - "./gradlew codeCoverageReport || echo 'code coverage upload failed'"
 env:
   global:
     - CODACY_PROJECT_TOKEN=e9c07f97fad84186826f873f384a6112
