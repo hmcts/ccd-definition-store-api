@@ -1,11 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
 
 public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID extends Serializable> extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
 

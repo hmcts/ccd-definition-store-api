@@ -106,6 +106,10 @@ public class EventEntity implements Serializable {
     @Column(name = "show_event_notes")
     private Boolean showEventNotes;
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

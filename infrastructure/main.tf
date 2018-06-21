@@ -24,6 +24,10 @@ locals {
   previewVaultUri = "https://ccd-definition-aat.vault.azure.net/"
   nonPreviewVaultUri = "${module.definition-store-vault.key_vault_uri}"
   vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
+
+  custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
+  default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
+  oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
 }
 
 data "vault_generic_secret" "definition_store_item_key" {
@@ -32,6 +36,10 @@ data "vault_generic_secret" "definition_store_item_key" {
 
 data "vault_generic_secret" "gateway_idam_key" {
   path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-gw"
+}
+
+data "vault_generic_secret" "gateway_oauth2_client_secret" {
+  path = "secret/${var.vault_section}/ccidam/idam-api/oauth2/client-secrets/ccd-gateway"
 }
 
 module "case-definition-store-api" {
@@ -60,6 +68,9 @@ module "case-definition-store-api" {
     IDAM_USER_URL = "${var.idam_api_url}"
     IDAM_S2S_URL = "${local.s2s_url}"
     DEFINITION_STORE_IDAM_KEY = "${data.vault_generic_secret.definition_store_item_key.data["value"]}"
+
+    DEFINITION_STORE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
+
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
   }
 
@@ -133,5 +144,11 @@ resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
 resource "azurerm_key_vault_secret" "gw_s2s_key" {
   name = "microserviceGatewaySecret"
   value = "${data.vault_generic_secret.gateway_idam_key.data["value"]}"
+  vault_uri = "${module.definition-store-vault.key_vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "gw_oauth2_secret" {
+  name = "gatewayOAuth2ClientSecret"
+  value = "${data.vault_generic_secret.gateway_oauth2_client_secret.data["value"]}"
   vault_uri = "${module.definition-store-vault.key_vault_uri}"
 }
