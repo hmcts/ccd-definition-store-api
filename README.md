@@ -40,12 +40,12 @@ The following environment variables are required:
 
 ### Building
 
-The project uses [Maven](https://maven.apache.org/). 
+The project uses [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html). 
 
 To build project please execute the following command:
 
 ```bash
-mvn install
+./gradlew clean build
 ```
 
 ### Running
@@ -85,7 +85,7 @@ You can connect to the database at `http://localhost:5451` with the username and
 
 ## Modules
 
-The application is structured as a Maven multi-module project. The modules are:
+The application is structured as a multi-module project. The modules are:
 
 ### repository
 
