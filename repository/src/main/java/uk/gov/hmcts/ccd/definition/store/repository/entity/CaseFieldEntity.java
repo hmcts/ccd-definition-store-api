@@ -16,6 +16,7 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "case_field")
@@ -54,11 +55,11 @@ public class CaseFieldEntity implements Serializable {
     @Type( type = "pgsql_securityclassification_enum" )
     private SecurityClassification securityClassification;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "field_type_id", nullable=false)
     private FieldTypeEntity fieldType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id", nullable=false)
     private CaseTypeEntity caseType;
 
@@ -66,6 +67,10 @@ public class CaseFieldEntity implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_field_id")
     private final List<CaseFieldUserRoleEntity> caseFieldUserRoles = new ArrayList<>();
+
+    public Integer getId() {
+        return id;
+    }
 
     public String getReference() {
         return reference;
