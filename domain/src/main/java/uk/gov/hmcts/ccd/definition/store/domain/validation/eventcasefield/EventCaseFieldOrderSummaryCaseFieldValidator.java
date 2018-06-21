@@ -8,19 +8,32 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 @Component
-public class EventCaseFieldDisplayContextValidatorImpl implements EventCaseFieldEntityValidator {
+public class EventCaseFieldOrderSummaryCaseFieldValidator implements EventCaseFieldEntityValidator {
 
     @Override
     public ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
         ValidationResult validationResult = new ValidationResult();
-        DisplayContext displayContext = eventCaseFieldEntity.getDisplayContext();
-        if (displayContext == null) {
-            validationResult.addError(new ValidationError("Couldn't find the column DisplayContext or " +
-                                                              "incorrect value specified for DisplayContext. Allowed values are 'READONLY','MANDATORY' or 'OPTIONAL'",
-                                                          eventCaseFieldEntity));
+
+        if (isOrderSummaryType(eventCaseFieldEntity)
+            && !isEmptyDisplayContext(eventCaseFieldEntity)
+            && !isReadOnlyDisplayContext(eventCaseFieldEntity)) {
+            validationResult.addError(
+                new EventCaseFieldOrderSummaryCaseFieldValidator.ValidationError(
+                    String.format(
+                        "'%s' is OrderSummary type and cannot be editable for event with reference '%s'",
+                        eventCaseFieldEntity.getCaseField() != null ? eventCaseFieldEntity.getCaseField().getReference() : "",
+                        eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""
+                    ),
+                    eventCaseFieldEntity)
+            );
         }
+
         return validationResult;
+    }
+
+    private boolean isOrderSummaryType(EventCaseFieldEntity eventCaseFieldEntity) {
+        return "OrderSummary".equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
     }
 
     public static class ValidationError extends SimpleValidationError<EventCaseFieldEntity> {

@@ -19,6 +19,10 @@ variable "subscription" {
   type = "string"
 }
 
+variable "capacity" {
+  default = "1"
+}
+
 variable "ilbIp"{}
 
 variable "tenant_id" {
@@ -32,6 +36,12 @@ variable "jenkins_AAD_objectId" {
 
 variable "vault_section" {
   default = "test"
+}
+
+variable "frontend_url" {
+  type = "string"
+  default = ""
+  description = "Optional front end URL to use for building redirect URI"
 }
 
 ////////////////////////////////
@@ -57,4 +67,12 @@ variable "use_uk_db" {
 
 variable "idam_api_url" {
   default = "http://betaDevBccidamAppLB.reform.hmcts.net"
+}
+
+////////////////////////////////
+// S2S
+////////////////////////////////
+
+variable "authorised-services" {
+  default = "ccd_data,ccd_gw,ccd_admin"
 }

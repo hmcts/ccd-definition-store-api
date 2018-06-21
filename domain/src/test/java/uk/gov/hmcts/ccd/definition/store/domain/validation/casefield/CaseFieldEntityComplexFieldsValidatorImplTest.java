@@ -5,8 +5,6 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
@@ -20,7 +18,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -49,9 +46,6 @@ public class CaseFieldEntityComplexFieldsValidatorImplTest {
 
     @Mock
     private FieldTypeService fieldTypeService;
-
-    @Captor
-    private ArgumentCaptor<Collection<CaseFieldEntity>> captor;
 
     private ComplexFieldEntity complexFieldEntity1 = new ComplexFieldEntity();
 

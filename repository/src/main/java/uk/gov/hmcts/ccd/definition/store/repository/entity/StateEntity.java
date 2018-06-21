@@ -49,6 +49,10 @@ public class StateEntity implements Serializable, Referencable {
     @JoinColumn(name = "state_id")
     private final List<StateUserRoleEntity> stateUserRoles = new ArrayList<>();
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getReference() {
         return reference;
     }

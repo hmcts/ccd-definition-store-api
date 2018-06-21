@@ -4,8 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -30,8 +28,6 @@ import static org.junit.Assert.assertThat;
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
 public class SearchResultObjectGraphTest {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SearchResultObjectGraphTest.class);
 
     @Autowired
     private CaseTypeRepository caseTypeRepository;
