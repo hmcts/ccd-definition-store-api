@@ -63,3 +63,11 @@ variable "database_name" {
 variable "idam_api_url" {
   default = "http://betaDevBccidamAppLB.reform.hmcts.net"
 }
+
+////////////////////////////////
+// S2S
+////////////////////////////////
+
+variable "authorised-services" {
+  default = "ccd_data,ccd_gw,ccd_admin"
+}

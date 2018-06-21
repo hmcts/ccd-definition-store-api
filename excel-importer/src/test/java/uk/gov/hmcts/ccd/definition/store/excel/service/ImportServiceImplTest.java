@@ -12,7 +12,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidationContextFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
@@ -45,8 +44,6 @@ public class ImportServiceImplTest {
     @Mock
     private FieldTypeService fieldTypeService;
 
-    private FieldTypeValidationContextFactory fieldTypevalidationContextFactory;
-
     @Mock
     private SpreadsheetValidator spreadsheetValidator;
 
@@ -76,6 +73,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity emailBaseType;
     private FieldTypeEntity yesNoBaseType;
     private FieldTypeEntity dateBaseType;
+    private FieldTypeEntity dateTimeBaseType;
     private FieldTypeEntity postCodeBaseType;
     private FieldTypeEntity moneyGBPBaseType;
     private FieldTypeEntity phoneUKBaseType;
@@ -83,6 +81,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity collectionBaseType;
     private FieldTypeEntity documentBaseType;
     private FieldTypeEntity labelBaseType;
+    private FieldTypeEntity casePaymentHistoryViewerBaseType;
 
     @Before
     public void setup() {
@@ -109,6 +108,7 @@ public class ImportServiceImplTest {
         emailBaseType = buildBaseType(BASE_EMAIL);
         yesNoBaseType = buildBaseType(BASE_YES_OR_NO);
         dateBaseType = buildBaseType(BASE_DATE);
+        dateTimeBaseType = buildBaseType(BASE_DATE_TIME);
         postCodeBaseType = buildBaseType(BASE_POST_CODE);
         moneyGBPBaseType = buildBaseType(BASE_MONEY_GBP);
         phoneUKBaseType = buildBaseType(BASE_PHONE_UK);
@@ -116,6 +116,7 @@ public class ImportServiceImplTest {
         collectionBaseType = buildBaseType(BASE_COLLECTION);
         documentBaseType = buildBaseType(BASE_DOCUMENT);
         labelBaseType = buildBaseType(BASE_LABEL);
+        casePaymentHistoryViewerBaseType = buildBaseType(BASE_CASE_PAYMENT_HISTORY_VIEWER);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
     }
@@ -146,13 +147,15 @@ public class ImportServiceImplTest {
                                                                         emailBaseType,
                                                                         yesNoBaseType,
                                                                         dateBaseType,
+                                                                        dateTimeBaseType,
                                                                         postCodeBaseType,
                                                                         moneyGBPBaseType,
                                                                         phoneUKBaseType,
                                                                         textAreaBaseType,
                                                                         collectionBaseType,
                                                                         documentBaseType,
-                                                                        labelBaseType));
+                                                                        labelBaseType,
+                                                                        casePaymentHistoryViewerBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
 
         final InputStream inputStream = ClassLoader.getSystemResourceAsStream(GOOD_FILE);

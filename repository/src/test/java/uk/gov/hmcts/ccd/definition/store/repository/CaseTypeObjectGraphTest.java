@@ -1,32 +1,25 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import javax.persistence.EntityManager;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -40,7 +33,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
  */
 public class CaseTypeObjectGraphTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CaseTypeObjectGraphTest.class);
     public static final String CASE_FIELD_REFERENCE = "ref cf";
     public static final String CASE_FIELD_LABEL = "lab";
     public static final LocalDate TODAY = LocalDate.of(2017, 7, 7);

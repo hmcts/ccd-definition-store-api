@@ -257,22 +257,6 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_LabelTypeCannotBeEditableValidationError() {
-
-        assertEquals("Case Field Reference is Label type and cannot be editable for the Event Reference in the tab CaseEventToFields",
-            classUnderTest.createErrorMessage(
-                new LabelTypeCannotBeEditableValidationError(
-                    eventCaseFieldEntity(
-                        eventEntity("Event Reference", null),
-                        caseFieldEntity("Case Field Reference", null)
-                    )
-                )
-            )
-        );
-
-    }
-
-    @Test
     public void entityExistsInRegistry_createErrorMessageCalledForCreateEventDoesNotHavePostStateValidationError_customMessageReturned() {
 
         EventEntity eventEntity = eventEntity("Event ID", null);
@@ -940,6 +924,48 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals("default message. WorkSheet 'CaseEventToFields'",
             classUnderTest.createErrorMessage(
                 new EventCaseFieldDisplayContextValidatorImpl.ValidationError("default message", entity))
+        );
+    }
+
+    @Test
+    public void shouldHaveValidValidationMessageForOrderSummaryValidationError() {
+
+        EventCaseFieldEntity entity = new EventCaseFieldEntity();
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(entity))).thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals("default message. WorkSheet 'CaseEventToFields'",
+                     classUnderTest.createErrorMessage(
+                         new EventCaseFieldOrderSummaryCaseFieldValidator.ValidationError("default message", entity))
+        );
+    }
+
+    @Test
+    public void shouldHaveValidValidationMessageForLabelValidationError() {
+
+        EventCaseFieldEntity entity = new EventCaseFieldEntity();
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(entity))).thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals("default message. WorkSheet 'CaseEventToFields'",
+                     classUnderTest.createErrorMessage(
+                         new EventCaseFieldLabelCaseFieldValidator.ValidationError("default message", entity))
+        );
+    }
+
+    @Test
+    public void shouldHaveValidValidationMessageForCasePaymentHistoryViewerValidationError() {
+
+        EventCaseFieldEntity entity = new EventCaseFieldEntity();
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(entity))).thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals("default message. WorkSheet 'CaseEventToFields'",
+                     classUnderTest.createErrorMessage(
+                         new EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError("default message", entity))
         );
     }
 
