@@ -1,0 +1,143 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-2027" author="andrzej.folga@hmcts.net">
+
+        <sql>
+            UPDATE complex_field SET label='Payment Total' where reference='PaymentTotal';
+        </sql>
+
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentDate" />
+            <column name="label" value="Payment Date" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentPayer" />
+            <column name="label" value="Payment Payer" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentDescription" />
+            <column name="label" value="Payment Description" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentCurrency" />
+            <column name="label" value="Payment Currency" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentCCDCaseNumber" />
+            <column name="label" value="Payment CCD Case Number" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentCaseReference" />
+            <column name="label" value="Payment Case Reference" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentChannel" />
+            <column name="label" value="Payment Channel" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentMethod" />
+            <column name="label" value="Payment Method" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentExternalProvider" />
+            <column name="label" value="Payment External Provider" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentStatus" />
+            <column name="label" value="Payment Status" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentExternalReference" />
+            <column name="label" value="Payment External Reference" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentSiteID" />
+            <column name="label" value="Payment Site ID" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+        <insert tableName="complex_field">
+            <column name="reference" value="PaymentServiceName" />
+            <column name="label" value="Payment Service Name" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id" valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrderSummary'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>

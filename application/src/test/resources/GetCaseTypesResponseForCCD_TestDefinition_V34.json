@@ -1211,7 +1211,7 @@
       }, {
         "id" : "PaymentTotal",
         "case_type_id" : null,
-        "label" : "Total",
+        "label" : "Payment Total",
         "hint_text" : null,
         "field_type" : {
           "id" : "MoneyGBP",
@@ -1336,6 +1336,279 @@
             } ],
             "collection_field_type" : null
           }
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentDate",
+        "case_type_id" : null,
+        "label" : "Payment Date",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentPayer",
+        "case_type_id" : null,
+        "label" : "Payment Payer",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentDescription",
+        "case_type_id" : null,
+        "label" : "Payment Description",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentCurrency",
+        "case_type_id" : null,
+        "label" : "Payment Currency",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentCCDCaseNumber",
+        "case_type_id" : null,
+        "label" : "Payment CCD Case Number",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentCaseReference",
+        "case_type_id" : null,
+        "label" : "Payment Case Reference",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentChannel",
+        "case_type_id" : null,
+        "label" : "Payment Channel",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentMethod",
+        "case_type_id" : null,
+        "label" : "Payment Method",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentExternalProvider",
+        "case_type_id" : null,
+        "label" : "Payment External Provider",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentStatus",
+        "case_type_id" : null,
+        "label" : "Payment Status",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentExternalReference",
+        "case_type_id" : null,
+        "label" : "Payment External Reference",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentSiteID",
+        "case_type_id" : null,
+        "label" : "Payment Site ID",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PUBLIC",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "show_condition" : null
+      }, {
+        "id" : "PaymentServiceName",
+        "case_type_id" : null,
+        "label" : "Payment Service Name",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
         },
         "hidden" : null,
         "security_classification" : "PUBLIC",
