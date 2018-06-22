@@ -41,4 +41,19 @@
         <gav regex="true">^org\.apache\.tomcat:tomcat-annotations-api:.*$</gav>
         <cpe>cpe:/a:apache:tomcat</cpe>
     </suppress>
+    <suppress>
+        <notes>Dependencies brough in by codacy report; not used in production</notes>
+        <gav regex="true">^org\.scala-lang:scala-compiler:.*$</gav>
+        <cpe>cpe:/a:scala-lang:scala</cpe>
+    </suppress>
+    <suppress>
+        <notes>Dependencies brough in by codacy report; not used in production</notes>
+        <gav regex="true">^org\.scala-lang:scala-reflect:.*$</gav>
+        <cpe>cpe:/a:scala-lang:scala</cpe>
+    </suppress>
+    <suppress>
+        <notes>Dependencies brough in by codacy report; not used in production</notes>
+        <gav regex="true">^com\.jcraft:jsch:.*$</gav>
+        <cpe>cpe:/a:jcraft:jsch</cpe>
+    </suppress>
 </suppressions>
