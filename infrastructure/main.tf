@@ -68,6 +68,9 @@ module "case-definition-store-api" {
     IDAM_USER_URL = "${var.idam_api_url}"
     IDAM_S2S_URL = "${local.s2s_url}"
     DEFINITION_STORE_IDAM_KEY = "${data.vault_generic_secret.definition_store_item_key.data["value"]}"
+
+    DEFINITION_STORE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
+
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
   }
 
