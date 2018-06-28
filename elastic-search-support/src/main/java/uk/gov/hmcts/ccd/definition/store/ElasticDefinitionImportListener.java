@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
@@ -21,13 +22,19 @@ public class ElasticDefinitionImportListener {
         this.elasticIndexesCreator = elasticIndexesCreator;
     }
 
+    @Async
     @TransactionalEventListener
-    void onDefinitionImported(DefinitionImportedEvent event) {
+    void onDefinitionImported(DefinitionImportedEvent event) throws InterruptedException {
+        try {
+            List<CaseTypeEntity> caseTypes = event.getCaseTypes();
+            Thread.sleep(6000);
+            log.info("notified of imported definition");
+            elasticIndexesCreator.createIndexes(caseTypes);
+            throw new RuntimeException("failed");
+        } catch (Exception e) {
+            log.warn("error while creating index", e);
+        }
 
-        List<CaseTypeEntity> caseTypes = event.getCaseTypes();
-
-        log.info("notified of imported definition");
-        elasticIndexesCreator.createIndexes(caseTypes);
     }
 
 }
