@@ -7,8 +7,7 @@ jar {
 dependencies {
 
     compile project(':domain')
-    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.3.0'
-//    compile group: 'org.elasticsearch', name: 'elasticsearch-core', version: '6.3.0'
+    compile "org.elasticsearch.client:elasticsearch-rest-high-level-client:${elasticSearchVersion}"
 
     // need these for command line to pass in the gradle version,
     // intellij does not need the next 2 lines though
