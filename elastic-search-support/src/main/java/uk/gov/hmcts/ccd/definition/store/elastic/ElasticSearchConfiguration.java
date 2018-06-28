@@ -15,15 +15,15 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = "classpath:elastic-search-support.properties")
 public class ElasticSearchConfiguration {
 
-    @Value("${spring.data.elasticsearch.cluster-nodes}")
-    private String clusterNodes;
-    @Value("${spring.data.elasticsearch.cluster-name}")
-    private String clusterName;
+    @Value("${ccd.elasticsearch.host}")
+    private String hostname;
+    @Value("${ccd.elasticsearch.port}")
+    private int port;
 
     @Bean
     public RestHighLevelClient getRestHighLevelClient() {
         return new RestHighLevelClient(
                     RestClient.builder(
-                            new HttpHost("localhost", 9200, "http")));
+                            new HttpHost(hostname, port, "http")));
     }
 }
