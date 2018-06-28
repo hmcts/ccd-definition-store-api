@@ -20,9 +20,6 @@ dependencies {
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
     compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.9'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
-    runtime group: 'org.elasticsearch', name: 'elasticsearch-core', version: '6.3.0'
-    runtime 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.3.0'
-
     runtime "org.liquibase:liquibase-core"
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testCompile "io.rest-assured:rest-assured:3.1.0"

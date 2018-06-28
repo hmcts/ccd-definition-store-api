@@ -180,9 +180,6 @@ subprojects {
         compile "org.hibernate:hibernate-core:${hibernateVersion}"
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
-//        runtime 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.3.0'
-//        runtime group: 'org.elasticsearch', name: 'elasticsearch-core', version: '6.3.0'
-//        runtime group: 'org.elasticsearch', name: 'elasticsearch', version: '6.3.0'
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
 
