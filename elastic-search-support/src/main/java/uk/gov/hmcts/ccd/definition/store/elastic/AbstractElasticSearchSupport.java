@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store;
+package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
