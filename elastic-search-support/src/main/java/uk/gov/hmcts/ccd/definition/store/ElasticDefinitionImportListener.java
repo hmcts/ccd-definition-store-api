@@ -18,7 +18,6 @@ public class ElasticDefinitionImportListener {
 
     @Autowired
     public ElasticDefinitionImportListener(ElasticIndexesCreator elasticIndexesCreator) {
-        System.out.println("ElasticDefinitionImportListener created");
         this.elasticIndexesCreator = elasticIndexesCreator;
     }
 
@@ -27,14 +26,11 @@ public class ElasticDefinitionImportListener {
     void onDefinitionImported(DefinitionImportedEvent event) throws InterruptedException {
         try {
             List<CaseTypeEntity> caseTypes = event.getCaseTypes();
-            Thread.sleep(6000);
             log.info("notified of imported definition");
             elasticIndexesCreator.createIndexes(caseTypes);
-            throw new RuntimeException("failed");
         } catch (Exception e) {
             log.warn("error while creating index", e);
         }
-
     }
 
 }

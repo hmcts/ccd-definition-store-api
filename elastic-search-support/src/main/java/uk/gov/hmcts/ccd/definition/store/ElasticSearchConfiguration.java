@@ -19,50 +19,6 @@ public class ElasticSearchConfiguration {
     private String clusterNodes;
     @Value("${spring.data.elasticsearch.cluster-name}")
     private String clusterName;
-//    private RestHighLevelClient restHighLevelClient;
-
-
-//    @Override
-//    public void destroy() {
-//        try {
-//            if (restHighLevelClient != null) {
-//                log.info("stopping ElasticSearch client");
-//                restHighLevelClient.close();
-//            }
-//        } catch (final Exception e) {
-//            log.error("Error closing ElasticSearch client: ", e);
-//        }
-//    }
-//
-//    @Override
-//    public Class<RestHighLevelClient> getObjectType() {
-//        return RestHighLevelClient.class;
-//    }
-//
-//    @Override
-//    public boolean isSingleton() {
-//        return false;
-//    }
-//
-//    @Override
-//    public RestHighLevelClient createInstance() {
-//        return buildClient();
-//    }
-//
-//    private RestHighLevelClient buildClient() {
-//        try {
-//
-//            log.info("nodes: "+clusterNodes);
-//            log.info("name: "+clusterName);
-//            restHighLevelClient = new RestHighLevelClient(
-//                    RestClient.builder(
-//                            new HttpHost("localhost", 9200, "http"),
-//                            new HttpHost("localhost", 9201, "http")));
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//        }
-//        return restHighLevelClient;
-//    }
 
     @Bean
     public RestHighLevelClient getRestHighLevelClient() {
