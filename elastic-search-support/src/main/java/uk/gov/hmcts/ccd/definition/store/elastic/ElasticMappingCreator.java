@@ -18,23 +18,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 @Slf4j
 public class ElasticMappingCreator extends AbstractElasticSearchSupport {
 
-    @Value("${ccd.elasticsearch.cases.index.type.name}")
+    @Value("${ccd.elasticsearch.index.cases.name}")
     private String typeName;
 
     public void createMapping(String indexName, CaseTypeEntity caseType) throws IOException {
         log.info("creating mapping for case type {}", caseType.getReference());
-
-        PutMappingRequest request = createPutMappingRequest(indexName);
-
-        PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request);
-
-        boolean acknowledged = putMappingResponse.isAcknowledged();
-        log.info("mapping created: {}", acknowledged);
-    }
-
-    private PutMappingRequest createPutMappingRequest(String indexName) {
-        PutMappingRequest request = new PutMappingRequest(indexName);
-        request.type(typeName);
 
 
         Map<String, Object> jsonMap = new HashMap<>();
@@ -43,10 +31,19 @@ public class ElasticMappingCreator extends AbstractElasticSearchSupport {
         Map<String, Object> properties = new HashMap<>();
         properties.put("message", message);
         jsonMap.put("properties", properties);
-        request.source(jsonMap);
 
+        PutMappingRequest request = createPutMappingRequest(indexName, jsonMap);
 
+        PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request);
 
+        boolean acknowledged = putMappingResponse.isAcknowledged();
+        log.info("mapping created: {}", acknowledged);
+    }
+
+    private PutMappingRequest createPutMappingRequest(String indexName, Map<String, Object> mappings) {
+        PutMappingRequest request = new PutMappingRequest(indexName);
+        request.type(typeName);
+        request.source(mappings);
         return request;
     }
 }

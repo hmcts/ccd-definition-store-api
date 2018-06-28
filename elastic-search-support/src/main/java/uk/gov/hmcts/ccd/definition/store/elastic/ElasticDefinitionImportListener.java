@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import static java.util.stream.Collectors.toList;
-
-import java.io.IOException;
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 @Slf4j
 public class ElasticDefinitionImportListener extends AbstractElasticSearchSupport {
 
-    @Value("${ccd.elasticsearch.cases.index.name.format}")
+    @Value("${ccd.elasticsearch.index.cases.name}")
     private String indexNameFormat;
 
     @Autowired
