@@ -104,6 +104,7 @@ allprojects {
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
         compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
         compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.9'
+        runtime group: 'org.elasticsearch', name: 'elasticsearch', version: '6.3.0'
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testCompile 'io.github.openfeign:feign-jackson:9.7.0'
         testCompile 'io.github.openfeign.form:feign-form:3.3.0'
@@ -179,7 +180,9 @@ subprojects {
         compile "org.hibernate:hibernate-core:${hibernateVersion}"
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
-
+//        runtime 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.3.0'
+//        runtime group: 'org.elasticsearch', name: 'elasticsearch-core', version: '6.3.0'
+//        runtime group: 'org.elasticsearch', name: 'elasticsearch', version: '6.3.0'
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
 

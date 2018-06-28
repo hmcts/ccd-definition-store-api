@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
@@ -56,6 +57,9 @@ public class CaseTypeServiceImplTest {
     @Mock
     private CaseTypeEntityValidator caseTypeEntityValidator2;
 
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
+
     @Captor
     private ArgumentCaptor<Collection<CaseTypeEntity>> captor;
 
@@ -79,7 +83,8 @@ public class CaseTypeServiceImplTest {
             caseTypeRepository,
             caseTypeMapper,
             legacyCaseTypeValidator,
-            Arrays.asList(caseTypeEntityValidator1, caseTypeEntityValidator2)
+            Arrays.asList(caseTypeEntityValidator1, caseTypeEntityValidator2),
+            applicationEventPublisher
         );
     }
 
