@@ -56,11 +56,6 @@ variable "database_name" {
   default = "ccd_definition_store"
 }
 
-variable "use_uk_db" {
-  type = "string"
-  default = "false"
-}
-
 ////////////////////////////////
 // IDAM
 ////////////////////////////////
