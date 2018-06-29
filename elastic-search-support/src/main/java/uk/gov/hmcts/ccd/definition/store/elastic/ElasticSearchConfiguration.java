@@ -14,8 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @Slf4j
 @Configuration
-@EnableConfigurationProperties
-@PropertySource(value = "classpath:elastic-search-support.yml")
 public class ElasticSearchConfiguration {
 
     @Autowired

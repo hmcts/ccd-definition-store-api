@@ -1,8 +1,0 @@
-ccd:
-  elasticsearch:
-    host: localhost
-    port: 9200
-    index:
-      cases:
-        name: %s_%s_cases
-        type: case

@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -13,9 +12,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 @Service
 @Slf4j
 public class ElasticDefinitionImportListener extends AbstractElasticSearchSupport {
-
-    @Value("${ccd.elasticsearch.index.cases.name}")
-    private String indexNameFormat;
 
     @Autowired
     private ElasticIndexCreator indexCreator;
@@ -42,7 +38,7 @@ public class ElasticDefinitionImportListener extends AbstractElasticSearchSuppor
 
                     mappingCreator.createMapping(indexName, ct);
                 } catch (Exception e) {
-                    log.warn("error while initialising ElasticSearch for new imported case {}. Your case might not be searchable ", ct.getReference(), e);
+                    log.error("error while initialising ElasticSearch for new imported case {}. Your case type won't be searchable ", ct.getReference(), e);
                 }
             });
     }
@@ -57,6 +53,6 @@ public class ElasticDefinitionImportListener extends AbstractElasticSearchSuppor
     private String indexName(CaseTypeEntity caseType) {
         String jurisdiction = caseType.getJurisdiction().getName();
         String caseTypeId = caseType.getReference();
-        return String.format(indexNameFormat, jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
+        return String.format(properties.getIndexCasesNameFormat(), jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
     }
 }

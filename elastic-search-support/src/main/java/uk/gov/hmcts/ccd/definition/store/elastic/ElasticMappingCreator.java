@@ -5,11 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -18,12 +15,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 @Slf4j
 public class ElasticMappingCreator extends AbstractElasticSearchSupport {
 
-    @Value("${ccd.elasticsearch.index.cases.name}")
-    private String typeName;
-
     public void createMapping(String indexName, CaseTypeEntity caseType) throws IOException {
         log.info("creating mapping for case type {}", caseType.getReference());
-
 
         Map<String, Object> jsonMap = new HashMap<>();
         Map<String, Object> message = new HashMap<>();
@@ -42,7 +35,7 @@ public class ElasticMappingCreator extends AbstractElasticSearchSupport {
 
     private PutMappingRequest createPutMappingRequest(String indexName, Map<String, Object> mappings) {
         PutMappingRequest request = new PutMappingRequest(indexName);
-        request.type(typeName);
+        request.type(properties.getIndexCasesType());
         request.source(mappings);
         return request;
     }

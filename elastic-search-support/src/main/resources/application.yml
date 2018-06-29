@@ -1,0 +1,6 @@
+elasticsearch:
+  host: localhost
+  port: 9200
+  indexCasesNameFormat: "%s_%s_cases"
+  indexCasesType: case
+
