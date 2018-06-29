@@ -38,7 +38,7 @@ public class ElasticDefinitionImportListener extends AbstractElasticSearchSuppor
 
                     mappingCreator.createMapping(indexName, ct);
                 } catch (Exception e) {
-                    log.error("error while initialising ElasticSearch for new imported case {}. Your case type won't be searchable ", ct.getReference(), e);
+                    log.error("error while initialising ElasticSearch for new imported case type {}. Your case type might have search issues", ct.getReference(), e);
                 }
             });
     }
@@ -53,6 +53,6 @@ public class ElasticDefinitionImportListener extends AbstractElasticSearchSuppor
     private String indexName(CaseTypeEntity caseType) {
         String jurisdiction = caseType.getJurisdiction().getName();
         String caseTypeId = caseType.getReference();
-        return String.format(properties.getIndexCasesNameFormat(), jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
+        return String.format(config.getIndexCasesNameFormat(), jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
     }
 }

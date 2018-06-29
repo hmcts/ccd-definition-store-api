@@ -10,6 +10,6 @@ public class AbstractElasticSearchSupport {
     protected RestHighLevelClient elasticClient;
 
     @Autowired
-    protected CcdElasticSearchProperties properties;
+    protected CcdElasticSearchProperties config;
 
 }

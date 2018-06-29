@@ -1,6 +1,23 @@
 elasticsearch:
   host: localhost
   port: 9200
+  typeMappings:
+    text: text
+    date: date
+    yesOrNo: boolean
+    email: keyword
   indexCasesNameFormat: "%s_%s_cases"
   indexCasesType: case
+  caseMappings:
+    reference: keyword
+    jurisdiction: keyword
+    id: long
+    state: keyword
+    created_date: date
+    last_modified: date
+    security_classification: keyword
+    case_type_id: keyword
+
+
+
 

@@ -19,11 +19,25 @@ public class ElasticMappingCreator extends AbstractElasticSearchSupport {
         log.info("creating mapping for case type {}", caseType.getReference());
 
         Map<String, Object> jsonMap = new HashMap<>();
-        Map<String, Object> message = new HashMap<>();
-        message.put("type", "text");
         Map<String, Object> properties = new HashMap<>();
-        properties.put("message", message);
         jsonMap.put("properties", properties);
+
+        for(Map.Entry<String, String> mapping : config.getCaseMappings().entrySet()) {
+            String name = mapping.getKey();
+            String type = mapping.getValue();
+            Map<String, Object> conf = new HashMap<>();
+            conf.put("type", type);
+            properties.put(name, conf);
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        properties.put("data", data);
+        caseType.getCaseFields().forEach(f -> {
+
+
+        });
+
+
 
         PutMappingRequest request = createPutMappingRequest(indexName, jsonMap);
 
@@ -35,7 +49,7 @@ public class ElasticMappingCreator extends AbstractElasticSearchSupport {
 
     private PutMappingRequest createPutMappingRequest(String indexName, Map<String, Object> mappings) {
         PutMappingRequest request = new PutMappingRequest(indexName);
-        request.type(properties.getIndexCasesType());
+        request.type(config.getIndexCasesType());
         request.source(mappings);
         return request;
     }
