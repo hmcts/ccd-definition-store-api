@@ -11,12 +11,14 @@ public class FieldTypeUtils {
     public static final String BASE_EMAIL = "Email";
     public static final String BASE_YES_OR_NO = "YesOrNo";
     public static final String BASE_DATE = "Date";
+    public static final String BASE_DATE_TIME = "DateTime";
     public static final String BASE_POST_CODE = "Postcode";
     public static final String BASE_MONEY_GBP = "MoneyGBP";
     public static final String BASE_PHONE_UK = "PhoneUK";
     public static final String BASE_TEXT_AREA = "TextArea";
     public static final String BASE_DOCUMENT = "Document";
     public static final String BASE_LABEL = "Label";
+    public static final String BASE_CASE_PAYMENT_HISTORY_VIEWER = "CasePaymentHistoryViewer";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference) || BASE_MULTI_SELECT_LIST.equals(baseTypeReference);

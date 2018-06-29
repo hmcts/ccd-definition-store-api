@@ -1,11 +1,12 @@
-# Case definition store
+# ccd-case-definition-store-api
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/hmcts/ccd-definition-store-api.svg?branch=master)](https://travis-ci.org/hmcts/ccd-definition-store-api)
-[![codecov](https://codecov.io/gh/hmcts/ccd-user-profile-api/branch/master/graph/badge.svg)](https://codecov.io/gh/hmcts/ccd-definition_store-api)
+[![codecov](https://codecov.io/gh/hmcts/ccd-definition-store-api/branch/master/graph/badge.svg)](https://codecov.io/gh/hmcts/ccd-definition-store-api)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d3b02d95faf6419ca6fbb15b2e712b8b)](https://www.codacy.com/app/adr1ancho/ccd-definition-store-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hmcts/ccd-definition-store-api&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/d3b02d95faf6419ca6fbb15b2e712b8b)](https://www.codacy.com/app/HMCTS/ccd-definition_store-api)
-[![Known Vulnerabilities](https://snyk.io/test/github/hmcts/ccd-definition-store-api/badge.svg)](https://snyk.io/test/github/hmcts/ccd-definition_store-api)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/d3b02d95faf6419ca6fbb15b2e712b8b)](https://www.codacy.com/app/adr1ancho/ccd-definition-store-api?utm_source=github.com&utm_medium=referral&utm_content=hmcts/ccd-definition-store-api&utm_campaign=Badge_Coverage)
+[![Known Vulnerabilities](https://snyk.io/test/github/hmcts/ccd-definition-store-api/badge.svg)](https://snyk.io/test/github/hmcts/ccd-definition-store-api)
+[![HitCount](http://hits.dwyl.io/hmcts/ccd-definition-store-api.svg)](#ccd-definition-store-api)
+[![Issue Stats](http://issuestats.com/github/hmcts/ccd-definition-store-api/badge/pr)](http://issuestats.com/github/hmcts/ccd-definition-store-api)
 
 Validation and persistence of definitions for field types, jurisdictions, case types and associated display elements.
 
@@ -32,7 +33,7 @@ The following environment variables are required:
 | DEFINITION_STORE_DB_PASSWORD | - | Password for database |
 | DEFINITION_STORE_DB_USE_SSL | - | set to `true` if SSL is to be enabled. `false` recommended for local environments. |
 | DEFINITION_STORE_IDAM_KEY | - | Definition store's IDAM S2S micro-service secret key. This must match the IDAM instance it's being run against. |
-| DEFINITION_STORE_S2S_AUTHORISED_SERVICES | ccd_data,ccd_gw | Authorised micro-service names for S2S calls |
+| DEFINITION_STORE_S2S_AUTHORISED_SERVICES | ccd_data,ccd_gw,ccd_admin,jui_webapp | Authorised micro-service names for S2S calls |
 | IDAM_USER_URL | - | Base URL for IdAM's User API service (idam-app). `http://localhost:4501` for the dockerised local instance or tunneled `dev` instance. |
 | IDAM_S2S_URL | - | Base URL for IdAM's S2S API service (service-auth-provider). `http://localhost:4502` for the dockerised local instance or tunneled `dev` instance. |
 | USER_PROFILE_HOST | - | Base URL for the User Profile service. `http://localhost:4453` for the dockerised local instance. |
@@ -40,12 +41,12 @@ The following environment variables are required:
 
 ### Building
 
-The project uses [Maven](https://maven.apache.org/). 
+The project uses [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html). 
 
 To build project please execute the following command:
 
 ```bash
-mvn install
+./gradlew clean build
 ```
 
 ### Running
@@ -85,7 +86,7 @@ You can connect to the database at `http://localhost:5451` with the username and
 
 ## Modules
 
-The application is structured as a Maven multi-module project. The modules are:
+The application is structured as a multi-module project. The modules are:
 
 ### repository
 

@@ -106,6 +106,7 @@ allprojects {
         compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.9'
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testCompile 'io.github.openfeign:feign-jackson:9.7.0'
+        testCompile 'io.github.openfeign.form:feign-form:3.3.0'
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
@@ -320,12 +321,6 @@ task wrapper(type: Wrapper) {
 }
 // end::wrapper[]
 
-task projectVersion {
-    description 'Prints the version of this project; used for publishing JAR file'
-    doLast {
-        print project.version
-    }
-}
 sonarqube {
     properties {
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
@@ -411,3 +406,23 @@ task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
 
 // for cnp pipeline
 task dependencyCheck(dependsOn: dependencyCheckAnalyze)
+
+configurations { codacy }
+repositories {
+    maven { url "https://jitpack.io" }
+    maven { url "http://dl.bintray.com/typesafe/maven-releases" }
+}
+dependencies {
+    codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
+}
+task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
+    main = "com.codacy.CodacyCoverageReporter"
+    classpath = configurations.codacy
+    args = [
+            "report",
+            "-l",
+            "Java",
+            "-r",
+            "${buildDir}/reports/jacoco/jacocoTestReport.xml"
+    ]
+}
