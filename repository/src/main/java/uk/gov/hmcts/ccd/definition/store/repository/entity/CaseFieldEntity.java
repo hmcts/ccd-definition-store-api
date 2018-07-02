@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -27,6 +28,8 @@ import static javax.persistence.GenerationType.IDENTITY;
     parameters = @Parameter(name="type", value="uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
 public class CaseFieldEntity implements Serializable {
+
+    static final String COMPLEX_TYPE_KEY = "Complex";
 
     @Id
     @Column(name = "id")
@@ -157,5 +160,18 @@ public class CaseFieldEntity implements Serializable {
     public CaseFieldEntity addCaseFieldUserRoles(final Collection<CaseFieldUserRoleEntity> entities) {
         entities.forEach(e -> addCaseFieldUserRole(e));
         return this;
+    }
+
+    public String getBaseTypeString() {
+        FieldTypeEntity baseFieldType = this.getFieldType().getBaseFieldType();
+        if (baseFieldType != null) {
+            return baseFieldType.getReference();
+        } else {
+            return fieldType.getReference();
+        }
+    }
+
+    public boolean isComplex() {
+        return this.getBaseTypeString().equals(COMPLEX_TYPE_KEY);
     }
 }

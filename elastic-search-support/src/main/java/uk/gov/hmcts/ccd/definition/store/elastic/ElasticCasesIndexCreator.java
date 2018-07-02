@@ -15,12 +15,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 public class ElasticCasesIndexCreator extends AbstractElasticSearchSupport {
 
     public void createIndex(CaseTypeEntity caseType) throws IOException {
-        log.info("creating index for case type {}", caseType.getReference());
+        String indexName = indexName(caseType);
+        log.info("creating index {} for case type {}", caseType.getReference());
 
-        CreateIndexRequest request = createCreateIndexRequest(indexName(caseType));
+        CreateIndexRequest request = createCreateIndexRequest(indexName);
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request);
         boolean acknowledged = createIndexResponse.isAcknowledged();
-        log.info("index {} created: {}", indexName(caseType), acknowledged);
+        log.info("index created: {}", acknowledged);
     }
 
     private CreateIndexRequest createCreateIndexRequest(String indexName) {

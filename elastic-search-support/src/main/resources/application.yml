@@ -3,26 +3,28 @@ elasticsearch:
   port: 9200
   elasticTypes:
     defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
-    keyword: '{"type" : "keyword"}'
+    defaultKeyword: '{"type" : "keyword"}'
     defaultDate: '{"type" : "date"}'
     defaultBoolean: '{"type" : "boolean"}'
     defaultLong: '{"type" : "long"}'
   typeMappings:
-    text: ${elasticsearch.elasticTypes.defaultText}
-    date: ${elasticsearch.elasticTypes.defaultDate}
-    yesOrNo: ${elasticsearch.elasticTypes.defaultBoolean}
-    email: ${elasticsearch.elasticTypes.keyword}
+    Text: ${elasticsearch.elasticTypes.defaultText}
+    Date: ${elasticsearch.elasticTypes.defaultDate}
+    YesOrNo: ${elasticsearch.elasticTypes.defaultBoolean}
+    Email: ${elasticsearch.elasticTypes.defaultKeyword}
+    FixedList : ${elasticsearch.elasticTypes.defaultText}
+    MultiSelectList : ${elasticsearch.elasticTypes.defaultText}
   indexCasesNameFormat: "%s_%s_cases"
   indexCasesType: case
   caseMappings:
-    reference: ${elasticsearch.elasticTypes.keyword}
+    reference: ${elasticsearch.elasticTypes.defaultKeyword}
     jurisdiction: ${elasticsearch.elasticTypes.defaultText}
     id: ${elasticsearch.elasticTypes.defaultLong}
-    state: ${elasticsearch.elasticTypes.keyword}
+    state: ${elasticsearch.elasticTypes.defaultKeyword}
     created_date: ${elasticsearch.elasticTypes.defaultDate}
     last_modified: ${elasticsearch.elasticTypes.defaultDate}
-    security_classification: ${elasticsearch.elasticTypes.keyword}
-    case_type_id: ${elasticsearch.elasticTypes.keyword}
+    security_classification: ${elasticsearch.elasticTypes.defaultKeyword}
+    case_type_id: ${elasticsearch.elasticTypes.defaultKeyword}
 
 
 

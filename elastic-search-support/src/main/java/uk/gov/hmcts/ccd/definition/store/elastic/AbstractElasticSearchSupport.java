@@ -14,7 +14,7 @@ public class AbstractElasticSearchSupport {
     protected CcdElasticSearchProperties config;
 
     protected String indexName(CaseTypeEntity caseType) {
-        String jurisdiction = caseType.getJurisdiction().getName();
+        String jurisdiction = caseType.getJurisdiction().getReference();
         String caseTypeId = caseType.getReference();
         return String.format(config.getIndexCasesNameFormat(), jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
     }
