@@ -51,6 +51,9 @@ dependencyCheck {
     }
 }
 
+ext['elasticsearch.version'] = '6.3.0'
+
+
 ext {
     junitJupiterVersion = '5.1.1'
     junitVintageVersion = '4.12.1'
@@ -133,6 +136,14 @@ allprojects {
 
     checkstyleMain.shouldRunAfter(compileJava)
     test.shouldRunAfter(checkstyleTest)
+
+    configurations.all {
+        resolutionStrategy {
+            dependencySubstitution {
+                substitute module('org.elasticsearch:elasticsearch') with module('org.elasticsearch:elasticsearch:6.3.0')
+            }
+        }
+    }
 }
 
 sourceCompatibility = 1.8

@@ -1,22 +1,28 @@
 elasticsearch:
   host: localhost
   port: 9200
+  elasticTypes:
+    defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
+    keyword: '{"type" : "keyword"}'
+    defaultDate: '{"type" : "date"}'
+    defaultBoolean: '{"type" : "boolean"}'
+    defaultLong: '{"type" : "long"}'
   typeMappings:
-    text: text
-    date: date
-    yesOrNo: boolean
-    email: keyword
+    text: ${elasticsearch.elasticTypes.defaultText}
+    date: ${elasticsearch.elasticTypes.defaultDate}
+    yesOrNo: ${elasticsearch.elasticTypes.defaultBoolean}
+    email: ${elasticsearch.elasticTypes.keyword}
   indexCasesNameFormat: "%s_%s_cases"
   indexCasesType: case
   caseMappings:
-    reference: keyword
-    jurisdiction: keyword
-    id: long
-    state: keyword
-    created_date: date
-    last_modified: date
-    security_classification: keyword
-    case_type_id: keyword
+    reference: ${elasticsearch.elasticTypes.keyword}
+    jurisdiction: ${elasticsearch.elasticTypes.defaultText}
+    id: ${elasticsearch.elasticTypes.defaultLong}
+    state: ${elasticsearch.elasticTypes.keyword}
+    created_date: ${elasticsearch.elasticTypes.defaultDate}
+    last_modified: ${elasticsearch.elasticTypes.defaultDate}
+    security_classification: ${elasticsearch.elasticTypes.keyword}
+    case_type_id: ${elasticsearch.elasticTypes.keyword}
 
 
 

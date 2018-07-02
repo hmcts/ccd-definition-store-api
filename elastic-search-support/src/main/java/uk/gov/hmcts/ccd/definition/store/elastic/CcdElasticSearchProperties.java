@@ -13,6 +13,7 @@ public class CcdElasticSearchProperties {
     private int port;
     private String indexCasesType;
     private String indexCasesNameFormat;
+    private Map<String, String> elasticTypes;
     private Map<String, String> typeMappings;
     private Map<String, String> caseMappings;
 
@@ -62,5 +63,13 @@ public class CcdElasticSearchProperties {
 
     public void setCaseMappings(Map<String, String> caseMappings) {
         this.caseMappings = caseMappings;
+    }
+
+    public Map<String, String> getElasticTypes() {
+        return elasticTypes;
+    }
+
+    public void setElasticTypes(Map<String, String> elasticTypes) {
+        this.elasticTypes = elasticTypes;
     }
 }

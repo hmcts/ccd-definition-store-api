@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import java.io.IOException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,45 +16,29 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 public class ElasticDefinitionImportListener extends AbstractElasticSearchSupport {
 
     @Autowired
-    private ElasticIndexCreator indexCreator;
+    private ElasticCasesIndexCreator indexCreator;
 
     @Autowired
-    private ElasticMappingCreator mappingCreator;
+    private ElasticCasesMappingCreator mappingCreator;
 
     @Async
     @TransactionalEventListener
-    void onDefinitionImported(DefinitionImportedEvent importEvent) throws InterruptedException {
-            importEvent.getCaseTypes().forEach(ct -> {
-                try {
-                    log.info("initialising ElasticSearch for newly imported case type: {}", ct.getReference());
-                    String indexName = indexName(ct);
-                    GetIndexRequest getReq = createGetIndexRequest(indexName);
+    void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
 
-                    boolean exists = elasticClient.indices().exists(getReq);
-
-                    log.info("index {} exists: {}", indexName, exists);
-
-                    if(!exists) {
-                        indexCreator.createIndex(indexName, ct);
-                    }
-
-                    mappingCreator.createMapping(indexName, ct);
-                } catch (Exception e) {
-                    log.error("error while initialising ElasticSearch for new imported case type {}. Your case type might have search issues", ct.getReference(), e);
-                }
-            });
+        for (CaseTypeEntity ct : event.getCaseTypes()) {
+            if (!indexExists(ct)) {
+                indexCreator.createIndex(ct);
+            }
+            mappingCreator.createMapping(ct);
+        }
     }
 
-    private GetIndexRequest createGetIndexRequest(String indexName) {
+    private boolean indexExists(CaseTypeEntity caseType) throws IOException {
+        String indexName = indexName(caseType);
         GetIndexRequest getReq = new GetIndexRequest();
         getReq.indices(indexName);
-        return getReq;
-    }
-
-
-    private String indexName(CaseTypeEntity caseType) {
-        String jurisdiction = caseType.getJurisdiction().getName();
-        String caseTypeId = caseType.getReference();
-        return String.format(config.getIndexCasesNameFormat(), jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
+        boolean exists = elasticClient.indices().exists(getReq);
+        log.info("index for case type {} exists: {}", caseType.getReference(), exists);
+        return exists;
     }
 }
