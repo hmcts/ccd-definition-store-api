@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -232,5 +233,9 @@ public class CaseTypeEntity implements Serializable, Versionable {
     public CaseTypeEntity addCaseTypeUserRoles(final Collection<CaseTypeUserRoleEntity> caseTypeUserRoleEntities) {
         caseTypeUserRoleEntities.forEach(e -> addCaseTypeUserRole(e));
         return this;
+    }
+
+    public Optional<CaseFieldEntity> findCaseField(String reference) {
+        return this.caseFields.stream().filter(cf -> cf.getReference().equals(reference)).findFirst();
     }
 }

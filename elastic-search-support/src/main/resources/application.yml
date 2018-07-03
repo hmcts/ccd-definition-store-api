@@ -7,12 +7,24 @@ elasticsearch:
     defaultDate: '{"type" : "date"}'
     defaultBoolean: '{"type" : "boolean"}'
     defaultLong: '{"type" : "long"}'
+    defaultDouble: '{"type" : "double"}'
+  typeMappingsIgnored:
+    - Label
   typeMappings:
     Text: ${elasticsearch.elasticTypes.defaultText}
+    TextArea: ${elasticsearch.elasticTypes.defaultText}
+    Number: ${elasticsearch.elasticTypes.defaultDouble}
     Date: ${elasticsearch.elasticTypes.defaultDate}
+    Time: ${elasticsearch.elasticTypes.defaultDate}
+    DateTime: ${elasticsearch.elasticTypes.defaultDate}
+    PhoneUK: ${elasticsearch.elasticTypes.defaultKeyword}
+    MoneyGBP: ${elasticsearch.elasticTypes.defaultDouble}
     YesOrNo: ${elasticsearch.elasticTypes.defaultBoolean}
     Email: ${elasticsearch.elasticTypes.defaultKeyword}
+    Postcode: ${elasticsearch.elasticTypes.defaultKeyword}
+    Document: ${elasticsearch.elasticTypes.defaultKeyword}
     FixedList : ${elasticsearch.elasticTypes.defaultText}
+    FixedListEdit : ${elasticsearch.elasticTypes.defaultText}
     MultiSelectList : ${elasticsearch.elasticTypes.defaultText}
   indexCasesNameFormat: "%s_%s_cases"
   indexCasesType: case

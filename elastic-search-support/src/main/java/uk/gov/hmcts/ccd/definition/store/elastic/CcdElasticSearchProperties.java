@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,6 +17,7 @@ public class CcdElasticSearchProperties {
     private Map<String, String> elasticTypes;
     private Map<String, String> typeMappings;
     private Map<String, String> caseMappings;
+    private List<String> typeMappingsIgnored;
 
     public String getHost() {
         return host;
@@ -71,5 +73,13 @@ public class CcdElasticSearchProperties {
 
     public void setElasticTypes(Map<String, String> elasticTypes) {
         this.elasticTypes = elasticTypes;
+    }
+
+    public List<String> getTypeMappingsIgnored() {
+        return typeMappingsIgnored;
+    }
+
+    public void setTypeMappingsIgnored(List<String> typeMappingsIgnored) {
+        this.typeMappingsIgnored = typeMappingsIgnored;
     }
 }
