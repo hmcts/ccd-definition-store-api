@@ -1,0 +1,83 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-1240-3" author="giri.benadikar@hmcts.net">
+        <insert tableName="case_field">
+            <column name="reference" value="jurisdiction"/>
+            <column name="live_from" value="${now}"/>
+            <column name="label" value="Jurisdiction"/>
+            <column name="hidden" value="false"/>
+            <column name="security_classification" value="PUBLIC"/>
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)"/>
+            <column name="data_field_type" value="METADATA"/>
+        </insert>
+
+        <insert tableName="case_field">
+            <column name="reference" value="case_type"/>
+            <column name="live_from" value="${now}"/>
+            <column name="label" value="Case Type"/>
+            <column name="hidden" value="false"/>
+            <column name="security_classification" value="PUBLIC"/>
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)"/>
+            <column name="data_field_type" value="METADATA"/>
+        </insert>
+
+        <insert tableName="case_field">
+            <column name="reference" value="state"/>
+            <column name="live_from" value="${now}"/>
+            <column name="label" value="State"/>
+            <column name="hidden" value="false"/>
+            <column name="security_classification" value="PUBLIC"/>
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type where reference = 'FixedList' and version = 1 and jurisdiction_id is null)"/>
+            <column name="data_field_type" value="METADATA"/>
+        </insert>
+
+        <insert tableName="case_field">
+            <column name="reference" value="security_classification"/>
+            <column name="live_from" value="${now}"/>
+            <column name="label" value="Security Classification"/>
+            <column name="hidden" value="false"/>
+            <column name="security_classification" value="PUBLIC"/>
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)"/>
+            <column name="data_field_type" value="METADATA"/>
+        </insert>
+
+        <insert tableName="case_field">
+            <column name="reference" value="case_reference"/>
+            <column name="live_from" value="${now}"/>
+            <column name="label" value="Case Reference"/>
+            <column name="hidden" value="false"/>
+            <column name="security_classification" value="PUBLIC"/>
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type where reference = 'Number' and version = 1 and jurisdiction_id is null)"/>
+            <column name="data_field_type" value="METADATA"/>
+        </insert>
+
+        <insert tableName="case_field">
+            <column name="reference" value="created_date"/>
+            <column name="live_from" value="${now}"/>
+            <column name="label" value="Created Date"/>
+            <column name="hidden" value="false"/>
+            <column name="security_classification" value="PUBLIC"/>
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type where reference = 'Date' and version = 1 and jurisdiction_id is null)"/>
+            <column name="data_field_type" value="METADATA"/>
+        </insert>
+
+        <insert tableName="case_field">
+            <column name="reference" value="last_modified_date"/>
+            <column name="live_from" value="${now}"/>
+            <column name="label" value="Last Modified Date"/>
+            <column name="hidden" value="false"/>
+            <column name="security_classification" value="PUBLIC"/>
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type where reference = 'Date' and version = 1 and jurisdiction_id is null)"/>
+            <column name="data_field_type" value="METADATA"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
