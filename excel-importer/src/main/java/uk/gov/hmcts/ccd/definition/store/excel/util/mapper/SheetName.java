@@ -9,12 +9,12 @@ public enum SheetName {
     CASE_FIELD("CaseField"),
     STATE("State"),
     CASE_EVENT("CaseEvent"),
-    CASE_EVENT_TO_FIELDS("CaseEventToFields", true),
+    CASE_EVENT_TO_FIELDS("CaseEventToFields"),
     WORK_BASKET_INPUT_FIELD("WorkBasketInputFields"),
-    WORK_BASKET_RESULT_FIELDS("WorkBasketResultFields", true),
-    CASE_TYPE_TAB("CaseTypeTab", true),
-    SEARCH_INPUT_FIELD("SearchInputFields", true),
-    SEARCH_RESULT_FIELD("SearchResultFields", true),
+    WORK_BASKET_RESULT_FIELDS("WorkBasketResultFields"),
+    CASE_TYPE_TAB("CaseTypeTab"),
+    SEARCH_INPUT_FIELD("SearchInputFields"),
+    SEARCH_RESULT_FIELD("SearchResultFields"),
     USER_PROFILE("UserProfile"),
     FIXED_LISTS("FixedLists"),
     COMPLEX_TYPES("ComplexTypes"),
@@ -24,23 +24,13 @@ public enum SheetName {
     AUTHORISATION_CASE_STATE("AuthorisationCaseState");
 
     private final String name;
-    private boolean allowMetaDataFields;
 
     SheetName(String sheetName) {
         this.name = sheetName;
     }
 
-    SheetName(String name, boolean allowMetaDataFields) {
-        this.name = name;
-        this.allowMetaDataFields = allowMetaDataFields;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public boolean isAllowMetaDataFields() {
-        return allowMetaDataFields;
     }
 
     @Override
