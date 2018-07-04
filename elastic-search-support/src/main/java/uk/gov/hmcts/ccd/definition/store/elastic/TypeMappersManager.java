@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MappersManager {
+public class TypeMappersManager {
 
     protected Map<String, TypeMappingGenerator> typeMappers = newHashMap();
 
@@ -29,7 +29,7 @@ public class MappersManager {
         }
     }
 
-    //This line will guarantee the BeansManager class will be injected last
+    //This line will guarantee the MappersManager will be injected last
     @Autowired
     private Set<Injectable> injectables = new HashSet();
 

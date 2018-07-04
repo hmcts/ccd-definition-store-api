@@ -12,7 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
-public class ComplexFieldMappingGenerator extends AbstractMapper implements TypeMappingGenerator, Injectable {
+public class ComplexFieldMappingGenerator extends AbstractMapper implements TypeMappingGenerator {
 
     @Override
     public String generateMapping(FieldEntity fieldEntity) throws IOException {
@@ -34,9 +34,5 @@ public class ComplexFieldMappingGenerator extends AbstractMapper implements Type
     @Override
     public List<String> getTypes() {
         return newArrayList("Complex");
-    }
-
-    public void inject(MappersManager mappersManager){
-        this.typeMappers = mappersManager.getTypeMappers();
     }
 }

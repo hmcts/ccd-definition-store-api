@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
-public class CollectionFieldMappingGenerator extends AbstractMapper implements TypeMappingGenerator, Injectable {
+public class CollectionFieldMappingGenerator extends AbstractMapper implements TypeMappingGenerator {
 
     @Override
     public String generateMapping(FieldEntity fieldEntity) throws IOException {
@@ -25,9 +25,5 @@ public class CollectionFieldMappingGenerator extends AbstractMapper implements T
     @Override
     public List<String> getTypes() {
         return newArrayList("Collection");
-    }
-
-    public void inject(MappersManager mappersManager){
-        this.typeMappers = mappersManager.getTypeMappers();
     }
 }

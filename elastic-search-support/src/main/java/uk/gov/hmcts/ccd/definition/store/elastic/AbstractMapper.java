@@ -4,39 +4,18 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractMapper implements JsonGenerator {
-
-    protected Map<String, TypeMappingGenerator> typeMappers;
+public abstract class AbstractMapper implements JsonGenerator, Injectable {
 
     @Autowired
     protected CcdElasticSearchProperties config;
 
-//    public void setTypeMappers(List<TypeMappingGenerator> mappingGenerators) {
-//        for (TypeMappingGenerator mg : mappingGenerators) {
-//            for (String type : mg.getTypes()) {
-//                typeMappers.put(type, mg);
-//            }
-//        }
-//    }
+    protected Map<String, TypeMappingGenerator> typeMappers;
 
-//    protected String getMapperForType(String type) throws IOException {
-//        return getMapperForType(caseFieldEntity.getBaseTypeString()).generateMapping(caseFieldEntity);
-
-//        else if (caseFieldEntity.isCollection()) {
-//
-//        } else {
-//            String ccdType = caseFieldEntity.getBaseTypeString();
-//            String configuredMapping = config.getTypeMappings().get(ccdType);
-//            if (configuredMapping == null) {
-//                throw new RuntimeException(String.format("unknown mapping for ccd type %s", ccdType));
-//            }
-//            result = configuredMapping;
-//        }
-//        return result;
-//    }
+    public void inject(TypeMappersManager typeMappersManager){
+        this.typeMappers = typeMappersManager.getTypeMappers();
+    }
 
     protected TypeMappingGenerator getMapperForType(String type) {
         return this.typeMappers.get(type);
     }
-
 }

@@ -15,7 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 @Component
 @Slf4j
-public class CaseMappingGenerator extends AbstractMapper implements Injectable {
+public class CaseMappingGenerator extends AbstractMapper {
 
     public String generate(CaseTypeEntity caseType) throws IOException {
         log.info("creating mapping for case type: {}", caseType.getReference());
@@ -64,9 +64,5 @@ public class CaseMappingGenerator extends AbstractMapper implements Injectable {
             }
         }
         return result;
-    }
-
-    public void inject(MappersManager mappersManager){
-        this.typeMappers = mappersManager.getTypeMappers();
     }
 }

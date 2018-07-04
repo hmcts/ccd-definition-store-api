@@ -1,5 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 public interface Injectable {
-    void inject(MappersManager mappersManager);
+    void inject(TypeMappersManager typeMappersManager);
 }
