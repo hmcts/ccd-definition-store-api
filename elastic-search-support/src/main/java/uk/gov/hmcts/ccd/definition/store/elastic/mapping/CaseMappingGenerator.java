@@ -1,10 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import static com.google.common.collect.Maps.newHashMap;
+import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.List;
 
 import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
@@ -23,18 +22,18 @@ public class CaseMappingGenerator extends AbstractMapper {
         String caseMapping = newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();
-                for(Entry<String, String> mapping : propertiesMapping().entrySet()) {
-                    jw.name(mapping.getKey());
-                    jw.jsonValue(mapping.getValue());
+                for(FieldMapping mapping : casePropertiesMapping()) {
+                    jw.name(mapping.getFieldName());
+                    jw.jsonValue(mapping.getMapping());
                 }
                 //TODO handle case with no properties
                 jw.name("data");
                 jw.beginObject();
                     jw.name("properties");
                     jw.beginObject();
-                        for(Entry<String, String> mapping : dataMapping(caseType).entrySet()) {
-                            jw.name(mapping.getKey());
-                            jw.jsonValue(mapping.getValue());
+                        for(FieldMapping mapping : caseDataMapping(caseType)) {
+                            jw.name(mapping.getFieldName());
+                            jw.jsonValue(mapping.getMapping());
                         }
                     jw.endObject();
                 jw.endObject();
@@ -45,24 +44,21 @@ public class CaseMappingGenerator extends AbstractMapper {
         return caseMapping;
     }
 
-    private Map<String, String> propertiesMapping() {
-        Map<String, String> result = newHashMap();
-        for(Entry<String, String> mapping : config.getCaseMappings().entrySet()) {
-            String name = mapping.getKey();
-            String elasticMapping = mapping.getValue();
-            result.put(name, elasticMapping);
-        }
-        return result;
+    private List<FieldMapping> casePropertiesMapping() {
+        return config.getCaseMappings().entrySet().stream().map(e ->
+                new FieldMapping(e.getKey(), e.getValue()))
+                .collect(toList());
     }
 
-    private Map<String, String> dataMapping(CaseTypeEntity caseType) throws IOException {
-        Map<String, String> result = newHashMap();
-        for (CaseFieldEntity f : caseType.getCaseFields()) {
-            if (!config.getTypeMappingsIgnored().contains(f.getBaseTypeString())) {
-                String generatedMapping = getMapperForType(f.getBaseTypeString()).generateMapping(f);
-                result.put(f.getReference(), generatedMapping);
-            }
-        }
-        return result;
+    private List<FieldMapping> caseDataMapping(CaseTypeEntity caseType) {
+        List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(f -> !shouldIgnore(f)).collect(toList());
+        return fields.stream().map(Unchecked.function(f -> {
+            String generatedMapping = getMapperForType(f.getBaseTypeString()).generateMapping(f);
+            return new FieldMapping(f.getReference(), generatedMapping);
+        })).collect(toList());
+    }
+
+    private boolean shouldIgnore(CaseFieldEntity caseFieldEntity) {
+        return config.getTypeMappingsIgnored().contains(caseFieldEntity.getBaseTypeString());
     }
 }
