@@ -17,15 +17,20 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,6 +70,9 @@ public class ImportServiceImplTest {
     @Mock
     private WorkBasketUserDefaultService workBasketUserDefaultService;
 
+    @Mock
+    private CaseFieldRepository caseFieldRepository;
+
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -98,7 +106,8 @@ public class ImportServiceImplTest {
                                         caseTypeService,
                                         layoutService,
                                         userRoleRepository,
-                                        workBasketUserDefaultService);
+                                        workBasketUserDefaultService,
+                                        caseFieldRepository);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
@@ -130,7 +139,7 @@ public class ImportServiceImplTest {
                                                                         complexType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
 
-        final InputStream inputStream = ClassLoader.getSystemResourceAsStream(BAD_FILE);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BAD_FILE);
 
         service.importFormDefinitions(inputStream);
     }
@@ -157,10 +166,16 @@ public class ImportServiceImplTest {
                                                                         labelBaseType,
                                                                         casePaymentHistoryViewerBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("STATE");
+        given(caseFieldRepository.findByDataFieldType(DataFieldType.METADATA)).willReturn(Collections.singletonList
+            (state));
 
-        final InputStream inputStream = ClassLoader.getSystemResourceAsStream(GOOD_FILE);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
         service.importFormDefinitions(inputStream);
+
+        verify(caseFieldRepository).findByDataFieldType(DataFieldType.METADATA);
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {

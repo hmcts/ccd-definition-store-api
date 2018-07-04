@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
@@ -17,27 +18,31 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
 
     private final CaseTypeRepository repository;
-    private final EntityToResponseDTOMapper caseTypeMapper;
+    private final EntityToResponseDTOMapper dtoMapper;
     private final LegacyCaseTypeValidator legacyCaseTypeValidator;
     private final List<CaseTypeEntityValidator> caseTypeEntityValidators;
     private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedRepository;
+    private final MetadataFieldService metadataFieldService;
 
     @Autowired
     public CaseTypeServiceImpl(CaseTypeRepository repository,
-                               EntityToResponseDTOMapper caseTypeMapper,
+                               EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
-                               List<CaseTypeEntityValidator> caseTypeEntityValidators) {
+                               List<CaseTypeEntityValidator> caseTypeEntityValidators,
+                               MetadataFieldService metadataFieldService) {
         this.repository = repository;
-        this.caseTypeMapper = caseTypeMapper;
+        this.dtoMapper = dtoMapper;
         this.legacyCaseTypeValidator = legacyCaseTypeValidator;
         this.caseTypeEntityValidators = caseTypeEntityValidators;
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
+        this.metadataFieldService = metadataFieldService;
     }
 
     @Override
@@ -55,8 +60,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
 
         if (validationResult.isValid()) {
             versionedRepository.save(caseTypes);
-        }
-        else {
+        } else {
             throw new ValidationException(validationResult);
         }
 
@@ -68,22 +72,23 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             = Optional.ofNullable(repository.findByJurisdictionId(jurisdictionId));
 
         return caseTypeEntities.orElse(Collections.emptyList())
-             .stream()
-             .map(caseTypeMapper::map)
-             .collect(Collectors.toList());
+            .stream()
+            .map(dtoMapper::map)
+            .map(this::addMetadataFields)
+            .collect(toList());
     }
 
     @Override
     public Optional<CaseType> findByCaseTypeId(String id) {
         return repository.findCurrentVersionForReference(id)
-            .map(caseTypeMapper::map);
-
+            .map(dtoMapper::map)
+            .map(this::addMetadataFields);
     }
 
     @Override
     public Optional<CaseTypeVersionInformation> findVersionInfoByCaseTypeId(final String id) {
         return repository.findLastVersion(id)
-                         .map(CaseTypeVersionInformation::new);
+            .map(CaseTypeVersionInformation::new);
     }
 
     private ValidationResult validate(CaseTypeEntity caseTypeEntity) {
@@ -92,6 +97,11 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             validationResult.merge(caseTypeEntityValidator.validate(caseTypeEntity));
         }
         return validationResult;
+    }
+
+    private CaseType addMetadataFields(CaseType caseType) {
+        caseType.addCaseFields(metadataFieldService.getCaseMetadataFields(caseType));
+        return caseType;
     }
 
 }

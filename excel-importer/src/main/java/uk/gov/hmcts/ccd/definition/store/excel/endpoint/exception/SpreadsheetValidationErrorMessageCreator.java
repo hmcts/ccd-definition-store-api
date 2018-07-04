@@ -5,26 +5,36 @@ import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield
-    .CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield
-    .CaseFieldEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype
-    .CaseTypeEntityMissingSecurityClassificationValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield
-    .ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield
-    .ComplexFieldEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield
-    .ComplexFieldShowConditionReferencesInvalidFieldError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldShowConditionReferencesInvalidFieldError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupColumnNumberValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidEventFieldShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityInvalidShowConditionError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldLabelCaseFieldValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldMetadataValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldOrderSummaryCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityUserRoleValidatorImpl;
@@ -45,7 +55,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE
 @Component
 public class SpreadsheetValidationErrorMessageCreator implements ValidationErrorMessageCreator {
 
-    private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
+    private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     public SpreadsheetValidationErrorMessageCreator(EntityToDefinitionDataItemRegistry
                                                         entityToDefinitionDataItemRegistry) {
@@ -54,7 +64,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(CaseTypeEntityMissingSecurityClassificationValidationError
-                                             caseTypeEntityMissingSecurityClassificationValidationError) {
+                                         caseTypeEntityMissingSecurityClassificationValidationError) {
         return createMissingOrInvalidSecurityClassificationMessage(
             caseTypeEntityMissingSecurityClassificationValidationError.getCaseTypeEntity(),
             caseTypeEntityMissingSecurityClassificationValidationError.getCaseTypeEntity().getReference(),
@@ -63,7 +73,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(CaseFieldEntityMissingSecurityClassificationValidationError
-                                             caseFieldEntityMissingSecurityClassificationValidationError) {
+                                         caseFieldEntityMissingSecurityClassificationValidationError) {
         return createMissingOrInvalidSecurityClassificationMessage(
             caseFieldEntityMissingSecurityClassificationValidationError.getCaseFieldEntity(),
             caseFieldEntityMissingSecurityClassificationValidationError.getCaseFieldEntity().getReference(),
@@ -72,7 +82,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError
-                                             validationError) {
+                                         validationError) {
         return String.format("%s values cannot have lower security classification than case type; " + "%s entry with " +
                                  "" + "" + "id '%s' has a security classification of '%s' " + "but %s '%s' has a " +
                                  "security " + "" + "classification of '%s'",
@@ -93,7 +103,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(ComplexFieldEntityMissingSecurityClassificationValidationError
-                                             complexFieldEntityMissingSecurityClassificationValidationError) {
+                                         complexFieldEntityMissingSecurityClassificationValidationError) {
 
         return createMissingOrInvalidSecurityClassificationMessage(
             complexFieldEntityMissingSecurityClassificationValidationError.getComplexFieldEntity(),
@@ -134,7 +144,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(EventEntityMissingSecurityClassificationValidationError
-                                             eventEntityMissingSecurityClassificationValidationError) {
+                                         eventEntityMissingSecurityClassificationValidationError) {
 
         return createMissingOrInvalidSecurityClassificationMessage(
             eventEntityMissingSecurityClassificationValidationError.getEventEntity(),
@@ -145,7 +155,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError
-                                             validationError) {
+                                         validationError) {
         return String.format("%s values cannot have lower security classification than case type; " + "%s entry with " +
                                  "" + "id '%s' has a security classification of '%s' " + "but %s '%s' has a security " +
                                  "" + "classification of '%s'",
@@ -279,6 +289,15 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
+    public String createErrorMessage(CaseFieldEntityInvalidMetadataFieldValidationError error) {
+        return newMessageIfDefinitionExists(error,
+                                            error.getMetadataField(),
+                                            def -> String.format("%s. WorkSheet '%s'",
+                                                                 error.getDefaultMessage(),
+                                                                 def.getSheetName()));
+    }
+
+    @Override
     public String createErrorMessage(EventEntityMissingForPageTypeDisplayGroupError eventMissingError) {
         return String.format("Event is missing for displayGroup '%s' and with label '%s'",
                              eventMissingError.getCaseTypeUserRoleEntity().getReference(),
@@ -322,7 +341,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                                                     error.getDisplayGroup().getReference(),
                                                     def.getSheetName(),
                                                     error.getShowConditionField()) :
-                                                def ->  error.getDefaultMessage());
+                                                def -> error.getDefaultMessage());
     }
 
     @Override
@@ -337,7 +356,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                                                     error.getDisplayGroupCaseField().getCaseField().getReference(),
                                                     def.getSheetName(),
                                                     error.getShowConditionField()) :
-                                                def ->  error.getDefaultMessage()
+                                                def -> error.getDefaultMessage()
         );
     }
 
@@ -372,7 +391,9 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return withWorkSheetName(validationError);
     }
 
-    public String createErrorMessage(EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError validationError) {
+    @Override
+    public String createErrorMessage(
+        EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError validationError) {
         return withWorkSheetName(validationError);
     }
 
@@ -403,6 +424,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(StateEntityCrudValidatorImpl.ValidationError error) {
+        return withWorkSheetName(error);
+    }
+
+    @Override
+    public String createErrorMessage(EventCaseFieldMetadataValidatorImpl.ValidationError error) {
         return withWorkSheetName(error);
     }
 

@@ -72,11 +72,12 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseFieldEntity.hint", target = "hintText")
     @Mapping(source = "caseFieldEntity.liveTo", target = "liveUntil")
     @Mapping(expression = "java(" +
-                "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-                "               caseFieldEntity.getCaseFieldUserRoles()" +
-                "           )" +
-                "       )",
-            target = "acls")
+        "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
+        "               caseFieldEntity.getCaseFieldUserRoles()" +
+        "           )" +
+        "       )",
+        target = "acls")
+    @Mapping(expression = "java(caseFieldEntity.isMetadataField())", target = "metadata")
     CaseField map(CaseFieldEntity caseFieldEntity);
 
     @Mapping(source = "fieldTypeEntity.reference", target = "id")
