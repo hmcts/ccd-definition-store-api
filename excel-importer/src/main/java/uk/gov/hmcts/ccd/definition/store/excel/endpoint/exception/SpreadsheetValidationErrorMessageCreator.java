@@ -377,11 +377,6 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(EventCaseFieldOrderSummaryCaseFieldValidator.ValidationError validationError) {
-        return withWorkSheetName(validationError);
-    }
-
-    @Override
     public String createErrorMessage(EventCaseFieldLabelCaseFieldValidator.ValidationError validationError) {
         return withWorkSheetName(validationError);
     }
