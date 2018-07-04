@@ -2,6 +2,21 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <changeSet id="rdm-1240-1" author="giri.benadikar@hmcts.net">
+        <sql>
+            CREATE TYPE datafieldtype AS ENUM ('CASE_DATA','METADATA');
+        </sql>
+        <addColumn tableName="case_field">
+            <column name="data_field_type" type="datafieldtype" defaultValue="CASE_DATA">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="rdm-1240-2" author="giri.benadikar@hmcts.net">
+        <dropNotNullConstraint tableName="case_field" columnName="case_type_id"/>
+    </changeSet>
+
     <changeSet id="rdm-1240-3" author="giri.benadikar@hmcts.net">
         <insert tableName="case_field">
             <column name="reference" value="jurisdiction"/>
@@ -10,7 +25,7 @@
             <column name="hidden" value="false"/>
             <column name="security_classification" value="PUBLIC"/>
             <column name="field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)"/>
+                    valueComputed="(select id from field_type where reference = 'Text'and jurisdiction_id is null order by version limit 1)"/>
             <column name="data_field_type" value="METADATA"/>
         </insert>
 
@@ -21,7 +36,7 @@
             <column name="hidden" value="false"/>
             <column name="security_classification" value="PUBLIC"/>
             <column name="field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)"/>
+                    valueComputed="(select id from field_type where reference = 'Text' and jurisdiction_id is null order by version limit 1)"/>
             <column name="data_field_type" value="METADATA"/>
         </insert>
 
@@ -32,7 +47,7 @@
             <column name="hidden" value="false"/>
             <column name="security_classification" value="PUBLIC"/>
             <column name="field_type_id"
-                    valueComputed="(select id from field_type where reference = 'FixedList' and version = 1 and jurisdiction_id is null)"/>
+                    valueComputed="(select id from field_type where reference = 'FixedList'and jurisdiction_id is null order by version limit 1)"/>
             <column name="data_field_type" value="METADATA"/>
         </insert>
 
@@ -43,7 +58,7 @@
             <column name="hidden" value="false"/>
             <column name="security_classification" value="PUBLIC"/>
             <column name="field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null)"/>
+                    valueComputed="(select id from field_type where reference = 'Text'and jurisdiction_id is null order by version limit 1)"/>
             <column name="data_field_type" value="METADATA"/>
         </insert>
 
@@ -54,7 +69,7 @@
             <column name="hidden" value="false"/>
             <column name="security_classification" value="PUBLIC"/>
             <column name="field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Number' and version = 1 and jurisdiction_id is null)"/>
+                    valueComputed="(select id from field_type where reference = 'Number'and jurisdiction_id is null order by version limit 1)"/>
             <column name="data_field_type" value="METADATA"/>
         </insert>
 
@@ -65,7 +80,7 @@
             <column name="hidden" value="false"/>
             <column name="security_classification" value="PUBLIC"/>
             <column name="field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Date' and version = 1 and jurisdiction_id is null)"/>
+                    valueComputed="(select id from field_type where reference = 'Date'and jurisdiction_id is null order by version limit 1)"/>
             <column name="data_field_type" value="METADATA"/>
         </insert>
 
@@ -76,8 +91,9 @@
             <column name="hidden" value="false"/>
             <column name="security_classification" value="PUBLIC"/>
             <column name="field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Date' and version = 1 and jurisdiction_id is null)"/>
+                    valueComputed="(select id from field_type where reference = 'Date'and jurisdiction_id is null order by version limit 1)"/>
             <column name="data_field_type" value="METADATA"/>
         </insert>
     </changeSet>
+
 </databaseChangeLog>
