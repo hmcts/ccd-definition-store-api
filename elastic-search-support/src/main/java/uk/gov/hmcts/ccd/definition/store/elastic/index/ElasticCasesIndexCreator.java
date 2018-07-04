@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic;
+package uk.gov.hmcts.ccd.definition.store.elastic.index;
 
 import java.io.IOException;
 
@@ -7,6 +7,7 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.common.settings.Settings;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ccd.definition.store.elastic.AbstractElasticSearchSupport;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 

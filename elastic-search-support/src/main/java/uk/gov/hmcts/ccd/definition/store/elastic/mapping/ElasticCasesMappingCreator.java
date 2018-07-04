@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic;
+package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
 import java.io.IOException;
 
@@ -8,8 +8,8 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ccd.definition.store.elastic.AbstractElasticSearchSupport;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-
 
 @Service
 @Slf4j

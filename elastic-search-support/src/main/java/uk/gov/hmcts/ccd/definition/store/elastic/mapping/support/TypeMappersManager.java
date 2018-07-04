@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic;
+package uk.gov.hmcts.ccd.definition.store.elastic.mapping.support;
 
 import static com.google.common.collect.Maps.newHashMap;
 
@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 
 @Component
 public class TypeMappersManager {

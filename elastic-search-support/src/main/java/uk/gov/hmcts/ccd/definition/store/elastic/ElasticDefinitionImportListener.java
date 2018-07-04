@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
+import uk.gov.hmcts.ccd.definition.store.elastic.index.ElasticCasesIndexCreator;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.ElasticCasesMappingCreator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 

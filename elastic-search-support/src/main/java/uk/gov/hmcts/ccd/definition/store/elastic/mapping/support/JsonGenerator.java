@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic;
+package uk.gov.hmcts.ccd.definition.store.elastic.mapping.support;
 
 import java.io.IOException;
 import java.io.StringWriter;

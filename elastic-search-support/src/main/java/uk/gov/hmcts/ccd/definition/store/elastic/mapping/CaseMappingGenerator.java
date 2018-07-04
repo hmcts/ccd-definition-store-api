@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic;
+package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
 import static com.google.common.collect.Maps.newHashMap;
 
