@@ -17,14 +17,15 @@ public class ComplexTypeMappingGenerator extends AbstractMapper implements TypeM
 
     @Override
     public String generateMapping(FieldEntity fieldEntity) throws IOException {
-        return generateMapping(fieldEntity.getFieldType().getComplexFields());
+        List<ComplexFieldEntity> complexFields = fieldEntity.getFieldType().getComplexFields();
+        return generateMapping(complexFields);
     }
 
     public String generateMapping(List<ComplexFieldEntity> complexFields) throws IOException {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();
-            for (ComplexFieldEntity f : complexFields) {
+            for (FieldEntity f : complexFields) {
                 jw.name(f.getReference());
                 jw.jsonValue(getMapperForType(f.getBaseTypeString()).generateMapping(f));
             }

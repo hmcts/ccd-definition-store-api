@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.CcdElasticSearchProperties;
@@ -21,6 +22,7 @@ public abstract class AbstractMapper implements JsonGenerator, Injectable {
     }
 
     protected TypeMappingGenerator getMapperForType(String type) {
-        return this.typeMappers.get(type);
+        return Optional.ofNullable(this.typeMappers.get(type))
+                .orElseThrow(() -> new RuntimeException(String.format("cannot find Mapper for type {}", type)));
     }
 }

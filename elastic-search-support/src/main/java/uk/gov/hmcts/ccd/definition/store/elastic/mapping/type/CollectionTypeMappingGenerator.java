@@ -15,16 +15,20 @@ public class CollectionTypeMappingGenerator extends AbstractMapper implements Ty
     @Override
     public String generateMapping(FieldEntity fieldEntity) throws IOException {
         String result = null;
-        if (fieldEntity.getFieldType().getCollectionFieldType().getComplexFields() != null) {
-                result = ((ComplexTypeMappingGenerator) getMapperForType("Complex")).generateMapping(fieldEntity.getFieldType().getCollectionFieldType().getComplexFields());
-            } else {
-                result = null;
-            }
+        if (isCollectionOfComplex(fieldEntity)) {
+            result = ((ComplexTypeMappingGenerator) getMapperForType("Complex")).generateMapping(fieldEntity.getFieldType().getCollectionFieldType().getComplexFields());
+        } else {
+            result = getMapperForType(fieldEntity.getBaseTypeString()).generateMapping(fieldEntity);
+        }
         return result;
     }
 
     @Override
     public List<String> getTypes() {
         return newArrayList("Collection");
+    }
+
+    private boolean isCollectionOfComplex(FieldEntity fieldEntity) {
+        return fieldEntity.getFieldType().getCollectionFieldType().getComplexFields() != null;
     }
 }
