@@ -109,6 +109,7 @@ allprojects {
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
         compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
         compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.9'
+        compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.13'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testCompile 'io.github.openfeign:feign-jackson:9.7.0'
