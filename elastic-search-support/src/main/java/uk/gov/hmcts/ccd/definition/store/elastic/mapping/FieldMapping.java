@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
+import lombok.ToString;
+
+@ToString
 public class FieldMapping {
 
     private String fieldName;

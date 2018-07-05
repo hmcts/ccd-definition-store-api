@@ -14,7 +14,7 @@ public class CcdElasticSearchProperties {
     private int port;
     private String indexCasesType;
     private String indexCasesNameFormat;
-    private Map<String, String> elasticTypes;
+    private Map<String, String> elasticMappings;
     private Map<String, String> typeMappings;
     private Map<String, String> caseMappings;
     private List<String> typeMappingsIgnored;
@@ -67,12 +67,12 @@ public class CcdElasticSearchProperties {
         this.caseMappings = caseMappings;
     }
 
-    public Map<String, String> getElasticTypes() {
-        return elasticTypes;
+    public Map<String, String> getElasticMappings() {
+        return elasticMappings;
     }
 
-    public void setElasticTypes(Map<String, String> elasticTypes) {
-        this.elasticTypes = elasticTypes;
+    public void setElasticMappings(Map<String, String> elasticMappings) {
+        this.elasticMappings = elasticMappings;
     }
 
     public List<String> getTypeMappingsIgnored() {

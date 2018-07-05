@@ -45,20 +45,31 @@ public class CaseMappingGenerator extends AbstractMappingGenerator {
     }
 
     private List<FieldMapping> casePropertiesMapping() {
+        log.info("generating case properties mappings");
         return config.getCaseMappings().entrySet().stream().map(e ->
-                new FieldMapping(e.getKey(), e.getValue()))
-                .collect(toList());
+        {
+            FieldMapping fieldMapping = new FieldMapping(e.getKey(), e.getValue());
+            log.info("property: {}", fieldMapping);
+            return fieldMapping;
+        }).collect(toList());
     }
 
     private List<FieldMapping> caseDataMapping(CaseTypeEntity caseType) {
+        log.info("generating case data mappings");
         List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(f -> !shouldIgnore(f)).collect(toList());
         return fields.stream().map(Unchecked.function(f -> {
             String generatedMapping = getMapperForType(f.getBaseTypeString()).generateMapping(f);
-            return new FieldMapping(f.getReference(), generatedMapping);
+            FieldMapping fieldMapping = new FieldMapping(f.getReference(), generatedMapping);
+            log.info("data: {}", fieldMapping);
+            return fieldMapping;
         })).collect(toList());
     }
 
     private boolean shouldIgnore(CaseFieldEntity caseFieldEntity) {
-        return config.getTypeMappingsIgnored().contains(caseFieldEntity.getBaseTypeString());
+        boolean ignored = config.getTypeMappingsIgnored().contains(caseFieldEntity.getBaseTypeString());
+        if (ignored) {
+            log.info("field {} of type {} ignored", caseFieldEntity.getReference(), caseFieldEntity.getBaseTypeString());
+        }
+        return ignored;
     }
 }

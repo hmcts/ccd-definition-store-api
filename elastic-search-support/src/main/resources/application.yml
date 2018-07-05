@@ -1,7 +1,8 @@
 elasticsearch:
   host: localhost
   port: 9200
-  elasticTypes:
+  elasticMappings:
+    disabled: '{"enabled": false}'
     defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
     defaultKeyword: '{"type" : "keyword"}'
     defaultDate: '{"type" : "date"}'
@@ -11,32 +12,32 @@ elasticsearch:
   typeMappingsIgnored:
     - Label
   typeMappings:
-    Text: ${elasticsearch.elasticTypes.defaultText}
-    TextArea: ${elasticsearch.elasticTypes.defaultText}
-    Number: ${elasticsearch.elasticTypes.defaultDouble}
-    Date: ${elasticsearch.elasticTypes.defaultDate}
-    Time: ${elasticsearch.elasticTypes.defaultDate}
-    DateTime: ${elasticsearch.elasticTypes.defaultDate}
-    PhoneUK: ${elasticsearch.elasticTypes.defaultKeyword}
-    MoneyGBP: ${elasticsearch.elasticTypes.defaultDouble}
-    YesOrNo: ${elasticsearch.elasticTypes.defaultBoolean}
-    Email: ${elasticsearch.elasticTypes.defaultKeyword}
-    Postcode: ${elasticsearch.elasticTypes.defaultKeyword}
-    Document: ${elasticsearch.elasticTypes.defaultKeyword}
-    FixedList : ${elasticsearch.elasticTypes.defaultText}
-    FixedListEdit : ${elasticsearch.elasticTypes.defaultText}
-    MultiSelectList : ${elasticsearch.elasticTypes.defaultText}
+    Text: ${elasticsearch.elasticMappings.defaultText}
+    TextArea: ${elasticsearch.elasticMappings.defaultText}
+    Number: ${elasticsearch.elasticMappings.defaultDouble}
+    Date: ${elasticsearch.elasticMappings.defaultDate}
+    Time: ${elasticsearch.elasticMappings.defaultDate}
+    DateTime: ${elasticsearch.elasticMappings.defaultDate}
+    PhoneUK: ${elasticsearch.elasticMappings.defaultKeyword}
+    MoneyGBP: ${elasticsearch.elasticMappings.defaultDouble}
+    YesOrNo: ${elasticsearch.elasticMappings.defaultBoolean}
+    Email: ${elasticsearch.elasticMappings.defaultKeyword}
+    Postcode: ${elasticsearch.elasticMappings.defaultKeyword}
+    Document: ${elasticsearch.elasticMappings.defaultKeyword}
+    FixedList: ${elasticsearch.elasticMappings.defaultText}
+    FixedListEdit: ${elasticsearch.elasticMappings.defaultText}
+    MultiSelectList: ${elasticsearch.elasticMappings.defaultText}
   indexCasesNameFormat: "%s_%s_cases"
   indexCasesType: case
   caseMappings:
-    reference: ${elasticsearch.elasticTypes.defaultKeyword}
-    jurisdiction: ${elasticsearch.elasticTypes.defaultText}
-    id: ${elasticsearch.elasticTypes.defaultLong}
-    state: ${elasticsearch.elasticTypes.defaultKeyword}
-    created_date: ${elasticsearch.elasticTypes.defaultDate}
-    last_modified: ${elasticsearch.elasticTypes.defaultDate}
-    security_classification: ${elasticsearch.elasticTypes.defaultKeyword}
-    case_type_id: ${elasticsearch.elasticTypes.defaultKeyword}
+    reference: ${elasticsearch.elasticMappings.defaultKeyword}
+    jurisdiction: ${elasticsearch.elasticMappings.defaultText}
+    id: ${elasticsearch.elasticMappings.defaultLong}
+    state: ${elasticsearch.elasticMappings.defaultKeyword}
+    created_date: ${elasticsearch.elasticMappings.defaultDate}
+    last_modified: ${elasticsearch.elasticMappings.defaultDate}
+    security_classification: ${elasticsearch.elasticMappings.defaultKeyword}
+    case_type_id: ${elasticsearch.elasticMappings.defaultKeyword}
 
 
 
