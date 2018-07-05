@@ -1,6 +1,7 @@
 elasticsearch:
   host: localhost
   port: 9200
+  enabled: true
   elasticMappings:
     disabled: '{"enabled": false}'
     defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
