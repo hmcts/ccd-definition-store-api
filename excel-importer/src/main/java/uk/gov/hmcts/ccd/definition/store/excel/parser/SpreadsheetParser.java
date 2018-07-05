@@ -22,11 +22,12 @@ public class SpreadsheetParser {
     private static final Logger logger = LoggerFactory.getLogger(SpreadsheetParser.class);
 
     private final SpreadsheetValidator spreadsheetValidator;
+    private DataFormatter cellFormatter;
 
     @Autowired
     public SpreadsheetParser(final SpreadsheetValidator spreadsheetValidator) {
-
         this.spreadsheetValidator = spreadsheetValidator;
+        this.cellFormatter = new DataFormatter();
     }
 
 
@@ -81,7 +82,7 @@ public class SpreadsheetParser {
                                         cellValue = cell.getBooleanCellValue();
                                         break;
                                     case NUMERIC:
-                                        cellValue = DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue() : cell.getNumericCellValue();
+                                        cellValue = DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue() : formatNumberAsString(cell);
                                         break;
                                     case STRING:
                                         cellValue = cell.getStringCellValue();
@@ -106,5 +107,10 @@ public class SpreadsheetParser {
         }
 
         return definitionSheets;
+    }
+
+    private String formatNumberAsString(Cell cell) {
+        //we need to format a numeric cell as a string to prevent integers from being interpreted as decimals
+        return cellFormatter.formatCellValue(cell);
     }
 }
