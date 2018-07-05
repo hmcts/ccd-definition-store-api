@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic;
+package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import java.io.IOException;
 
@@ -8,14 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
-import uk.gov.hmcts.ccd.definition.store.elastic.index.ElasticCasesIndexCreator;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.ElasticCasesMappingCreator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 @Service
 @Slf4j
-public class ElasticDefinitionImportListener extends AbstractElasticSearchSupport {
+public class ElasticDefinitionImportListener extends AbstractElasticSearchClient {
 
     @Autowired
     private ElasticCasesIndexCreator indexCreator;

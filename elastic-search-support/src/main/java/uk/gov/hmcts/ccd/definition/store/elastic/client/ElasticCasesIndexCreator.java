@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic.index;
+package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import java.io.IOException;
 
@@ -7,13 +7,12 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.common.settings.Settings;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ccd.definition.store.elastic.AbstractElasticSearchSupport;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 
 @Service
 @Slf4j
-public class ElasticCasesIndexCreator extends AbstractElasticSearchSupport {
+public class ElasticCasesIndexCreator extends AbstractElasticSearchClient {
 
     public void createIndex(CaseTypeEntity caseType) throws IOException {
         String indexName = indexName(caseType);

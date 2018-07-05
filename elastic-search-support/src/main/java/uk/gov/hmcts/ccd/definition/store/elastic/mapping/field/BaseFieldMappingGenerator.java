@@ -1,15 +1,15 @@
-package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
+package uk.gov.hmcts.ccd.definition.store.elastic.mapping.field;
 
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
 
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapper;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
-public class BaseTypeMappingGenerator extends AbstractMapper implements TypeMappingGenerator {
+public class BaseFieldMappingGenerator extends AbstractMappingGenerator implements FieldMappingGenerator {
 
     @Override
     public String generateMapping(FieldEntity fieldEntity) {
@@ -22,7 +22,7 @@ public class BaseTypeMappingGenerator extends AbstractMapper implements TypeMapp
     }
 
     @Override
-    public List<String> getTypes() {
+    public List<String> getCcdTypes() {
         return newArrayList(config.getTypeMappings().keySet());
     }
 }

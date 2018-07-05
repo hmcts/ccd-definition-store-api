@@ -14,7 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 @Component
 @Slf4j
-public class CaseMappingGenerator extends AbstractMapper {
+public class CaseMappingGenerator extends AbstractMappingGenerator {
 
     public String generate(CaseTypeEntity caseType) throws IOException {
         log.info("creating mapping for case type: {}", caseType.getReference());

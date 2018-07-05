@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
+package uk.gov.hmcts.ccd.definition.store.elastic.mapping.field;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -6,17 +6,17 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapper;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
-public class CollectionTypeMappingGenerator extends AbstractMapper implements TypeMappingGenerator {
+public class CollectionFieldMappingGenerator extends AbstractMappingGenerator implements FieldMappingGenerator {
 
     @Override
     public String generateMapping(FieldEntity fieldEntity) throws IOException {
         String result = null;
         if (isCollectionOfComplex(fieldEntity)) {
-            result = ((ComplexTypeMappingGenerator) getMapperForType("Complex")).generateMapping(fieldEntity.getFieldType().getCollectionFieldType().getComplexFields());
+            result = ((ComplexFieldMappingGenerator) getMapperForType("Complex")).generateMapping(fieldEntity.getFieldType().getCollectionFieldType().getComplexFields());
         } else {
             result = getMapperForType(fieldEntity.getBaseTypeString()).generateMapping(fieldEntity);
         }
@@ -24,7 +24,7 @@ public class CollectionTypeMappingGenerator extends AbstractMapper implements Ty
     }
 
     @Override
-    public List<String> getTypes() {
+    public List<String> getCcdTypes() {
         return newArrayList("Collection");
     }
 
