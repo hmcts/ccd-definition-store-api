@@ -98,6 +98,8 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(EventCaseFieldLabelCaseFieldValidator.ValidationError validationError);
 
+    String createErrorMessage(EventCaseFieldOrderSummaryCaseFieldValidator.ValidationError validationError);
+
     String createErrorMessage(EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError validationError);
 
 }
