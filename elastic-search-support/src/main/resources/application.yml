@@ -9,8 +9,9 @@ elasticsearch:
     defaultBoolean: '{"type" : "boolean"}'
     defaultLong: '{"type" : "long"}'
     defaultDouble: '{"type" : "double"}'
-  typeMappingsIgnored:
+  ccdIgnoredTypes:
     - Label
+    - CasePaymentHistoryViewer
   typeMappings:
     Text: ${elasticsearch.elasticMappings.defaultText}
     TextArea: ${elasticsearch.elasticMappings.defaultText}

@@ -66,7 +66,7 @@ public class CaseMappingGenerator extends AbstractMappingGenerator {
     }
 
     private boolean shouldIgnore(CaseFieldEntity caseFieldEntity) {
-        boolean ignored = config.getTypeMappingsIgnored().contains(caseFieldEntity.getBaseTypeString());
+        boolean ignored = config.getCcdIgnoredTypes().contains(caseFieldEntity.getFieldType().getReference());
         if (ignored) {
             log.info("field {} of type {} ignored", caseFieldEntity.getReference(), caseFieldEntity.getBaseTypeString());
         }

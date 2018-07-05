@@ -17,7 +17,7 @@ public class CcdElasticSearchProperties {
     private Map<String, String> elasticMappings;
     private Map<String, String> typeMappings;
     private Map<String, String> caseMappings;
-    private List<String> typeMappingsIgnored;
+    private List<String> ccdIgnoredTypes;
 
     public String getHost() {
         return host;
@@ -75,11 +75,11 @@ public class CcdElasticSearchProperties {
         this.elasticMappings = elasticMappings;
     }
 
-    public List<String> getTypeMappingsIgnored() {
-        return typeMappingsIgnored;
+    public List<String> getCcdIgnoredTypes() {
+        return ccdIgnoredTypes;
     }
 
-    public void setTypeMappingsIgnored(List<String> typeMappingsIgnored) {
-        this.typeMappingsIgnored = typeMappingsIgnored;
+    public void setCcdIgnoredTypes(List<String> ccdIgnoredTypes) {
+        this.ccdIgnoredTypes = ccdIgnoredTypes;
     }
 }

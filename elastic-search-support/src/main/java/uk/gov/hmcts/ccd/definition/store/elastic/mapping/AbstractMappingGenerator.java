@@ -23,7 +23,7 @@ public abstract class AbstractMappingGenerator implements JsonGenerator, Injecta
 
     protected FieldMappingGenerator getMapperForType(String type) {
         return Optional.ofNullable(this.fieldMappers.get(type))
-                .orElseThrow(() -> new RuntimeException(String.format("cannot find Mapper for type {}", type)));
+                .orElseThrow(() -> new RuntimeException(String.format("cannot find Mapper for type %s", type)));
     }
 
     public String disabled() {

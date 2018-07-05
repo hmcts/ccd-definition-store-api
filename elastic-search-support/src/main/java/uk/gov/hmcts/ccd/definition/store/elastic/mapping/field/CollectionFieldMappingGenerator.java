@@ -17,10 +17,13 @@ public class CollectionFieldMappingGenerator extends AbstractMappingGenerator im
     @Override
     public String generateMapping(FieldEntity fieldEntity) throws IOException {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
+            jw.name("properties");
+            jw.beginObject();
             jw.name("id");
             jw.jsonValue(disabled());
             jw.name("value");
             jw.jsonValue(collectionTypeMapping(fieldEntity));
+            jw.endObject();
         }));
     }
 
