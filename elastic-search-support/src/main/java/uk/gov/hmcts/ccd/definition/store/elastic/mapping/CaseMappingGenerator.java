@@ -37,10 +37,20 @@ public class CaseMappingGenerator extends AbstractMappingGenerator {
                         }
                     jw.endObject();
                 jw.endObject();
-            jw.endObject();
+                jw.name("data_classification");
+                jw.beginObject();
+                    jw.name("properties");
+                    jw.beginObject();
+                    for(FieldMapping mapping : caseDataClassificationMapping(caseType)) {
+                        jw.name(mapping.getFieldName());
+                        jw.jsonValue(mapping.getMapping());
+                    }
+                    jw.endObject();
+                jw.endObject();
+                jw.endObject();
         }));
 
-        log.info("generated mapping: {}", caseMapping);
+        log.info("generated mapping for case type {}: {}", caseType.getReference(), caseMapping);
         return caseMapping;
     }
 
@@ -58,9 +68,20 @@ public class CaseMappingGenerator extends AbstractMappingGenerator {
         log.info("generating case data mappings");
         List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(f -> !shouldIgnore(f)).collect(toList());
         return fields.stream().map(Unchecked.function(f -> {
-            String generatedMapping = getMapperForType(f.getBaseTypeString()).generateMapping(f);
+            String generatedMapping = getMapperForType(f.getBaseTypeString()).dataMapping(f);
             FieldMapping fieldMapping = new FieldMapping(f.getReference(), generatedMapping);
             log.info("data: {}", fieldMapping);
+            return fieldMapping;
+        })).collect(toList());
+    }
+
+    private List<FieldMapping> caseDataClassificationMapping(CaseTypeEntity caseType) {
+        log.info("generating case data classification mappings");
+        List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(f -> !shouldIgnore(f)).collect(toList());
+        return fields.stream().map(Unchecked.function(f -> {
+            String generatedMapping = getMapperForType(f.getBaseTypeString()).dataClassificationMapping(f);
+            FieldMapping fieldMapping = new FieldMapping(f.getReference(), generatedMapping);
+            log.info("data classification: {}", fieldMapping);
             return fieldMapping;
         })).collect(toList());
     }

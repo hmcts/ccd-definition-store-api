@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.field;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -12,13 +13,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 public class BaseFieldMappingGenerator extends AbstractMappingGenerator implements FieldMappingGenerator {
 
     @Override
-    public String generateMapping(FieldEntity fieldEntity) {
+    public String dataMapping(FieldEntity fieldEntity) {
         String ccdType = fieldEntity.getBaseTypeString();
         String configuredMapping = config.getTypeMappings().get(ccdType);
         if (configuredMapping == null) {
             throw new RuntimeException(String.format("unknown mapping for ccd type %s", ccdType));
         }
         return configuredMapping;
+    }
+
+    @Override
+    public String dataClassificationMapping(FieldEntity fieldEntity) {
+        return keyword();
     }
 
     @Override

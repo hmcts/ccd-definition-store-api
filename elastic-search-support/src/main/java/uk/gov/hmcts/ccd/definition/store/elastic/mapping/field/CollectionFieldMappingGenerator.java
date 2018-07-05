@@ -15,14 +15,35 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 public class CollectionFieldMappingGenerator extends AbstractMappingGenerator implements FieldMappingGenerator {
 
     @Override
-    public String generateMapping(FieldEntity fieldEntity) throws IOException {
+    public String dataMapping(FieldEntity fieldEntity) throws IOException {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();
             jw.name("id");
             jw.jsonValue(disabled());
             jw.name("value");
-            jw.jsonValue(collectionTypeMapping(fieldEntity));
+            jw.jsonValue(collectionTypeDataMapping(fieldEntity));
+            jw.endObject();
+        }));
+    }
+
+    @Override
+    public String dataClassificationMapping(FieldEntity fieldEntity) throws IOException {
+        return newJson(Unchecked.consumer((JsonWriter jw) -> {
+            jw.name("properties");
+            jw.beginObject();
+            jw.name("classification");
+            jw.jsonValue(keyword());
+            jw.name("value");
+            jw.beginObject();
+            jw.name("properties");
+            jw.beginObject();
+            jw.name("id");
+            jw.jsonValue(disabled());
+            jw.name("classification");
+            jw.jsonValue(collectionTypeDataClassificationMapping(fieldEntity));
+            jw.endObject();
+            jw.endObject();
             jw.endObject();
         }));
     }
@@ -33,15 +54,24 @@ public class CollectionFieldMappingGenerator extends AbstractMappingGenerator im
     }
 
     private boolean isCollectionOfComplex(FieldEntity fieldEntity) {
-        return fieldEntity.getFieldType().getCollectionFieldType().getComplexFields() != null;
+        return !fieldEntity.getFieldType().getCollectionFieldType().getComplexFields().isEmpty();
     }
 
-    private String collectionTypeMapping(FieldEntity fieldEntity) throws IOException {
+    private String collectionTypeDataMapping(FieldEntity fieldEntity) throws IOException {
         if (isCollectionOfComplex(fieldEntity)) {
             ComplexFieldMappingGenerator mapper = (ComplexFieldMappingGenerator) getMapperForType("Complex");
-            return mapper.generateMapping(fieldEntity.getFieldType().getCollectionFieldType().getComplexFields());
+            return mapper.dataMapping(fieldEntity.getFieldType().getCollectionFieldType().getComplexFields());
         } else {
-            return getMapperForType(fieldEntity.getBaseTypeString()).generateMapping(fieldEntity);
+            return config.getTypeMappings().get(fieldEntity.getFieldType().getCollectionFieldType().getReference());
+        }
+    }
+
+    private String collectionTypeDataClassificationMapping(FieldEntity fieldEntity) throws IOException {
+        if (isCollectionOfComplex(fieldEntity)) {
+            ComplexFieldMappingGenerator mapper = (ComplexFieldMappingGenerator) getMapperForType("Complex");
+            return mapper.dataClassificationMapping(fieldEntity.getFieldType().getCollectionFieldType().getComplexFields());
+        } else {
+            return keyword();
         }
     }
 }

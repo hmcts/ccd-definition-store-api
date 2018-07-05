@@ -16,19 +16,43 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 public class ComplexFieldMappingGenerator extends AbstractMappingGenerator implements FieldMappingGenerator {
 
     @Override
-    public String generateMapping(FieldEntity fieldEntity) throws IOException {
-        List<ComplexFieldEntity> complexFields = fieldEntity.getFieldType().getComplexFields();
-        return generateMapping(complexFields);
+    public String dataMapping(FieldEntity fieldEntity) throws IOException {
+        return dataMapping(complexFields(fieldEntity));
     }
 
-    public String generateMapping(List<ComplexFieldEntity> complexFields) throws IOException {
+    public String dataMapping(List<ComplexFieldEntity> complexFields) throws IOException {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();
             for (FieldEntity f : complexFields) {
                 jw.name(f.getReference());
-                jw.jsonValue(getMapperForType(f.getBaseTypeString()).generateMapping(f));
+                jw.jsonValue(getMapperForType(f.getBaseTypeString()).dataMapping(f));
             }
+            jw.endObject();
+        }));
+    }
+
+    @Override
+    public String dataClassificationMapping(FieldEntity fieldEntity) throws IOException {
+        return dataClassificationMapping(complexFields(fieldEntity));
+    }
+
+    public String dataClassificationMapping(List<ComplexFieldEntity> complexFields) throws IOException {
+        return newJson(Unchecked.consumer((JsonWriter jw) -> {
+            jw.name("properties");
+            jw.beginObject();
+            jw.name("classification");
+            jw.jsonValue(keyword());
+            jw.name("value");
+            jw.beginObject();
+            jw.name("properties");
+            jw.beginObject();
+            for (FieldEntity f : complexFields) {
+                jw.name(f.getReference());
+                jw.jsonValue(keyword());
+            }
+            jw.endObject();
+            jw.endObject();
             jw.endObject();
         }));
     }
@@ -36,5 +60,9 @@ public class ComplexFieldMappingGenerator extends AbstractMappingGenerator imple
     @Override
     public List<String> getCcdTypes() {
         return newArrayList("Complex");
+    }
+
+    private List<ComplexFieldEntity> complexFields(FieldEntity fieldEntity) {
+        return fieldEntity.getFieldType().getComplexFields();
     }
 }

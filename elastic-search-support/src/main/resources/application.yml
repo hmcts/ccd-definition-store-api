@@ -39,6 +39,8 @@ elasticsearch:
     last_modified: ${elasticsearch.elasticMappings.defaultDate}
     security_classification: ${elasticsearch.elasticMappings.defaultKeyword}
     case_type_id: ${elasticsearch.elasticMappings.defaultKeyword}
+    '@timestamp': ${elasticsearch.elasticMappings.disabled}
+    '@version': ${elasticsearch.elasticMappings.disabled}
 
 
 

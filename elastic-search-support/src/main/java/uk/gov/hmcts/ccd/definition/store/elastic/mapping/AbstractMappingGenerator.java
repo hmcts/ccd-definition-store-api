@@ -29,4 +29,8 @@ public abstract class AbstractMappingGenerator implements JsonGenerator, Injecta
     public String disabled() {
         return config.getElasticMappings().get("disabled");
     }
+
+    protected String keyword() {
+        return config.getElasticMappings().get("defaultKeyword");
+    }
 }
