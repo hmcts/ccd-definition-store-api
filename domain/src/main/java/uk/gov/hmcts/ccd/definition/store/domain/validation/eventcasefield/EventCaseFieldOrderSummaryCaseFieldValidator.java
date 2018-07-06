@@ -20,7 +20,7 @@ public class EventCaseFieldOrderSummaryCaseFieldValidator implements EventCaseFi
             validationResult.addError(
                 new EventCaseFieldOrderSummaryCaseFieldValidator.ValidationError(
                     String.format(
-                        "'%s' is OrderSummary type and has to be mandatory (it's not editable but has to be added to a form in UI) for event with reference '%s'",
+                        "'%s' is OrderSummary type and has to be mandatory (not editable but has to be added to a form in UI) for event with reference '%s'",
                         eventCaseFieldEntity.getCaseField() != null ? eventCaseFieldEntity.getCaseField().getReference() : "",
                         eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""
                     ),
