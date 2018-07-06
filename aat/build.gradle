@@ -3,7 +3,6 @@ dependencies {
     compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
     compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
-    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.9'
     testCompile 'io.github.openfeign:feign-jackson:9.7.0'
     testCompile "org.exparity:hamcrest-date:2.0.4"
     testCompile "io.rest-assured:rest-assured:3.1.0"
@@ -36,7 +35,3 @@ task functional(type: Test) {
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
     useJUnitPlatform()
 }
-
-
-
-
