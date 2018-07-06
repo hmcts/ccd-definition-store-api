@@ -27,8 +27,8 @@ public class ElasticCasesIndexCreator extends AbstractElasticSearchClient {
     private CreateIndexRequest createCreateIndexRequest(String indexName) {
         CreateIndexRequest createReq = new CreateIndexRequest(indexName);
         createReq.settings(Settings.builder()
-                .put("index.number_of_shards", 3)
-                .put("index.number_of_replicas", 2)
+                .put("index.number_of_shards", config.getIndexShards())
+                .put("index.number_of_replicas", config.getIndexShardsReplicas())
         );
         return createReq;
     }

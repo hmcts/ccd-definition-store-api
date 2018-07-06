@@ -12,11 +12,14 @@ public class CcdElasticSearchProperties {
 
     private String host;
     private int port;
+    private String scheme;
+    private int indexShards;
+    private int indexShardsReplicas;
     private String indexCasesType;
     private String indexCasesNameFormat;
     private Map<String, String> elasticMappings;
     private Map<String, String> typeMappings;
-    private Map<String, String> caseMappings;
+    private Map<String, String> casePredefinedMappings;
     private List<String> ccdIgnoredTypes;
 
     public String getHost() {
@@ -59,12 +62,12 @@ public class CcdElasticSearchProperties {
         this.typeMappings = typeMappings;
     }
 
-    public Map<String, String> getCaseMappings() {
-        return caseMappings;
+    public Map<String, String> getCasePredefinedMappings() {
+        return casePredefinedMappings;
     }
 
-    public void setCaseMappings(Map<String, String> caseMappings) {
-        this.caseMappings = caseMappings;
+    public void setCasePredefinedMappings(Map<String, String> casePredefinedMappings) {
+        this.casePredefinedMappings = casePredefinedMappings;
     }
 
     public Map<String, String> getElasticMappings() {
@@ -81,5 +84,29 @@ public class CcdElasticSearchProperties {
 
     public void setCcdIgnoredTypes(List<String> ccdIgnoredTypes) {
         this.ccdIgnoredTypes = ccdIgnoredTypes;
+    }
+
+    public int getIndexShards() {
+        return indexShards;
+    }
+
+    public void setIndexShards(int indexShards) {
+        this.indexShards = indexShards;
+    }
+
+    public int getIndexShardsReplicas() {
+        return indexShardsReplicas;
+    }
+
+    public void setIndexShardsReplicas(int indexShardsReplicas) {
+        this.indexShardsReplicas = indexShardsReplicas;
+    }
+
+    public String getScheme() {
+        return scheme;
+    }
+
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
     }
 }

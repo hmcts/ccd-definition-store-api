@@ -5,25 +5,25 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.FieldMappersManager;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.TypeMappersManager;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.Injectable;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.JsonGenerator;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.field.FieldMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 
 public abstract class AbstractMappingGenerator implements JsonGenerator, Injectable {
 
     @Autowired
     protected CcdElasticSearchProperties config;
 
-    protected Map<String, FieldMappingGenerator> fieldMappers;
+    protected Map<String, TypeMappingGenerator> typeMappers;
 
-    public void inject(FieldMappersManager fieldMappersManager){
-        this.fieldMappers = fieldMappersManager.getFieldMappers();
+    public void inject(TypeMappersManager typeMappersManager){
+        this.typeMappers = typeMappersManager.getTypeMappers();
     }
 
-    protected FieldMappingGenerator getMapperForType(String type) {
-        return Optional.ofNullable(this.fieldMappers.get(type))
-                .orElseThrow(() -> new RuntimeException(String.format("cannot find Mapper for type %s", type)));
+    protected TypeMappingGenerator getTypeMapper(String type) {
+        return Optional.ofNullable(this.typeMappers.get(type))
+                .orElseThrow(() -> new RuntimeException(String.format("cannot find mapper for type %s", type)));
     }
 
     public String disabled() {

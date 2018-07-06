@@ -26,7 +26,6 @@ public class ElasticDefinitionImportListener extends AbstractElasticSearchClient
     @Async
     @TransactionalEventListener
     void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
-
         for (CaseTypeEntity ct : event.getCaseTypes()) {
             if (!indexExists(ct)) {
                 indexCreator.createIndex(ct);

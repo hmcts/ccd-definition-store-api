@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic.mapping.field;
+package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -12,28 +12,28 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
-public class ComplexFieldMappingGenerator extends AbstractMappingGenerator implements FieldMappingGenerator {
+public class ComplexTypeMappingGenerator extends AbstractMappingGenerator implements TypeMappingGenerator {
 
     @Override
-    public String dataMapping(FieldEntity fieldEntity) {
-        return dataMapping(complexFields(fieldEntity));
+    public String dataMapping(FieldEntity field) {
+        return dataMapping(complexFields(field));
     }
 
     public String dataMapping(List<ComplexFieldEntity> complexFields) {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();
-            for (FieldEntity f : complexFields) {
-                jw.name(f.getReference());
-                jw.jsonValue(getMapperForType(f.getBaseTypeString()).dataMapping(f));
+            for (FieldEntity field : complexFields) {
+                jw.name(field.getReference());
+                jw.jsonValue(getTypeMapper(field.getBaseTypeString()).dataMapping(field));
             }
             jw.endObject();
         }));
     }
 
     @Override
-    public String dataClassificationMapping(FieldEntity fieldEntity) {
-        return dataClassificationMapping(complexFields(fieldEntity));
+    public String dataClassificationMapping(FieldEntity field) {
+        return dataClassificationMapping(complexFields(field));
     }
 
     public String dataClassificationMapping(List<ComplexFieldEntity> complexFields) {
@@ -46,8 +46,8 @@ public class ComplexFieldMappingGenerator extends AbstractMappingGenerator imple
             jw.beginObject();
             jw.name("properties");
             jw.beginObject();
-            for (FieldEntity f : complexFields) {
-                jw.name(f.getReference());
+            for (FieldEntity field : complexFields) {
+                jw.name(field.getReference());
                 jw.jsonValue(keyword());
             }
             jw.endObject();
@@ -61,7 +61,7 @@ public class ComplexFieldMappingGenerator extends AbstractMappingGenerator imple
         return newArrayList("Complex");
     }
 
-    private List<ComplexFieldEntity> complexFields(FieldEntity fieldEntity) {
-        return fieldEntity.getFieldType().getComplexFields();
+    private List<ComplexFieldEntity> complexFields(FieldEntity field) {
+        return field.getFieldType().getComplexFields();
     }
 }

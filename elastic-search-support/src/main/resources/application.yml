@@ -1,7 +1,10 @@
 elasticsearch:
   host: localhost
   port: 9200
+  scheme: http
   enabled: true
+  indexShards: 2
+  indexShardsReplicas: 3
   elasticMappings:
     disabled: '{"enabled": false}'
     defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
@@ -31,7 +34,7 @@ elasticsearch:
     MultiSelectList: ${elasticsearch.elasticMappings.defaultText}
   indexCasesNameFormat: "%s_%s_cases"
   indexCasesType: case
-  caseMappings:
+  casePredefinedMappings:
     reference: ${elasticsearch.elasticMappings.defaultKeyword}
     jurisdiction: ${elasticsearch.elasticMappings.defaultText}
     id: ${elasticsearch.elasticMappings.defaultLong}

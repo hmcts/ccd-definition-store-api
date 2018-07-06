@@ -19,7 +19,7 @@ public class ElasticCasesMappingCreator extends AbstractElasticSearchClient {
     private CaseMappingGenerator mappingGenerator;
 
     public void createMapping(CaseTypeEntity caseType) throws IOException {
-        String caseMapping = mappingGenerator.generate(caseType);
+        String caseMapping = mappingGenerator.generateMapping(caseType);
         PutMappingRequest request = createPutMappingRequest(indexName(caseType), caseMapping);
         PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request);
         boolean acknowledged = putMappingResponse.isAcknowledged();

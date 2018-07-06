@@ -14,9 +14,9 @@ public class ElasticSearchConfiguration {
     private CcdElasticSearchProperties config;
 
     @Bean
-    public RestHighLevelClient getRestHighLevelClient() {
+    public RestHighLevelClient restHighLevelClient() {
         return new RestHighLevelClient(
                     RestClient.builder(
-                            new HttpHost(config.getHost(), config.getPort(), "http")));
+                            new HttpHost(config.getHost(), config.getPort(), config.getScheme())));
     }
 }
