@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 @Component
@@ -17,11 +16,11 @@ public class EventCaseFieldOrderSummaryCaseFieldValidator implements EventCaseFi
 
         if (isOrderSummaryType(eventCaseFieldEntity)
             && !isEmptyDisplayContext(eventCaseFieldEntity)
-            && !isReadOnlyDisplayContext(eventCaseFieldEntity)) {
+            && !isMandatoryDisplayContext(eventCaseFieldEntity)) {
             validationResult.addError(
                 new EventCaseFieldOrderSummaryCaseFieldValidator.ValidationError(
                     String.format(
-                        "'%s' is OrderSummary type and cannot be editable for event with reference '%s'",
+                        "'%s' is OrderSummary type and has to be mandatory (not editable but has to be added to a form in UI) for event with reference '%s'",
                         eventCaseFieldEntity.getCaseField() != null ? eventCaseFieldEntity.getCaseField().getReference() : "",
                         eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""
                     ),
