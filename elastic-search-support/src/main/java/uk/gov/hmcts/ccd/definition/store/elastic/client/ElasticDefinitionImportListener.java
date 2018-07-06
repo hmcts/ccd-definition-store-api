@@ -13,7 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 @Service
-@ConditionalOnProperty(name = "elastic.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "elasticsearch.enabled", havingValue = "true")
 @Slf4j
 public class ElasticDefinitionImportListener extends AbstractElasticSearchClient {
 

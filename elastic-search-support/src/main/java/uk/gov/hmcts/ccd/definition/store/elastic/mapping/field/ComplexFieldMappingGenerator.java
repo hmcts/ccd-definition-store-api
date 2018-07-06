@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.field;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.google.gson.stream.JsonWriter;
@@ -16,11 +15,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 public class ComplexFieldMappingGenerator extends AbstractMappingGenerator implements FieldMappingGenerator {
 
     @Override
-    public String dataMapping(FieldEntity fieldEntity) throws IOException {
+    public String dataMapping(FieldEntity fieldEntity) {
         return dataMapping(complexFields(fieldEntity));
     }
 
-    public String dataMapping(List<ComplexFieldEntity> complexFields) throws IOException {
+    public String dataMapping(List<ComplexFieldEntity> complexFields) {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();
@@ -33,11 +32,11 @@ public class ComplexFieldMappingGenerator extends AbstractMappingGenerator imple
     }
 
     @Override
-    public String dataClassificationMapping(FieldEntity fieldEntity) throws IOException {
+    public String dataClassificationMapping(FieldEntity fieldEntity) {
         return dataClassificationMapping(complexFields(fieldEntity));
     }
 
-    public String dataClassificationMapping(List<ComplexFieldEntity> complexFields) throws IOException {
+    public String dataClassificationMapping(List<ComplexFieldEntity> complexFields) {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();

@@ -15,7 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 public class CollectionFieldMappingGenerator extends AbstractMappingGenerator implements FieldMappingGenerator {
 
     @Override
-    public String dataMapping(FieldEntity fieldEntity) throws IOException {
+    public String dataMapping(FieldEntity fieldEntity) {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();
@@ -28,7 +28,7 @@ public class CollectionFieldMappingGenerator extends AbstractMappingGenerator im
     }
 
     @Override
-    public String dataClassificationMapping(FieldEntity fieldEntity) throws IOException {
+    public String dataClassificationMapping(FieldEntity fieldEntity) {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();
@@ -57,7 +57,7 @@ public class CollectionFieldMappingGenerator extends AbstractMappingGenerator im
         return !fieldEntity.getFieldType().getCollectionFieldType().getComplexFields().isEmpty();
     }
 
-    private String collectionTypeDataMapping(FieldEntity fieldEntity) throws IOException {
+    private String collectionTypeDataMapping(FieldEntity fieldEntity) {
         if (isCollectionOfComplex(fieldEntity)) {
             ComplexFieldMappingGenerator mapper = (ComplexFieldMappingGenerator) getMapperForType("Complex");
             return mapper.dataMapping(fieldEntity.getFieldType().getCollectionFieldType().getComplexFields());
@@ -66,7 +66,7 @@ public class CollectionFieldMappingGenerator extends AbstractMappingGenerator im
         }
     }
 
-    private String collectionTypeDataClassificationMapping(FieldEntity fieldEntity) throws IOException {
+    private String collectionTypeDataClassificationMapping(FieldEntity fieldEntity) {
         if (isCollectionOfComplex(fieldEntity)) {
             ComplexFieldMappingGenerator mapper = (ComplexFieldMappingGenerator) getMapperForType("Complex");
             return mapper.dataClassificationMapping(fieldEntity.getFieldType().getCollectionFieldType().getComplexFields());

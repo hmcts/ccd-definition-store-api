@@ -4,11 +4,13 @@ import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Function;
 
 import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.field.FieldMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -16,74 +18,60 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 @Slf4j
 public class CaseMappingGenerator extends AbstractMappingGenerator {
 
-    public String generate(CaseTypeEntity caseType) throws IOException {
+    public String generate(CaseTypeEntity caseType) {
         log.info("creating mapping for case type: {}", caseType.getReference());
 
-        String caseMapping = newJson(Unchecked.consumer((JsonWriter jw) -> {
+        String mapping = newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();
-                for(FieldMapping mapping : casePropertiesMapping()) {
-                    jw.name(mapping.getFieldName());
-                    jw.jsonValue(mapping.getMapping());
-                }
-                //TODO handle case with no properties
-                jw.name("data");
-                jw.beginObject();
-                    jw.name("properties");
-                    jw.beginObject();
-                        for(FieldMapping mapping : caseDataMapping(caseType)) {
-                            jw.name(mapping.getFieldName());
-                            jw.jsonValue(mapping.getMapping());
-                        }
-                    jw.endObject();
-                jw.endObject();
-                jw.name("data_classification");
-                jw.beginObject();
-                    jw.name("properties");
-                    jw.beginObject();
-                    for(FieldMapping mapping : caseDataClassificationMapping(caseType)) {
-                        jw.name(mapping.getFieldName());
-                        jw.jsonValue(mapping.getMapping());
-                    }
-                    jw.endObject();
-                jw.endObject();
-                jw.endObject();
+                propertiesMapping(jw);
+                dataMapping(jw, caseType);
+                dataClassificationMapping(jw, caseType);
+            jw.endObject();
         }));
 
-        log.info("generated mapping for case type {}: {}", caseType.getReference(), caseMapping);
-        return caseMapping;
+        log.info("generated mapping for case type {}: {}", caseType.getReference(), mapping);
+        return mapping;
     }
 
-    private List<FieldMapping> casePropertiesMapping() {
+    private void propertiesMapping(JsonWriter jw) {
         log.info("generating case properties mappings");
-        return config.getCaseMappings().entrySet().stream().map(e ->
-        {
-            FieldMapping fieldMapping = new FieldMapping(e.getKey(), e.getValue());
-            log.info("property: {}", fieldMapping);
-            return fieldMapping;
-        }).collect(toList());
+        config.getCaseMappings().forEach(Unchecked.biConsumer((property, mapping) -> {
+            jw.name(property);
+            jw.jsonValue(mapping);
+            log.info("property: {}, mapping: {}", property, mapping);
+        }));
     }
 
-    private List<FieldMapping> caseDataMapping(CaseTypeEntity caseType) {
+    private void dataMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
+        //TODO handle case with no properties
         log.info("generating case data mappings");
-        List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(f -> !shouldIgnore(f)).collect(toList());
-        return fields.stream().map(Unchecked.function(f -> {
-            String generatedMapping = getMapperForType(f.getBaseTypeString()).dataMapping(f);
-            FieldMapping fieldMapping = new FieldMapping(f.getReference(), generatedMapping);
-            log.info("data: {}", fieldMapping);
-            return fieldMapping;
-        })).collect(toList());
+        jw.name("data");
+        dataAndClassificationMapping(jw, caseType, fieldMappingGenerator -> field -> fieldMappingGenerator.dataMapping(field));
     }
 
-    private List<FieldMapping> caseDataClassificationMapping(CaseTypeEntity caseType) {
+    private void dataClassificationMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
+        //TODO handle case with no properties
         log.info("generating case data classification mappings");
+        jw.name("data_classification");
+        dataAndClassificationMapping(jw, caseType, fieldMappingGenerator -> field -> fieldMappingGenerator.dataClassificationMapping(field));
+    }
+
+    private void dataAndClassificationMapping(JsonWriter jw, CaseTypeEntity caseType, Function<FieldMappingGenerator, Function<CaseFieldEntity, String>> gen) throws IOException {
+        //TODO handle case with no properties
+        jw.beginObject();
+        jw.name("properties");
+        jw.beginObject();
         List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(f -> !shouldIgnore(f)).collect(toList());
-        return fields.stream().map(Unchecked.function(f -> {
-            String generatedMapping = getMapperForType(f.getBaseTypeString()).dataClassificationMapping(f);
-            FieldMapping fieldMapping = new FieldMapping(f.getReference(), generatedMapping);
-            log.info("data classification: {}", fieldMapping);
-            return fieldMapping;
-        })).collect(toList());
+        for (CaseFieldEntity f : fields) {
+            String property = f.getReference();
+            String mapping = gen.apply(getMapperForType(f.getBaseTypeString())).apply(f);
+            jw.name(property);
+            jw.jsonValue(mapping);
+            log.info("property: {}, mapping: {}", property, mapping);
+        }
+        jw.endObject();
+        jw.endObject();
     }
 
     private boolean shouldIgnore(CaseFieldEntity caseFieldEntity) {
