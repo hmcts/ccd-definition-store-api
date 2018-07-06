@@ -30,7 +30,7 @@ public class ElasticDefinitionImportListener extends AbstractElasticSearchClient
             if (!indexExists(ct)) {
                 indexCreator.createIndex(ct);
             }
-            mappingCreator.createMapping(ct);
+            mappingCreator.upsertMapping(ct);
         }
     }
 
