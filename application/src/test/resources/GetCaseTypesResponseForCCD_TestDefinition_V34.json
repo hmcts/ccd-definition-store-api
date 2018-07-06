@@ -1564,170 +1564,182 @@
         }
       ],
       "show_condition": null
-    }, {
-      "metadata" : true,
-      "id" : "jurisdiction",
-      "case_type_id" : null,
-      "label" : "Jurisdiction",
-      "hint_text" : null,
-      "field_type" : {
-        "id" : "Text",
-        "type" : "Text",
-        "min" : null,
-        "max" : null,
-        "regular_expression" : null,
-        "fixed_list_items" : [ ],
-        "complex_fields" : [ ],
-        "collection_field_type" : null
+    },
+    {
+      "metadata": true,
+      "id": "jurisdiction",
+      "case_type_id": null,
+      "label": "Jurisdiction",
+      "hint_text": null,
+      "field_type": {
+        "id": "Text",
+        "type": "Text",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
       },
-      "hidden" : false,
-      "security_classification" : "PUBLIC",
-      "live_from" : "2018-07-05",
-      "live_until" : null,
-      "acls" : [ ],
-      "show_condition" : null
-    }, {
-      "metadata" : true,
-      "id" : "case_type",
-      "case_type_id" : null,
-      "label" : "Case Type",
-      "hint_text" : null,
-      "field_type" : {
-        "id" : "Text",
-        "type" : "Text",
-        "min" : null,
-        "max" : null,
-        "regular_expression" : null,
-        "fixed_list_items" : [ ],
-        "complex_fields" : [ ],
-        "collection_field_type" : null
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "case_type",
+      "case_type_id": null,
+      "label": "Case Type",
+      "hint_text": null,
+      "field_type": {
+        "id": "Text",
+        "type": "Text",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
       },
-      "hidden" : false,
-      "security_classification" : "PUBLIC",
-      "live_from" : "2018-07-05",
-      "live_until" : null,
-      "acls" : [ ],
-      "show_condition" : null
-    }, {
-      "metadata" : true,
-      "id" : "state",
-      "case_type_id" : null,
-      "label" : "State",
-      "hint_text" : null,
-      "field_type" : {
-        "id" : "FixedList",
-        "type" : "FixedList",
-        "min" : null,
-        "max" : null,
-        "regular_expression" : null,
-        "fixed_list_items" : [ {
-          "code" : "CaseCreated",
-          "label" : "Case created"
-        }, {
-          "code" : "CaseEnteredIntoLegacy",
-          "label" : "Case has been Entered into Legacy"
-        }, {
-          "code" : "CaseStopped",
-          "label" : "Put case on hold"
-        } ],
-        "complex_fields" : [ ],
-        "collection_field_type" : null
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "state",
+      "case_type_id": null,
+      "label": "State",
+      "hint_text": null,
+      "field_type": {
+        "id": "FixedList",
+        "type": "FixedList",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [
+          {
+            "code": "CaseCreated",
+            "label": "Case created"
+          },
+          {
+            "code": "CaseEnteredIntoLegacy",
+            "label": "Case has been Entered into Legacy"
+          },
+          {
+            "code": "CaseStopped",
+            "label": "Put case on hold"
+          }
+        ],
+        "complex_fields": [],
+        "collection_field_type": null
       },
-      "hidden" : false,
-      "security_classification" : "PUBLIC",
-      "live_from" : "2018-07-05",
-      "live_until" : null,
-      "acls" : [ ],
-      "show_condition" : null
-    }, {
-      "metadata" : true,
-      "id" : "security_classification",
-      "case_type_id" : null,
-      "label" : "Security Classification",
-      "hint_text" : null,
-      "field_type" : {
-        "id" : "Text",
-        "type" : "Text",
-        "min" : null,
-        "max" : null,
-        "regular_expression" : null,
-        "fixed_list_items" : [ ],
-        "complex_fields" : [ ],
-        "collection_field_type" : null
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "security_classification",
+      "case_type_id": null,
+      "label": "Security Classification",
+      "hint_text": null,
+      "field_type": {
+        "id": "Text",
+        "type": "Text",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
       },
-      "hidden" : false,
-      "security_classification" : "PUBLIC",
-      "live_from" : "2018-07-05",
-      "live_until" : null,
-      "acls" : [ ],
-      "show_condition" : null
-    }, {
-      "metadata" : true,
-      "id" : "case_reference",
-      "case_type_id" : null,
-      "label" : "Case Reference",
-      "hint_text" : null,
-      "field_type" : {
-        "id" : "Number",
-        "type" : "Number",
-        "min" : null,
-        "max" : null,
-        "regular_expression" : null,
-        "fixed_list_items" : [ ],
-        "complex_fields" : [ ],
-        "collection_field_type" : null
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "case_reference",
+      "case_type_id": null,
+      "label": "Case Reference",
+      "hint_text": null,
+      "field_type": {
+        "id": "Number",
+        "type": "Number",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
       },
-      "hidden" : false,
-      "security_classification" : "PUBLIC",
-      "live_from" : "2018-07-05",
-      "live_until" : null,
-      "acls" : [ ],
-      "show_condition" : null
-    }, {
-      "metadata" : true,
-      "id" : "created_date",
-      "case_type_id" : null,
-      "label" : "Created Date",
-      "hint_text" : null,
-      "field_type" : {
-        "id" : "Date",
-        "type" : "Date",
-        "min" : null,
-        "max" : null,
-        "regular_expression" : null,
-        "fixed_list_items" : [ ],
-        "complex_fields" : [ ],
-        "collection_field_type" : null
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "created_date",
+      "case_type_id": null,
+      "label": "Created Date",
+      "hint_text": null,
+      "field_type": {
+        "id": "Date",
+        "type": "Date",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
       },
-      "hidden" : false,
-      "security_classification" : "PUBLIC",
-      "live_from" : "2018-07-05",
-      "live_until" : null,
-      "acls" : [ ],
-      "show_condition" : null
-    }, {
-      "metadata" : true,
-      "id" : "last_modified_date",
-      "case_type_id" : null,
-      "label" : "Last Modified Date",
-      "hint_text" : null,
-      "field_type" : {
-        "id" : "Date",
-        "type" : "Date",
-        "min" : null,
-        "max" : null,
-        "regular_expression" : null,
-        "fixed_list_items" : [ ],
-        "complex_fields" : [ ],
-        "collection_field_type" : null
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "last_modified_date",
+      "case_type_id": null,
+      "label": "Last Modified Date",
+      "hint_text": null,
+      "field_type": {
+        "id": "Date",
+        "type": "Date",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
       },
-      "hidden" : false,
-      "security_classification" : "PUBLIC",
-      "live_from" : "2018-07-05",
-      "live_until" : null,
-      "acls" : [ ],
-      "show_condition" : null
-    } ],
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    }
+  ],
   "printable_document_url": null,
   "security_classification": "PRIVATE"
 }
