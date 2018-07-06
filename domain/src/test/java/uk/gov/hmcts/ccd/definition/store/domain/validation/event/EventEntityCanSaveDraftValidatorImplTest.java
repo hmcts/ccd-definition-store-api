@@ -14,26 +14,26 @@ import static org.junit.Assert.assertThat;
 class EventEntityCanSaveDraftValidatorImplTest {
 
     private EventEntityCanSaveDraftValidatorImpl classUnderTest;
-
-    private CaseTypeEntity caseType;
     private EventEntity eventEntity;
     private EventEntityValidationContext context;
+
     @BeforeEach
     void setUp() {
+        CaseTypeEntity caseTypeEntity;
         classUnderTest = new EventEntityCanSaveDraftValidatorImpl();
-        caseType = new CaseTypeEntity();
-        caseType.setReference("case type");
+        caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference("case type");
 
         eventEntity = new EventEntity();
         eventEntity.setName("Some Event");
         eventEntity.setCanSaveDraft(true);
         eventEntity.setReference("case event");
-        context = new EventEntityValidationContext(caseType);
+        context = new EventEntityValidationContext(caseTypeEntity);
     }
 
     @Test
     @DisplayName("should allow enable save draft when event has no pre-state i.e. Create type event")
-    void shouldAllowEnabling () {
+    void shouldAllowEnabling() {
         final ValidationResult result = classUnderTest.validate(eventEntity, context);
 
         assertThat(result.isValid(), is(true));
@@ -41,7 +41,7 @@ class EventEntityCanSaveDraftValidatorImplTest {
 
     @Test
     @DisplayName("should not allow enable save draft when event has a pre-state i.e. Not a Create type event")
-    void shouldNotAllowEnabling () {
+    void shouldNotAllowEnabling() {
         StateEntity stateEntity = new StateEntity();
         stateEntity.setName("SomeState");
         eventEntity.getPreStates().add(stateEntity);
@@ -49,7 +49,7 @@ class EventEntityCanSaveDraftValidatorImplTest {
 
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors().size(), is(1));
-        assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Enable saving draft is only " +
-            "available for Create events. Event Some Event is not eligible."));
+        assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Enable saving draft is only "
+            + "available for Create events. Event Some Event is not eligible."));
     }
 }
