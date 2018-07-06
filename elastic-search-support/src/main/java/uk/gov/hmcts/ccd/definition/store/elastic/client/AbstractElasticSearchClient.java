@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -8,14 +7,5 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 public class AbstractElasticSearchClient {
 
     @Autowired
-    protected RestHighLevelClient elasticClient;
-
-    @Autowired
     protected CcdElasticSearchProperties config;
-
-    protected String indexName(CaseTypeEntity caseType) {
-        String jurisdiction = caseType.getJurisdiction().getReference();
-        String caseTypeId = caseType.getReference();
-        return String.format(config.getIndexCasesNameFormat(), jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
-    }
 }
