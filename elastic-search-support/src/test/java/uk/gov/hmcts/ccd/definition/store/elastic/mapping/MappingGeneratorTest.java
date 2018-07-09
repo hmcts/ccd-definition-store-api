@@ -30,9 +30,7 @@ public class MappingGeneratorTest {
 
     @Test
     public void shouldThrowErrorWhenNoMapperForType() {
-        assertThrows(RuntimeException.class, () -> {
-            mappingGenerator.getTypeMapper("unkonwnType");
-        });
+        assertThrows(RuntimeException.class, () -> mappingGenerator.getTypeMapper("unkonwnType"));
     }
 
     private static class TestMappingGenerator extends MappingGenerator {}

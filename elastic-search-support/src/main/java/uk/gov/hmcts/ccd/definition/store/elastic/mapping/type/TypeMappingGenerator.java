@@ -22,7 +22,7 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
         return config.getElasticMappings().get("disabled");
     }
 
-    protected String keyword() {
-        return config.getElasticMappings().get("defaultKeyword");
+    protected String securityClassificationMapping() {
+        return config.getSecurityClassificationMapping();
     }
 }

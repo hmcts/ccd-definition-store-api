@@ -45,6 +45,7 @@ elasticsearch:
     case_type_id: ${elasticsearch.elasticMappings.defaultKeyword}
     '@timestamp': ${elasticsearch.elasticMappings.disabled}
     '@version': ${elasticsearch.elasticMappings.disabled}
+  securityClassificationMapping: ${elasticsearch.elasticMappings.defaultKeyword}
 
 
 

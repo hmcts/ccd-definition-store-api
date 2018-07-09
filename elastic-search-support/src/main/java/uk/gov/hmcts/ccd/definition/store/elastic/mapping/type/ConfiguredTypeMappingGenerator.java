@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
@@ -23,7 +22,7 @@ public class ConfiguredTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public String dataClassificationMapping(FieldEntity field) {
-        return keyword();
+        return securityClassificationMapping();
     }
 
     @Override

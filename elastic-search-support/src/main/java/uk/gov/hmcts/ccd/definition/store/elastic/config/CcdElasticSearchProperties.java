@@ -21,6 +21,7 @@ public class CcdElasticSearchProperties {
     private Map<String, String> typeMappings;
     private Map<String, String> casePredefinedMappings;
     private List<String> ccdIgnoredTypes;
+    private String securityClassificationMapping;
 
     public String getHost() {
         return host;
@@ -108,5 +109,13 @@ public class CcdElasticSearchProperties {
 
     public void setScheme(String scheme) {
         this.scheme = scheme;
+    }
+
+    public String getSecurityClassificationMapping() {
+        return securityClassificationMapping;
+    }
+
+    public void setSecurityClassificationMapping(String securityClassificationMapping) {
+        this.securityClassificationMapping = securityClassificationMapping;
     }
 }

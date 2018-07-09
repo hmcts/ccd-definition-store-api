@@ -32,7 +32,7 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
             jw.name("properties");
             jw.beginObject();
             jw.name("classification");
-            jw.jsonValue(keyword());
+            jw.jsonValue(securityClassificationMapping());
             jw.name("value");
             jw.beginObject();
             jw.name("properties");
@@ -72,7 +72,7 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
             ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper("Complex");
             return mapper.dataClassificationMapping(field.getFieldType().getCollectionFieldType().getComplexFields());
         } else {
-            return keyword();
+            return securityClassificationMapping();
         }
     }
 }

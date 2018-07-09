@@ -9,7 +9,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * A Matcher for comparing JSON.
+ * A Matcher for comparing JSON. From:
+ * https://github.com/sharfah/java-utils
  * Example usage:
  * <pre>
  * assertThat(new String[] {"foo", "bar"}, equalToJSON("[\"foo\", \"bar\"]"));
