@@ -16,7 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 @Component
 @Slf4j
-public class CaseMappingGenerator extends AbstractMappingGenerator {
+public class CaseMappingGenerator extends MappingGenerator {
 
     public String generateMapping(CaseTypeEntity caseType) {
         log.info("creating mapping for case type: {}", caseType.getReference());
@@ -44,35 +44,35 @@ public class CaseMappingGenerator extends AbstractMappingGenerator {
     }
 
     private void dataMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
-        //TODO handle case with no properties
         log.info("generating case data mapping");
         jw.name("data");
         genericDataMapping(jw, caseType, typeMapper -> field -> typeMapper.dataMapping(field));
     }
 
     private void dataClassificationMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
-        //TODO handle case with no properties
         log.info("generating case data classification mapping");
         jw.name("data_classification");
         genericDataMapping(jw, caseType, typeMapper -> field -> typeMapper.dataClassificationMapping(field));
     }
 
     private void genericDataMapping(JsonWriter jw, CaseTypeEntity caseType,
-                                    Function<TypeMappingGenerator, Function<CaseFieldEntity, String>> mappingProducer) throws IOException {
-        //TODO handle case with no properties
+                                    Function<TypeMappingGenerator, Function<CaseFieldEntity, String>> typeMappingFunctionProducer) throws IOException {
         jw.beginObject();
-        jw.name("properties");
-        jw.beginObject();
-        List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(f -> !shouldIgnore(f)).collect(toList());
-        for (CaseFieldEntity field : fields) {
-            String property = field.getReference();
-            Function<CaseFieldEntity, String> typeMapper = mappingProducer.apply(getTypeMapper(field.getBaseTypeString()));
-            String mapping = typeMapper.apply(field);
-            jw.name(property);
-            jw.jsonValue(mapping);
-            log.info("property: {}, mapping: {}", property, mapping);
-        }
-        jw.endObject();
+            jw.name("properties");
+            jw.beginObject();
+                List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(field -> !shouldIgnore(field)).collect(toList());
+                for (CaseFieldEntity field : fields) {
+
+                    String property = field.getReference();
+                    TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
+                    Function<CaseFieldEntity, String> typeMappingFunction = typeMappingFunctionProducer.apply(typeMapper);
+                    String mapping = typeMappingFunction.apply(field);
+
+                    jw.name(property);
+                    jw.jsonValue(mapping);
+                    log.info("property: {}, mapping: {}", property, mapping);
+                }
+            jw.endObject();
         jw.endObject();
     }
 

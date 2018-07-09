@@ -7,12 +7,11 @@ import java.util.List;
 import com.google.gson.stream.JsonWriter;
 import org.jooq.lambda.Unchecked;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
-public class ComplexTypeMappingGenerator extends AbstractMappingGenerator implements TypeMappingGenerator {
+public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public String dataMapping(FieldEntity field) {
@@ -25,7 +24,8 @@ public class ComplexTypeMappingGenerator extends AbstractMappingGenerator implem
             jw.beginObject();
             for (FieldEntity field : complexFields) {
                 jw.name(field.getReference());
-                jw.jsonValue(getTypeMapper(field.getBaseTypeString()).dataMapping(field));
+                TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
+                jw.jsonValue(typeMapper.dataMapping(field));
             }
             jw.endObject();
         }));

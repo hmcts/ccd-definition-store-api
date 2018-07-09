@@ -10,7 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.Injec
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.JsonGenerator;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 
-public abstract class AbstractMappingGenerator implements JsonGenerator, Injectable {
+public abstract class MappingGenerator implements JsonGenerator, Injectable {
 
     @Autowired
     protected CcdElasticSearchProperties config;
@@ -24,13 +24,5 @@ public abstract class AbstractMappingGenerator implements JsonGenerator, Injecta
     protected TypeMappingGenerator getTypeMapper(String type) {
         return Optional.ofNullable(this.typeMappers.get(type))
                 .orElseThrow(() -> new RuntimeException(String.format("cannot find mapper for type %s", type)));
-    }
-
-    public String disabled() {
-        return config.getElasticMappings().get("disabled");
-    }
-
-    protected String keyword() {
-        return config.getElasticMappings().get("defaultKeyword");
     }
 }

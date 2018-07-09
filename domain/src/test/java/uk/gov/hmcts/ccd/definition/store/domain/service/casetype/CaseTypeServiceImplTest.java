@@ -18,6 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
@@ -28,6 +29,7 @@ import java.util.*;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -59,6 +61,9 @@ public class CaseTypeServiceImplTest {
 
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Captor
+    private ArgumentCaptor<DefinitionImportedEvent> eventCaptor;
 
     @Captor
     private ArgumentCaptor<Collection<CaseTypeEntity>> captor;
@@ -146,6 +151,15 @@ public class CaseTypeServiceImplTest {
 
             assertComponentsCalled(false, caseTypeEntity2);
 
+        }
+
+        @Test
+        @DisplayName("Should publish definition imported event")
+        public void shouldPublishDefinitionImportedEvent() {
+            classUnderTest.createAll(jurisdiction, caseTypeEntities);
+
+            verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
+            assertThat(eventCaptor.getValue().getCaseTypes(), equalTo(caseTypeEntities));
         }
 
         private <T> Matcher<T> matchesValidationErrorWithDefaultMessage(String defaultMessage) {

@@ -14,5 +14,5 @@ dependencies {
     // intellij does not need the next 2 lines though
     testCompile project(path: ':domain', configuration: 'testOutput')
     testCompile project(":domain").sourceSets.main.output
-
+    testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
 }

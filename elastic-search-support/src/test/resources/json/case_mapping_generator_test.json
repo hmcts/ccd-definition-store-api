@@ -1,0 +1,12 @@
+{
+  "properties":{
+    "testPropA": "valuePropA",
+    "testPropB": "valuePropB",
+    "data": {
+      "properties": {}
+    },
+    "data_classification": {
+      "properties": {}
+    }
+  }
+}

@@ -15,8 +15,8 @@ public class CcdElasticSearchProperties {
     private String scheme;
     private int indexShards;
     private int indexShardsReplicas;
-    private String indexCasesType;
-    private String indexCasesNameFormat;
+    private String casesIndexType;
+    private String casesIndexNameFormat;
     private Map<String, String> elasticMappings;
     private Map<String, String> typeMappings;
     private Map<String, String> casePredefinedMappings;
@@ -38,20 +38,20 @@ public class CcdElasticSearchProperties {
         this.port = port;
     }
 
-    public String getIndexCasesType() {
-        return indexCasesType;
+    public String getCasesIndexType() {
+        return casesIndexType;
     }
 
-    public void setIndexCasesType(String indexCasesType) {
-        this.indexCasesType = indexCasesType;
+    public void setCasesIndexType(String casesIndexType) {
+        this.casesIndexType = casesIndexType;
     }
 
-    public String getIndexCasesNameFormat() {
-        return indexCasesNameFormat;
+    public String getCasesIndexNameFormat() {
+        return casesIndexNameFormat;
     }
 
-    public void setIndexCasesNameFormat(String indexCasesNameFormat) {
-        this.indexCasesNameFormat = indexCasesNameFormat;
+    public void setCasesIndexNameFormat(String casesIndexNameFormat) {
+        this.casesIndexNameFormat = casesIndexNameFormat;
     }
 
     public Map<String, String> getTypeMappings() {

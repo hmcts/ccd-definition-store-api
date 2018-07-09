@@ -45,10 +45,9 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
 
     @Override
     public boolean upsertMapping(String indexName, String caseMapping) throws IOException {
-        PutMappingRequest request1 = new PutMappingRequest(indexName);
-        request1.type(config.getIndexCasesType());
-        request1.source(caseMapping, XContentType.JSON);
-        PutMappingRequest request = request1;
+        PutMappingRequest request = new PutMappingRequest(indexName);
+        request.type(config.getCasesIndexType());
+        request.source(caseMapping, XContentType.JSON);
         PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request);
         return putMappingResponse.isAcknowledged();
     }

@@ -7,11 +7,11 @@ import java.util.List;
 import com.google.gson.stream.JsonWriter;
 import org.jooq.lambda.Unchecked;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 @Component
-public class CollectionTypeMappingGenerator extends AbstractMappingGenerator implements TypeMappingGenerator {
+public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public String dataMapping(FieldEntity field) {
@@ -57,12 +57,14 @@ public class CollectionTypeMappingGenerator extends AbstractMappingGenerator imp
     }
 
     private String collectionTypeDataMapping(FieldEntity field) {
+        FieldTypeEntity collectionFieldType = field.getFieldType().getCollectionFieldType();
         if (isCollectionOfComplex(field)) {
             ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper("Complex");
-            return mapper.dataMapping(field.getFieldType().getCollectionFieldType().getComplexFields());
+            return mapper.dataMapping(collectionFieldType.getComplexFields());
         } else {
-            return config.getTypeMappings().get(field.getFieldType().getCollectionFieldType().getReference());
+            return typeMappings().get(collectionFieldType.getReference());
         }
+        //TODO collection of collection?
     }
 
     private String collectionTypeDataClassificationMapping(FieldEntity field) {

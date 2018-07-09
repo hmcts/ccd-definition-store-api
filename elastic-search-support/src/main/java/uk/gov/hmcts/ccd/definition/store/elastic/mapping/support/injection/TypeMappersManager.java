@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 
 /**
- * used to break circular dependency between type mappers which doesn't allow them to be Autowired
+ * used to inject type mappers, which can't be Autowired because of a circular dependency between them. i.e. a
+ * ComplexTypeMappingGenerator needs to be injected with a ComplexTypeMappingGenerator to handle complex types made
+ * of nested complex types
  */
 @Component
 public class TypeMappersManager {

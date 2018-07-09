@@ -51,6 +51,8 @@ dependencyCheck {
     }
 }
 
+//spring boot '1.5.12.RELEASE' comes with an older version of elasticserarch libraries which causes runtime issues when
+// used together with our target version. Forcing it to align with our target version '6.3.0'
 ext['elasticsearch.version'] = '6.3.0'
 
 

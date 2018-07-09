@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic.client;
+package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Matchers.any;
@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
@@ -41,7 +41,7 @@ public class ElasticDefinitionImportListenerTest {
 
     @Test
     public void createsIndexIfNotExists() throws IOException {
-        when(config.getIndexCasesNameFormat()).thenReturn("%s_%s");
+        when(config.getCasesIndexNameFormat()).thenReturn("%s_%s");
         when(ccdElasticClient.indexExists(anyString())).thenReturn(false);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
@@ -52,7 +52,7 @@ public class ElasticDefinitionImportListenerTest {
 
     @Test
     public void skipIndexCreationIfNotExists() throws IOException {
-        when(config.getIndexCasesNameFormat()).thenReturn("%s_%s");
+        when(config.getCasesIndexNameFormat()).thenReturn("%s_%s");
         when(ccdElasticClient.indexExists(anyString())).thenReturn(true);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
@@ -62,7 +62,7 @@ public class ElasticDefinitionImportListenerTest {
 
     @Test
     public void createsMapping() throws IOException {
-        when(config.getIndexCasesNameFormat()).thenReturn("%s_%s");
+        when(config.getCasesIndexNameFormat()).thenReturn("%s_%s");
         when(ccdElasticClient.indexExists(anyString())).thenReturn(false);
         when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
 

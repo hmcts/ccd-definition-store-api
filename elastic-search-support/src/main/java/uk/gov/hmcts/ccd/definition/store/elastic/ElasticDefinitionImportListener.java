@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 import java.io.IOException;
 
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
@@ -50,6 +49,6 @@ public class ElasticDefinitionImportListener {
     private String indexName(CaseTypeEntity caseType) {
         String jurisdiction = caseType.getJurisdiction().getReference();
         String caseTypeId = caseType.getReference();
-        return String.format(config.getIndexCasesNameFormat(), jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
+        return String.format(config.getCasesIndexNameFormat(), jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
     }
 }
