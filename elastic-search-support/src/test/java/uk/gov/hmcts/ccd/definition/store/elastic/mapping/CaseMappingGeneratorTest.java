@@ -7,7 +7,6 @@ import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -19,9 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.TypeMappersManager;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldEntityBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
@@ -34,16 +31,16 @@ public class CaseMappingGeneratorTest implements TestUtils {
     @InjectMocks
     private CaseMappingGenerator mappingGenerator;
 
+    private CaseTypeBuilder caseType = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
+
     @Before
     public void setup() {
         TypeMappersManager typeMappersManager = new TypeMappersManager();
-        typeMappersManager.setTypeMappers(
-                newArrayList(stubTypeMappingGenerator("Text", "dataMapping",
-                        "dataClassificationMapping")));
+        StubTypeMappingGenerator stubTypeMappingGenerator = new StubTypeMappingGenerator("Text",
+                "dataMapping","dataClassificationMapping");
+        typeMappersManager.setTypeMappers(newArrayList(stubTypeMappingGenerator));
         mappingGenerator.inject(typeMappersManager);
     }
-
-    CaseTypeBuilder caseType = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
 
     @Test
     public void shouldCrateMappingForPredefinedProperties() {
@@ -69,38 +66,5 @@ public class CaseMappingGeneratorTest implements TestUtils {
         String result = mappingGenerator.generateMapping(caseType.build());
 
         assertThat(result, equalToJSONInFile(readFileFromClasspath("json/case_mapping_generator_data.json")));
-    }
-
-    @Test
-    public void shouldThrowErrorWhenNoMapperForType() {
-        when(config.getCasePredefinedMappings()).thenReturn(Collections.emptyMap());
-
-        CaseFieldEntity fieldA = new CaseFieldEntityBuilder().withReference("fieldA").withBaseType("TypeWithNoMapper").build();
-        caseType.withField(fieldA);
-
-        String result = mappingGenerator.generateMapping(caseType.build());
-
-        assertThat(result, equalToJSONInFile(readFileFromClasspath("json/case_mapping_generator_data.json")));
-    }
-
-    private TypeMappingGenerator stubTypeMappingGenerator(String type, String dataMapping,
-                                                          String dataClassificationMapping) {
-        return new TypeMappingGenerator() {
-
-            @Override
-            public String dataMapping(FieldEntity field) {
-                return dataMapping;
-            }
-
-            @Override
-            public String dataClassificationMapping(FieldEntity field) {
-                return dataClassificationMapping;
-            }
-
-            @Override
-            public List<String> getCcdTypes() {
-                return newArrayList(type);
-            }
-        };
     }
 }
