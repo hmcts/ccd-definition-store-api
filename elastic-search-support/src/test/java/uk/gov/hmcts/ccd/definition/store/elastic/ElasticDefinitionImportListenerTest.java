@@ -6,7 +6,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.elastic.client.CaseTypeFixture.newCaseType;
 
 import java.io.IOException;
 
@@ -20,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ElasticDefinitionImportListenerTest {
@@ -36,8 +36,8 @@ public class ElasticDefinitionImportListenerTest {
     @Mock
     private CaseMappingGenerator caseMappingGenerator;
 
-    private CaseTypeEntity caseA = newCaseType("jurA", "caseA");
-    private CaseTypeEntity caseB = newCaseType("jurB", "caseB");
+    private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseA").build();
+    private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseB").build();
 
     @Test
     public void createsIndexIfNotExists() throws IOException {

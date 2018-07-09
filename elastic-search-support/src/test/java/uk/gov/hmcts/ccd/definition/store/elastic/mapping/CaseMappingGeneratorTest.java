@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
 import static org.junit.Assert.assertThat;
-import static uk.gov.hmcts.ccd.definition.store.elastic.client.CaseTypeFixture.newCaseType;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 
 import java.util.HashMap;
@@ -15,6 +14,8 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CaseMappingGeneratorTest implements TestUtils {
@@ -31,8 +32,9 @@ public class CaseMappingGeneratorTest implements TestUtils {
         predefinedMappings.put("testPropA", "valuePropA");
         predefinedMappings.put("testPropB", "valuePropB");
         Mockito.when(config.getCasePredefinedMappings()).thenReturn(predefinedMappings);
+        CaseTypeEntity caseType = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA").build();
 
-        String result = mappingGenerator.generateMapping(newCaseType("jur", "caseTypeA"));
+        String result = mappingGenerator.generateMapping(caseType);
 
         assertThat(result, equalToJSONInFile(readFileFromClasspath("json/case_mapping_generator_test.json")));
     }
