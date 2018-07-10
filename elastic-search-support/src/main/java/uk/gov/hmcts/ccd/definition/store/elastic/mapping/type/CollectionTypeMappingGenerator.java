@@ -62,9 +62,9 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
             ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper("Complex");
             return mapper.dataMapping(collectionFieldType.getComplexFields());
         } else {
+            //TODO check null value here, or delegate to bast type mapper?
             return typeMappings().get(collectionFieldType.getReference());
         }
-        //TODO collection of collection?
     }
 
     private String collectionTypeDataClassificationMapping(FieldEntity field) {

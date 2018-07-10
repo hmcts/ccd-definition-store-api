@@ -12,17 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ConfiguredTypeMappingGeneratorTest {
-
-    @Mock
-    private CcdElasticSearchProperties config;
+public class ConfiguredTypeMappingGeneratorTest extends AbstractMapperTest {
 
     @InjectMocks
     private ConfiguredTypeMappingGenerator typeMappingGenerator;
@@ -31,7 +27,6 @@ public class ConfiguredTypeMappingGeneratorTest {
 
     @Before
     public void setup() {
-        Map<String, String> typeMappings = newHashMap();
         typeMappings.put("Text", "textMapping");
         when(config.getTypeMappings()).thenReturn(typeMappings);
     }
