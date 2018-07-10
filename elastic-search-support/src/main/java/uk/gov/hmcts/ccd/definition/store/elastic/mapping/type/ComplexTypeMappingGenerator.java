@@ -19,7 +19,6 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
     }
 
     public String dataMapping(List<ComplexFieldEntity> complexFields) {
-        //TODO verify complex of complex
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("properties");
             jw.beginObject();

@@ -1,0 +1,11 @@
+{
+  "properties":{
+    "classification":securityClassificationMapping,
+    "value":{
+      "properties":{
+        "AddressLine1":securityClassificationMapping,
+        "AddressLine2":securityClassificationMapping
+      }
+    }
+  }
+}

@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldEntityBuilder;
+import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConfiguredTypeMappingGeneratorTest {
@@ -27,7 +27,7 @@ public class ConfiguredTypeMappingGeneratorTest {
     @InjectMocks
     private ConfiguredTypeMappingGenerator typeMappingGenerator;
 
-    private CaseFieldEntity field = new CaseFieldEntityBuilder().withReference("fieldA").withBaseType("Text").build();
+    private CaseFieldEntity field = new CaseFieldBuilder().withReference("fieldA").withFieldTypeReference("Text").buildBaseType();
 
     @Before
     public void setup() {
@@ -55,7 +55,7 @@ public class ConfiguredTypeMappingGeneratorTest {
     @Test
     public void shouldThrowErrorWhenNoConfiguredMapping() {
 
-        CaseFieldEntity field = new CaseFieldEntityBuilder().withReference("fieldA").withBaseType("Unknown").build();
+        CaseFieldEntity field = new CaseFieldBuilder().withReference("fieldA").withFieldTypeReference("Unknown").buildBaseType();
 
         assertThrows(RuntimeException.class, () -> typeMappingGenerator.dataMapping(field));
     }

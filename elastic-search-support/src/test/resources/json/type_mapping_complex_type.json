@@ -1,0 +1,6 @@
+{
+ "properties":{
+   "AddressLine1":dataMapping,
+   "AddressLine2":dataMapping
+ }
+}

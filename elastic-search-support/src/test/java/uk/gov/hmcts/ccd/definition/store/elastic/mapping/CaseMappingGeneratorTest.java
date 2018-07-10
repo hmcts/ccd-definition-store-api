@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
@@ -17,13 +16,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.TypeMappersManager;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldEntityBuilder;
+import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CaseMappingGeneratorTest implements TestUtils {
+public class CaseMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
 
     @Mock
     private CcdElasticSearchProperties config;
@@ -35,11 +33,8 @@ public class CaseMappingGeneratorTest implements TestUtils {
 
     @Before
     public void setup() {
-        TypeMappersManager typeMappersManager = new TypeMappersManager();
-        StubTypeMappingGenerator stubTypeMappingGenerator = new StubTypeMappingGenerator("Text",
-                "dataMapping","dataClassificationMapping");
-        typeMappersManager.setTypeMappers(newArrayList(stubTypeMappingGenerator));
-        mappingGenerator.inject(typeMappersManager);
+        stubMappingGenerator("Text", "dataMapping","dataClassificationMapping");
+        mappingGenerator.inject(stubTypeMappersManager);
     }
 
     @Test
@@ -59,8 +54,8 @@ public class CaseMappingGeneratorTest implements TestUtils {
     public void shouldCrateMappingForDataAndDataClassification() {
         when(config.getCasePredefinedMappings()).thenReturn(Collections.emptyMap());
 
-        CaseFieldEntity fieldA = new CaseFieldEntityBuilder().withReference("fieldA").withBaseType("Text").build();
-        CaseFieldEntity fieldB = new CaseFieldEntityBuilder().withReference("fieldB").withBaseType("Text").build();
+        CaseFieldEntity fieldA = new CaseFieldBuilder().withReference("fieldA").withFieldTypeReference("Text").buildBaseType();
+        CaseFieldEntity fieldB = new CaseFieldBuilder().withReference("fieldB").withFieldTypeReference("Text").buildBaseType();
         caseType.withField(fieldA).withField(fieldB);
 
         String result = mappingGenerator.generateMapping(caseType.build());
