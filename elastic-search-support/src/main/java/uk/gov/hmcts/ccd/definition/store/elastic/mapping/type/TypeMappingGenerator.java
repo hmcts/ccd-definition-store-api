@@ -22,6 +22,14 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
         return config.getElasticMappings().get("disabled");
     }
 
+    protected String getConfiguredMapping(String ccdType) {
+        String configuredMapping = typeMappings().get(ccdType);
+        if (configuredMapping == null) {
+            throw new RuntimeException(String.format("no configured mapping for ccd type %s", ccdType));
+        }
+        return configuredMapping;
+    }
+
     protected String securityClassificationMapping() {
         return config.getSecurityClassificationMapping();
     }

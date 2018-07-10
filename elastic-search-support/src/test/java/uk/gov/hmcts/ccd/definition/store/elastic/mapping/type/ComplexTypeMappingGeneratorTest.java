@@ -21,14 +21,13 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 @RunWith(MockitoJUnitRunner.class)
 public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
 
-    @Mock
-    private CcdElasticSearchProperties config;
-
     @InjectMocks
     private ComplexTypeMappingGenerator complexTypeMapper;
 
     @Before
     public void setup() {
+        super.setup();
+
         when(config.getSecurityClassificationMapping()).thenReturn("securityClassificationMapping");
         stubMappingGenerator("Text", "dataMapping","dataClassificationMapping");
         complexTypeMapper.inject(stubTypeMappersManager);

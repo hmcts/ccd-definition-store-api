@@ -13,11 +13,7 @@ public class ConfiguredTypeMappingGenerator extends TypeMappingGenerator {
     @Override
     public String dataMapping(FieldEntity field) {
         String ccdType = field.getBaseTypeString();
-        String configuredMapping = typeMappings().get(ccdType);
-        if (configuredMapping == null) {
-            throw new RuntimeException(String.format("no configured mapping for ccd type %s", ccdType));
-        }
-        return configuredMapping;
+        return getConfiguredMapping(ccdType);
     }
 
     @Override

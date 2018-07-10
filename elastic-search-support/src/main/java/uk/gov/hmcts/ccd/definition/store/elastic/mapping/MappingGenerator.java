@@ -21,7 +21,7 @@ public abstract class MappingGenerator implements JsonGenerator, Injectable {
         this.typeMappers = typeMappersManager.getTypeMappers();
     }
 
-    protected TypeMappingGenerator getTypeMapper(String type) {
+    public TypeMappingGenerator getTypeMapper(String type) {
         return Optional.ofNullable(this.typeMappers.get(type))
                 .orElseThrow(() -> new RuntimeException(String.format("cannot find mapper for type %s", type)));
     }

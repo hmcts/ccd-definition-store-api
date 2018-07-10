@@ -27,8 +27,9 @@ public class ConfiguredTypeMappingGeneratorTest extends AbstractMapperTest {
 
     @Before
     public void setup() {
+        super.setup();
+
         typeMappings.put("Text", "textMapping");
-        when(config.getTypeMappings()).thenReturn(typeMappings);
     }
 
     @Test
@@ -45,13 +46,5 @@ public class ConfiguredTypeMappingGeneratorTest extends AbstractMapperTest {
         String result = typeMappingGenerator.dataClassificationMapping(field);
 
         assertThat(result, equalTo("someMapping"));
-    }
-
-    @Test
-    public void shouldThrowErrorWhenNoConfiguredMapping() {
-
-        CaseFieldEntity field = new CaseFieldBuilder().withReference("fieldA").withFieldTypeReference("Unknown").buildBaseType();
-
-        assertThrows(RuntimeException.class, () -> typeMappingGenerator.dataMapping(field));
     }
 }
