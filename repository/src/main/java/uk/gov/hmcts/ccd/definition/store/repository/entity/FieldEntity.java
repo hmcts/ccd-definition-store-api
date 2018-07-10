@@ -6,6 +6,7 @@ public interface FieldEntity {
 
     FieldTypeEntity getFieldType();
 
+    //TODO add test
     default String getBaseTypeString() {
         FieldTypeEntity baseFieldType = this.getFieldType().getBaseFieldType();
         if (baseFieldType != null) {
