@@ -1,12 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,14 +29,14 @@ public class ConfiguredTypeMappingGeneratorTest extends AbstractMapperTest {
     }
 
     @Test
-    public void sholdReturnConfiguredMapping() {
+    public void shouldReturnConfiguredMapping() {
         String result = typeMappingGenerator.dataMapping(field);
 
         assertThat(result, equalTo("textMapping"));
     }
 
     @Test
-    public void sholdReturnSecurityClassificationMapping() {
+    public void shouldReturnSecurityClassificationMapping() {
         when(config.getSecurityClassificationMapping()).thenReturn("someMapping");
 
         String result = typeMappingGenerator.dataClassificationMapping(field);

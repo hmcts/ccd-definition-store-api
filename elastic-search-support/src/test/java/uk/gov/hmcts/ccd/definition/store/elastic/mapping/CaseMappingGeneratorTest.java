@@ -4,27 +4,18 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CaseMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
-
-    @Mock
-    private CcdElasticSearchProperties config;
 
     @InjectMocks
     private CaseMappingGenerator mappingGenerator;
@@ -33,16 +24,16 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
 
     @Before
     public void setup() {
+        super.setup();
+        when(config.getDynamic()).thenReturn("dynamicConfig");
         stubMappingGenerator("Text", "dataMapping","dataClassificationMapping");
         mappingGenerator.inject(stubTypeMappersManager);
     }
 
     @Test
     public void shouldCrateMappingForPredefinedProperties() {
-        Map<String, String> predefinedMappings = new HashMap<>();
         predefinedMappings.put("testPropA", "valuePropA");
         predefinedMappings.put("testPropB", "valuePropB");
-        when(config.getCasePredefinedMappings()).thenReturn(predefinedMappings);
 
         String result = mappingGenerator.generateMapping(caseType.build());
 
@@ -52,8 +43,6 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
 
     @Test
     public void shouldCrateMappingForDataAndDataClassification() {
-        when(config.getCasePredefinedMappings()).thenReturn(Collections.emptyMap());
-
         CaseFieldEntity fieldA = new CaseFieldBuilder().withReference("fieldA").withFieldTypeReference("Text").buildBaseType();
         CaseFieldEntity fieldB = new CaseFieldBuilder().withReference("fieldB").withFieldTypeReference("Text").buildBaseType();
         caseType.withField(fieldA).withField(fieldB);

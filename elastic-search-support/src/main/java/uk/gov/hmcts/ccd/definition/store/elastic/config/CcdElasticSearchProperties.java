@@ -15,6 +15,7 @@ public class CcdElasticSearchProperties {
     private String scheme;
     private int indexShards;
     private int indexShardsReplicas;
+    private String dynamic;
     private String casesIndexType;
     private String casesIndexNameFormat;
     private Map<String, String> elasticMappings;
@@ -117,5 +118,13 @@ public class CcdElasticSearchProperties {
 
     public void setSecurityClassificationMapping(String securityClassificationMapping) {
         this.securityClassificationMapping = securityClassificationMapping;
+    }
+
+    public String getDynamic() {
+        return dynamic;
+    }
+
+    public void setDynamic(String dynamic) {
+        this.dynamic = dynamic;
     }
 }

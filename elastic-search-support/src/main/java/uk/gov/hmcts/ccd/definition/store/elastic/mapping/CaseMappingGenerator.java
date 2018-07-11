@@ -22,6 +22,8 @@ public class CaseMappingGenerator extends MappingGenerator {
         log.info("creating mapping for case type: {}", caseType.getReference());
 
         String mapping = newJson(Unchecked.consumer((JsonWriter jw) -> {
+            jw.name("dynamic");
+            jw.value(config.getDynamic());
             jw.name("properties");
             jw.beginObject();
                 propertiesMapping(jw);

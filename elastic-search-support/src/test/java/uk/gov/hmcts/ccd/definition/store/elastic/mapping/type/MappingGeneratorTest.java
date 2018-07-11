@@ -7,14 +7,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MappingGeneratorTest extends AbstractMapperTest {

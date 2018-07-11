@@ -25,7 +25,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 public class ElasticDefinitionImportListenerTest {
 
     @InjectMocks
-    private ElasticDefinitionImportListener listener;
+    private TestDefinitionImportListener listener;
 
     @Mock
     private CCDElasticClient ccdElasticClient;
@@ -77,4 +77,13 @@ public class ElasticDefinitionImportListenerTest {
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
         return new DefinitionImportedEvent(newArrayList(caseTypes));
     }
+
+    private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {
+
+        @Override
+        public void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
+            super.initialiseElasticSearch(event.getCaseTypes());
+        }
+    }
 }
+

@@ -1,4 +1,5 @@
 {
+  "dynamic": dynamicConfig,
   "properties":{
     "testPropA": "valuePropA",
     "testPropB": "valuePropB",

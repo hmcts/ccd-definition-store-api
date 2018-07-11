@@ -1,23 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import java.io.IOException;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.event.TransactionalEventListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
-@Service
-@ConditionalOnProperty(name = "elasticsearch.enabled", havingValue = "true")
 @Slf4j
-public class ElasticDefinitionImportListener {
+public abstract class ElasticDefinitionImportListener {
 
     @Autowired
     CcdElasticSearchProperties config;
@@ -28,10 +23,10 @@ public class ElasticDefinitionImportListener {
     @Autowired
     private CCDElasticClient elasticClient;
 
-    @Async
-    @TransactionalEventListener
-    public void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
-        for (CaseTypeEntity caseType : event.getCaseTypes()) {
+    public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
+
+    protected void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) throws IOException {
+        for (CaseTypeEntity caseType : caseTypes) {
             String indexName = indexName(caseType);
 
             if (!elasticClient.indexExists(indexName)) {

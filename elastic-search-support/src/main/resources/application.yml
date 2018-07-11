@@ -5,6 +5,8 @@ elasticsearch:
   enabled: true
   indexShards: 2
   indexShardsReplicas: 3
+  failImportIfError: true
+  dynamic: strict
   elasticMappings:
     disabled: '{"enabled": false}'
     defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
