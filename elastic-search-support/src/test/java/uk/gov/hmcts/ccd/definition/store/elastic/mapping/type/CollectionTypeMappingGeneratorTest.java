@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubComplexTypeMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
@@ -30,8 +32,16 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
         typeMappings.put("Text", "textMapping");
         elasticMappings.put("disabled", "disabledMapping");
 
-        stubMappingGenerator("Text", "dataMapping","dataClassificationMapping");
+        StubTypeMappingGenerator stubTypeMappingGenerator = new StubTypeMappingGenerator("Text", "dataMapping",
+                "dataClassificationMapping");
+        StubComplexTypeMappingGenerator stubComplexTypeMappingGenerator =
+                new StubComplexTypeMappingGenerator("Complex",
+                        "complexDataMapping", "complexDataClassificationMapping");
+        stubMappingGenerator(stubTypeMappingGenerator);
+        stubMappingGenerator(stubComplexTypeMappingGenerator);
         collectionTypeMapper.inject(stubTypeMappersManager);
+        stubTypeMappingGenerator.inject(stubTypeMappersManager);
+        stubComplexTypeMappingGenerator.inject(stubTypeMappersManager);
     }
 
     @Test
@@ -52,6 +62,27 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
 
         assertThat(result, equalToJSONInFile(
                 readFileFromClasspath("json/type_mapping_classification_collection_type.json")));
+
+    }
+
+    @Test
+    public void shouldGenerateMappingForCollectionOfComplexType() {
+        CaseFieldEntity collectionField = newCollectionOfComplexField();
+
+        String result = collectionTypeMapper.dataMapping(collectionField);
+
+        assertThat(result, equalToJSONInFile(
+                readFileFromClasspath("json/type_mapping_collection_complex_type.json")));
+    }
+
+    @Test
+    public void shouldGenerateClassificationMappingForCollectionOfComplexType() {
+        CaseFieldEntity collectionField = newCollectionOfComplexField();
+
+        String result = collectionTypeMapper.dataClassificationMapping(collectionField);
+
+        assertThat(result, equalToJSONInFile(
+                readFileFromClasspath("json/type_mapping_classification_collection_complex_type.json")));
 
     }
 
@@ -79,7 +110,6 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
     private FieldTypeEntity newComplexType() {
         FieldTypeBuilder complexType = new FieldTypeBuilder().withReference("Person");
         complexType.addComplexField("forename", FieldTypeBuilder.textFieldType());
-        complexType.addComplexField("dob", FieldTypeBuilder.baseFieldType("Date"));
         return complexType.buildComplex();
     }
 }

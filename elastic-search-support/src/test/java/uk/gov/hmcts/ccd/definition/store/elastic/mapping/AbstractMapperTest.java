@@ -9,6 +9,7 @@ import java.util.Map;
 import org.mockito.Mock;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.TypeMappersManager;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 
 public class AbstractMapperTest {
 
@@ -26,11 +27,7 @@ public class AbstractMapperTest {
         when(config.getCasePredefinedMappings()).thenReturn(predefinedMappings);
     }
 
-    protected void stubMappingGenerator(String type, String dataMapping, String dataClassificationMapping) {
-        StubTypeMappingGenerator stubTypeMappingGenerator = new StubTypeMappingGenerator(type,
-                dataMapping,dataClassificationMapping);
-        stubTypeMappersManager.getTypeMappers().put(type, stubTypeMappingGenerator);
+    protected void stubMappingGenerator(TypeMappingGenerator stubTypeMappingGenerator) {
+        stubTypeMappersManager.getTypeMappers().put(stubTypeMappingGenerator.getCcdTypes().get(0), stubTypeMappingGenerator);
     }
-
-
 }

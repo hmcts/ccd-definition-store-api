@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -18,7 +19,7 @@ public class TypeMappingGeneratorTest extends AbstractMapperTest {
 
     @Before
     public void setup() {
-        stubMappingGenerator("Text", "dataMapping","dataClassificationMapping");
+        stubMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
         typeMappingGenerator.inject(stubTypeMappersManager);
     }
 

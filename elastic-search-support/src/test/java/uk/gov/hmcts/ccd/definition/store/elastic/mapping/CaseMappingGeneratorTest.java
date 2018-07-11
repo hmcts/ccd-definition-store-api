@@ -26,7 +26,7 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
     public void setup() {
         super.setup();
         when(config.getDynamic()).thenReturn("dynamicConfig");
-        stubMappingGenerator("Text", "dataMapping","dataClassificationMapping");
+        stubMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
         mappingGenerator.inject(stubTypeMappersManager);
     }
 

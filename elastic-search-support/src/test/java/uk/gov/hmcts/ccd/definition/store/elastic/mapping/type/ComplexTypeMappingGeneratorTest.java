@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
@@ -27,7 +28,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         super.setup();
 
         when(config.getSecurityClassificationMapping()).thenReturn("securityClassificationMapping");
-        stubMappingGenerator("Text", "dataMapping","dataClassificationMapping");
+        stubMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
         complexTypeMapper.inject(stubTypeMappersManager);
     }
 

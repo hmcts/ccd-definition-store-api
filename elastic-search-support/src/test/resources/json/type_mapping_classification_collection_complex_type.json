@@ -1,0 +1,20 @@
+{
+  "properties":{
+    "classification":securityClassificationMapping,
+    "value":{
+      "properties":{
+        "id":disabledMapping,
+        "classification":{
+          "properties":{
+            "classification":securityClassificationMapping,
+            "value":{
+              "properties":{
+                "forename":securityClassificationMapping
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
