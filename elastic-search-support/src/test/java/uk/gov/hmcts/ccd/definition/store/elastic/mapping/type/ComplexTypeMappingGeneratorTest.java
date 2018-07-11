@@ -53,7 +53,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     }
 
     private CaseFieldEntity newComplexField() {
-        CaseFieldBuilder complexField = new CaseFieldBuilder().withReference("personAddress");
+        CaseFieldBuilder complexField = new CaseFieldBuilder("personAddress");
         complexField.withFieldTypeReference("Address");
         FieldTypeEntity textType = FieldTypeBuilder.textFieldType();
         complexField.withComplexField("AddressLine1", textType);

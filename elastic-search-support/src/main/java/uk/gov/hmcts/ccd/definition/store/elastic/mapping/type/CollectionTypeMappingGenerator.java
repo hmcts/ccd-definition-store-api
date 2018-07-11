@@ -52,13 +52,9 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
         return newArrayList("Collection");
     }
 
-    private boolean isCollectionOfComplex(FieldEntity field) {
-        return !field.getFieldType().getCollectionFieldType().getComplexFields().isEmpty();
-    }
-
     private String collectionTypeDataMapping(FieldEntity field) {
         FieldTypeEntity collectionFieldType = field.getFieldType().getCollectionFieldType();
-        if (isCollectionOfComplex(field)) {
+        if (field.isCollectionOfComplex()) {
             ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper("Complex");
             return mapper.dataMapping(collectionFieldType.getComplexFields());
         } else {
@@ -67,7 +63,7 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
     }
 
     private String collectionTypeDataClassificationMapping(FieldEntity field) {
-        if (isCollectionOfComplex(field)) {
+        if (field.isCollectionOfComplex()) {
             ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper("Complex");
             return mapper.dataClassificationMapping(field.getFieldType().getCollectionFieldType().getComplexFields());
         } else {

@@ -19,7 +19,7 @@ public class ConfiguredTypeMappingGeneratorTest extends AbstractMapperTest {
     @InjectMocks
     private ConfiguredTypeMappingGenerator typeMappingGenerator;
 
-    private CaseFieldEntity field = new CaseFieldBuilder().withReference("fieldA").withFieldTypeReference("Text").buildBaseType();
+    private CaseFieldEntity field = new CaseFieldBuilder("fieldA").withFieldTypeReference("Text").buildBaseType();
 
     @Before
     public void setup() {

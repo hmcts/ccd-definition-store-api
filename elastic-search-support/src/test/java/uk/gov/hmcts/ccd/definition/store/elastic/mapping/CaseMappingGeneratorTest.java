@@ -43,8 +43,8 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
 
     @Test
     public void shouldCrateMappingForDataAndDataClassification() {
-        CaseFieldEntity fieldA = new CaseFieldBuilder().withReference("fieldA").withFieldTypeReference("Text").buildBaseType();
-        CaseFieldEntity fieldB = new CaseFieldBuilder().withReference("fieldB").withFieldTypeReference("Text").buildBaseType();
+        CaseFieldEntity fieldA = new CaseFieldBuilder("fieldA").withFieldTypeReference("Text").buildBaseType();
+        CaseFieldEntity fieldB = new CaseFieldBuilder("fieldB").withFieldTypeReference("Text").buildBaseType();
         caseType.withField(fieldA).withField(fieldB);
 
         String result = mappingGenerator.generateMapping(caseType.build());

@@ -12,7 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MappingGeneratorTest extends AbstractMapperTest {
+public class TypeMappingGeneratorTest extends AbstractMapperTest {
 
     private TestMappingGenerator typeMappingGenerator = new TestMappingGenerator();
 

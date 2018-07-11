@@ -65,4 +65,21 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
         collectionField.setFieldType(collectionFieldType);
         return collectionField;
     }
+
+    private CaseFieldEntity newCollectionOfComplexField() {
+        FieldTypeEntity collectionFieldType = new FieldTypeBuilder().withReference
+                ("reasons-51503ee8-ac6d-4b57-845e-4806332a9820").withCollectionFieldType(newComplexType()).buildCollection();
+
+        CaseFieldEntity collectionField = new CaseFieldEntity();
+        collectionField.setReference("Aliases");
+        collectionField.setFieldType(collectionFieldType);
+        return collectionField;
+    }
+
+    private FieldTypeEntity newComplexType() {
+        FieldTypeBuilder complexType = new FieldTypeBuilder().withReference("Person");
+        complexType.addComplexField("forename", FieldTypeBuilder.textFieldType());
+        complexType.addComplexField("dob", FieldTypeBuilder.baseFieldType("Date"));
+        return complexType.buildComplex();
+    }
 }

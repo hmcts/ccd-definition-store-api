@@ -6,7 +6,6 @@ public interface FieldEntity {
 
     FieldTypeEntity getFieldType();
 
-    //TODO add test
     default String getBaseTypeString() {
         FieldTypeEntity baseFieldType = this.getFieldType().getBaseFieldType();
         if (baseFieldType != null) {
@@ -14,5 +13,10 @@ public interface FieldEntity {
         } else {
             return getFieldType().getReference();
         }
+    }
+
+    default boolean isCollectionOfComplex() {
+        FieldTypeEntity collectionFieldType = this.getFieldType().getCollectionFieldType();
+        return collectionFieldType != null && !collectionFieldType.getComplexFields().isEmpty();
     }
 }

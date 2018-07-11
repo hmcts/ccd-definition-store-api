@@ -57,7 +57,7 @@ public class CaseMappingGenerationIT implements TestUtils {
     private CcdElasticSearchProperties config;
 
     @Autowired
-    CaseMappingGenerator mappingGenerator;
+    private CaseMappingGenerator mappingGenerator;
 
     @MockBean
     private HighLevelCCDElasticClient client;
@@ -84,7 +84,7 @@ public class CaseMappingGenerationIT implements TestUtils {
 
     private CaseTypeEntity createCaseType() {
         CaseTypeBuilder caseTypeBuilder = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
-        CaseFieldEntity baseTypeField = new CaseFieldBuilder().withReference("forename").withFieldTypeReference("Text").buildBaseType();
+        CaseFieldEntity baseTypeField = new CaseFieldBuilder("forename").withFieldTypeReference("Text").buildBaseType();
         CaseFieldEntity complexOfComplex = newComplexFieldOfComplex();
         CaseFieldEntity complexOfCollection = newComplexFieldOfCollection();
         CaseFieldEntity collectionOfBaseType = newCollectionFieldOfBaseType();
@@ -96,20 +96,20 @@ public class CaseMappingGenerationIT implements TestUtils {
     }
 
     private CaseFieldEntity newComplexFieldOfComplex() {
-        CaseFieldBuilder executorBuilder = new CaseFieldBuilder().withReference("executor");
-        executorBuilder.withFieldTypeReference("Executor");
+        CaseFieldBuilder complexOfComplex = new CaseFieldBuilder("executor");
+        complexOfComplex.withFieldTypeReference("Executor");
 
-        FieldTypeBuilder execPersonComplex = new FieldTypeBuilder().withReference("Person");
-        execPersonComplex.addComplexField("forename", FieldTypeBuilder.textFieldType());
-        execPersonComplex.addComplexField("dob", FieldTypeBuilder.baseFieldType("Date"));
-        FieldTypeEntity execPersonComplexFieldType = execPersonComplex.buildComplex();
-        executorBuilder.withComplexField("executorPerson", execPersonComplexFieldType);
+        FieldTypeBuilder complexType = new FieldTypeBuilder().withReference("Person");
+        complexType.addComplexField("forename", FieldTypeBuilder.textFieldType());
+        complexType.addComplexField("dob", FieldTypeBuilder.baseFieldType("Date"));
+        FieldTypeEntity execPersonComplexFieldType = complexType.buildComplex();
+        complexOfComplex.withComplexField("executorPerson", execPersonComplexFieldType);
 
-        return executorBuilder.buildComplexType();
+        return complexOfComplex.buildComplexType();
     }
 
     private CaseFieldEntity newComplexFieldOfCollection() {
-        CaseFieldBuilder complexField = new CaseFieldBuilder().withReference("appealReasons");
+        CaseFieldBuilder complexField = new CaseFieldBuilder("appealReasons");
         complexField.withFieldTypeReference("appealReasons");
 
         FieldTypeEntity collectionFieldType = new FieldTypeBuilder().withReference

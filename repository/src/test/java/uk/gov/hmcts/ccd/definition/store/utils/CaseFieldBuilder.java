@@ -15,11 +15,8 @@ public class CaseFieldBuilder {
     private String fieldTypeReference;
     private List<ComplexFieldEntity> complexFields = newArrayList();
 
-    public CaseFieldBuilder() {}
-
-    public CaseFieldBuilder withReference(String reference) {
+    public CaseFieldBuilder(String reference) {
         this.reference = reference;
-        return this;
     }
 
     public CaseFieldBuilder withFieldTypeReference(String reference) {
