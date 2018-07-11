@@ -51,10 +51,10 @@ dependencyCheck {
     }
 }
 
-//spring boot '1.5.12.RELEASE' comes with an older version of elasticserarch libraries which causes runtime issues when
-// used together with our target version. Forcing it to align with our target version '6.3.0'
+//overriding default spring boot versions. This should be done only if really needed and is not generally recommended
 ext['elasticsearch.version'] = '6.3.0'
-
+ext['javax-validation.version'] = '2.0.1.Final'
+ext['hibernate-validator.version'] = '6.0.10.Final'
 
 ext {
     junitJupiterVersion = '5.1.1'

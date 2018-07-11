@@ -3,9 +3,9 @@ elasticsearch:
   port: 9200
   scheme: http
   enabled: true
-  indexShards: 2
+  indexShards: 8
   indexShardsReplicas: 3
-  failImportIfError: false
+  failImportIfError: true
   dynamic: strict
   elasticMappings:
     disabled: '{"enabled": false}'
