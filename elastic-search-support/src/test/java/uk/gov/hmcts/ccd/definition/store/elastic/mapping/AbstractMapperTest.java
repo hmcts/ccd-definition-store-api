@@ -27,7 +27,7 @@ public class AbstractMapperTest {
         when(config.getCasePredefinedMappings()).thenReturn(predefinedMappings);
     }
 
-    protected void stubMappingGenerator(TypeMappingGenerator stubTypeMappingGenerator) {
+    protected void addMappingGenerator(TypeMappingGenerator stubTypeMappingGenerator) {
         stubTypeMappersManager.getTypeMappers().put(stubTypeMappingGenerator.getCcdTypes().get(0), stubTypeMappingGenerator);
     }
 }

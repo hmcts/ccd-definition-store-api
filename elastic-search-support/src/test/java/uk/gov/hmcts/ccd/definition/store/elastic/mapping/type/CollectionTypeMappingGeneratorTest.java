@@ -37,8 +37,8 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
         StubComplexTypeMappingGenerator stubComplexTypeMappingGenerator =
                 new StubComplexTypeMappingGenerator("Complex",
                         "complexDataMapping", "complexDataClassificationMapping");
-        stubMappingGenerator(stubTypeMappingGenerator);
-        stubMappingGenerator(stubComplexTypeMappingGenerator);
+        addMappingGenerator(stubTypeMappingGenerator);
+        addMappingGenerator(stubComplexTypeMappingGenerator);
         collectionTypeMapper.inject(stubTypeMappersManager);
         stubTypeMappingGenerator.inject(stubTypeMappersManager);
         stubComplexTypeMappingGenerator.inject(stubTypeMappersManager);

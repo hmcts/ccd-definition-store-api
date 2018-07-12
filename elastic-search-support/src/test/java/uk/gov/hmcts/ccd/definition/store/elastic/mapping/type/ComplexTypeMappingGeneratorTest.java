@@ -28,7 +28,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         super.setup();
 
         when(config.getSecurityClassificationMapping()).thenReturn("securityClassificationMapping");
-        stubMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
+        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
         complexTypeMapper.inject(stubTypeMappersManager);
     }
 

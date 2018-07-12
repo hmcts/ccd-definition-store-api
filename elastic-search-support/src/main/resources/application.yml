@@ -1,12 +1,12 @@
 elasticsearch:
-  host: localhost
-  port: 9200
-  scheme: http
-  enabled: true
-  indexShards: 2
-  indexShardsReplicas: 3
-  failImportIfError: false
-  dynamic: strict
+  host: ${ELASTIC_SEARCH_HOST:localhost}
+  port: ${ELASTIC_SEARCH_PORT:9200}
+  scheme: ${ELASTIC_SEARCH_SCHEME:http}
+  enabled: ${ELASTIC_SEARCH_ENABLED:false}
+  indexShards: ${ELASTIC_SEARCH_INDEX_SHARDS:2}
+  indexShardsReplicas: ${ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS:3}
+  failImportIfError: ${ELASTIC_SEARCH_FAIL_ON_IMPORT:false}
+  dynamic: ${ELASTIC_SEARCH_DYNAMIC:strict}
   elasticMappings:
     disabled: '{"enabled": false}'
     defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
@@ -34,7 +34,7 @@ elasticsearch:
     FixedList: ${elasticsearch.elasticMappings.defaultText}
     FixedListEdit: ${elasticsearch.elasticMappings.defaultText}
     MultiSelectList: ${elasticsearch.elasticMappings.defaultText}
-  casesIndexNameFormat: "%s_%s_cases"
+  casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_%s_cases}
   casesIndexType: case
   casePredefinedMappings:
     reference: ${elasticsearch.elasticMappings.defaultText}

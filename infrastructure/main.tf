@@ -66,6 +66,16 @@ module "case-definition-store-api" {
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
 
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
+
+    ELASTIC_SEARCH_HOST = "${var.elastic_search_host}"
+    ELASTIC_SEARCH_PORT = "${var.elastic_search_port}"
+    ELASTIC_SEARCH_SCHEME = "${var.elastic_search_scheme}"
+    ELASTIC_SEARCH_ENABLED = "${var.elastic_search_enabled}"
+    ELASTIC_SEARCH_INDEX_SHARDS = "${var.elastic_search_index_shards}"
+    ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS = "${var.elastic_search_index_shards_replicas}"
+    ELASTIC_SEARCH_FAIL_ON_IMPORT = "${var.elastic_search_fail_on_import}"
+    ELASTIC_SEARCH_DYNAMIC = "${var.elastic_search_dynamc}"
+    ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT = "${var.elastic_search_case_index_name_format}"
   }
 
 }
