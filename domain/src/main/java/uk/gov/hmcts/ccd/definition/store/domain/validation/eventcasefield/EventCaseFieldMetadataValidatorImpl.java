@@ -17,7 +17,9 @@ public class EventCaseFieldMetadataValidatorImpl implements EventCaseFieldEntity
             validationResult.addError(new ValidationError(
                 String.format(
                     "'%s' is a metadata field and cannot be editable for event with reference '%s'",
-                    eventCaseFieldEntity.getCaseField() != null ? eventCaseFieldEntity.getCaseField().getReference() : "",
+                    eventCaseFieldEntity.getCaseField() != null ?
+                        String.join(eventCaseFieldEntity.getCaseField().getReference().toUpperCase(), "[", "]")
+                        : "",
                     eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""
                 ),
                 eventCaseFieldEntity));

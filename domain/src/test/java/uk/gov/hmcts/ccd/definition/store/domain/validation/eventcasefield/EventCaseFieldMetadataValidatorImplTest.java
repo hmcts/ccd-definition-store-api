@@ -29,7 +29,7 @@ class EventCaseFieldMetadataValidatorImplTest {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setEvent(eventEntity);
         CaseFieldEntity caseField = new CaseFieldEntity();
-        caseField.setReference("[FIELD]");
+        caseField.setReference("FIELD");
         caseField.setDataFieldType(DataFieldType.METADATA);
         eventCaseFieldEntity.setCaseField(caseField);
         EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
