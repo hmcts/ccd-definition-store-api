@@ -16,13 +16,13 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseTypeEntity.liveFrom", target = "version.liveFrom")
     @Mapping(source = "caseTypeEntity.liveTo", target = "version.liveUntil")
     @Mapping(
-            expression = "java(" +
-                "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-                "               caseTypeEntity.getCaseTypeUserRoleEntities()" +
-                "           )" +
-                "       )",
-            target = "acls"
-        )
+        expression = "java(" +
+            "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
+            "               caseTypeEntity.getCaseTypeUserRoleEntities()" +
+            "           )" +
+            "       )",
+        target = "acls"
+    )
     @Mapping(source = "caseTypeEntity.printWebhook.url", target = "printableDocumentsUrl")
     CaseType map(CaseTypeEntity caseTypeEntity);
 
@@ -45,7 +45,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(
         expression = "java(eventEntity.isCanCreate() ? java.util.Collections.emptyList() " +
             ": eventEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") " +
-                ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+            ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
     @Mapping(
@@ -85,8 +85,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "fieldTypeEntity.minimum", target = "min")
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
     @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null" +
-                            " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
-            target = "type")
+        " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
+        target = "type")
     FieldType map(FieldTypeEntity fieldTypeEntity);
 
     @Mapping(source = "fieldTypeListItemEntity.value", target = "code")
@@ -111,12 +111,14 @@ public interface EntityToResponseDTOMapper {
     SearchInputField map(SearchInputCaseFieldEntity searchInputCaseFieldEntity);
 
     @Mapping(source = "searchResultCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(expression = "java(searchResultCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchResultsField map(SearchResultCaseFieldEntity searchResultCaseFieldEntity);
 
     @Mapping(source = "workBasketInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
     WorkbasketInputField map(WorkBasketInputCaseFieldEntity workBasketInputCaseFieldEntity);
 
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 
     // Would be conventional to use a Default method like

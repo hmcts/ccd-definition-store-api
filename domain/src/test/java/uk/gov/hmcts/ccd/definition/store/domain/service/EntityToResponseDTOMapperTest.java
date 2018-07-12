@@ -883,7 +883,7 @@ public class EntityToResponseDTOMapperTest {
     class SearchResultCaseFieldEntityTests {
 
         @Test
-        public void testMapSearchResultCaseFieldEntity() {
+        void testMapSearchResultCaseFieldEntity() {
             SearchResultCaseFieldEntity searchResultCaseFieldEntity = new SearchResultCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
@@ -897,6 +897,22 @@ public class EntityToResponseDTOMapperTest {
             assertEquals(searchResultCaseFieldEntity.getLabel(), searchResultsField.getLabel());
             assertEquals(searchResultCaseFieldEntity.getCaseField().getReference(),
                          searchResultsField.getCaseFieldId());
+            assertThat(searchResultsField.isMetadata(), is(false));
+        }
+
+        @Test
+        void shouldSetMetadataFlagOnDto() {
+            SearchResultCaseFieldEntity searchResultCaseFieldEntity = new SearchResultCaseFieldEntity();
+            CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+            caseFieldEntity.setReference("CaseFieldReference");
+            caseFieldEntity.setDataFieldType(DataFieldType.METADATA);
+            searchResultCaseFieldEntity.setCaseField(caseFieldEntity);
+            searchResultCaseFieldEntity.setLabel("Label");
+            searchResultCaseFieldEntity.setOrder(69);
+
+            SearchResultsField searchResultsField = spyOnClassUnderTest.map(searchResultCaseFieldEntity);
+
+            assertThat(searchResultsField.isMetadata(), is(true));
         }
 
     }
@@ -929,7 +945,7 @@ public class EntityToResponseDTOMapperTest {
     class WorkBasketCaseFieldEntityTests {
 
         @Test
-        public void testMapWorkBasketCaseFieldEntity() {
+        void testMapWorkBasketCaseFieldEntity() {
             WorkBasketCaseFieldEntity workBasketCaseFieldEntity = new WorkBasketCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
@@ -944,15 +960,30 @@ public class EntityToResponseDTOMapperTest {
             assertEquals(workBasketCaseFieldEntity.getCaseField().getReference(), workBasketResult.getCaseFieldId());
         }
 
+        @Test
+        void shouldSetMetadataFlagOnDto() {
+            WorkBasketCaseFieldEntity workBasketCaseFieldEntity = new WorkBasketCaseFieldEntity();
+            CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+            caseFieldEntity.setReference("CaseFieldReference");
+            caseFieldEntity.setDataFieldType(DataFieldType.METADATA);
+            workBasketCaseFieldEntity.setCaseField(caseFieldEntity);
+            workBasketCaseFieldEntity.setLabel("Label");
+            workBasketCaseFieldEntity.setOrder(69);
+
+            WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
+
+            assertThat(workBasketResult.isMetadata(), is(true));
+        }
+
     }
 
     private void assertAcls(List<? extends Authorisation> authorisation, List<AccessControlList> accessControlList) {
         assertEquals(authorisation.size(), accessControlList.size());
         for (Authorisation authItem : authorisation) {
             assertThat(accessControlList,
-                hasItem(
-                    aclWhichMatchesAuthorisation(authItem)
-                )
+                       hasItem(
+                           aclWhichMatchesAuthorisation(authItem)
+                       )
             );
         }
     }
