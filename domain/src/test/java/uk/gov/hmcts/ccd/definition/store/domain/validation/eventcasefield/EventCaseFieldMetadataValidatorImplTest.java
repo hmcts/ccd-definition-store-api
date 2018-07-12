@@ -21,8 +21,8 @@ class EventCaseFieldMetadataValidatorImplTest {
     private final EventCaseFieldMetadataValidatorImpl validator = new EventCaseFieldMetadataValidatorImpl();
 
     @Test
-    @DisplayName("Should return validation result with exception when non-metadata case field id is enclosed in " +
-        "square brackets")
+    @DisplayName("Should return validation result with exception when metadata case field id is defined in case event" +
+        " fields")
     void shouldReturnValidationResultWithError_whenNonMetadataCaseFieldIdContainsSquareBrackets() {
         EventEntity eventEntity = new EventEntity();
         eventEntity.setReference("event");
