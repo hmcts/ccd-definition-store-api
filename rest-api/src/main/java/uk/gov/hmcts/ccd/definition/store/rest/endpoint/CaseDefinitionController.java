@@ -31,16 +31,12 @@ public class CaseDefinitionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(CaseDefinitionController.class);
 
-    /**
-     * @deprecated Use {@link uk.gov.hmcts.ccd.definition.endpoint.CaseDefinitionController#dataCaseworkerIdAndJurisdictionIdCaseTypeGet(String, String, String)} instead.
-     */
     @RequestMapping(value = "/data/case-type/{id}", method = RequestMethod.GET, produces = {"application/json"})
     @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n", response = CaseType.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
         @ApiResponse(code = 200, message = "Unexpected error")
     })
-    @Deprecated
     public CaseType dataCaseTypeIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
         return caseTypeService.findByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
