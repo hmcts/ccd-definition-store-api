@@ -23,6 +23,10 @@ variable "capacity" {
   default = "1"
 }
 
+variable "common_tags" {
+  type = "map"
+}
+
 variable "ilbIp"{}
 
 variable "tenant_id" {
@@ -69,5 +73,5 @@ variable "idam_api_url" {
 ////////////////////////////////
 
 variable "authorised-services" {
-  default = "ccd_data,ccd_gw,ccd_admin"
+  default = "ccd_data,ccd_gw,ccd_admin,jui_webapp"
 }

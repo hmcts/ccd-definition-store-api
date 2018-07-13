@@ -26,15 +26,15 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
     @Test
     public void shouldPassValidationIfFieldIsNotLabelType() {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotOrderSummary"), null, DisplayContext.READONLY), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotOrderSummary"), null, DisplayContext.MANDATORY), null).isValid());
         assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotOrderSummary"), null, DisplayContext.OPTIONAL), null).isValid());
 
     }
 
     @Test
-    public void shouldPassValidationIfFieldTypeReadonly() throws Exception {
+    public void shouldPassValidationIfFieldTypeMandatory() throws Exception {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY), null, DisplayContext.READONLY), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY), null, DisplayContext.MANDATORY), null).isValid());
 
     }
 
@@ -58,21 +58,21 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
                              hasItem(
-                                 hasProperty("defaultMessage", equalTo("'OrderSummary' is OrderSummary type and cannot be editable for event with reference 'Event Reference'"))))
+                                 hasProperty("defaultMessage", equalTo("'OrderSummary' is OrderSummary type and has to be mandatory (not editable but has to be added to a form in UI) for event with reference 'Event Reference'"))))
         );
     }
 
     @Test
-    public void shouldReturnValidationErrorIfFieldTypeMandatory() throws Exception {
+    public void shouldReturnValidationErrorIfFieldTypeReadOnly() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY), event("Event Reference"), DisplayContext.MANDATORY), null);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY), event("Event Reference"), DisplayContext.READONLY), null);
 
         assertAll(
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
                              hasItem(
-                                 hasProperty("defaultMessage", equalTo("'OrderSummary' is OrderSummary type and cannot be editable for event with reference 'Event Reference'"))))
+                                 hasProperty("defaultMessage", equalTo("'OrderSummary' is OrderSummary type and has to be mandatory (not editable but has to be added to a form in UI) for event with reference 'Event Reference'"))))
         );
     }
 
