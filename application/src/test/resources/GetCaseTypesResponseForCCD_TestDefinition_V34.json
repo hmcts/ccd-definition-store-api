@@ -27,7 +27,7 @@
       "show_summary_content_option" : null
     }, {
       "case_field_id" : "PersonOrderSummary",
-      "display_context" : "READONLY",
+      "display_context" : "MANDATORY",
       "show_condition" : null,
       "show_summary_change_option" : true,
       "show_summary_content_option" : null
@@ -289,8 +289,8 @@
     "field_type" : {
       "id" : "PersonLastNameWithValidation-<GUID-REMOVED>",
       "type" : "Text",
-      "min" : "3.0",
-      "max" : "20.0",
+      "min" : "3",
+      "max" : "20",
       "regular_expression" : null,
       "fixed_list_items" : [ ],
       "complex_fields" : [ ],
