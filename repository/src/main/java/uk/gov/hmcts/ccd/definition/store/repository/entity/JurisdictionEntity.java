@@ -1,12 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "jurisdiction")
@@ -39,6 +47,11 @@ public class JurisdictionEntity implements Serializable, Versionable {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "jurisdiction_id")
+    private final List<CaseTypeEntity> caseTypes = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -94,6 +107,21 @@ public class JurisdictionEntity implements Serializable, Versionable {
 
     public void setLiveTo(final Date liveTo) {
         this.liveTo = liveTo;
+    }
+
+    public void addCaseType(@NotNull final CaseTypeEntity caseType) {
+        caseType.setJurisdiction(this);
+        caseTypes.add(caseType);
+    }
+
+    public void addCaseTypes(@NotNull final Collection<CaseTypeEntity> caseTypes) {
+        for (CaseTypeEntity caseType : caseTypes) {
+            addCaseType(caseType);
+        }
+    }
+
+    public List<CaseTypeEntity> getCaseTypes() {
+        return caseTypes;
     }
 
     @Override

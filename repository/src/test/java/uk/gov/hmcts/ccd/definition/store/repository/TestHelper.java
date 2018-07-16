@@ -2,11 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 @Component
 public class TestHelper {
@@ -14,14 +10,17 @@ public class TestHelper {
     private final VersionedDefinitionRepositoryDecorator<JurisdictionEntity, Integer> versionedJurisdictionRepository;
     private final VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedTypeRepository;
     private final UserRoleRepository userRoleRepository;
+    private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
 
     @Autowired
     public TestHelper(JurisdictionRepository jurisdictionRepository,
                       FieldTypeRepository fieldTypeRepository,
-                      UserRoleRepository userRoleRepository) {
+                      UserRoleRepository userRoleRepository,
+                      CaseTypeRepository caseTypeRepository) {
         versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository);
         versionedTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository);
         this.userRoleRepository = userRoleRepository;
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
     }
 
     public JurisdictionEntity createJurisdiction() {
@@ -75,4 +74,15 @@ public class TestHelper {
         return ecf;
     }
 
+    CaseTypeEntity createCaseTypeEntity(final String reference,
+                                        final String name,
+                                        final JurisdictionEntity jurisdiction,
+                                        final SecurityClassification sc) {
+        final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference(reference);
+        caseTypeEntity.setName(name);
+        caseTypeEntity.setJurisdiction(jurisdiction);
+        caseTypeEntity.setSecurityClassification(sc);
+        return versionedCaseTypeRepository.save(caseTypeEntity);
+    }
 }
