@@ -9,6 +9,10 @@ public interface EventCaseFieldEntityValidator {
     ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
                               EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext);
 
+    default boolean isMandatoryDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {
+        return eventCaseFieldEntity.getDisplayContext().equals(DisplayContext.MANDATORY);
+    }
+
     default boolean isReadOnlyDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {
         return eventCaseFieldEntity.getDisplayContext().equals(DisplayContext.READONLY);
     }

@@ -2,60 +2,34 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
 
     <suppress>
-        <notes><![CDATA[
-     Does not apply as we're not using the XmlMapper.
-     ]]></notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cpe>cpe:/a:fasterxml:jackson-databind</cpe>
+        <notes>Netty cookie related</notes>
+        <cve>CVE-2015-2156</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[
-   Does not apply as we're not using the XmlMapper.
-   ]]></notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cpe>cpe:/a:fasterxml:jackson</cpe>
+        <notes>Netty ssl related</notes>
+        <cve>CVE-2016-4970</cve>
+    </suppress>
+    <suppress>
+        <notes>Postgres jdbc ddriver</notes>
+        <cve>CVE-2017-8806</cve>
+    </suppress>
+    <suppress>
+        <notes>Postgres jdbc ddriver</notes>
+        <cve>CVE-2017-14798</cve>
+    </suppress>
+    <suppress>
+        <notes>Postgres jdbc ddriver</notes>
+        <cve>CVE-2018-1115</cve>
+    </suppress>
+    <suppress>
+        <notes>h2 not used in production</notes>
+        <!--<cve>CVE-2018-10054</cve>-->
+        <gav regex="true">^com\.h2database:h2:.*$</gav>
+        <cpe>cpe:/a:h2database:h2</cpe>
     </suppress>
     <suppress>
         <gav regex="true">^org\.postgresql:postgresql:.*$</gav>
         <cpe>cpe:/a:postgresql:postgresql</cpe>
-    </suppress>
-    <suppress>
-        <notes>See https://github.com/jeremylong/DependencyCheck/issues/1146 for Embedded Tomcat</notes>
-        <cve>CVE-2017-12617</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            Introduced by Spring 4.3.13.RELEASE; Upgrade to Spring Boot 1.5.12 or Spring Boot 2 to resolve.
-        </notes>
-        <cve>CVE-2018-1199</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            Spring Boot application that are not installed as a service, or are not using the embedded launch script are not susceptible.
-        </notes>
-        <cve>CVE-2018-1196</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            Only affect PATCH requests, those are not supported by CCD APIs.
-        </notes>
-        <cve>CVE-2017-8046</cve>
-    </suppress>
-    <suppress>
-        <notes>SSL related</notes>
-        <cve>CVE-2014-3488</cve>
-    </suppress>
-    <suppress>
-        <notes>cookie related</notes>
-        <cve>CVE-2015-2156</cve>
-    </suppress>
-    <suppress>
-        <notes>ssl related</notes>
-        <cve>CVE-2016-4970</cve>
-    </suppress>
-    <suppress>
-        <notes>h2 not used in production</notes>
-        <cve>CVE-2018-10054</cve>
     </suppress>
     <suppress>
         <notes>tomcat embed is not used in production</notes>
@@ -81,5 +55,9 @@
         <notes>Dependencies brough in by codacy report; not used in production</notes>
         <gav regex="true">^com\.jcraft:jsch:.*$</gav>
         <cpe>cpe:/a:jcraft:jsch</cpe>
+    </suppress>
+    <suppress>
+        <notes>Temporarly supress until we can migration to Spring Boot 2 see https://tools.hmcts.net/jira/browse/RDM-2464</notes>
+        <cve>CVE-2018-1258</cve>
     </suppress>
 </suppressions>
