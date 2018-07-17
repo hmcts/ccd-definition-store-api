@@ -30,7 +30,7 @@ import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField.STATE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 
-class StateMetadataCaseFieldEntityFactoryImplTest {
+class StateMetadataCaseFieldEntityFactoryTest {
 
     private StateMetadataCaseFieldEntityFactory factory;
 
