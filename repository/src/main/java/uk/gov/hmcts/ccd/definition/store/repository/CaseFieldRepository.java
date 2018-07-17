@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface CaseFieldRepository extends JpaRepository<CaseFieldEntity, Integer> {
 
-    List<CaseFieldEntity> findByDataFieldType(DataFieldType dataFieldType);
-    
+    List<CaseFieldEntity> findByDataFieldTypeAndCaseTypeNull(DataFieldType dataFieldType);
+
 }

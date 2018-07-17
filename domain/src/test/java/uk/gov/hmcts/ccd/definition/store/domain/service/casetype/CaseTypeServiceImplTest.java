@@ -309,8 +309,7 @@ class CaseTypeServiceImplTest {
             );
             when(dtoMapper.map(same(caseTypeEntity1))).thenReturn(caseType1);
             when(dtoMapper.map(same(caseTypeEntity2))).thenReturn(caseType2);
-            when(metadataFieldService.getCaseMetadataFields(any(CaseType.class))).thenReturn(singletonList(
-                metadataField));
+            when(metadataFieldService.getCaseMetadataFields()).thenReturn(singletonList(metadataField));
 
             ArgumentCaptor<CaseTypeEntity> caseTypeCaptor = ArgumentCaptor.forClass(CaseTypeEntity.class);
 
@@ -408,7 +407,7 @@ class CaseTypeServiceImplTest {
 
             when(caseTypeRepository.findCurrentVersionForReference(caseTypeId)).thenReturn(Optional.of(caseTypeEntity));
             when(dtoMapper.map(caseTypeEntity)).thenReturn(caseType);
-            when(metadataFieldService.getCaseMetadataFields(caseType)).thenReturn(singletonList(metadataField));
+            when(metadataFieldService.getCaseMetadataFields()).thenReturn(singletonList(metadataField));
         }
 
         @Test
@@ -452,7 +451,7 @@ class CaseTypeServiceImplTest {
             assertThat(result.getCaseFields().get(0).getId(), is(MetadataField.STATE.name()));
             verify(caseTypeRepository).findCurrentVersionForReference(same(caseTypeId));
             verify(dtoMapper).map(same(caseTypeEntity));
-            verify(metadataFieldService).getCaseMetadataFields(caseType);
+            verify(metadataFieldService).getCaseMetadataFields();
         }
     }
 

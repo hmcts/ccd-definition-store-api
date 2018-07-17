@@ -14,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -239,8 +240,8 @@ public class ParseContext {
     }
 
     public void registerMetadataFields(List<CaseFieldEntity> fields) {
-        metadataFields.putAll(
-            fields.stream().collect(toMap(entity -> String.join(entity.getReference().toUpperCase(), "[", "]"),
-                                          Function.identity())));
+        metadataFields.putAll(fields.stream()
+                                  .filter(Objects::nonNull)
+                                  .collect(toMap(entity -> String.join(entity.getReference().toUpperCase(), "[", "]"), Function.identity())));
     }
 }

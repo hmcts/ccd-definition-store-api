@@ -100,7 +100,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     private CaseType addMetadataFields(CaseType caseType) {
-        caseType.addCaseFields(metadataFieldService.getCaseMetadataFields(caseType));
+        caseType.addCaseFields(metadataFieldService.getCaseMetadataFields());
         return caseType;
     }
 

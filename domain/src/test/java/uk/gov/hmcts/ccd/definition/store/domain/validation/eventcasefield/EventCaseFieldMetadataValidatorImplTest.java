@@ -45,13 +45,13 @@ class EventCaseFieldMetadataValidatorImplTest {
     }
 
     @Test
-    @DisplayName("Should return validation result with no errors when non-metadata case field has readonly display " +
+    @DisplayName("Should return validation result with no errors when metadata case field has readonly display " +
         "context")
     void shouldReturnValidationResultWithNoError_whenMetadataCaseFieldIdDisplayContextIsReadOnly() {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         CaseFieldEntity caseField = new CaseFieldEntity();
         caseField.setReference("FIELD");
-        caseField.setDataFieldType(DataFieldType.CASE_DATA);
+        caseField.setDataFieldType(DataFieldType.METADATA);
         eventCaseFieldEntity.setCaseField(caseField);
         EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
         eventCaseFieldEntity.setDisplayContext(DisplayContext.READONLY);

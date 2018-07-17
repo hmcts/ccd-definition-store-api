@@ -1,20 +1,40 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.metadata;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public enum MetadataField {
     JURISDICTION,
     CASE_TYPE,
-    STATE,
+    STATE(true, "State"),
     CASE_REFERENCE,
     CREATED_DATE,
     LAST_MODIFIED,
     SECURITY_CLASSIFICATION;
 
-    public static MetadataField fromString(String fieldName) {
-        for (MetadataField metadataField : values()) {
-            if (metadataField.name().equalsIgnoreCase(fieldName)) {
-                return metadataField;
-            }
+    private boolean dynamic;
+    private String label;
+
+    MetadataField() {}
+
+    MetadataField(boolean dynamic, String label) {
+        this.dynamic = dynamic;
+        this.label = label;
+    }
+
+    private boolean isDynamic() {
+        return dynamic;
+    }
+
+    public String getLabel() {
+        if (label == null) {
+            return name();
         }
-        return null;
+        return label;
+    }
+
+    public static List<MetadataField> getDynamicFields() {
+        return Arrays.stream(values()).filter(MetadataField::isDynamic).collect(Collectors.toList());
     }
 }

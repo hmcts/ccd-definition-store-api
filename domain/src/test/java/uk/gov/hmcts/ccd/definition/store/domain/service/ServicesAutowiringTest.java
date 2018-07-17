@@ -14,9 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ccd.definition.store.AppInsights;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFixedListItemFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntitySecurityClassificationValidatorImpl;
@@ -51,9 +49,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
@@ -265,12 +261,6 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public MetadataFieldService metadataFieldService() {
             return mock(MetadataFieldService.class);
-        }
-
-        @Bean
-        @Primary
-        public Map<MetadataField, MetadataFixedListItemFactory> metadataFixedListItemFactoryMap() {
-            return Collections.emptyMap();
         }
 
     }

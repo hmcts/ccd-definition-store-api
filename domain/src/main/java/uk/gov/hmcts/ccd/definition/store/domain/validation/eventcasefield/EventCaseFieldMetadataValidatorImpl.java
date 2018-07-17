@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 @Component
@@ -13,14 +14,12 @@ public class EventCaseFieldMetadataValidatorImpl implements EventCaseFieldEntity
     public ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
         ValidationResult validationResult = new ValidationResult();
-        if (eventCaseFieldEntity.getCaseField().isMetadataField()) {
-            validationResult.addError(new ValidationError(
-                String.format(
-                    "'%s' is a metadata field and cannot be editable for event with reference '%s'",
-                    eventCaseFieldEntity.getCaseField() != null ?
-                        String.join(eventCaseFieldEntity.getCaseField().getReference().toUpperCase(), "[", "]")
-                        : "",
-                    eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""
+        if (eventCaseFieldEntity.getCaseField().isMetadataField() && eventCaseFieldEntity.getDisplayContext() != DisplayContext.READONLY) {
+            validationResult.addError(new ValidationError(String.format("'%s' is a metadata field and cannot be editable for event with reference '%s'",
+                              eventCaseFieldEntity.getCaseField() != null ?
+                                  String.join(eventCaseFieldEntity.getCaseField().getReference().toUpperCase(), "[", "]")
+                                  : "",
+                              eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""
                 ),
                 eventCaseFieldEntity));
         }

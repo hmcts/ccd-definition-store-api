@@ -78,13 +78,10 @@ public class ImportServiceImpl implements ImportService {
     /**
      * Imports the Case Definition data and inserts it into the database.
      *
-     * @param inputStream
-     *         the Case Definition data as an <code>InputStream</code>
-     * @throws IOException
-     *         in the event that there is a problem reading in the data
-     * @throws InvalidImportException
-     *         if any of the Case Definition sheets fails checks for a definition name and a row
-     *         of attribute headers
+     * @param inputStream the Case Definition data as an <code>InputStream</code>
+     * @throws IOException            in the event that there is a problem reading in the data
+     * @throws InvalidImportException if any of the Case Definition sheets fails checks for a definition name and a row
+     *                                of attribute headers
      */
     @Override
     public void importFormDefinitions(InputStream inputStream) throws IOException {
@@ -131,7 +128,7 @@ public class ImportServiceImpl implements ImportService {
         /*
             3 - metadata fields
          */
-        parseContext.registerMetadataFields(caseFieldRepository.findByDataFieldType(DataFieldType.METADATA));
+        parseContext.registerMetadataFields(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
 
         /*
             4 - Case Type
