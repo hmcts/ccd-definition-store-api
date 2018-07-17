@@ -39,18 +39,7 @@
                     valueComputed="(select id from field_type where reference = 'Text' and jurisdiction_id is null order by version limit 1)"/>
             <column name="data_field_type" value="METADATA"/>
         </insert>
-
-        <insert tableName="case_field">
-            <column name="reference" value="state"/>
-            <column name="live_from" value="${now}"/>
-            <column name="label" value="State"/>
-            <column name="hidden" value="false"/>
-            <column name="security_classification" value="PUBLIC"/>
-            <column name="field_type_id"
-                    valueComputed="(select id from field_type where reference = 'FixedList'and jurisdiction_id is null order by version limit 1)"/>
-            <column name="data_field_type" value="METADATA"/>
-        </insert>
-
+        
         <insert tableName="case_field">
             <column name="reference" value="security_classification"/>
             <column name="live_from" value="${now}"/>
