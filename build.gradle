@@ -16,7 +16,7 @@ buildscript {
 plugins {
     id 'application'
     id 'io.spring.dependency-management' version '1.0.5.RELEASE'
-    id 'org.springframework.boot' version '1.5.14.RELEASE'
+    id 'org.springframework.boot' version '2.0.3.RELEASE'
     id 'org.owasp.dependencycheck' version '3.2.1'
     id 'se.patrikerdes.use-latest-versions' version '0.2.3'
     id 'com.github.ben-manes.versions' version '0.20.0'
@@ -120,6 +120,7 @@ allprojects {
         testRuntime "org.junit.platform:junit-platform-launcher:${junitPlatformVersion}"
         testRuntime "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
         testCompile "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
+        runtime("org.springframework.boot:spring-boot-properties-migrator")
     }
 
     checkstyle {
