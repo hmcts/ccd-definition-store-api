@@ -80,7 +80,8 @@
     } ],
     "show_summary" : true,
     "show_event_notes" : true,
-    "end_button_label" : "Save"
+    "can_save_draft" : true,
+    "end_button_label": "Save"
   }, {
     "id" : "enterCaseIntoLegacy",
     "name" : "Enter into legacy system",
@@ -135,6 +136,7 @@
     } ],
     "show_summary" : false,
     "show_event_notes" : false,
+    "can_save_draft" : null,
     "end_button_label" : "Create Draft"
   }, {
     "id" : "stopCase",
@@ -166,6 +168,7 @@
     } ],
     "show_summary" : false,
     "show_event_notes" : null,
+    "can_save_draft" : null,
     "end_button_label" : null
   } ],
   "states" : [ {
@@ -173,19 +176,22 @@
     "name" : "Case created",
     "description" : null,
     "order" : 1,
-    "acls" : [ {
-      "role" : "CaseWorker1",
-      "create" : false,
-      "read" : true,
-      "update" : false,
-      "delete" : false
-    }, {
-      "role" : "CaseWorker3",
-      "create" : true,
-      "read" : true,
-      "update" : false,
-      "delete" : false
-    } ]
+    "acls": [
+      {
+        "role": "CaseWorker1",
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      },
+      {
+        "role": "CaseWorker3",
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    ]
   }, {
     "id" : "CaseEnteredIntoLegacy",
     "name" : "Case has been Entered into Legacy",
