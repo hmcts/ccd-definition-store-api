@@ -42,18 +42,13 @@ public class JurisdictionObjectGraphTest {
     @Autowired
     private EntityManager entityManager;
 
-    private VersionedDefinitionRepositoryDecorator<JurisdictionEntity, Integer> versionedJurisdictionRepository;
     private JurisdictionEntity jurisdiction;
     private CaseTypeEntity caseType1;
-    private CaseTypeEntity caseType2;
 
     @Before
-    public void setup() {
-        versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository);
+    public void setUp() {
         jurisdiction = testHelper.createJurisdiction("TEST", "Test", "Dummy jurisdiction");
         caseType1 = testHelper.createCaseTypeEntity("TestCase", "1st Test case", jurisdiction,
-            SecurityClassification.PUBLIC);
-        caseType2 = testHelper.createCaseTypeEntity("AnotherTestCase", "2nd Test case", jurisdiction,
             SecurityClassification.PUBLIC);
     }
 

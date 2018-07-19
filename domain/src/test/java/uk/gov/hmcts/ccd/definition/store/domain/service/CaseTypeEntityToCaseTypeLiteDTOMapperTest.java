@@ -33,13 +33,13 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
     private CaseTypeEntityToCaseTypeLiteDTOMapper spyOnClassUnderTest;
 
     @BeforeEach
-    void setupSpy() throws Exception {
+    public void setupSpy() throws Exception {
         spyOnClassUnderTest = spy(classUnderTest);
     }
 
     @Nested
     @DisplayName("Should return a CaseTypeLite whose fields match those in the CaseTypeEntity")
-    class MapCaseTypeEntitySubsetTests {
+    public class MapCaseTypeEntitySubsetTests {
 
         @Test
         void testMapSubsetCaseTypeEntity() throws Exception {
@@ -79,7 +79,7 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
 
     @Nested
     @DisplayName("Should return a Jurisdiction which matches the JurisdictionEntity")
-    class MapJurisdictionEntityTests {
+    public class MapJurisdictionEntityTests {
 
         @Test
         void testMapJurisdictionEntity() throws Exception {

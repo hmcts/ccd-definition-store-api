@@ -74,7 +74,7 @@ public class TestHelper {
         return ecf;
     }
 
-    CaseTypeEntity createCaseTypeEntity(final String reference,
+    public CaseTypeEntity createCaseTypeEntity(final String reference,
                                         final String name,
                                         final JurisdictionEntity jurisdiction,
                                         final SecurityClassification sc) {
