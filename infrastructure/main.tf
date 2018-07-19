@@ -111,7 +111,7 @@ module "elastic" {
   common_tags = "${var.common_tags}"
   vNetName = "${data.terraform_remote_state.core_apps_infrastructure.vnetname}"
   vNetExistingResourceGroup = "${data.terraform_remote_state.core_apps_infrastructure.resourcegroup_name}"
-  vNetClusterSubnetName = "es-subnet"
+  vNetClusterSubnetName = "${data.terraform_remote_state.core_apps_infrastructure.subnet_names[2]}"
   vNetLoadBalancerIp = "10.100.132.4"
 }
 
