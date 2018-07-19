@@ -42,7 +42,7 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
     public class MapCaseTypeEntitySubsetTests {
 
         @Test
-        void testMapSubsetCaseTypeEntity() throws Exception {
+        public void testMapSubsetCaseTypeEntity() throws Exception {
             CaseTypeEntity caseTypeEntity = caseTypeEntity();
 
             CaseTypeLite caseTypeLite = classUnderTest.map(caseTypeEntity);
@@ -54,7 +54,7 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
         }
 
         @Test
-        void testMapEmptyCaseTypeEntity() throws Exception {
+        public void testMapEmptyCaseTypeEntity() throws Exception {
             CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
             CaseTypeLite caseTypeLite = classUnderTest.map(caseTypeEntity);
@@ -82,7 +82,7 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
     public class MapJurisdictionEntityTests {
 
         @Test
-        void testMapJurisdictionEntity() throws Exception {
+        public void testMapJurisdictionEntity() throws Exception {
 
             JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
             jurisdictionEntity.setDescription("Jurisdiction Description");
@@ -112,7 +112,7 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
         }
 
         @Test
-        void testMapEmptyJurisdictionEntity() throws Exception {
+        public void testMapEmptyJurisdictionEntity() throws Exception {
 
             JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
 
