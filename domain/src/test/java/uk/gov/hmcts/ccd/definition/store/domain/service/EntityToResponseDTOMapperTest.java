@@ -250,24 +250,14 @@ public class EntityToResponseDTOMapperTest {
             jurisdictionEntity.setLiveFrom(new Date());
             jurisdictionEntity.setLiveTo(new Date());
 
-            CaseTypeEntity caseTypeEntity1 = new CaseTypeEntity();
-            CaseTypeEntity caseTypeEntity2 = new CaseTypeEntity();
-            CaseType caseType1 = new CaseType();
-            CaseType caseType2 = new CaseType();
-            when(spyOnClassUnderTest.map(caseTypeEntity1)).thenReturn(caseType1);
-            when(spyOnClassUnderTest.map(caseTypeEntity2)).thenReturn(caseType2);
-            jurisdictionEntity.addCaseTypes(Arrays.asList(caseTypeEntity1, caseTypeEntity2));
-
-            // Call the 'spied on' implementation
-            Jurisdiction jurisdiction = spyOnClassUnderTest.map(jurisdictionEntity);
+            Jurisdiction jurisdiction = classUnderTest.map(jurisdictionEntity);
 
             assertEquals(jurisdictionEntity.getDescription(), jurisdiction.getDescription());
             assertEquals(jurisdictionEntity.getName(), jurisdiction.getName());
             assertEquals(jurisdictionEntity.getReference(), jurisdiction.getId());
             assertEquals(jurisdictionEntity.getLiveFrom(), jurisdiction.getLiveFrom());
             assertEquals(jurisdictionEntity.getLiveTo(), jurisdiction.getLiveUntil());
-            assertEquals(2, jurisdiction.getCaseTypes().size());
-            assertThat(jurisdiction.getCaseTypes(), hasItems(caseType1, caseType2));
+
         }
 
         @Test
@@ -282,7 +272,7 @@ public class EntityToResponseDTOMapperTest {
             assertNull(jurisdiction.getId());
             assertNull(jurisdiction.getLiveFrom());
             assertNull(jurisdiction.getLiveUntil());
-            assertEquals(0, jurisdiction.getCaseTypes().size());
+
         }
     }
 

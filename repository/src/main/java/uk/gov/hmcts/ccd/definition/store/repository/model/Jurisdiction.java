@@ -16,7 +16,9 @@ public class Jurisdiction {
     private String description = null;
     private Date liveFrom = null;
     private Date liveUntil = null;
-    private List<CaseType> caseTypes = new ArrayList<>();
+
+    // Use the "lite" version of CaseType, since we do not require the full entity mapping.
+    private List<CaseTypeLite> caseTypes = new ArrayList<>();
 
     /**
      **/
@@ -82,11 +84,11 @@ public class Jurisdiction {
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("case_types")
-    public List<CaseType> getCaseTypes() {
+    public List<CaseTypeLite> getCaseTypes() {
         return caseTypes;
     }
 
-    public void setCaseTypes(List<CaseType> caseTypes) {
+    public void setCaseTypes(List<CaseTypeLite> caseTypes) {
         this.caseTypes = caseTypes;
     }
 }

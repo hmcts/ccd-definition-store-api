@@ -20,15 +20,15 @@ public class JurisdictionServiceImpl implements JurisdictionService {
     private static final Logger LOG = LoggerFactory.getLogger(JurisdictionServiceImpl.class);
 
     private final JurisdictionRepository repository;
-    private final EntityToResponseDTOMapper entityToResponseDTOMapper;
+    private final CaseTypeEntityToCaseTypeLiteDTOMapper caseTypeEntityToCaseTypeLiteDTOMapper;
     private final VersionedDefinitionRepositoryDecorator<JurisdictionEntity, Integer> versionedRepository;
 
     @Autowired
-    public JurisdictionServiceImpl(JurisdictionRepository repository, EntityToResponseDTOMapper
-            entityToResponseDTOMapper) {
+    public JurisdictionServiceImpl(JurisdictionRepository repository, CaseTypeEntityToCaseTypeLiteDTOMapper
+            caseTypeEntityToCaseTypeLiteDTOMapper) {
         this.repository = repository;
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
-        this.entityToResponseDTOMapper = entityToResponseDTOMapper;
+        this.caseTypeEntityToCaseTypeLiteDTOMapper = caseTypeEntityToCaseTypeLiteDTOMapper;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class JurisdictionServiceImpl implements JurisdictionService {
     @Override
     public List<Jurisdiction> getAll() {
         List<JurisdictionEntity> jurisdictionEntities = repository.findAllLatestVersion();
-        return jurisdictionEntities.stream().map(entityToResponseDTOMapper::map).collect(toList());
+        return jurisdictionEntities.stream().map(caseTypeEntityToCaseTypeLiteDTOMapper::map).collect(toList());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class JurisdictionServiceImpl implements JurisdictionService {
         LOG.debug("retrieving jurisdictions {}", references);
         List<JurisdictionEntity> jurisdictionEntities = repository.findAllLatestVersionByReference(references);
         LOG.debug("retrieved jurisdictions {}", jurisdictionEntities);
-        return jurisdictionEntities.stream().map(entityToResponseDTOMapper::map).collect(toList());
+        return jurisdictionEntities.stream().map(caseTypeEntityToCaseTypeLiteDTOMapper::map).collect(toList());
     }
 
     @Override

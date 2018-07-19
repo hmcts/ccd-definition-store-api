@@ -56,6 +56,7 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(source = "jurisdictionEntity.reference", target = "id")
     @Mapping(source = "jurisdictionEntity.liveTo", target = "liveUntil")
+    @Mapping(target = "caseTypes", ignore = true)
     Jurisdiction map(JurisdictionEntity jurisdictionEntity);
 
     @Mapping(expression = "java(" +
