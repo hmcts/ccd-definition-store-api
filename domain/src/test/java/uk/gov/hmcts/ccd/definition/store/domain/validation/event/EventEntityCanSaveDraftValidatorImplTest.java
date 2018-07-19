@@ -50,6 +50,6 @@ class EventEntityCanSaveDraftValidatorImplTest {
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors().size(), is(1));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Enable saving draft is only "
-            + "available for Create events. Event Some Event is not eligible."));
+            + "available for Create events. Event \'Some Event\' is not eligible."));
     }
 }
