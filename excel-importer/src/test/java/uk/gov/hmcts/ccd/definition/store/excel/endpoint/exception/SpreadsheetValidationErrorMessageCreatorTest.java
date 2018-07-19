@@ -471,7 +471,6 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void shouldHaveValidationMessageForCaseFieldEntityInvalidMetadataFieldValidationError() {
         CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
-        CaseFieldUserRoleEntity entity = caseFieldUserRoleEntity("Xcrud");
 
         CaseFieldEntityInvalidMetadataFieldValidationError error = new CaseFieldEntityInvalidMetadataFieldValidationError(
             "Invalid metadata field 'case field' declaration for case type 'case type'",
