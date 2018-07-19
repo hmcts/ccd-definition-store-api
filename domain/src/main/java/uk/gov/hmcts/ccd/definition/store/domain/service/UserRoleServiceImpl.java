@@ -6,7 +6,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
-import uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -55,7 +54,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public List<UserRole> getRoles(List<String> roles) {
         final List<UserRoleEntity> userRoles = repository.findByRoleIn(roles);
         return userRoles.stream()
-            .map(UserRoleModelMapper::toModel)
+            .map(userRoleEntity -> toModel(userRoleEntity))
             .collect(toList());
     }
 

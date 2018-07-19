@@ -1057,30 +1057,6 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         );
     }
 
-    @Test
-    public void testCreateErrorMessage_EventEntityCanSaveDraftValidatorImplValidationError_customMessageReturned() {
-
-        EventEntity eventEntity = new EventEntity();
-        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
-        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT.toString());
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity))).thenReturn(Optional.of(definitionDataItem));
-
-        assertEquals("Custom message. WorkSheet 'CaseEvent'",
-            classUnderTest.createErrorMessage(
-                new EventEntityCanSaveDraftValidatorImpl.ValidationError("Custom message", eventEntity))
-        );
-    }
-
-    @Test
-    public void testCreateErrorMessage_EventEntityCanSaveDraftValidatorImplValidationError_defaultMessageReturned() {
-        EventEntity eventEntity = new EventEntity();
-        assertEquals(
-            "default message",
-            classUnderTest.createErrorMessage(
-                new EventEntityCanSaveDraftValidatorImpl.ValidationError("default message", eventEntity))
-        );
-    }
-
     private CaseTypeEntity caseTypeEntity(String reference) {
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference(reference);
