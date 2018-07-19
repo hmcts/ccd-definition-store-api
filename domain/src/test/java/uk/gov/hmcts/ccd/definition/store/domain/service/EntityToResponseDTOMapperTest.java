@@ -79,20 +79,22 @@ public class EntityToResponseDTOMapperTest {
     }
 
     @Nested
-    @DisplayName("Should return a CaseEventField which matches the EventCaseFieldEntity")
+    @DisplayName("Should return a CaseEvent which matches the EventEntity")
     class MapEventEntity {
 
         @Test
         public void shouldMapToCaseEvent() throws Exception {
             EventEntity eventEntity = new EventEntity();
             eventEntity.setShowEventNotes(true);
+            eventEntity.setCanSaveDraft(true);
 
             CaseEvent caseEvent = spyOnClassUnderTest.map(
                 eventEntity
             );
 
             assertAll(
-                () -> assertEquals(eventEntity.getShowEventNotes(), caseEvent.getShowEventNotes())
+                () -> assertEquals(eventEntity.getShowEventNotes(), caseEvent.getShowEventNotes()),
+                () -> assertEquals(eventEntity.getCanSaveDraft(), caseEvent.getCanSaveDraft())
             );
         }
     }
@@ -334,6 +336,7 @@ public class EntityToResponseDTOMapperTest {
             assertTrue(caseEvent.getAcls().isEmpty());
             assertNull(caseEvent.getShowSummary());
             assertNull(caseEvent.getEndButtonLabel());
+            assertNull(caseEvent.getCanSaveDraft());
 
             assertEquals(1, caseEvent.getPreStates().size());
             assertThat(caseEvent.getPreStates(), hasItems("*"));
@@ -439,6 +442,7 @@ public class EntityToResponseDTOMapperTest {
             eventEntity.setSecurityClassification(SecurityClassification.RESTRICTED);
             eventEntity.setShowSummary(Boolean.TRUE);
             eventEntity.setEndButtonLabel("Create Draft");
+            eventEntity.setCanSaveDraft(true);
 
             Integer startTimeout1 = 691;
             Integer startTimeout2 = 692;
@@ -514,6 +518,7 @@ public class EntityToResponseDTOMapperTest {
             assertAcls(eventEntity.getEventUserRoles(), caseEvent.getAcls());
             assertEquals(eventEntity.getShowSummary(), caseEvent.getShowSummary());
             assertEquals(eventEntity.getEndButtonLabel(), caseEvent.getEndButtonLabel());
+            assertEquals(eventEntity.getCanSaveDraft(), caseEvent.getCanSaveDraft());
 
             return caseEvent;
 
