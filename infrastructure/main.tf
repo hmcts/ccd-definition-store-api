@@ -114,18 +114,6 @@ module "elastic" {
   vNetClusterSubnetName = "${data.terraform_remote_state.core_apps_infrastructure.subnet_names[1]}"
 }
 
-variable "vNetName" {
-  type = "string"
-}
-
-variable "vNetExistingResourceGroup" {
-  type = "string"
-}
-
-variable "vNetClusterSubnetName" {
-  type = "string"
-}
-
 ////////////////////////////////
 // Populate Vault with DB info
 ////////////////////////////////
