@@ -8,11 +8,9 @@ public class CaseFieldEntityInvalidMetadataFieldValidationError extends Validati
 
     private final CaseFieldEntity metadataField;
 
-    public CaseFieldEntityInvalidMetadataFieldValidationError(CaseFieldEntity caseFieldEntity,
+    public CaseFieldEntityInvalidMetadataFieldValidationError(String message, CaseFieldEntity caseFieldEntity,
                                                               CaseFieldEntityValidationContext context) {
-        super(String.format("Invalid metadata field '%s' declaration for case type '%s'",
-                            caseFieldEntity.getReference(),
-                            context.getCaseReference()));
+        super(message);
         this.metadataField = caseFieldEntity;
     }
 
