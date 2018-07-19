@@ -67,9 +67,8 @@ module "case-definition-store-api" {
 
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
 
-    ELASTIC_SEARCH_HOST = "${var.elastic_search_host}"
+    ELASTIC_SEARCH_HOST = "${module.elastic.loadbalancer}"
     ELASTIC_SEARCH_PORT = "${var.elastic_search_port}"
-    ELASTIC_SEARCH_SCHEME = "${var.elastic_search_scheme}"
     ELASTIC_SEARCH_ENABLED = "${var.elastic_search_enabled}"
     ELASTIC_SEARCH_INDEX_SHARDS = "${var.elastic_search_index_shards}"
     ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS = "${var.elastic_search_index_shards_replicas}"
@@ -101,6 +100,29 @@ module "definition-store-vault" {
   object_id           = "${var.jenkins_AAD_objectId}"
   resource_group_name = "${module.case-definition-store-api.resource_group_name}"
   product_group_object_id = "be8b3850-998a-4a66-8578-da268b8abd6b"
+}
+
+module "elastic" {
+  source = "git@github.com:hmcts/moj-module-elk.git?ref=master"
+  product = "${var.product}-definition-store"
+  location = "${var.location}"
+  env = "${var.env}"
+  common_tags = "${var.common_tags}"
+  vNetName = "${data.terraform_remote_state.core_apps_infrastructure.vnetname}"
+  vNetvNetExistingResourceGroupName = "${data.terraform_remote_state.core_apps_infrastructure.resourcegroup_name}"
+  vNetName = "${data.terraform_remote_state.core_apps_infrastructure.subnet_names[1]}"
+}
+
+variable "vNetName" {
+  type = "string"
+}
+
+variable "vNetExistingResourceGroup" {
+  type = "string"
+}
+
+variable "vNetClusterSubnetName" {
+  type = "string"
 }
 
 ////////////////////////////////
