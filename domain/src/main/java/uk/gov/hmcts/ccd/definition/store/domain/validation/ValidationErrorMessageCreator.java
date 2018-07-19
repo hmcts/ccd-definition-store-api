@@ -112,9 +112,8 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError validationError);
 
-    String createErrorMessage(EventEntityCanSaveDraftValidatorImpl.ValidationError error);
-  
     String createErrorMessage(EventCaseFieldMetadataValidatorImpl.ValidationError error);
 
     String createErrorMessage(CaseFieldEntityInvalidMetadataFieldValidationError error);
+
 }

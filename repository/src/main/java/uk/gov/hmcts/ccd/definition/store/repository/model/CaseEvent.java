@@ -29,7 +29,6 @@ public class CaseEvent implements HasAcls {
     private List<AccessControlList> acls = new ArrayList<>();
     private Boolean showSummary = null;
     private Boolean showEventNotes = null;
-    private Boolean canSaveDraft = null;
     private String endButtonLabel = null;
 
     /**
@@ -234,15 +233,5 @@ public class CaseEvent implements HasAcls {
 
     public void setEndButtonLabel(final String endButtonLabel) {
         this.endButtonLabel = endButtonLabel;
-    }
-
-    @ApiModelProperty(value = "")
-    @JsonProperty("can_save_draft")
-    public Boolean getCanSaveDraft() {
-        return canSaveDraft;
-    }
-
-    public void setCanSaveDraft(Boolean canSaveDraft) {
-        this.canSaveDraft = canSaveDraft;
     }
 }
