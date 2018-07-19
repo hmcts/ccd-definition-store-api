@@ -50,6 +50,8 @@ public class JurisdictionObjectGraphTest {
         jurisdiction = testHelper.createJurisdiction("TEST", "Test", "Dummy jurisdiction");
         caseType1 = testHelper.createCaseTypeEntity("TestCase", "1st Test case", jurisdiction,
             SecurityClassification.PUBLIC);
+        testHelper.createCaseTypeEntity("AnotherTestCase", "2nd Test case", jurisdiction,
+            SecurityClassification.PUBLIC);
     }
 
     @Test
