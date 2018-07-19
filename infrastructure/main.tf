@@ -76,7 +76,7 @@ module "case-definition-store-api" {
     ELASTIC_SEARCH_DYNAMIC = "${var.elastic_search_dynamc}"
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT = "${var.elastic_search_case_index_name_format}"
   }
-
+  common_tags = "${var.common_tags}"
 }
 
 module "definition-store-db" {
@@ -89,6 +89,7 @@ module "definition-store-db" {
   sku_name = "GP_Gen5_2"
   sku_tier = "GeneralPurpose"
   storage_mb = "51200"
+  common_tags = "${var.common_tags}"
 }
 
 module "definition-store-vault" {
@@ -109,8 +110,8 @@ module "elastic" {
   env = "${var.env}"
   common_tags = "${var.common_tags}"
   vNetName = "${data.terraform_remote_state.core_apps_infrastructure.vnetname}"
-  vNetvNetExistingResourceGroupName = "${data.terraform_remote_state.core_apps_infrastructure.resourcegroup_name}"
-  vNetName = "${data.terraform_remote_state.core_apps_infrastructure.subnet_names[1]}"
+  vNetExistingResourceGroup = "${data.terraform_remote_state.core_apps_infrastructure.resourcegroup_name}"
+  vNetClusterSubnetName = "${data.terraform_remote_state.core_apps_infrastructure.subnet_names[1]}"
 }
 
 variable "vNetName" {
