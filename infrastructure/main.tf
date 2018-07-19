@@ -112,6 +112,7 @@ module "elastic" {
   vNetName = "${data.terraform_remote_state.core_apps_infrastructure.vnetname}"
   vNetExistingResourceGroup = "${data.terraform_remote_state.core_apps_infrastructure.resourcegroup_name}"
   vNetClusterSubnetName = "${data.terraform_remote_state.core_apps_infrastructure.subnet_names[1]}"
+  vNetLoadBalancerIp = "10.100.132.4"
 }
 
 ////////////////////////////////
