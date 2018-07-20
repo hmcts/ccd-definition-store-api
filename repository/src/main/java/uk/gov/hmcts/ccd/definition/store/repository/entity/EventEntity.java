@@ -106,6 +106,9 @@ public class EventEntity implements Serializable {
     @Column(name = "show_event_notes")
     private Boolean showEventNotes;
 
+    @Column(name = "can_save_draft")
+    private Boolean canSaveDraft;
+
     public Integer getId() {
         return id;
     }
@@ -282,5 +285,13 @@ public class EventEntity implements Serializable {
 
     public void setShowEventNotes(Boolean showEventNotes) {
         this.showEventNotes = showEventNotes;
+    }
+
+    public Boolean getCanSaveDraft() {
+        return canSaveDraft;
+    }
+
+    public void setCanSaveDraft(Boolean canSaveDraft) {
+        this.canSaveDraft = canSaveDraft;
     }
 }
