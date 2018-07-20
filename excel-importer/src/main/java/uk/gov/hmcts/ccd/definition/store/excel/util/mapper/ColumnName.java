@@ -10,6 +10,7 @@ public enum ColumnName {
     CALLBACK_URL_ABOUT_TO_START_EVENT("CallBackURLAboutToStartEvent"),
     CALLBACK_URL_ABOUT_TO_SUBMIT_EVENT("CallBackURLAboutToSubmitEvent"),
     CALLBACK_URL_SUBMITTED_EVENT("CallBackURLSubmittedEvent"),
+    CAN_SAVE_DRAFT("CanSaveDraft"),
     CASE_EVENT_ID("CaseEventID"),
     CASE_FIELD_ID("CaseFieldID"),
     CASE_TYPE_ID("CaseTypeID"),
