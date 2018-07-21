@@ -8,13 +8,16 @@ import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.StateLite;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,9 +40,45 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
         spyOnClassUnderTest = spy(classUnderTest);
     }
 
+    private StateEntity stateEntity() {
+        StateEntity stateEntity = new StateEntity();
+
+        stateEntity.setName("Name");
+        stateEntity.setReference("Id");
+        return stateEntity;
+    }
+
+    @Nested
+    @DisplayName("Should return a StateLite whose fields match those in the StateEntity")
+    public class MapStateEntitySubsetTests {
+        @Test
+        public void testMapEmptyStateEntity() throws Exception {
+            StateEntity stateEntity= new StateEntity();
+
+            StateLite stateLite = classUnderTest.map(stateEntity);
+
+            // Assertions
+            assertNull(stateLite.getId());
+            assertNull(stateLite.getName());
+        }
+
+        @Test
+        public void testMapSubsetStateEntity() throws Exception {
+            StateEntity stateEntity = stateEntity();
+
+            StateLite stateLite = classUnderTest.map(stateEntity);
+
+            // Assertions
+            assertEquals(stateLite.getId(), stateEntity.getReference());
+            assertEquals(stateLite.getName(), stateEntity.getName());
+        }
+
+    }
+
     @Nested
     @DisplayName("Should return a CaseTypeLite whose fields match those in the CaseTypeEntity")
     public class MapCaseTypeEntitySubsetTests {
+
 
         @Test
         public void testMapSubsetCaseTypeEntity() throws Exception {
@@ -51,6 +90,9 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
             assertEquals(caseTypeLite.getId(), caseTypeEntity.getReference());
             assertEquals(caseTypeLite.getDescription(), caseTypeEntity.getDescription());
             assertEquals(caseTypeLite.getName(), caseTypeEntity.getName());
+            assertTrue(caseTypeLite.getStates().size() == 1);
+            assertEquals("Id",caseTypeLite.getStates().get(0).getId());
+            assertEquals("Name",caseTypeLite.getStates().get(0).getName());
         }
 
         @Test
@@ -63,6 +105,7 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
             assertNull(caseTypeLite.getId());
             assertNull(caseTypeLite.getDescription());
             assertNull(caseTypeLite.getName());
+            assertTrue(caseTypeLite.getStates().isEmpty());
         }
 
         private CaseTypeEntity caseTypeEntity() {
@@ -73,6 +116,7 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
             caseTypeEntity.setReference("Reference");
             caseTypeEntity.setName("Name");
             caseTypeEntity.setSecurityClassification(SecurityClassification.PUBLIC);
+            caseTypeEntity.addState(stateEntity());
             return caseTypeEntity;
         }
     }
