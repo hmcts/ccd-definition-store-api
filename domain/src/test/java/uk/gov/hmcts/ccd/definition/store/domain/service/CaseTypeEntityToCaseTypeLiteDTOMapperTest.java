@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -51,9 +50,10 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
     @Nested
     @DisplayName("Should return a StateLite whose fields match those in the StateEntity")
     public class MapStateEntitySubsetTests {
+
         @Test
         public void testMapEmptyStateEntity() throws Exception {
-            StateEntity stateEntity= new StateEntity();
+            StateEntity stateEntity = new StateEntity();
 
             StateLite stateLite = classUnderTest.map(stateEntity);
 
@@ -72,13 +72,11 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
             assertEquals(stateLite.getId(), stateEntity.getReference());
             assertEquals(stateLite.getName(), stateEntity.getName());
         }
-
     }
 
     @Nested
     @DisplayName("Should return a CaseTypeLite whose fields match those in the CaseTypeEntity")
     public class MapCaseTypeEntitySubsetTests {
-
 
         @Test
         public void testMapSubsetCaseTypeEntity() throws Exception {
@@ -146,12 +144,12 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
             // Call the 'spied on' implementation
             Jurisdiction jurisdiction = spyOnClassUnderTest.map(jurisdictionEntity);
 
-            Assert.assertEquals(jurisdictionEntity.getDescription(), jurisdiction.getDescription());
-            Assert.assertEquals(jurisdictionEntity.getName(), jurisdiction.getName());
-            Assert.assertEquals(jurisdictionEntity.getReference(), jurisdiction.getId());
-            Assert.assertEquals(jurisdictionEntity.getLiveFrom(), jurisdiction.getLiveFrom());
-            Assert.assertEquals(jurisdictionEntity.getLiveTo(), jurisdiction.getLiveUntil());
-            Assert.assertEquals(2, jurisdiction.getCaseTypes().size());
+            assertEquals(jurisdictionEntity.getDescription(), jurisdiction.getDescription());
+            assertEquals(jurisdictionEntity.getName(), jurisdiction.getName());
+            assertEquals(jurisdictionEntity.getReference(), jurisdiction.getId());
+            assertEquals(jurisdictionEntity.getLiveFrom(), jurisdiction.getLiveFrom());
+            assertEquals(jurisdictionEntity.getLiveTo(), jurisdiction.getLiveUntil());
+            assertEquals(2, jurisdiction.getCaseTypes().size());
             assertThat(jurisdiction.getCaseTypes(), hasItems(caseType1, caseType2));
         }
 
@@ -162,12 +160,12 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
 
             Jurisdiction jurisdiction = classUnderTest.map(jurisdictionEntity);
 
-            Assert.assertNull(jurisdiction.getDescription());
-            Assert.assertNull(jurisdiction.getName());
-            Assert.assertNull(jurisdiction.getId());
-            Assert.assertNull(jurisdiction.getLiveFrom());
-            Assert.assertNull(jurisdiction.getLiveUntil());
-            Assert.assertEquals(0, jurisdiction.getCaseTypes().size());
+            assertNull(jurisdiction.getDescription());
+            assertNull(jurisdiction.getName());
+            assertNull(jurisdiction.getId());
+            assertNull(jurisdiction.getLiveFrom());
+            assertNull(jurisdiction.getLiveUntil());
+            assertEquals(0, jurisdiction.getCaseTypes().size());
         }
     }
 }
