@@ -90,9 +90,9 @@ class CaseTypeEntityToCaseTypeLiteDTOMapperTest {
             assertEquals(caseTypeLite.getId(), caseTypeEntity.getReference());
             assertEquals(caseTypeLite.getDescription(), caseTypeEntity.getDescription());
             assertEquals(caseTypeLite.getName(), caseTypeEntity.getName());
-            assertTrue(caseTypeLite.getStates().size() == 1);
-            assertEquals("Id",caseTypeLite.getStates().get(0).getId());
-            assertEquals("Name",caseTypeLite.getStates().get(0).getName());
+            assertEquals(1, caseTypeLite.getStates().size());
+            assertEquals("Id", caseTypeLite.getStates().get(0).getId());
+            assertEquals("Name", caseTypeLite.getStates().get(0).getName());
         }
 
         @Test
