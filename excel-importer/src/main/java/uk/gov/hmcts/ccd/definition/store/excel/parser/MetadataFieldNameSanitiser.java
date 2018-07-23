@@ -5,8 +5,8 @@ import java.util.regex.Pattern;
 
 public class MetadataFieldNameSanitiser {
 
-    private static final Pattern METADATA_PATTERN_IN_LABEL = Pattern.compile("\\[[^\\[]*\\]");
-    private static final Pattern METADATA_FIELD_NAME_PATTERN = Pattern.compile("\\[(.*?)\\]");
+    private static final Pattern METADATA_PATTERN_IN_LABEL = Pattern.compile("\\[[^\\[]*]");
+    private static final Pattern METADATA_FIELD_NAME_PATTERN = Pattern.compile("\\[(.*?)]");
 
     private MetadataFieldNameSanitiser() {}
 

@@ -30,6 +30,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
@@ -1066,8 +1067,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals("Custom message. WorkSheet 'CaseEvent'",
-            classUnderTest.createErrorMessage(
-                new EventEntityCanSaveDraftValidatorImpl.ValidationError("Custom message", eventEntity))
+                     classUnderTest.createErrorMessage(
+                         new EventEntityCanSaveDraftValidatorImpl.ValidationError("Custom message", eventEntity))
         );
     }
 
