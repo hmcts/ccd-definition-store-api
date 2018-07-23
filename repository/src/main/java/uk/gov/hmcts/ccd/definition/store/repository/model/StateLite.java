@@ -8,7 +8,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
  */
 public class StateLite {
     private String id = null;
-    private String name =null;
+    private String name = null;
 
     public String getId() {
         return id;
