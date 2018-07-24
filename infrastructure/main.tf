@@ -49,6 +49,7 @@ module "case-definition-store-api" {
   env      = "${var.env}"
   ilbIp    = "${var.ilbIp}"
   subscription = "${var.subscription}"
+  common_tags  = "${var.common_tags}"
 
   app_settings = {
     DEFINITION_STORE_DB_HOST = "${module.definition-store-db.host_name}"
@@ -89,7 +90,7 @@ module "definition-store-db" {
   sku_name = "GP_Gen5_2"
   sku_tier = "GeneralPurpose"
   storage_mb = "51200"
-  common_tags = "${var.common_tags}"
+  common_tags  = "${var.common_tags}"
 }
 
 module "definition-store-vault" {
