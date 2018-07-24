@@ -25,4 +25,13 @@ class MetadataFieldNameSanitiserTest {
 
         assertThat(sanitised, is(label));
     }
+
+    @Test
+    @DisplayName("should construct metadata field name from origina name")
+    void shouldConstructMetadataFieldName() {
+        String originalFieldName = "state";
+        String metadataFieldName = MetadataFieldNameSanitiser.constructMetadataFieldName(originalFieldName);
+
+        assertThat(metadataFieldName, is("[STATE]"));
+    }
 }

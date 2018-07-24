@@ -23,4 +23,8 @@ public class MetadataFieldNameSanitiser {
 
         return result;
     }
+
+    public static String constructMetadataFieldName(String originalName) {
+        return originalName == null ? null : String.join(originalName.toUpperCase(), "[", "]");
+    }
 }
