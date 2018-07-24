@@ -1,3 +1,4 @@
 capacity = "2"
 use_uk_db = "true"
 elastic_search_enabled = "true"
+elastic_search_fail_on_import = "true"
