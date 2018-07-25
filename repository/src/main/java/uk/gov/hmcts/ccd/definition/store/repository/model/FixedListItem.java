@@ -10,6 +10,14 @@ public class FixedListItem {
     private String code = null;
     private String label = null;
 
+    public FixedListItem() {
+    }
+
+    public FixedListItem(String code, String label) {
+        this.code = code;
+        this.label = label;
+    }
+
     /**
      **/
     @ApiModelProperty(value = "")
