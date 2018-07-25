@@ -2,19 +2,25 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+
+import java.util.Map;
 
 @Component
 public class ParserFactory {
 
     private final ShowConditionParser showConditionParser;
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
+    private final Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
-                         EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+                         EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
+                         Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
+        this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -48,8 +54,8 @@ public class ParserFactory {
             new AuthorisationCaseTypeParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseFieldParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseEventParser(context, entityToDefinitionDataItemRegistry),
-            new AuthorisationCaseStateParser(context, entityToDefinitionDataItemRegistry)
-        );
+            new AuthorisationCaseStateParser(context, entityToDefinitionDataItemRegistry),
+            new MetadataCaseFieldParser(context, metadataCaseFieldEntityFactoryRegistry));
     }
 
     public LayoutParser createLayoutParser(ParseContext parseContext) {

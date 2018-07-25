@@ -31,20 +31,23 @@ public class SpreadsheetParserTest {
 
     @Test
     public void shouldParse() throws Exception {
-        final InputStream inputStream = ClassLoader.getSystemResourceAsStream(ImportServiceImplTest.BAD_FILE);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(ImportServiceImplTest.BAD_FILE);
 
         final Map<String, DefinitionSheet> map = spreadsheetParser.parse(inputStream);
         assertThat(map.size(), is(16));
 
         assertThat(map.keySet(), containsInAnyOrder("SearchInputFields", "UserProfile", "CaseField",
-            "ComplexTypes", "WorkBasketResultFields", "CaseTypeTab", "FixedLists", "CaseEvent", "Jurisdiction",
-            "SearchResultFields", "AuthorisationCaseField", "CaseType", "State", "AuthorisationCaseType",
-            "AuthorisationCaseEvent", "CaseEventFieldRestriction"
+                                                    "ComplexTypes", "WorkBasketResultFields", "CaseTypeTab",
+                                                    "FixedLists", "CaseEvent", "Jurisdiction",
+                                                    "SearchResultFields", "AuthorisationCaseField", "CaseType", "State",
+                                                    "AuthorisationCaseType",
+                                                    "AuthorisationCaseEvent", "CaseEventFieldRestriction"
         ));
     }
 
     /**
      * Helps test coverage.
+     *
      * @throws Exception
      */
     @Test(expected = NullPointerException.class)
