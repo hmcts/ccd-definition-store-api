@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +14,6 @@ import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
@@ -54,11 +54,9 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     }
 
     private CaseFieldEntity newComplexField() {
-        CaseFieldBuilder complexField = new CaseFieldBuilder("personAddress");
-        complexField.withFieldTypeReference("Address");
-        FieldTypeEntity textType = FieldTypeBuilder.textFieldType();
-        complexField.withComplexField("AddressLine1", textType);
-        complexField.withComplexField("AddressLine2", textType);
-        return complexField.buildComplexType();
+        CaseFieldBuilder complexField = newField("personAddress", "Address");
+        complexField.withComplexField("AddressLine1", FieldTypeBuilder.textFieldType());
+        complexField.withComplexField("AddressLine2", FieldTypeBuilder.textFieldType());
+        return complexField.buildComplex();
     }
 }

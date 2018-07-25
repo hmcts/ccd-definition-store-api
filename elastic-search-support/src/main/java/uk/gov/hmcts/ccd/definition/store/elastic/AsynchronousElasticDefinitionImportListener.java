@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import java.io.IOException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.event.EventListener;
@@ -18,7 +16,7 @@ public class AsynchronousElasticDefinitionImportListener extends ElasticDefiniti
     @Async
     @TransactionalEventListener
     @EventListener
-    public void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
+    public void onDefinitionImported(DefinitionImportedEvent event) {
         log.info("import listener executing asynchronously");
         super.initialiseElasticSearch(event.getCaseTypes());
     }

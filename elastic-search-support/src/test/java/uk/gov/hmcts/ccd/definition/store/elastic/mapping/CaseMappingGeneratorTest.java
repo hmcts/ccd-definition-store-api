@@ -3,6 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -43,8 +44,8 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
 
     @Test
     public void shouldCrateMappingForDataAndDataClassification() {
-        CaseFieldEntity fieldA = new CaseFieldBuilder("fieldA").withFieldTypeReference("Text").buildBaseType();
-        CaseFieldEntity fieldB = new CaseFieldBuilder("fieldB").withFieldTypeReference("Text").buildBaseType();
+        CaseFieldEntity fieldA = newTextField("fieldA").build();
+        CaseFieldEntity fieldB = newTextField("fieldB").build();
         caseType.withField(fieldA).withField(fieldB);
 
         String result = mappingGenerator.generateMapping(caseType.build());

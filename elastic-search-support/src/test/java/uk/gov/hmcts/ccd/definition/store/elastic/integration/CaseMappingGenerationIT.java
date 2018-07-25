@@ -5,6 +5,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 
 import java.io.IOException;
 
@@ -74,7 +76,7 @@ public class CaseMappingGenerationIT implements TestUtils {
 
     private CaseTypeEntity createCaseType() {
         CaseTypeBuilder caseTypeBuilder = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
-        CaseFieldEntity baseTypeField = new CaseFieldBuilder("forename").withFieldTypeReference("Text").buildBaseType();
+        CaseFieldEntity baseTypeField = newTextField("forename").build();
         CaseFieldEntity complexOfComplex = newComplexFieldOfComplex();
         CaseFieldEntity complexOfCollection = newComplexFieldOfCollection();
         CaseFieldEntity collectionOfBaseType = newCollectionFieldOfBaseType();
@@ -86,8 +88,8 @@ public class CaseMappingGenerationIT implements TestUtils {
     }
 
     private CaseFieldEntity newComplexFieldOfComplex() {
-        CaseFieldBuilder complexOfComplex = new CaseFieldBuilder("executor");
-        complexOfComplex.withFieldTypeReference("Executor");
+
+        CaseFieldBuilder complexOfComplex = newField("executor", "Executor");
 
         FieldTypeBuilder complexType = new FieldTypeBuilder().withReference("Person");
         complexType.addComplexField("forename", FieldTypeBuilder.textFieldType());
@@ -95,19 +97,18 @@ public class CaseMappingGenerationIT implements TestUtils {
         FieldTypeEntity execPersonComplexFieldType = complexType.buildComplex();
         complexOfComplex.withComplexField("executorPerson", execPersonComplexFieldType);
 
-        return complexOfComplex.buildComplexType();
+        return complexOfComplex.buildComplex();
     }
 
     private CaseFieldEntity newComplexFieldOfCollection() {
-        CaseFieldBuilder complexField = new CaseFieldBuilder("appealReasons");
-        complexField.withFieldTypeReference("appealReasons");
+        CaseFieldBuilder complexField = newField("appealReasons", "appealReasons");
 
         FieldTypeEntity collectionFieldType = new FieldTypeBuilder().withReference
                 ("reasons-51503ee8-ac6d-4b57-845e-4806332a9820").withCollectionFieldType(FieldTypeBuilder
                 .textFieldType()).buildCollection();
 
         complexField.withComplexField("reasons", collectionFieldType);
-        return complexField.buildComplexType();
+        return complexField.buildComplex();
     }
 
     private CaseFieldEntity newCollectionFieldOfBaseType() {

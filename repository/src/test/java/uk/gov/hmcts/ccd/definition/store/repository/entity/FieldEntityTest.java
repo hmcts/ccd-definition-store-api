@@ -2,6 +2,8 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
@@ -11,7 +13,7 @@ public class FieldEntityTest {
 
     @Test
     public void testBaseTypeString() {
-        CaseFieldEntity baseTypeField = new CaseFieldBuilder("forename").withFieldTypeReference("Text").buildBaseType();
+        CaseFieldEntity baseTypeField = newTextField("forename").build();
         CaseFieldEntity complexField = newComplexField();
         CaseFieldEntity collection = newCollectionFieldOfBaseType();
 
@@ -22,7 +24,7 @@ public class FieldEntityTest {
 
     @Test
     public void testIsCollectionOfComplex() {
-        CaseFieldEntity baseTypeField = new CaseFieldBuilder("forename").withFieldTypeReference("Text").buildBaseType();
+        CaseFieldEntity baseTypeField = newTextField("forename").build();
         CaseFieldEntity complexField = newComplexField();
         CaseFieldEntity collection = newCollectionFieldOfBaseType();
         CaseFieldEntity collectionOfComplex = newCollectionOfComplexField();
@@ -34,10 +36,9 @@ public class FieldEntityTest {
     }
 
     private CaseFieldEntity newComplexField() {
-        CaseFieldBuilder complexOfComplex = new CaseFieldBuilder("executor");
-        complexOfComplex.withFieldTypeReference("Executor");
+        CaseFieldBuilder complexOfComplex = newField("executor", "Executor");
         complexOfComplex.withComplexField("executorPerson", FieldTypeBuilder.textFieldType());
-        return complexOfComplex.buildComplexType();
+        return complexOfComplex.buildComplex();
     }
 
     private CaseFieldEntity newCollectionFieldOfBaseType() {

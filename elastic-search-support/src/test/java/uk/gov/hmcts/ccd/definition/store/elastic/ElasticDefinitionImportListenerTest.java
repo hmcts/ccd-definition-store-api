@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
@@ -74,6 +75,14 @@ public class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient).upsertMapping("jurb_caseb", "caseMapping");
     }
 
+    @Test
+    public void throwsRuntimeExceptionOnErrors() {
+        assertThrows(RuntimeException.class, () -> {
+            when(config.getCasesIndexNameFormat()).thenThrow(new Exception("test"));
+            listener.onDefinitionImported(newEvent(caseA, caseB));
+        });
+    }
+
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
         return new DefinitionImportedEvent(newArrayList(caseTypes));
     }
@@ -81,7 +90,7 @@ public class ElasticDefinitionImportListenerTest {
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {
 
         @Override
-        public void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
+        public void onDefinitionImported(DefinitionImportedEvent event) {
             super.initialiseElasticSearch(event.getCaseTypes());
         }
     }
