@@ -31,7 +31,7 @@ output "OAUTH2_REDIRECT_URI" {
 }
 
 output "ELASTIC_SEARCH_URL" {
-  value = "${module.elastic.loadbalancer}"
+  value = "${module.elastic.outputs["loadbalancer"]}"
 }
 
 output "ELASTIC_SEARCH_ENABLED" {

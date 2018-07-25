@@ -111,7 +111,3 @@ variable "elastic_search_dynamc" {
 variable "elastic_search_case_index_name_format" {
   default = "%s_%s_cases"
 }
-
-variable "common_tags" {
-  type = "map"
-}
