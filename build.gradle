@@ -317,3 +317,17 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
             "${buildDir}/reports/jacoco/jacocoTestReport.xml"
     ]
 }
+
+test {
+    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    reports {
+        html.enabled = true
+    }
+}
