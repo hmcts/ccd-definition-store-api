@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.utils;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.ObjectArrays.newArray;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class CaseFieldBuilder {
     private String fieldTypeReference;
     private List<ComplexFieldEntity> complexFields = newArrayList();
 
-    public CaseFieldBuilder(String reference) {
+    private CaseFieldBuilder(String reference) {
         this.reference = reference;
     }
 
@@ -27,7 +28,7 @@ public class CaseFieldBuilder {
     public CaseFieldEntity build() {
         CaseFieldEntity field = new CaseFieldEntity();
         field.setReference(this.reference);
-        field.setFieldType(new FieldTypeBuilder().withReference(fieldTypeReference).build());
+        field.setFieldType(newType(fieldTypeReference).build());
         return field;
     }
 
@@ -42,9 +43,9 @@ public class CaseFieldBuilder {
     public CaseFieldEntity buildComplex() {
         CaseFieldEntity field = new CaseFieldEntity();
         field.setReference(this.reference);
-        FieldTypeEntity typeEntity = new FieldTypeBuilder().withReference(fieldTypeReference).build();
+        FieldTypeEntity typeEntity = newType(fieldTypeReference).build();
         typeEntity.addComplexFields(complexFields);
-        FieldTypeEntity baseTypeEntity = new FieldTypeBuilder().withReference("Complex").build();
+        FieldTypeEntity baseTypeEntity = newType("Complex").build();
         typeEntity.setBaseFieldType(baseTypeEntity);
         field.setFieldType(typeEntity);
         return field;

@@ -13,17 +13,7 @@ public class FieldTypeBuilder {
     private List<ComplexFieldEntity> complexFields = newArrayList();
     private FieldTypeEntity collectionFieldType;
 
-    public FieldTypeBuilder() {}
-
-    public static FieldTypeEntity baseFieldType(String reference) {
-        FieldTypeEntity baseType = new FieldTypeEntity();
-        baseType.setReference(reference);
-        return baseType;
-    }
-
-    public static FieldTypeEntity textFieldType() {
-        return baseFieldType("Text");
-    }
+    private FieldTypeBuilder() {}
 
     public FieldTypeBuilder withReference(String reference) {
         this.reference = reference;
@@ -43,25 +33,35 @@ public class FieldTypeBuilder {
         return this;
     }
 
-    public FieldTypeEntity buildComplex() {
-        FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
-        fieldTypeEntity.setReference(this.reference);
-        fieldTypeEntity.addComplexFields(complexFields);
-        fieldTypeEntity.setBaseFieldType(new FieldTypeBuilder().withReference("Complex").build());
-        return fieldTypeEntity;
-    }
-
     public FieldTypeEntity build() {
         FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference(this.reference);
         return fieldType;
     }
 
+    public FieldTypeEntity buildComplex() {
+        FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
+        fieldTypeEntity.setReference(this.reference);
+        fieldTypeEntity.addComplexFields(complexFields);
+        fieldTypeEntity.setBaseFieldType(newType("Complex").build());
+        return fieldTypeEntity;
+    }
+
     public FieldTypeEntity buildCollection() {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(this.reference);
         fieldTypeEntity.setCollectionFieldType(collectionFieldType);
-        fieldTypeEntity.setBaseFieldType(new FieldTypeBuilder().withReference("Collection").build());
+        fieldTypeEntity.setBaseFieldType(newType("Collection").build());
         return fieldTypeEntity;
+    }
+
+    public static FieldTypeBuilder newType(String reference) {
+        FieldTypeBuilder builder = new FieldTypeBuilder();
+        builder.withReference(reference);
+        return builder;
+    }
+
+    public static FieldTypeEntity textFieldType() {
+        return newType("Text").build();
     }
 }

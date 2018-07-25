@@ -3,6 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -87,9 +89,8 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
     }
 
     private CaseFieldEntity newCollectionField() {
-        FieldTypeEntity collectionFieldType = new FieldTypeBuilder().withReference
-                ("reasons-51503ee8-ac6d-4b57-845e-4806332a9820").withCollectionFieldType(FieldTypeBuilder
-                .textFieldType()).buildCollection();
+        FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
+                .withCollectionFieldType(textFieldType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");
@@ -98,8 +99,8 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
     }
 
     private CaseFieldEntity newCollectionOfComplexField() {
-        FieldTypeEntity collectionFieldType = new FieldTypeBuilder().withReference
-                ("reasons-51503ee8-ac6d-4b57-845e-4806332a9820").withCollectionFieldType(newComplexType()).buildCollection();
+        FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
+                .withCollectionFieldType(newComplexType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");
@@ -108,8 +109,8 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
     }
 
     private FieldTypeEntity newComplexType() {
-        FieldTypeBuilder complexType = new FieldTypeBuilder().withReference("Person");
-        complexType.addComplexField("forename", FieldTypeBuilder.textFieldType());
+        FieldTypeBuilder complexType = newType("Person");
+        complexType.addComplexField("forename", textFieldType());
         return complexType.buildComplex();
     }
 }
