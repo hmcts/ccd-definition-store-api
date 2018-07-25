@@ -178,7 +178,16 @@ subprojects {
 
     test {
         environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-        reports.junitXml.setDestination((File) rootProject.testResultsDir)
+
+        useJUnitPlatform()
+
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+
+        reports {
+            html.enabled = true
+        }
     }
 
     check.dependsOn jacocoTestReport
