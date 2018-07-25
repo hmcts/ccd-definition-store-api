@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import java.io.IOException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.event.EventListener;
@@ -12,7 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 public class SynchronousElasticDefinitionImportListener extends ElasticDefinitionImportListener {
 
     @EventListener
-    public void onDefinitionImported(DefinitionImportedEvent event) {
+    public void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
         log.info("import listener executing synchronously");
         super.initialiseElasticSearch(event.getCaseTypes());
     }

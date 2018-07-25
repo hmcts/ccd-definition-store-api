@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import java.io.IOException;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,25 +23,21 @@ public abstract class ElasticDefinitionImportListener {
     @Autowired
     private CCDElasticClient elasticClient;
 
-    public abstract void onDefinitionImported(DefinitionImportedEvent event);
+    public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
 
-    protected void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) {
-        try {
-            for (CaseTypeEntity caseType : caseTypes) {
-                String indexName = indexName(caseType);
+    protected void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) throws IOException {
+        for (CaseTypeEntity caseType : caseTypes) {
+            String indexName = indexName(caseType);
 
-                if (!elasticClient.indexExists(indexName)) {
-                    log.info("creating index {} for case type {}", indexName, caseType.getReference());
-                    boolean acknowledged = elasticClient.createIndex(indexName);
-                    log.info("index created: {}", acknowledged);
-                }
-
-                String caseMapping = mappingGenerator.generateMapping(caseType);
-                boolean acknowledged = elasticClient.upsertMapping(indexName, caseMapping);
-                log.info("mapping created: {}", acknowledged);
+            if (!elasticClient.indexExists(indexName)) {
+                log.info("creating index {} for case type {}", indexName, caseType.getReference());
+                boolean acknowledged = elasticClient.createIndex(indexName);
+                log.info("index created: {}", acknowledged);
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Error while updating ElasticSearch", e);
+
+            String caseMapping = mappingGenerator.generateMapping(caseType);
+            boolean acknowledged = elasticClient.upsertMapping(indexName, caseMapping);
+            log.info("mapping created: {}", acknowledged);
         }
     }
 
