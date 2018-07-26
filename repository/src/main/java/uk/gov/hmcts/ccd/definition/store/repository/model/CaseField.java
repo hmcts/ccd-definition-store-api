@@ -21,6 +21,7 @@ public class CaseField implements HasAcls {
     private String liveUntil = null;
     private List<AccessControlList> acls = new ArrayList<>();
     private String showCondition;
+    private boolean metadata;
 
     /**
      * The id of the case field
@@ -152,5 +153,13 @@ public class CaseField implements HasAcls {
     @Override
     public void setAcls(List<AccessControlList> acls) {
         this.acls = acls;
+    }
+
+    public boolean isMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(boolean metadata) {
+        this.metadata = metadata;
     }
 }
