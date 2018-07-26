@@ -2,12 +2,6 @@ jar {
     baseName = 'definition-store-rest-api'
 }
 
-ext {
-    limits = [ // test coverage success criteria, same in pom.xml
-        'class' : 9
-    ]
-}
-
 dependencies {
     compile project(':domain')
     testCompile project(path: ':domain', configuration: 'testOutput')
