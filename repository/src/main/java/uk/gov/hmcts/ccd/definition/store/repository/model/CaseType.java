@@ -82,12 +82,6 @@ public class CaseType implements HasAcls {
         return caseFields;
     }
 
-    public void addCaseFields(List<CaseField> caseFields) {
-        if (this.caseFields != null) {
-            this.caseFields.addAll(caseFields);
-        }
-    }
-
     public void setCaseFields(List<CaseField> caseFields) {
         this.caseFields = caseFields;
     }
@@ -112,7 +106,6 @@ public class CaseType implements HasAcls {
         return acls;
     }
 
-    @Override
     public void setAcls(List<AccessControlList> acls) {
         this.acls = acls;
     }

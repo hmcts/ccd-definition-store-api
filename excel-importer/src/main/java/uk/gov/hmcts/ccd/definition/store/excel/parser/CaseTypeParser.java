@@ -8,11 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificationColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +24,6 @@ public class CaseTypeParser {
     private final AuthorisationCaseFieldParser authorisationCaseFieldParser;
     private final AuthorisationCaseEventParser authorisationCaseEventParser;
     private final AuthorisationCaseStateParser authorisationCaseStateParser;
-    private final MetadataCaseFieldParser metadataCaseFieldParser;
 
     public CaseTypeParser(ParseContext parseContext,
                           CaseFieldParser caseFieldParser,
@@ -37,8 +32,7 @@ public class CaseTypeParser {
                           AuthorisationCaseTypeParser authorisationParser,
                           AuthorisationCaseFieldParser authorisationCaseFieldParser,
                           AuthorisationCaseEventParser authorisationCaseEventParser,
-                          AuthorisationCaseStateParser authorisationCaseStateParser,
-                          MetadataCaseFieldParser metadataCaseFieldParser) {
+                          AuthorisationCaseStateParser authorisationCaseStateParser) {
         this.parseContext = parseContext;
         this.caseFieldParser = caseFieldParser;
         this.stateParser = stateParser;
@@ -47,7 +41,6 @@ public class CaseTypeParser {
         this.authorisationCaseFieldParser = authorisationCaseFieldParser;
         this.authorisationCaseEventParser = authorisationCaseEventParser;
         this.authorisationCaseStateParser = authorisationCaseStateParser;
-        this.metadataCaseFieldParser = metadataCaseFieldParser;
     }
 
     public ParseResult<CaseTypeEntity> parseAll(Map<String, DefinitionSheet> definitionSheets) {
@@ -72,22 +65,21 @@ public class CaseTypeParser {
 
             final CaseTypeEntity caseType = parseCaseType(caseTypeItem, caseTypeDefinition);
             caseType.addCaseFields(caseFieldParser.parseAll(definitionSheets, caseType))
-                .addStates(stateParser.parseAll(definitionSheets, caseType))
-                .addCaseFields(metadataCaseFieldParser.parseAll(caseType))
-                .addEvents(eventParser.parseAll(definitionSheets, caseType))
-                .addCaseTypeUserRoles(authorisationCaseTypeParser.parseAll(definitionSheets, caseType));
+                    .addStates(stateParser.parseAll(definitionSheets, caseType))
+                    .addEvents(eventParser.parseAll(definitionSheets, caseType))
+                    .addCaseTypeUserRoles(authorisationCaseTypeParser.parseAll(definitionSheets, caseType));
 
-            for (CaseFieldEntity caseField : caseType.getCaseFields()) {
+            for (CaseFieldEntity caseField: caseType.getCaseFields()) {
                 caseField.addCaseFieldUserRoles(authorisationCaseFieldParser
-                                                    .parseAll(definitionSheets, caseType, caseField));
+                    .parseAll(definitionSheets, caseType, caseField));
             }
 
-            for (EventEntity event : caseType.getEvents()) {
+            for (EventEntity event: caseType.getEvents()) {
                 event.addEventUserRoles(authorisationCaseEventParser
-                                            .parseAll(definitionSheets, caseType, event));
+                    .parseAll(definitionSheets, caseType, event));
             }
 
-            for (StateEntity stateEntity : caseType.getStates()) {
+            for (StateEntity stateEntity : caseType.getStates()){
                 stateEntity.addStateUserRoles(authorisationCaseStateParser.parseAll(definitionSheets, caseType, stateEntity));
             }
 

@@ -10,40 +10,14 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingSecurityClassificationValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldShowConditionReferencesInvalidFieldError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupColumnNumberValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidEventFieldShowCondition;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityValidationContext;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityInvalidShowConditionError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldLabelCaseFieldValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldMetadataValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldOrderSummaryCaseFieldValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityUserRoleValidatorImpl;
@@ -52,28 +26,13 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldUserRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeUserRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventUserRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class SpreadsheetValidationErrorMessageCreatorTest {
 
@@ -173,14 +132,14 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void testCreateErrorMessage_CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError() {
 
         assertEquals("CaseField values cannot have lower security classification than case type; " +
-                         "CaseField entry with id 'Case Field Reference' has a security classification of 'Public' " +
-                         "but CaseType 'Case Name' has a security classification of 'Private'",
-                     classUnderTest.createErrorMessage(
-                         new CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
-                             caseFieldEntity("Case Field Reference", SecurityClassification.PUBLIC),
-                             caseFieldEntityValidationContext("Case Name", SecurityClassification.PRIVATE)
-                         )
-                     )
+                "CaseField entry with id 'Case Field Reference' has a security classification of 'Public' " +
+                "but CaseType 'Case Name' has a security classification of 'Private'",
+            classUnderTest.createErrorMessage(
+                new CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
+                    caseFieldEntity("Case Field Reference", SecurityClassification.PUBLIC),
+                    caseFieldEntityValidationContext("Case Name", SecurityClassification.PRIVATE)
+                )
+            )
         );
 
     }
@@ -229,14 +188,14 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void testCreateErrorMessage_ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError() {
 
         assertEquals("ComplexTypes values cannot have lower security classification than case field; " +
-                         "ComplexTypes entry with id 'Complex Field Reference' has a security classification of 'Public' " +
-                         "but CaseField entry with id 'Case Field Reference' has a security classification of 'Private'",
-                     classUnderTest.createErrorMessage(
-                         new ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
-                             complexFieldEntity("Complex Field Reference", SecurityClassification.PUBLIC),
-                             complexFieldEntityValidationContext("Case Field Reference", SecurityClassification.PRIVATE)
-                         )
-                     )
+                "ComplexTypes entry with id 'Complex Field Reference' has a security classification of 'Public' " +
+                "but CaseField entry with id 'Case Field Reference' has a security classification of 'Private'",
+            classUnderTest.createErrorMessage(
+                new ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
+                    complexFieldEntity("Complex Field Reference", SecurityClassification.PUBLIC),
+                    complexFieldEntityValidationContext("Case Field Reference", SecurityClassification.PRIVATE)
+                )
+            )
         );
 
     }
@@ -285,14 +244,14 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void testCreateErrorMessage_EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError() {
 
         assertEquals("CaseEvent values cannot have lower security classification than case type; " +
-                         "CaseEvent entry with id 'Event Reference' has a security classification of 'Public' " +
-                         "but CaseType 'Case Name' has a security classification of 'Private'",
-                     classUnderTest.createErrorMessage(
-                         new EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
-                             eventEntity("Event Reference", SecurityClassification.PUBLIC),
-                             eventEntityValidationContext("Case Name", SecurityClassification.PRIVATE)
-                         )
-                     )
+                "CaseEvent entry with id 'Event Reference' has a security classification of 'Public' " +
+                "but CaseType 'Case Name' has a security classification of 'Private'",
+            classUnderTest.createErrorMessage(
+                new EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
+                    eventEntity("Event Reference", SecurityClassification.PUBLIC),
+                    eventEntityValidationContext("Case Name", SecurityClassification.PRIVATE)
+                )
+            )
         );
 
     }
@@ -363,9 +322,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeUserRoleEntity))
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_TYPE,
-                                   new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
-                                   new ImmutablePair<>(ColumnName.USER_ROLE, "user role"),
-                                   new ImmutablePair<>(ColumnName.CRUD, "Xcrud"))
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"),
+                    new ImmutablePair<>(ColumnName.CRUD, "Xcrud"))
             );
 
         assertEquals(
@@ -394,16 +353,15 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
             entity,
-            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                                                        new CaseFieldEntityValidationContext(caseTypeEntity)));
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity, new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_FIELD,
-                                   new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
-                                   new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
-                                   new ImmutablePair<>(ColumnName.USER_ROLE, "X"),
-                                   new ImmutablePair<>(ColumnName.CRUD, "Y"))
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "X"),
+                    new ImmutablePair<>(ColumnName.CRUD, "Y"))
             );
 
         assertEquals(
@@ -419,8 +377,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
             entity,
-            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                                                        new CaseFieldEntityValidationContext(caseTypeEntity)));
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity, new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
             "Invalid UserRole for case type 'case type', case field 'case field'",
@@ -435,16 +392,15 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         final CaseFieldEntityInvalidCrudValidationError error = new CaseFieldEntityInvalidCrudValidationError(
             entity,
-            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                                                        new CaseFieldEntityValidationContext(caseTypeEntity)));
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity, new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_FIELD,
-                                   new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
-                                   new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
-                                   new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
-                                   new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
+                    new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
             );
 
         assertEquals(
@@ -459,27 +415,10 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseFieldUserRoleEntity entity = caseFieldUserRoleEntity("Xcrud");
 
         final CaseFieldEntityInvalidCrudValidationError error = new CaseFieldEntityInvalidCrudValidationError(entity,
-                                                                                                              new AuthorisationCaseFieldValidationContext(
-                                                                                                                  caseFieldEntity,
-                                                                                                                  new CaseFieldEntityValidationContext(
-                                                                                                                      caseTypeEntity)));
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity, new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         assertEquals("Invalid CRUD value 'Xcrud' for case type 'case type', case field 'case field'",
-                     classUnderTest.createErrorMessage(error));
-    }
-
-    @Test
-    public void shouldHaveValidationMessageForCaseFieldEntityInvalidMetadataFieldValidationError() {
-        CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
-        CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
-
-        CaseFieldEntityInvalidMetadataFieldValidationError error = new CaseFieldEntityInvalidMetadataFieldValidationError(
-            "Invalid metadata field 'case field' declaration for case type 'case type'",
-            caseFieldEntity,
-            new CaseFieldEntityValidationContext(caseTypeEntity));
-
-        assertEquals("Invalid metadata field 'case field' declaration for case type 'case type'",
-                     classUnderTest.createErrorMessage(error));
+            classUnderTest.createErrorMessage(error));
     }
 
     @Test
@@ -495,10 +434,10 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_EVENT,
-                                   new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
-                                   new ImmutablePair<>(ColumnName.CASE_EVENT_ID, "event"),
-                                   new ImmutablePair<>(ColumnName.CRUD, "x"),
-                                   new ImmutablePair<>(ColumnName.USER_ROLE, "u"))
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_EVENT_ID, "event"),
+                    new ImmutablePair<>(ColumnName.CRUD, "x"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "u"))
             );
 
         assertEquals(
@@ -534,10 +473,10 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_FIELD,
-                                   new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
-                                   new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
-                                   new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
-                                   new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
+                    new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
             );
 
         assertEquals(
@@ -551,14 +490,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventUserRoleEntity entity = eventUserRoleEntity("user role", "Xcrud");
 
-        final EventEntityInvalidCrudValidationError error = new EventEntityInvalidCrudValidationError(entity,
-                                                                                                      new AuthorisationEventValidationContext(
-                                                                                                          eventEntity,
-                                                                                                          new EventEntityValidationContext(
-                                                                                                              caseTypeEntity)));
+        final EventEntityInvalidCrudValidationError error = new EventEntityInvalidCrudValidationError(entity, new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
-        assertEquals("Invalid CRUD value 'Xcrud' for case type 'case type', event 'event'",
-                     classUnderTest.createErrorMessage(error));
+        assertEquals("Invalid CRUD value 'Xcrud' for case type 'case type', event 'event'", classUnderTest.createErrorMessage(error));
     }
 
     @Test
@@ -570,8 +504,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
         when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn("SHOW CONDITION");
 
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventCaseFieldEntity))).thenReturn(
-            Optional.of(definitionDataItem));
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventCaseFieldEntity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
             "Unknown field 'SHOW CONDITION FIELD' for event 'EVENT ID' in show condition: 'SHOW CONDITION' on tab 'CaseEventToFields'",
@@ -591,10 +524,10 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
             = new EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError(
-            "SHOW CONDITION FIELD",
-            eventCaseFieldEntityValidationContext("EVENT ID"),
-            eventCaseFieldEntity
-        );
+                "SHOW CONDITION FIELD",
+                eventCaseFieldEntityValidationContext("EVENT ID"),
+                eventCaseFieldEntity
+            );
 
         assertEquals(
             eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError.getDefaultMessage(),
@@ -613,11 +546,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
-        when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn(
-            "SHOW CONDITION FROM SPREADSHEET");
+        when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn("SHOW CONDITION FROM SPREADSHEET");
 
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventCaseFieldEntity))).thenReturn(
-            Optional.of(definitionDataItem));
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventCaseFieldEntity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
             "Invalid show condition 'SHOW CONDITION FROM SPREADSHEET' for event 'EVENT ID' on tab 'CaseEventToFields'",
@@ -657,13 +588,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
         when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn("sc");
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupEntity))).thenReturn(
-            Optional.of(definitionDataItem));
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupEntity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
-            "Invalid show condition 'sc' for display group 'dg' on tab 'CaseEventToFields'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidShowConditionError(displayGroupEntity))
+                "Invalid show condition 'sc' for display group 'dg' on tab 'CaseEventToFields'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidShowConditionError(displayGroupEntity))
         );
     }
 
@@ -677,9 +607,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
 
         assertEquals(
-            "Invalid show condition 'sc' for display group 'dg'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidShowConditionError(displayGroupEntity))
+                "Invalid show condition 'sc' for display group 'dg'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidShowConditionError(displayGroupEntity))
         );
     }
 
@@ -695,13 +625,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
         when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn("sc");
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupEntity))).thenReturn(
-            Optional.of(definitionDataItem));
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupEntity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
-            "Invalid show condition 'sc' for display group 'dg' on tab 'CaseEventToFields': unknown field 'field' for event 'event'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidEventFieldShowCondition("field", displayGroupEntity))
+                "Invalid show condition 'sc' for display group 'dg' on tab 'CaseEventToFields': unknown field 'field' for event 'event'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidEventFieldShowCondition("field", displayGroupEntity))
         );
     }
 
@@ -718,9 +647,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
 
         assertEquals(
-            "Invalid show condition 'sc' for display group 'dg': unknown field 'field' for event 'event'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidEventFieldShowCondition("field", displayGroupEntity))
+                "Invalid show condition 'sc' for display group 'dg': unknown field 'field' for event 'event'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidEventFieldShowCondition("field", displayGroupEntity))
         );
     }
 
@@ -733,13 +662,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_TYPE_TAB.toString());
         when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn("sc");
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupCaseFieldEntity))).thenReturn(
-            Optional.of(definitionDataItem));
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupCaseFieldEntity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
-            "Invalid show condition 'sc' for tab field 'dg' on spreadsheet tab 'CaseTypeTab': unknown field 'field'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidTabFieldShowCondition("field", displayGroupCaseFieldEntity))
+                "Invalid show condition 'sc' for tab field 'dg' on spreadsheet tab 'CaseTypeTab': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabFieldShowCondition("field", displayGroupCaseFieldEntity))
         );
     }
 
@@ -753,9 +681,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_TYPE_TAB.toString());
 
         assertEquals(
-            "Invalid show condition 'sc' for tab field 'dg': unknown field 'field'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidTabFieldShowCondition("field", displayGroupCaseFieldEntity))
+                "Invalid show condition 'sc' for tab field 'dg': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabFieldShowCondition("field", displayGroupCaseFieldEntity))
         );
     }
 
@@ -766,9 +694,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         displayGroupCaseFieldEntity.setCaseField(caseFieldEntity("dg", SecurityClassification.PUBLIC));
 
         assertEquals(
-            "Invalid show condition 'null' for tab field 'dg': unknown field 'field'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidTabFieldShowCondition("field", displayGroupCaseFieldEntity))
+                "Invalid show condition 'null' for tab field 'dg': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabFieldShowCondition("field", displayGroupCaseFieldEntity))
         );
     }
 
@@ -781,13 +709,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_TYPE_TAB.toString());
         when(definitionDataItem.getString(eq(ColumnName.TAB_SHOW_CONDITION))).thenReturn("sc");
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupEntity))).thenReturn(
-            Optional.of(definitionDataItem));
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(displayGroupEntity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
-            "Invalid show condition 'sc' for tab 'dg' on spreadsheet tab 'CaseTypeTab': unknown field 'field'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidTabShowCondition("field", displayGroupEntity))
+                "Invalid show condition 'sc' for tab 'dg' on spreadsheet tab 'CaseTypeTab': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabShowCondition("field", displayGroupEntity))
         );
     }
 
@@ -801,9 +728,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_TYPE_TAB.toString());
 
         assertEquals(
-            "Invalid show condition 'sc' for tab 'dg': unknown field 'field'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidTabShowCondition("field", displayGroupEntity))
+                "Invalid show condition 'sc' for tab 'dg': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabShowCondition("field", displayGroupEntity))
         );
     }
 
@@ -814,9 +741,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         displayGroupEntity.setReference("dg");
 
         assertEquals(
-            "Invalid show condition 'null' for tab 'dg': unknown field 'field'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupInvalidTabShowCondition("field", displayGroupEntity))
+                "Invalid show condition 'null' for tab 'dg': unknown field 'field'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupInvalidTabShowCondition("field", displayGroupEntity))
         );
     }
 
@@ -832,9 +759,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(field))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
-            "Invalid show condition 'sc' for complex field element 'f' on tab 'ComplexTypes'",
-            classUnderTest.createErrorMessage(
-                new ComplexFieldInvalidShowConditionError(field))
+                "Invalid show condition 'sc' for complex field element 'f' on tab 'ComplexTypes'",
+                classUnderTest.createErrorMessage(
+                        new ComplexFieldInvalidShowConditionError(field))
         );
     }
 
@@ -846,9 +773,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         field.setShowCondition("sc");
 
         assertEquals(
-            "Show condition 'sc' invalid for complex field element 'f'",
-            classUnderTest.createErrorMessage(
-                new ComplexFieldInvalidShowConditionError(field))
+                "Show condition 'sc' invalid for complex field element 'f'",
+                classUnderTest.createErrorMessage(
+                        new ComplexFieldInvalidShowConditionError(field))
         );
     }
 
@@ -867,9 +794,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(field))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
-            "Unknown field 'field' of complex field 'complexField' in show condition: 'sc' on tab 'ComplexTypes'",
-            classUnderTest.createErrorMessage(
-                new ComplexFieldShowConditionReferencesInvalidFieldError("field", field))
+                "Unknown field 'field' of complex field 'complexField' in show condition: 'sc' on tab 'ComplexTypes'",
+                classUnderTest.createErrorMessage(
+                        new ComplexFieldShowConditionReferencesInvalidFieldError("field", field))
         );
     }
 
@@ -886,9 +813,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.COMPLEX_TYPES.toString());
 
         assertEquals(
-            "Unknown field 'field' of complex field 'complexField' in show condition: 'sc'",
-            classUnderTest.createErrorMessage(
-                new ComplexFieldShowConditionReferencesInvalidFieldError("field", field))
+                "Unknown field 'field' of complex field 'complexField' in show condition: 'sc'",
+                classUnderTest.createErrorMessage(
+                        new ComplexFieldShowConditionReferencesInvalidFieldError("field", field))
         );
     }
 
@@ -901,19 +828,18 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(entity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
-            "default message. WorkSheet 'CaseEventToFields'",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupColumnNumberValidator.ValidationError("default message", entity))
+                "default message. WorkSheet 'CaseEventToFields'",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupColumnNumberValidator.ValidationError("default message", entity))
         );
     }
 
     @Test
     public void entityNotInRegistry_DisplayGroupColumnNrValidatorError_defaultMessageReturned() {
         assertEquals(
-            "default message",
-            classUnderTest.createErrorMessage(
-                new DisplayGroupColumnNumberValidator.ValidationError("default message",
-                                                                      new DisplayGroupCaseFieldEntity()))
+                "default message",
+                classUnderTest.createErrorMessage(
+                        new DisplayGroupColumnNumberValidator.ValidationError("default message", new DisplayGroupCaseFieldEntity()))
         );
     }
 
@@ -936,8 +862,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals(
             "default message",
             classUnderTest.createErrorMessage(
-                new GenericLayoutEntityValidatorImpl.ValidationError("default message",
-                                                                     new SearchInputCaseFieldEntity()))
+                new GenericLayoutEntityValidatorImpl.ValidationError("default message", new SearchInputCaseFieldEntity()))
         );
     }
 
@@ -950,8 +875,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(entity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals("default message. WorkSheet 'AuthorisationCaseState'",
-                     classUnderTest.createErrorMessage(
-                         new StateEntityUserRoleValidatorImpl.ValidationError("default message", entity))
+            classUnderTest.createErrorMessage(
+                new StateEntityUserRoleValidatorImpl.ValidationError("default message", entity))
         );
     }
 
@@ -973,8 +898,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(entity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals("default message. WorkSheet 'AuthorisationCaseState'",
-                     classUnderTest.createErrorMessage(
-                         new StateEntityCrudValidatorImpl.ValidationError("default message", entity))
+            classUnderTest.createErrorMessage(
+                new StateEntityCrudValidatorImpl.ValidationError("default message", entity))
         );
     }
 
@@ -997,8 +922,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(entity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals("default message. WorkSheet 'CaseEventToFields'",
-                     classUnderTest.createErrorMessage(
-                         new EventCaseFieldDisplayContextValidatorImpl.ValidationError("default message", entity))
+            classUnderTest.createErrorMessage(
+                new EventCaseFieldDisplayContextValidatorImpl.ValidationError("default message", entity))
         );
     }
 
@@ -1040,21 +965,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         assertEquals("default message. WorkSheet 'CaseEventToFields'",
                      classUnderTest.createErrorMessage(
-                         new EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError("default message",
-                                                                                                      entity))
-        );
-    }
-
-    @Test
-    public void shouldHaveValidationMessageForEventCaseFieldMetadataValidationError() {
-        EventCaseFieldEntity entity = new EventCaseFieldEntity();
-        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
-        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(entity))).thenReturn(Optional.of(definitionDataItem));
-
-        assertEquals("default message. WorkSheet 'CaseEventToFields'",
-                     classUnderTest.createErrorMessage(
-                         new EventCaseFieldMetadataValidatorImpl.ValidationError("default message", entity))
+                         new EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError("default message", entity))
         );
     }
 
@@ -1067,8 +978,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity))).thenReturn(Optional.of(definitionDataItem));
 
         assertEquals("Custom message. WorkSheet 'CaseEvent'",
-                     classUnderTest.createErrorMessage(
-                         new EventEntityCanSaveDraftValidatorImpl.ValidationError("Custom message", eventEntity))
+            classUnderTest.createErrorMessage(
+                new EventEntityCanSaveDraftValidatorImpl.ValidationError("Custom message", eventEntity))
         );
     }
 
@@ -1098,11 +1009,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext(String caseName,
                                                                               SecurityClassification parentSecurityClassification) {
-        CaseFieldEntityValidationContext caseFieldEntityValidationContext = mock(
-            CaseFieldEntityValidationContext.class);
+        CaseFieldEntityValidationContext caseFieldEntityValidationContext = mock(CaseFieldEntityValidationContext.class);
         when(caseFieldEntityValidationContext.getCaseName()).thenReturn(caseName);
-        when(caseFieldEntityValidationContext.getParentSecurityClassification()).thenReturn(
-            parentSecurityClassification);
+        when(caseFieldEntityValidationContext.getParentSecurityClassification()).thenReturn(parentSecurityClassification);
         return caseFieldEntityValidationContext;
     }
 
@@ -1116,15 +1025,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     }
 
-    private CaseFieldComplexFieldEntityValidator.ValidationContext complexFieldEntityValidationContext(
-        String caseFieldReference,
-        SecurityClassification parentSecurityClassification) {
+    private CaseFieldComplexFieldEntityValidator.ValidationContext complexFieldEntityValidationContext(String caseFieldReference,
+                                                                                             SecurityClassification parentSecurityClassification) {
 
-        CaseFieldComplexFieldEntityValidator.ValidationContext complexFieldEntityValidationContext = mock(
-            CaseFieldComplexFieldEntityValidator.ValidationContext.class);
+        CaseFieldComplexFieldEntityValidator.ValidationContext complexFieldEntityValidationContext = mock(CaseFieldComplexFieldEntityValidator.ValidationContext.class);
         when(complexFieldEntityValidationContext.getCaseFieldReference()).thenReturn(caseFieldReference);
-        when(complexFieldEntityValidationContext.getParentSecurityClassification()).thenReturn(
-            parentSecurityClassification);
+        when(complexFieldEntityValidationContext.getParentSecurityClassification()).thenReturn(parentSecurityClassification);
         return complexFieldEntityValidationContext;
 
     }
@@ -1182,15 +1088,13 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     private EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext(String eventId) {
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext = mock(
-            EventCaseFieldEntityValidationContext.class);
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext = mock(EventCaseFieldEntityValidationContext.class);
         when(eventCaseFieldEntityValidationContext.getEventId()).thenReturn(eventId);
         return eventCaseFieldEntityValidationContext;
 
     }
 
-    private Optional<DefinitionDataItem> definitionDataItem(SheetName sheetName, ColumnName columnName,
-                                                            String columnValue) {
+    private Optional<DefinitionDataItem> definitionDataItem(SheetName sheetName, ColumnName columnName, String columnValue) {
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(sheetName.toString());
         definitionDataItem.addAttribute(columnName.toString(), columnValue);
         return Optional.of(definitionDataItem);
@@ -1206,10 +1110,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         return Optional.of(definitionDataItem);
     }
 
-    private void assertCreateEventDoesNotHavePostStateValidationErrorMessageForEntityFromDataDefinitionItem(
-        String message,
-        EventEntity eventEntity,
-        Optional<DefinitionDataItem> definitionDataItem) {
+    private void assertCreateEventDoesNotHavePostStateValidationErrorMessageForEntityFromDataDefinitionItem(String message,
+                                                                                                            EventEntity eventEntity,
+                                                                                                            Optional<DefinitionDataItem> definitionDataItem) {
 
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity))).thenReturn(definitionDataItem);
 
@@ -1224,10 +1127,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     }
 
-    private void assertCaseTypeEntityMissingSecurityClassificationValidationErrorForEntityFromDataDefinitionItem(
-        String message,
-        CaseTypeEntity caseTypeEntity,
-        Optional<DefinitionDataItem> definitionDataItem) {
+    private void assertCaseTypeEntityMissingSecurityClassificationValidationErrorForEntityFromDataDefinitionItem(String message,
+                                                                                                                 CaseTypeEntity caseTypeEntity,
+                                                                                                                 Optional<DefinitionDataItem> definitionDataItem) {
 
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(caseTypeEntity))).thenReturn(definitionDataItem);
 
@@ -1242,10 +1144,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     }
 
-    private void assertCaseFieldEntityMissingSecurityClassificationValidationErrorForEntityFromDataDefinitionItem(
-        String message,
-        CaseFieldEntity caseFieldEntity,
-        Optional<DefinitionDataItem> definitionDataItem) {
+    private void assertCaseFieldEntityMissingSecurityClassificationValidationErrorForEntityFromDataDefinitionItem(String message,
+                                                                                                                  CaseFieldEntity caseFieldEntity,
+                                                                                                                  Optional<DefinitionDataItem> definitionDataItem) {
 
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(caseFieldEntity))).thenReturn(definitionDataItem);
 
@@ -1260,10 +1161,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     }
 
-    private void assertEventEntityMissingSecurityClassificationValidationErrorForEntityFromDataDefinitionItem(
-        String message,
-        EventEntity eventEntity,
-        Optional<DefinitionDataItem> definitionDataItem) {
+    private void assertEventEntityMissingSecurityClassificationValidationErrorForEntityFromDataDefinitionItem(String message,
+                                                                                                              EventEntity eventEntity,
+                                                                                                              Optional<DefinitionDataItem> definitionDataItem) {
 
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity))).thenReturn(definitionDataItem);
 
@@ -1278,10 +1178,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     }
 
-    private void assertComplexFieldEntityMissingSecurityClassificationValidationErrorForEntityFromDataDefinitionItem(
-        String message,
-        ComplexFieldEntity complexFieldEntity,
-        Optional<DefinitionDataItem> definitionDataItem) {
+    private void assertComplexFieldEntityMissingSecurityClassificationValidationErrorForEntityFromDataDefinitionItem(String message,
+                                                                                                                     ComplexFieldEntity complexFieldEntity,
+                                                                                                                     Optional<DefinitionDataItem> definitionDataItem) {
 
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(complexFieldEntity))).thenReturn(definitionDataItem);
 

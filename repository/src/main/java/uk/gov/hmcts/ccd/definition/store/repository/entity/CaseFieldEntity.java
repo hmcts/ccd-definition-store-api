@@ -1,23 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
-import javax.persistence.Column;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,24 +21,16 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "case_field")
 @Entity
-@TypeDefs({
-    @TypeDef(
-        name = "pgsql_securityclassification_enum",
-        typeClass = PostgreSQLEnumType.class,
-        parameters = @Parameter(name = "type",
-            value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
-    ),
-    @TypeDef(
-        name = "pgsql_datafieldtype_enum",
-        typeClass = PostgreSQLEnumType.class,
-        parameters = @Parameter(name = "type",
-            value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType")
-    )})
+@TypeDef(
+    name = "pgsql_securityclassification_enum",
+    typeClass = PostgreSQLEnumType.class,
+    parameters = @Parameter(name="type", value="uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
+)
 public class CaseFieldEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy= IDENTITY)
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -70,29 +52,21 @@ public class CaseFieldEntity implements Serializable {
     private Boolean hidden;
 
     @Column(name = "security_classification")
-    @Type(type = "pgsql_securityclassification_enum")
+    @Type( type = "pgsql_securityclassification_enum" )
     private SecurityClassification securityClassification;
 
     @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "field_type_id", nullable = false)
+    @JoinColumn(name = "field_type_id", nullable=false)
     private FieldTypeEntity fieldType;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "case_type_id", nullable = false)
+    @JoinColumn(name = "case_type_id", nullable=false)
     private CaseTypeEntity caseType;
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_field_id")
     private final List<CaseFieldUserRoleEntity> caseFieldUserRoles = new ArrayList<>();
-
-    @Column(name = "data_field_type")
-    @Type(type = "pgsql_datafieldtype_enum")
-    private DataFieldType dataFieldType;
-
-    public CaseFieldEntity() {
-        this.dataFieldType = DataFieldType.CASE_DATA;
-    }
 
     public Integer getId() {
         return id;
@@ -174,14 +148,6 @@ public class CaseFieldEntity implements Serializable {
         return caseFieldUserRoles;
     }
 
-    public DataFieldType getDataFieldType() {
-        return dataFieldType;
-    }
-
-    public void setDataFieldType(DataFieldType dataFieldType) {
-        this.dataFieldType = dataFieldType;
-    }
-
     public CaseFieldEntity addCaseFieldUserRole(final CaseFieldUserRoleEntity caseFieldUserRole) {
         caseFieldUserRole.setCaseField(this);
         caseFieldUserRoles.add(caseFieldUserRole);
@@ -191,10 +157,5 @@ public class CaseFieldEntity implements Serializable {
     public CaseFieldEntity addCaseFieldUserRoles(final Collection<CaseFieldUserRoleEntity> entities) {
         entities.forEach(e -> addCaseFieldUserRole(e));
         return this;
-    }
-
-    @Transient
-    public boolean isMetadataField() {
-        return dataFieldType == DataFieldType.METADATA;
     }
 }

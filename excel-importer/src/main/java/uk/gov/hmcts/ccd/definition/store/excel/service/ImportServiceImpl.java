@@ -10,25 +10,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.LayoutParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 
 import java.io.IOException;
@@ -39,7 +25,7 @@ import java.util.Map;
 @Component
 public class ImportServiceImpl implements ImportService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(ImportServiceImpl.class);
 
     private final SpreadsheetValidator spreadsheetValidator;
     private final SpreadsheetParser spreadsheetParser;
@@ -50,7 +36,6 @@ public class ImportServiceImpl implements ImportService {
     private final LayoutService layoutService;
     private final UserRoleRepository userRoleRepository;
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
-    private final CaseFieldRepository caseFieldRepository;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -61,8 +46,7 @@ public class ImportServiceImpl implements ImportService {
                              CaseTypeService caseTypeService,
                              LayoutService layoutService,
                              UserRoleRepository userRoleRepository,
-                             WorkBasketUserDefaultService workBasketUserDefaultService,
-                             CaseFieldRepository caseFieldRepository) {
+                             WorkBasketUserDefaultService workBasketUserDefaultService) {
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
         this.parserFactory = parserFactory;
@@ -72,16 +56,18 @@ public class ImportServiceImpl implements ImportService {
         this.layoutService = layoutService;
         this.userRoleRepository = userRoleRepository;
         this.workBasketUserDefaultService = workBasketUserDefaultService;
-        this.caseFieldRepository = caseFieldRepository;
     }
 
     /**
      * Imports the Case Definition data and inserts it into the database.
      *
-     * @param inputStream the Case Definition data as an <code>InputStream</code>
-     * @throws IOException            in the event that there is a problem reading in the data
-     * @throws InvalidImportException if any of the Case Definition sheets fails checks for a definition name and a row
-     *                                of attribute headers
+     * @param inputStream
+     *         the Case Definition data as an <code>InputStream</code>
+     * @throws IOException
+     *         in the event that there is a problem reading in the data
+     * @throws InvalidImportException
+     *         if any of the Case Definition sheets fails checks for a definition name and a row
+     *         of attribute headers
      */
     @Override
     public void importFormDefinitions(InputStream inputStream) throws IOException {
@@ -126,12 +112,7 @@ public class ImportServiceImpl implements ImportService {
                     parsedFieldTypes.getNewResults().size());
 
         /*
-            3 - metadata fields
-         */
-        parseContext.registerMetadataFields(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
-
-        /*
-            4 - Case Type
+            3 - Case Type
          */
         logger.debug("Importing spreadsheet: Case types...");
 
@@ -143,7 +124,7 @@ public class ImportServiceImpl implements ImportService {
                     parsedCaseTypes.getNewResults().size());
 
         /*
-            5 - UI definition
+            4 - UI definition
          */
         logger.debug("Importing spreadsheet: UI definition...");
 
@@ -159,7 +140,7 @@ public class ImportServiceImpl implements ImportService {
         logger.info("Importing spreadsheet: UI definition: OK");
 
         /*
-            6 - User profiles
+            5 - User profiles
          */
         logger.debug("Importing spreadsheet: User profiles...");
 

@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -17,9 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,9 +48,6 @@ public class CaseTypeParserTest extends ParserTestBase {
     @Mock
     private AuthorisationCaseStateParser authorisationCaseStateParser;
 
-    @Mock
-    private MetadataCaseFieldParser metadataCaseFieldParser;
-
     @Before
     public void setup() {
 
@@ -61,9 +55,7 @@ public class CaseTypeParserTest extends ParserTestBase {
 
         parseContext = mock(ParseContext.class);
         caseTypeParser = new CaseTypeParser(parseContext, caseFieldParser, stateParser, eventParser,
-                                            authorisationCaseTypeParser, authorisationCaseFieldParser, authorisationCaseEventParser,
-                                            authorisationCaseStateParser,
-                                            metadataCaseFieldParser);
+            authorisationCaseTypeParser, authorisationCaseFieldParser, authorisationCaseEventParser, authorisationCaseStateParser);
         given(parseContext.getJurisdiction()).willReturn(jurisdiction);
     }
 
@@ -81,23 +73,10 @@ public class CaseTypeParserTest extends ParserTestBase {
 
         final CaseTypeEntity caseTypeEntity = parseResult.getAllResults().get(0);
 
-        InOrder inOrder = inOrder(caseFieldParser,
-                                  stateParser,
-                                  metadataCaseFieldParser,
-                                  eventParser,
-                                  authorisationCaseTypeParser);
-
-        assertAll(
-            () -> assertThat(caseTypeEntity.getId(), is(nullValue())),
-            () -> assertThat(caseTypeEntity.getJurisdiction(), is(jurisdiction)),
-            () -> assertThat(caseTypeEntity.getName(), is("Test Address Book Case")),
-            () -> assertThat(caseTypeEntity.getReference(), is(CASE_TYPE_UNDER_TEST)),
-            () -> inOrder.verify(caseFieldParser).parseAll(definitionSheets, caseTypeEntity),
-            () -> inOrder.verify(stateParser).parseAll(definitionSheets, caseTypeEntity),
-            () -> inOrder.verify(metadataCaseFieldParser).parseAll(caseTypeEntity),
-            () -> inOrder.verify(eventParser).parseAll(definitionSheets, caseTypeEntity),
-            () -> inOrder.verify(authorisationCaseTypeParser).parseAll(definitionSheets, caseTypeEntity)
-        );
+        assertThat(caseTypeEntity.getId(), is(nullValue()));
+        assertThat(caseTypeEntity.getJurisdiction(), is(jurisdiction));
+        assertThat(caseTypeEntity.getName(), is("Test Address Book Case"));
+        assertThat(caseTypeEntity.getReference(), is(CASE_TYPE_UNDER_TEST));
     }
 
     @Test
