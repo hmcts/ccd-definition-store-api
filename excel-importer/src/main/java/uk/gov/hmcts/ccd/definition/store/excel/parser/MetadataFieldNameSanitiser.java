@@ -10,18 +10,20 @@ public class MetadataFieldNameSanitiser {
 
     private MetadataFieldNameSanitiser() {}
 
-    public static String sanitiseMetadataFieldNameInString(String label) {
+    public static String sanitiseMetadataFieldNameInLabel(String label) {
+        if (label == null) {
+            return null;
+        }
         Matcher metadataPatternMatcher = METADATA_PATTERN_IN_LABEL.matcher(label);
-        String result = label;
         while (metadataPatternMatcher.find()) {
             String fieldWithName = metadataPatternMatcher.group();
             Matcher matcher = METADATA_FIELD_NAME_PATTERN.matcher(fieldWithName);
             if (matcher.find()) {
-                result = result.replace(fieldWithName, matcher.group(1).toLowerCase());
+                label = label.replace(fieldWithName, matcher.group(1).toLowerCase());
             }
         }
 
-        return result;
+        return label;
     }
 
     public static String constructMetadataFieldName(String originalName) {

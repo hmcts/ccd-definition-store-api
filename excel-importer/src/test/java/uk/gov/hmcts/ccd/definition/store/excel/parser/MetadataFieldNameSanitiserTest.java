@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 class MetadataFieldNameSanitiserTest {
@@ -12,7 +13,7 @@ class MetadataFieldNameSanitiserTest {
     @DisplayName("should sanitise metadata field names in a label")
     void shouldSanitiseMetadataFieldNameInString() {
         String label = "This is metadata ${[STATE]} with ${[CREATED_DATE]} and ${[STATE]} again";
-        String sanitised = MetadataFieldNameSanitiser.sanitiseMetadataFieldNameInString(label);
+        String sanitised = MetadataFieldNameSanitiser.sanitiseMetadataFieldNameInLabel(label);
 
         assertThat(sanitised, is("This is metadata ${state} with ${created_date} and ${state} again"));
     }
@@ -21,9 +22,15 @@ class MetadataFieldNameSanitiserTest {
     @DisplayName("should return label when no metadata field names in the label")
     void shouldReturnLabelWhenNoMetadataFields() {
         String label = "case data field ${field}";
-        String sanitised = MetadataFieldNameSanitiser.sanitiseMetadataFieldNameInString(label);
+        String sanitised = MetadataFieldNameSanitiser.sanitiseMetadataFieldNameInLabel(label);
 
         assertThat(sanitised, is(label));
+    }
+
+    @Test
+    @DisplayName("should return null when label is null")
+    void shouldReturnNullWhenLabelIsNull() {
+        assertThat(MetadataFieldNameSanitiser.sanitiseMetadataFieldNameInLabel(null), is(nullValue()));
     }
 
     @Test
