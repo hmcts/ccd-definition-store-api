@@ -15,11 +15,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataFieldNameSanitiser.sanitiseMetadataFieldNameInLabel;
-
 public class CaseFieldParser {
     private static final Logger logger = LoggerFactory.getLogger(CaseFieldParser.class);
-
 
     private final ParseContext parseContext;
 
@@ -35,7 +32,7 @@ public class CaseFieldParser {
         final List<CaseFieldEntity> caseFields = Lists.newArrayList();
 
         final Map<String, List<DefinitionDataItem>> caseFieldItemsByCaseTypes = definitionSheets.get(SheetName.CASE_FIELD.getName())
-            .groupDataItemsByCaseType();
+                                                                                                .groupDataItemsByCaseType();
 
         if (!caseFieldItemsByCaseTypes.containsKey(caseTypeId)) {
             throw new SpreadsheetParsingException("At least one case field must be defined for case type: " + caseTypeId);
@@ -70,7 +67,7 @@ public class CaseFieldParser {
         SecurityClassificationColumn securityClassificationColumn = caseFieldDefinition.getSecurityClassification();
         caseField.setSecurityClassification(securityClassificationColumn.getSecurityClassification());
 
-        caseField.setLabel(sanitiseMetadataFieldNameInLabel(caseFieldDefinition.getString(ColumnName.LABEL)));
+        caseField.setLabel(caseFieldDefinition.getString(ColumnName.LABEL));
         caseField.setHidden(caseFieldDefinition.getBoolean(ColumnName.DEFAULT_HIDDEN));
         caseField.setHint(caseFieldDefinition.getString(ColumnName.HINT_TEXT));
         caseField.setLiveFrom(caseFieldDefinition.getLocalDate(ColumnName.LIVE_FROM));
@@ -78,5 +75,4 @@ public class CaseFieldParser {
 
         return caseField;
     }
-
 }

@@ -10,34 +10,22 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -77,12 +65,6 @@ public class ImportServiceImplTest {
     @Mock
     private WorkBasketUserDefaultService workBasketUserDefaultService;
 
-    @Mock
-    private CaseFieldRepository caseFieldRepository;
-
-    @Mock
-    private MetadataCaseFieldEntityFactory metadataCaseFieldEntityFactory;
-
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -103,10 +85,8 @@ public class ImportServiceImplTest {
 
     @Before
     public void setup() {
-        Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
-        registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
-        parserFactory = new ParserFactory(new ShowConditionParser(), new EntityToDefinitionDataItemRegistry(), registry);
+        parserFactory = new ParserFactory(new ShowConditionParser(), new EntityToDefinitionDataItemRegistry());
 
         spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -118,8 +98,7 @@ public class ImportServiceImplTest {
                                         caseTypeService,
                                         layoutService,
                                         userRoleRepository,
-                                        workBasketUserDefaultService,
-                                        caseFieldRepository);
+                                        workBasketUserDefaultService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
@@ -151,7 +130,7 @@ public class ImportServiceImplTest {
                                                                         complexType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
 
-        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BAD_FILE);
+        final InputStream inputStream = ClassLoader.getSystemResourceAsStream(BAD_FILE);
 
         service.importFormDefinitions(inputStream);
     }
@@ -178,19 +157,10 @@ public class ImportServiceImplTest {
                                                                         labelBaseType,
                                                                         casePaymentHistoryViewerBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
-        CaseFieldEntity caseRef = new CaseFieldEntity();
-        caseRef.setReference("case_reference");
-        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA)).willReturn(Collections.singletonList
-            (caseRef));
-        CaseFieldEntity state = new CaseFieldEntity();
-        state.setReference("state");
-        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class))).willReturn(state);
 
-        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
+        final InputStream inputStream = ClassLoader.getSystemResourceAsStream(GOOD_FILE);
 
         service.importFormDefinitions(inputStream);
-
-        verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {
