@@ -2,6 +2,12 @@ jar {
     baseName = 'definition-store-rest-api'
 }
 
+ext {
+    limits = [
+        'class' : 59
+    ]
+}
+
 dependencies {
     compile project(':domain')
     testCompile project(path: ':domain', configuration: 'testOutput')
