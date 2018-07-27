@@ -3,6 +3,7 @@
 plugins {
     id 'nebula.optional-base' version '3.3.0'
     id 'nebula.provided-base' version '3.3.0'
+    id 'net.ltgt.apt' version '0.18'
 }
 
 apply plugin: 'nebula.optional-base'
@@ -28,6 +29,7 @@ jar {
 
 ext {
     mapstructGenSourceDir = 'build/classes/java/main'
+    orgMapstructVersion='1.2.0.Final'
 }
 
 dependencies {
@@ -37,12 +39,14 @@ dependencies {
     }
     compile "org.apache.commons:commons-lang3"
     compile group: 'commons-validator', name: 'commons-validator', version: '1.6'
-    compile "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
+    compile 'org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}'
     // Adding mapstruct-processor as an optional dependancy required pending resolution of
     // https://youtrack.jetbrains.com/issue/IDEA-150621
     // See http://mapstruct.org/documentation/ide-support/
     compile "org.mapstruct:mapstruct-processor:${orgMapstructVersion}", optional
     testCompile project(":app-insights").sourceSets.main.output
+
+    apt 'org.mapstruct:mapstruct-processor:${orgMapstructVersion}'
 }
 
 idea {
