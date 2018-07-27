@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toMap;
  * Accumulate everything that has been parsed so far and which is required for a subsequent parse stage. This is not meant
  * to expose the result of the parse itself, but instead to facilitate the mapping of dependent elements parsed at different
  * stages. As such, it should focus on the ease of consumption by parser.
- * <p>
+ *
  * To expose the results of a parse stage, use {@link ParseResult} instead.
  */
 public class ParseContext {
