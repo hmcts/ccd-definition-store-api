@@ -42,6 +42,8 @@ public abstract class ElasticDefinitionImportListener {
                 log.info("mapping created: {}", acknowledged);
             }
         } catch (Exception e) {
+            //TODO remove
+            log.error("error initialising elastiserach", e);
             throw new MapperException("failed initialising ElasticSearch", e);
         }
     }
