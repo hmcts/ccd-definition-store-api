@@ -3,6 +3,7 @@
 plugins {
     id 'nebula.optional-base' version '3.3.0'
     id 'nebula.provided-base' version '3.3.0'
+    id 'net.ltgt.apt' version '0.18'
 }
 
 apply plugin: 'nebula.optional-base'
@@ -28,6 +29,7 @@ jar {
 
 ext {
     mapstructGenSourceDir = 'build/classes/java/main'
+    orgMapstructVersion='1.2.0.Final'
 }
 
 dependencies {
@@ -43,6 +45,8 @@ dependencies {
     // See http://mapstruct.org/documentation/ide-support/
     compile "org.mapstruct:mapstruct-processor:${orgMapstructVersion}", optional
     testCompile project(":app-insights").sourceSets.main.output
+
+    apt "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
 }
 
 idea {
