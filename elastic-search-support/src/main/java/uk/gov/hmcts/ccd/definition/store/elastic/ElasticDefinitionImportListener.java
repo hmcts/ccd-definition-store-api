@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.index.mapper.MapperException;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -26,18 +27,22 @@ public abstract class ElasticDefinitionImportListener {
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
 
     protected void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) throws IOException {
-        for (CaseTypeEntity caseType : caseTypes) {
-            String indexName = indexName(caseType);
+        try {
+            for (CaseTypeEntity caseType : caseTypes) {
+                String indexName = indexName(caseType);
 
-            if (!elasticClient.indexExists(indexName)) {
-                log.info("creating index {} for case type {}", indexName, caseType.getReference());
-                boolean acknowledged = elasticClient.createIndex(indexName);
-                log.info("index created: {}", acknowledged);
+                if (!elasticClient.indexExists(indexName)) {
+                    log.info("creating index {} for case type {}", indexName, caseType.getReference());
+                    boolean acknowledged = elasticClient.createIndex(indexName);
+                    log.info("index created: {}", acknowledged);
+                }
+
+                String caseMapping = mappingGenerator.generateMapping(caseType);
+                boolean acknowledged = elasticClient.upsertMapping(indexName, caseMapping);
+                log.info("mapping created: {}", acknowledged);
             }
-
-            String caseMapping = mappingGenerator.generateMapping(caseType);
-            boolean acknowledged = elasticClient.upsertMapping(indexName, caseMapping);
-            log.info("mapping created: {}", acknowledged);
+        } catch (Exception e) {
+            throw new MapperException("failed initialising ElasticSearch", e);
         }
     }
 
