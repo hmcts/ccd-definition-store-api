@@ -179,11 +179,11 @@ public class ImportServiceImplTest {
                                                                         casePaymentHistoryViewerBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
-        caseRef.setReference("case_reference");
+        caseRef.setReference("[CASE_REFERENCE]");
         given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA)).willReturn(Collections.singletonList
             (caseRef));
         CaseFieldEntity state = new CaseFieldEntity();
-        state.setReference("state");
+        state.setReference("[STATE]");
         given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class))).willReturn(state);
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);

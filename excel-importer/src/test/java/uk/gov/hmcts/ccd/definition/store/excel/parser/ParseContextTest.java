@@ -244,7 +244,7 @@ public class ParseContextTest {
 
     @Test
     public void shouldReturnMetadataField_whenGetCaseFieldForCaseTypeIsMetadataField() {
-        String metadataFieldName = "METADATA";
+        String metadataFieldName = "[METADATA]";
         CaseFieldEntity caseField = new CaseFieldEntity();
         caseField.setReference("TEST");
         parseContext.registerCaseFieldForCaseType("caseTypeId", caseField);
@@ -253,8 +253,7 @@ public class ParseContextTest {
         metadataField.setReference(metadataFieldName);
         parseContext.registerMetadataFields(Collections.singletonList(metadataField));
 
-        CaseFieldEntity response = parseContext.getCaseFieldForCaseType("caseTypeId",
-                                                                        String.join(metadataFieldName, "[", "]"));
+        CaseFieldEntity response = parseContext.getCaseFieldForCaseType("caseTypeId", metadataFieldName);
 
         assertThat(response, is(metadataField));
     }
