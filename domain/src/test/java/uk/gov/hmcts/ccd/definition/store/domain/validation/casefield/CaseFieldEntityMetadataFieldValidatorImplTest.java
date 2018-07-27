@@ -18,8 +18,7 @@ class CaseFieldEntityMetadataFieldValidatorImplTest {
     private final CaseFieldEntityMetadataFieldValidatorImpl validator = new CaseFieldEntityMetadataFieldValidatorImpl();
 
     @Test
-    @DisplayName("Should return validation result with exception when non-metadata case field id is enclosed in " +
-        "square brackets")
+    @DisplayName("Should return validation result with exception when non-metadata case field id is enclosed in square brackets")
     void shouldReturnValidationResultWithError_whenNonMetadataCaseFieldIdContainsSquareBrackets() {
         CaseFieldEntity caseField = new CaseFieldEntity();
         caseField.setReference("[FIELD]");
@@ -30,11 +29,12 @@ class CaseFieldEntityMetadataFieldValidatorImplTest {
 
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidMetadataFieldValidationError.class));
-        assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Invalid metadata field '[FIELD]' declaration for case type 'case ref'"));
+        assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                   is("Metadata field syntax cannot be used for a case field. Found '[FIELD]'"));
     }
 
     @Test
-    @DisplayName("Should return validation result with exception when non-metadata case field name is same as metadata field name")
+    @DisplayName("Should return no exception when metadata field name is used as case field name without square brackets")
     void shouldReturnValidationResultWithNoError_whenMetadataCaseFieldIdIsNotEnclosedInBrackets() {
         CaseFieldEntity caseField = new CaseFieldEntity();
         caseField.setReference("STATE");
@@ -43,9 +43,6 @@ class CaseFieldEntityMetadataFieldValidatorImplTest {
 
         ValidationResult result = validator.validate(caseField, context);
 
-        assertThat(result.getValidationErrors(), hasSize(1));
-        assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidMetadataFieldValidationError.class));
-        assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Invalid case field reference name 'STATE' for case type 'case ref'. This case"
-                                                                                   + " field reference is reserved for metadata fields only."));
+        assertThat(result.getValidationErrors(), hasSize(0));
     }
 }
