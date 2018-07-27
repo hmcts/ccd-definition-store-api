@@ -21,6 +21,6 @@ public class ElasticSearchConfiguration {
     public RestHighLevelClient restHighLevelClient() {
         return new RestHighLevelClient(
                     RestClient.builder(
-                            new HttpHost(config.getHost())));
+                            new HttpHost(config.getHost(), config.getPort())));
     }
 }
