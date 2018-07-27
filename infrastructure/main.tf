@@ -29,7 +29,7 @@ locals {
   default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
   oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
 
-  elasticLoadBalancerIp = "10.100.136.12"
+  elasticLoadBalancerIp = "10.112.0.4"
 }
 
 data "vault_generic_secret" "definition_store_item_key" {
