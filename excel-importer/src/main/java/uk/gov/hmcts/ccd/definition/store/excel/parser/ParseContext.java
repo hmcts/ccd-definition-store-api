@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
-import static uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataFieldNameSanitiser.constructMetadataFieldName;
 
 /**
  * Accumulate everything that has been parsed so far and which is required for a subsequent parse stage. This is not meant
@@ -243,6 +242,6 @@ public class ParseContext {
     public void registerMetadataFields(List<CaseFieldEntity> fields) {
         metadataFields.putAll(fields.stream()
                                   .filter(Objects::nonNull)
-                                  .collect(toMap(entity -> constructMetadataFieldName(entity.getReference()), Function.identity())));
+                                  .collect(toMap(CaseFieldEntity::getReference, Function.identity())));
     }
 }

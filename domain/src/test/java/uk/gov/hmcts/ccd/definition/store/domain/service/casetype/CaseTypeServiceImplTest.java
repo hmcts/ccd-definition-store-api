@@ -400,7 +400,7 @@ class CaseTypeServiceImplTest {
 
         @BeforeEach
         void setup() {
-            metadataField.setId(MetadataField.STATE.name());
+            metadataField.setId(MetadataField.STATE.getReference());
             FieldType fieldType = new FieldType();
             fieldType.setType(BASE_FIXED_LIST);
             metadataField.setFieldType(fieldType);
@@ -448,7 +448,7 @@ class CaseTypeServiceImplTest {
 
         private void verifyResult(CaseType result) {
             assertThat(result.getCaseFields(), hasSize(1));
-            assertThat(result.getCaseFields().get(0).getId(), is(MetadataField.STATE.name()));
+            assertThat(result.getCaseFields().get(0).getId(), is(MetadataField.STATE.getReference()));
             verify(caseTypeRepository).findCurrentVersionForReference(same(caseTypeId));
             verify(dtoMapper).map(same(caseTypeEntity));
             verify(metadataFieldService).getCaseMetadataFields();

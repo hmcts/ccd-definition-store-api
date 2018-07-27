@@ -16,12 +16,12 @@ public class EventCaseFieldMetadataValidatorImpl implements EventCaseFieldEntity
         ValidationResult validationResult = new ValidationResult();
         if (eventCaseFieldEntity.getCaseField().isMetadataField() && eventCaseFieldEntity.getDisplayContext() != DisplayContext.READONLY) {
             validationResult.addError(new ValidationError(String.format("'%s' is a metadata field and cannot be editable for event with reference '%s'",
-                              eventCaseFieldEntity.getCaseField() != null ?
-                                  String.join(eventCaseFieldEntity.getCaseField().getReference().toUpperCase(), "[", "]")
-                                  : "",
-                              eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""
-                ),
-                eventCaseFieldEntity));
+                                                                        eventCaseFieldEntity.getCaseField() != null ?
+                                                                            eventCaseFieldEntity.getCaseField().getReference() : "",
+                                                                        eventCaseFieldEntity.getEvent() != null ?
+                                                                            eventCaseFieldEntity.getEvent().getReference() : ""
+            ),
+                                                          eventCaseFieldEntity));
         }
         return validationResult;
     }

@@ -10,7 +10,7 @@ public enum MetadataField {
     STATE(true, "State"),
     CASE_REFERENCE,
     CREATED_DATE,
-    LAST_MODIFIED,
+    LAST_MODIFIED_DATE,
     SECURITY_CLASSIFICATION;
 
     private boolean dynamic;
@@ -32,6 +32,10 @@ public enum MetadataField {
             return name();
         }
         return label;
+    }
+
+    public String getReference() {
+        return String.join(name(), "[", "]");
     }
 
     public static List<MetadataField> getDynamicFields() {

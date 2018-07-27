@@ -21,15 +21,14 @@ class EventCaseFieldMetadataValidatorImplTest {
     private final EventCaseFieldMetadataValidatorImpl validator = new EventCaseFieldMetadataValidatorImpl();
 
     @Test
-    @DisplayName("Should return validation result with exception when metadata case field id is defined in case event" +
-        " fields")
+    @DisplayName("Should return validation result with exception when metadata case field id is defined in case event fields")
     void shouldReturnValidationResultWithError_whenNonMetadataCaseFieldIdContainsSquareBrackets() {
         EventEntity eventEntity = new EventEntity();
         eventEntity.setReference("event");
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setEvent(eventEntity);
         CaseFieldEntity caseField = new CaseFieldEntity();
-        caseField.setReference("FIELD");
+        caseField.setReference("[FIELD]");
         caseField.setDataFieldType(DataFieldType.METADATA);
         eventCaseFieldEntity.setCaseField(caseField);
         EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
@@ -45,8 +44,7 @@ class EventCaseFieldMetadataValidatorImplTest {
     }
 
     @Test
-    @DisplayName("Should return validation result with no errors when metadata case field has readonly display " +
-        "context")
+    @DisplayName("Should return validation result with no errors when metadata case field has readonly display context")
     void shouldReturnValidationResultWithNoError_whenMetadataCaseFieldIdDisplayContextIsReadOnly() {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         CaseFieldEntity caseField = new CaseFieldEntity();

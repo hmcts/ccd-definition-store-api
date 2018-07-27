@@ -61,7 +61,7 @@ class StateMetadataCaseFieldEntityFactoryTest {
         CaseFieldEntity caseField = factory.createCaseFieldEntity(parseContext, caseType);
 
         assertAll(() -> assertThat(caseField, notNullValue()),
-                  () -> assertThat(caseField.getReference(), is(STATE.name().toLowerCase())),
+                  () -> assertThat(caseField.getReference(), is(STATE.getReference())),
                   () -> assertThat(caseField.getFieldType(), is(stateFixedListType)),
                   () -> assertThat(caseField.getSecurityClassification(), is(SecurityClassification.PUBLIC)),
                   () -> assertThat(caseField.getLabel(), is(STATE.getLabel())),
