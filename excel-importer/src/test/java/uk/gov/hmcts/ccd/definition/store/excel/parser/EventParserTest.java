@@ -212,6 +212,9 @@ public class EventParserTest extends ParserTestBase {
     private void assertEvent(final EventEntity entity) {
         assertThat(entity.getReference(), is(EVENT_ID));
         assertThat(entity.getName(), is("event name"));
+        assertThat(entity.getDescription(), is("event Description"));
+        assertThat(entity.getEndButtonLabel(), is("End Button Label"));
+        assertThat(entity.getCanSaveDraft(), is(true));
     }
 
     private DefinitionDataItem buildSimpleDefinitionDataItem() {
@@ -221,6 +224,7 @@ public class EventParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.NAME.toString(), "event name");
         item.addAttribute(ColumnName.DESCRIPTION.toString(), "event Description");
         item.addAttribute(ColumnName.END_BUTTON_LABEL.toString(), "End Button Label");
+        item.addAttribute(ColumnName.CAN_SAVE_DRAFT.toString(), "Y");
         return item;
     }
 
