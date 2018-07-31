@@ -27,7 +27,7 @@ class StateParserTest {
     private static final String CASE_TYPE_ID = "N>G>I>T>B.";
     private static final String STATE_ID = "how many more tests to get over 80%";
     private static final String TITLE_DISPLAY = "${lastName} ${[CASE_REFERENCE]}";
-    private static final String EXPECTED_TITLE_DISPLAY = "${lastName} ${case_reference}";
+    private static final String EXPECTED_TITLE_DISPLAY = "${lastName} ${[CASE_REFERENCE]}";
 
     private StateParser underTest;
     private Map<String, DefinitionSheet> definitionSheets;

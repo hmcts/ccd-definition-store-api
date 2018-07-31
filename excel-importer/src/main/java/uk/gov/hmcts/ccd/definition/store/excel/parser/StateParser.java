@@ -14,8 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataFieldNameSanitiser.sanitiseMetadataFieldNameInLabel;
-
 public class StateParser {
     private static final Logger logger = LoggerFactory.getLogger(StateParser.class);
 
@@ -68,7 +66,7 @@ public class StateParser {
         state.setOrder(stateDefinition.getInteger(ColumnName.DISPLAY_ORDER));
         state.setLiveFrom(stateDefinition.getLocalDate(ColumnName.LIVE_FROM));
         state.setLiveTo(stateDefinition.getLocalDate(ColumnName.LIVE_TO));
-        state.setTitleDisplay(sanitiseMetadataFieldNameInLabel(stateDefinition.getString(ColumnName.TITLE_DISPLAY)));
+        state.setTitleDisplay(stateDefinition.getString(ColumnName.TITLE_DISPLAY));
 
         return state;
     }
