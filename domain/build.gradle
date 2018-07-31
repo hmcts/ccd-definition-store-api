@@ -19,6 +19,7 @@ jar {
 
 ext {
     mapstructGenSourceDir = 'build/classes/java/main'
+    orgMapstructVersion='1.2.0.Final'
 }
 
 dependencies {
@@ -31,6 +32,8 @@ dependencies {
     compile "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
     compileOnly "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
     testCompile project(":app-insights").sourceSets.main.output
+
+    apt "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
 }
 
 idea {
