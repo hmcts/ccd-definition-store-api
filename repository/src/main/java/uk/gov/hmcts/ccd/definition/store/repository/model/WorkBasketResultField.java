@@ -9,6 +9,7 @@ public class WorkBasketResultField {
     private String caseFieldId = null;
     private String label = null;
     private Integer order = null;
+    private boolean metadata;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -35,5 +36,13 @@ public class WorkBasketResultField {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    public boolean isMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(boolean metadata) {
+        this.metadata = metadata;
     }
 }
