@@ -18,6 +18,7 @@ import java.util.Map;
 public class CaseFieldParser {
     private static final Logger logger = LoggerFactory.getLogger(CaseFieldParser.class);
 
+
     private final ParseContext parseContext;
 
     public CaseFieldParser(ParseContext parseContext) {
@@ -32,7 +33,7 @@ public class CaseFieldParser {
         final List<CaseFieldEntity> caseFields = Lists.newArrayList();
 
         final Map<String, List<DefinitionDataItem>> caseFieldItemsByCaseTypes = definitionSheets.get(SheetName.CASE_FIELD.getName())
-                                                                                                .groupDataItemsByCaseType();
+            .groupDataItemsByCaseType();
 
         if (!caseFieldItemsByCaseTypes.containsKey(caseTypeId)) {
             throw new SpreadsheetParsingException("At least one case field must be defined for case type: " + caseTypeId);
@@ -75,4 +76,5 @@ public class CaseFieldParser {
 
         return caseField;
     }
+
 }
