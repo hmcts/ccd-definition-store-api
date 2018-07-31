@@ -300,6 +300,7 @@
   ],
   "case_fields": [
     {
+      "metadata": false,
       "id": "PersonFirstName",
       "case_type_id": "TestAddressBookCase",
       "label": "First Name",
@@ -344,6 +345,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonLastNameWithValidation",
       "case_type_id": "TestAddressBookCase",
       "label": "Last Name",
@@ -374,6 +376,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonLastName",
       "case_type_id": "TestAddressBookCase",
       "label": "Last Name",
@@ -418,6 +421,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonAddress",
       "case_type_id": "TestAddressBookCase",
       "label": "Address",
@@ -431,6 +435,7 @@
         "fixed_list_items": [],
         "complex_fields": [
           {
+            "metadata": false,
             "id": "AddressLine1",
             "case_type_id": null,
             "label": "Address Line 1",
@@ -453,6 +458,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine2",
             "case_type_id": null,
             "label": "Address Line 2",
@@ -475,6 +481,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine3",
             "case_type_id": null,
             "label": "Address Line 3",
@@ -497,6 +504,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "Country",
             "case_type_id": null,
             "label": "Country",
@@ -519,6 +527,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "Postcode",
             "case_type_id": null,
             "label": "Postcode",
@@ -573,6 +582,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonHasSecondAddress",
       "case_type_id": "TestAddressBookCase",
       "label": "Has Second Address",
@@ -603,6 +613,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonSecondAddress",
       "case_type_id": "TestAddressBookCase",
       "label": "Second Address",
@@ -616,6 +627,7 @@
         "fixed_list_items": [],
         "complex_fields": [
           {
+            "metadata": false,
             "id": "AddressLine1",
             "case_type_id": null,
             "label": "Address Line 1",
@@ -638,6 +650,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine2",
             "case_type_id": null,
             "label": "Address Line 2",
@@ -660,6 +673,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine3",
             "case_type_id": null,
             "label": "Address Line 3",
@@ -682,6 +696,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "Country",
             "case_type_id": null,
             "label": "Country",
@@ -704,6 +719,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "Postcode",
             "case_type_id": null,
             "label": "Postcode",
@@ -744,6 +760,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "HasOtherInfo",
       "case_type_id": "TestAddressBookCase",
       "label": "HasOtherInfo",
@@ -766,6 +783,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonAddressGlobal",
       "case_type_id": "TestAddressBookCase",
       "label": "Address Global",
@@ -779,6 +797,7 @@
         "fixed_list_items": [],
         "complex_fields": [
           {
+            "metadata": false,
             "id": "AddressLine1",
             "case_type_id": null,
             "label": "Building and Street",
@@ -801,6 +820,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine2",
             "case_type_id": null,
             "label": "",
@@ -823,6 +843,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine3",
             "case_type_id": null,
             "label": "",
@@ -845,6 +866,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "PostTown",
             "case_type_id": null,
             "label": "Town or City",
@@ -867,6 +889,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "County",
             "case_type_id": null,
             "label": "County/State",
@@ -889,6 +912,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "Country",
             "case_type_id": null,
             "label": "Country",
@@ -911,6 +935,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "PostCode",
             "case_type_id": null,
             "label": "Postcode/Zipcode",
@@ -943,6 +968,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonAddressUK",
       "case_type_id": "TestAddressBookCase",
       "label": "Address UK",
@@ -956,6 +982,7 @@
         "fixed_list_items": [],
         "complex_fields": [
           {
+            "metadata": false,
             "id": "AddressLine1",
             "case_type_id": null,
             "label": "Building and Street",
@@ -978,6 +1005,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine2",
             "case_type_id": null,
             "label": "",
@@ -1000,6 +1028,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine3",
             "case_type_id": null,
             "label": "",
@@ -1022,6 +1051,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "PostTown",
             "case_type_id": null,
             "label": "Town or City",
@@ -1044,6 +1074,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "County",
             "case_type_id": null,
             "label": "County",
@@ -1066,6 +1097,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "PostCode",
             "case_type_id": null,
             "label": "Postcode/Zipcode",
@@ -1088,6 +1120,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "Country",
             "case_type_id": null,
             "label": "Country",
@@ -1120,6 +1153,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonAddressGlobalUK",
       "case_type_id": "TestAddressBookCase",
       "label": "Address Global UK",
@@ -1133,6 +1167,7 @@
         "fixed_list_items": [],
         "complex_fields": [
           {
+            "metadata": false,
             "id": "AddressLine1",
             "case_type_id": null,
             "label": "Building and Street",
@@ -1155,6 +1190,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine2",
             "case_type_id": null,
             "label": "",
@@ -1177,6 +1213,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "AddressLine3",
             "case_type_id": null,
             "label": "",
@@ -1199,6 +1236,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "PostTown",
             "case_type_id": null,
             "label": "Town or City",
@@ -1221,6 +1259,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "County",
             "case_type_id": null,
             "label": "County/State",
@@ -1243,6 +1282,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "Country",
             "case_type_id": null,
             "label": "Country",
@@ -1265,6 +1305,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "PostCode",
             "case_type_id": null,
             "label": "Postcode/Zipcode",
@@ -1297,6 +1338,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonOrderSummary",
       "case_type_id": "TestAddressBookCase",
       "label": "Order Summary",
@@ -1310,6 +1352,7 @@
         "fixed_list_items": [],
         "complex_fields": [
           {
+            "metadata": false,
             "id": "PaymentReference",
             "case_type_id": null,
             "label": "Payment Reference",
@@ -1332,6 +1375,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "PaymentTotal",
             "case_type_id": null,
             "label": "Total",
@@ -1354,6 +1398,7 @@
             "show_condition": null
           },
           {
+            "metadata": false,
             "id": "Fees",
             "case_type_id": null,
             "label": "Fees",
@@ -1375,6 +1420,7 @@
                 "fixed_list_items": [],
                 "complex_fields": [
                   {
+                    "metadata": false,
                     "id": "FeeCode",
                     "case_type_id": null,
                     "label": "Fee Code",
@@ -1397,6 +1443,7 @@
                     "show_condition": null
                   },
                   {
+                    "metadata": false,
                     "id": "FeeDescription",
                     "case_type_id": null,
                     "label": "Fee Description",
@@ -1419,6 +1466,7 @@
                     "show_condition": null
                   },
                   {
+                    "metadata": false,
                     "id": "FeeAmount",
                     "case_type_id": null,
                     "label": "Fee Amount",
@@ -1441,6 +1489,7 @@
                     "show_condition": null
                   },
                   {
+                    "metadata": false,
                     "id": "FeeVersion",
                     "case_type_id": null,
                     "label": "Fee Version",
@@ -1492,6 +1541,7 @@
       "show_condition": null
     },
     {
+      "metadata": false,
       "id": "PersonCasePaymentHistoryViewer",
       "case_type_id": "TestAddressBookCase",
       "label": "Case Payment History",
@@ -1519,6 +1569,180 @@
           "delete": false
         }
       ],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "[STATE]",
+      "case_type_id": "TestAddressBookCase",
+      "label": "State",
+      "hint_text": null,
+      "field_type": {
+        "id": "FixedList-TestAddressBookCase[STATE]",
+        "type": "FixedList",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [
+          {
+            "code": "CaseCreated",
+            "label": "Case created"
+          },
+          {
+            "code": "CaseEnteredIntoLegacy",
+            "label": "Case has been Entered into Legacy"
+          },
+          {
+            "code": "CaseStopped",
+            "label": "Put case on hold"
+          }
+        ],
+        "complex_fields": [],
+        "collection_field_type": null
+      },
+      "hidden": false,
+      "security_classification": "PRIVATE",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "[JURISDICTION]",
+      "case_type_id": null,
+      "label": "Jurisdiction",
+      "hint_text": null,
+      "field_type": {
+        "id": "Text",
+        "type": "Text",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+      },
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "[CASE_TYPE]",
+      "case_type_id": null,
+      "label": "Case Type",
+      "hint_text": null,
+      "field_type": {
+        "id": "Text",
+        "type": "Text",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+      },
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "[SECURITY_CLASSIFICATION]",
+      "case_type_id": null,
+      "label": "Security Classification",
+      "hint_text": null,
+      "field_type": {
+        "id": "Text",
+        "type": "Text",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+      },
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "[CASE_REFERENCE]",
+      "case_type_id": null,
+      "label": "Case Reference",
+      "hint_text": null,
+      "field_type": {
+        "id": "Number",
+        "type": "Number",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+      },
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "[CREATED_DATE]",
+      "case_type_id": null,
+      "label": "Created Date",
+      "hint_text": null,
+      "field_type": {
+        "id": "Date",
+        "type": "Date",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+      },
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    },
+    {
+      "metadata": true,
+      "id": "[LAST_MODIFIED_DATE]",
+      "case_type_id": null,
+      "label": "Last Modified Date",
+      "hint_text": null,
+      "field_type": {
+        "id": "Date",
+        "type": "Date",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+      },
+      "hidden": false,
+      "security_classification": "PUBLIC",
+      "live_from": "#date",
+      "live_until": null,
+      "acls": [],
       "show_condition": null
     }
   ],

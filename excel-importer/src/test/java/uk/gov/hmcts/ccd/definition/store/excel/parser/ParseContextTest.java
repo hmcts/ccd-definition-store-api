@@ -3,9 +3,14 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -220,7 +225,7 @@ public class ParseContextTest {
     }
 
     @Test
-    public void shoudlAddToAllTypesAndGet() {
+    public void shouldAddToAllTypesAndGet() {
 
         final FieldTypeEntity t = mock(FieldTypeEntity.class);
         given(t.getReference()).willReturn("ngitb");
@@ -235,5 +240,21 @@ public class ParseContextTest {
 
         final Optional<FieldTypeEntity> type = parseContext.getType("ngitb");
         assertThat(type, isEmpty());
+    }
+
+    @Test
+    public void shouldReturnMetadataField_whenGetCaseFieldForCaseTypeIsMetadataField() {
+        String metadataFieldName = "[METADATA]";
+        CaseFieldEntity caseField = new CaseFieldEntity();
+        caseField.setReference("TEST");
+        parseContext.registerCaseFieldForCaseType("caseTypeId", caseField);
+
+        CaseFieldEntity metadataField = new CaseFieldEntity();
+        metadataField.setReference(metadataFieldName);
+        parseContext.registerMetadataFields(Collections.singletonList(metadataField));
+
+        CaseFieldEntity response = parseContext.getCaseFieldForCaseType("caseTypeId", metadataFieldName);
+
+        assertThat(response, is(metadataField));
     }
 }

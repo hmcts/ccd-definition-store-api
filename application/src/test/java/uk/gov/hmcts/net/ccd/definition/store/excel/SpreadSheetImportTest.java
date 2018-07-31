@@ -19,15 +19,23 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.Assert.assertEquals;
@@ -55,8 +63,7 @@ public class SpreadSheetImportTest extends BaseTest {
     /**
      * API test for successful import of a valid Case Definition spreadsheet.
      *
-     * @throws Exception
-     *         On error running test
+     * @throws Exception On error running test
      */
     @Test
     @Transactional
@@ -97,8 +104,7 @@ public class SpreadSheetImportTest extends BaseTest {
     /**
      * API test when user profile app fails to respond.
      *
-     * @throws Exception
-     *         On error running test
+     * @throws Exception On error running test
      */
     @Test
     @Transactional
@@ -128,8 +134,7 @@ public class SpreadSheetImportTest extends BaseTest {
      * API test for failure to import a Case Definition spreadsheet, due to invalid data format. (This means one or more
      * workbook sheets did not contain a Definition name in Cell A1, and/or were missing data attribute headers.)
      *
-     * @throws Exception
-     *         On error running test
+     * @throws Exception On error running test
      */
     @Test
     @Transactional
@@ -158,8 +163,7 @@ public class SpreadSheetImportTest extends BaseTest {
      * API test for transactional rollback of import of Case Definition spreadsheet that fails due to missing a required
      * workbook sheet (in this case, WorkBasketResultFields).
      *
-     * @throws Exception
-     *         On error running test
+     * @throws Exception On error running test
      */
     @Test
     public void rollbackFailedDefinitionFileImport() throws Exception {
@@ -212,13 +216,11 @@ public class SpreadSheetImportTest extends BaseTest {
      * returns a version of the 'hasEntry' matcher that is unchecked. This allows mixing of different types of
      * matchers for a of Map<String, Object>, which would otherwise be not possible due to compilation issues
      */
-    @SuppressWarnings("unchecked")
     public static Matcher<Map<String, Object>> hasColumn(Matcher<String> keyMatcher, Matcher valueMatcher) {
         Matcher mapMatcher = hasEntry(keyMatcher, valueMatcher);
         return mapMatcher;
     }
 
-    @SuppressWarnings("unchecked")
     public static Matcher<Map<String, Object>> hasColumn(String key, Object value) {
         Matcher mapMatcher = hasColumn(is(key), is(value));
         return mapMatcher;
@@ -226,12 +228,12 @@ public class SpreadSheetImportTest extends BaseTest {
 
     private void assertBody(String contentAsString) throws IOException, URISyntaxException {
 
-        final String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
-                                                                               .getResource(RESPONSE_JSON)
-                                                                               .toURI())));
+        String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
+                                                                         .getResource(RESPONSE_JSON)
+                                                                         .toURI())));
+        expected = expected.replaceAll("#date", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         assertEquals(removeGuids(expected), formatJsonString(removeGuids(contentAsString)));
-
     }
 
     private String formatJsonString(String string) throws IOException {
@@ -399,7 +401,7 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("display_order", 1),
                                        hasColumn("case_field_id", caseFieldIds.get("PersonFirstName")))
 
-                                ),
+                         ),
                          hasItem(allOf(hasColumn("label", "Last Name"),
                                        hasColumn("display_order", 2),
                                        hasColumn("case_field_id", caseFieldIds.get("PersonLastName"))))));
@@ -418,7 +420,7 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("display_order", 2),
                                        hasColumn("case_field_id", caseFieldIds.get("ContectNumber")))
 
-                                ),
+                         ),
                          hasItem(allOf(hasColumn("label", "Age"),
                                        hasColumn("display_order", 3),
                                        hasColumn("case_field_id", caseFieldIds.get("Age"))))));
@@ -436,7 +438,7 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("display_order", 1),
                                        hasColumn("case_field_id", caseFieldIds.get("PersonFirstName")))
 
-                                ),
+                         ),
                          hasItem(allOf(hasColumn("label", "Last Name"),
                                        hasColumn("display_order", 2),
                                        hasColumn("case_field_id", caseFieldIds.get("PersonLastName"))))));
@@ -454,7 +456,7 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("display_order", 2),
                                        hasColumn("case_field_id", caseFieldIds.get("DateOfBirth")))
 
-                                ),
+                         ),
                          hasItem(allOf(hasColumn("label", "Contact Email"),
                                        hasColumn("display_order", 3),
                                        hasColumn("case_field_id", caseFieldIds.get("ContectEmail"))))));
@@ -505,7 +507,8 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("case_field_id", caseFieldIds.get("PersonAddress")))),
                          hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("PaymentTab")),
                                        hasColumn("display_order", 1),
-                                       hasColumn("case_field_id", caseFieldIds.get("PersonCasePaymentHistoryViewer"))))));
+                                       hasColumn("case_field_id",
+                                                 caseFieldIds.get("PersonCasePaymentHistoryViewer"))))));
 
         List<Map<String, Object>> complexCaseTypeDisplayGroup = jdbcTemplate.queryForList(
             "SELECT * FROM display_group WHERE case_type_id = ? AND type = 'TAB'",
@@ -515,7 +518,7 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("label", "Name"),
                                        hasColumn("display_order", 1))
 
-                                ),
+                         ),
                          hasItem(allOf(hasColumn("reference", "ContectEmail"),
                                        hasColumn("label", "Details"),
                                        hasColumn("display_order", 3)))));
@@ -590,7 +593,8 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("case_field_id", caseFieldIds.get("PersonOrderSummary")))),
                          hasItem(allOf(hasColumn("display_group_id", displayGroupsId.get("createCasePage1")),
                                        hasColumn("display_order", 1),
-                                       hasColumn("case_field_id", caseFieldIds.get("PersonCasePaymentHistoryViewer"))))));
+                                       hasColumn("case_field_id",
+                                                 caseFieldIds.get("PersonCasePaymentHistoryViewer"))))));
     }
 
     private Map<Object, Object> getIdsByReference(String query) {
