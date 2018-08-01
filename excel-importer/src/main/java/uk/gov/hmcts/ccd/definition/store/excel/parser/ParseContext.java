@@ -3,13 +3,23 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Accumulate everything that has been parsed so far and which is required for a subsequent parse stage. This is not meant
@@ -45,6 +55,11 @@ public class ParseContext {
      * Accumulate Events by case type and event ID for subsequent linking to events.
      */
     private final Map<String, Map<String, EventEntity>> eventsByCaseTypes = Maps.newHashMap();
+
+    /**
+     * Store metadata fields for linking to layouts
+     */
+    private final Map<String, CaseFieldEntity> metadataFields = new HashMap<>();
 
     public JurisdictionEntity getJurisdiction() {
         return jurisdiction;
@@ -106,7 +121,8 @@ public class ParseContext {
         final FieldTypeEntity fieldType = caseType.get(caseFieldId);
 
         if (null == fieldType) {
-            throw new SpreadsheetParsingException(String.format("No types registered for case field ID: %s/%s", caseTypeId, caseFieldId));
+            throw new SpreadsheetParsingException(
+                String.format("No types registered for case field ID: %s/%s", caseTypeId, caseFieldId));
         }
 
         return fieldType;
@@ -138,7 +154,8 @@ public class ParseContext {
         final StateEntity state = caseTypeStates.get(stateId);
 
         if (null == state) {
-            throw new SpreadsheetParsingException(String.format("No state registered for state ID: %s/%s", caseTypeId, stateId));
+            throw new SpreadsheetParsingException(
+                String.format("No state registered for state ID: %s/%s", caseTypeId, stateId));
         }
 
         return state;
@@ -167,10 +184,11 @@ public class ParseContext {
             throw new SpreadsheetParsingException("No case fields registered for case type: " + caseTypeId);
         }
 
-        final CaseFieldEntity caseField = caseTypeFields.get(caseFieldId);
+        final CaseFieldEntity caseField = caseTypeFields.getOrDefault(caseFieldId, metadataFields.get(caseFieldId));
 
         if (null == caseField) {
-            throw new SpreadsheetParsingException(String.format("Unknown field %s for case type %s", caseFieldId, caseTypeId));
+            throw new SpreadsheetParsingException(
+                String.format("Unknown field %s for case type %s", caseFieldId, caseTypeId));
         }
 
         return caseField;
@@ -191,8 +209,8 @@ public class ParseContext {
     public ParseContext registerUserRoles(final List<UserRoleEntity> userRoleList) {
         userRoles.clear();
         userRoles.putAll(userRoleList
-            .stream()
-            .collect(Collectors.toMap(UserRoleEntity::getRole, u -> u)));
+                             .stream()
+                             .collect(toMap(UserRoleEntity::getRole, u -> u)));
         return this;
     }
 
@@ -219,5 +237,11 @@ public class ParseContext {
             event = caseTypeEvents.get(eventId);
         }
         return event;
+    }
+
+    public void registerMetadataFields(List<CaseFieldEntity> fields) {
+        metadataFields.putAll(fields.stream()
+                                  .filter(Objects::nonNull)
+                                  .collect(toMap(CaseFieldEntity::getReference, Function.identity())));
     }
 }
