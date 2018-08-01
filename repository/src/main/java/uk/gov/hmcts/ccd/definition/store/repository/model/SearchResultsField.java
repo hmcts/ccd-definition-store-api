@@ -10,6 +10,7 @@ public class SearchResultsField {
     private String caseFieldId = null;
     private String label = null;
     private Integer order = null;
+    private boolean metadata;
 
     /**
      **/
@@ -42,5 +43,13 @@ public class SearchResultsField {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    public boolean isMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(boolean metadata) {
+        this.metadata = metadata;
     }
 }
