@@ -335,10 +335,7 @@ dependencies {
     compile project(':application')
 }
 
-task smoke(type: Test) {
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-    logger.quiet("!!!! Smoke test stage to be configured !!!!")
-}
+task smoke(type: Test, dependsOn: ":aat:smoke")
 
 task functional(type: Test, dependsOn: ":aat:functional")
 
