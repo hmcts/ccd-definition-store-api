@@ -15,19 +15,18 @@ locals {
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 
   // Vault name
-  previewVaultName = "${var.product}-definition"
-  # preview env contains pr number prefix, other envs need a suffix
-  nonPreviewVaultName = "${local.previewVaultName}-${var.env}"
+  previewVaultName = "${var.product}-shared-aat"
+  nonPreviewVaultName = "${var.product}-shared-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
-
-  // Vault URI
-  previewVaultUri = "https://ccd-definition-aat.vault.azure.net/"
-  nonPreviewVaultUri = "${module.definition-store-vault.key_vault_uri}"
-  vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
 
   custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
   default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
   oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
+}
+
+data "azurerm_key_vault" "ccd_shared_key_vault" {
+  name = "${local.vaultName}"
+  resource_group_name = "${local.vaultName}"
 }
 
 data "vault_generic_secret" "definition_store_item_key" {
