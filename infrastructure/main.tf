@@ -15,8 +15,8 @@ locals {
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 
   // Vault name
-  previewVaultName = "${var.product}-shared-aat"
-  nonPreviewVaultName = "${var.product}-shared-${var.env}"
+  previewVaultName = "${var.raw_product}-shared-aat"
+  nonPreviewVaultName = "${var.raw_product}-shared-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
   custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
