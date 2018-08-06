@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @ApiModel(description = "")
 public class Jurisdiction {
@@ -16,9 +14,6 @@ public class Jurisdiction {
     private String description = null;
     private Date liveFrom = null;
     private Date liveUntil = null;
-
-    // Use the "lite" version of CaseType, since we do not require the full entity mapping.
-    private List<CaseTypeLite> caseTypes = new ArrayList<>();
 
     /**
      **/
@@ -78,17 +73,5 @@ public class Jurisdiction {
 
     public void setLiveUntil(Date liveUntil) {
         this.liveUntil = liveUntil;
-    }
-
-    /**
-     **/
-    @ApiModelProperty(value = "")
-    @JsonProperty("case_types")
-    public List<CaseTypeLite> getCaseTypes() {
-        return caseTypes;
-    }
-
-    public void setCaseTypes(List<CaseTypeLite> caseTypes) {
-        this.caseTypes = caseTypes;
     }
 }
