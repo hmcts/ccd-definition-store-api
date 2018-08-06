@@ -139,3 +139,9 @@ resource "azurerm_key_vault_secret" "gw_oauth2_secret" {
   value = "${data.vault_generic_secret.gateway_oauth2_client_secret.data["value"]}"
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
+
+resource "azurerm_key_vault_secret" "definition_store_idam_key" {
+  name = "definition-store-idam-key"
+  value = "${data.vault_generic_secret.definition_store_item_key.data["value"]}"
+  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+}
