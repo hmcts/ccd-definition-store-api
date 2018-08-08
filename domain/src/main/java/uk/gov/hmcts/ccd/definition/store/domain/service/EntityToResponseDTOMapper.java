@@ -128,7 +128,7 @@ public interface EntityToResponseDTOMapper {
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 
     // Would be conventional to use a Default method like
-    //  default AccessControlList map(Authorisation authorisation)
+    // default AccessControlList map(Authorisation authorisation)
     // but this does not play nicely with Mockito v1
     class AuthorisationToAccessControlListMapper {
 
@@ -146,5 +146,4 @@ public interface EntityToResponseDTOMapper {
                 .collect(Collectors.toList());
         }
     }
-
 }
