@@ -19,6 +19,12 @@ locals {
   nonPreviewVaultName = "${var.raw_product}-shared-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
+  // Old Vault to be removed
+  oldPreviewVaultName = "${var.product}-definition"
+  # preview env contains pr number prefix, other envs need a suffix
+  oldNonPreviewVaultName = "${local.previewVaultName}-${var.env}"
+  oldVaultName = "${(var.env == "preview" || var.env == "spreview") ? local.oldPreviewVaultName : local.oldNonPreviewVaultName}"
+
   custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
   default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
   oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
@@ -85,7 +91,7 @@ module "definition-store-db" {
 
 module "definition-store-vault" {
   source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-  name                = "${local.vaultName}" // Max 24 characters
+  name                = "${local.oldVaultName}" // Max 24 characters
   product             = "${var.product}"
   env                 = "${var.env}"
   tenant_id           = "${var.tenant_id}"
