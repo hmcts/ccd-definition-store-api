@@ -1,16 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.domain.showcondition;
 
 import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class ShowConditionParserTest {
 
-    private ShowConditionParser classUnderTest = new ShowConditionParser();
+    private final ShowConditionParser classUnderTest = new ShowConditionParser();
 
     @Test
     public void testValidShowCondition() throws InvalidShowConditionException {
@@ -35,15 +32,14 @@ public class ShowConditionParserTest {
 
     private void assertShowCondition(ShowCondition showCondition) {
         assertEquals("SomeField=\"Some String\"", showCondition.getShowConditionExpression());
-        assertEquals("SomeField", showCondition.getField());
+        assertEquals("SomeField", showCondition.getFields().get(0));
     }
 
     private void assertInvalidShowCondition(String invalidShowCondition) {
         try {
             classUnderTest.parseShowCondition(invalidShowCondition);
             fail("InvalidShowConditionException should have been thrown");
-        }
-        catch (InvalidShowConditionException e) {
+        } catch (InvalidShowConditionException e) {
             assertEquals(invalidShowCondition, e.getShowCondition());
         }
     }

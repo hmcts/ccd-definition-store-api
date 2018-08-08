@@ -37,10 +37,11 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
                 return validationResult;
             }
 
-            String showConditionField = showCondition.getField();
-            if (!displayGroup.getEvent().hasField(showConditionField)) {
-                validationResult.addError(new DisplayGroupInvalidEventFieldShowCondition(showConditionField, displayGroup));
-            }
+            showCondition.getFields().forEach(showConditionField -> {
+                if (!displayGroup.getEvent().hasField(showConditionField)) {
+                    validationResult.addError(new DisplayGroupInvalidEventFieldShowCondition(showConditionField, displayGroup));
+                }
+            });
         }
         return validationResult;
     }
