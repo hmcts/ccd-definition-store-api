@@ -68,6 +68,7 @@ public class CaseTypeLiteRepositoryTest {
         final StateEntity state = new StateEntity();
         state.setReference("s1");
         state.setName("State 1");
+        state.setDescription("A description");
         caseType2.addState(state);
         saveCaseTypeClearAndFlushSession(caseType2);
         caseType2.setVersion(2);
@@ -92,6 +93,7 @@ public class CaseTypeLiteRepositoryTest {
         assertEquals(1, caseTypeLite2.getStates().size());
         assertEquals("s1", caseTypeLite2.getStates().get(0).getReference());
         assertEquals("State 1", caseTypeLite2.getStates().get(0).getName());
+        assertEquals("A description", caseTypeLite2.getStates().get(0).getDescription());
     }
 
     @Test

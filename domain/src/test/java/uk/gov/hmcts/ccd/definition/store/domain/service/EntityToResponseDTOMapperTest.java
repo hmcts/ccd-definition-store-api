@@ -1037,6 +1037,7 @@ class EntityToResponseDTOMapperTest {
             // Assertions
             assertEquals(caseStateLite.getId(), stateLiteEntity.getReference());
             assertEquals(caseStateLite.getName(), stateLiteEntity.getName());
+            assertEquals(caseStateLite.getDescription(), stateLiteEntity.getDescription());
         }
 
         @Test
@@ -1048,6 +1049,7 @@ class EntityToResponseDTOMapperTest {
             // Assertions
             assertNull(caseStateLite.getId());
             assertNull(caseStateLite.getName());
+            assertNull(caseStateLite.getDescription());
         }
     }
 
@@ -1056,6 +1058,7 @@ class EntityToResponseDTOMapperTest {
 
         stateLiteEntity.setName("Name");
         stateLiteEntity.setReference("Id");
+        stateLiteEntity.setDescription("Description");
         return stateLiteEntity;
     }
 
