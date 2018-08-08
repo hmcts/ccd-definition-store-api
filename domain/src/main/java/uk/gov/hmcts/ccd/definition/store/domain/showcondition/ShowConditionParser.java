@@ -7,8 +7,8 @@ import java.util.regex.Pattern;
 
 @Component
 public class ShowConditionParser {
-    private static final String AND_CONDITION_REGEX = "(?i)\\sand\\s";
-    private static final String AND_OPERATOR = " AND ";
+    private static final String AND_CONDITION_REGEX = "\\s\\.AND\\.\\s";
+    private static final String AND_OPERATOR = " .AND. ";
     private static final Pattern EQUALITY_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(=)\\s*?(\".*\")\\s*?");
 
     public ShowCondition parseShowCondition(String rawShowConditionString) throws InvalidShowConditionException {
