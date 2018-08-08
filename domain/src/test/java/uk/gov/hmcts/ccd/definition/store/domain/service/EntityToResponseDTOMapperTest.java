@@ -411,23 +411,23 @@ class EntityToResponseDTOMapperTest {
                 this.postStateExpectation = postStateExpectation;
             }
 
-            Boolean getCanCreate() {
+            private Boolean getCanCreate() {
                 return canCreate;
             }
 
-            List<StateEntity> getPreStates() {
+            private List<StateEntity> getPreStates() {
                 return preStates;
             }
 
-            StateEntity getPostState() {
+            private StateEntity getPostState() {
                 return postState;
             }
 
-            List<String> getPreStateExpectation() {
+            private List<String> getPreStateExpectation() {
                 return preStateExpectation;
             }
 
-            String getPostStateExpectation() {
+            private String getPostStateExpectation() {
                 return postStateExpectation;
             }
         }

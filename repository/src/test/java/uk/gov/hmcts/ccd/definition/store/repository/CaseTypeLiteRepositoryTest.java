@@ -15,7 +15,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -76,7 +75,7 @@ public class CaseTypeLiteRepositoryTest {
     }
 
     @Test
-    public void severalVersionsOfCaseTypesExistForJurisdiction_findByJurisdictionIdReturnsCurrentVersionOfCaseTypes() {
+    public void findByJurisdictionIdReturnsCurrentVersionOfCaseTypesWhenSeveralVersionsExist() {
         List<CaseTypeLiteEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertTrue(caseTypeEntityOptional.size() == 2);
@@ -96,7 +95,7 @@ public class CaseTypeLiteRepositoryTest {
     }
 
     @Test
-    public void caseTypeDoesNotExistForJurisdiction_emptyListReturned() {
+    public void emptyListReturnedWhenNoCaseTypesForJurisdiction() {
         List<CaseTypeLiteEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
         assertTrue(caseTypeEntityOptional.isEmpty());
