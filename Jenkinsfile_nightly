@@ -1,12 +1,15 @@
 #!groovy
 
+properties([
+    // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
+    pipelineTriggers([cron('H 05 * * *')])
+])
+
 @Library("Infrastructure")
 
 def type = "java"
-
 def product = "ccd"
-
-def app = "definition-store-api"
+def component = "definition-store-api"
 
 List<LinkedHashMap<String, Object>> secrets = [
     secret('importerAutoTest1Email', 'CCD_IMPORT_AUTOTEST_EMAIL'),
@@ -27,8 +30,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     ]
 }
 
-withPipeline(type, product, app) {
+withNightlyPipeline(type, product, component) {
     loadVaultSecrets(secrets)
     enableDbMigration()
-    enableSlackNotifications('#ccd-notifications')
+    enableSlackNotifications('#ccd-nightly-builds')
 }
