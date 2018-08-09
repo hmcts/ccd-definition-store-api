@@ -23,6 +23,6 @@ public interface FieldTypeRepository extends VersionedDefinitionRepository<Field
     Optional<FieldTypeEntity> findBaseType(@Param("reference") String reference);
 
     @Query("select entity from FieldTypeEntity entity where entity.reference in ("
-           + "'AddressGlobal', 'AddressUK', 'AddressGlobalUK','OrderSummary', 'CaseLink')")
+           + "'AddressGlobal', 'AddressUK', 'AddressGlobalUK', 'OrderSummary', 'CaseLink')")
     List<FieldTypeEntity> findPredefinedComplexTypes();
 }
