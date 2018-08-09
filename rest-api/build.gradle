@@ -3,8 +3,8 @@ jar {
 }
 
 ext {
-    limits = [ // test coverage success criteria, same in pom.xml
-        'class' : 9
+    limits = [
+        'class' : 59
     ]
 }
 
