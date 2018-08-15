@@ -48,7 +48,8 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
             jw.beginObject();
             for (FieldEntity field : complexFields) {
                 jw.name(field.getReference());
-                jw.jsonValue(securityClassificationMapping());
+                TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
+                jw.jsonValue(typeMapper.dataClassificationMapping(field));
             }
             jw.endObject();
             jw.endObject();

@@ -1,10 +1,11 @@
 {
-  "properties":{
-    "classification":securityClassificationMapping,
-    "value":{
-      "properties":{
-        "AddressLine1":securityClassificationMapping,
-        "AddressLine2":securityClassificationMapping
+  "properties": {
+    "classification": securityClassificationMapping,
+    "value": {
+      "properties": {
+        "field1": dataClassificationMapping,
+        "field2": dataClassificationMapping,
+        "nestedComplexField": dataClassificationMappingForComplexType
       }
     }
   }
