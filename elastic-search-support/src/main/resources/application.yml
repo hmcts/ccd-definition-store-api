@@ -37,7 +37,7 @@ elasticsearch:
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_%s_cases}
   casesIndexType: case
   casePredefinedMappings:
-    reference: ${elasticsearch.elasticMappings.defaultText}
+    reference: ${elasticsearch.elasticMappings.defaultKeyword}
     jurisdiction: ${elasticsearch.elasticMappings.defaultText}
     id: ${elasticsearch.elasticMappings.defaultLong}
     state: ${elasticsearch.elasticMappings.defaultKeyword}
