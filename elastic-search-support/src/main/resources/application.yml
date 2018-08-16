@@ -27,7 +27,7 @@ elasticsearch:
     DateTime: ${elasticsearch.elasticMappings.defaultDate}
     PhoneUK: ${elasticsearch.elasticMappings.defaultKeyword}
     MoneyGBP: ${elasticsearch.elasticMappings.defaultDouble}
-    YesOrNo: ${elasticsearch.elasticMappings.defaultBoolean}
+    YesOrNo: ${elasticsearch.elasticMappings.defaultKeyword}
     Email: ${elasticsearch.elasticMappings.defaultKeyword}
     Postcode: ${elasticsearch.elasticMappings.defaultKeyword}
     Document: ${elasticsearch.elasticMappings.defaultKeyword}
