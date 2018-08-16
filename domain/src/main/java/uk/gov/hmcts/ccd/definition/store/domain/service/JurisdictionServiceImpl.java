@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 
@@ -20,13 +22,16 @@ public class JurisdictionServiceImpl implements JurisdictionService {
     private static final Logger LOG = LoggerFactory.getLogger(JurisdictionServiceImpl.class);
 
     private final JurisdictionRepository repository;
+    private final CaseTypeLiteRepository caseTypeLiteRepository;
     private final EntityToResponseDTOMapper entityToResponseDTOMapper;
     private final VersionedDefinitionRepositoryDecorator<JurisdictionEntity, Integer> versionedRepository;
 
     @Autowired
-    public JurisdictionServiceImpl(JurisdictionRepository repository, EntityToResponseDTOMapper
-            entityToResponseDTOMapper) {
+    public JurisdictionServiceImpl(JurisdictionRepository repository,
+                                   CaseTypeLiteRepository caseTypeLiteRepository,
+                                   EntityToResponseDTOMapper entityToResponseDTOMapper) {
         this.repository = repository;
+        this.caseTypeLiteRepository = caseTypeLiteRepository;
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
     }
@@ -39,7 +44,10 @@ public class JurisdictionServiceImpl implements JurisdictionService {
     @Override
     public List<Jurisdiction> getAll() {
         List<JurisdictionEntity> jurisdictionEntities = repository.findAllLatestVersion();
-        return jurisdictionEntities.stream().map(entityToResponseDTOMapper::map).collect(toList());
+        return jurisdictionEntities.stream()
+            .map(entityToResponseDTOMapper::map)
+            .map(this::attachCaseTypes)
+            .collect(toList());
     }
 
     @Override
@@ -47,11 +55,21 @@ public class JurisdictionServiceImpl implements JurisdictionService {
         LOG.debug("retrieving jurisdictions {}", references);
         List<JurisdictionEntity> jurisdictionEntities = repository.findAllLatestVersionByReference(references);
         LOG.debug("retrieved jurisdictions {}", jurisdictionEntities);
-        return jurisdictionEntities.stream().map(entityToResponseDTOMapper::map).collect(toList());
+        return jurisdictionEntities.stream()
+            .map(entityToResponseDTOMapper::map)
+            .map(this::attachCaseTypes)
+            .collect(toList());
     }
 
     @Override
     public void create(JurisdictionEntity jurisdiction) {
         versionedRepository.save(jurisdiction);
+    }
+
+    private Jurisdiction attachCaseTypes(Jurisdiction jurisdiction) {
+        List<CaseTypeLiteEntity> caseTypeLiteEntities =
+            caseTypeLiteRepository.findByJurisdictionId(jurisdiction.getId());
+        jurisdiction.setCaseTypes(caseTypeLiteEntities.stream().map(entityToResponseDTOMapper::map).collect(toList()));
+        return jurisdiction;
     }
 }
