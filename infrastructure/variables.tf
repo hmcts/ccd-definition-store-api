@@ -2,6 +2,10 @@ variable "product" {
   type    = "string"
 }
 
+variable "raw_product" {
+  default = "ccd" // jenkins-library overrides product for PRs and adds e.g. pr-118-ccd
+}
+
 variable "component" {
   type    = "string"
 }
@@ -73,5 +77,5 @@ variable "idam_api_url" {
 ////////////////////////////////
 
 variable "authorised-services" {
-  default = "ccd_data,ccd_gw,ccd_admin,jui_webapp"
+  default = "ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp"
 }
