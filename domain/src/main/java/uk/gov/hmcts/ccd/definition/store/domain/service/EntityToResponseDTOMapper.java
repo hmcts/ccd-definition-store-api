@@ -26,6 +26,9 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseTypeEntity.printWebhook.url", target = "printableDocumentsUrl")
     CaseType map(CaseTypeEntity caseTypeEntity);
 
+    @Mapping(source = "caseTypeLiteEntity.reference", target = "id")
+    CaseTypeLite map(CaseTypeLiteEntity caseTypeLiteEntity);
+
     @Mapping(source = "eventEntity.reference", target = "id")
     @Mapping(source = "eventEntity.eventCaseFields", target = "caseFields")
     @Mapping(source = "eventEntity.webhookStart.url", target = "callBackURLAboutToStartEvent")
@@ -66,6 +69,9 @@ public interface EntityToResponseDTOMapper {
         target = "acls")
     @Mapping(source = "stateEntity.reference", target = "id")
     CaseState map(StateEntity stateEntity);
+
+    @Mapping(source = "stateLiteEntity.reference", target = "id")
+    CaseStateLite map(StateLiteEntity stateLiteEntity);
 
     @Mapping(source = "caseFieldEntity.reference", target = "id")
     @Mapping(source = "caseFieldEntity.caseType.reference", target = "caseTypeId")
@@ -122,7 +128,7 @@ public interface EntityToResponseDTOMapper {
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 
     // Would be conventional to use a Default method like
-    //  default AccessControlList map(Authorisation authorisation)
+    // default AccessControlList map(Authorisation authorisation)
     // but this does not play nicely with Mockito v1
     class AuthorisationToAccessControlListMapper {
 
@@ -140,5 +146,4 @@ public interface EntityToResponseDTOMapper {
                 .collect(Collectors.toList());
         }
     }
-
 }

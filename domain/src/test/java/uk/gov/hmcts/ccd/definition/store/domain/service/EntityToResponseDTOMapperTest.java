@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-public class EntityToResponseDTOMapperTest {
+class EntityToResponseDTOMapperTest {
 
     private static final SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -40,12 +40,12 @@ public class EntityToResponseDTOMapperTest {
 
     private static final String LIVE_TO = "2018-03-03";
 
-    EntityToResponseDTOMapper classUnderTest = new EntityToResponseDTOMapperImpl();
+    private EntityToResponseDTOMapper classUnderTest = new EntityToResponseDTOMapperImpl();
 
-    EntityToResponseDTOMapper spyOnClassUnderTest;
+    private EntityToResponseDTOMapper spyOnClassUnderTest;
 
     @BeforeEach
-    public void setUpSpy() throws Exception {
+    void setUpSpy() {
         spyOnClassUnderTest = spy(classUnderTest);
     }
 
@@ -54,7 +54,7 @@ public class EntityToResponseDTOMapperTest {
     class MapEventCaseFieldEntity {
 
         @Test
-        public void testMapEventCaseFieldEntity() throws Exception {
+        void testMapEventCaseFieldEntity() {
             EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
             eventCaseFieldEntity.setShowCondition("PersonFirstName=\"John\"");
             eventCaseFieldEntity.setShowSummaryChangeOption(true);
@@ -83,7 +83,7 @@ public class EntityToResponseDTOMapperTest {
     class MapEventEntity {
 
         @Test
-        public void shouldMapToCaseEvent() throws Exception {
+        void shouldMapToCaseEvent() {
             EventEntity eventEntity = new EventEntity();
             eventEntity.setShowEventNotes(true);
             eventEntity.setCanSaveDraft(true);
@@ -104,7 +104,7 @@ public class EntityToResponseDTOMapperTest {
     class MapCaseTypeEntityTests {
 
         @Test
-        public void testMapCaseTypeEntity() throws Exception {
+        void testMapCaseTypeEntity() throws Exception {
 
             // Set up
             JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
@@ -189,7 +189,7 @@ public class EntityToResponseDTOMapperTest {
         }
 
         @Test
-        public void testMapEmptyCaseTypeEntity() throws Exception {
+        void testMapEmptyCaseTypeEntity() {
 
             CaseType caseType = classUnderTest.map(
                 new CaseTypeEntity()
@@ -259,7 +259,7 @@ public class EntityToResponseDTOMapperTest {
     class MapJurisdictionEntityTests {
 
         @Test
-        public void testMapJurisdictionEntity() throws Exception {
+        void testMapJurisdictionEntity() {
 
             JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
             jurisdictionEntity.setDescription("Jurisdiction Description");
@@ -279,7 +279,7 @@ public class EntityToResponseDTOMapperTest {
         }
 
         @Test
-        public void testMapEmptyJurisdictionEntity() throws Exception {
+        void testMapEmptyJurisdictionEntity() {
 
             JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
 
@@ -302,7 +302,7 @@ public class EntityToResponseDTOMapperTest {
     class MapEventEntityTests {
 
         @Test
-        public void testMapEventEntity() throws Exception {
+        void testMapEventEntity() {
             for (Parameters parameters : createParameters()) {
                 CaseEvent caseEvent = mapEventWithStatesAssertCommonFieldsAndReturn(
                     parameters
@@ -313,7 +313,7 @@ public class EntityToResponseDTOMapperTest {
         }
 
         @Test
-        public void testMapEmptyEventEntity() throws Exception {
+        void testMapEmptyEventEntity() {
             CaseEvent caseEvent = classUnderTest.map(new EventEntity());
 
             assertNull(caseEvent.getId());
@@ -347,12 +347,12 @@ public class EntityToResponseDTOMapperTest {
         private List<Parameters> createParameters() {
             return Arrays.asList(
                 new Parameters(
-                    false, Collections.EMPTY_LIST, null,
-                    Arrays.asList("*"), "*"
+                    false, Collections.emptyList(), null,
+                    Collections.singletonList("*"), "*"
                 ),
                 new Parameters(
-                    false, Collections.EMPTY_LIST, stateEntity("PostState"),
-                    Arrays.asList("*"), "PostState"
+                    false, Collections.emptyList(), stateEntity("PostState"),
+                    Collections.singletonList("*"), "PostState"
                 ),
                 new Parameters(
                     false, Arrays.asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
@@ -365,22 +365,22 @@ public class EntityToResponseDTOMapperTest {
                     Arrays.asList("preState1", "preState2", "preState3"), "PostState"
                 ),
                 new Parameters(
-                    true, Collections.EMPTY_LIST, null,
-                    Collections.EMPTY_LIST, "*"
+                    true, Collections.emptyList(), null,
+                    Collections.emptyList(), "*"
                 ),
                 new Parameters(
-                    true, Collections.EMPTY_LIST, stateEntity("PostState"),
-                    Collections.EMPTY_LIST, "PostState"
+                    true, Collections.emptyList(), stateEntity("PostState"),
+                    Collections.emptyList(), "PostState"
                 ),
                 new Parameters(
                     true, Arrays.asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
                     null,
-                    Collections.EMPTY_LIST, "*"
+                    Collections.emptyList(), "*"
                 ),
                 new Parameters(
                     true, Arrays.asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
                     stateEntity("PostState"),
-                    Collections.EMPTY_LIST, "PostState"
+                    Collections.emptyList(), "PostState"
                 )
             );
         }
@@ -399,7 +399,7 @@ public class EntityToResponseDTOMapperTest {
             private final List<String> preStateExpectation;
             private final String postStateExpectation;
 
-            public Parameters(Boolean canCreate,
+            Parameters(Boolean canCreate,
                               List<StateEntity> preStates,
                               StateEntity postState,
                               List<String> preStateExpectation,
@@ -411,23 +411,23 @@ public class EntityToResponseDTOMapperTest {
                 this.postStateExpectation = postStateExpectation;
             }
 
-            public Boolean getCanCreate() {
+            private Boolean getCanCreate() {
                 return canCreate;
             }
 
-            public List<StateEntity> getPreStates() {
+            private List<StateEntity> getPreStates() {
                 return preStates;
             }
 
-            public StateEntity getPostState() {
+            private StateEntity getPostState() {
                 return postState;
             }
 
-            public List<String> getPreStateExpectation() {
+            private List<String> getPreStateExpectation() {
                 return preStateExpectation;
             }
 
-            public String getPostStateExpectation() {
+            private String getPostStateExpectation() {
                 return postStateExpectation;
             }
         }
@@ -483,7 +483,7 @@ public class EntityToResponseDTOMapperTest {
                 Arrays.asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
 
             eventEntity.setCanCreate(parameters.getCanCreate());
-            parameters.getPreStates().forEach(ps -> eventEntity.addPreState(ps));
+            parameters.getPreStates().forEach(eventEntity::addPreState);
             eventEntity.setPostState(parameters.getPostState());
 
             CaseEvent caseEvent = spyOnClassUnderTest.map(eventEntity);
@@ -555,7 +555,7 @@ public class EntityToResponseDTOMapperTest {
     class MapStateEntityTests {
 
         @Test
-        public void testMapStateEntity() throws Exception {
+        void testMapStateEntity() {
             StateEntity stateEntity = new StateEntity();
             stateEntity.setReference("reference");
             stateEntity.setName("name");
@@ -582,7 +582,7 @@ public class EntityToResponseDTOMapperTest {
         }
 
         @Test
-        public void testMapEmptyStateEntity() throws Exception {
+        void testMapEmptyStateEntity() {
 
             CaseState caseState = classUnderTest.map(new StateEntity());
 
@@ -616,7 +616,7 @@ public class EntityToResponseDTOMapperTest {
     class MapCaseFieldEntityTests {
 
         @Test
-        public void testMapCaseFieldEntity() {
+        void testMapCaseFieldEntity() {
 
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setCaseType(caseTypeEntity("caseTypeReference"));
@@ -660,7 +660,7 @@ public class EntityToResponseDTOMapperTest {
         }
 
         @Test
-        public void testMapEmptyCaseFieldEntity() throws Exception {
+        void testMapEmptyCaseFieldEntity() {
 
             CaseField caseField = classUnderTest.map(new CaseFieldEntity());
 
@@ -704,7 +704,7 @@ public class EntityToResponseDTOMapperTest {
     class MapFieldTypeEntityTests {
 
         @Test
-        public void testMapFieldTypeEntityWithBaseField() {
+        void testMapFieldTypeEntityWithBaseField() {
             FieldTypeEntity fieldTypeEntity = fieldTypeEntity("fieldTypeEntityReference");
             fieldTypeEntity.setBaseFieldType(fieldTypeEntity("baseFieldTypeEntityReference"));
             FieldType fieldType = mapAssertCommonFieldsAndReturn(fieldTypeEntity);
@@ -712,14 +712,14 @@ public class EntityToResponseDTOMapperTest {
         }
 
         @Test
-        public void testMapFieldTypeEntityWithoutBaseField() {
+        void testMapFieldTypeEntityWithoutBaseField() {
             FieldTypeEntity fieldTypeEntity = fieldTypeEntity("fieldTypeEntityReference");
             FieldType fieldType = mapAssertCommonFieldsAndReturn(fieldTypeEntity);
             assertEquals(fieldTypeEntity.getReference(), fieldType.getType());
         }
 
         @Test
-        public void testEmptyMapFieldTypeEntity() {
+        void testEmptyMapFieldTypeEntity() {
             FieldType fieldType = classUnderTest.map(new FieldTypeEntity());
 
             assertNull(fieldType.getId());
@@ -799,7 +799,7 @@ public class EntityToResponseDTOMapperTest {
     class MapDisplayGroupEntityTests {
 
         @Test
-        public void testMapDisplayGroupEntity() {
+        void testMapDisplayGroupEntity() {
 
             DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
             displayGroupEntity.setReference("Reference");
@@ -844,7 +844,7 @@ public class EntityToResponseDTOMapperTest {
     class DisplayGroupCaseFieldEntityTests {
 
         @Test
-        public void testMapDisplayGroupCaseFieldEntity() {
+        void testMapDisplayGroupCaseFieldEntity() {
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
             displayGroupCaseFieldEntity.setOrder(69);
 
@@ -866,7 +866,7 @@ public class EntityToResponseDTOMapperTest {
     class SearchInputCaseFieldEntityTests {
 
         @Test
-        public void testMapSearchInputCaseFieldEntity() {
+        void testMapSearchInputCaseFieldEntity() {
             SearchInputCaseFieldEntity searchInputCaseFieldEntity = new SearchInputCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
@@ -980,6 +980,86 @@ public class EntityToResponseDTOMapperTest {
             assertThat(workBasketResult.isMetadata(), is(true));
         }
 
+    }
+
+    @Nested
+    @DisplayName("Should return a CaseTypeLite model object whose fields match those in the CaseTypeLiteEntity")
+    class MapCaseTypeEntitySubsetTests {
+
+        @Test
+        void testMapSubsetCaseTypeEntity() {
+            CaseTypeLiteEntity caseTypeLiteEntity = caseTypeLiteEntity();
+
+            CaseTypeLite caseTypeLite = classUnderTest.map(caseTypeLiteEntity);
+
+            // Assertions
+            assertEquals(caseTypeLite.getId(), caseTypeLiteEntity.getReference());
+            assertEquals(caseTypeLite.getDescription(), caseTypeLiteEntity.getDescription());
+            assertEquals(caseTypeLite.getName(), caseTypeLiteEntity.getName());
+            assertEquals(1, caseTypeLite.getStates().size());
+            assertEquals("Id", caseTypeLite.getStates().get(0).getId());
+            assertEquals("Name", caseTypeLite.getStates().get(0).getName());
+        }
+
+        @Test
+        void testMapEmptyCaseTypeEntity() {
+            CaseTypeLiteEntity caseTypeLiteEntity = new CaseTypeLiteEntity();
+
+            CaseTypeLite caseTypeLite = classUnderTest.map(caseTypeLiteEntity);
+
+            // Assertions
+            assertNull(caseTypeLite.getId());
+            assertNull(caseTypeLite.getDescription());
+            assertNull(caseTypeLite.getName());
+            assertTrue(caseTypeLite.getStates().isEmpty());
+        }
+
+        private CaseTypeLiteEntity caseTypeLiteEntity() {
+            CaseTypeLiteEntity caseTypeLiteEntity = new CaseTypeLiteEntity();
+            caseTypeLiteEntity.setVersion(100);
+            caseTypeLiteEntity.setReference("Reference");
+            caseTypeLiteEntity.setName("Name");
+            caseTypeLiteEntity.addState(stateLiteEntity());
+            return caseTypeLiteEntity;
+        }
+    }
+
+    @Nested
+    @DisplayName("Should return a CaseStateLite model object whose fields match those in the StateLiteEntity")
+    class MapStateLiteEntityTests {
+
+        @Test
+        void testMapStateLiteEntity() {
+            StateLiteEntity stateLiteEntity = stateLiteEntity();
+
+            CaseStateLite caseStateLite = classUnderTest.map(stateLiteEntity);
+
+            // Assertions
+            assertEquals(caseStateLite.getId(), stateLiteEntity.getReference());
+            assertEquals(caseStateLite.getName(), stateLiteEntity.getName());
+            assertEquals(caseStateLite.getDescription(), stateLiteEntity.getDescription());
+        }
+
+        @Test
+        void testMapEmptyStateLiteEntity() {
+            StateLiteEntity stateLiteEntity = new StateLiteEntity();
+
+            CaseStateLite caseStateLite = classUnderTest.map(stateLiteEntity);
+
+            // Assertions
+            assertNull(caseStateLite.getId());
+            assertNull(caseStateLite.getName());
+            assertNull(caseStateLite.getDescription());
+        }
+    }
+
+    private StateLiteEntity stateLiteEntity() {
+        StateLiteEntity stateLiteEntity = new StateLiteEntity();
+
+        stateLiteEntity.setName("Name");
+        stateLiteEntity.setReference("Id");
+        stateLiteEntity.setDescription("Description");
+        return stateLiteEntity;
     }
 
     private void assertAcls(List<? extends Authorisation> authorisation, List<AccessControlList> accessControlList) {
