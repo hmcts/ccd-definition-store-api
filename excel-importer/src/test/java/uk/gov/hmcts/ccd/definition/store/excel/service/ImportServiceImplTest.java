@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
@@ -21,12 +22,14 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -35,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -46,12 +50,10 @@ public class ImportServiceImplTest {
     public static final String BAD_FILE = "CCD_TestDefinition_V12.xlsx";
     private static final String GOOD_FILE = "CCD_TestDefinition.xlsx";
     private static final String JURISDICTION_NAME = "TEST";
+    private static final String TEST_ADDRESS_BOOK_CASE_TYPE = "TestAddressBookCase";
+    private static final String TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE = "TestComplexAddressBookCase";
 
     private ImportServiceImpl service;
-
-    private SpreadsheetParser spreadsheetParser;
-
-    private ParserFactory parserFactory;
 
     @Mock
     private FieldTypeService fieldTypeService;
@@ -83,6 +85,9 @@ public class ImportServiceImplTest {
     @Mock
     private MetadataCaseFieldEntityFactory metadataCaseFieldEntityFactory;
 
+    @Mock
+    private SecurityUtils securityUtils;
+
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -106,9 +111,10 @@ public class ImportServiceImplTest {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
-        parserFactory = new ParserFactory(new ShowConditionParser(), new EntityToDefinitionDataItemRegistry(), registry);
+        final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
+            new EntityToDefinitionDataItemRegistry(), registry);
 
-        spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
+        final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
         service = new ImportServiceImpl(spreadsheetValidator,
                                         spreadsheetParser,
@@ -119,7 +125,8 @@ public class ImportServiceImplTest {
                                         layoutService,
                                         userRoleRepository,
                                         workBasketUserDefaultService,
-                                        caseFieldRepository);
+                                        caseFieldRepository,
+                                        securityUtils);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
@@ -180,15 +187,23 @@ public class ImportServiceImplTest {
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
-        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA)).willReturn(Collections.singletonList
-            (caseRef));
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
         CaseFieldEntity state = new CaseFieldEntity();
         state.setReference("[STATE]");
-        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class))).willReturn(state);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+        ServiceAndUserDetails userDetails = new ServiceAndUserDetails("123", "token", Collections.emptyList(), null);
+        given(securityUtils.getCurrentUser()).willReturn(userDetails);
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        service.importFormDefinitions(inputStream);
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream);
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertEquals(2, metadata.getCaseTypes().size());
+        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
+        assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
+        assertEquals(userDetails.getUsername(), metadata.getUserId());
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
     }
