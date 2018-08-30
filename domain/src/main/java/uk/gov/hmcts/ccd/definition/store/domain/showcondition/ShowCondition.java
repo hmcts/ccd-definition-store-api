@@ -8,58 +8,46 @@ import java.util.List;
 @ToString
 public class ShowCondition {
 
-    private final StringBuilder showConditionExprBuilder = new StringBuilder();
+    private final String showConditionExpression;
+    private final List<String> fields;
 
-    private final List<String> fields = new ArrayList<>();
-
-    // User builder
-    private ShowCondition() {
-    }
-
-    private void addShowConditionExpression(String showConditionExpression) {
-        showConditionExprBuilder.append(showConditionExpression);
+    public ShowCondition(String showConditionExpression, List<String> fields) {
+        this.showConditionExpression = showConditionExpression;
+        this.fields = fields;
     }
 
     public String getShowConditionExpression() {
-        return showConditionExprBuilder.toString();
-    }
-
-    private void addField(String field) {
-        fields.add(field);
+        return showConditionExpression;
     }
 
     public List<String> getFields() {
         return fields;
     }
 
-    private boolean hasShowCondition() {
-        return showConditionExprBuilder.length() > 0;
-    }
-
     public static class Builder {
 
-        private final ShowCondition showCondition;
+        private final StringBuilder showConditionExprBuilder = new StringBuilder();
+        private final List<String> fields = new ArrayList<>();
 
         public Builder() {
-            showCondition = new ShowCondition();
         }
 
         public Builder field(String field) {
-            showCondition.addField(field);
+            fields.add(field);
             return this;
         }
 
         public Builder showConditionExpression(String showConditionExpression) {
-            showCondition.addShowConditionExpression(showConditionExpression);
+            showConditionExprBuilder.append(showConditionExpression);
             return this;
         }
 
-        public boolean hasShowCondition() {
-            return showCondition.hasShowCondition();
+        boolean hasShowCondition() {
+            return showConditionExprBuilder.length() > 0;
         }
 
         public ShowCondition build() {
-            return showCondition;
+            return new ShowCondition(showConditionExprBuilder.toString(), fields);
         }
 
     }
