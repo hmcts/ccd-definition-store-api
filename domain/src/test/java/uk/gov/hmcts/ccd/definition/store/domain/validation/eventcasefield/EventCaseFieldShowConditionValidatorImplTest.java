@@ -201,7 +201,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldReturnInvalidResult_whenAnyCaseFieldUsedInAndConditionsDoNotMatchEventCaseFields() throws InvalidShowConditionException {
+    public void shouldReturnInvalidResultWhenAnyCaseFieldUsedInAndConditionsDoNotMatchEventCaseFields() throws InvalidShowConditionException {
 
         String matchingCaseFieldId1 = "MatchingCaseFieldId1";
         String matchingCaseFieldId2 = "MatchingCaseFieldId2";
@@ -236,7 +236,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         assertThat(validationResult.isValid(), is(false));
         assertThat(validationResult.getValidationErrors(), hasSize(1));
         assertThat(validationResult.getValidationErrors().get(0), instanceOf(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError.class));
-        
+
         verify(showConditionExtractor).parseShowCondition(eq(showCondition));
     }
 
