@@ -28,9 +28,6 @@ locals {
   custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
   default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
   oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
-
-  // TODO remove hardcoded value
-  elasticLoadBalancerIp = "10.112.0.4"
 }
 
 data "vault_generic_secret" "definition_store_item_key" {
@@ -71,7 +68,7 @@ module "case-definition-store-api" {
 
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
 
-    ELASTIC_SEARCH_HOST = "${local.elasticLoadBalancerIp}"
+    ELASTIC_SEARCH_HOST = "${var.elastic_search_host}"
     ELASTIC_SEARCH_PORT = "${var.elastic_search_port}"
     ELASTIC_SEARCH_ENABLED = "${var.elastic_search_enabled}"
     ELASTIC_SEARCH_INDEX_SHARDS = "${var.elastic_search_index_shards}"
@@ -116,7 +113,7 @@ module "elastic" {
   vNetName = "${data.terraform_remote_state.core_apps_infrastructure.vnetname}"
   vNetExistingResourceGroup = "${data.terraform_remote_state.core_apps_infrastructure.resourcegroup_name}"
   vNetClusterSubnetName = "${data.terraform_remote_state.core_apps_infrastructure.subnet_names[2]}"
-  vNetLoadBalancerIp = "${local.elasticLoadBalancerIp}"
+  vNetLoadBalancerIp = "${var.elastic_search_host}"
 }
 
 ////////////////////////////////

@@ -81,7 +81,7 @@ variable "authorised-services" {
 ////////////////////////////////
 
 variable "elastic_search_host" {
-  default = "localhost"
+  default = ""
 }
 
 variable "elastic_search_port" {
