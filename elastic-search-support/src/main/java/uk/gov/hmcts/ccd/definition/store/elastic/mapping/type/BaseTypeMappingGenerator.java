@@ -23,6 +23,6 @@ public class BaseTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public List<String> getMappedTypes() {
-        return newArrayList(typeMappings().keySet());
+        return newArrayList(configuredTypeMappings().keySet());
     }
 }

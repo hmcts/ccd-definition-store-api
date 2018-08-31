@@ -14,7 +14,7 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
 
     public abstract List<String> getMappedTypes();
 
-    protected Map<String, String> typeMappings() {
+    protected Map<String, String> configuredTypeMappings() {
         return config.getTypeMappings();
     }
 
@@ -23,7 +23,7 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
     }
 
     protected String getConfiguredMapping(String ccdType) {
-        String configuredMapping = typeMappings().get(ccdType);
+        String configuredMapping = configuredTypeMappings().get(ccdType);
         if (configuredMapping == null) {
             throw new RuntimeException(String.format("no configured mapping for ccd type %s", ccdType));
         }
