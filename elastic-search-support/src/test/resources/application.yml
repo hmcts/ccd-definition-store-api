@@ -34,7 +34,7 @@ elasticsearch:
     FixedList: ${elasticsearch.elasticMappings.defaultText}
     FixedListEdit: ${elasticsearch.elasticMappings.defaultText}
     MultiSelectList: ${elasticsearch.elasticMappings.defaultText}
-  casesIndexNameFormat: "%s_%s_cases"
+  casesIndexNameFormat: "%s_cases"
   casesIndexType: case
   casePredefinedMappings:
     reference: ${elasticsearch.elasticMappings.defaultText}

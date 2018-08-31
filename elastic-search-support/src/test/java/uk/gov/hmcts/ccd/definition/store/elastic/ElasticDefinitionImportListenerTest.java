@@ -37,23 +37,23 @@ public class ElasticDefinitionImportListenerTest {
     @Mock
     private CaseMappingGenerator caseMappingGenerator;
 
-    private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseA").build();
-    private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseB").build();
+    private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseTypeA").build();
+    private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
 
     @Test
     public void createsIndexIfNotExists() throws IOException {
-        when(config.getCasesIndexNameFormat()).thenReturn("%s_%s");
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.indexExists(anyString())).thenReturn(false);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
-        verify(ccdElasticClient).createIndex("jura_casea");
-        verify(ccdElasticClient).createIndex("jurb_caseb");
+        verify(ccdElasticClient).createIndex("casetypea");
+        verify(ccdElasticClient).createIndex("casetypeb");
     }
 
     @Test
     public void skipIndexCreationIfNotExists() throws IOException {
-        when(config.getCasesIndexNameFormat()).thenReturn("%s_%s");
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.indexExists(anyString())).thenReturn(true);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
@@ -63,7 +63,7 @@ public class ElasticDefinitionImportListenerTest {
 
     @Test
     public void createsMapping() throws IOException {
-        when(config.getCasesIndexNameFormat()).thenReturn("%s_%s");
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.indexExists(anyString())).thenReturn(false);
         when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
 
@@ -71,8 +71,8 @@ public class ElasticDefinitionImportListenerTest {
 
         verify(caseMappingGenerator).generateMapping(caseA);
         verify(caseMappingGenerator).generateMapping(caseB);
-        verify(ccdElasticClient).upsertMapping("jura_casea", "caseMapping");
-        verify(ccdElasticClient).upsertMapping("jurb_caseb", "caseMapping");
+        verify(ccdElasticClient).upsertMapping("casetypea", "caseMapping");
+        verify(ccdElasticClient).upsertMapping("casetypeb", "caseMapping");
     }
 
     @Test

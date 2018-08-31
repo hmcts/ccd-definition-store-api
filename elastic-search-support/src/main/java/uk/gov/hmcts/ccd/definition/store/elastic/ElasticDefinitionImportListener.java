@@ -49,8 +49,7 @@ public abstract class ElasticDefinitionImportListener {
     }
 
     private String indexName(CaseTypeEntity caseType) {
-        String jurisdiction = caseType.getJurisdiction().getReference();
         String caseTypeId = caseType.getReference();
-        return String.format(config.getCasesIndexNameFormat(), jurisdiction.toLowerCase(), caseTypeId.toLowerCase());
+        return String.format(config.getCasesIndexNameFormat(), caseTypeId.toLowerCase());
     }
 }
