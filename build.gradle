@@ -51,7 +51,7 @@ dependencyCheck {
     }
 }
 
-//overriding default spring boot versions. This should be done only if really needed and is not generally recommended
+//overriding default spring boot versions for elasticsearch because too old. Not generally recommended but needed to prevent runtime errors
 ext['elasticsearch.version'] = '6.3.0'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.10.Final'
@@ -111,7 +111,7 @@ allprojects {
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
         compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
         compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
-        compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.13'
+        compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testCompile 'io.github.openfeign:feign-jackson:9.7.0'
@@ -143,7 +143,7 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             dependencySubstitution {
-                substitute module('org.elasticsearch:elasticsearch') with module('org.elasticsearch:elasticsearch:6.3.0')
+                substitute module('org.elasticsearch:elasticsearch') with module("org.elasticsearch:elasticsearch:${springBootVersion}")
             }
         }
     }
