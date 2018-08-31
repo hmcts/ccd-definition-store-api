@@ -4,7 +4,7 @@ elasticsearch:
   scheme: ${ELASTIC_SEARCH_SCHEME:http}
   enabled: ${ELASTIC_SEARCH_ENABLED:false}
   indexShards: ${ELASTIC_SEARCH_INDEX_SHARDS:2}
-  indexShardsReplicas: ${ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS:2}
+  indexShardsReplicas: ${ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS:1}
   failImportIfError: ${ELASTIC_SEARCH_FAIL_ON_IMPORT:false}
   dynamic: ${ELASTIC_SEARCH_DYNAMIC:strict}
   elasticMappings:
