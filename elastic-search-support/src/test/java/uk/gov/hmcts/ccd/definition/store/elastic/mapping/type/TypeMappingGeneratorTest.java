@@ -45,7 +45,7 @@ public class TypeMappingGeneratorTest extends AbstractMapperTest {
         }
 
         @Override
-        public List<String> getCcdTypes() {
+        public List<String> getMappedTypes() {
             return null;
         }
     }

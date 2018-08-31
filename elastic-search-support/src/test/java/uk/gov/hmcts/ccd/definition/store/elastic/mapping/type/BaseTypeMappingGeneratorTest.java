@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 
 import org.junit.Before;
@@ -15,10 +14,10 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ConfiguredTypeMappingGeneratorTest extends AbstractMapperTest {
+public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
 
     @InjectMocks
-    private ConfiguredTypeMappingGenerator typeMappingGenerator;
+    private BaseTypeMappingGenerator typeMappingGenerator;
 
     private CaseFieldEntity field = newTextField("fieldA").build();
 

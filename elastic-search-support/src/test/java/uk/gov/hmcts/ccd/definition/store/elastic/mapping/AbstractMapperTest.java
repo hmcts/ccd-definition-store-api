@@ -28,6 +28,6 @@ public class AbstractMapperTest {
     }
 
     protected void addMappingGenerator(TypeMappingGenerator stubTypeMappingGenerator) {
-        stubTypeMappersManager.getTypeMappers().put(stubTypeMappingGenerator.getCcdTypes().get(0), stubTypeMappingGenerator);
+        stubTypeMappersManager.getTypeMappers().put(stubTypeMappingGenerator.getMappedTypes().get(0), stubTypeMappingGenerator);
     }
 }

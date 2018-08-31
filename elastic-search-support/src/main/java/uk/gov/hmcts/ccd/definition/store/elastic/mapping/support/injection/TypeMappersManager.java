@@ -29,7 +29,7 @@ public class TypeMappersManager {
     @Autowired
     public void setTypeMappers(List<TypeMappingGenerator> mappingGenerators) {
         for (TypeMappingGenerator mapper : mappingGenerators) {
-            for (String type : mapper.getCcdTypes()) {
+            for (String type : mapper.getMappedTypes()) {
                 typeMappers.put(type, mapper);
             }
         }

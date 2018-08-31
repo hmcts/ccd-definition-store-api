@@ -48,7 +48,7 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
     }
 
     @Override
-    public List<String> getCcdTypes() {
+    public List<String> getMappedTypes() {
         return newArrayList("Collection");
     }
 

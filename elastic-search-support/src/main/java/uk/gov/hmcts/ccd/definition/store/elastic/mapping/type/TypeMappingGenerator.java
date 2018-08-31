@@ -12,7 +12,7 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
 
     public abstract String dataClassificationMapping(FieldEntity field);
 
-    public abstract List<String> getCcdTypes();
+    public abstract List<String> getMappedTypes();
 
     protected Map<String, String> typeMappings() {
         return config.getTypeMappings();

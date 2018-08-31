@@ -27,7 +27,7 @@ public class StubComplexTypeMappingGenerator extends ComplexTypeMappingGenerator
         return dataClassificationMapping;
     }
 
-    public List<String> getCcdTypes() {
+    public List<String> getMappedTypes() {
         return newArrayList(type);
     }
 

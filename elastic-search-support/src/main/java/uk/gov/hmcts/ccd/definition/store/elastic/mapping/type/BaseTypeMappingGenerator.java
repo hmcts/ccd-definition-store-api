@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
-public class ConfiguredTypeMappingGenerator extends TypeMappingGenerator {
+public class BaseTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public String dataMapping(FieldEntity field) {
@@ -22,7 +22,7 @@ public class ConfiguredTypeMappingGenerator extends TypeMappingGenerator {
     }
 
     @Override
-    public List<String> getCcdTypes() {
+    public List<String> getMappedTypes() {
         return newArrayList(typeMappings().keySet());
     }
 }

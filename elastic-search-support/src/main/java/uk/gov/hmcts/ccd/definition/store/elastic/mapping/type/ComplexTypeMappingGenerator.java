@@ -58,7 +58,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
     }
 
     @Override
-    public List<String> getCcdTypes() {
+    public List<String> getMappedTypes() {
         return newArrayList("Complex");
     }
 
