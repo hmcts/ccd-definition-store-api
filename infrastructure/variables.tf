@@ -97,7 +97,7 @@ variable "elastic_search_index_shards" {
 }
 
 variable "elastic_search_index_shards_replicas" {
-  default = "2"
+  default = "1"
 }
 
 variable "elastic_search_fail_on_import" {
