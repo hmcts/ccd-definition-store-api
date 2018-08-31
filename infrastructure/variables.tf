@@ -101,7 +101,7 @@ variable "elastic_search_index_shards_replicas" {
 }
 
 variable "elastic_search_fail_on_import" {
-  default = "true"
+  default = "false"
 }
 
 variable "elastic_search_dynamc" {
