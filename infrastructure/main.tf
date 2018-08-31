@@ -29,6 +29,7 @@ locals {
   default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
   oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
 
+  // TODO remove hardcoded value
   elasticLoadBalancerIp = "10.112.0.4"
 }
 
@@ -107,8 +108,8 @@ module "definition-store-vault" {
 }
 
 module "elastic" {
-  source = "git@github.com:hmcts/moj-module-elk.git?ref=master"
-  product = "${var.product}-definition-store"
+  source = "git@github.com:hmcts/cnp-module-elk.git?ref=master"
+  product = "${var.product}"
   location = "${var.location}"
   env = "${var.env}"
   common_tags = "${var.common_tags}"
