@@ -8,5 +8,5 @@ public interface CCDElasticClient {
 
     boolean createIndex(String indexName) throws IOException;
 
-    boolean upsertMapping(String indexName, String caseMapping) throws IOException;
+    boolean upsertMapping(String indexName, String caseTypeMapping) throws IOException;
 }

@@ -19,7 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 public class CaseMappingGenerator extends MappingGenerator {
 
     public String generateMapping(CaseTypeEntity caseType) {
-        log.info("creating mapping for case type: {}", caseType.getReference());
+        log.debug("creating mapping for case type: {}", caseType.getReference());
 
         String mapping = newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("dynamic");
@@ -32,27 +32,27 @@ public class CaseMappingGenerator extends MappingGenerator {
             jw.endObject();
         }));
 
-        log.info("generated mapping for case type {}: {}", caseType.getReference(), mapping);
+        log.debug("generated mapping for case type {}: {}", caseType.getReference(), mapping);
         return mapping;
     }
 
     private void propertiesMapping(JsonWriter jw) {
-        log.info("generating case properties mapping");
+        log.debug("generating case properties mapping");
         config.getCasePredefinedMappings().forEach(Unchecked.biConsumer((property, mapping) -> {
             jw.name(property);
             jw.jsonValue(mapping);
-            log.info("property: {}, mapping: {}", property, mapping);
+            log.debug("property: {}, mapping: {}", property, mapping);
         }));
     }
 
     private void dataMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
-        log.info("generating case data mapping");
+        log.debug("generating case data mapping");
         jw.name("data");
         genericDataMapping(jw, caseType, typeMapper -> field -> typeMapper.dataMapping(field));
     }
 
     private void dataClassificationMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
-        log.info("generating case data classification mapping");
+        log.debug("generating case data classification mapping");
         jw.name("data_classification");
         genericDataMapping(jw, caseType, typeMapper -> field -> typeMapper.dataClassificationMapping(field));
     }
@@ -72,7 +72,7 @@ public class CaseMappingGenerator extends MappingGenerator {
 
                     jw.name(property);
                     jw.jsonValue(mapping);
-                    log.info("property: {}, mapping: {}", property, mapping);
+                    log.debug("property: {}, mapping: {}", property, mapping);
                 }
             jw.endObject();
         jw.endObject();
@@ -81,7 +81,7 @@ public class CaseMappingGenerator extends MappingGenerator {
     private boolean shouldIgnore(CaseFieldEntity field) {
         boolean ignored = config.getCcdIgnoredTypes().contains(field.getFieldType().getReference());
         if (ignored) {
-            log.info("field {} of type {} ignored", field.getReference(), field.getBaseTypeString());
+            log.debug("field {} of type {} ignored", field.getReference(), field.getBaseTypeString());
         }
         return ignored;
     }
