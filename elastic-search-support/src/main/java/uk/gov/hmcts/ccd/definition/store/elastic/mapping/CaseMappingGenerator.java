@@ -64,7 +64,6 @@ public class CaseMappingGenerator extends MappingGenerator {
             jw.beginObject();
                 List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(field -> !shouldIgnore(field)).collect(toList());
                 for (CaseFieldEntity field : fields) {
-
                     String property = field.getReference();
                     TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
                     Function<CaseFieldEntity, String> typeMappingFunction = typeMappingFunctionProducer.apply(typeMapper);

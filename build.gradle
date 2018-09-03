@@ -47,10 +47,11 @@ dependencyCheck {
     }
 }
 
-//overriding default spring boot versions for elasticsearch because too old. Not generally recommended but needed to prevent runtime errors
+//overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.3.0 of Elastic
 ext['elasticsearch.version'] = '6.3.0'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.10.Final'
+// end
 
 ext {
     junitJupiterVersion = '5.2.0'

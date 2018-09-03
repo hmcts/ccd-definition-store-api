@@ -27,24 +27,18 @@ public abstract class ElasticDefinitionImportListener {
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
 
     protected void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) throws IOException {
-        try {
-            for (CaseTypeEntity caseType : caseTypes) {
-                String indexName = indexName(caseType);
+        for (CaseTypeEntity caseType : caseTypes) {
+            String indexName = indexName(caseType);
 
-                if (!elasticClient.indexExists(indexName)) {
-                    log.info("creating index {} for case type {}", indexName, caseType.getReference());
-                    boolean acknowledged = elasticClient.createIndex(indexName);
-                    log.info("index created: {}", acknowledged);
-                }
-
-                String caseMapping = mappingGenerator.generateMapping(caseType);
-                boolean acknowledged = elasticClient.upsertMapping(indexName, caseMapping);
-                log.info("mapping created: {}", acknowledged);
+            if (!elasticClient.indexExists(indexName)) {
+                log.info("creating index {} for case type {}", indexName, caseType.getReference());
+                boolean acknowledged = elasticClient.createIndex(indexName);
+                log.info("index created: {}", acknowledged);
             }
-        } catch (Exception e) {
-            //TODO remove
-            log.error("error initialising elastiserach", e);
-            throw new MapperException("failed initialising ElasticSearch", e);
+
+            String caseMapping = mappingGenerator.generateMapping(caseType);
+            boolean acknowledged = elasticClient.upsertMapping(indexName, caseMapping);
+            log.info("mapping created: {}", acknowledged);
         }
     }
 

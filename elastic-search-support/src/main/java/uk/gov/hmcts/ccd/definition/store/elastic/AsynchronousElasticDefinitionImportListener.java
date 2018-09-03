@@ -19,7 +19,7 @@ public class AsynchronousElasticDefinitionImportListener extends ElasticDefiniti
     @TransactionalEventListener
     @EventListener
     public void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
-        log.info("import listener executing asynchronously");
+        log.warn("Errors initialising ElasticSearch will not fail the definition import");
         super.initialiseElasticSearch(event.getCaseTypes());
     }
 }
