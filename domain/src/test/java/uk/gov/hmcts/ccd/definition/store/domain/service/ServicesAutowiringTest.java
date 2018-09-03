@@ -1,14 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -20,10 +11,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ccd.definition.store.AppInsights;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntitySecurityClassificationValidatorImpl;
@@ -46,7 +37,9 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventC
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.BaseReferenceFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeComplexFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
@@ -55,6 +48,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -188,7 +190,7 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
 
     private boolean containsInstance(Collection collection, Class clazz) {
         return collection == null ? false : collection.stream()
-                                                .anyMatch(item -> clazz.isInstance(item));
+            .anyMatch(item -> clazz.isInstance(item));
     }
 
     @Configuration
@@ -206,6 +208,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public CaseTypeRepository caseTypeRepository() {
             return mock(CaseTypeRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public CaseTypeLiteRepository caseTypeLiteRepository() {
+            return mock(CaseTypeLiteRepository.class);
         }
 
         @Bean
@@ -249,6 +257,18 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Bean
         @Primary
         public SecurityUtils securityUtils() { return mock(SecurityUtils.class); }
+
+        @Bean
+        @Primary
+        public CaseFieldRepository caseFieldRepository() {
+            return mock(CaseFieldRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public MetadataFieldService metadataFieldService() {
+            return mock(MetadataFieldService.class);
+        }
 
     }
 

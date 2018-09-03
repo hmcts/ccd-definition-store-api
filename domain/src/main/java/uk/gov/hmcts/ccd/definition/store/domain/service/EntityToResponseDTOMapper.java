@@ -16,15 +16,18 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseTypeEntity.liveFrom", target = "version.liveFrom")
     @Mapping(source = "caseTypeEntity.liveTo", target = "version.liveUntil")
     @Mapping(
-            expression = "java(" +
-                "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-                "               caseTypeEntity.getCaseTypeUserRoleEntities()" +
-                "           )" +
-                "       )",
-            target = "acls"
-        )
+        expression = "java(" +
+            "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
+            "               caseTypeEntity.getCaseTypeUserRoleEntities()" +
+            "           )" +
+            "       )",
+        target = "acls"
+    )
     @Mapping(source = "caseTypeEntity.printWebhook.url", target = "printableDocumentsUrl")
     CaseType map(CaseTypeEntity caseTypeEntity);
+
+    @Mapping(source = "caseTypeLiteEntity.reference", target = "id")
+    CaseTypeLite map(CaseTypeLiteEntity caseTypeLiteEntity);
 
     @Mapping(source = "eventEntity.reference", target = "id")
     @Mapping(source = "eventEntity.eventCaseFields", target = "caseFields")
@@ -45,7 +48,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(
         expression = "java(eventEntity.isCanCreate() ? java.util.Collections.emptyList() " +
             ": eventEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") " +
-                ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+            ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
     @Mapping(
@@ -67,16 +70,20 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "stateEntity.reference", target = "id")
     CaseState map(StateEntity stateEntity);
 
+    @Mapping(source = "stateLiteEntity.reference", target = "id")
+    CaseStateLite map(StateLiteEntity stateLiteEntity);
+
     @Mapping(source = "caseFieldEntity.reference", target = "id")
     @Mapping(source = "caseFieldEntity.caseType.reference", target = "caseTypeId")
     @Mapping(source = "caseFieldEntity.hint", target = "hintText")
     @Mapping(source = "caseFieldEntity.liveTo", target = "liveUntil")
     @Mapping(expression = "java(" +
-                "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-                "               caseFieldEntity.getCaseFieldUserRoles()" +
-                "           )" +
-                "       )",
-            target = "acls")
+        "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
+        "               caseFieldEntity.getCaseFieldUserRoles()" +
+        "           )" +
+        "       )",
+        target = "acls")
+    @Mapping(expression = "java(caseFieldEntity.isMetadataField())", target = "metadata")
     CaseField map(CaseFieldEntity caseFieldEntity);
 
     @Mapping(source = "fieldTypeEntity.reference", target = "id")
@@ -84,8 +91,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "fieldTypeEntity.minimum", target = "min")
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
     @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null" +
-                            " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
-            target = "type")
+        " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
+        target = "type")
     FieldType map(FieldTypeEntity fieldTypeEntity);
 
     @Mapping(source = "fieldTypeListItemEntity.value", target = "code")
@@ -110,16 +117,18 @@ public interface EntityToResponseDTOMapper {
     SearchInputField map(SearchInputCaseFieldEntity searchInputCaseFieldEntity);
 
     @Mapping(source = "searchResultCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(expression = "java(searchResultCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchResultsField map(SearchResultCaseFieldEntity searchResultCaseFieldEntity);
 
     @Mapping(source = "workBasketInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
     WorkbasketInputField map(WorkBasketInputCaseFieldEntity workBasketInputCaseFieldEntity);
 
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 
     // Would be conventional to use a Default method like
-    //  default AccessControlList map(Authorisation authorisation)
+    // default AccessControlList map(Authorisation authorisation)
     // but this does not play nicely with Mockito v1
     class AuthorisationToAccessControlListMapper {
 
@@ -137,5 +146,4 @@ public interface EntityToResponseDTOMapper {
                 .collect(Collectors.toList());
         }
     }
-
 }
