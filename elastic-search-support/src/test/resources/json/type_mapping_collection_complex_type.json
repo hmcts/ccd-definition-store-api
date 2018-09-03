@@ -1,9 +1,9 @@
 {
-  "properties":{
-    "id":disabledMapping,
-    "value":{
-      "properties":{
-        "forename":dataMapping
+  "properties": {
+    "id": disabledMapping,
+    "value": {
+      "properties": {
+        "forename": dataMapping
       }
     }
   }

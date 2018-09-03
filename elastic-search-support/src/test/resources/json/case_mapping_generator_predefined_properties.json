@@ -1,6 +1,6 @@
 {
   "dynamic": dynamicConfig,
-  "properties":{
+  "properties": {
     "testPropA": "valuePropA",
     "testPropB": "valuePropB",
     "data": {

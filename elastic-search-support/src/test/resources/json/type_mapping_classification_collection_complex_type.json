@@ -1,15 +1,15 @@
 {
-  "properties":{
-    "classification":securityClassificationMapping,
-    "value":{
-      "properties":{
-        "id":disabledMapping,
-        "classification":{
-          "properties":{
-            "classification":securityClassificationMapping,
-            "value":{
-              "properties":{
-                "forename":securityClassificationMapping
+  "properties": {
+    "classification": securityClassificationMapping,
+    "value": {
+      "properties": {
+        "id": disabledMapping,
+        "classification": {
+          "properties": {
+            "classification": securityClassificationMapping,
+            "value": {
+              "properties": {
+                "forename": dataClassificationMapping
               }
             }
           }

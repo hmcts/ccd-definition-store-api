@@ -1,6 +1,6 @@
 {
-  "properties":{
-    "id":disabledMapping,
-    "value":textMapping
+  "properties": {
+    "id": disabledMapping,
+    "value": textMapping
   }
 }
