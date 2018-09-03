@@ -1,92 +1,92 @@
 {
-  "dynamic":"strict",
-  "properties":{
-    "reference":{
-      "type":"text",
-      "fields":{
-        "keyword":{
-          "type":"keyword",
-          "ignore_above":256
+  "dynamic": "strict",
+  "properties": {
+    "reference": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
         }
       }
     },
-    "jurisdiction":{
-      "type":"text",
-      "fields":{
-        "keyword":{
-          "type":"keyword",
-          "ignore_above":256
+    "jurisdiction": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
         }
       }
     },
-    "id":{
-      "type":"long"
+    "id": {
+      "type": "long"
     },
-    "state":{
-      "type":"keyword"
+    "state": {
+      "type": "keyword"
     },
-    "created_date":{
-      "type":"date"
+    "created_date": {
+      "type": "date"
     },
-    "last_modified":{
-      "type":"date"
+    "last_modified": {
+      "type": "date"
     },
-    "security_classification":{
-      "type":"keyword"
+    "security_classification": {
+      "type": "keyword"
     },
-    "case_type_id":{
-      "type":"keyword"
+    "case_type_id": {
+      "type": "keyword"
     },
-    "@timestamp":{
-      "enabled":false
+    "@timestamp": {
+      "enabled": false
     },
-    "@version":{
-      "enabled":false
+    "@version": {
+      "enabled": false
     },
-    "data":{
-      "properties":{
-        "forename":{
-          "type":"text",
-          "fields":{
-            "keyword":{
-              "type":"keyword",
-              "ignore_above":256
+    "data": {
+      "properties": {
+        "forename": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
             }
           }
         },
-        "executor":{
-          "properties":{
-            "executorPerson":{
-              "properties":{
-                "forename":{
-                  "type":"text",
-                  "fields":{
-                    "keyword":{
-                      "type":"keyword",
-                      "ignore_above":256
+        "executor": {
+          "properties": {
+            "executorPerson": {
+              "properties": {
+                "forename": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256
                     }
                   }
                 },
-                "dob":{
-                  "type":"date"
+                "dob": {
+                  "type": "date"
                 }
               }
             }
           }
         },
-        "appealReasons":{
-          "properties":{
-            "reasons":{
-              "properties":{
-                "id":{
-                  "enabled":false
+        "appealReasons": {
+          "properties": {
+            "reasons": {
+              "properties": {
+                "id": {
+                  "enabled": false
                 },
-                "value":{
-                  "type":"text",
-                  "fields":{
-                    "keyword":{
-                      "type":"keyword",
-                      "ignore_above":256
+                "value": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256
                     }
                   }
                 }
@@ -94,17 +94,17 @@
             }
           }
         },
-        "Aliases":{
-          "properties":{
-            "id":{
-              "enabled":false
+        "Aliases": {
+          "properties": {
+            "id": {
+              "enabled": false
             },
-            "value":{
-              "type":"text",
-              "fields":{
-                "keyword":{
-                  "type":"keyword",
-                  "ignore_above":256
+            "value": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
                 }
               }
             }
@@ -112,51 +112,79 @@
         }
       }
     },
-    "data_classification":{
-      "properties":{
-        "forename":{
-          "type":"keyword"
+    "data_classification": {
+      "properties": {
+        "forename": {
+          "type": "keyword"
         },
-        "executor":{
-          "properties":{
-            "classification":{
-              "type":"keyword"
+        "executor": {
+          "properties": {
+            "classification": {
+              "type": "keyword"
             },
-            "value":{
-              "properties":{
-                "executorPerson":{
-                  "type":"keyword"
+            "value": {
+              "properties": {
+                "executorPerson": {
+                  "properties": {
+                    "classification": {
+                      "type": "keyword"
+                    },
+                    "value": {
+                      "properties": {
+                        "forename": {
+                          "type": "keyword"
+                        },
+                        "dob": {
+                          "type": "keyword"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           }
         },
-        "appealReasons":{
-          "properties":{
-            "classification":{
-              "type":"keyword"
+        "appealReasons": {
+          "properties": {
+            "classification": {
+              "type": "keyword"
             },
-            "value":{
-              "properties":{
-                "reasons":{
-                  "type":"keyword"
+            "value": {
+              "properties": {
+                "reasons": {
+                  "properties": {
+                    "classification": {
+                      "type": "keyword"
+                    },
+                    "value": {
+                      "properties": {
+                        "id": {
+                          "enabled": false
+                        },
+                        "classification": {
+                          "type": "keyword"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           }
         },
-        "Aliases":{
-          "properties":{
-            "classification":{
-              "type":"keyword"
+        "Aliases": {
+          "properties": {
+            "classification": {
+              "type": "keyword"
             },
-            "value":{
-              "properties":{
-                "id":{
-                  "enabled":false
+            "value": {
+              "properties": {
+                "id": {
+                  "enabled": false
                 },
-                "classification":{
-                  "type":"keyword"
+                "classification": {
+                  "type": "keyword"
                 }
               }
             }
