@@ -78,7 +78,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void throwsRuntimeExceptionOnErrors() {
+    public void throwsElasticSearchInitialisationExceptionOnErrors() {
         assertThrows(ElasticSearchInitialisationException.class, () -> {
             when(config.getCasesIndexNameFormat()).thenThrow(new ArrayIndexOutOfBoundsException("test"));
             listener.onDefinitionImported(newEvent(caseA, caseB));
