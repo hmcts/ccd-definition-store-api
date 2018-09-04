@@ -14,7 +14,7 @@ import java.io.IOException;
 public class SynchronousElasticDefinitionImportListener extends ElasticDefinitionImportListener {
 
     @EventListener
-    public void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
+    public void onDefinitionImported(DefinitionImportedEvent event) {
         log.info("Errors initialising ElasticSearch will fail the definition import");
         super.initialiseElasticSearch(event.getCaseTypes());
     }

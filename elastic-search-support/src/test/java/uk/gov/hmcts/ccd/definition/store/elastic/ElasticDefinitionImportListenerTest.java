@@ -90,7 +90,7 @@ public class ElasticDefinitionImportListenerTest {
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {
 
         @Override
-        public void onDefinitionImported(DefinitionImportedEvent event) throws IOException {
+        public void onDefinitionImported(DefinitionImportedEvent event) {
             super.initialiseElasticSearch(event.getCaseTypes());
         }
     }
