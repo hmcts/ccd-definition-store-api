@@ -115,7 +115,8 @@ class CaseTypeServiceImplTest {
             dtoMapper,
             legacyCaseTypeValidator,
             Arrays.asList(caseTypeEntityValidator1, caseTypeEntityValidator2),
-            metadataFieldService, applicationEventPublisher);
+            metadataFieldService,
+            applicationEventPublisher);
     }
 
     @Nested
