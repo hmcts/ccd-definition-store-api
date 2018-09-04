@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import static com.google.common.collect.Maps.newHashMap;
-import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.mockito.Mock;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.TypeMappersManager;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.google.common.collect.Maps.newHashMap;
+import static org.mockito.Mockito.when;
 
 public class AbstractMapperTest {
 

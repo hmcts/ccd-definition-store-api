@@ -1,14 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.util.List;
-
 import com.google.gson.stream.JsonWriter;
 import org.jooq.lambda.Unchecked;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 @Component
 public class CollectionTypeMappingGenerator extends TypeMappingGenerator {

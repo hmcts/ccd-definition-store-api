@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import static com.google.common.collect.Lists.newArrayList;
+import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+import static com.google.common.collect.Lists.newArrayList;
 
 @Component
 public class BaseTypeMappingGenerator extends TypeMappingGenerator {

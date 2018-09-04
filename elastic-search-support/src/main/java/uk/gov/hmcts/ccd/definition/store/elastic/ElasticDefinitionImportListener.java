@@ -1,16 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import java.io.IOException;
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.index.mapper.MapperException;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+
+import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {

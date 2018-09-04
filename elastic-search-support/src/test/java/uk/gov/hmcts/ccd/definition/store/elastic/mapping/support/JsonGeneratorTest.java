@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.support;
 
-import static org.junit.Assert.assertThat;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
-
 import org.jooq.lambda.Unchecked;
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
+
+import static org.junit.Assert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 
 public class JsonGeneratorTest implements TestUtils {
 

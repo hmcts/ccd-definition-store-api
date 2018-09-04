@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.support;
 
+import com.google.gson.stream.JsonWriter;
+
 import java.io.StringWriter;
 import java.util.function.Consumer;
-
-import com.google.gson.stream.JsonWriter;
 
 public interface JsonGenerator {
 

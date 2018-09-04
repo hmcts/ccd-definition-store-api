@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import java.io.IOException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -14,6 +12,8 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+
+import java.io.IOException;
 
 @Component
 @Slf4j

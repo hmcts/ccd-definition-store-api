@@ -1,14 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.JsonGenerator;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.Injectable;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.TypeMappersManager;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
+
+import java.util.Map;
+import java.util.Optional;
 
 public abstract class MappingGenerator implements JsonGenerator, Injectable {
 

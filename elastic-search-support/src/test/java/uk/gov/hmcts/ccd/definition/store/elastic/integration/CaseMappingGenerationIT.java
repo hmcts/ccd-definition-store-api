@@ -1,17 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
-
-import java.io.IOException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +23,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
+
+import java.io.IOException;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
 @RunWith(SpringRunner.class)
 @BootstrapWith(SpringBootTestContextBootstrapper.class)

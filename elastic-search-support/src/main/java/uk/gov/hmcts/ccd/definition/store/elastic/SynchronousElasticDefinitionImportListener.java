@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import java.io.IOException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+
+import java.io.IOException;
 
 @Service
 @ConditionalOnExpression("'${elasticsearch.enabled}'=='true' && '${elasticsearch.failImportIfError}'=='true'")

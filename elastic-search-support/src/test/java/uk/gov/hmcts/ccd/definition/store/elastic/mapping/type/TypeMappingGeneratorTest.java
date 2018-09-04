@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +7,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TypeMappingGeneratorTest extends AbstractMapperTest {
