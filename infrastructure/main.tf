@@ -44,14 +44,6 @@ data "vault_generic_secret" "definition_store_item_key" {
   path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-definition"
 }
 
-data "vault_generic_secret" "gateway_idam_key" {
-  path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-gw"
-}
-
-data "vault_generic_secret" "gateway_oauth2_client_secret" {
-  path = "secret/${var.vault_section}/ccidam/idam-api/oauth2/client-secrets/ccd-gateway"
-}
-
 module "case-definition-store-api" {
   source   = "git@github.com:contino/moj-module-webapp?ref=master"
   product  = "${local.app_full_name}"
@@ -136,17 +128,5 @@ resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
 resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   name = "${local.app_full_name}-POSTGRES-DATABASE"
   value = "${module.definition-store-db.postgresql_database}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
-}
-
-resource "azurerm_key_vault_secret" "gw_s2s_key" {
-  name = "ccd-api-gateway-idam-service-key"
-  value = "${data.vault_generic_secret.gateway_idam_key.data["value"]}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
-}
-
-resource "azurerm_key_vault_secret" "gw_oauth2_secret" {
-  name = "ccd-api-gateway-oauth2-client-secret"
-  value = "${data.vault_generic_secret.gateway_oauth2_client_secret.data["value"]}"
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
