@@ -26,9 +26,9 @@ public class CaseMappingGenerator extends MappingGenerator {
             jw.value(config.getDynamic());
             jw.name("properties");
             jw.beginObject();
-                propertiesMapping(jw);
-                dataMapping(jw, caseType);
-                dataClassificationMapping(jw, caseType);
+            propertiesMapping(jw);
+            dataMapping(jw, caseType);
+            dataClassificationMapping(jw, caseType);
             jw.endObject();
         }));
 
@@ -60,20 +60,20 @@ public class CaseMappingGenerator extends MappingGenerator {
     private void genericDataMapping(JsonWriter jw, CaseTypeEntity caseType,
                                     Function<TypeMappingGenerator, Function<CaseFieldEntity, String>> typeMappingFunctionProducer) throws IOException {
         jw.beginObject();
-            jw.name("properties");
-            jw.beginObject();
-                List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(field -> !shouldIgnore(field)).collect(toList());
-                for (CaseFieldEntity field : fields) {
-                    String property = field.getReference();
-                    TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
-                    Function<CaseFieldEntity, String> typeMappingFunction = typeMappingFunctionProducer.apply(typeMapper);
-                    String mapping = typeMappingFunction.apply(field);
+        jw.name("properties");
+        jw.beginObject();
+        List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(field -> !shouldIgnore(field)).collect(toList());
+        for (CaseFieldEntity field : fields) {
+            String property = field.getReference();
+            TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
+            Function<CaseFieldEntity, String> typeMappingFunction = typeMappingFunctionProducer.apply(typeMapper);
+            String mapping = typeMappingFunction.apply(field);
 
-                    jw.name(property);
-                    jw.jsonValue(mapping);
-                    log.debug("property: {}, mapping: {}", property, mapping);
-                }
-            jw.endObject();
+            jw.name(property);
+            jw.jsonValue(mapping);
+            log.debug("property: {}, mapping: {}", property, mapping);
+        }
+        jw.endObject();
         jw.endObject();
     }
 

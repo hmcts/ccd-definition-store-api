@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 public interface JsonGenerator {
 
     /**
-     * starts a new json object and returns any content written by the consumer, enclosed in curly brackets
+     * starts a new json object and returns any content written by the consumer, enclosed in curly brackets.
      */
     default String newJson(Consumer<JsonWriter> jsonWriterConsumer) {
         try {
@@ -21,7 +21,7 @@ public interface JsonGenerator {
             jw.endObject();
             return out.toString();
         } catch (Exception e) {
-           throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 }

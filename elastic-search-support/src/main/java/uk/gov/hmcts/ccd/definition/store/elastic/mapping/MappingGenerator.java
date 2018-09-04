@@ -17,7 +17,7 @@ public abstract class MappingGenerator implements JsonGenerator, Injectable {
 
     protected Map<String, TypeMappingGenerator> typeMappers;
 
-    public void inject(TypeMappersManager typeMappersManager){
+    public void inject(TypeMappersManager typeMappersManager) {
         this.typeMappers = typeMappersManager.getTypeMappers();
     }
 
