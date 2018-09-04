@@ -40,8 +40,9 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
   resource_group_name = "${local.sharedResourceGroup}"
 }
 
-data "vault_generic_secret" "definition_store_item_key" {
-  path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-definition"
+data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
+  name = "ccd-definition-store-api-s2s-secret"
+  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
 
 module "case-definition-store-api" {
@@ -64,7 +65,7 @@ module "case-definition-store-api" {
 
     IDAM_USER_URL = "${var.idam_api_url}"
     IDAM_S2S_URL = "${local.s2s_url}"
-    DEFINITION_STORE_IDAM_KEY = "${data.vault_generic_secret.definition_store_item_key.data["value"]}"
+    DEFINITION_STORE_IDAM_KEY = "${data.azurerm_key_vault_secret.definition_store_s2s_secret.value}"
 
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
 
