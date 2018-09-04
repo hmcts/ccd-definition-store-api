@@ -2,7 +2,9 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.support;
 
 import org.jooq.lambda.Unchecked;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 
 import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
@@ -20,6 +22,18 @@ public class JsonGeneratorTest implements TestUtils {
         ));
 
         assertThat(result, equalToJSONInFile(readFileFromClasspath("json/json_generator_test.json")));
+    }
+
+    @Test
+    public void shouldThrowElasticSearchInitialisationExceptionOnErrors() {
+        TestJsonGenerator jsonGenerator = new TestJsonGenerator();
+
+        Assertions.assertThrows(ElasticSearchInitialisationException.class, () -> {
+            jsonGenerator.newJson(Unchecked.consumer(jsonWriter -> {
+                throw new ArrayIndexOutOfBoundsException("test");
+                }
+            ));
+        });
     }
 
     private static class TestJsonGenerator implements JsonGenerator {}

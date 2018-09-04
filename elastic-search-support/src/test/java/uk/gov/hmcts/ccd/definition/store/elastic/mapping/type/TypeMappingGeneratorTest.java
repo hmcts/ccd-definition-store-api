@@ -4,11 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -25,12 +28,12 @@ public class TypeMappingGeneratorTest extends AbstractMapperTest {
 
     @Test
     public void shouldThrowErrorWhenNoMapperForType() {
-        assertThrows(RuntimeException.class, () -> typeMappingGenerator.getTypeMapper("unkonwnType"));
+        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator.getTypeMapper("unkonwnType"));
     }
 
     @Test
     public void shouldThrowErrorWhenNoConfiguredMapping() {
-        assertThrows(RuntimeException.class, () -> typeMappingGenerator.getConfiguredMapping("Unknown"));
+        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator.getConfiguredMapping("Unknown"));
     }
 
     private static class TestMappingGenerator extends TypeMappingGenerator {
@@ -47,6 +50,11 @@ public class TypeMappingGeneratorTest extends AbstractMapperTest {
         @Override
         public List<String> getMappedTypes() {
             return null;
+        }
+
+        @Override
+        protected Map<String, String> configuredTypeMappings() {
+            return Collections.EMPTY_MAP;
         }
     }
 }
