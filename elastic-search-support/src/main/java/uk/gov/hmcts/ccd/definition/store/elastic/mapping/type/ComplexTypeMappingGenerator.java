@@ -20,7 +20,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
 
     public String dataMapping(List<ComplexFieldEntity> complexFields) {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
-            jw.name("properties");
+            jw.name(PROPERTIES);
             jw.beginObject();
             for (FieldEntity field : complexFields) {
                 jw.name(field.getReference());
@@ -38,13 +38,13 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
 
     public String dataClassificationMapping(List<ComplexFieldEntity> complexFields) {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
-            jw.name("properties");
+            jw.name(PROPERTIES);
             jw.beginObject();
-            jw.name("classification");
+            jw.name(CLASSIFICATION);
             jw.jsonValue(securityClassificationMapping());
-            jw.name("value");
+            jw.name(VALUE);
             jw.beginObject();
-            jw.name("properties");
+            jw.name(PROPERTIES);
             jw.beginObject();
             for (FieldEntity field : complexFields) {
                 jw.name(field.getReference());
@@ -59,7 +59,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public List<String> getMappedTypes() {
-        return newArrayList("Complex");
+        return newArrayList(COMPLEX);
     }
 
     private List<ComplexFieldEntity> complexFields(FieldEntity field) {

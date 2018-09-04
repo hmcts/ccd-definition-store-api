@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
@@ -25,7 +26,7 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
     protected String getConfiguredMapping(String ccdType) {
         String configuredMapping = configuredTypeMappings().get(ccdType);
         if (configuredMapping == null) {
-            throw new RuntimeException(String.format("no configured mapping for ccd type %s", ccdType));
+            throw new ElasticSearchInitialisationException(String.format("no configured mapping for ccd type %s", ccdType));
         }
         return configuredMapping;
     }

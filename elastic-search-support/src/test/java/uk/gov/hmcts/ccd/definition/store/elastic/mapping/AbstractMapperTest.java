@@ -11,7 +11,7 @@ import java.util.Map;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.mockito.Mockito.when;
 
-public class AbstractMapperTest {
+public abstract class AbstractMapperTest {
 
     @Mock
     protected CcdElasticSearchProperties config;

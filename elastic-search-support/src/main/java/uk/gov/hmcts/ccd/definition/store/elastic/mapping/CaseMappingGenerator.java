@@ -24,7 +24,7 @@ public class CaseMappingGenerator extends MappingGenerator {
         String mapping = newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("dynamic");
             jw.value(config.getDynamic());
-            jw.name("properties");
+            jw.name(PROPERTIES);
             jw.beginObject();
             propertiesMapping(jw);
             dataMapping(jw, caseType);
@@ -47,27 +47,27 @@ public class CaseMappingGenerator extends MappingGenerator {
 
     private void dataMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
         log.debug("generating case data mapping");
-        jw.name("data");
-        genericDataMapping(jw, caseType, typeMapper -> field -> typeMapper.dataMapping(field));
+        jw.name(DATA);
+        genericDataMapping(jw, caseType, typeMapper -> typeMapper::dataMapping);
     }
 
     private void dataClassificationMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
         log.debug("generating case data classification mapping");
-        jw.name("data_classification");
-        genericDataMapping(jw, caseType, typeMapper -> field -> typeMapper.dataClassificationMapping(field));
+        jw.name(DATA_CLASSIFICATION);
+        genericDataMapping(jw, caseType, typeMapper -> typeMapper::dataClassificationMapping);
     }
 
     private void genericDataMapping(JsonWriter jw, CaseTypeEntity caseType,
-                                    Function<TypeMappingGenerator, Function<CaseFieldEntity, String>> typeMappingFunctionProducer) throws IOException {
+                                    Function<TypeMappingGenerator, Function<CaseFieldEntity, String>> mappingMethodSelection) throws IOException {
         jw.beginObject();
-        jw.name("properties");
+        jw.name(PROPERTIES);
         jw.beginObject();
         List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(field -> !shouldIgnore(field)).collect(toList());
         for (CaseFieldEntity field : fields) {
             String property = field.getReference();
             TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
-            Function<CaseFieldEntity, String> typeMappingFunction = typeMappingFunctionProducer.apply(typeMapper);
-            String mapping = typeMappingFunction.apply(field);
+            Function<CaseFieldEntity, String> mappingMethod = mappingMethodSelection.apply(typeMapper);
+            String mapping = mappingMethod.apply(field);
 
             jw.name(property);
             jw.jsonValue(mapping);

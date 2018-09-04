@@ -12,6 +12,15 @@ import java.util.Optional;
 
 public abstract class MappingGenerator implements JsonGenerator, Injectable {
 
+    protected static final String DATA_CLASSIFICATION = "data_classification";
+    protected static final String DATA = "data";
+    protected static final String PROPERTIES = "properties";
+    protected static final String ID = "id";
+    protected static final String CLASSIFICATION = "classification";
+    protected static final String VALUE = "value";
+    protected static final String COLLECTION = "Collection";
+    protected static final String COMPLEX = "Complex";
+
     @Autowired
     protected CcdElasticSearchProperties config;
 

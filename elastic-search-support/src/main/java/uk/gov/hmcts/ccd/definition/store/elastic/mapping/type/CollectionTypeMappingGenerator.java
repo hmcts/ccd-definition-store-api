@@ -16,11 +16,11 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
     @Override
     public String dataMapping(FieldEntity field) {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
-            jw.name("properties");
+            jw.name(PROPERTIES);
             jw.beginObject();
-            jw.name("id");
+            jw.name(ID);
             jw.jsonValue(disabled());
-            jw.name("value");
+            jw.name(VALUE);
             jw.jsonValue(collectionTypeDataMapping(field));
             jw.endObject();
         }));
@@ -29,17 +29,17 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
     @Override
     public String dataClassificationMapping(FieldEntity field) {
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
-            jw.name("properties");
+            jw.name(PROPERTIES);
             jw.beginObject();
-            jw.name("classification");
+            jw.name(CLASSIFICATION);
             jw.jsonValue(securityClassificationMapping());
-            jw.name("value");
+            jw.name(VALUE);
             jw.beginObject();
-            jw.name("properties");
+            jw.name(PROPERTIES);
             jw.beginObject();
-            jw.name("id");
+            jw.name(ID);
             jw.jsonValue(disabled());
-            jw.name("classification");
+            jw.name(CLASSIFICATION);
             jw.jsonValue(collectionTypeDataClassificationMapping(field));
             jw.endObject();
             jw.endObject();
@@ -49,13 +49,13 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public List<String> getMappedTypes() {
-        return newArrayList("Collection");
+        return newArrayList(COLLECTION);
     }
 
     private String collectionTypeDataMapping(FieldEntity field) {
         FieldTypeEntity collectionFieldType = field.getFieldType().getCollectionFieldType();
         if (field.isCollectionOfComplex()) {
-            ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper("Complex");
+            ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper(COMPLEX);
             return mapper.dataMapping(collectionFieldType.getComplexFields());
         } else {
             return getConfiguredMapping(collectionFieldType.getReference());
@@ -64,7 +64,7 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
 
     private String collectionTypeDataClassificationMapping(FieldEntity field) {
         if (field.isCollectionOfComplex()) {
-            ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper("Complex");
+            ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper(COMPLEX);
             return mapper.dataClassificationMapping(field.getFieldType().getCollectionFieldType().getComplexFields());
         } else {
             return securityClassificationMapping();

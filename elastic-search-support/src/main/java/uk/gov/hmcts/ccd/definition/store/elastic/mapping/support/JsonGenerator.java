@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.support;
 
 import com.google.gson.stream.JsonWriter;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 
 import java.io.StringWriter;
 import java.util.function.Consumer;
@@ -21,7 +22,7 @@ public interface JsonGenerator {
             jw.endObject();
             return out.toString();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new ElasticSearchInitialisationException("mapping json generation exception", e);
         }
     }
 }
