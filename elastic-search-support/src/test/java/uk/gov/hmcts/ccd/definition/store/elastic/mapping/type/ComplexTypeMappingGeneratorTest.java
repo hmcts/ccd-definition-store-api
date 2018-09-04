@@ -26,7 +26,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     private ComplexTypeMappingGenerator complexTypeMapper;
 
     @Before
-    public void setup() {
+    public void setUp() {
         super.setup();
 
         when(config.getSecurityClassificationMapping()).thenReturn("securityClassificationMapping");

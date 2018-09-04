@@ -22,7 +22,7 @@ public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
     private CaseFieldEntity field = newTextField("fieldA").build();
 
     @Before
-    public void setup() {
+    public void setUp() {
         super.setup();
 
         typeMappings.put("Text", "textMapping");

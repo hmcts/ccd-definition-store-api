@@ -22,6 +22,10 @@ public class TypeMappersManager {
 
     protected Map<String, TypeMappingGenerator> typeMappers = newHashMap();
 
+    //This line will guarantee the TypeMappersManager will be injected last
+    @Autowired
+    private Set<Injectable> injectables = new HashSet();
+
     public Map<String, TypeMappingGenerator> getTypeMappers() {
         return typeMappers;
     }
@@ -35,14 +39,10 @@ public class TypeMappersManager {
         }
     }
 
-    //This line will guarantee the TypeMappersManager will be injected last
-    @Autowired
-    private Set<Injectable> injectables = new HashSet();
-
     //This method will make sure all the injectable classes will get the TypeMappersManager in its steady state,
     //where it's class members are ready to be set
     @PostConstruct
-    private void inject() {
+    protected void inject() {
         for (Injectable injectableItem : injectables) {
             injectableItem.inject(this);
         }

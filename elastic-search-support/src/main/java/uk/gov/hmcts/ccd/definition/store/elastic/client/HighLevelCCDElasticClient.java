@@ -20,7 +20,7 @@ import java.io.IOException;
 public class HighLevelCCDElasticClient implements CCDElasticClient {
 
     @Autowired
-    CcdElasticSearchProperties config;
+    protected CcdElasticSearchProperties config;
 
     @Autowired
     protected RestHighLevelClient elasticClient;

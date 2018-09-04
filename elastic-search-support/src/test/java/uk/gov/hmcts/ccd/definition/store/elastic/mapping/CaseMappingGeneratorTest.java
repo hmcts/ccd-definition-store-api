@@ -23,7 +23,7 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
     private CaseTypeBuilder caseType = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
 
     @Before
-    public void setup() {
+    public void setUp() {
         super.setup();
         when(config.getDynamic()).thenReturn("dynamicConfig");
         addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));

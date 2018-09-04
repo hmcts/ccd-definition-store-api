@@ -26,7 +26,7 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
     private CollectionTypeMappingGenerator collectionTypeMapper;
 
     @Before
-    public void setup() {
+    public void setUp() {
         super.setup();
 
         when(config.getSecurityClassificationMapping()).thenReturn("securityClassificationMapping");

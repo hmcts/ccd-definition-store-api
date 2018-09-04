@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 
-import java.io.IOException;
-
 @Service
 @ConditionalOnExpression("'${elasticsearch.enabled}'=='true' && '${elasticsearch.failImportIfError}'=='false'")
 @Slf4j

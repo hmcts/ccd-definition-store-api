@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.utils;
 
-import static com.google.common.collect.Lists.newArrayList;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.List;
 
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import static com.google.common.collect.Lists.newArrayList;
 
 public class FieldTypeBuilder {
 

@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.utils;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.util.List;
-
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class CaseTypeBuilder {
 

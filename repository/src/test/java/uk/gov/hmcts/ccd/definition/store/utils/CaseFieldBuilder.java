@@ -1,14 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.utils;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.ObjectArrays.newArray;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
-
-import java.util.List;
-
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
 public class CaseFieldBuilder {
 

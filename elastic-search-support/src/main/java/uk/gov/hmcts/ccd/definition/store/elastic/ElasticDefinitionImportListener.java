@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class ElasticDefinitionImportListener {
 
     @Autowired
-    CcdElasticSearchProperties config;
+    private CcdElasticSearchProperties config;
 
     @Autowired
     private CaseMappingGenerator mappingGenerator;

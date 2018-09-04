@@ -71,8 +71,7 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
      */
     private static String toJSONString(final Object o) {
         try {
-            return o instanceof String ?
-                    (String) o : new ObjectMapper().writeValueAsString(o);
+            return o instanceof String ? (String) o : new ObjectMapper().writeValueAsString(o);
         } catch (final JsonProcessingException e) {
             throw new RuntimeException(e);
         }

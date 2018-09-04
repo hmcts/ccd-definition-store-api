@@ -18,7 +18,7 @@ public class TypeMappingGeneratorTest extends AbstractMapperTest {
     private TestMappingGenerator typeMappingGenerator = new TestMappingGenerator();
 
     @Before
-    public void setup() {
+    public void setUp() {
         addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
         typeMappingGenerator.inject(stubTypeMappersManager);
     }
