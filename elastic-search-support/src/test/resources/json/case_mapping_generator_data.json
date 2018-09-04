@@ -1,16 +1,16 @@
 {
-  "dynamic": dynamicConfig,
+  "dynamic": "dynamicConfig",
   "properties":{
     "data": {
       "properties": {
-        "fieldA": dataMapping,
-        "fieldB": dataMapping
+        "fieldA": "dataMapping",
+        "fieldB": "dataMapping"
       }
     },
     "data_classification": {
       "properties": {
-        "fieldA": dataClassificationMapping,
-        "fieldB": dataClassificationMapping
+        "fieldA": "dataClassificationMapping",
+        "fieldB": "dataClassificationMapping"
       }
     }
   }
