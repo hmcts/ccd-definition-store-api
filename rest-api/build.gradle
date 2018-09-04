@@ -10,6 +10,7 @@ ext {
 
 dependencies {
     compile project(':domain')
+    compile project(':elastic-search-support')
     testCompile project(path: ':domain', configuration: 'testOutput')
     testCompile project(":domain").sourceSets.main.output
     testCompile project(":repository").sourceSets.main.output
