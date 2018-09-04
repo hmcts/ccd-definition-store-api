@@ -24,7 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
-import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.ElasticSearchConfiguration;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
@@ -54,7 +54,7 @@ public class CaseMappingGenerationIT implements TestUtils {
     private CaseMappingGenerator mappingGenerator;
 
     @MockBean
-    private HighLevelCCDElasticClient client;
+    private CCDElasticClient client;
 
     @Test
     public void testListeningToDefinitionImportedEvent() throws IOException {
