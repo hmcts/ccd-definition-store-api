@@ -70,9 +70,9 @@ class ControllerExceptionHandler {
     @ExceptionHandler(ElasticSearchInitialisationException.class)
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
-    Map<String, String> elastiSearchInitialisationError(ElasticSearchInitialisationException e) {
-        LOG.error("ElasticSearch initialisation error", e);
-        return getMessage(e, "ElasticSearch initialisation error:%s");
+    Map<String, String> elasticSearchInitialisationException(ElasticSearchInitialisationException e) {
+        LOG.error("ElasticSearch initialisation exception", e);
+        return getMessage(e, "ElasticSearch initialisation exception:%s");
     }
 
 
