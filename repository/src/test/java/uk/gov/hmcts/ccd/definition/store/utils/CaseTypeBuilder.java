@@ -14,8 +14,6 @@ public class CaseTypeBuilder {
     private String caseTypeReference;
     private List<CaseFieldEntity> fields = newArrayList();
 
-    public CaseTypeBuilder() {}
-
     public CaseTypeBuilder withJurisdiction(String reference) {
         this.jurisdictionReference = reference;
         return this;

@@ -7,6 +7,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 
 public class JsonGeneratorTest implements TestUtils {
@@ -28,7 +29,7 @@ public class JsonGeneratorTest implements TestUtils {
     public void shouldThrowElasticSearchInitialisationExceptionOnErrors() {
         TestJsonGenerator jsonGenerator = new TestJsonGenerator();
 
-        Assertions.assertThrows(ElasticSearchInitialisationException.class, () -> {
+        assertThrows(ElasticSearchInitialisationException.class, () -> {
             jsonGenerator.newJson(Unchecked.consumer(jsonWriter -> {
                 throw new ArrayIndexOutOfBoundsException("test");
                 }
