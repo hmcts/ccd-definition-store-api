@@ -223,8 +223,7 @@ public class ImportServiceImplTest {
         state.setReference("[STATE]");
         given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
             .willReturn(state);
-        ServiceAndUserDetails userDetails = new ServiceAndUserDetails("123", "token", Collections.emptyList(), null);
-        given(securityUtils.getCurrentUser()).willReturn(userDetails);
+        setupMocksForIdam();
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
@@ -233,7 +232,7 @@ public class ImportServiceImplTest {
         assertEquals(2, metadata.getCaseTypes().size());
         assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
         assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
-        assertEquals(userDetails.getUsername(), metadata.getUserId());
+        assertEquals("user@hmcts.net", metadata.getUserId());
         assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE,
             metadata.getCaseTypesAsString());
 
@@ -242,18 +241,7 @@ public class ImportServiceImplTest {
 
     @Test
     public void shouldGetUserDetails() {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, "ey123.ey456");
-        given(securityUtils.userAuthorizationHeaders()).willReturn(httpHeaders);
-        final HttpEntity requestEntity = new HttpEntity(securityUtils.userAuthorizationHeaders());
-        given(applicationParams.idamUserProfileURL()).willReturn("http://idam.local/details");
-        IDAMProperties idamProperties = new IDAMProperties();
-        idamProperties.setId("445");
-        idamProperties.setEmail("user@hmcts.net");
-        ResponseEntity<IDAMProperties> responseEntity = new ResponseEntity<>(idamProperties, HttpStatus.OK);
-        given(restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
-            IDAMProperties.class)).willReturn(responseEntity);
-
+        final HttpEntity requestEntity = setupMocksForIdam();
         final IDAMProperties expectedIdamProperties = service.getUserDetails();
         assertEquals("445", expectedIdamProperties.getId());
         assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
@@ -274,4 +262,18 @@ public class ImportServiceImplTest {
         return fieldTypeEntity;
     }
 
+    private HttpEntity setupMocksForIdam() {
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, "ey123.ey456");
+        given(securityUtils.userAuthorizationHeaders()).willReturn(httpHeaders);
+        final HttpEntity requestEntity = new HttpEntity(securityUtils.userAuthorizationHeaders());
+        given(applicationParams.idamUserProfileURL()).willReturn("http://idam.local/details");
+        final IDAMProperties idamProperties = new IDAMProperties();
+        idamProperties.setId("445");
+        idamProperties.setEmail("user@hmcts.net");
+        final ResponseEntity<IDAMProperties> responseEntity = new ResponseEntity<>(idamProperties, HttpStatus.OK);
+        given(restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
+            IDAMProperties.class)).willReturn(responseEntity);
+        return requestEntity;
+    }
 }
