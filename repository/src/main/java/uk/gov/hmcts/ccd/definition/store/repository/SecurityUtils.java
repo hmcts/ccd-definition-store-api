@@ -31,4 +31,12 @@ public class SecurityUtils {
         }
         return null;
     }
+
+    public HttpHeaders userAuthorizationHeaders() {
+        final ServiceAndUserDetails serviceAndUser =
+            (ServiceAndUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, serviceAndUser.getPassword());
+        return headers;
+    }
 }

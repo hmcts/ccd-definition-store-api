@@ -4,8 +4,17 @@ import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -14,6 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
@@ -88,6 +98,24 @@ public class ImportServiceImplTest {
     @Mock
     private SecurityUtils securityUtils;
 
+    @Mock
+    private RestTemplate restTemplate;
+
+    @Mock
+    private ApplicationParams applicationParams;
+
+    @Captor
+    private ArgumentCaptor<String> idamUserProfileURLCaptor;
+
+    @Captor
+    private ArgumentCaptor<HttpMethod> httpMethodCaptor;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity> requestEntityCaptor;
+
+    @Captor
+    private ArgumentCaptor<Class<IDAMProperties>> idamPropertiesClassCaptor;
+
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -126,7 +154,9 @@ public class ImportServiceImplTest {
                                         userRoleRepository,
                                         workBasketUserDefaultService,
                                         caseFieldRepository,
-                                        securityUtils);
+                                        securityUtils,
+                                        restTemplate,
+                                        applicationParams);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
@@ -208,6 +238,34 @@ public class ImportServiceImplTest {
             metadata.getCaseTypesAsString());
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
+    }
+
+    @Test
+    public void shouldGetUserDetails() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, "ey123.ey456");
+        given(securityUtils.userAuthorizationHeaders()).willReturn(httpHeaders);
+        final HttpEntity requestEntity = new HttpEntity(securityUtils.userAuthorizationHeaders());
+        given(applicationParams.idamUserProfileURL()).willReturn("http://idam.local/details");
+        IDAMProperties idamProperties = new IDAMProperties();
+        idamProperties.setId("445");
+        idamProperties.setEmail("user@hmcts.net");
+        ResponseEntity<IDAMProperties> responseEntity = new ResponseEntity<>(idamProperties, HttpStatus.OK);
+        given(restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
+            IDAMProperties.class)).willReturn(responseEntity);
+
+        final IDAMProperties expectedIdamProperties = service.getUserDetails();
+        assertEquals("445", expectedIdamProperties.getId());
+        assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
+
+        verify(restTemplate).exchange(idamUserProfileURLCaptor.capture(),
+                                      httpMethodCaptor.capture(),
+                                      requestEntityCaptor.capture(),
+                                      idamPropertiesClassCaptor.capture());
+        assertEquals("http://idam.local/details", idamUserProfileURLCaptor.getValue());
+        assertEquals(HttpMethod.GET, httpMethodCaptor.getValue());
+        assertEquals(requestEntity, requestEntityCaptor.getValue());
+        assertEquals(IDAMProperties.class, idamPropertiesClassCaptor.getValue());
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {

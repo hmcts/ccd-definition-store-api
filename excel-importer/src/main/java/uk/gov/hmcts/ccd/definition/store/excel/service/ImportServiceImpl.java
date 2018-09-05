@@ -3,13 +3,18 @@ package uk.gov.hmcts.ccd.definition.store.excel.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
@@ -55,6 +60,8 @@ public class ImportServiceImpl implements ImportService {
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
     private final CaseFieldRepository caseFieldRepository;
     private final SecurityUtils securityUtils;
+    private final RestTemplate restTemplate;
+    private final ApplicationParams applicationParams;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -67,7 +74,9 @@ public class ImportServiceImpl implements ImportService {
                              UserRoleRepository userRoleRepository,
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
-                             SecurityUtils securityUtils) {
+                             SecurityUtils securityUtils,
+                             RestTemplate restTemplate,
+                             ApplicationParams applicationParams) {
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
         this.parserFactory = parserFactory;
@@ -79,6 +88,8 @@ public class ImportServiceImpl implements ImportService {
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
         this.securityUtils = securityUtils;
+        this.restTemplate = restTemplate;
+        this.applicationParams = applicationParams;
     }
 
     /**
@@ -189,12 +200,19 @@ public class ImportServiceImpl implements ImportService {
             metadata.addCaseType(entity.getReference());
         }
 
-        ServiceAndUserDetails userDetails = securityUtils.getCurrentUser();
+        IDAMProperties userDetails = getUserDetails();
         if (userDetails != null) {
-            metadata.setUserId(userDetails.getUsername());
+            metadata.setUserId(userDetails.getEmail());
         }
 
         return metadata;
+    }
+
+    public IDAMProperties getUserDetails() {
+        final HttpEntity<ServiceAndUserDetails> requestEntity =
+            new HttpEntity<>(securityUtils.userAuthorizationHeaders());
+        return restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
+            IDAMProperties.class).getBody();
     }
 
     private JurisdictionEntity importJurisdiction(JurisdictionEntity jurisdiction) {
