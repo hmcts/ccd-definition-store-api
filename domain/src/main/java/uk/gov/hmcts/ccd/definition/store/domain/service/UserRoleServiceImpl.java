@@ -59,6 +59,14 @@ public class UserRoleServiceImpl implements UserRoleService {
             .collect(toList());
     }
 
+    @Override
+    public List<UserRole> getRoles() {
+        final List<UserRoleEntity> userRoles = repository.findAll();
+        return userRoles.stream()
+            .map(UserRoleModelMapper::toModel)
+            .collect(toList());
+    }
+
     private LocalDate parseDate(String date) {
         return null == date ? null : LocalDate.parse(date);
     }

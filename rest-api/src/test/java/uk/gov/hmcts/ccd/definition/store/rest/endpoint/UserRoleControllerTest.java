@@ -44,6 +44,7 @@ class UserRoleControllerTest {
     private static final String URL_API_USER_ROLE = "/api/user-role";
     private static final UriTemplate URL_TEMPLATE = new UriTemplate(URL_API_USER_ROLE + "?role={role}");
     private static final String URL_API_USER_ROLES = "/api/user-roles/role1,role2";
+    private static final String URL_API_ALL_USER_ROLES = "/api/all-roles";
     private static final String ROLE_DEFINED = "@<\"*#$%^\\/";
     private static final String ROLE1 = "role1";
     private static final String ROLE2 = "role2";
@@ -157,6 +158,34 @@ class UserRoleControllerTest {
             assertAll(
                 () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
                 () -> assertThat(userRoles.size(), is(0))
+            );
+        }
+
+
+        @Test
+        void shouldGetAllRoles() throws Exception {
+            final UserRole mockUserRole = buildUserRole(ROLE1, 1);
+            final UserRole mockUserRole2 = buildUserRole(ROLE2, 2);
+            List<UserRole> roles = Arrays.asList(mockUserRole, mockUserRole2);
+            when(userRoleService.getRoles()).thenReturn(roles);
+
+            final MvcResult mvcResult = mockMvc.perform(
+                get(URL_API_ALL_USER_ROLES))
+                .andExpect(status().isOk())
+                .andReturn();
+
+            final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+
+            assertAll(
+                () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
+                () -> assertThat(userRoles.size(), is(2)),
+                () -> assertThat(userRoles.get(0).getId(), is(1)),
+                () -> assertThat(userRoles.get(0).getRole(), is(ROLE1)),
+                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
+                () -> assertThat(userRoles.get(1).getId(), is(2)),
+                () -> assertThat(userRoles.get(1).getRole(), is(ROLE2)),
+                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
             );
         }
     }
