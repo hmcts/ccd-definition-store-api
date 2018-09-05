@@ -41,8 +41,8 @@ public abstract class ElasticDefinitionImportListener {
                 boolean acknowledged = elasticClient.upsertMapping(indexName, caseMapping);
                 log.info("mapping created: {}", acknowledged);
             }
-        } catch (Exception e) {
-            throw new ElasticSearchInitialisationException(e);
+        } catch (Exception exc) {
+            throw new ElasticSearchInitialisationException(exc);
         }
     }
 
