@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Enum to track all valid column names for a Case Definition import
  */
@@ -59,13 +56,14 @@ public enum ColumnName {
     TAB_LABEL("TabLabel"),
     TAB_DISPLAY_ORDER("TabDisplayOrder"),
     TAB_FIELD_DISPLAY_ORDER("TabFieldDisplayOrder"),
+    TITLE_DISPLAY("TitleDisplay"),
     USER_IDAM_ID("UserIDAMId"),
     USER_ROLE("UserRole"),
     WORK_BASKET_DEFAULT_JURISDICTION("WorkBasketDefaultJurisdiction"),
     WORK_BASKET_DEFAULT_CASETYPE("WorkBasketDefaultCaseType"),
     WORK_BASKET_DEFAULT_STATE("WorkBasketDefaultState");
 
-    private String name;
+    private final String name;
 
     ColumnName(String columnName) {
         this.name = columnName;
@@ -87,56 +85,56 @@ public enum ColumnName {
                     columnName.equals(ColumnName.NAME);
             case CASE_EVENT:
                 return columnName.equals(ColumnName.ID) ||
-                       columnName.equals(ColumnName.NAME) ||
-                       columnName.equals(ColumnName.CASE_TYPE_ID);
+                    columnName.equals(ColumnName.NAME) ||
+                    columnName.equals(ColumnName.CASE_TYPE_ID);
             case CASE_FIELD:
                 return columnName.equals(ColumnName.ID) ||
-                       columnName.equals(ColumnName.NAME) ||
-                       columnName.equals(ColumnName.FIELD_TYPE) ||
-                       columnName.equals(ColumnName.CASE_TYPE_ID);
+                    columnName.equals(ColumnName.NAME) ||
+                    columnName.equals(ColumnName.FIELD_TYPE) ||
+                    columnName.equals(ColumnName.CASE_TYPE_ID);
             case STATE:
                 return columnName.equals(ColumnName.ID);
             case CASE_EVENT_TO_FIELDS:
                 return columnName.equals(ColumnName.CASE_FIELD_ID) ||
-                       columnName.equals(ColumnName.CASE_TYPE_ID) ||
-                       columnName.equals(ColumnName.CASE_EVENT_ID) ||
-                       columnName.equals(ColumnName.PAGE_ID);
+                    columnName.equals(ColumnName.CASE_TYPE_ID) ||
+                    columnName.equals(ColumnName.CASE_EVENT_ID) ||
+                    columnName.equals(ColumnName.PAGE_ID);
             case FIXED_LISTS:
                 return columnName.equals(ColumnName.LIST_ELEMENT_CODE) ||
                     columnName.equals(ColumnName.LIST_ELEMENT);
             case COMPLEX_TYPES:
                 return columnName.equals(ColumnName.ID) ||
-                       columnName.equals(ColumnName.FIELD_TYPE);
+                    columnName.equals(ColumnName.FIELD_TYPE);
             case SEARCH_INPUT_FIELD:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
-                       columnName.equals(ColumnName.CASE_FIELD_ID);
+                    columnName.equals(ColumnName.CASE_FIELD_ID);
             case SEARCH_RESULT_FIELD:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
-                       columnName.equals(ColumnName.CASE_FIELD_ID);
+                    columnName.equals(ColumnName.CASE_FIELD_ID);
             case WORK_BASKET_INPUT_FIELD:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
-                       columnName.equals(ColumnName.CASE_FIELD_ID);
+                    columnName.equals(ColumnName.CASE_FIELD_ID);
             case WORK_BASKET_RESULT_FIELDS:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
-                       columnName.equals(ColumnName.CASE_FIELD_ID);
+                    columnName.equals(ColumnName.CASE_FIELD_ID);
             case CASE_TYPE_TAB:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
-                       columnName.equals(ColumnName.TAB_ID) ||
-                       columnName.equals(ColumnName.CASE_FIELD_ID);
+                    columnName.equals(ColumnName.TAB_ID) ||
+                    columnName.equals(ColumnName.CASE_FIELD_ID);
             case AUTHORISATION_CASE_TYPE:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
-                       columnName.equals(ColumnName.USER_ROLE) ||
-                       columnName.equals(ColumnName.CRUD);
+                    columnName.equals(ColumnName.USER_ROLE) ||
+                    columnName.equals(ColumnName.CRUD);
             case AUTHORISATION_CASE_FIELD:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
-                       columnName.equals(ColumnName.CASE_FIELD_ID) ||
-                       columnName.equals(ColumnName.USER_ROLE) ||
-                       columnName.equals(ColumnName.CRUD);
+                    columnName.equals(ColumnName.CASE_FIELD_ID) ||
+                    columnName.equals(ColumnName.USER_ROLE) ||
+                    columnName.equals(ColumnName.CRUD);
             case AUTHORISATION_CASE_EVENT:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
-                       columnName.equals(ColumnName.CASE_EVENT_ID) ||
-                       columnName.equals(ColumnName.USER_ROLE) ||
-                       columnName.equals(ColumnName.CRUD);
+                    columnName.equals(ColumnName.CASE_EVENT_ID) ||
+                    columnName.equals(ColumnName.USER_ROLE) ||
+                    columnName.equals(ColumnName.CRUD);
             case AUTHORISATION_CASE_STATE:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
                     columnName.equals(ColumnName.STATE_ID) ||
@@ -144,7 +142,7 @@ public enum ColumnName {
                     columnName.equals(ColumnName.CRUD);
             default:
                 return false;
-        // @formatter:on
+            // @formatter:on
         }
     }
 
