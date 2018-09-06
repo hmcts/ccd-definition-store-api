@@ -16,7 +16,7 @@ List<LinkedHashMap<String, Object>> secrets = [
     secret('ccd-importer-autotest-password', 'CCD_IMPORT_AUTOTEST_PASSWORD'),
     secret('ccd-caseworker-autotest-email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
     secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
-    secret('ccd-api-gateway-idam-service-key', 'CCD_GW_SERVICE_SECRET'),
+    secret('ccd-api-gateway-s2s-secret', 'CCD_GW_SERVICE_SECRET'),
     secret('ccd-api-gateway-oauth2-client-secret', 'OAUTH2_CLIENT_SECRET'),
 ]
 
