@@ -26,6 +26,8 @@ class StateParserTest {
 
     private static final String CASE_TYPE_ID = "N>G>I>T>B.";
     private static final String STATE_ID = "how many more tests to get over 80%";
+    private static final String TITLE_DISPLAY = "${lastName} ${[CASE_REFERENCE]}";
+    private static final String EXPECTED_TITLE_DISPLAY = "${lastName} ${[CASE_REFERENCE]}";
 
     private StateParser underTest;
     private Map<String, DefinitionSheet> definitionSheets;
@@ -54,6 +56,7 @@ class StateParserTest {
                       final StateEntity s = new ArrayList<>(stateEntities).get(0);
                       assertThat(s.getReference(), is(STATE_ID));
                       assertThat(s.getCaseType(), is(nullValue()));
+                      assertThat(s.getTitleDisplay(), is(EXPECTED_TITLE_DISPLAY));
                       assertThat(context.getStateForCaseType(CASE_TYPE_ID, STATE_ID), is(s));
                   });
     }
@@ -69,6 +72,7 @@ class StateParserTest {
         final DefinitionDataItem item = new DefinitionDataItem(STATE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
         item.addAttribute(ColumnName.ID, STATE_ID);
+        item.addAttribute(ColumnName.TITLE_DISPLAY, TITLE_DISPLAY);
         sheet.addDataItem(item);
         return sheet;
     }
