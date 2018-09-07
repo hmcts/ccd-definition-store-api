@@ -1,44 +1,53 @@
 package uk.gov.hmcts.ccd.definition.store.domain.showcondition;
 
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@ToString
 public class ShowCondition {
 
-    private String showConditionExpression;
+    private final String showConditionExpression;
+    private final List<String> fields;
 
-    private String field;
-
-    // User builder
-    private ShowCondition() {
-
-    }
-
-    public String getField() {
-        return this.field;
+    public ShowCondition(String showConditionExpression, List<String> fields) {
+        this.showConditionExpression = showConditionExpression;
+        this.fields = fields;
     }
 
     public String getShowConditionExpression() {
-        return this.showConditionExpression;
+        return showConditionExpression;
+    }
+
+    public List<String> getFields() {
+        return fields;
     }
 
     public static class Builder {
 
-        private ShowCondition showCondition;
+        private final StringBuilder showConditionExprBuilder = new StringBuilder();
+        private final List<String> fields = new ArrayList<>();
 
         public Builder() {
-            this.showCondition = new ShowCondition();
         }
 
         public Builder field(String field) {
-            this.showCondition.field = field;
+            fields.add(field);
             return this;
         }
 
         public Builder showConditionExpression(String showConditionExpression) {
-            this.showCondition.showConditionExpression = showConditionExpression;
+            showConditionExprBuilder.append(showConditionExpression);
             return this;
         }
 
+        boolean hasShowCondition() {
+            return showConditionExprBuilder.length() > 0;
+        }
+
         public ShowCondition build() {
-            return showCondition;
+            return new ShowCondition(showConditionExprBuilder.toString(), fields);
         }
 
     }

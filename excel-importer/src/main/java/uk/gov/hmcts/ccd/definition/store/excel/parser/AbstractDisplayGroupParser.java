@@ -10,7 +10,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +42,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     protected boolean displayGroupItemMandatory;
 
 
-    public AbstractDisplayGroupParser(ParseContext parseContext, ShowConditionParser showConditionParser, EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+    public AbstractDisplayGroupParser(ParseContext parseContext, ShowConditionParser showConditionParser,
+                                      EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
         this.parseContext = parseContext;
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
@@ -107,7 +112,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         return result;
     }
 
-    protected ParseResult.Entry<DisplayGroupEntity> parseGroup(CaseTypeEntity caseType, String groupId, Map.Entry<String, List<DefinitionDataItem>> groupDefinition) {
+    protected ParseResult.Entry<DisplayGroupEntity> parseGroup(CaseTypeEntity caseType, String groupId,
+                                                               Map.Entry<String, List<DefinitionDataItem>> groupDefinition) {
         final DefinitionDataItem sample = groupDefinition.getValue().get(0);
 
         final DisplayGroupEntity group = new DisplayGroupEntity();
@@ -134,7 +140,9 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
 
     private void parseGroupShowCondition(ColumnName column, DisplayGroupEntity group, List<DefinitionDataItem> groupDefinition) {
         if (groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).count() > 1) {
-            throw new MapperException(String.format("Please provide single condition in %s column in %s for the tab %s", column, groupDefinition.get(0).getSheetName(), group.getReference()));
+            throw new MapperException(
+                String.format("Please provide single condition in %s column in %s for the tab %s", column, groupDefinition.get(0).getSheetName(),
+                              group.getReference()));
         }
         Optional<DefinitionDataItem> definitionDataItemOpt = groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).findFirst();
         definitionDataItemOpt.ifPresent(ddi -> group.setShowCondition(parseShowCondition(ddi.getString(column))));
@@ -149,7 +157,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         groupCaseField.setLiveTo(groupCaseFieldDefinition.getLocalDate(ColumnName.LIVE_TO));
         groupCaseField.setOrder(groupCaseFieldDefinition.getInteger(this.displayGroupFieldDisplayOrder));
         this.columnId.ifPresent(cId -> groupCaseField.setColumnNumber(groupCaseFieldDefinition.getInteger(cId)));
-        this.fieldShowConditionColumn.ifPresent(sC -> groupCaseField.setShowCondition(groupCaseFieldDefinition.getString(sC)));
+        this.fieldShowConditionColumn.ifPresent(sC -> groupCaseField.setShowCondition(parseShowCondition(groupCaseFieldDefinition.getString(sC))));
 
         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(groupCaseField, groupCaseFieldDefinition);
 

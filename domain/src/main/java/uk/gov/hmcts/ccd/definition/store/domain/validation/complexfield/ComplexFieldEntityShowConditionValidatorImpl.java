@@ -36,12 +36,13 @@ public class ComplexFieldEntityShowConditionValidatorImpl implements ComplexFiel
             return validationResult;
         }
 
-        String showConditionField = showCondition.getField();
-        if (!complexField.getComplexFieldType().hasComplexField(showConditionField)) {
-            validationResult.addError(
+        showCondition.getFields().forEach(showConditionField -> {
+            if (!complexField.getComplexFieldType().hasComplexField(showConditionField)) {
+                validationResult.addError(
                     new ComplexFieldShowConditionReferencesInvalidFieldError(showConditionField, complexField)
-            );
-        }
+                );
+            }
+        });
 
         return validationResult;
     }
