@@ -13,25 +13,16 @@ import java.util.concurrent.Executor;
 @EnableAsync
 class ApplicationConfiguration {
 
-    @Value("${async.executor.core.pool.size}")
-    private Integer corePoolSize;
-
-    @Value("${async.executor.max.pool.size}")
-    private Integer maxPoolSize;
-
-    @Value("${async.executor.queue.capacity}")
-    private Integer queueCapacity;
-
-    @Value("${async.executor.prefix}")
-    private String prefix;
-
     @Bean
     RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
     @Bean
-    public Executor asyncExecutor() {
+    public Executor asyncExecutor(@Value("${async.executor.core.pool.size}") Integer corePoolSize,
+                                  @Value("${async.executor.max.pool.size}") Integer maxPoolSize,
+                                  @Value("${async.executor.queue.capacity}") Integer queueCapacity,
+                                  @Value("${async.executor.prefix}") String prefix) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
