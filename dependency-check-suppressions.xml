@@ -60,4 +60,14 @@
         <notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security (any version), see https://pivotal.io/security/cve-2018-1258</notes>
         <cve>CVE-2018-1258</cve>
     </suppress>
+    <suppress>
+        <notes>CVE-2018-13661: case-app*_2.11-1.2.0.jar is used in codacy for test coverage reporting, thus unimpacted in production</notes>
+        <gav regex="true">^com\.github\.alexarchambault:case-app(-util|-annotations|)_2\.11:.*$</gav>
+        <cpe>cpe:/a:app_project:app</cpe>
+    </suppress>
+    <suppress>
+        <notes>CVE-2018-13661: we aren't using this for Ethereum, The mintToken function of a smart contract implementation for APP, an Ethereum token, has an integer overflow that allows the owner of the contract to set the balance of an arbitrary user to any value.</notes>
+        <gav regex="true">^uk\.gov\.hmcts\.ccd\.definition:app-insights:.*$</gav>
+        <cpe>cpe:/a:app_project:app</cpe>
+    </suppress>
 </suppressions>

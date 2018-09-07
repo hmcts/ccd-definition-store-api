@@ -31,7 +31,7 @@ public class StateParser {
         final List<StateEntity> states = Lists.newArrayList();
 
         final Map<String, List<DefinitionDataItem>> stateItemsByCaseTypes = definitionSheets.get(SheetName.STATE.getName())
-                                                                                                .groupDataItemsByCaseType();
+            .groupDataItemsByCaseType();
 
         if (!stateItemsByCaseTypes.containsKey(caseTypeId)) {
             throw new SpreadsheetParsingException("At least one state must be defined for case type: " + caseTypeId);
@@ -66,6 +66,7 @@ public class StateParser {
         state.setOrder(stateDefinition.getInteger(ColumnName.DISPLAY_ORDER));
         state.setLiveFrom(stateDefinition.getLocalDate(ColumnName.LIVE_FROM));
         state.setLiveTo(stateDefinition.getLocalDate(ColumnName.LIVE_TO));
+        state.setTitleDisplay(stateDefinition.getString(ColumnName.TITLE_DISPLAY));
 
         return state;
     }
