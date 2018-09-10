@@ -90,6 +90,10 @@ public class ElasticDefinitionImportListenerTest {
 
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {
 
+        public TestDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator, CCDElasticClient elasticClient) {
+            super(config, mappingGenerator, elasticClient);
+        }
+
         @Override
         public void onDefinitionImported(DefinitionImportedEvent event) {
             super.initialiseElasticSearch(event.getContent());

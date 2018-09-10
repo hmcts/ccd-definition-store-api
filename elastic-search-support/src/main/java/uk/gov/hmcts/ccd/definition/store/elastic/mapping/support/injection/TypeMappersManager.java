@@ -24,7 +24,7 @@ public class TypeMappersManager {
 
     //This line will guarantee the TypeMappersManager will be injected last
     @Autowired
-    private Set<Injectable> injectables = new HashSet();
+    private Set<Injectable> injectables;
 
     public Map<String, TypeMappingGenerator> getTypeMappers() {
         return typeMappers;

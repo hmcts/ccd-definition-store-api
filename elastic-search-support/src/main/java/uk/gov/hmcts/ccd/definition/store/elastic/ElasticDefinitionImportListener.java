@@ -15,14 +15,17 @@ import java.util.List;
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
 
-    @Autowired
     private CcdElasticSearchProperties config;
 
-    @Autowired
     private CaseMappingGenerator mappingGenerator;
 
-    @Autowired
     private CCDElasticClient elasticClient;
+
+    public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator, CCDElasticClient elasticClient) {
+        this.config = config;
+        this.mappingGenerator = mappingGenerator;
+        this.elasticClient = elasticClient;
+    }
 
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
 

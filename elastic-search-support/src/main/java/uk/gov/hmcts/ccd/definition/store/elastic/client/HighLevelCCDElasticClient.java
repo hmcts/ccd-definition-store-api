@@ -19,11 +19,15 @@ import java.io.IOException;
 @Slf4j
 public class HighLevelCCDElasticClient implements CCDElasticClient {
 
-    @Autowired
     protected CcdElasticSearchProperties config;
 
-    @Autowired
     protected RestHighLevelClient elasticClient;
+
+    @Autowired
+    public HighLevelCCDElasticClient(CcdElasticSearchProperties config, RestHighLevelClient elasticClient) {
+        this.config = config;
+        this.elasticClient = elasticClient;
+    }
 
     @Override
     public boolean indexExists(String indexName) throws IOException {
