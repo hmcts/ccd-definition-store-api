@@ -1,12 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.support;
 
 import org.jooq.lambda.Unchecked;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 

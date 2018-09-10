@@ -1,9 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
@@ -15,12 +17,13 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class TypeMappingGeneratorTest extends AbstractMapperTest {
 
     private TestMappingGenerator typeMappingGenerator = new TestMappingGenerator();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
         typeMappingGenerator.inject(stubTypeMappersManager);
