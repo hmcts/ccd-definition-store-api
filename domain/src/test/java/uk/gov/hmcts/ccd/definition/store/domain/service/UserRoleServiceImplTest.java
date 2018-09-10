@@ -132,6 +132,44 @@ class UserRoleServiceImplTest {
         }
     }
 
+    @Nested
+    @DisplayName("GetRoles Tests")
+    class GetRolesTests {
+        @Test
+        @DisplayName("should return userRoles if defined")
+        void getRoles() {
+            String[] roleNames = {"role1", "role2", "role3"};
+            UserRoleEntity entity2 = mock(UserRoleEntity.class);
+            givenUserRole(roleNames[0], PUBLIC);
+            givenEntityWithRole(roleNames[0], RESTRICTED, entity);
+            givenUserRole(roleNames[2], PUBLIC);
+            givenEntityWithRole(roleNames[2], PUBLIC, entity2);
+
+            doReturn(Arrays.asList(entity, entity2)).when(repository).findByRoleIn(Arrays.asList(roleNames));
+
+            List<UserRole> userRoles = service.getRoles(Arrays.asList(roleNames));
+
+            assertAll(
+                () -> assertThat(userRoles.get(0).getId(), is(-3)),
+                () -> assertThat(userRoles.get(0).getRole(), is(roleNames[0])),
+                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(RESTRICTED)),
+                () -> assertThat(userRoles.get(1).getId(), is(-3)),
+                () -> assertThat(userRoles.get(1).getRole(), is(roleNames[2])),
+                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(PUBLIC))
+            );
+        }
+
+        @Test
+        @DisplayName("should return empty if given roles are undefined")
+        void getNonExistentRoles() {
+            String[] roleNames = {"role1", "role2", "role3"};
+            doReturn(Collections.EMPTY_LIST).when(repository).findByRoleIn(Arrays.asList(roleNames));
+
+            List<UserRole> userRoles = service.getRoles(Arrays.asList(roleNames));
+
+            assertThat(userRoles.size(), is(0));
+        }
+    }
 
     @Nested
     @DisplayName("Get All Roles Tests")
