@@ -44,7 +44,7 @@ class UserRoleControllerTest {
     private static final String URL_API_USER_ROLE = "/api/user-role";
     private static final UriTemplate URL_TEMPLATE = new UriTemplate(URL_API_USER_ROLE + "?role={role}");
     private static final String URL_API_USER_ROLES = "/api/user-roles/role1,role2";
-    private static final String URL_API_ALL_USER_ROLES = "/api/all-roles";
+    private static final String URL_API_ALL_USER_ROLES = "/api/user-roles";
     private static final String ROLE_DEFINED = "@<\"*#$%^\\/";
     private static final String ROLE1 = "role1";
     private static final String ROLE2 = "role2";
@@ -160,7 +160,7 @@ class UserRoleControllerTest {
                 () -> assertThat(userRoles.size(), is(0))
             );
         }
-        
+
         @Test
         void shouldGetAllRoles() throws Exception {
             final UserRole mockUserRole = buildUserRole(ROLE1, 1);

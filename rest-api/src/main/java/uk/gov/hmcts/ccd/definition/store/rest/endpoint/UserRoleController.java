@@ -68,7 +68,7 @@ class UserRoleController {
         return this.userRoleService.getRoles(roles);
     }
 
-    @RequestMapping(value = "/all-roles", method = RequestMethod.GET, produces = {"application/json"})
+    @RequestMapping(value = "/user-roles", method = RequestMethod.GET, produces = {"application/json"})
     @ApiOperation(value = "Get All user role definitions", notes = "", response = UserRole.class, responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "User Roles Response is returned"),
