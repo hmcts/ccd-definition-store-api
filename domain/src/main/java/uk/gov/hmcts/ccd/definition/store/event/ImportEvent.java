@@ -2,13 +2,13 @@ package uk.gov.hmcts.ccd.definition.store.event;
 
 public abstract class ImportEvent<T> {
 
-    private final T caseTypes;
+    private final T content;
 
-    ImportEvent(T caseTypes) {
-        this.caseTypes = caseTypes;
+    ImportEvent(T content) {
+        this.content = content;
     }
 
-    public T getCaseTypes() {
-        return caseTypes;
+    public T getContent() {
+        return content;
     }
 }

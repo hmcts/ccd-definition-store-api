@@ -194,7 +194,7 @@ class CaseTypeServiceImplTest {
             classUnderTest.createAll(jurisdiction, caseTypeEntities);
 
             verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
-            assertThat(eventCaptor.getValue().getCaseTypes(), equalTo(caseTypeEntities));
+            assertThat(eventCaptor.getValue().getContent(), equalTo(caseTypeEntities));
         }
 
         private <T> Matcher<T> matchesValidationErrorWithDefaultMessage(String defaultMessage) {

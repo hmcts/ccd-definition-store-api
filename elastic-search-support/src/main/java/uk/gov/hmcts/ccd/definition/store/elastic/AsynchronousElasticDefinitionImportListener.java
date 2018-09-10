@@ -18,6 +18,6 @@ public class AsynchronousElasticDefinitionImportListener extends ElasticDefiniti
     @EventListener
     public void onDefinitionImported(DefinitionImportedEvent event) {
         log.warn("Errors initialising ElasticSearch will not fail the definition import");
-        super.initialiseElasticSearch(event.getCaseTypes());
+        super.initialiseElasticSearch(event.getContent());
     }
 }
