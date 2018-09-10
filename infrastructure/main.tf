@@ -24,12 +24,6 @@ locals {
   nonPreviewResourceGroup = "${var.raw_product}-shared-${var.env}"
   sharedResourceGroup = "${(var.env == "preview" || var.env == "spreview") ? local.previewResourceGroup : local.nonPreviewResourceGroup}"
 
-  // Old Vault to be removed
-  oldPreviewVaultName = "${var.product}-definition"
-  # preview env contains pr number prefix, other envs need a suffix
-  oldNonPreviewVaultName = "${local.previewVaultName}-${var.env}"
-  oldVaultName = "${(var.env == "preview" || var.env == "spreview") ? local.oldPreviewVaultName : local.oldNonPreviewVaultName}"
-
   custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
   default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
   oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
@@ -85,17 +79,6 @@ module "definition-store-db" {
   sku_tier = "GeneralPurpose"
   storage_mb = "51200"
   common_tags  = "${var.common_tags}"
-}
-
-module "definition-store-vault" {
-  source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-  name                = "${local.oldVaultName}" // Max 24 characters
-  product             = "${var.product}"
-  env                 = "${var.env}"
-  tenant_id           = "${var.tenant_id}"
-  object_id           = "${var.jenkins_AAD_objectId}"
-  resource_group_name = "${module.case-definition-store-api.resource_group_name}"
-  product_group_object_id = "be8b3850-998a-4a66-8578-da268b8abd6b"
 }
 
 ////////////////////////////////
