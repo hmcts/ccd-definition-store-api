@@ -160,8 +160,7 @@ class UserRoleControllerTest {
                 () -> assertThat(userRoles.size(), is(0))
             );
         }
-
-
+        
         @Test
         void shouldGetAllRoles() throws Exception {
             final UserRole mockUserRole = buildUserRole(ROLE1, 1);
