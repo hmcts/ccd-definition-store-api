@@ -15,9 +15,14 @@ locals {
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 
   // Vault name
-  previewVaultName = "${var.raw_product}-shared-aat"
-  nonPreviewVaultName = "${var.raw_product}-shared-${var.env}"
+  previewVaultName = "${var.raw_product}-aat"
+  nonPreviewVaultName = "${var.raw_product}-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
+
+  // Shared Resource Group
+  previewResourceGroup = "${var.raw_product}-shared-aat"
+  nonPreviewResourceGroup = "${var.raw_product}-shared-${var.env}"
+  sharedResourceGroup = "${(var.env == "preview" || var.env == "spreview") ? local.previewResourceGroup : local.nonPreviewResourceGroup}"
 
   // Old Vault to be removed
   oldPreviewVaultName = "${var.product}-definition"
@@ -32,19 +37,12 @@ locals {
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
   name = "${local.vaultName}"
-  resource_group_name = "${local.vaultName}"
+  resource_group_name = "${local.sharedResourceGroup}"
 }
 
-data "vault_generic_secret" "definition_store_item_key" {
-  path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-definition"
-}
-
-data "vault_generic_secret" "gateway_idam_key" {
-  path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-gw"
-}
-
-data "vault_generic_secret" "gateway_oauth2_client_secret" {
-  path = "secret/${var.vault_section}/ccidam/idam-api/oauth2/client-secrets/ccd-gateway"
+data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
+  name = "ccd-definition-store-api-s2s-secret"
+  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
 
 module "case-definition-store-api" {
@@ -67,7 +65,7 @@ module "case-definition-store-api" {
 
     IDAM_USER_URL = "${var.idam_api_url}"
     IDAM_S2S_URL = "${local.s2s_url}"
-    DEFINITION_STORE_IDAM_KEY = "${data.vault_generic_secret.definition_store_item_key.data["value"]}"
+    DEFINITION_STORE_IDAM_KEY = "${data.azurerm_key_vault_secret.definition_store_s2s_secret.value}"
 
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
 
@@ -131,17 +129,5 @@ resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
 resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   name = "${local.app_full_name}-POSTGRES-DATABASE"
   value = "${module.definition-store-db.postgresql_database}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
-}
-
-resource "azurerm_key_vault_secret" "gw_s2s_key" {
-  name = "ccd-api-gateway-idam-service-key"
-  value = "${data.vault_generic_secret.gateway_idam_key.data["value"]}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
-}
-
-resource "azurerm_key_vault_secret" "gw_oauth2_secret" {
-  name = "ccd-api-gateway-oauth2-client-secret"
-  value = "${data.vault_generic_secret.gateway_oauth2_client_secret.data["value"]}"
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
