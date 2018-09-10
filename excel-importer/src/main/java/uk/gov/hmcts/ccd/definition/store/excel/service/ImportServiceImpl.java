@@ -3,12 +3,14 @@ package uk.gov.hmcts.ccd.definition.store.excel.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
@@ -33,6 +35,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +54,7 @@ public class ImportServiceImpl implements ImportService {
     private final UserRoleRepository userRoleRepository;
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
     private final CaseFieldRepository caseFieldRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -62,7 +66,8 @@ public class ImportServiceImpl implements ImportService {
                              LayoutService layoutService,
                              UserRoleRepository userRoleRepository,
                              WorkBasketUserDefaultService workBasketUserDefaultService,
-                             CaseFieldRepository caseFieldRepository) {
+                             CaseFieldRepository caseFieldRepository,
+                             ApplicationEventPublisher applicationEventPublisher) {
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
         this.parserFactory = parserFactory;
@@ -73,6 +78,7 @@ public class ImportServiceImpl implements ImportService {
         this.userRoleRepository = userRoleRepository;
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     /**
@@ -137,10 +143,11 @@ public class ImportServiceImpl implements ImportService {
 
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
-        caseTypeService.createAll(jurisdiction, parsedCaseTypes.getNewResults());
+        List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
+        caseTypeService.createAll(jurisdiction, caseTypes);
 
         logger.info("Importing spreadsheet: Case types: OK: {} case types imported",
-                    parsedCaseTypes.getNewResults().size());
+                    caseTypes.size());
 
         /*
             5 - UI definition
@@ -168,8 +175,9 @@ public class ImportServiceImpl implements ImportService {
         workBasketUserDefaultService.saveWorkBasketUserDefaults(workBasketUserDefaults,
                                                                 jurisdiction,
                                                                 parsedCaseTypes.getAllResults());
-
         logger.info("Importing spreadsheet: User profiles: OK");
+
+        applicationEventPublisher.publishEvent(new DefinitionImportedEvent(caseTypes));
 
         logger.info("Importing spreadsheet: OK: For jurisdiction {}", jurisdiction.getReference());
     }

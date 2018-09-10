@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
@@ -9,14 +8,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldSe
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
-import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -33,15 +30,13 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     private final List<CaseTypeEntityValidator> caseTypeEntityValidators;
     private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedRepository;
     private final MetadataFieldService metadataFieldService;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     public CaseTypeServiceImpl(CaseTypeRepository repository,
                                EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
-                               MetadataFieldService metadataFieldService,
-                               ApplicationEventPublisher applicationEventPublisher
+                               MetadataFieldService metadataFieldService
     ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
@@ -49,7 +44,6 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         this.caseTypeEntityValidators = caseTypeEntityValidators;
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
         this.metadataFieldService = metadataFieldService;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -70,7 +64,6 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         } else {
             throw new ValidationException(validationResult);
         }
-        applicationEventPublisher.publishEvent(new DefinitionImportedEvent(new ArrayList(caseTypes)));
     }
 
     @Override

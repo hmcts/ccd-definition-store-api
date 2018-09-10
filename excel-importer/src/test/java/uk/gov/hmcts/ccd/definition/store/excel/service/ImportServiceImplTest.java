@@ -1,11 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
 import com.google.common.collect.Lists;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -13,6 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
@@ -35,6 +41,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -83,6 +91,12 @@ public class ImportServiceImplTest {
     @Mock
     private MetadataCaseFieldEntityFactory metadataCaseFieldEntityFactory;
 
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    @Captor
+    private ArgumentCaptor<DefinitionImportedEvent> eventCaptor;
+
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -119,7 +133,8 @@ public class ImportServiceImplTest {
                                         layoutService,
                                         userRoleRepository,
                                         workBasketUserDefaultService,
-                                        caseFieldRepository);
+                                        caseFieldRepository,
+                                        applicationEventPublisher);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
@@ -191,6 +206,8 @@ public class ImportServiceImplTest {
         service.importFormDefinitions(inputStream);
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
+        verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
+        assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {
