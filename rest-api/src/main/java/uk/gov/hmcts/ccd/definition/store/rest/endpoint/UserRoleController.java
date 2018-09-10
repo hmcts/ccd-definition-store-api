@@ -74,6 +74,6 @@ class UserRoleController {
         @ApiResponse(code = 200, message = "User Roles Response is returned"),
     })
     public List<UserRole> getAllUserRoles() {
-            return this.userRoleService.getRoles();
+        return this.userRoleService.getRoles();
     }
 }
