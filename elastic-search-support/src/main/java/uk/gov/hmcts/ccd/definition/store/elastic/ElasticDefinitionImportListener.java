@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;

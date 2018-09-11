@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 
 import javax.annotation.PostConstruct;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
