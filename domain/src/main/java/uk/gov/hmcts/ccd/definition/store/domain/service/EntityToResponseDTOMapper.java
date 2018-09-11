@@ -57,6 +57,14 @@ public interface EntityToResponseDTOMapper {
     )
     CaseEvent map(EventEntity eventEntity);
 
+    @Mapping(
+        expression = "java(eventLiteEntity.getPreStates().isEmpty() ? java.util.Collections.emptyList()" +
+            ": eventLiteEntity.getPreStates().stream().map(StateLiteEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+        target = "preStates"
+    )
+    @Mapping(source = "eventLiteEntity.reference", target = "id")
+    CaseEventLite map(EventLiteEntity eventLiteEntity);
+
     @Mapping(source = "jurisdictionEntity.reference", target = "id")
     @Mapping(source = "jurisdictionEntity.liveTo", target = "liveUntil")
     Jurisdiction map(JurisdictionEntity jurisdictionEntity);

@@ -3,14 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -55,6 +48,11 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<StateLiteEntity> states = new ArrayList<>();
+
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private final List<EventLiteEntity> events = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -115,4 +113,12 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
         states.add(state);
         return this;
     }
-}
+
+    public List<EventLiteEntity> getEvents() {
+        return events;
+    }
+
+    public CaseTypeLiteEntity addEvent(@NotNull final EventLiteEntity event) {
+        events.add(event);
+        return this;
+    }}
