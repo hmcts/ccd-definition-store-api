@@ -43,6 +43,8 @@ module "case-definition-store-api" {
   ilbIp    = "${var.ilbIp}"
   subscription = "${var.subscription}"
   common_tags  = "${var.common_tags}"
+  asp_name = "${var.asp_name}"
+  asp_rg = "${var.asp_rg}"
 
   app_settings = {
     DEFINITION_STORE_DB_HOST = "${module.definition-store-db.host_name}"
