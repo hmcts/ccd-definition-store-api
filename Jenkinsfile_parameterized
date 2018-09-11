@@ -9,11 +9,11 @@ properties([
 ])
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret('importerAutoTest1Email', 'CCD_IMPORT_AUTOTEST_EMAIL'),
-    secret('importerAutoTest1Password', 'CCD_IMPORT_AUTOTEST_PASSWORD'),
-    secret('caseworkerAutoTest1Email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
-    secret('caseworkerAutoTest1Password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
-    secret('ccd-api-gateway-idam-service-key', 'CCD_GW_SERVICE_SECRET'),
+    secret('ccd-importer-autotest-email', 'CCD_IMPORT_AUTOTEST_EMAIL'),
+    secret('ccd-importer-autotest-password', 'CCD_IMPORT_AUTOTEST_PASSWORD'),
+    secret('ccd-caseworker-autotest-email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
+    secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
+    secret('ccd-api-gateway-s2s-secret', 'CCD_GW_SERVICE_SECRET'),
     secret('ccd-api-gateway-oauth2-client-secret', 'OAUTH2_CLIENT_SECRET'),
 ]
 
