@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import org.springframework.stereotype.Component;
+
+import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -49,6 +51,19 @@ public class UserRoleServiceImpl implements UserRoleService {
             roleFound = false;
         }
         return new ServiceResponse<>(toModel(repository.save(entity)), roleFound ? UPDATE : CREATE);
+    }
+
+    @Override
+    public ServiceResponse<UserRole> createRole(final UserRole userRole) {
+        final UserRoleEntity entity;
+        final Optional<UserRoleEntity> searchResult = repository.findTopByRole(userRole.getRole());
+
+        if (!searchResult.isPresent()) {
+            entity = toEntity(userRole);
+            return new ServiceResponse<>(toModel(repository.save(entity)), CREATE);
+        } else {
+            throw new DuplicateUserRoleException("User role already exists");
+        }
     }
 
     @Override

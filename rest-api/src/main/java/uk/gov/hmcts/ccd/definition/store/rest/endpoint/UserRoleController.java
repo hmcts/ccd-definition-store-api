@@ -46,6 +46,22 @@ class UserRoleController {
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
     }
 
+    @RequestMapping(value = "/user-role", method = RequestMethod.POST, produces = {"application/json"})
+    @ResponseStatus(RESET_CONTENT)
+    @ApiOperation(value = "Update a user role", response = UserRole.class,
+        notes = "a user role is created if it does not exist")
+    @ApiResponses(value = {
+        @ApiResponse(code = 215, message = "User role is created"),
+        @ApiResponse(code = 205, message = "User role is updated successfully and the user agent SHOULD reset the document view"),
+        @ApiResponse(code = 409, message = "Bad request, for example, incorrect data")
+    })
+    ResponseEntity<UserRole> userRoleCreate(
+        @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
+        final ServiceResponse<UserRole> serviceResponse = userRoleService.createRole(userRole);
+        final ResponseEntity.BodyBuilder responseEntityBuilder = ResponseEntity.status(CREATED);
+        return responseEntityBuilder.body(serviceResponse.getResponseBody());
+    }
+
     @RequestMapping(value = "/user-role", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get a user profile")

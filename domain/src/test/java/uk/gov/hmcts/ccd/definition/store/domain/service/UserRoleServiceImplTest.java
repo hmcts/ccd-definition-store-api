@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -129,6 +130,57 @@ class UserRoleServiceImplTest {
 
             assertThat(saved.getRole(), is(role));
             assertThat(saved.getSecurityClassification(), is(PUBLIC));
+        }
+    }
+
+    @Nested
+    @DisplayName("Create Role Tests")
+    class CreateTests {
+        @Test
+        @DisplayName("should create role is saved")
+        void shouldCreate_whenCreateRole() {
+
+            final String role = "create";
+            final ArgumentCaptor<UserRoleEntity> argumentCaptor = ArgumentCaptor.forClass(UserRoleEntity.class);
+
+            givenUserRole(role, RESTRICTED);
+            givenEntityWithRole(role);
+
+            doReturn(Optional.empty()).when(repository).findTopByRole(role);
+            doReturn(entity).when(repository).save(argumentCaptor.capture());
+
+            final UserRole saved = service.createRole(mockUserRole).getResponseBody();
+            final UserRoleEntity captured = argumentCaptor.getValue();
+
+            verify(repository).save(any(UserRoleEntity.class));
+            assertThat(captured.getRole(), is(role));
+            assertThat(captured.getSecurityClassification(), is(RESTRICTED));
+
+
+            verify(entity, never()).setSecurityClassification(any());
+            verify(entity, never()).setRole(anyString());
+
+            assertThat(saved.getRole(), is(role));
+            assertThat(saved.getSecurityClassification(), is(RESTRICTED));
+
+        }
+
+        @Test
+        @DisplayName("should throw exception when role duplicate role is being saved")
+        void shouldThrowExceptionwhenCreateRole() {
+
+            final String role = "create";
+            final ArgumentCaptor<UserRoleEntity> argumentCaptor = ArgumentCaptor.forClass(UserRoleEntity.class);
+            final UserRoleEntity savedEntity = mock(UserRoleEntity.class);
+
+            givenUserRole(role, PUBLIC);
+            givenEntityWithRole(role);
+            givenEntityWithRole(role, PUBLIC, savedEntity);
+
+            doReturn(Optional.of(entity)).when(repository).findTopByRole(role);
+
+            Throwable thrown = assertThrows(DuplicateUserRoleException.class, () -> service.createRole(mockUserRole));
+            assertEquals("User role already exists", thrown.getMessage());
         }
     }
 
