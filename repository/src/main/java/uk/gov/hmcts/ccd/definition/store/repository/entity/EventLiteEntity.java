@@ -33,6 +33,9 @@ public class EventLiteEntity implements Serializable, Referencable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "can_create", nullable = false)
+    private Boolean canCreate = Boolean.FALSE;
+
     @ManyToMany(fetch = EAGER)
     @Fetch(value = SUBSELECT)
     @JoinTable(
@@ -69,6 +72,18 @@ public class EventLiteEntity implements Serializable, Referencable {
 
     public String getDescription() {
         return description;
+    }
+
+    public boolean isCanCreate() {
+        return canCreate;
+    }
+
+    public boolean getCanCreate() {
+        return canCreate;
+    }
+
+    public void setCanCreate(final boolean canCreate) {
+        this.canCreate = canCreate;
     }
 
     public void setDescription(String description) {

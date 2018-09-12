@@ -58,7 +58,8 @@ public interface EntityToResponseDTOMapper {
     CaseEvent map(EventEntity eventEntity);
 
     @Mapping(
-        expression = "java(eventLiteEntity.getPreStates().isEmpty() ? java.util.Collections.emptyList()" +
+        expression = "java(eventLiteEntity.isCanCreate() ? java.util.Collections.emptyList() " +
+            ": eventLiteEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") " +
             ": eventLiteEntity.getPreStates().stream().map(StateLiteEntity::getReference).collect(java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
