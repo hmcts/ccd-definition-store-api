@@ -88,6 +88,11 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "case_type_id")
     private final List<CaseTypeUserRoleEntity> caseTypeUserRoleEntities = new ArrayList<>();
 
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private final List<CaseRoleEntity> caseRoleEntities = new ArrayList<>();
+
     public Integer getId() {
         return id;
     }
@@ -231,6 +236,21 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public CaseTypeEntity addCaseTypeUserRoles(final Collection<CaseTypeUserRoleEntity> caseTypeUserRoleEntities) {
         caseTypeUserRoleEntities.forEach(e -> addCaseTypeUserRole(e));
+        return this;
+    }
+
+    public List<CaseRoleEntity> getCaseRoleEntities() {
+        return caseRoleEntities;
+    }
+
+    public CaseTypeEntity addCaseRole(final CaseRoleEntity caseRoleEntity) {
+        caseRoleEntity.setCaseType(this);
+        caseRoleEntities.add(caseRoleEntity);
+        return this;
+    }
+
+    public CaseTypeEntity addCaseRoles(final Collection<CaseRoleEntity> caseRoleEntities) {
+        caseRoleEntities.forEach(cr -> addCaseRole(cr));
         return this;
     }
 }

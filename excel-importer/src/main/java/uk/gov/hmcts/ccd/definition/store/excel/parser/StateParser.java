@@ -52,7 +52,7 @@ public class StateParser {
             logger.info("Parsing states for case type {}: Parsing state {}: OK", caseTypeId, stateId);
         }
 
-        logger.info("Parsing states for case type {}: OK: {} case fields parsed", caseTypeId, states.size());
+        logger.info("Parsing states for case type {}: OK: {} case states parsed", caseTypeId, states.size());
 
         return states;
     }

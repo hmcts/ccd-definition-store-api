@@ -1,0 +1,42 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-2835" author="fatih.ozceylan@hmcts.net">
+
+        <createTable tableName="case_roles">
+            <column name="id" type="serial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description"  type="varchar(128)" >
+                <constraints nullable="true" />
+            </column>
+            <column name="case_type_id" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="security_classification" type="securityclassification">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="id"
+                       constraintName="pk_case_roles"
+                       tableName="case_roles"/>
+
+        <addForeignKeyConstraint baseColumnNames="case_type_id"
+                                 baseTableName="case_roles"
+                                 constraintName="fk_case_roles_case_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="case_type"/>
+
+        <addUniqueConstraint columnNames="case_type_id, name"
+                             constraintName="unique_case_roles_case_type_id_role_name"
+                             tableName="workbasket_input_case_field"/>
+    </changeSet>
+</databaseChangeLog>
