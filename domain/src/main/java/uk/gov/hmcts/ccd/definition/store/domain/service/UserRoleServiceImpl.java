@@ -56,9 +56,10 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public ServiceResponse<UserRole> createRole(final UserRole userRole) {
         final UserRoleEntity entity;
-        final Optional<UserRoleEntity> searchResult = repository.findTopByRole(userRole.getRole());
+        final Optional<UserRoleEntity> searchResult = repository.findTopByRole(userRole.getRole().trim());
 
         if (!searchResult.isPresent()) {
+            userRole.setRole(userRole.getRole().trim());
             entity = toEntity(userRole);
             return new ServiceResponse<>(toModel(repository.save(entity)), CREATE);
         } else {
