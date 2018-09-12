@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
@@ -40,6 +41,8 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 /**
@@ -54,7 +57,6 @@ public class SpreadSheetImportTest extends BaseTest {
         TEST_CASE_TYPE;
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
-    private static final int JURISDICTION_ID = 1;
     private static final String RESPONSE_JSON = "GetCaseTypesResponseForCCD_TestDefinition_V34.json";
 
     private Map<Object, Object> caseTypesId;
@@ -187,6 +189,37 @@ public class SpreadSheetImportTest extends BaseTest {
                      jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
     }
 
+    /**
+     * API test for transactional rollback of import of Case Definition spreadsheet that fails due to an Azure Storage
+     * upload error because the file already exists.
+     *
+     * @throws Exception On error running test
+     */
+    @Test
+    public void rollbackFailedDefinitionFileImportDueToDuplicateUpload() throws Exception {
+        givenUserProfileReturnsSuccess();
+
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
+        MockMultipartFile file = new MockMultipartFile("file", inputStream);
+        doThrow(new FileStorageException(FileStorageException.FILE_ALREADY_EXISTS_ERROR)).when(fileStorageService)
+            .uploadFile(any(), any());
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn();
+
+        // Check the exception message.
+        assertThat("Incorrect exception for import failing due to duplicate file upload to Azure Storage",
+            result.getResolvedException().getMessage(),
+            containsString(FileStorageException.FILE_ALREADY_EXISTS_ERROR));
+
+        // Check that no Definition data has been persisted.
+        assertEquals("Unexpected number of rows returned from case_type_items table",
+            0,
+            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
+    }
+
     @Test
     public void userProfileIsNotStoredWhenImportFails() throws Exception {
 
@@ -217,13 +250,11 @@ public class SpreadSheetImportTest extends BaseTest {
      * matchers for a of Map<String, Object>, which would otherwise be not possible due to compilation issues
      */
     public static Matcher<Map<String, Object>> hasColumn(Matcher<String> keyMatcher, Matcher valueMatcher) {
-        Matcher mapMatcher = hasEntry(keyMatcher, valueMatcher);
-        return mapMatcher;
+        return hasEntry(keyMatcher, valueMatcher);
     }
 
     public static Matcher<Map<String, Object>> hasColumn(String key, Object value) {
-        Matcher mapMatcher = hasColumn(is(key), is(value));
-        return mapMatcher;
+        return hasColumn(is(key), is(value));
     }
 
     private void assertBody(String contentAsString) throws IOException, URISyntaxException {
@@ -264,8 +295,7 @@ public class SpreadSheetImportTest extends BaseTest {
     private void assertJurisdiction() {
         Map<String, Object> jurisdictionRow = jdbcTemplate.queryForMap("SELECT * FROM jurisdiction");
         assertThat(jurisdictionRow,
-                   allOf(hasColumn("id", JURISDICTION_ID),
-                         hasColumn("reference", "TEST"),
+                   allOf(hasColumn("reference", "TEST"),
                          hasColumn("version", 1),
                          hasColumn("name", "Test"),
                          hasColumn("description", "Content for the Test Jurisdiction.")));
@@ -282,10 +312,10 @@ public class SpreadSheetImportTest extends BaseTest {
     private void assertListFieldTypes(List<Map<String, Object>> fieldTypes) {
 
         assertThat(fieldTypes,
-                   allOf(hasItem(allOf(hasColumn("jurisdiction_id", JURISDICTION_ID),
+                   allOf(hasItem(allOf(hasColumn("jurisdiction_id", getIdForTestJurisdiction()),
                                        hasColumn("reference", "FixedList-marritalStatusEnum"),
                                        hasColumn("base_field_type_id", fieldTypesId.get("FixedList")))),
-                         hasItem(allOf(hasColumn("jurisdiction_id", JURISDICTION_ID),
+                         hasItem(allOf(hasColumn("jurisdiction_id", getIdForTestJurisdiction()),
                                        hasColumn("reference", "MultiSelectList-marritalStatusEnum"),
                                        hasColumn("base_field_type_id", fieldTypesId.get("MultiSelectList")))),
                          hasItem(allOf(hasColumn("reference", "FixedList-regionalCentreEnum"))),
@@ -309,10 +339,10 @@ public class SpreadSheetImportTest extends BaseTest {
     private void assertComplexFieldTypes(List<Map<String, Object>> fieldTypes) {
 
         assertThat(fieldTypes,
-                   allOf(hasItem(allOf(hasColumn("jurisdiction_id", JURISDICTION_ID),
+                   allOf(hasItem(allOf(hasColumn("jurisdiction_id", getIdForTestJurisdiction()),
                                        hasColumn("reference", "Address"),
                                        hasColumn("base_field_type_id", fieldTypesId.get("Complex")))),
-                         hasItem(allOf(hasColumn("jurisdiction_id", JURISDICTION_ID),
+                         hasItem(allOf(hasColumn("jurisdiction_id", getIdForTestJurisdiction()),
                                        hasColumn("reference", "Person"),
                                        hasColumn("base_field_type_id", fieldTypesId.get("Complex"))))));
 
@@ -360,11 +390,11 @@ public class SpreadSheetImportTest extends BaseTest {
     private void assertFieldTypes(List<Map<String, Object>> fieldTypes) {
 
         assertThat(fieldTypes,
-                   allOf(hasItem(allOf(hasColumn("jurisdiction_id", JURISDICTION_ID),
+                   allOf(hasItem(allOf(hasColumn("jurisdiction_id", getIdForTestJurisdiction()),
                                        hasColumn("base_field_type_id", fieldTypesId.get("Collection")),
                                        hasColumn("collection_field_type_id", fieldTypesId.get("Person")),
                                        hasColumn(is("reference"), startsWith("Group-")))),
-                         hasItem(allOf(hasColumn("jurisdiction_id", JURISDICTION_ID),
+                         hasItem(allOf(hasColumn("jurisdiction_id", getIdForTestJurisdiction()),
                                        hasColumn("base_field_type_id", fieldTypesId.get("Collection")),
                                        hasColumn("collection_field_type_id", fieldTypesId.get("Text")),
                                        hasColumn(is("reference"), startsWith("Alliases-")))),
@@ -609,4 +639,8 @@ public class SpreadSheetImportTest extends BaseTest {
             .collect(toMap(row -> row.get("reference"), row -> row.get("id")));
     }
 
+    private int getIdForTestJurisdiction() {
+        return jdbcTemplate.queryForObject("SELECT id FROM jurisdiction WHERE reference = 'TEST' AND version = 1",
+            Integer.class);
+    }
 }

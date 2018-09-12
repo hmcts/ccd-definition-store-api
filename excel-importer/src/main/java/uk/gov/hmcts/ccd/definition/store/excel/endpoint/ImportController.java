@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 
@@ -34,10 +36,12 @@ public class ImportController {
     private static final Logger LOG = LoggerFactory.getLogger(ImportController.class);
 
     private ImportServiceImpl importService;
+    private FileStorageService fileStorageService;
 
     @Autowired
-    public ImportController(ImportServiceImpl importService) {
+    public ImportController(ImportServiceImpl importService, FileStorageService fileStorageService) {
         this.importService = importService;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
@@ -54,6 +58,9 @@ public class ImportController {
             LOG.info("Importing Definition file...");
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes));
+
+            LOG.info("Uploading Definition file to Azure Storage...");
+            fileStorageService.uploadFile(file, metadata);
 
             return new ResponseEntity<>("Case Definition data successfully imported", HttpStatus.CREATED);
         }
