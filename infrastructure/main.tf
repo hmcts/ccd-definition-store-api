@@ -109,18 +109,6 @@ module "definition-store-vault" {
   product_group_object_id = "be8b3850-998a-4a66-8578-da268b8abd6b"
 }
 
-module "elastic" {
-  source = "git@github.com:hmcts/cnp-module-elk.git?ref=master"
-  product = "${var.product}"
-  location = "${var.location}"
-  env = "${var.env}"
-  common_tags = "${var.common_tags}"
-  vNetName = "${data.terraform_remote_state.core_apps_infrastructure.vnetname}"
-  vNetExistingResourceGroup = "${data.terraform_remote_state.core_apps_infrastructure.resourcegroup_name}"
-  vNetClusterSubnetName = "${data.terraform_remote_state.core_apps_infrastructure.subnet_names[2]}"
-  vNetLoadBalancerIp = "${var.elastic_search_host}"
-}
-
 ////////////////////////////////
 // Populate Vault with DB info
 ////////////////////////////////
