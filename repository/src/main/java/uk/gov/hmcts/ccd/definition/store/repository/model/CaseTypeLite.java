@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +11,8 @@ public class CaseTypeLite {
     private String id = null;
     private String description = null;
     private String name;
-    private List<CaseStateLite> states = null;
+    private List<CaseStateLite> states = new ArrayList<>();
+    private List<CaseEventLite> events = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -42,5 +44,13 @@ public class CaseTypeLite {
 
     public void setStates(List<CaseStateLite> states) {
         this.states = states;
+    }
+
+    public List<CaseEventLite> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<CaseEventLite> events) {
+        this.events = events;
     }
 }

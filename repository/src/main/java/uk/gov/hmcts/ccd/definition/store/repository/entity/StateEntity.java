@@ -3,7 +3,16 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +28,7 @@ public class StateEntity implements Serializable, Referencable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -41,7 +50,7 @@ public class StateEntity implements Serializable, Referencable {
     private Integer order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "case_type_id", nullable=false)
+    @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
@@ -49,10 +58,14 @@ public class StateEntity implements Serializable, Referencable {
     @JoinColumn(name = "state_id")
     private final List<StateUserRoleEntity> stateUserRoles = new ArrayList<>();
 
+    @Column(name = "title_display")
+    private String titleDisplay;
+
     public Integer getId() {
         return id;
     }
 
+    @Override
     public String getReference() {
         return reference;
     }
@@ -111,6 +124,14 @@ public class StateEntity implements Serializable, Referencable {
 
     public List<StateUserRoleEntity> getStateUserRoles() {
         return stateUserRoles;
+    }
+
+    public String getTitleDisplay() {
+        return titleDisplay;
+    }
+
+    public void setTitleDisplay(String titleDisplay) {
+        this.titleDisplay = titleDisplay;
     }
 
     public StateEntity addStateUserRole(final StateUserRoleEntity stateUserRoleEntity) {

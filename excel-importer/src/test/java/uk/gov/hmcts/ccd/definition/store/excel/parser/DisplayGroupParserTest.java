@@ -11,19 +11,25 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 
 public class DisplayGroupParserTest extends ParserTestBase {
@@ -34,7 +40,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     private ShowConditionParser mockShowConditionParser;
     private EntityToDefinitionDataItemRegistry mockEntityToDefinitionRegistry;
     private static final ShowCondition PARSED_SHOW_CONDITION = new ShowCondition.Builder()
-                                                                    .showConditionExpression("parsedShowCondition2").build();
+        .showConditionExpression("parsedShowCondition2").build();
 
     @Before
     public void setup() {
@@ -210,21 +216,24 @@ public class DisplayGroupParserTest extends ParserTestBase {
     @Test
     public void shouldFailIfTwoTabShowConditionsForSameTab() throws InvalidShowConditionException {
 
-        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Collections.singleton(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
         given(mockShowConditionParser.parseShowCondition("someShowCondition")).willReturn(PARSED_SHOW_CONDITION);
+        given(mockShowConditionParser.parseShowCondition("fieldShowCondition")).willReturn(new ShowCondition.Builder().build());
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.TAB_ID.toString(), "Name");
         item.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), "someShowCondition");
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "fieldShowCondition");
 
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
         item2.addAttribute(ColumnName.TAB_ID.toString(), "Name");
         item2.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), "someShowCondition");
+        item2.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "fieldShowCondition");
 
         definitionSheet.addDataItem(item);
         definitionSheet.addDataItem(item2);
@@ -285,10 +294,11 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseCaseTypeTab() {
+    public void shouldParseCaseTypeTab() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
