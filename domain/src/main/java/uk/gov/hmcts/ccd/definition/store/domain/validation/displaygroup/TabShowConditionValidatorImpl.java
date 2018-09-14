@@ -40,11 +40,11 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                 return validationResult;
             }
 
-            String showConditionField = showCondition.getField();
-
-            if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)) {
-                validationResult.addError(new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
-            }
+            showCondition.getFields().forEach(showConditionField -> {
+                if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)) {
+                    validationResult.addError(new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
+                }
+            });
         }
 
         if (tabFieldsPreconditions(thisDisplayGroup)) {
@@ -58,11 +58,11 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                         return validationResult;
                     }
 
-                    String showConditionField = showCondition.getField();
-
-                    if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)) {
-                        validationResult.addError(new DisplayGroupInvalidTabFieldShowCondition(showConditionField, caseField));
-                    }
+                    showCondition.getFields().forEach(showConditionField -> {
+                        if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)) {
+                            validationResult.addError(new DisplayGroupInvalidTabFieldShowCondition(showConditionField, caseField));
+                        }
+                    });
                 }
             }
         }

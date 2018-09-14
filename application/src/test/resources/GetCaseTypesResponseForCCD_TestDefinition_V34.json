@@ -12,7 +12,8 @@
     "name": "Test",
     "description": "Content for the Test Jurisdiction.",
     "live_from": "2017-01-01T00:00:00.000+0000",
-    "live_until": null
+    "live_until": null,
+    "case_types": []
   },
   "events": [
     {
@@ -210,6 +211,7 @@
       "name": "Case created",
       "description": null,
       "order": 1,
+      "title_display": null,
       "acls": [
         {
           "role": "CaseWorker1",
@@ -232,6 +234,7 @@
       "name": "Case has been Entered into Legacy",
       "description": null,
       "order": 2,
+      "title_display": null,
       "acls": [
         {
           "role": "CaseWorker1",
@@ -254,6 +257,7 @@
       "name": "Put case on hold",
       "description": null,
       "order": 3,
+      "title_display": null,
       "acls": [
         {
           "role": "CaseWorker2",
