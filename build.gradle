@@ -99,7 +99,7 @@ allprojects {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        testCompile "io.rest-assured:rest-assured:3.1.0"
+        testCompile "io.rest-assured:rest-assured:3.1.1"
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
         testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
