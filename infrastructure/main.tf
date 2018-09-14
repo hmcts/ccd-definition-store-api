@@ -20,6 +20,8 @@ locals {
   nonPreviewResourceGroup = "${var.raw_product}-shared-${var.env}"
   sharedResourceGroup = "${(var.env == "preview" || var.env == "spreview") ? local.previewResourceGroup : local.nonPreviewResourceGroup}"
 
+  sharedAppServicePlan = "${var.raw_product}-${var.env}"
+
   custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
   default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
   oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
@@ -43,8 +45,8 @@ module "case-definition-store-api" {
   ilbIp    = "${var.ilbIp}"
   subscription = "${var.subscription}"
   common_tags  = "${var.common_tags}"
-  asp_name = "${var.asp_name}"
-  asp_rg = "${var.asp_rg}"
+  asp_name = "${(var.asp_name == "use_shared") ? local.sharedAppServicePlan : var.asp_name}"
+  asp_rg = "${(var.asp_rg == "use_shared") ? local.sharedResourceGroup : var.asp_rg}"
 
   app_settings = {
     DEFINITION_STORE_DB_HOST = "${module.definition-store-db.host_name}"
