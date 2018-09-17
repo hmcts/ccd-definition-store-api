@@ -48,7 +48,7 @@ dependencyCheck {
 }
 
 ext {
-    junitJupiterVersion = '5.2.0'
+    junitJupiterVersion = '5.3.1'
     junitVintageVersion = '5.2.0'
     springBootVersion = '1.5.12.RELEASE'
     springfoxSwaggerVersion = '2.9.0'
