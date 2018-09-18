@@ -305,7 +305,6 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
         item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
         item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
-        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "");
 
         // Excel parses an integer into a decimal number
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
