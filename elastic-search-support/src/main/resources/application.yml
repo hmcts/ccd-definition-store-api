@@ -4,7 +4,7 @@ elasticsearch:
   scheme: ${ELASTIC_SEARCH_SCHEME:http}
   enabled: ${ELASTIC_SEARCH_ENABLED:false}
   indexShards: ${ELASTIC_SEARCH_INDEX_SHARDS:2}
-  indexShardsReplicas: ${ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS:1}
+  indexShardsReplicas: ${ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS:0}
   failImportIfError: ${ELASTIC_SEARCH_FAIL_ON_IMPORT:false}
   dynamic: ${ELASTIC_SEARCH_DYNAMIC:strict}
   elasticMappings:
@@ -15,6 +15,7 @@ elasticsearch:
     defaultBoolean: '{"type" : "boolean"}'
     defaultLong: '{"type" : "long"}'
     defaultDouble: '{"type" : "double"}'
+    ccdPhoneUK: '{"type" : "text", "analyzer": "standard", "search_analyzer": "phone_number_analyzer"}'
   ccdIgnoredTypes:
     - Label
     - CasePaymentHistoryViewer
@@ -25,7 +26,7 @@ elasticsearch:
     Date: ${elasticsearch.elasticMappings.defaultDate}
     Time: ${elasticsearch.elasticMappings.defaultDate}
     DateTime: ${elasticsearch.elasticMappings.defaultDate}
-    PhoneUK: ${elasticsearch.elasticMappings.defaultKeyword}
+    PhoneUK: ${elasticsearch.elasticMappings.ccdPhoneUK}
     MoneyGBP: ${elasticsearch.elasticMappings.defaultDouble}
     YesOrNo: ${elasticsearch.elasticMappings.defaultKeyword}
     Email: ${elasticsearch.elasticMappings.defaultKeyword}

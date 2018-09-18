@@ -19,6 +19,7 @@ import java.io.IOException;
 @Slf4j
 public class HighLevelCCDElasticClient implements CCDElasticClient {
 
+    private static final String CASES_INDEX_SETTINGS_JSON = "/casesIndexSettings.json";
     protected CcdElasticSearchProperties config;
 
     protected RestHighLevelClient elasticClient;
@@ -41,10 +42,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
     @Override
     public boolean createIndex(String indexName) throws IOException {
         CreateIndexRequest request = new CreateIndexRequest(indexName);
-        request.settings(Settings.builder()
-                .put("index.number_of_shards", config.getIndexShards())
-                .put("index.number_of_replicas", config.getIndexShardsReplicas())
-        );
+        request.settings(casesIndexSettings());
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request);
         return createIndexResponse.isAcknowledged();
     }
@@ -56,5 +54,13 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         request.source(caseTypeMapping, XContentType.JSON);
         PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request);
         return putMappingResponse.isAcknowledged();
+    }
+
+    private Settings.Builder casesIndexSettings() throws IOException {
+        Settings.Builder settings = Settings.builder().loadFromStream(CASES_INDEX_SETTINGS_JSON,
+            getClass().getResourceAsStream(CASES_INDEX_SETTINGS_JSON), false);
+        settings.put("index.number_of_shards", config.getIndexShards());
+        settings.put("index.number_of_replicas", config.getIndexShardsReplicas());
+        return settings;
     }
 }
