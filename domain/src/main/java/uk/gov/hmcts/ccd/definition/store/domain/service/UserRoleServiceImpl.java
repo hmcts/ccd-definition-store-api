@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import org.springframework.stereotype.Component;
+
+import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -52,8 +54,30 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    public ServiceResponse<UserRole> createRole(final UserRole userRole) {
+        final UserRoleEntity entity;
+        final Optional<UserRoleEntity> searchResult = repository.findTopByRole(userRole.getRole().trim());
+
+        if (!searchResult.isPresent()) {
+            userRole.setRole(userRole.getRole().trim());
+            entity = toEntity(userRole);
+            return new ServiceResponse<>(toModel(repository.save(entity)), CREATE);
+        } else {
+            throw new DuplicateUserRoleException("User role already exists");
+        }
+    }
+
+    @Override
     public List<UserRole> getRoles(List<String> roles) {
         final List<UserRoleEntity> userRoles = repository.findByRoleIn(roles);
+        return userRoles.stream()
+            .map(UserRoleModelMapper::toModel)
+            .collect(toList());
+    }
+
+    @Override
+    public List<UserRole> getRoles() {
+        final List<UserRoleEntity> userRoles = repository.findAll();
         return userRoles.stream()
             .map(UserRoleModelMapper::toModel)
             .collect(toList());
