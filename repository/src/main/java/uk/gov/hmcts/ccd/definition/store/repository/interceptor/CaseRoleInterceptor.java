@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.domain.interceptor;
+package uk.gov.hmcts.ccd.definition.store.repository.interceptor;
 
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
