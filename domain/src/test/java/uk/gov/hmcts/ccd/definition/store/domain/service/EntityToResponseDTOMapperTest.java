@@ -332,7 +332,7 @@ class EntityToResponseDTOMapperTest {
 
             assertNull(caseEventLite.getDescription());
             assertNull(caseEventLite.getName());
-            assertEquals(caseEventLite.getPreStates().size(), 0);
+            assertEquals(0, caseEventLite.getPreStates().size());
             assertNull(caseEventLite.getId());
 
         }

@@ -6,13 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -25,21 +23,19 @@ class CaseRoleServiceImplTest {
     EntityToResponseDTOMapper dtoMapper;
     @Mock
     private CaseRoleRepository caseRoleRepository;
-    @Mock
-    private CaseTypeRepository caseTypeRepository;
 
     private CaseRoleServiceImpl classUnderTest;
-    CaseRoleEntity caseRoleEntity1 = new CaseRoleEntity();
-    CaseRoleEntity caseRoleEntity2 = new CaseRoleEntity();
-    CaseRoleEntity caseRoleEntity3 = new CaseRoleEntity();
-    CaseRole caseRole1 =  new CaseRole();
-    CaseRole caseRole2 = new CaseRole();
-    CaseRole caseRole3 = new CaseRole();
+    private CaseRoleEntity caseRoleEntity1 = new CaseRoleEntity();
+    private CaseRoleEntity caseRoleEntity2 = new CaseRoleEntity();
+    private CaseRoleEntity caseRoleEntity3 = new CaseRoleEntity();
+    private CaseRole caseRole1 =  new CaseRole();
+    private CaseRole caseRole2 = new CaseRole();
+    private CaseRole caseRole3 = new CaseRole();
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        classUnderTest = new CaseRoleServiceImpl(caseRoleRepository, caseTypeRepository, dtoMapper);
+        classUnderTest = new CaseRoleServiceImpl(caseRoleRepository, dtoMapper);
         caseRoleEntity1.setReference("ref1");
         caseRole1.setId(caseRoleEntity1.getReference());
         doReturn(Arrays.asList(caseRoleEntity1, caseRoleEntity2, caseRoleEntity3))
@@ -53,8 +49,6 @@ class CaseRoleServiceImplTest {
     @DisplayName("should return Case Role List")
     @Test
     void findByCaseTypeId() {
-        doReturn(Optional.of(new Integer(1))).when(caseTypeRepository).findLastVersion(CASE_TYPE_REFERENCE);
-
         final List<CaseRole> caseRoles = classUnderTest.findByCaseTypeId(CASE_TYPE_REFERENCE);
 
         assertAll(

@@ -17,22 +17,17 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class CaseRoleServiceImpl implements CaseRoleService {
     private final CaseRoleRepository caseRoleRepository;
-    private final CaseTypeRepository caseTypeRepository;
     private final EntityToResponseDTOMapper dtoMapper;
 
     @Autowired
     public CaseRoleServiceImpl(CaseRoleRepository caseRoleRepository,
-                               CaseTypeRepository caseTypeRepository,
                                EntityToResponseDTOMapper dtoMapper) {
         this.caseRoleRepository = caseRoleRepository;
-        this.caseTypeRepository = caseTypeRepository;
         this.dtoMapper = dtoMapper;
     }
 
     @Override
     public List<CaseRole> findByCaseTypeId(String caseType) {
-        caseTypeRepository.findLastVersion(caseType).orElseThrow(() -> new NotFoundException(caseType));
-
         Optional<List<CaseRoleEntity>> caseRoleEntities =
             Optional.ofNullable(caseRoleRepository.findCaseRoleEntitiesByCaseType(caseType));
 

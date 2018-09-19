@@ -75,7 +75,7 @@ public class CaseRoleRepositoryTest {
     }
 
     @Test
-    public void caseRoleRepositoryFindsCasRolesByCaseType() {
+    public void shouldFindCaseRolesByCaseType() {
         List<CaseRoleEntity> caseRoleEntities
             = classUnderTest.findCaseRoleEntitiesByCaseType(CASE_TYPE_REFERENCE);
         assertThat(caseRoleEntities.size(), is(2));
@@ -87,6 +87,13 @@ public class CaseRoleRepositoryTest {
         assertThat(caseRoleEntities.get(1).getName(), is(CASE_ROLE_NAME_2));
         assertThat(caseRoleEntities.get(1).getDescription(), is(CASE_ROLE_DESCRIPTION_2));
         assertThat(caseRoleEntities.get(1).getCaseType().getReference(), is(CASE_TYPE_REFERENCE));
+    }
+
+    @Test
+    public void shouldFindNoCaseRolesForInvalidCaseType() {
+        List<CaseRoleEntity> caseRoleEntities
+            = classUnderTest.findCaseRoleEntitiesByCaseType("InvalidCaseType");
+        assertThat(caseRoleEntities.size(), is(0));
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {
