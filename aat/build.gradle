@@ -5,7 +5,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
     testCompile 'io.github.openfeign:feign-jackson:9.7.0'
     testCompile "org.exparity:hamcrest-date:2.0.4"
-    testCompile "io.rest-assured:rest-assured:3.1.0"
+    testCompile "io.rest-assured:rest-assured:3.1.1"
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 }
 
