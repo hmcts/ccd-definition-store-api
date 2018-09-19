@@ -15,7 +15,7 @@ dependencies {
     compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
     compile "commons-beanutils:commons-beanutils"
-    compile "org.apache.commons:commons-lang3:3.7"
+    compile "org.apache.commons:commons-lang3:3.8"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
     testCompile "org.springframework.boot:spring-boot-test"
