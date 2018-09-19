@@ -2,10 +2,10 @@ elasticsearch:
   host: ${ELASTIC_SEARCH_HOST:localhost}
   port: ${ELASTIC_SEARCH_PORT:9200}
   scheme: ${ELASTIC_SEARCH_SCHEME:http}
-  enabled: ${ELASTIC_SEARCH_ENABLED:true}
+  enabled: ${ELASTIC_SEARCH_ENABLED:false}
   indexShards: ${ELASTIC_SEARCH_INDEX_SHARDS:2}
   indexShardsReplicas: ${ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS:0}
-  failImportIfError: ${ELASTIC_SEARCH_FAIL_ON_IMPORT:true}
+  failImportIfError: ${ELASTIC_SEARCH_FAIL_ON_IMPORT:false}
   dynamic: ${ELASTIC_SEARCH_DYNAMIC:strict}
   elasticMappings:
     disabled: '{"enabled": false}'
