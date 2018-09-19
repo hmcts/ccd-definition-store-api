@@ -8,6 +8,9 @@
             <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
+            <column name="reference"  type="varchar(40)" >
+                <constraints nullable="false" />
+            </column>
             <column name="name" type="varchar(40)">
                 <constraints nullable="false"/>
             </column>
@@ -16,9 +19,6 @@
             </column>
             <column name="case_type_id" type="integer">
                 <constraints nullable="true"/>
-            </column>
-            <column name="security_classification" type="securityclassification">
-                <constraints nullable="false"/>
             </column>
             <column name="created_at" type="datetime" defaultValue="now()">
                 <constraints nullable="false"/>
@@ -35,8 +35,8 @@
                                  referencedColumnNames="id"
                                  referencedTableName="case_type"/>
 
-        <addUniqueConstraint columnNames="case_type_id, name"
-                             constraintName="unique_case_roles_case_type_id_role_name"
-                             tableName="workbasket_input_case_field"/>
+        <addUniqueConstraint columnNames="case_type_id, reference"
+                             constraintName="unique_case_roles_case_type_id_role_reference"
+                             tableName="case_roles"/>
     </changeSet>
 </databaseChangeLog>

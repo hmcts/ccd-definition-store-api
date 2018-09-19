@@ -26,29 +26,38 @@ public class CaseRoleParser {
     public Collection<CaseRoleEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseType) {
         final String caseTypeId = caseType.getReference();
 
-        logger.debug("Parsing case roles for case type {}...", caseTypeId);
+        logger.debug("Parsing case roles for case type '{}'...", caseTypeId);
 
         final List<CaseRoleEntity> caseRoleEntities = Lists.newArrayList();
 
-        final Map<String, List<DefinitionDataItem>> caseRoleItemsByCaseTypes = definitionSheets.get(SheetName.CASE_ROLE.getName())
-            .groupDataItemsByCaseType();
+        final DefinitionSheet definitionSheet = definitionSheets.get(SheetName.CASE_ROLE.getName());
+
+        if (definitionSheet == null) {
+            logger.debug("Worksheet 'CaseRoles' not found in the workbook...");
+            return caseRoleEntities;
+        }
+
+        final Map<String, List<DefinitionDataItem>> caseRoleItemsByCaseTypes = definitionSheet.groupDataItemsByCaseType();
 
         final List<DefinitionDataItem> caseRoles = caseRoleItemsByCaseTypes.get(caseTypeId);
-
-        logger.debug("Parsing case roles for case type {}: {} case roles detected", caseTypeId, caseRoles.size());
+        if (caseRoles == null) {
+            logger.debug("No case roles found for case type '{}'", caseTypeId);
+            return caseRoleEntities;
+        }
+        logger.debug("Parsing case roles for case type '{}': {} case roles detected", caseTypeId, caseRoles.size());
 
         for (DefinitionDataItem caseRolesDefinition : caseRoles) {
             final String caseRoleId = caseRolesDefinition.getId();
-            logger.debug("Parsing case roles for case type {}: Parsing case roles {}...", caseTypeId, caseRoleId);
+            logger.debug("Parsing case roles for case type '{}': Parsing case role '{}'...", caseTypeId, caseRoleId);
 
             final CaseRoleEntity caseRoleEntity = parseCaseRole(caseRoleId, caseRolesDefinition);
             parseContext.registerCaseRoleForCaseType(caseTypeId, caseRoleEntity);
             caseRoleEntities.add(caseRoleEntity);
 
-            logger.info("Parsing case roles for case type {}: Parsing case role {}: OK", caseTypeId, caseRoleId);
+            logger.info("Parsing case roles for case type '{}': Parsing case role '{}': OK", caseTypeId, caseRoleId);
         }
 
-        logger.info("Parsing case roles for case type {}: OK: {} case roles parsed", caseTypeId, caseRoleEntities.size());
+        logger.info("Parsing case roles for case type '{}': OK: {} case roles parsed", caseTypeId, caseRoleEntities.size());
 
         return caseRoleEntities;
     }

@@ -19,10 +19,12 @@ public class ShowConditionParser {
 
     public ShowCondition parseShowCondition(String rawShowConditionString) throws InvalidShowConditionException {
         try {
-            String[] andConditions = rawShowConditionString.split(AND_CONDITION_REGEX);
-            Optional<ShowCondition> optShowCondition = buildShowCondition(andConditions);
-            if (optShowCondition.isPresent()) {
-                return optShowCondition.get();
+            if (rawShowConditionString != null) {
+                String[] andConditions = rawShowConditionString.split(AND_CONDITION_REGEX);
+                Optional<ShowCondition> optShowCondition = buildShowCondition(andConditions);
+                if (optShowCondition.isPresent()) {
+                    return optShowCondition.get();
+                }
             }
         } catch (Exception e) {
             LOG.error("Error occurred while parsing show condition", e);

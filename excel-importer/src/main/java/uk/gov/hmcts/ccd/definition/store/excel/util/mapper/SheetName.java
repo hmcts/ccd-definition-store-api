@@ -8,7 +8,7 @@ public enum SheetName {
     CASE_EVENT("CaseEvent"),
     CASE_EVENT_TO_FIELDS("CaseEventToFields"),
     CASE_FIELD("CaseField"),
-    CASE_ROLE("CaseRole"),
+    CASE_ROLE("CaseRoles"),
     CASE_TYPE("CaseType"),
     CASE_TYPE_TAB("CaseTypeTab"),
     STATE("State"),

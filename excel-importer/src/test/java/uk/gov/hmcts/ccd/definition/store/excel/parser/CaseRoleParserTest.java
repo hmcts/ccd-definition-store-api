@@ -25,7 +25,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE
 class CaseRoleParserTest {
 
     private static final String CASE_TYPE_ID = "Some case type";
-    private static final String CASE_ROLE_ID = "Some case role Id";
+    private static final String CASE_ROLE_ID = "[Some case role Id]";
     private static final String DESCRIPTION = "Some description";
 
     private CaseRoleParser underTest;
@@ -46,18 +46,60 @@ class CaseRoleParserTest {
     }
 
     @Test
-    @DisplayName("parse all state entities")
+    @DisplayName("should be OK - parse valid case roles entities")
     void testParseAll() {
         definitionSheets.put(CASE_ROLE.getName(), buildCaseRoleSheet());
         final Collection<CaseRoleEntity> caseRoleEntities = underTest.parseAll(definitionSheets, caseTypeEntity);
+        assertAll(() -> assertThat(caseRoleEntities, hasSize(2)),
+            () -> {
+                final CaseRoleEntity s = new ArrayList<>(caseRoleEntities).get(0);
+                assertThat(s.getReference(), is(CASE_ROLE_ID));
+                assertThat(s.getCaseType(), is(nullValue()));
+                assertThat(s.getDescription(), is(DESCRIPTION));
+                assertThat(context.getCaseRoleForCaseType(CASE_TYPE_ID, CASE_ROLE_ID), is(s));
+            },
+            () -> {
+                final CaseRoleEntity s = new ArrayList<>(caseRoleEntities).get(1);
+                assertThat(s.getReference(), is(CASE_ROLE_ID + "_2"));
+                assertThat(s.getCaseType(), is(nullValue()));
+                assertThat(s.getDescription(), is(DESCRIPTION + "_2"));
+                assertThat(context.getCaseRoleForCaseType(CASE_TYPE_ID, CASE_ROLE_ID + "_2"), is(s));
+            });
+    }
+
+    @Test
+    @DisplayName("should be OK - no CaseRoles worksheet")
+    void testParseNoWorksheet() {
+        final Collection<CaseRoleEntity> caseRoleEntities = underTest.parseAll(definitionSheets, caseTypeEntity);
+        assertThat(caseRoleEntities, hasSize(0));
+    }
+
+    @Test
+    @DisplayName("should be OK - no CaseRoles in the CaseRoles worksheet")
+    void testParseNoCaseRoleInWorksheet() {
+        definitionSheets.put(CASE_ROLE.getName(), new DefinitionSheet());
+        final Collection<CaseRoleEntity> caseRoleEntities = underTest.parseAll(definitionSheets, caseTypeEntity);
+        assertThat(caseRoleEntities, hasSize(0));
+    }
+
+    @Test
+    @DisplayName("should be OK - case role description is empty")
+    void testParseNoDescriptionForCaseRole() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(CASE_ROLE.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.ID, CASE_ROLE_ID);
+        sheet.addDataItem(item);
+        definitionSheets.put(CASE_ROLE.getName(), sheet);
+        final Collection<CaseRoleEntity> caseRoleEntities = underTest.parseAll(definitionSheets, caseTypeEntity);
         assertAll(() -> assertThat(caseRoleEntities, hasSize(1)),
-                  () -> {
-                      final CaseRoleEntity s = new ArrayList<>(caseRoleEntities).get(0);
-                      assertThat(s.getReference(), is(CASE_ROLE_ID));
-                      assertThat(s.getCaseType(), is(nullValue()));
-                      assertThat(s.getDescription(), is(DESCRIPTION));
-                      assertThat(context.getCaseRoleForCaseType(CASE_TYPE_ID, CASE_ROLE_ID), is(s));
-                  });
+            () -> {
+                final CaseRoleEntity s = new ArrayList<>(caseRoleEntities).get(0);
+                assertThat(s.getReference(), is(CASE_ROLE_ID));
+                assertThat(s.getCaseType(), is(nullValue()));
+                assertThat(s.getDescription(), is(nullValue()));
+                assertThat(context.getCaseRoleForCaseType(CASE_TYPE_ID, CASE_ROLE_ID), is(s));
+            });
     }
 
     private CaseTypeEntity buildCaseTypeEntity() {
@@ -73,6 +115,11 @@ class CaseRoleParserTest {
         item.addAttribute(ColumnName.ID, CASE_ROLE_ID);
         item.addAttribute(ColumnName.DESCRIPTION, DESCRIPTION);
         sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(CASE_ROLE.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item2.addAttribute(ColumnName.ID, CASE_ROLE_ID + "_2");
+        item2.addAttribute(ColumnName.DESCRIPTION, DESCRIPTION + "_2");
+        sheet.addDataItem(item2);
         return sheet;
     }
 }

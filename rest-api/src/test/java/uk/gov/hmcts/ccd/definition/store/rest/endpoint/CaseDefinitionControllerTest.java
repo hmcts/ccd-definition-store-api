@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
+import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
@@ -35,12 +36,13 @@ public class CaseDefinitionControllerTest {
 
     private CaseTypeService caseTypeService = mock(CaseTypeService.class);
     private JurisdictionService jurisdictionService = mock(JurisdictionService.class);
+    private CaseRoleService caseRoleService = mock(CaseRoleService.class);
     private CaseDefinitionController subject;
     private MockMvc mockMvc;
 
     @BeforeEach
     public void createSubject(){
-       subject = new CaseDefinitionController( caseTypeService, jurisdictionService );
+       subject = new CaseDefinitionController( caseTypeService, jurisdictionService, caseRoleService);
        mockMvc = MockMvcBuilders.standaloneSetup(subject)
                                 .setControllerAdvice(new RestEndPointExceptionHandler())
                                 .build();
@@ -63,7 +65,25 @@ public class CaseDefinitionControllerTest {
             subject.dataJurisdictionsJurisdictionIdCaseTypeGet(null);
             verify(caseTypeService, times(1)).findByJurisdictionId(null);
         }
+    }
 
+    @Nested
+    @DisplayName("Test the getCaseRoles method")
+    class GetCaseRoleTests {
+
+        @Test
+        @DisplayName("Should call the caseRoleService by correct parameter")
+        void shouldCallCaseRoleService() {
+            subject.getCaseRoles(null, null, "someCaseTypeId");
+            verify(caseRoleService, times(1)).findByCaseTypeId(eq("someCaseTypeId"));
+        }
+
+        @Test
+        @DisplayName("Should call the caseRoleService with null when parameter is null")
+        void shouldCallCaseRoleServiceWhenParameterIsNull() {
+            subject.getCaseRoles(null, null, null);
+            verify(caseRoleService, times(1)).findByCaseTypeId(null);
+        }
     }
 
     @Nested

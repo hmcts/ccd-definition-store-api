@@ -840,6 +840,30 @@ class EntityToResponseDTOMapperTest {
     }
 
     @Nested
+    @DisplayName("Should return a CaseRole that matches CaseRoleEntity")
+    class CaseRoleEntityTests {
+        private final String REFERENCE = "Ref";
+        private final String NAME = "Name";
+        private final String DESCRIPTION = "Some description";
+
+        @Test
+        void shouldReturnCaseRole() {
+            CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
+            caseRoleEntity.setReference(REFERENCE);
+            caseRoleEntity.setName(NAME);
+            caseRoleEntity.setDescription(DESCRIPTION);
+
+            final CaseRole caseRole = classUnderTest.map(caseRoleEntity);
+
+            assertAll(
+                () -> assertThat(caseRole.getId(), is(caseRoleEntity.getReference())),
+                () -> assertThat(caseRole.getName(), is(caseRoleEntity.getName())),
+                () -> assertThat(caseRole.getDescription(), is(caseRoleEntity.getDescription()))
+            );
+        }
+    }
+
+    @Nested
     @DisplayName("Should create a CaseTypeTabField matching DisplayGroupCaseFieldEntity fields")
     class DisplayGroupCaseFieldEntityTests {
 

@@ -121,6 +121,8 @@ public enum ColumnName {
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
                     columnName.equals(ColumnName.TAB_ID) ||
                     columnName.equals(ColumnName.CASE_FIELD_ID);
+            case CASE_ROLE:
+                return columnName.equals(CASE_TYPE_ID);
             case AUTHORISATION_CASE_TYPE:
                 return columnName.equals(ColumnName.CASE_TYPE_ID) ||
                     columnName.equals(ColumnName.USER_ROLE) ||

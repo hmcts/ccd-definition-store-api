@@ -259,6 +259,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
         assertFieldTypes();
         assertLayout();
+        assertCaseRoles();
     }
 
     private void assertJurisdiction() {
@@ -373,6 +374,32 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn("minimum", "3"),
                                        hasColumn("maximum", "20"),
                                        hasColumn(is("reference"), startsWith("PersonLastNameWithValidation-"))))));
+    }
+
+    private void assertCaseRoles() {
+        List<Map<String, Object>> allCaseRoles = jdbcTemplate.queryForList("SELECT * FROM case_roles");
+        assertThat(allCaseRoles, hasSize(6));
+
+        List<Map<String, Object>> caseTypeCaseRoles = jdbcTemplate.queryForList("SELECT * FROM case_roles where " +
+            "case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
+        assertThat(caseTypeCaseRoles, allOf(
+            hasItem(allOf(
+                hasColumn("name", "Claimant"),
+                hasColumn("description", "The person created the case"),
+                hasColumn("reference", "[Claimant]".toUpperCase()))),
+            hasItem(allOf(
+                hasColumn("name", "Defendant"),
+                hasColumn("description", "The defending person"),
+                hasColumn("reference", "[Defendant]".toUpperCase()))),
+            hasItem(allOf(
+                hasColumn("name", "Claimant solicitor"),
+                hasColumn("description", "The claiming solicitor"),
+                hasColumn("reference", "[ClaimantSolicitor]".toUpperCase()))),
+            hasItem(allOf(
+                hasColumn("name", "Defendant solicitor"),
+                hasColumn("description", "The defending solicitor"),
+                hasColumn("reference", "[DefendantSolicitor]".toUpperCase())))
+        ));
     }
 
     private void assertLayout() {

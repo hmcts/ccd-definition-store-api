@@ -91,7 +91,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
-    private final List<CaseRoleEntity> caseRoleEntities = new ArrayList<>();
+    private final List<CaseRoleEntity> caseRoles = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -239,13 +239,13 @@ public class CaseTypeEntity implements Serializable, Versionable {
         return this;
     }
 
-    public List<CaseRoleEntity> getCaseRoleEntities() {
-        return caseRoleEntities;
+    public List<CaseRoleEntity> getCaseRoles() {
+        return caseRoles;
     }
 
     public CaseTypeEntity addCaseRole(final CaseRoleEntity caseRoleEntity) {
         caseRoleEntity.setCaseType(this);
-        caseRoleEntities.add(caseRoleEntity);
+        caseRoles.add(caseRoleEntity);
         return this;
     }
 

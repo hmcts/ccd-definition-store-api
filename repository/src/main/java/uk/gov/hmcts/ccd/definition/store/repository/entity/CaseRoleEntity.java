@@ -1,11 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,11 +11,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "case_roles")
 @Entity
-@TypeDef(
-    name = "pgsql_securityclassification_enum",
-    typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name="type", value="uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
-)
 public class CaseRoleEntity implements Serializable {
     @Id
     @Column(name = "id")
@@ -40,10 +30,6 @@ public class CaseRoleEntity implements Serializable {
     @JoinColumn(name = "case_type_id")
     private CaseTypeEntity caseType;
 
-    @Column(name = "security_classification")
-    @Type(type = "pgsql_securityclassification_enum")
-    private SecurityClassification securityClassification;
-
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -57,7 +43,7 @@ public class CaseRoleEntity implements Serializable {
     }
 
     public void setReference(String reference) {
-        this.reference = reference;
+            this.reference = reference;
     }
 
     public String getName() {
@@ -65,7 +51,7 @@ public class CaseRoleEntity implements Serializable {
     }
 
     public void setName(String name) {
-        this.name = name;
+            this.name = name;
     }
 
     public String getDescription() {
@@ -82,14 +68,6 @@ public class CaseRoleEntity implements Serializable {
 
     public void setCaseType(CaseTypeEntity caseType) {
         this.caseType = caseType;
-    }
-
-    public SecurityClassification getSecurityClassification() {
-        return securityClassification;
-    }
-
-    public void setSecurityClassification(SecurityClassification securityClassification) {
-        this.securityClassification = securityClassification;
     }
 
     public LocalDateTime getCreatedAt() {

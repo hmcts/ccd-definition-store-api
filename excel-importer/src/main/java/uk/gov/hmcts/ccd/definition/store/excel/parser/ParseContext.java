@@ -164,15 +164,8 @@ public class ParseContext {
         if (!caseRolesByCaseTypes.containsKey(caseTypeId)) {
             caseRolesByCaseTypes.put(caseTypeId, Maps.newHashMap());
         }
-
         final Map<String, CaseRoleEntity> caseTypeCaseRoles = caseRolesByCaseTypes.get(caseTypeId);
-
-        if (caseTypeCaseRoles.containsKey(caseRole.getReference())) {
-            throw new SpreadsheetParsingException("CaseRole with ID: " + caseRole.getReference() + " for caseType: " + caseTypeId + " already registered!");
-        }
-
         caseTypeCaseRoles.put(caseRole.getReference(), caseRole);
-
         return this;
     }
 
