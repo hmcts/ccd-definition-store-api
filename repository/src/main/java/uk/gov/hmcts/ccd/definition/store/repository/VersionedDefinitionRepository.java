@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import org.springframework.data.repository.NoRepositoryBean;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 @NoRepositoryBean
 public interface VersionedDefinitionRepository<T, ID extends Serializable> extends DefinitionRepository<T, ID>{
