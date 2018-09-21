@@ -28,7 +28,6 @@ class CaseRoleEntityMandatoryFieldsValidatorImplTest {
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setName("Case Type One");
         caseTypeEntity.setReference("Case Type I");
-        caseTypeEntity.addCaseRole(caseRoleEntity);
         caseRoleEntityValidationContext = new CaseRoleEntityValidationContext(caseTypeEntity);
     }
 
