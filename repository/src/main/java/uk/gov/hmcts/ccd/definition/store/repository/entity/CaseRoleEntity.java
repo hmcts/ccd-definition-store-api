@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -9,7 +7,9 @@ import java.time.LocalDateTime;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Table(name = "case_roles")
+import org.hibernate.annotations.CreationTimestamp;
+
+@Table(name = "case_role")
 @Entity
 public class CaseRoleEntity implements Serializable {
     @Id

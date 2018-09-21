@@ -4,7 +4,7 @@
 
     <changeSet id="rdm-2835" author="fatih.ozceylan@hmcts.net">
 
-        <createTable tableName="case_roles">
+        <createTable tableName="case_role">
             <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
@@ -26,17 +26,17 @@
         </createTable>
 
         <addPrimaryKey columnNames="id"
-                       constraintName="pk_case_roles"
-                       tableName="case_roles"/>
+                       constraintName="pk_case_role"
+                       tableName="case_role"/>
 
         <addForeignKeyConstraint baseColumnNames="case_type_id"
-                                 baseTableName="case_roles"
-                                 constraintName="fk_case_roles_case_type_id"
+                                 baseTableName="case_role"
+                                 constraintName="fk_case_role_case_type_id"
                                  referencedColumnNames="id"
                                  referencedTableName="case_type"/>
 
         <addUniqueConstraint columnNames="case_type_id, reference"
-                             constraintName="unique_case_roles_case_type_id_role_reference"
-                             tableName="case_roles"/>
+                             constraintName="unique_case_role_case_type_id_role_reference"
+                             tableName="case_role"/>
     </changeSet>
 </databaseChangeLog>

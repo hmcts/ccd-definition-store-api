@@ -1,13 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.caserole;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class CaseRoleEntityUniquenessValidatorImpl implements CaseRoleEntityValidator {
@@ -18,7 +18,7 @@ public class CaseRoleEntityUniquenessValidatorImpl implements CaseRoleEntityVali
     public ValidationResult validate(CaseRoleEntity caseRoleEntity,
                                      CaseRoleEntityValidationContext caseRoleEntityValidationContext) {
         final ValidationResult validationResult = new ValidationResult();
-        if (caseRoleEntity.getReference() != null && caseRoleEntity.getReference().equalsIgnoreCase(CREATOR)) {
+        if (CREATOR.equalsIgnoreCase(caseRoleEntity.getReference())) {
             validationResult.addError(new CaseRoleEntityUniquenessValidatorImpl.ValidationError(String.format(
                 "CaseRole Id [CREATOR] is reserved. Please check case type'%s'",
                 caseRoleEntity.getReference()),

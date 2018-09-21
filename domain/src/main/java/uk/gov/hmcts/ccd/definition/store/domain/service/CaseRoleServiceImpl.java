@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,10 +24,9 @@ public class CaseRoleServiceImpl implements CaseRoleService {
 
     @Override
     public List<CaseRole> findByCaseTypeId(String caseType) {
-        Optional<List<CaseRoleEntity>> caseRoleEntities =
-            Optional.ofNullable(caseRoleRepository.findCaseRoleEntitiesByCaseType(caseType));
+        List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findCaseRoleEntitiesByCaseType(caseType);
 
-        return caseRoleEntities.orElse(Collections.emptyList())
+        return caseRoleEntities
             .stream()
             .map(dtoMapper::map)
             .collect(toList());
