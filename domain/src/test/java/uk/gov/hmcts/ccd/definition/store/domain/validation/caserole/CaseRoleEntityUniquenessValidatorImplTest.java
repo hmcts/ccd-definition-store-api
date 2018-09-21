@@ -23,14 +23,14 @@ class CaseRoleEntityUniquenessValidatorImplTest {
 
     @BeforeEach
     void setUp() {
+        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
         classUnderTest = new CaseRoleEntityUniquenessValidatorImpl();
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setName("Case Type One");
         caseTypeEntity.setReference("Case Type I");
-        caseRoleEntityValidationContext = new CaseRoleEntityValidationContext(caseTypeEntity);
-        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
-        caseRoleEntity.setReference(REFERENCE);
         caseTypeEntity.addCaseRole(caseRoleEntity);
+        caseRoleEntityValidationContext = new CaseRoleEntityValidationContext(caseTypeEntity);
+        caseRoleEntity.setReference(REFERENCE);
     }
 
     @DisplayName("should pass - when no validation failures")
@@ -70,7 +70,8 @@ class CaseRoleEntityUniquenessValidatorImplTest {
         caseRoleIdWithReservedWord.setReference("[CREATOR]");
         caseTypeEntity.addCaseRole(caseRoleIdWithReservedWord);
 
-        final ValidationResult result = classUnderTest.validate(caseRoleIdWithReservedWord, caseRoleEntityValidationContext);
+        final ValidationResult result = classUnderTest.validate(caseRoleIdWithReservedWord,
+            caseRoleEntityValidationContext);
 
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),

@@ -23,12 +23,13 @@ class CaseRoleEntityMandatoryFieldsValidatorImplTest {
 
     @BeforeEach
     void setUp() {
+        caseRoleEntity = new CaseRoleEntity();
         classUnderTest = new CaseRoleEntityMandatoryFieldsValidatorImpl();
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setName("Case Type One");
         caseTypeEntity.setReference("Case Type I");
+        caseTypeEntity.addCaseRole(caseRoleEntity);
         caseRoleEntityValidationContext = new CaseRoleEntityValidationContext(caseTypeEntity);
-        caseRoleEntity = new CaseRoleEntity();
     }
 
     @DisplayName("should return empty validation result in case of no validation failures")
