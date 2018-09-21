@@ -11,8 +11,8 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
@@ -31,12 +31,12 @@ class CaseTypeEntityCaseRoleValidatorImplTest {
     @Mock
     CaseRoleEntityUniquenessValidatorImpl uniquenessValidator;
 
-    @InjectMocks
     CaseTypeEntityCaseRoleValidatorImpl classUnderTest;
     private CaseTypeEntity caseType;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.initMocks(this);
         classUnderTest = new CaseTypeEntityCaseRoleValidatorImpl(Arrays.asList(mandatoryValidator,
             fieldValueValidator, uniquenessValidator));
         caseType = new CaseTypeEntity();
