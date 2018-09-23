@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import java.io.Serializable;
 import java.util.List;
 
-abstract class AbstractDefinitionRepositoryDecorator <T, ID extends Serializable, R extends DefinitionRepository<T, ID>> implements DefinitionRepository<T, ID> {
+abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable, R extends DefinitionRepository<T, ID>> implements DefinitionRepository<T, ID> {
 
     protected R repository;
 
