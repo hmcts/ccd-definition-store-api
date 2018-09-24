@@ -20,7 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @TypeDef(
     name = "pgsql_securityclassification_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name="type", value="uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
+    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 
 )
 
@@ -28,7 +28,7 @@ public class UserRoleEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
