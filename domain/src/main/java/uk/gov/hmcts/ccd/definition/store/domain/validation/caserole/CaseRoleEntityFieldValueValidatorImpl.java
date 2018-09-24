@@ -17,21 +17,28 @@ public class CaseRoleEntityFieldValueValidatorImpl implements CaseRoleEntityVali
     public ValidationResult validate(CaseRoleEntity caseRoleEntity,
                                      CaseRoleEntityValidationContext caseRoleEntityValidationContext) {
         final ValidationResult validationResult = new ValidationResult();
-        if (caseRoleEntity.getReference() != null &&
-            !caseRoleEntity.getReference().matches(CASE_ROLE_ID_REGEX)) {
+        if (caseRoleEntity.getReference() == null) {
+            validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
+                String.format("CaseRole ID cannot be null for case type '%s'",
+                    caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
+        } else if (!caseRoleEntity.getReference().matches(CASE_ROLE_ID_REGEX)) {
             validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
                 String.format("CaseRole ID must be only characters with no space and between '[]' for case type '%s'",
                     caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
-        } else if (caseRoleEntity.getReference() != null && caseRoleEntity.getReference().length() > ID_MAX_LENGTH) {
+        } else if (caseRoleEntity.getReference().length() > ID_MAX_LENGTH) {
             validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
                 String.format("CaseRole ID must be less than %s characters long for case type '%s'", ID_MAX_LENGTH,
                     caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
         }
-        if (caseRoleEntity.getName() != null && caseRoleEntity.getName().length() > NAME_MAX_LENGTH) {
+        if (caseRoleEntity.getName() == null) {
+            validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
+                String.format("CaseRole name cannot be null for case type '%s'", NAME_MAX_LENGTH,
+                    caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
+        } else if(caseRoleEntity.getName().length() > NAME_MAX_LENGTH) {
             validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
                 String.format("CaseRole name must be less than %s characters long for case type '%s'", NAME_MAX_LENGTH,
                     caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
-        } else if (caseRoleEntity.getName() != null && caseRoleEntity.getName().trim().length() < 1) {
+        } else if (caseRoleEntity.getName().trim().length() < 1) {
             validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
                 String.format("CaseRole name must be non-empty characters for case type '%s'", caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
         }
