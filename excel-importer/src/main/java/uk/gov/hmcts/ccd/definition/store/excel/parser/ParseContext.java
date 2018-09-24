@@ -235,7 +235,7 @@ public class ParseContext {
         userRoles.clear();
         userRoles.putAll(userRoleList
                              .stream()
-                             .collect(toMap(UserRoleEntity::getRole, u -> u)));
+                             .collect(toMap(UserRoleEntity::getReference, u -> u)));
         return this;
     }
 

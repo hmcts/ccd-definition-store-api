@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Integer> {
 
-    Optional<UserRoleEntity> findTopByRole(String role);
+    Optional<UserRoleEntity> findTopByReference(String reference);
 
-    List<UserRoleEntity> findByRoleIn(List<String> role);
+    List<UserRoleEntity> findByReferenceIn(List<String> reference);
 }

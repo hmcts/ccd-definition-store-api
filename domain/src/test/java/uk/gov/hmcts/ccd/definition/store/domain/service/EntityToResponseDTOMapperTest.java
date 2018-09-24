@@ -237,14 +237,14 @@ class EntityToResponseDTOMapperTest {
             return caseTypeEntity;
         }
 
-        private CaseTypeUserRoleEntity caseTypeUserRoleEntity(String role,
+        private CaseTypeUserRoleEntity caseTypeUserRoleEntity(String reference,
                                                               Boolean create,
                                                               Boolean read,
                                                               Boolean update,
                                                               Boolean delete) {
             CaseTypeUserRoleEntity caseTypeUserRoleEntity = new CaseTypeUserRoleEntity();
             UserRoleEntity userRoleEntity = new UserRoleEntity();
-            userRoleEntity.setRole(role);
+            userRoleEntity.setReference(reference);
             caseTypeUserRoleEntity.setUserRole(userRoleEntity);
             caseTypeUserRoleEntity.setCreate(create);
             caseTypeUserRoleEntity.setRead(read);
@@ -642,14 +642,14 @@ class EntityToResponseDTOMapperTest {
             return webhookEntity;
         }
 
-        private EventUserRoleEntity eventUserRoleEntity(String role,
+        private EventUserRoleEntity eventUserRoleEntity(String reference,
                                                         Boolean create,
                                                         Boolean read,
                                                         Boolean update,
                                                         Boolean delete) {
             EventUserRoleEntity eventUserRoleEntity = new EventUserRoleEntity();
             UserRoleEntity userRoleEntity = new UserRoleEntity();
-            userRoleEntity.setRole(role);
+            userRoleEntity.setReference(reference);
             eventUserRoleEntity.setUserRole(userRoleEntity);
             eventUserRoleEntity.setCreate(create);
             eventUserRoleEntity.setRead(read);
@@ -702,14 +702,14 @@ class EntityToResponseDTOMapperTest {
             assertTrue(caseState.getAcls().isEmpty());
         }
 
-        private StateUserRoleEntity stateUserRoleEntity(String role,
+        private StateUserRoleEntity stateUserRoleEntity(String reference,
                                                         Boolean create,
                                                         Boolean read,
                                                         Boolean update,
                                                         Boolean delete) {
             StateUserRoleEntity eventUserRoleEntity = new StateUserRoleEntity();
             UserRoleEntity userRoleEntity = new UserRoleEntity();
-            userRoleEntity.setRole(role);
+            userRoleEntity.setReference(reference);
             eventUserRoleEntity.setUserRole(userRoleEntity);
             eventUserRoleEntity.setCreate(create);
             eventUserRoleEntity.setRead(read);
@@ -784,14 +784,14 @@ class EntityToResponseDTOMapperTest {
             assertNull(caseField.getLiveUntil());
         }
 
-        private CaseFieldUserRoleEntity caseFieldUserRoleEntity(String role,
+        private CaseFieldUserRoleEntity caseFieldUserRoleEntity(String reference,
                                                                 Boolean create,
                                                                 Boolean read,
                                                                 Boolean update,
                                                                 Boolean delete) {
             CaseFieldUserRoleEntity eventUserRoleEntity = new CaseFieldUserRoleEntity();
             UserRoleEntity userRoleEntity = new UserRoleEntity();
-            userRoleEntity.setRole(role);
+            userRoleEntity.setReference(reference);
             eventUserRoleEntity.setUserRole(userRoleEntity);
             eventUserRoleEntity.setCreate(create);
             eventUserRoleEntity.setRead(read);
@@ -1208,7 +1208,7 @@ class EntityToResponseDTOMapperTest {
 
     private <T> Matcher<T> aclWhichMatchesAuthorisation(Authorisation authorisation) {
 
-        String role = authorisation.getUserRole().getRole();
+        String role = authorisation.getUserRole().getReference();
 
         return new BaseMatcher<T>() {
             @Override

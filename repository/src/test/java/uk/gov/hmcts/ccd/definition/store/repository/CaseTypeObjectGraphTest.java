@@ -192,8 +192,8 @@ public class CaseTypeObjectGraphTest {
 
         // Check authorisation case fields
         assertThat(caseField.getCaseFieldUserRoles().size(), equalTo(2));
-        assertThat(caseField.getCaseFieldUserRoles().get(0).getUserRole().getRole(), equalTo("user role 1"));
-        assertThat(caseField.getCaseFieldUserRoles().get(1).getUserRole().getRole(), equalTo("user role 2"));
+        assertThat(caseField.getCaseFieldUserRoles().get(0).getUserRole().getReference(), equalTo("user role 1"));
+        assertThat(caseField.getCaseFieldUserRoles().get(1).getUserRole().getReference(), equalTo("user role 2"));
         assertThat(caseField.getCaseFieldUserRoles().get(0).getCreate(), equalTo(true));
         assertThat(caseField.getCaseFieldUserRoles().get(0).getRead(), equalTo(false));
         assertThat(caseField.getCaseFieldUserRoles().get(0).getUpdate(), equalTo(false));
@@ -233,7 +233,7 @@ public class CaseTypeObjectGraphTest {
                                            final boolean canUpdate,
                                            final boolean canDelete) {
         final String reasonPrefix = String.format("Case type '%s, Event '%s', User Role '%s' ",
-                entity.getEvent().getCaseType().getReference(), entity.getEvent().getReference(), entity.getUserRole().getRole());
+                entity.getEvent().getCaseType().getReference(), entity.getEvent().getReference(), entity.getUserRole().getReference());
         assertThat(reasonPrefix + "can create", entity.getCreate(), is(canCreate));
         assertThat(reasonPrefix + "can read", entity.getRead(), is(canRead));
         assertThat(reasonPrefix + "can update", entity.getUpdate(), is(canUpdate));
@@ -244,7 +244,7 @@ public class CaseTypeObjectGraphTest {
         // @formatter:off
         return eventEntity.getEventUserRoles()
             .stream()
-            .filter(r -> StringUtils.equals(userRole, r.getUserRole().getRole()))
+            .filter(r -> StringUtils.equals(userRole, r.getUserRole().getReference()))
             .findFirst()
             .get();
         // @formatter:on
@@ -264,14 +264,14 @@ public class CaseTypeObjectGraphTest {
                                               final CaseTypeUserRoleEntity expected,
                                               final CaseTypeUserRoleEntity actual) {
         assertThat(expected.getCaseType().getReference(), is(caseType.getReference()));
-        assertThat(expected.getUserRole().getRole(), is(actual.getUserRole().getRole()));
+        assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
         assertThat(expected.getUserRole().getSecurityClassification(), is(actual.getUserRole().getSecurityClassification()));
     }
     private void assertStateUserRoleEntity(final StateEntity stateEntity,
                                               final StateUserRoleEntity expected,
                                               final StateUserRoleEntity actual) {
         assertThat(expected.getStateEntity().getReference(), is(stateEntity.getReference()));
-        assertThat(expected.getUserRole().getRole(), is(actual.getUserRole().getRole()));
+        assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
         assertThat(expected.getUserRole().getSecurityClassification(), is(actual.getUserRole().getSecurityClassification()));
     }
 

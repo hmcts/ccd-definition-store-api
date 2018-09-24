@@ -1,16 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import org.springframework.stereotype.Component;
-
-import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
-import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
-import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
-import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
-import uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper;
-
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +8,15 @@ import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOper
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.UPDATE;
 import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toEntity;
 import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toModel;
+
+import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
+import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
+import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
+import uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper;
 
 @Component
 public class UserRoleServiceImpl implements UserRoleService {
@@ -31,7 +29,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public UserRole getRole(final String role) {
-        return toModel(repository.findTopByRole(role).orElseThrow(() ->
+        return toModel(repository.findTopByReference(role).orElseThrow(() ->
             new NotFoundException("Role '" + role + "' is not found")));
     }
 
@@ -39,11 +37,11 @@ public class UserRoleServiceImpl implements UserRoleService {
     public ServiceResponse<UserRole> saveRole(final UserRole userRole) {
         final UserRoleEntity entity;
         final boolean roleFound;
-        final Optional<UserRoleEntity> searchResult = repository.findTopByRole(userRole.getRole());
+        final Optional<UserRoleEntity> searchResult = repository.findTopByReference(userRole.getRole());
         if (searchResult.isPresent()) {
             entity = searchResult.get();
-            entity.setLiveFrom(parseDate(userRole.getLiveFrom()));
-            entity.setLiveTo(parseDate(userRole.getLiveTo()));
+//            entity.setLiveFrom(parseDate(userRole.getLiveFrom()));
+//            entity.setLiveTo(parseDate(userRole.getLiveTo()));
             entity.setSecurityClassification(userRole.getSecurityClassification());
             roleFound = true;
         } else {
@@ -56,7 +54,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public ServiceResponse<UserRole> createRole(final UserRole userRole) {
         final UserRoleEntity entity;
-        final Optional<UserRoleEntity> searchResult = repository.findTopByRole(userRole.getRole().trim());
+        final Optional<UserRoleEntity> searchResult = repository.findTopByReference(userRole.getRole().trim());
 
         if (!searchResult.isPresent()) {
             userRole.setRole(userRole.getRole().trim());
@@ -69,7 +67,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<UserRole> getRoles(List<String> roles) {
-        final List<UserRoleEntity> userRoles = repository.findByRoleIn(roles);
+        final List<UserRoleEntity> userRoles = repository.findByReferenceIn(roles);
         return userRoles.stream()
             .map(UserRoleModelMapper::toModel)
             .collect(toList());
@@ -81,9 +79,5 @@ public class UserRoleServiceImpl implements UserRoleService {
         return userRoles.stream()
             .map(UserRoleModelMapper::toModel)
             .collect(toList());
-    }
-
-    private LocalDate parseDate(String date) {
-        return null == date ? null : LocalDate.parse(date);
     }
 }

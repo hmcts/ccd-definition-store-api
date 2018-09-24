@@ -43,7 +43,7 @@ public class AuthorisationCaseFieldParserTest {
     public void setup() {
         final ParseContext context = new ParseContext();
         final String role = "CaseWorker 1";
-        given(mockUserRoleEntity.getRole()).willReturn(role);
+        given(mockUserRoleEntity.getReference()).willReturn(role);
         context.registerUserRoles(Arrays.asList(mockUserRoleEntity));
 
         entityToDefinitionDataItemRegistry =  new EntityToDefinitionDataItemRegistry();

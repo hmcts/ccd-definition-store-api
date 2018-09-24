@@ -58,10 +58,10 @@ public class TestHelper {
         return caseFieldEntity;
     }
 
-    public UserRoleEntity createUserRole(final String role,
+    public UserRoleEntity createUserRole(final String reference,
                                          final SecurityClassification sc) {
         final UserRoleEntity entity = new UserRoleEntity();
-        entity.setRole(role);
+        entity.setReference(reference);
         entity.setSecurityClassification(sc);
         return userRoleRepository.save(entity);
     }

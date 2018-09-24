@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -12,6 +7,10 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+
+import org.junit.Test;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 
 public class UserRoleModelMapperTest {
@@ -23,8 +22,8 @@ public class UserRoleModelMapperTest {
         assertThat(userRoleEntity.getSecurityClassification(), is(SecurityClassification.PUBLIC));
         assertThat(userRoleEntity.getId(), is(nullValue()));
         assertThat(userRoleEntity.getCreatedAt(), is(nullValue()));
-        assertThat(userRoleEntity.getLiveFrom(), is(LocalDate.parse(model.getLiveFrom())));
-        assertThat(userRoleEntity.getLiveTo(), is(LocalDate.parse(model.getLiveTo())));
+//        assertThat(userRoleEntity.getLiveFrom(), is(LocalDate.parse(model.getLiveFrom())));
+//        assertThat(userRoleEntity.getLiveTo(), is(LocalDate.parse(model.getLiveTo())));
 
     }
 
@@ -59,9 +58,9 @@ public class UserRoleModelMapperTest {
         given(entity.getId()).willReturn(-3);
         given(entity.getCreatedAt()).willReturn(LocalDateTime.of(2011, 6, 5, 23, 59, 59));
         given(entity.getSecurityClassification()).willReturn(SecurityClassification.RESTRICTED);
-        given(entity.getRole()).willReturn("entity role");
-        given(entity.getLiveFrom()).willReturn(LocalDate.of(2018, 4, 3));
-        given(entity.getLiveTo()).willReturn(LocalDate.of(4000, 2, 29));
+        given(entity.getReference()).willReturn("entity role");
+//        given(entity.getLiveFrom()).willReturn(LocalDate.of(2018, 4, 3));
+//        given(entity.getLiveTo()).willReturn(LocalDate.of(4000, 2, 29));
 
         return entity;
     }

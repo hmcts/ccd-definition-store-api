@@ -1,0 +1,139 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-2917" author="fatih.ozceylan@hmcts.net">
+
+        <!-- case_role table changes-->
+        <!-- Change precision of reference, name and description columns in case_role table -->
+        <modifyDataType columnName="reference" newDataType="varchar(255)" tableName="case_role"/>
+        <modifyDataType columnName="name" newDataType="varchar(255)" tableName="case_role"/>
+        <modifyDataType columnName="description" newDataType="varchar(255)" tableName="case_role"/>
+
+        <!-- Add new security_classification and user_role_id fields to the case_role table -->
+        <addColumn tableName="case_role">
+            <column name="user_role_id" type="integer" >
+                <constraints nullable="true"/>
+            </column>
+            <column name="security_classification" type="security_classification" >
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+
+        <!-- case_field_user_role table changes -->
+        <!-- Add new case_role_id column to the case_field_user_role table -->
+        <addColumn tableName="case_field_user_role">
+            <column name="case_role_id" type="integer" >
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <!-- Add foreign key for case_role_id column linking to case_role table -->
+        <addForeignKeyConstraint baseColumnNames="case_role_id"
+                                 baseTableName="case_field_user_role"
+                                 constraintName="fk_case_field_user_role_case_role_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="case_role"/>
+
+        <!-- Add unique constraint on case_field_id and case_role_id columns for the case_field_user_role table -->
+        <addUniqueConstraint columnNames="case_field_id, case_role_id"
+                             constraintName="unique_case_field_user_role_case_field_id_case_role_id"
+                             tableName="case_field_user_role"/>
+
+
+        <!-- case_type_user_role table changes -->
+        <!-- Add new case_role_id column to the case_type_user_role table -->
+        <addColumn tableName="case_type_user_role">
+            <column name="case_role_id" type="integer" >
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <!-- Add foreign key for case_role_id column linking to case_role table -->
+        <addForeignKeyConstraint baseColumnNames="case_role_id"
+                                 baseTableName="case_type_user_role"
+                                 constraintName="fk_case_type_user_role_case_role_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="case_role"/>
+
+        <!-- Add unique constraint on case_type_id and case_role_id columns for the case_type_user_role table -->
+        <addUniqueConstraint columnNames="case_type_id, case_role_id"
+                             constraintName="unique_case_type_user_role_case_type_id_case_role_id"
+                             tableName="case_type_user_role"/>
+
+
+        <!-- event_user_role table changes -->
+        <!-- Add new case_role_id column to the event_user_role table -->
+        <addColumn tableName="event_user_role">
+            <column name="case_role_id" type="integer" >
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <!-- Add foreign key for case_role_id column linking to case_role table -->
+        <addForeignKeyConstraint baseColumnNames="case_role_id"
+                                 baseTableName="event_user_role"
+                                 constraintName="fk_event_user_role_case_role_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="case_role"/>
+
+        <!-- Add unique constraint on event_id and case_role_id columns for the event_user_role table -->
+        <addUniqueConstraint columnNames="event_id, case_role_id"
+                             constraintName="unique_event_user_role_event_id_case_role_id"
+                             tableName="event_user_role"/>
+
+
+        <!-- state_user_role table changes -->
+        <!-- Add new case_role_id column to the state_user_role table -->
+        <addColumn tableName="state_user_role">
+            <column name="case_role_id" type="integer" >
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <!-- Add foreign key for case_role_id column linking to case_role table -->
+        <addForeignKeyConstraint baseColumnNames="case_role_id"
+                                 baseTableName="state_user_role"
+                                 constraintName="fk_state_user_role_case_role_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="case_role"/>
+
+        <!-- Add unique constraint on state_id and case_role_id columns for the state_user_role table -->
+        <addUniqueConstraint columnNames="state_id, case_role_id"
+                             constraintName="unique_state_user_role_state_id_case_role_id"
+                             tableName="state_user_role"/>
+
+
+        <!-- MIGRATE the DATA -->
+        <!-- Pull in the user_roles into case_role table -->
+        <sql>
+            INSERT INTO case_role (user_role_id, reference, name, description, security_classification)
+            SELECT id as user_role_id, "role" AS reference, "role" AS name, "role" AS description, security_classification FROM user_role;
+        </sql>
+        <!-- Pull in the case_role_id into case_field_user_role table -->
+        <sql>
+            Update case_field_user_role cfur
+            set case_role_id = (SELECT cr.id id FROM case_role cr where cr.user_role_id = cfur.user_role_id )
+            WHERE exists (SELECT 1  from case_role cr where cr.user_role_id = cfur.user_role_id);
+        </sql>
+        <!-- Pull in the case_role_id into case_type_user_role table -->
+        <sql>
+            Update case_type_user_role ctur
+            set case_role_id = (SELECT cr.id id FROM case_role cr where cr.user_role_id = ctur.user_role_id )
+            WHERE exists (SELECT 1  from case_role cr where cr.user_role_id = ctur.user_role_id);
+        </sql>
+        <!-- Pull in the case_role_id into event_user_role table -->
+        <sql>
+            Update event_user_role eur
+            set case_role_id = (SELECT cr.id id FROM case_role cr where cr.user_role_id = eur.user_role_id )
+            WHERE exists (SELECT 1  from case_role cr where cr.user_role_id = eur.user_role_id);
+        </sql>
+        <!-- Pull in the case_role_id into state_user_role table -->
+        <sql>
+            Update state_user_role sur
+            set case_role_id = (SELECT cr.id id FROM case_role cr where cr.user_role_id = sur.user_role_id )
+            WHERE exists (SELECT 1  from case_role cr where cr.user_role_id = sur.user_role_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

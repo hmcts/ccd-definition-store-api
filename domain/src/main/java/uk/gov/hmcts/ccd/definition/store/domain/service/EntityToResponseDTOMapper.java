@@ -150,7 +150,7 @@ public interface EntityToResponseDTOMapper {
 
         static List<AccessControlList> map(List<? extends Authorisation> authorisation) {
             return authorisation.stream()
-                .map(auth -> new AccessControlList(auth.getUserRole().getRole(),
+                .map(auth -> new AccessControlList(auth.getUserRole().getReference(),
                                                    auth.getCreate(),
                                                    auth.getRead(),
                                                    auth.getUpdate(),
