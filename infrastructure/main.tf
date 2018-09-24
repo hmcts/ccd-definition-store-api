@@ -20,6 +20,9 @@ locals {
   nonPreviewResourceGroup = "${var.raw_product}-shared-${var.env}"
   sharedResourceGroup = "${(var.env == "preview" || var.env == "spreview") ? local.previewResourceGroup : local.nonPreviewResourceGroup}"
 
+  sharedAppServicePlan = "${var.raw_product}-${var.env}"
+  sharedASPResourceGroup = "${var.raw_product}-shared-${var.env}"
+
   custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
   default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
   oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
@@ -36,13 +39,15 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
 }
 
 module "case-definition-store-api" {
-  source   = "git@github.com:contino/moj-module-webapp?ref=master"
+  source   = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product  = "${local.app_full_name}"
   location = "${var.location}"
   env      = "${var.env}"
   ilbIp    = "${var.ilbIp}"
   subscription = "${var.subscription}"
   common_tags  = "${var.common_tags}"
+  asp_name = "${(var.asp_name == "use_shared") ? local.sharedAppServicePlan : var.asp_name}"
+  asp_rg = "${(var.asp_rg == "use_shared") ? local.sharedASPResourceGroup : var.asp_rg}"
 
   app_settings = {
     DEFINITION_STORE_DB_HOST = "${module.definition-store-db.host_name}"
@@ -65,7 +70,7 @@ module "case-definition-store-api" {
 }
 
 module "definition-store-db" {
-  source = "git@github.com:hmcts/moj-module-postgres?ref=master"
+  source = "git@github.com:hmcts/cnp-module-postgres?ref=master"
   product = "${local.app_full_name}-postgres-db"
   location = "${var.location}"
   env = "${var.env}"
