@@ -30,7 +30,7 @@ public class EventCaseFieldEntity implements Serializable {
     private CaseFieldEntity caseField;
 
     @Column(name = "display_context", nullable=false)
-    @Type( type = "pgsql_displaycontext_enum" )
+    @Type(type = "pgsql_displaycontext_enum")
     private DisplayContext displayContext;
 
     @Column(name = "show_condition")

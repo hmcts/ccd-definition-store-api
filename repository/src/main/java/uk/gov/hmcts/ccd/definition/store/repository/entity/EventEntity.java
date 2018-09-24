@@ -56,7 +56,7 @@ public class EventEntity implements Serializable {
     private Integer order;
 
     @Column(name = "security_classification")
-    @Type( type = "pgsql_securityclassification_enum" )
+    @Type(type = "pgsql_securityclassification_enum")
     private SecurityClassification securityClassification;
 
     @Column(name = "show_summary")

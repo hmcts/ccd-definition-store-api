@@ -46,7 +46,7 @@ public class UserRoleEntity implements Serializable {
 
     @Column(name = "security_classification", nullable = false)
     @Enumerated(EnumType.STRING)
-    @Type( type = "pgsql_securityclassification_enum" )
+    @Type(type = "pgsql_securityclassification_enum")
     private SecurityClassification securityClassification;
 
     @Version

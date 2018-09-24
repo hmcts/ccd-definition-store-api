@@ -42,7 +42,7 @@ public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
         SharedSessionContractImplementor session) throws SQLException {
 
         if(value == null) {
-            st.setNull( index, Types.OTHER );
+            st.setNull(index, Types.OTHER);
         }
         else {
             st.setObject(
