@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
@@ -14,9 +16,10 @@ import static java.util.stream.Collectors.toList;
 
 @Component
 public class CaseRoleServiceImpl implements CaseRoleService {
+    private static final Logger LOG = LoggerFactory.getLogger(CaseRoleServiceImpl.class);
+
     private final CaseRoleRepository caseRoleRepository;
     private final CaseTypeRepository caseTypeRepository;
-
     private final EntityToResponseDTOMapper dtoMapper;
 
     @Autowired
@@ -29,7 +32,8 @@ public class CaseRoleServiceImpl implements CaseRoleService {
 
     @Override
     public List<CaseRole> findByCaseTypeId(String caseType) {
-        caseTypeRepository.findLastVersion(caseType).orElseThrow(() -> new NotFoundException(caseType));
+        Integer caseTypeVersion = caseTypeRepository.findLastVersion(caseType).orElseThrow(() -> new NotFoundException(caseType));
+        LOG.debug("CaseType version {} found. for caseType {}...", caseTypeVersion, caseType);
 
         List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findCaseRoleEntitiesByCaseType(caseType);
 
