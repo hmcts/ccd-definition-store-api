@@ -1,2 +1,3 @@
 capacity = "2"
-use_uk_db = "true"
+asp_name = "ccd-definition-store-api-sprod"
+asp_rg = "ccd-definition-store-api-sprod"
