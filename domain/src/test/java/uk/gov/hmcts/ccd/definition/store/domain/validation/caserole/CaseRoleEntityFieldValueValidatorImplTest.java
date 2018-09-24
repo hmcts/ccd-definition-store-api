@@ -137,6 +137,17 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         );
     }
 
+    @DisplayName("should fail - CaseRole name is null")
+    @Test
+    void nullCaseRoleName() {
+        caseRoleEntity.setName(null);
+        final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
+        assertAll(
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.isValid(), is(false))
+        );
+    }
+
     @DisplayName("should fail - CaseRole name too long")
     @Test
     void veryLongCaseRoleName() {
