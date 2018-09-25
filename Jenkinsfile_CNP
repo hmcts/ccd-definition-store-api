@@ -39,6 +39,7 @@ withPipeline(type, product, app) {
     }
 
     enableDbMigration()
+    enableDockerBuild()
 
     loadVaultSecrets(secrets)
 }
