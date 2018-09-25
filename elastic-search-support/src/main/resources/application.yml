@@ -16,6 +16,21 @@ elasticsearch:
     defaultLong: '{"type" : "long"}'
     defaultDouble: '{"type" : "double"}'
     ccdPhoneUK: '{"type" : "text", "analyzer": "standard", "search_analyzer": "phone_number_analyzer"}'
+    ccdDocument: '{
+                    "properties":{
+                       "document_binary_url":{
+                          "type":"text",
+                          "index":false
+                       },
+                       "document_filename":{
+                          "type":"keyword"
+                       },
+                       "document_url":{
+                          "type":"text",
+                          "index":false
+                       }
+                    }
+                 }'
   ccdIgnoredTypes:
     - Label
     - CasePaymentHistoryViewer
@@ -31,7 +46,7 @@ elasticsearch:
     YesOrNo: ${elasticsearch.elasticMappings.defaultKeyword}
     Email: ${elasticsearch.elasticMappings.defaultKeyword}
     Postcode: ${elasticsearch.elasticMappings.defaultKeyword}
-    Document: ${elasticsearch.elasticMappings.defaultKeyword}
+    Document: ${elasticsearch.elasticMappings.ccdDocument}
     FixedList: ${elasticsearch.elasticMappings.defaultText}
     FixedListEdit: ${elasticsearch.elasticMappings.defaultText}
     MultiSelectList: ${elasticsearch.elasticMappings.defaultText}
