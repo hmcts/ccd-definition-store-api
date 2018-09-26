@@ -48,8 +48,8 @@ public class ElasticDefinitionImportListenerTest {
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
-        verify(ccdElasticClient).createIndex("casetypea");
-        verify(ccdElasticClient).createIndex("casetypeb");
+        verify(ccdElasticClient).createIndex("casetypea", caseType.getReference());
+        verify(ccdElasticClient).createIndex("casetypeb", caseType.getReference());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ElasticDefinitionImportListenerTest {
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
-        verify(ccdElasticClient, never()).createIndex(anyString());
+        verify(ccdElasticClient, never()).createIndex(anyString(), caseType.getReference());
     }
 
     @Test

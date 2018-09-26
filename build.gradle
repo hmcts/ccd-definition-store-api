@@ -48,7 +48,7 @@ dependencyCheck {
 }
 
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.3.0 of Elastic
-ext['elasticsearch.version'] = '6.3.0'
+ext['elasticsearch.version'] = '6.4.0'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.10.Final'
 // end
@@ -90,7 +90,7 @@ allprojects {
 
     ext {
         hibernateVersion = '5.2.16.Final'
-        elasticSearchVersion = '6.3.0'
+        elasticSearchVersion = '6.4.0'
     }
 
     dependencies {

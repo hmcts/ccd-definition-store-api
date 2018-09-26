@@ -33,15 +33,14 @@ public abstract class ElasticDefinitionImportListener {
             for (CaseTypeEntity caseType : caseTypes) {
                 String indexName = indexName(caseType);
 
-                if (!elasticClient.indexExists(indexName)) {
-                    log.info("creating index {} for case type {}", indexName, caseType.getReference());
-                    boolean acknowledged = elasticClient.createIndex(indexName);
-                    log.info("index created: {}", acknowledged);
+                if (!elasticClient.indexExists(indexName + "*")) {
+                    String initial_index_name = indexName + "-000001";
+                    String alias = caseType.getReference().toLowerCase() + "_cases";
+                    elasticClient.createIndex(initial_index_name, alias);
                 }
 
                 String caseMapping = mappingGenerator.generateMapping(caseType);
-                boolean acknowledged = elasticClient.upsertMapping(indexName, caseMapping);
-                log.info("mapping created: {}", acknowledged);
+                elasticClient.upsertMapping(indexName, caseMapping);
             }
         } catch (Exception exc) {
             throw new ElasticSearchInitialisationException(exc);
