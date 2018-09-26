@@ -23,7 +23,7 @@ elasticsearch:
                           "index":false
                        },
                        "document_filename":{
-                          "type":"keyword"
+                          "type":"text"
                        },
                        "document_url":{
                           "type":"text",
