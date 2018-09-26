@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import static javax.persistence.FetchType.LAZY;
 
-@Table(name = "case_role")
+@Table(name = "role")
 @Entity
 public class CaseRoleEntity extends Role implements Serializable {
     @ManyToOne(fetch = LAZY)
