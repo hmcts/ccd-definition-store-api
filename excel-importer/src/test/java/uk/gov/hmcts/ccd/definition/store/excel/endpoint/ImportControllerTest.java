@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
@@ -22,6 +23,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
@@ -34,6 +36,8 @@ class ImportControllerTest {
     @Mock private ImportServiceImpl importService;
 
     @Mock private FileStorageService fileStorageService;
+
+    @Mock private ApplicationParams applicationParams;
 
     @InjectMocks private ImportController controller;
 
@@ -58,13 +62,24 @@ class ImportControllerTest {
         when(importService.importFormDefinitions(any())).thenReturn(metadata);
     }
 
-    @DisplayName("Upload - Green path")
+    @DisplayName("Upload - Green path, Azure enabled")
     @Test
-    void validUpload() throws Exception {
+    void validUploadAzureEnabled() throws Exception {
+        when(applicationParams.isAzureUploadEnabled()).thenReturn(true);
         mockMvc.perform(fileUpload(URI_IMPORT).file(file))
                .andExpect(status().isCreated())
                .andExpect(content().string("Case Definition data successfully imported"));
         verify(fileStorageService).uploadFile(file, metadata);
+    }
+
+    @DisplayName("Upload - Green path, Azure disabled")
+    @Test
+    void validUploadAzureDisabled() throws Exception {
+        when(applicationParams.isAzureUploadEnabled()).thenReturn(false);
+        mockMvc.perform(fileUpload(URI_IMPORT).file(file))
+            .andExpect(status().isCreated())
+            .andExpect(content().string("Case Definition data successfully imported"));
+        verify(fileStorageService, never()).uploadFile(file, metadata);
     }
 
     @DisplayName("Upload - non-Green path")

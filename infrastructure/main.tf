@@ -20,6 +20,11 @@ locals {
   nonPreviewResourceGroup = "${var.raw_product}-shared-${var.env}"
   sharedResourceGroup = "${(var.env == "preview" || var.env == "spreview") ? local.previewResourceGroup : local.nonPreviewResourceGroup}"
 
+  // Storage Account
+  previewStorageAccountName = "${var.raw_product}sharedaat"
+  nonPreviewStorageAccountName = "${var.raw_product}shared${var.env}"
+  storageAccountName = "${(var.env == "preview" || var.env == "spreview") ? local.previewStorageAccountName : local.nonPreviewStorageAccountName}"
+
   sharedAppServicePlan = "${var.raw_product}-${var.env}"
   sharedASPResourceGroup = "${var.raw_product}-shared-${var.env}"
 
@@ -33,8 +38,25 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
   resource_group_name = "${local.sharedResourceGroup}"
 }
 
+resource "azurerm_storage_container" "imports_container" {
+  name = "${local.app_full_name}-imports-${var.env}"
+  resource_group_name = "${local.sharedResourceGroup}"
+  storage_account_name = "${local.storageAccountName}"
+  container_access_type = "private"
+}
+
 data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
   name = "ccd-definition-store-api-s2s-secret"
+  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+}
+
+data "azurerm_key_vault_secret" "storageaccount_primary_connection_string" {
+  name = "storage-account-primary-connection-string"
+  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+}
+
+data "azurerm_key_vault_secret" "storageaccount_secondary_connection_string" {
+  name = "storage-account-secondary-connection-string"
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
 
@@ -65,8 +87,12 @@ module "case-definition-store-api" {
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
 
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
-  }
 
+    // Storage Account
+    AZURE_STORAGE_CONNECTION_STRING = "${data.azurerm_key_vault_secret.storageaccount_primary_connection_string.value}"
+    AZURE_STORAGE_BLOB_CONTAINER_REFERENCE = "${azurerm_storage_container.imports_container.name}"
+    AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED = "true"
+  }
 }
 
 module "definition-store-db" {

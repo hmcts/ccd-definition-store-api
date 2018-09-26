@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
@@ -37,11 +37,15 @@ public class ImportController {
 
     private ImportServiceImpl importService;
     private FileStorageService fileStorageService;
+    private ApplicationParams applicationParams;
 
     @Autowired
-    public ImportController(ImportServiceImpl importService, FileStorageService fileStorageService) {
+    public ImportController(ImportServiceImpl importService,
+                            FileStorageService fileStorageService,
+                            ApplicationParams applicationParams) {
         this.importService = importService;
         this.fileStorageService = fileStorageService;
+        this.applicationParams = applicationParams;
     }
 
     @Transactional
@@ -59,8 +63,10 @@ public class ImportController {
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes));
 
-            LOG.info("Uploading Definition file to Azure Storage...");
-            fileStorageService.uploadFile(file, metadata);
+            if (applicationParams.isAzureUploadEnabled()) {
+                LOG.info("Uploading Definition file to Azure Storage...");
+                fileStorageService.uploadFile(file, metadata);
+            }
 
             return new ResponseEntity<>("Case Definition data successfully imported", HttpStatus.CREATED);
         }
