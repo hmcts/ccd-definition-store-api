@@ -9,11 +9,11 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.cluster.metadata.AliasMetaData;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Set;
 
 @Component
 @Slf4j
@@ -43,7 +42,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
     @Override
     public boolean indexExists(String indexName) throws IOException {
         RestClient lowLevelClient = elasticClient.getLowLevelClient();
-        Response response = lowLevelClient.performRequest("HEAD", "/" + indexName + "?allow_no_indices=false");
+        Request request = new Request("HEAD", "/" + indexName + "?allow_no_indices=false");
+        Response response = lowLevelClient.performRequest(request);
         boolean exists = response.getStatusLine().getStatusCode() == 200;
         log.info("index {} exists: {}", indexName, exists);
         return exists;
@@ -55,27 +55,36 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         CreateIndexRequest request = new CreateIndexRequest(indexName);
         request.alias(new Alias(alias));
         request.settings(casesIndexSettings());
-        CreateIndexResponse createIndexResponse = elasticClient.indices().create(request);
+        CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
         log.info("index created: {}", createIndexResponse.isAcknowledged());
         return createIndexResponse.isAcknowledged();
     }
 
     @Override
     public boolean upsertMapping(String indexName, String caseTypeMapping) throws IOException {
-        log.info("upsert mapping for alias {}", indexName);
-        GetAliasesRequest requestWithAlias = new GetAliasesRequest(indexName);
-        GetAliasesResponse alias = elasticClient.indices().getAlias(requestWithAlias, RequestOptions.DEFAULT);
-        ArrayList<String> indices = new ArrayList<>(alias.getAliases().keySet());
-        Collections.sort(indices);
-        log.info("found following indexes for alias {}: {}", indexName, indices);
-        String currentIndex = Iterables.getLast(indices);
-        log.info("upsert mapping to index {}", currentIndex);
+        log.info("upsert mapping of most recent index for alias {}", indexName);
+        GetAliasesResponse aliasesResponse = getAlias(indexName);
+        String currentIndex = getCurrentAliasIndex(indexName, aliasesResponse);
+        log.info("upsert mapping of index {}", currentIndex);
         PutMappingRequest request = new PutMappingRequest(currentIndex);
         request.type(config.getCasesIndexType());
         request.source(caseTypeMapping, XContentType.JSON);
-        PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request);
+        PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
         log.info("mapping upserted: {}", putMappingResponse.isAcknowledged());
         return putMappingResponse.isAcknowledged();
+    }
+
+    @Override
+    public boolean aliasExists(String alias) throws IOException {
+        GetAliasesRequest request = new GetAliasesRequest(alias);
+        boolean exists = elasticClient.indices().existsAlias(request, RequestOptions.DEFAULT);
+        log.info("alias {} exists: {}", alias, exists);
+        return exists;
+    }
+
+    public GetAliasesResponse getAlias(String alias) throws IOException {
+        GetAliasesRequest request = new GetAliasesRequest(alias);
+        return elasticClient.indices().getAlias(request, RequestOptions.DEFAULT);
     }
 
     private Settings.Builder casesIndexSettings() throws IOException {
@@ -84,5 +93,12 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         settings.put("index.number_of_shards", config.getIndexShards());
         settings.put("index.number_of_replicas", config.getIndexShardsReplicas());
         return settings;
+    }
+
+    private String getCurrentAliasIndex(String indexName, GetAliasesResponse aliasesResponse) {
+        ArrayList<String> indices = new ArrayList<>(aliasesResponse.getAliases().keySet());
+        Collections.sort(indices);
+        log.info("found following indexes for alias {}: {}", indexName, indices);
+        return Iterables.getLast(indices);
     }
 }

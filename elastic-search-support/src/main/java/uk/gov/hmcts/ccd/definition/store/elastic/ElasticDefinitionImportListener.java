@@ -14,6 +14,8 @@ import java.util.List;
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
 
+    private static final String FIRST_INDEX_SUFFIX = "-000001";
+
     private CcdElasticSearchProperties config;
 
     private CaseMappingGenerator mappingGenerator;
@@ -31,23 +33,23 @@ public abstract class ElasticDefinitionImportListener {
     protected void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) {
         try {
             for (CaseTypeEntity caseType : caseTypes) {
-                String indexName = indexName(caseType);
+                String baseIndexName = baseIndexName(caseType);
 
-                if (!elasticClient.indexExists(indexName + "*")) {
-                    String initial_index_name = indexName + "-000001";
-                    String alias = caseType.getReference().toLowerCase() + "_cases";
-                    elasticClient.createIndex(initial_index_name, alias);
+                if (!elasticClient.aliasExists(baseIndexName)) {
+                    String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
+                    String alias = baseIndexName;
+                    elasticClient.createIndex(actualIndexName, alias);
                 }
 
                 String caseMapping = mappingGenerator.generateMapping(caseType);
-                elasticClient.upsertMapping(indexName, caseMapping);
+                elasticClient.upsertMapping(baseIndexName, caseMapping);
             }
         } catch (Exception exc) {
             throw new ElasticSearchInitialisationException(exc);
         }
     }
 
-    private String indexName(CaseTypeEntity caseType) {
+    private String baseIndexName(CaseTypeEntity caseType) {
         String caseTypeId = caseType.getReference();
         return String.format(config.getCasesIndexNameFormat(), caseTypeId.toLowerCase());
     }
