@@ -115,6 +115,9 @@ public abstract class BaseTest {
         doReturn(idamProperties).when(importService).getUserDetails();
 
         userRoleIds = new UserRoleSetup(jdbcTemplate).addUserRoleTestData();
+
+        // Enable Definition file upload to Azure (mocked)
+        ReflectionTestUtils.setField(applicationParams, "azureUploadEnabled", true);
     }
 
     protected DisplayItemsData mapDisplayItemsData(ResultSet resultSet, Integer i) throws SQLException {
