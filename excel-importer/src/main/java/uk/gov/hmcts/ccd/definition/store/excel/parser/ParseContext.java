@@ -3,13 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +49,11 @@ public class ParseContext {
      * Accumulate Events by case type and event ID for subsequent linking to events.
      */
     private final Map<String, Map<String, EventEntity>> eventsByCaseTypes = Maps.newHashMap();
+
+    /**
+     * Accumulate CaseRoles by case type and case role ID for subsequent linking to event states.
+     */
+    private final Map<String, Map<String, CaseRoleEntity>> caseRolesByCaseTypes = Maps.newHashMap();
 
     /**
      * Store metadata fields for linking to layouts
@@ -159,6 +158,32 @@ public class ParseContext {
         }
 
         return state;
+    }
+
+    public ParseContext registerCaseRoleForCaseType(String caseTypeId, CaseRoleEntity caseRole) {
+        if (!caseRolesByCaseTypes.containsKey(caseTypeId)) {
+            caseRolesByCaseTypes.put(caseTypeId, Maps.newHashMap());
+        }
+        final Map<String, CaseRoleEntity> caseTypeCaseRoles = caseRolesByCaseTypes.get(caseTypeId);
+        caseTypeCaseRoles.put(caseRole.getReference(), caseRole);
+        return this;
+    }
+
+    public CaseRoleEntity getCaseRoleForCaseType(String caseTypeId, String caseRoleId) {
+        final Map<String, CaseRoleEntity> caseTypeCaseRoles = caseRolesByCaseTypes.get(caseTypeId);
+
+        if (null == caseTypeCaseRoles) {
+            throw new SpreadsheetParsingException("No case roles registered for case type: " + caseTypeId);
+        }
+
+        final CaseRoleEntity caseRole = caseTypeCaseRoles.get(caseRoleId);
+
+        if (null == caseRole) {
+            throw new SpreadsheetParsingException(
+                String.format("No case role registered for case role ID: %s/%s", caseTypeId, caseRoleId));
+        }
+
+        return caseRole;
     }
 
     public ParseContext registerCaseFieldForCaseType(String caseTypeId, CaseFieldEntity caseField) {

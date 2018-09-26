@@ -1,22 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
-import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
-import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
-import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -31,19 +14,49 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
+import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
+import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
+
 public class CaseDefinitionControllerTest {
 
     private CaseTypeService caseTypeService = mock(CaseTypeService.class);
     private JurisdictionService jurisdictionService = mock(JurisdictionService.class);
+    private CaseRoleService caseRoleService = mock(CaseRoleService.class);
     private CaseDefinitionController subject;
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void createSubject(){
-       subject = new CaseDefinitionController( caseTypeService, jurisdictionService );
-       mockMvc = MockMvcBuilders.standaloneSetup(subject)
-                                .setControllerAdvice(new RestEndPointExceptionHandler())
-                                .build();
+    public void createSubject() {
+        subject = new CaseDefinitionController(caseTypeService, jurisdictionService, caseRoleService);
+        mockMvc = MockMvcBuilders.standaloneSetup(subject)
+            .setControllerAdvice(new RestEndPointExceptionHandler())
+            .build();
+    }
+
+    private CaseType createCaseType(String caseTypeId, String jurisdictionPostfix) {
+        CaseType caseType = new CaseType();
+        Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setId("test-" + jurisdictionPostfix);
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setId(caseTypeId);
+        Version version = new Version();
+        caseType.setVersion(version);
+        return caseType;
     }
 
     @Nested
@@ -63,7 +76,25 @@ public class CaseDefinitionControllerTest {
             subject.dataJurisdictionsJurisdictionIdCaseTypeGet(null);
             verify(caseTypeService, times(1)).findByJurisdictionId(null);
         }
+    }
 
+    @Nested
+    @DisplayName("Test the getCaseRoles method")
+    class GetCaseRoleTests {
+
+        @Test
+        @DisplayName("Should call the caseRoleService by correct parameter")
+        void shouldCallCaseRoleService() {
+            subject.getCaseRoles(null, null, "someCaseTypeId");
+            verify(caseRoleService, times(1)).findByCaseTypeId(eq("someCaseTypeId"));
+        }
+
+        @Test
+        @DisplayName("Should call the caseRoleService with null when parameter is null")
+        void shouldCallCaseRoleServiceWhenParameterIsNull() {
+            subject.getCaseRoles(null, null, null);
+            verify(caseRoleService, times(1)).findByCaseTypeId(null);
+        }
     }
 
     @Nested
@@ -103,12 +134,12 @@ public class CaseDefinitionControllerTest {
 
         @Test
         @DisplayName("Should return the CaseType when the CaseType exists")
-        public void shouldReturnCaseType_whenCaseTypeExistsForId(){
-            String itemName="get-test";
-            CaseType caseTypeReturned = createCaseType(itemName,itemName);
+        public void shouldReturnCaseType_whenCaseTypeExistsForId() {
+            String itemName = "get-test";
+            CaseType caseTypeReturned = createCaseType(itemName, itemName);
             when(caseTypeService.findByCaseTypeId(any())).thenReturn(Optional.of(caseTypeReturned));
             CaseType result = subject.dataCaseTypeIdGet(itemName);
-            assertEquals(itemName,result.getId());
+            assertEquals(itemName, result.getId());
             verify(caseTypeService).findByCaseTypeId(itemName);
         }
 
@@ -119,7 +150,8 @@ public class CaseDefinitionControllerTest {
 
             when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.empty());
 
-            NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> subject.dataCaseTypeIdGet(caseTypeId));
+            NotFoundException notFoundException = assertThrows(NotFoundException.class,
+                () -> subject.dataCaseTypeIdGet(caseTypeId));
 
             assertEquals(caseTypeId, notFoundException.getMessage());
         }
@@ -155,13 +187,13 @@ public class CaseDefinitionControllerTest {
         @DisplayName("Green path")
         void greenPath() throws Exception {
             when(caseTypeService
-                     .findVersionInfoByCaseTypeId(CASE_TYPE_REFERENCE))
+                .findVersionInfoByCaseTypeId(CASE_TYPE_REFERENCE))
                 .thenReturn(Optional.of(new CaseTypeVersionInformation(9087)));
             final MvcResult
                 mvcResult =
                 mockMvc.perform(get("/api/data/case-type/" + CASE_TYPE_REFERENCE + "/version"))
-                       .andExpect(status().isOk())
-                       .andReturn();
+                    .andExpect(status().isOk())
+                    .andReturn();
             assertThat(mvcResult.getResponse().getContentAsString(), is("{\"version\":9087}"));
         }
 
@@ -170,19 +202,8 @@ public class CaseDefinitionControllerTest {
         void notFound() throws Exception {
             when(caseTypeService.findVersionInfoByCaseTypeId(CASE_TYPE_REFERENCE)).thenReturn(Optional.empty());
             mockMvc.perform(get("/api/data/case-type/" + CASE_TYPE_REFERENCE + "/version"))
-                   .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
         }
-    }
-
-    private CaseType createCaseType(String  caseTypeId, String jurisdictionPostfix) {
-        CaseType caseType =  new CaseType();
-        Jurisdiction jurisdiction= new Jurisdiction();
-        jurisdiction.setId("test-"+jurisdictionPostfix);
-        caseType.setJurisdiction(jurisdiction);
-        caseType.setId(caseTypeId);
-        Version version = new Version();
-        caseType.setVersion(version);
-        return caseType;
     }
 
 }

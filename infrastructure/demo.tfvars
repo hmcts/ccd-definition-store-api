@@ -1,4 +1,5 @@
-vault_section = "preprod"
 idam_api_url = "https://preprod-idamapi.reform.hmcts.net:3511"
 capacity = "2"
 frontend_url = "https://www.ccd.demo.platform.hmcts.net"
+asp_name = "ccd-definition-store-api-demo"
+asp_rg = "ccd-definition-store-api-demo"

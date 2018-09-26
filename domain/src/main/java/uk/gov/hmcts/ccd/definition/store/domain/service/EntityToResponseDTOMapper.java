@@ -57,6 +57,15 @@ public interface EntityToResponseDTOMapper {
     )
     CaseEvent map(EventEntity eventEntity);
 
+    @Mapping(
+        expression = "java(eventLiteEntity.isCanCreate() ? java.util.Collections.emptyList() " +
+            ": eventLiteEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") " +
+            ": eventLiteEntity.getPreStates().stream().map(StateLiteEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+        target = "preStates"
+    )
+    @Mapping(source = "eventLiteEntity.reference", target = "id")
+    CaseEventLite map(EventLiteEntity eventLiteEntity);
+
     @Mapping(source = "jurisdictionEntity.reference", target = "id")
     @Mapping(source = "jurisdictionEntity.liveTo", target = "liveUntil")
     Jurisdiction map(JurisdictionEntity jurisdictionEntity);
@@ -94,6 +103,9 @@ public interface EntityToResponseDTOMapper {
         " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
         target = "type")
     FieldType map(FieldTypeEntity fieldTypeEntity);
+
+    @Mapping(source = "caseRoleEntity.reference", target = "id")
+    CaseRole map(CaseRoleEntity caseRoleEntity);
 
     @Mapping(source = "fieldTypeListItemEntity.value", target = "code")
     FixedListItem map(FieldTypeListItemEntity fieldTypeListItemEntity);

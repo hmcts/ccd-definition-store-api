@@ -37,16 +37,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventC
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.BaseReferenceFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeComplexFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
-import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.*;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.Collection;
@@ -270,6 +261,10 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
             return mock(MetadataFieldService.class);
         }
 
+        @Bean
+        @Primary
+        public CaseRoleRepository caseRoleRepository() {
+            return mock(CaseRoleRepository.class);
+        }
     }
-
 }
