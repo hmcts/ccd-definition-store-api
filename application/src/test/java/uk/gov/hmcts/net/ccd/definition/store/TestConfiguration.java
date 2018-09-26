@@ -1,14 +1,17 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
 import com.opentable.db.postgres.embedded.EmbeddedPostgres;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.web.context.ContextCleanupListener;
+import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 
 import javax.annotation.PreDestroy;
 import javax.sql.DataSource;
@@ -50,6 +53,13 @@ public class TestConfiguration extends ContextCleanupListener {
             ResourcePropertySource localPropertySource = new ResourcePropertySource(localPropertiesPath);
             environment.getPropertySources().addFirst(localPropertySource);
         } catch (IOException ignored) {}
+    }
+
+    @Bean
+    @Primary
+    public ImportServiceImpl importServiceSpy(ImportServiceImpl importService) {
+        // Use a spy (which is autowired in BaseTest), so specific methods can be overridden
+        return Mockito.spy(importService);
     }
 
     private int randomPort() {
