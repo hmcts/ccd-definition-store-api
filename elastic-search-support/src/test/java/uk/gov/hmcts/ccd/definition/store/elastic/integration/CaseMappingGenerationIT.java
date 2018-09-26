@@ -62,7 +62,7 @@ public class CaseMappingGenerationIT implements TestUtils {
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        verify(client).createIndex(anyString(), caseType.getReference());
+        verify(client).createIndex(anyString(), anyString());
         verify(client).upsertMapping(anyString(), anyString());
     }
 

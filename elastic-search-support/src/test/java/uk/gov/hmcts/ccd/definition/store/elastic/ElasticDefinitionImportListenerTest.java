@@ -44,28 +44,28 @@ public class ElasticDefinitionImportListenerTest {
     @Test
     public void createsIndexIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        when(ccdElasticClient.indexExists(anyString())).thenReturn(false);
+        when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
-        verify(ccdElasticClient).createIndex("casetypea", caseType.getReference());
-        verify(ccdElasticClient).createIndex("casetypeb", caseType.getReference());
+        verify(ccdElasticClient).createIndex("casetypea-000001", "casetypea");
+        verify(ccdElasticClient).createIndex("casetypeb-000001", "casetypeb");
     }
 
     @Test
     public void skipIndexCreationIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        when(ccdElasticClient.indexExists(anyString())).thenReturn(true);
+        when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
-        verify(ccdElasticClient, never()).createIndex(anyString(), caseType.getReference());
+        verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
     }
 
     @Test
     public void createsMapping() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        when(ccdElasticClient.indexExists(anyString())).thenReturn(false);
+        when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
         when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
