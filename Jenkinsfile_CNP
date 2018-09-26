@@ -38,6 +38,7 @@ withPipeline(type, product, app) {
         enableSlackNotifications('#ccd-pr-builds')
     }
 
-    loadVaultSecrets(secrets)
     enableDbMigration()
+
+    loadVaultSecrets(secrets)
 }
