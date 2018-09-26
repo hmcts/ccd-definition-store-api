@@ -54,16 +54,26 @@ public class CaseTypeParserTest extends ParserTestBase {
     @Mock
     private MetadataCaseFieldParser metadataCaseFieldParser;
 
+    @Mock
+    private CaseRoleParser caseRoleParser;
+
     @Before
     public void setup() {
 
         init();
 
         parseContext = mock(ParseContext.class);
-        caseTypeParser = new CaseTypeParser(parseContext, caseFieldParser, stateParser, eventParser,
-                                            authorisationCaseTypeParser, authorisationCaseFieldParser, authorisationCaseEventParser,
-                                            authorisationCaseStateParser,
-                                            metadataCaseFieldParser);
+        caseTypeParser = new CaseTypeParser(
+            parseContext,
+            caseFieldParser,
+            stateParser,
+            eventParser,
+            authorisationCaseTypeParser,
+            authorisationCaseFieldParser,
+            authorisationCaseEventParser,
+            authorisationCaseStateParser,
+            metadataCaseFieldParser,
+            caseRoleParser);
         given(parseContext.getJurisdiction()).willReturn(jurisdiction);
     }
 

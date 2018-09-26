@@ -10,6 +10,9 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEn
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
@@ -411,6 +414,21 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(EventEntityCanSaveDraftValidatorImpl.ValidationError error) {
         return withWorkSheetName(error);
+    }
+
+    @Override
+    public String createErrorMessage(CaseRoleEntityMandatoryFieldsValidatorImpl.ValidationError validationError) {
+        return withWorkSheetName(validationError);
+    }
+
+    @Override
+    public String createErrorMessage(CaseRoleEntityFieldValueValidatorImpl.ValidationError validationError) {
+        return withWorkSheetName(validationError);
+    }
+
+    @Override
+    public String createErrorMessage(CaseRoleEntityUniquenessValidatorImpl.ValidationError validationError) {
+        return withWorkSheetName(validationError);
     }
 
     @Override

@@ -11,5 +11,9 @@ public interface UserRoleService {
 
     ServiceResponse<UserRole> saveRole(UserRole userRole);
 
+    ServiceResponse<UserRole> createRole(UserRole userRole);
+
     List<UserRole> getRoles(List<String> roles);
+
+    List<UserRole> getRoles();
 }

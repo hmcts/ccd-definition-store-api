@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.util.UriTemplate;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.UserRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
@@ -35,8 +36,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.UPDATE;
 
 class UserRoleControllerTest {
@@ -44,6 +47,7 @@ class UserRoleControllerTest {
     private static final String URL_API_USER_ROLE = "/api/user-role";
     private static final UriTemplate URL_TEMPLATE = new UriTemplate(URL_API_USER_ROLE + "?role={role}");
     private static final String URL_API_USER_ROLES = "/api/user-roles/role1,role2";
+    private static final String URL_API_ALL_USER_ROLES = "/api/user-roles";
     private static final String ROLE_DEFINED = "@<\"*#$%^\\/";
     private static final String ROLE1 = "role1";
     private static final String ROLE2 = "role2";
@@ -159,6 +163,33 @@ class UserRoleControllerTest {
                 () -> assertThat(userRoles.size(), is(0))
             );
         }
+
+        @Test
+        void shouldGetAllRoles() throws Exception {
+            final UserRole mockUserRole = buildUserRole(ROLE1, 1);
+            final UserRole mockUserRole2 = buildUserRole(ROLE2, 2);
+            List<UserRole> roles = Arrays.asList(mockUserRole, mockUserRole2);
+            when(userRoleService.getRoles()).thenReturn(roles);
+
+            final MvcResult mvcResult = mockMvc.perform(
+                get(URL_API_ALL_USER_ROLES))
+                .andExpect(status().isOk())
+                .andReturn();
+
+            final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+
+            assertAll(
+                () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
+                () -> assertThat(userRoles.size(), is(2)),
+                () -> assertThat(userRoles.get(0).getId(), is(1)),
+                () -> assertThat(userRoles.get(0).getRole(), is(ROLE1)),
+                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
+                () -> assertThat(userRoles.get(1).getId(), is(2)),
+                () -> assertThat(userRoles.get(1).getRole(), is(ROLE2)),
+                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
+            );
+        }
     }
 
     @Nested
@@ -228,6 +259,43 @@ class UserRoleControllerTest {
         }
     }
 
+
+    @Nested
+    @DisplayName("Add a Role Tests")
+    class AddRoleTests {
+
+        @Test
+        @DisplayName("Should have bad request status when role is passed but duplicate user role exception is thrown")
+        void shouldHaveStatusConflict_whenUserRoleIsUpdatedThrowObjectOptimisticLockingFailureException()
+            throws Throwable {
+
+            final UserRole argument = buildUserRole(ROLE_DEFINED);
+            when(userRoleService.createRole(isA(UserRole.class)))
+                .thenThrow(new DuplicateUserRoleException("User role already exists"));
+
+            mockMvc.perform(
+                post(URL_API_USER_ROLE)
+                    .contentType(CONTENT_TYPE)
+                    .content(MAPPER.writeValueAsBytes(argument)))
+                .andExpect(status().isBadRequest())
+            ;
+        }
+
+        @Test
+        @DisplayName("Should have reset content status when role is created successfully")
+        void shouldHaveStatusResetContent_whenPutSuccessfully() throws Exception {
+            final UserRole argument = buildUserRole(ROLE_DEFINED);
+            final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -7);
+            when(userRoleService.createRole(isA(UserRole.class))).thenReturn(new ServiceResponse<>(mockUserRole, CREATE));
+
+            mockMvc.perform(
+                post(URL_API_USER_ROLE)
+                    .contentType(CONTENT_TYPE)
+                    .content(MAPPER.writeValueAsBytes(argument)))
+                .andExpect(status().isCreated())
+            ;
+        }
+    }
     private UserRole buildUserRole(final String role) {
         return buildUserRole(role, null);
     }
