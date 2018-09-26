@@ -104,6 +104,9 @@ public interface EntityToResponseDTOMapper {
         target = "type")
     FieldType map(FieldTypeEntity fieldTypeEntity);
 
+    @Mapping(source = "caseRoleEntity.reference", target = "id")
+    CaseRole map(CaseRoleEntity caseRoleEntity);
+
     @Mapping(source = "fieldTypeListItemEntity.value", target = "code")
     FixedListItem map(FieldTypeListItemEntity fieldTypeListItemEntity);
 
