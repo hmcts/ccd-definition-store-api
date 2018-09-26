@@ -55,7 +55,8 @@ public class ParserFactory {
             new AuthorisationCaseFieldParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseEventParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseStateParser(context, entityToDefinitionDataItemRegistry),
-            new MetadataCaseFieldParser(context, metadataCaseFieldEntityFactoryRegistry));
+            new MetadataCaseFieldParser(context, metadataCaseFieldEntityFactoryRegistry),
+            new CaseRoleParser(context));
     }
 
     public LayoutParser createLayoutParser(ParseContext parseContext) {
