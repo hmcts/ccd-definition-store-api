@@ -16,7 +16,7 @@ public class ApplicationParams {
     private String idamHost;
 
     @Value("${azure.storage.definition-upload-enabled}")
-    private boolean azureUploadEnabled;
+    private Boolean azureUploadEnabled;
 
     public String userProfilePutURL() {
         return userProfileHost + "/user-profile/users";
@@ -26,7 +26,7 @@ public class ApplicationParams {
         return idamHost + "/details";
     }
 
-    public boolean isAzureUploadEnabled() {
+    public Boolean isAzureUploadEnabled() {
         return azureUploadEnabled;
     }
 }
