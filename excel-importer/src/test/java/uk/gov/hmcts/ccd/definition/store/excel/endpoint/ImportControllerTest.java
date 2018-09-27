@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
@@ -37,7 +37,7 @@ class ImportControllerTest {
 
     @Mock private FileStorageService fileStorageService;
 
-    @Mock private ApplicationParams applicationParams;
+    @Mock private AzureStorageConfiguration azureStorageConfiguration;
 
     @InjectMocks private ImportController controller;
 
@@ -65,7 +65,7 @@ class ImportControllerTest {
     @DisplayName("Upload - Green path, Azure enabled")
     @Test
     void validUploadAzureEnabled() throws Exception {
-        when(applicationParams.isAzureUploadEnabled()).thenReturn(true);
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
         mockMvc.perform(fileUpload(URI_IMPORT).file(file))
                .andExpect(status().isCreated())
                .andExpect(content().string("Case Definition data successfully imported"));
@@ -75,7 +75,7 @@ class ImportControllerTest {
     @DisplayName("Upload - Green path, Azure disabled")
     @Test
     void validUploadAzureDisabled() throws Exception {
-        when(applicationParams.isAzureUploadEnabled()).thenReturn(false);
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(false);
         mockMvc.perform(fileUpload(URI_IMPORT).file(file))
             .andExpect(status().isCreated())
             .andExpect(content().string("Case Definition data successfully imported"));

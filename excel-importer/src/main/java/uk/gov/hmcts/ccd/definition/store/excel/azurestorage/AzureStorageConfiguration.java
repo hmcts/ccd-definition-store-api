@@ -21,6 +21,9 @@ public class AzureStorageConfiguration {
     @Value("${azure.storage.blob-container-reference}")
     private String containerReference;
 
+    @Value("${azure.storage.definition-upload-enabled}")
+    private Boolean azureUploadEnabled;
+
     @Bean
     public CloudStorageAccount storageAccount() throws URISyntaxException, InvalidKeyException {
         return CloudStorageAccount.parse(connectionString);
@@ -39,5 +42,10 @@ public class AzureStorageConfiguration {
     @Bean
     public CloudBlobContainer cloudBlobContainer() throws URISyntaxException, InvalidKeyException, StorageException {
         return cloudBlobClient().getContainerReference(containerReference);
+    }
+
+    @Bean
+    public Boolean isAzureUploadEnabled() {
+        return azureUploadEnabled;
     }
 }

@@ -123,7 +123,7 @@ public abstract class BaseTest {
         userRoleIds = new UserRoleSetup(jdbcTemplate).addUserRoleTestData();
 
         // Enable Definition file upload to Azure (mocked)
-        ReflectionTestUtils.setField(applicationParams, "azureUploadEnabled", true);
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
     }
 
     protected DisplayItemsData mapDisplayItemsData(ResultSet resultSet, Integer i) throws SQLException {
