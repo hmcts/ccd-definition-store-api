@@ -6,13 +6,17 @@ import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.file.CloudFileClient;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 
+@ConditionalOnProperty(value = "azureStorageConfig", havingValue = "enabled")
 @Configuration
+@PropertySource("classpath:application.properties")
 public class AzureStorageConfiguration {
 
     @Value("${azure.storage.connection-string}")
