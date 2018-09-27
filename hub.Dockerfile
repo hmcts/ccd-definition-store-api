@@ -14,7 +14,7 @@ COPY --from=builder /home/gradle/src/build/libs/case-definition-store-api.jar /o
 
 WORKDIR /opt/app
 
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q http://localhost:4451/health || exit 1
+HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" curl --silent --fail http://localhost:4451/status/health
 
 EXPOSE 4451
 
