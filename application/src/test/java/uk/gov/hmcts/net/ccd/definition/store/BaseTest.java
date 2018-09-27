@@ -28,6 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClient;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
@@ -82,6 +83,11 @@ public abstract class BaseTest {
     // Storage) during application startup when testing
     @MockBean
     private AzureBlobStorageClient storageClient;
+
+    // Mock the AzureStorageConfiguration component, to prevent it being initialised (which requires connection to Azure
+    // Storage) during application startup when testing
+    @MockBean
+    private AzureStorageConfiguration azureStorageConfiguration;
 
     protected MockMvc mockMvc;
     protected JdbcTemplate jdbcTemplate;
