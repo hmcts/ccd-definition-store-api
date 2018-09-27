@@ -1,4 +1,5 @@
 FROM hmcts/cnp-java-base:openjdk-jre-8-alpine-1.4
+LABEL maintainer="https://github.com/hmcts/ccd-definition-store-api"
 
 ENV APP case-definition-store-api.jar
 ENV APPLICATION_TOTAL_MEMORY 768M
