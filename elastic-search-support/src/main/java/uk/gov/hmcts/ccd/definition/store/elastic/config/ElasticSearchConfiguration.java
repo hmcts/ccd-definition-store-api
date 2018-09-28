@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic.config;
 
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,8 +20,11 @@ public class ElasticSearchConfiguration {
 
     @Bean
     public RestHighLevelClient restHighLevelClient() {
-        return new RestHighLevelClient(
-                    RestClient.builder(
-                            new HttpHost(config.getHost(), config.getPort())));
+        RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort()));
+        RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
+            requestConfigBuilder.setConnectTimeout(5000)
+            .setSocketTimeout(60000);
+        builder.setRequestConfigCallback(requestConfigCallback);
+        return new RestHighLevelClient(builder);
     }
 }
