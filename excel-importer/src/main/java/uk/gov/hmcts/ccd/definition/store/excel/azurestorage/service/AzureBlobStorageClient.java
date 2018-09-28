@@ -25,7 +25,7 @@ public class AzureBlobStorageClient implements FileStorageClient {
     }
 
     @PostConstruct
-    void init() throws StorageException {
+    protected void init() throws StorageException {
         cloudBlobContainer.createIfNotExists();
     }
 
