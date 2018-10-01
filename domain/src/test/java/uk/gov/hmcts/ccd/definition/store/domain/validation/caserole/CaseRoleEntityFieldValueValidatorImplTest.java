@@ -103,7 +103,10 @@ class CaseRoleEntityFieldValueValidatorImplTest {
     @DisplayName("should fail - CaseRole ID valid but too long")
     @Test
     void veryLongValidCaseRoleId() {
-        caseRoleEntity.setReference("[ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ]");
+        caseRoleEntity.setReference("[ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ" +
+            "ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ" +
+            "ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ" +
+            "ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ]");
         final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),
@@ -151,7 +154,13 @@ class CaseRoleEntityFieldValueValidatorImplTest {
     @DisplayName("should fail - CaseRole name too long")
     @Test
     void veryLongCaseRoleName() {
-        caseRoleEntity.setName("ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ");
+        caseRoleEntity.setName("ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ" +
+            "ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ" +
+            "ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ" +
+            "ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ" +
+            "ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ" +
+            "ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ" +
+            "ABCDEFGHIJKLMNOPRSQTXVWYZABCDEFGHIJKLMNOPRSQTXVWYZ");
         final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),

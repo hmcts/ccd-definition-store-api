@@ -59,9 +59,11 @@ public class TestHelper {
     }
 
     public UserRoleEntity createUserRole(final String reference,
+                                         final String name,
                                          final SecurityClassification sc) {
         final UserRoleEntity entity = new UserRoleEntity();
         entity.setReference(reference);
+        entity.setName(name);
         entity.setSecurityClassification(sc);
         return userRoleRepository.save(entity);
     }

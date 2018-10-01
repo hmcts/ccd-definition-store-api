@@ -40,8 +40,6 @@ public class UserRoleServiceImpl implements UserRoleService {
         final Optional<UserRoleEntity> searchResult = repository.findTopByReference(userRole.getRole());
         if (searchResult.isPresent()) {
             entity = searchResult.get();
-//            entity.setLiveFrom(parseDate(userRole.getLiveFrom()));
-//            entity.setLiveTo(parseDate(userRole.getLiveTo()));
             entity.setSecurityClassification(userRole.getSecurityClassification());
             roleFound = true;
         } else {

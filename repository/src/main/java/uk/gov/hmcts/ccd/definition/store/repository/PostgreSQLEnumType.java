@@ -1,14 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.type.EnumType;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Properties;
+
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.type.EnumType;
 
 public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
 
@@ -23,7 +23,7 @@ public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
         }
 
         try {
-            this.clazz = (Class<T>)Class.forName(className);
+            this.clazz = (Class<T>) Class.forName(className);
         } catch (ClassNotFoundException e) {
             throw new HibernateException("Couldn't get the class for name [" + className + "].", e);
         }
@@ -41,10 +41,9 @@ public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
         int index,
         SharedSessionContractImplementor session) throws SQLException {
 
-        if(value == null) {
-            st.setNull( index, Types.OTHER );
-        }
-        else {
+        if (value == null) {
+            st.setNull(index, Types.OTHER);
+        } else {
             st.setObject(
                 index,
                 value.toString(),

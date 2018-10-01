@@ -371,10 +371,10 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertCaseRoles() {
-        List<Map<String, Object>> allCaseRoles = jdbcTemplate.queryForList("SELECT * FROM case_role");
+        List<Map<String, Object>> allCaseRoles = jdbcTemplate.queryForList("SELECT * FROM role WHERE role.dtype = 'CASEROLE'");
         assertThat(allCaseRoles, hasSize(6));
 
-        List<Map<String, Object>> caseTypeCaseRoles = jdbcTemplate.queryForList("SELECT * FROM case_role where " +
+        List<Map<String, Object>> caseTypeCaseRoles = jdbcTemplate.queryForList("SELECT * FROM role where " +
             "case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
         assertThat(caseTypeCaseRoles, allOf(
             hasItem(allOf(

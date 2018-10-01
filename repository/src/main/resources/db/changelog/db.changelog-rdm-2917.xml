@@ -4,38 +4,53 @@
 
     <changeSet id="rdm-2917" author="fatih.ozceylan@hmcts.net">
 
+        <!-- case_role table changes to role-->
         <renameTable newTableName="role" oldTableName="case_role" schemaName="public"/>
 
-        <!-- role table changes-->
         <!-- Change precision of reference, name and description columns in role table -->
         <modifyDataType columnName="reference" newDataType="varchar(255)" tableName="role"/>
         <modifyDataType columnName="name" newDataType="varchar(255)" tableName="role"/>
         <modifyDataType columnName="description" newDataType="varchar(255)" tableName="role"/>
 
-        <!-- Add new security_classification and user_role_id fields to the role table -->
+        <!-- Add new security_classification, user_role_id and dtype fields to the role table -->
         <addColumn tableName="role">
             <column name="user_role_id" type="integer" >
                 <constraints nullable="true"/>
             </column>
-            <column name="security_classification" type="security_classification" >
+            <column name="security_classification" type="security_classification" defaultValue="PUBLIC">
                 <constraints nullable="true"/>
             </column>
+            <column name="dtype" type="varchar(10)" />
         </addColumn>
 
-        <!-- Update existing role data with PUBLIC security_classification -->
-        <sql>
-            update case_role set security_classification = 'PUBLIC' where security_classification isnull;
-        </sql>
-
-        <!-- Add not null constraint for secutiry_classification column in role table-->
+        <!-- Add not null constraint for security_classification column in role table-->
         <addNotNullConstraint columnDataType="security_classification"
                               columnName="security_classification"
                               defaultNullValue="PUBLIC"
                               tableName="role"/>
 
+        <!-- Add check constraint 'case_type_id is not null when role entity type is case role' -->
+        <sql>
+            ALTER TABLE role
+                ADD CONSTRAINT case_type_id_check
+            CHECK (
+                CASE WHEN dtype = 'CASEROLE'
+                THEN
+                    CASE WHEN case_type_id IS NOT NULL
+                    THEN 1
+                    ELSE 0
+                    END
+                ELSE 1
+                END = 1
+            );
+        </sql>
+
+
         <!-- case_field_user_role table changes -->
-        <!-- Add new role_id column to the case_field_user_role table -->
-        <addColumn tableName="case_field_user_role">
+        <renameTable newTableName="case_field_acl" oldTableName="case_field_user_role" schemaName="public"/>
+
+        <!-- Add new role_id column to the case_field_acl table -->
+        <addColumn tableName="case_field_acl">
             <column name="role_id" type="integer" >
                 <constraints nullable="true"/>
             </column>
@@ -43,20 +58,25 @@
 
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
-                                 baseTableName="case_field_user_role"
+                                 baseTableName="case_field_acl"
                                  constraintName="fk_case_field_user_role_role_id"
                                  referencedColumnNames="id"
                                  referencedTableName="role"/>
 
-        <!-- Add unique constraint on case_field_id and role_id columns for the case_field_user_role table -->
+        <!-- Add unique constraint on case_field_id and role_id columns for the case_field_acl table -->
         <addUniqueConstraint columnNames="case_field_id, role_id"
                              constraintName="unique_case_field_user_role_case_field_id_role_id"
-                             tableName="case_field_user_role"/>
+                             tableName="case_field_acl"/>
+
+        <!-- Drop not null constraint for user_role_id column in case_field_acl table-->
+        <dropNotNullConstraint tableName="case_field_acl" columnName="user_role_id"/>
 
 
         <!-- case_type_user_role table changes -->
-        <!-- Add new role_id column to the case_type_user_role table -->
-        <addColumn tableName="case_type_user_role">
+        <renameTable newTableName="case_type_acl" oldTableName="case_type_user_role" schemaName="public"/>
+
+        <!-- Add new role_id column to the case_type_acl table -->
+        <addColumn tableName="case_type_acl">
             <column name="role_id" type="integer" >
                 <constraints nullable="true"/>
             </column>
@@ -64,20 +84,25 @@
 
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
-                                 baseTableName="case_type_user_role"
+                                 baseTableName="case_type_acl"
                                  constraintName="fk_case_type_user_role_role_id"
                                  referencedColumnNames="id"
                                  referencedTableName="role"/>
 
-        <!-- Add unique constraint on case_type_id and role_id columns for the case_type_user_role table -->
+        <!-- Add unique constraint on case_type_id and role_id columns for the case_type_acl table -->
         <addUniqueConstraint columnNames="case_type_id, role_id"
                              constraintName="unique_case_type_user_role_case_type_id_role_id"
-                             tableName="case_type_user_role"/>
+                             tableName="case_type_acl"/>
+
+        <!-- Drop not null constraint for user_role_id column in case_type_acl table-->
+        <dropNotNullConstraint tableName="case_type_acl" columnName="user_role_id"/>
 
 
         <!-- event_user_role table changes -->
-        <!-- Add new role_id column to the event_user_role table -->
-        <addColumn tableName="event_user_role">
+        <renameTable newTableName="event_acl" oldTableName="event_user_role" schemaName="public"/>
+
+        <!-- Add new role_id column to the event_acl table -->
+        <addColumn tableName="event_acl">
             <column name="role_id" type="integer" >
                 <constraints nullable="true"/>
             </column>
@@ -85,20 +110,25 @@
 
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
-                                 baseTableName="event_user_role"
+                                 baseTableName="event_acl"
                                  constraintName="fk_event_user_role_role_id"
                                  referencedColumnNames="id"
                                  referencedTableName="role"/>
 
-        <!-- Add unique constraint on event_id and role_id columns for the event_user_role table -->
+        <!-- Add unique constraint on event_id and role_id columns for the event_acl table -->
         <addUniqueConstraint columnNames="event_id, role_id"
                              constraintName="unique_event_user_role_event_id_role_id"
-                             tableName="event_user_role"/>
+                             tableName="event_acl"/>
+
+        <!-- Drop not null constraint for user_role_id column in event_acl table-->
+        <dropNotNullConstraint tableName="event_acl" columnName="user_role_id"/>
 
 
         <!-- state_user_role table changes -->
-        <!-- Add new role_id column to the state_user_role table -->
-        <addColumn tableName="state_user_role">
+        <renameTable newTableName="state_acl" oldTableName="state_user_role" schemaName="public"/>
+
+        <!-- Add new role_id column to the state_acl table -->
+        <addColumn tableName="state_acl">
             <column name="role_id" type="integer" >
                 <constraints nullable="true"/>
             </column>
@@ -106,46 +136,60 @@
 
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
-                                 baseTableName="state_user_role"
+                                 baseTableName="state_acl"
                                  constraintName="fk_state_user_role_role_id"
                                  referencedColumnNames="id"
                                  referencedTableName="role"/>
 
-        <!-- Add unique constraint on state_id and role_id columns for the state_user_role table -->
+        <!-- Add unique constraint on state_id and role_id columns for the state_acl table -->
         <addUniqueConstraint columnNames="state_id, role_id"
                              constraintName="unique_state_user_role_state_id_role_id"
-                             tableName="state_user_role"/>
+                             tableName="state_acl"/>
+
+        <!-- Drop not null constraint for user_role_id column in state_acl table-->
+        <dropNotNullConstraint tableName="state_acl" columnName="user_role_id"/>
 
 
-        <!-- MIGRATE the DATA -->
+        <!-- MIGRATE the DATA & tighten the rules -->
         <!-- Pull in the user_roles into role table -->
         <sql>
-            INSERT INTO role (user_role_id, reference, name, description, security_classification)
-            SELECT id as user_role_id, "role" AS reference, "role" AS name, "role" AS description, security_classification FROM user_role;
+            INSERT INTO role (user_role_id, reference, name, description, security_classification, dtype)
+            SELECT id as user_role_id, "role" AS reference, "role" AS name, "role" AS description, security_classification, 'USERROLE' FROM user_role;
         </sql>
-        <!-- Pull in the role_id into case_field_user_role table -->
+        <!-- Pull in the role_id into case_field_acl table -->
         <sql>
-            Update case_field_user_role cfur
-            set role_id = (SELECT cr.id id FROM role cr where cr.user_role_id = cfur.user_role_id )
-            WHERE exists (SELECT 1  from role cr where cr.user_role_id = cfur.user_role_id);
+            Update case_field_acl cfa
+            set role_id = (SELECT cr.id id FROM role cr where cr.user_role_id = cfa.user_role_id )
+            WHERE exists (SELECT 1  from role cr where cr.user_role_id = cfa.user_role_id);
         </sql>
-        <!-- Pull in the role_id into case_type_user_role table -->
+        <!-- Add not null constraint for role_id column in case_field_acl table-->
+        <addNotNullConstraint columnDataType="integer" columnName="role_id" tableName="case_field_acl"/>
+
+        <!-- Pull in the role_id into case_type_acl table -->
         <sql>
-            Update case_type_user_role ctur
-            set role_id = (SELECT cr.id id FROM role cr where cr.user_role_id = ctur.user_role_id )
-            WHERE exists (SELECT 1  from role cr where cr.user_role_id = ctur.user_role_id);
+            Update case_type_acl cta
+            set role_id = (SELECT cr.id id FROM role cr where cr.user_role_id = cta.user_role_id )
+            WHERE exists (SELECT 1  from role cr where cr.user_role_id = cta.user_role_id);
         </sql>
-        <!-- Pull in the role_id into event_user_role table -->
+        <!-- Add not null constraint for role_id column in case_type_acl table-->
+        <addNotNullConstraint columnDataType="integer" columnName="role_id" tableName="case_type_acl"/>
+
+        <!-- Pull in the role_id into event_acl table -->
         <sql>
-            Update event_user_role eur
-            set role_id = (SELECT cr.id id FROM role cr where cr.user_role_id = eur.user_role_id )
-            WHERE exists (SELECT 1  from role cr where cr.user_role_id = eur.user_role_id);
+            Update event_acl ea
+            set role_id = (SELECT cr.id id FROM role cr where cr.user_role_id = ea.user_role_id )
+            WHERE exists (SELECT 1  from role cr where cr.user_role_id = ea.user_role_id);
         </sql>
-        <!-- Pull in the role_id into state_user_role table -->
+        <!-- Add not null constraint for role_id column in event_acl table-->
+        <addNotNullConstraint columnDataType="integer" columnName="role_id" tableName="event_acl"/>
+
+        <!-- Pull in the role_id into state_acl table -->
         <sql>
-            Update state_user_role sur
-            set role_id = (SELECT cr.id id FROM role cr where cr.user_role_id = sur.user_role_id )
-            WHERE exists (SELECT 1  from role cr where cr.user_role_id = sur.user_role_id);
+            Update state_acl sa
+            set role_id = (SELECT cr.id id FROM role cr where cr.user_role_id = sa.user_role_id )
+            WHERE exists (SELECT 1  from role cr where cr.user_role_id = sa.user_role_id);
         </sql>
+        <!-- Add not null constraint for role_id column in state_acl table-->
+        <addNotNullConstraint columnDataType="integer" columnName="role_id" tableName="state_acl"/>
     </changeSet>
 </databaseChangeLog>

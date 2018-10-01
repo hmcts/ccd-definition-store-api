@@ -84,7 +84,7 @@ public class CaseFieldEntity implements Serializable {
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_field_id")
-    private final List<CaseFieldUserRoleEntity> caseFieldUserRoles = new ArrayList<>();
+    private final List<CaseFieldACLEntity> caseFieldACLEntities = new ArrayList<>();
 
     @Column(name = "data_field_type")
     @Type(type = "pgsql_datafieldtype_enum")
@@ -170,8 +170,8 @@ public class CaseFieldEntity implements Serializable {
         return caseType;
     }
 
-    public List<CaseFieldUserRoleEntity> getCaseFieldUserRoles() {
-        return caseFieldUserRoles;
+    public List<CaseFieldACLEntity> getCaseFieldACLEntities() {
+        return caseFieldACLEntities;
     }
 
     public DataFieldType getDataFieldType() {
@@ -182,14 +182,14 @@ public class CaseFieldEntity implements Serializable {
         this.dataFieldType = dataFieldType;
     }
 
-    public CaseFieldEntity addCaseFieldUserRole(final CaseFieldUserRoleEntity caseFieldUserRole) {
-        caseFieldUserRole.setCaseField(this);
-        caseFieldUserRoles.add(caseFieldUserRole);
+    public CaseFieldEntity addCaseFieldACL(final CaseFieldACLEntity caseFieldACLEntity) {
+        caseFieldACLEntity.setCaseField(this);
+        caseFieldACLEntities.add(caseFieldACLEntity);
         return this;
     }
 
-    public CaseFieldEntity addCaseFieldUserRoles(final Collection<CaseFieldUserRoleEntity> entities) {
-        entities.forEach(e -> addCaseFieldUserRole(e));
+    public CaseFieldEntity addCaseACLEntities(final Collection<CaseFieldACLEntity> entities) {
+        entities.forEach(e -> addCaseFieldACL(e));
         return this;
     }
 

@@ -8,7 +8,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -16,16 +16,16 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
 
-public class CaseTypeEntityUserRoleValidatorImplTest {
+public class CaseTypeEntityACLValidatorImplTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 
-    private CaseTypeEntityUserRoleValidatorImpl validator;
+    private CaseTypeEntityACLValidatorImpl validator;
 
     private CaseTypeEntity caseType;
 
-    private CaseTypeUserRoleEntity caseTypeUserRole;
+    private CaseTypeACLEntity caseTypeUserRole;
 
     @Mock
     private UserRoleEntity userRole;
@@ -33,13 +33,13 @@ public class CaseTypeEntityUserRoleValidatorImplTest {
     @Before
     public void setup() {
 
-        validator = new CaseTypeEntityUserRoleValidatorImpl();
+        validator = new CaseTypeEntityACLValidatorImpl();
 
-        caseTypeUserRole = new CaseTypeUserRoleEntity();
+        caseTypeUserRole = new CaseTypeACLEntity();
 
         caseType = new CaseTypeEntity();
         caseType.setReference("case type");
-        caseType.addCaseTypeUserRole(caseTypeUserRole);
+        caseType.addCaseTypeACL(caseTypeUserRole);
     }
 
     @Test
@@ -61,6 +61,6 @@ public class CaseTypeEntityUserRoleValidatorImplTest {
         final ValidationResult result = validator.validate(caseType);
 
         assertThat(result.getValidationErrors(), empty());
-        assertThat(caseType.getCaseTypeUserRoleEntities().get(0).getUserRole(), is(userRole));
+        assertThat(caseType.getCaseTypeACLEntities().get(0).getUserRole(), is(userRole));
     }
 }

@@ -4,10 +4,10 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 
 @Component
-public class EventEntityUserRoleValidatorImpl implements EventEntityValidator {
+public class EventEntityACLValidatorImpl implements EventEntityValidator {
 
     @Override
     public ValidationResult validate(final EventEntity event,
@@ -15,7 +15,7 @@ public class EventEntityUserRoleValidatorImpl implements EventEntityValidator {
 
         final ValidationResult validationResult = new ValidationResult();
 
-        for (EventUserRoleEntity entity : event.getEventUserRoles()) {
+        for (EventACLEntity entity : event.getEventACLEntities()) {
 
             if (null == entity.getUserRole()) {
                 validationResult.addError(new EventEntityInvalidUserRoleValidationError(entity,

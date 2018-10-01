@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.CrudValidator.isValidCrud;
 
@@ -16,7 +16,7 @@ public class CaseFieldEntityCrudValidatorImpl implements CaseFieldEntityValidato
                                      final CaseFieldEntityValidationContext caseFieldEntityValidationContext) {
         final ValidationResult validationResult = new ValidationResult();
 
-        for (CaseFieldUserRoleEntity entity : caseField.getCaseFieldUserRoles()) {
+        for (CaseFieldACLEntity entity : caseField.getCaseFieldACLEntities()) {
             if (!isValidCrud(entity.getCrudAsString())) {
                 validationResult.addError(new CaseFieldEntityInvalidCrudValidationError(entity,
                     new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));

@@ -41,7 +41,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventC
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldOrderSummaryCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityUserRoleValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.userprofile.UserProfileValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -204,7 +204,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(final CaseFieldEntityInvalidCrudValidationError error) {
         return newMessageIfDefinitionExists(error,
-                                            error.getCaseFieldUserRoleEntity(),
+                                            error.getCaseFieldACLEntity(),
                                             def -> String.format(
                                                 "Invalid CRUD value '%s' in %s tab, case type '%s', case field '%s', " +
                                                     "" + "" + "user role '%s'",
@@ -218,7 +218,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(final CaseFieldEntityInvalidUserRoleValidationError error) {
         return newMessageIfDefinitionExists(error,
-                                            error.getCaseFieldUserRoleEntity(),
+                                            error.getCaseFieldACLEntity(),
                                             def -> String.format(
                                                 "Invalid IdamRole '%s' in %s tab, case type '%s', case field '%s', "
                                                     + "crud '%s'",
@@ -232,7 +232,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(final EventEntityInvalidCrudValidationError error) {
         return newMessageIfDefinitionExists(error,
-                                            error.getEventUserRoleEntity(),
+                                            error.getEventACLEntity(),
                                             def -> String.format(
                                                 "Invalid CRUD value '%s' in %s tab, case type '%s', event '%s', user " +
                                                     "" + "" + "role '%s'",
@@ -246,7 +246,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(final EventEntityInvalidUserRoleValidationError error) {
         return newMessageIfDefinitionExists(error,
-                                            error.getEventUserRoleEntity(),
+                                            error.getEventACLEntity(),
                                             def -> String.format(
                                                 "Invalid IdamRole '%s' in %s tab, case type '%s', event '%s', crud "
                                                     + "'%s'",
@@ -442,7 +442,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(StateEntityUserRoleValidatorImpl.ValidationError error) {
+    public String createErrorMessage(StateEntityACLValidatorImpl.ValidationError error) {
         return withWorkSheetName(error);
     }
 

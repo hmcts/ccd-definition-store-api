@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -13,6 +10,9 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * A "lite" version of the {@link CaseTypeEntity} class that contains selected Case Type fields (id, reference, name,
@@ -121,4 +121,5 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
     public CaseTypeLiteEntity addEvent(@NotNull final EventLiteEntity event) {
         events.add(event);
         return this;
-    }}
+    }
+}

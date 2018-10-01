@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Parameter;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -20,18 +15,23 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static org.hibernate.annotations.FetchMode.SUBSELECT;
 
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Parameter;
+import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+
 @Table(name = "event")
 @Entity
 @TypeDef(
     name = "pgsql_securityclassification_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name="type", value="uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
+    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
 public class EventEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -56,7 +56,7 @@ public class EventEntity implements Serializable {
     private Integer order;
 
     @Column(name = "security_classification")
-    @Type( type = "pgsql_securityclassification_enum" )
+    @Type(type = "pgsql_securityclassification_enum")
     private SecurityClassification securityClassification;
 
     @Column(name = "show_summary")
@@ -70,15 +70,15 @@ public class EventEntity implements Serializable {
     private StateEntity postState;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "case_type_id", nullable=false)
+    @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
     @ManyToMany(fetch = EAGER)
     @Fetch(value = SUBSELECT)
     @JoinTable(
         name = "event_pre_state",
-        joinColumns = @JoinColumn(name="event_id", referencedColumnName="id"),
-        inverseJoinColumns = @JoinColumn(name="state_id", referencedColumnName="id")
+        joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "state_id", referencedColumnName = "id")
     )
     private final List<StateEntity> preStates = new ArrayList<>();
 
@@ -101,7 +101,7 @@ public class EventEntity implements Serializable {
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "event_id")
-    private final List<EventUserRoleEntity> eventUserRoles = new ArrayList<>();
+    private final List<EventACLEntity> eventACLEntities = new ArrayList<>();
 
     @Column(name = "show_event_notes")
     private Boolean showEventNotes;
@@ -260,18 +260,18 @@ public class EventEntity implements Serializable {
         return eventCaseFields;
     }
 
-    public List<EventUserRoleEntity> getEventUserRoles() {
-        return eventUserRoles;
+    public List<EventACLEntity> getEventACLEntities() {
+        return eventACLEntities;
     }
 
-    public EventEntity addEventUserRole(final EventUserRoleEntity eventUserRole) {
-        eventUserRole.setEventEntity(this);
-        eventUserRoles.add(eventUserRole);
+    public EventEntity addEventACL(final EventACLEntity eventACLEntity) {
+        eventACLEntity.setEventEntity(this);
+        eventACLEntities.add(eventACLEntity);
         return this;
     }
 
-    public EventEntity addEventUserRoles(final Collection<EventUserRoleEntity> entities) {
-        entities.forEach(e -> addEventUserRole(e));
+    public EventEntity addEventACLEntities(final Collection<EventACLEntity> eventACLEntities) {
+        eventACLEntities.forEach(e -> addEventACL(e));
         return this;
     }
 

@@ -26,13 +26,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 @TypeDef(
     name = "pgsql_securityclassification_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name="type", value="uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
+    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
 public class CaseTypeEntity implements Serializable, Versionable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @Column(name = "created_at")
@@ -66,7 +66,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     private WebhookEntity printWebhook;
 
     @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "jurisdiction_id", nullable=false)
+    @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
@@ -87,7 +87,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
-    private final List<CaseTypeUserRoleEntity> caseTypeUserRoleEntities = new ArrayList<>();
+    private final List<CaseTypeACLEntity> caseTypeACLEntities = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -225,18 +225,18 @@ public class CaseTypeEntity implements Serializable, Versionable {
         this.jurisdiction = jurisdiction;
     }
 
-    public List<CaseTypeUserRoleEntity> getCaseTypeUserRoleEntities() {
-        return caseTypeUserRoleEntities;
+    public List<CaseTypeACLEntity> getCaseTypeACLEntities() {
+        return caseTypeACLEntities;
     }
 
-    public CaseTypeEntity addCaseTypeUserRole(final CaseTypeUserRoleEntity caseTypeUserRoleEntity) {
-        caseTypeUserRoleEntity.setCaseType(this);
-        caseTypeUserRoleEntities.add(caseTypeUserRoleEntity);
+    public CaseTypeEntity addCaseTypeACL(final CaseTypeACLEntity caseTypeACLEntity) {
+        caseTypeACLEntity.setCaseType(this);
+        caseTypeACLEntities.add(caseTypeACLEntity);
         return this;
     }
 
-    public CaseTypeEntity addCaseTypeUserRoles(final Collection<CaseTypeUserRoleEntity> caseTypeUserRoleEntities) {
-        caseTypeUserRoleEntities.forEach(e -> addCaseTypeUserRole(e));
+    public CaseTypeEntity addCaseTypeACLEntities(final Collection<CaseTypeACLEntity> caseTypeACLEntities) {
+        caseTypeACLEntities.forEach(e -> addCaseTypeACL(e));
         return this;
     }
 

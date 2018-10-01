@@ -18,7 +18,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(
         expression = "java(" +
             "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-            "               caseTypeEntity.getCaseTypeUserRoleEntities()" +
+            "               caseTypeEntity.getCaseTypeACLEntities()" +
             "           )" +
             "       )",
         target = "acls"
@@ -40,7 +40,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(
         expression = "java(" +
             "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-            "               eventEntity.getEventUserRoles()" +
+            "               eventEntity.getEventACLEntities()" +
             "           )" +
             "       )",
         target = "acls"
@@ -72,7 +72,7 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(expression = "java(" +
         "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-        "               stateEntity.getStateUserRoles()" +
+        "               stateEntity.getStateACLEntities()" +
         "           )" +
         "       )",
         target = "acls")
@@ -88,7 +88,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseFieldEntity.liveTo", target = "liveUntil")
     @Mapping(expression = "java(" +
         "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-        "               caseFieldEntity.getCaseFieldUserRoles()" +
+        "               caseFieldEntity.getCaseFieldACLEntities()" +
         "           )" +
         "       )",
         target = "acls")

@@ -8,7 +8,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -17,14 +17,14 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 
-public class CaseFieldEntityUserRoleValidatorImplTest {
+public class CaseFieldEntityACLValidatorImplTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 
-    private CaseFieldEntityUserRoleValidatorImpl validator;
+    private CaseFieldEntityACLValidatorImpl validator;
 
-    private CaseFieldUserRoleEntity caseFieldUserRole;
+    private CaseFieldACLEntity caseFieldUserRole;
 
     private CaseFieldEntity caseField;
 
@@ -37,15 +37,15 @@ public class CaseFieldEntityUserRoleValidatorImplTest {
     @Before
     public void setup() {
 
-        caseFieldUserRole = new CaseFieldUserRoleEntity();
+        caseFieldUserRole = new CaseFieldACLEntity();
 
         given(caseFieldEntityValidationContext.getCaseReference()).willReturn("case_type");
 
         caseField = new CaseFieldEntity();
-        caseField.addCaseFieldUserRole(caseFieldUserRole);
+        caseField.addCaseFieldACL(caseFieldUserRole);
         caseField.setReference("case_field");
 
-        validator = new CaseFieldEntityUserRoleValidatorImpl();
+        validator = new CaseFieldEntityACLValidatorImpl();
     }
 
     @Test

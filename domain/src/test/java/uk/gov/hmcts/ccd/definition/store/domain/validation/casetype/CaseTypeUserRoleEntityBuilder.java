@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 
 class CaseTypeUserRoleEntityBuilder {
 
-    static CaseTypeUserRoleEntity buildCaseTypeUserRoleEntity(final String crud) {
+    static CaseTypeACLEntity buildCaseTypeUserRoleEntity(final String crud) {
         final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("case_type");
 
-        final CaseTypeUserRoleEntity entity = new CaseTypeUserRoleEntity();
+        final CaseTypeACLEntity entity = new CaseTypeACLEntity();
         entity.setCrudAsString(crud);
         entity.setCaseType(caseTypeEntity);
 
