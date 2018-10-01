@@ -104,6 +104,13 @@ module "storage_account" {
   destroy_me   = "${var.destroy_me}"
 }
 
+resource "azurerm_storage_container" "imports_container" {
+  name = "${local.app_full_name}-imports-${var.env}"
+  resource_group_name = "${local.app_full_name}-${var.env}"
+  storage_account_name = "${module.storage_account.storageaccount_name}"
+  container_access_type = "private"
+}
+
 ////////////////////////////////
 // Populate Vault with DB info
 ////////////////////////////////
