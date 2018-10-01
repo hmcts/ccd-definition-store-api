@@ -83,6 +83,27 @@ module "definition-store-db" {
   common_tags  = "${var.common_tags}"
 }
 
+module "storage_account" {
+  source                    = "git@github.com:hmcts/cnp-module-storage-account.git?ref=master"
+  env                       = "${var.env}"
+  storage_account_name      = "${var.raw_product}defstore${var.env}"
+  resource_group_name       = "${local.app_full_name}-${var.env}"
+  location                  = "${var.location}"
+  account_kind              = "StorageV2"
+  account_tier              = "Standard"
+  account_replication_type  = "LRS"
+  access_tier               = "Hot"
+
+  enable_blob_encryption    = true
+  enable_file_encryption    = true
+  enable_https_traffic_only = true
+
+  // Tags
+  team_name    = "${var.team_name}"
+  team_contact = "${var.team_contact}"
+  destroy_me   = "${var.destroy_me}"
+}
+
 ////////////////////////////////
 // Populate Vault with DB info
 ////////////////////////////////
