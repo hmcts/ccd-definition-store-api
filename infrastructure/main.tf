@@ -66,6 +66,10 @@ module "case-definition-store-api" {
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
 
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
+
+    // Storage Account
+    AZURE_STORAGE_CONNECTION_STRING = "${module.storage_account.storageaccount_primary_connection_string}"
+    AZURE_STORAGE_BLOB_CONTAINER_REFERENCE = "${azurerm_storage_container.imports_container.name}"
   }
 
 }
@@ -81,6 +85,34 @@ module "definition-store-db" {
   sku_tier = "GeneralPurpose"
   storage_mb = "51200"
   common_tags  = "${var.common_tags}"
+}
+
+module "storage_account" {
+  source                    = "git@github.com:hmcts/cnp-module-storage-account.git?ref=master"
+  env                       = "${var.env}"
+  storage_account_name      = "${var.raw_product}defstore${var.env}"
+  resource_group_name       = "${local.app_full_name}-${var.env}"
+  location                  = "${var.location}"
+  account_kind              = "StorageV2"
+  account_tier              = "Standard"
+  account_replication_type  = "LRS"
+  access_tier               = "Hot"
+
+  enable_blob_encryption    = true
+  enable_file_encryption    = true
+  enable_https_traffic_only = true
+
+  // Tags
+  team_name    = "${var.team_name}"
+  team_contact = "${var.team_contact}"
+  destroy_me   = "${var.destroy_me}"
+}
+
+resource "azurerm_storage_container" "imports_container" {
+  name = "${local.app_full_name}-imports-${var.env}"
+  resource_group_name = "${local.app_full_name}-${var.env}"
+  storage_account_name = "${module.storage_account.storageaccount_name}"
+  container_access_type = "private"
 }
 
 ////////////////////////////////
