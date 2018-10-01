@@ -19,7 +19,7 @@ dependencies {
     compile "org.apache.commons:commons-collections4:4.1"
     compile "org.apache.poi:poi-ooxml:3.17"
     testCompile "org.springframework.boot:spring-boot-starter-test"
-    compile group: 'com.microsoft.azure', name: 'azure-storage', version: '7.0.0'
+    compile group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.4'
     testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.4'
 }
