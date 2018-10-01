@@ -54,6 +54,10 @@ public class DisplayGroupEntity implements Serializable {
     @OneToMany(mappedBy = "displayGroup", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private final List<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new ArrayList<>();
 
+    @ManyToOne(cascade = ALL)
+    @JoinColumn(name = "webhook_mid_event_id")
+    private WebhookEntity webhookMidEvent;
+
     public Integer getId() {
         return id;
     }
@@ -129,6 +133,14 @@ public class DisplayGroupEntity implements Serializable {
 
     public List<DisplayGroupCaseFieldEntity> getDisplayGroupCaseFields() {
         return displayGroupCaseFields;
+    }
+
+    public WebhookEntity getWebhookMidEvent() {
+        return webhookMidEvent;
+    }
+
+    public void setWebhookMidEvent(WebhookEntity webhookMidEvent) {
+        this.webhookMidEvent = webhookMidEvent;
     }
 
     public void addDisplayGroupCaseFields(List<DisplayGroupCaseFieldEntity> groupCaseFields) {
