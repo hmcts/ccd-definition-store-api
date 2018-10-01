@@ -66,6 +66,10 @@ module "case-definition-store-api" {
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
 
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
+
+    // Storage Account
+    AZURE_STORAGE_CONNECTION_STRING = "${module.storage_account.storageaccount_primary_connection_string}"
+    AZURE_STORAGE_BLOB_CONTAINER_REFERENCE = "${azurerm_storage_container.imports_container.name}"
   }
 
 }
