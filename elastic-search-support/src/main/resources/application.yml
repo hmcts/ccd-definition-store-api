@@ -53,14 +53,14 @@ elasticsearch:
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_cases}
   casesIndexType: case
   casePredefinedMappings:
-    reference: ${elasticsearch.elasticMappings.defaultKeyword}
+    reference: ${elasticsearch.elasticMappings.defaultText}
     jurisdiction: ${elasticsearch.elasticMappings.defaultText}
     id: ${elasticsearch.elasticMappings.defaultLong}
-    state: ${elasticsearch.elasticMappings.defaultKeyword}
+    state: ${elasticsearch.elasticMappings.defaultText}
     created_date: ${elasticsearch.elasticMappings.defaultDate}
     last_modified: ${elasticsearch.elasticMappings.defaultDate}
     security_classification: ${elasticsearch.elasticMappings.defaultKeyword}
-    case_type_id: ${elasticsearch.elasticMappings.defaultKeyword}
+    case_type_id: ${elasticsearch.elasticMappings.defaultText}
     '@timestamp': ${elasticsearch.elasticMappings.disabled}
     '@version': ${elasticsearch.elasticMappings.disabled}
     index_id: ${elasticsearch.elasticMappings.disabled}
