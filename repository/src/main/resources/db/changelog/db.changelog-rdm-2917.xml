@@ -9,6 +9,7 @@
         <sql>
             create table role (like case_role including all);
         </sql>
+
         <!-- Add foreign key for case_type_id column linking to case_type table -->
         <addForeignKeyConstraint baseColumnNames="case_type_id"
                                  baseTableName="role"
@@ -16,6 +17,10 @@
                                  referencedColumnNames="id"
                                  referencedTableName="case_type"/>
 
+        <!-- copy table data to the new case_field_acl table -->
+        <sql>
+            insert into role select * from case_role;
+        </sql>
 
         <!-- Change precision of reference, name and description columns in role table -->
         <modifyDataType columnName="reference" newDataType="varchar(255)" tableName="role"/>
