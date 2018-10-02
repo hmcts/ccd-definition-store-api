@@ -17,11 +17,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="case_type"/>
 
-        <!-- copy table data to the new case_field_acl table -->
-        <sql>
-            insert into role select * from case_role;
-        </sql>
-
         <!-- Change precision of reference, name and description columns in role table -->
         <modifyDataType columnName="reference" newDataType="varchar(255)" tableName="role"/>
         <modifyDataType columnName="name" newDataType="varchar(255)" tableName="role"/>
@@ -38,6 +33,11 @@
             <column name="dtype" type="varchar(10)" />
         </addColumn>
 
+
+        <!-- copy table data to the new case_field_acl table -->
+        <sql>
+            insert into role select *, null, 'PUBLIC','CASEROLE' as dtype from case_role;
+        </sql>
         <!-- Add not null constraint for security_classification column in role table-->
         <addNotNullConstraint columnDataType="security_classification"
                               columnName="security_classification"
