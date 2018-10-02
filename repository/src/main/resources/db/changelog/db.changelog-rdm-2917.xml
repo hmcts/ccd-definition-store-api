@@ -5,7 +5,17 @@
     <changeSet id="rdm-2917" author="fatih.ozceylan@hmcts.net">
 
         <!-- case_role table changes to role-->
-        <renameTable newTableName="role" oldTableName="case_role" schemaName="public"/>
+        <!-- clone table structure to the new role table -->
+        <sql>
+            create table role (like case_role including all);
+        </sql>
+        <!-- Add foreign key for case_type_id column linking to case_type table -->
+        <addForeignKeyConstraint baseColumnNames="case_type_id"
+                                 baseTableName="role"
+                                 constraintName="role_case_type_id_case_type_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="case_type"/>
+
 
         <!-- Change precision of reference, name and description columns in role table -->
         <modifyDataType columnName="reference" newDataType="varchar(255)" tableName="role"/>
@@ -47,7 +57,29 @@
 
 
         <!-- case_field_user_role table changes -->
-        <renameTable newTableName="case_field_acl" oldTableName="case_field_user_role" schemaName="public"/>
+        <!-- clone table structure to the new case_field_acl table -->
+        <sql>
+            create table case_field_acl (like case_field_user_role including all);
+        </sql>
+
+        <!-- Add foreign key for case_field_id column linking to case_field table -->
+        <addForeignKeyConstraint baseColumnNames="case_field_id"
+                                 baseTableName="case_field_acl"
+                                 constraintName="case_field_acl_case_field_id_case_field_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="case_field"/>
+
+        <!-- Add foreign key for user_role_id column linking to user_role table -->
+        <addForeignKeyConstraint baseColumnNames="user_role_id"
+                                 baseTableName="case_field_acl"
+                                 constraintName="case_field_acl_user_role_id_user_role_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_role"/>
+
+        <!-- copy table data to the new case_field_acl table -->
+        <sql>
+            insert into case_field_acl select * from case_field_user_role;
+        </sql>
 
         <!-- Add new role_id column to the case_field_acl table -->
         <addColumn tableName="case_field_acl">
@@ -73,7 +105,29 @@
 
 
         <!-- case_type_user_role table changes -->
-        <renameTable newTableName="case_type_acl" oldTableName="case_type_user_role" schemaName="public"/>
+        <!-- clone table structure to the new case_type_acl table -->
+        <sql>
+            create table case_type_acl (like case_type_user_role including all);
+        </sql>
+
+        <!-- Add foreign key for case_type_id column linking to case_type table -->
+        <addForeignKeyConstraint baseColumnNames="case_type_id"
+                                 baseTableName="case_type_acl"
+                                 constraintName="case_type_acl_case_type_id_case_type_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="case_type"/>
+
+        <!-- Add foreign key for user_role_id column linking to user_role table -->
+        <addForeignKeyConstraint baseColumnNames="user_role_id"
+                                 baseTableName="case_type_acl"
+                                 constraintName="case_type_acl_user_role_id_user_role_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_role"/>
+
+        <!-- copy table data to the new case_type_acl table -->
+        <sql>
+            insert into case_type_acl select * from case_type_user_role;
+        </sql>
 
         <!-- Add new role_id column to the case_type_acl table -->
         <addColumn tableName="case_type_acl">
@@ -99,7 +153,29 @@
 
 
         <!-- event_user_role table changes -->
-        <renameTable newTableName="event_acl" oldTableName="event_user_role" schemaName="public"/>
+        <!-- clone table structure to the new event_acl table -->
+        <sql>
+            create table event_acl (like event_user_role including all);
+        </sql>
+
+        <!-- Add foreign key for event_id column linking to event table -->
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="event_acl"
+                                 constraintName="event_acl_event_id_event_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="event"/>
+
+        <!-- Add foreign key for user_role_id column linking to user_role table -->
+        <addForeignKeyConstraint baseColumnNames="user_role_id"
+                                 baseTableName="event_acl"
+                                 constraintName="event_acl_user_role_id_user_role_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_role"/>
+
+        <!-- copy table data to the new event_acl table -->
+        <sql>
+            insert into event_acl select * from event_user_role;
+        </sql>
 
         <!-- Add new role_id column to the event_acl table -->
         <addColumn tableName="event_acl">
@@ -125,7 +201,29 @@
 
 
         <!-- state_user_role table changes -->
-        <renameTable newTableName="state_acl" oldTableName="state_user_role" schemaName="public"/>
+        <!-- clone table structure to the new state_acl table -->
+        <sql>
+            create table state_acl (like state_user_role including all);
+        </sql>
+
+        <!-- Add foreign key for state_id column linking to state table -->
+        <addForeignKeyConstraint baseColumnNames="state_id"
+                                 baseTableName="state_acl"
+                                 constraintName="state_acl_state_id_state_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="state"/>
+
+        <!-- Add foreign key for user_role_id column linking to user_role table -->
+        <addForeignKeyConstraint baseColumnNames="user_role_id"
+                                 baseTableName="state_acl"
+                                 constraintName="state_acl_user_role_id_user_role_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_role"/>
+
+        <!-- copy table data to the new state_acl table -->
+        <sql>
+            insert into state_acl select * from state_user_role;
+        </sql>
 
         <!-- Add new role_id column to the state_acl table -->
         <addColumn tableName="state_acl">
