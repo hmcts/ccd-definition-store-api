@@ -91,7 +91,7 @@
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="case_field_acl"
-                                 constraintName="fk_case_field_user_role_role_id"
+                                 constraintName="case_field_acl_role_id_role_id_fk"
                                  referencedColumnNames="id"
                                  referencedTableName="role"/>
 
@@ -139,7 +139,7 @@
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="case_type_acl"
-                                 constraintName="fk_case_type_user_role_role_id"
+                                 constraintName="case_type_acl_role_id_role_id_fk"
                                  referencedColumnNames="id"
                                  referencedTableName="role"/>
 
@@ -187,7 +187,7 @@
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="event_acl"
-                                 constraintName="fk_event_user_role_role_id"
+                                 constraintName="event_acl_role_id_role_id_fk"
                                  referencedColumnNames="id"
                                  referencedTableName="role"/>
 
@@ -235,7 +235,7 @@
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="state_acl"
-                                 constraintName="fk_state_user_role_role_id"
+                                 constraintName="state_acl_role_id_role_id_fk"
                                  referencedColumnNames="id"
                                  referencedTableName="role"/>
 
