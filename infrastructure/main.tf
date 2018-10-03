@@ -93,6 +93,7 @@ module "case-definition-store-api" {
   website_local_cache_sizeinmb = 1200
   capacity = "${var.capacity}"
   java_container_version = "9.0"
+  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
 
   app_settings = {
     DEFINITION_STORE_DB_HOST = "${module.definition-store-db.host_name}"
