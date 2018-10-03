@@ -12,7 +12,6 @@ import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
 
-import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -126,12 +125,26 @@ public class RoleRepositoryTest {
     }
 
     @Test
+    public void shouldFindCaseRoles() {
+        List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findAll();
+        assertThat(caseRoleEntities.size(), is(2));
+        assertThat(caseRoleEntities.get(0).getReference(), is(CASE_ROLE_REFERENCE.toUpperCase()));
+    }
+
+    @Test
+    public void shouldFindSingleUserRole() {
+        List<UserRoleEntity> userRoleEntities = userRoleRepository.findAll();
+        assertThat(userRoleEntities.size(), is(1));
+        assertThat(userRoleEntities.get(0).getReference(), is(USER_ROLE_REFERENCE));
+    }
+
+    @Test
     public void shouldFindUserRole() {
         final UserRoleEntity role = userRoleRepository.findTopByReference(USER_ROLE_REFERENCE).get();
-        assertThat(role.getId(), Is.is(notNullValue()));
-        assertThat(role.getCreatedAt(), Is.is(notNullValue()));
-        assertThat(role.getReference(), Is.is(USER_ROLE_REFERENCE));
-        assertThat(role.getSecurityClassification(), Is.is(SecurityClassification.PUBLIC));
+        assertThat(role.getId(), is(notNullValue()));
+        assertThat(role.getCreatedAt(), is(notNullValue()));
+        assertThat(role.getReference(), is(USER_ROLE_REFERENCE));
+        assertThat(role.getSecurityClassification(), is(SecurityClassification.PUBLIC));
     }
 
     @Test
@@ -153,8 +166,8 @@ public class RoleRepositoryTest {
         entityManager.clear();
 
         final UserRoleEntity afterSave = userRoleRepository.findTopByReference(role).get();
-        assertThat(afterSave.getReference(), Is.is(role));
-        assertThat(afterSave.getSecurityClassification(), Is.is(RESTRICTED));
+        assertThat(afterSave.getReference(), is(role));
+        assertThat(afterSave.getSecurityClassification(), is(RESTRICTED));
     }
 
     @Test(expected = DataIntegrityViolationException.class)
