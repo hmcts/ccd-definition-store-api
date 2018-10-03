@@ -1,0 +1,26 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-2917" author="fatih.ozceylan@hmcts.net">
+
+        <!-- drop case_field_user_role table -->
+        <dropTable tableName="case_field_user_role" cascadeConstraints="true" schemaName="public"/>
+
+        <!-- drop case_type_user_role table -->
+        <dropTable tableName="case_type_user_role" cascadeConstraints="true" schemaName="public"/>
+
+        <!-- drop event_user_role table -->
+        <dropTable tableName="event_user_role" cascadeConstraints="true" schemaName="public"/>
+
+        <!-- drop state_user_role table -->
+        <dropTable tableName="state_user_role" cascadeConstraints="true" schemaName="public"/>
+
+        <!-- drop case_role table -->
+        <dropTable tableName="case_role" cascadeConstraints="true" schemaName="public"/>
+
+        <!-- drop user_role table -->
+        <dropTable tableName="user_role" cascadeConstraints="true" schemaName="public"/>
+
+    </changeSet>
+</databaseChangeLog>
