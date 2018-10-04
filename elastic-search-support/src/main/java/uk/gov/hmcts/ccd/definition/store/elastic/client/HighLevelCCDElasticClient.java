@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
+import javax.annotation.PreDestroy;
+
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.alias.Alias;
@@ -81,6 +83,17 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         log.info("alias {} exists: {}", alias, exists);
         return exists;
     }
+
+    @PreDestroy
+    public void cleanup() {
+        try {
+            log.info("Closing the ES REST client");
+            this.elasticClient.close();
+        } catch (IOException ioe) {
+            log.error("Problem occurred when closing the ES REST client", ioe);
+        }
+    }
+
 
     public GetAliasesResponse getAlias(String alias) throws IOException {
         GetAliasesRequest request = new GetAliasesRequest(alias);
