@@ -19,8 +19,6 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +33,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
@@ -181,37 +178,6 @@ public class SpreadSheetImportTest extends BaseTest {
         assertEquals("Unexpected number of rows returned from case_type_items table",
                      0,
                      jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
-    }
-
-    /**
-     * API test for transactional rollback of import of Case Definition spreadsheet that fails due to an Azure Storage
-     * upload error because the file already exists.
-     *
-     * @throws Exception On error running test
-     */
-    @Test
-    public void rollbackFailedDefinitionFileImportDueToDuplicateUpload() throws Exception {
-        givenUserProfileReturnsSuccess();
-
-        InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        doThrow(new FileStorageException(FileStorageException.FILE_ALREADY_EXISTS_ERROR)).when(fileStorageService)
-            .uploadFile(any(), any());
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
-
-        // Check the exception message.
-        assertThat("Incorrect exception for import failing due to duplicate file upload to Azure Storage",
-            result.getResolvedException().getMessage(),
-            containsString(FileStorageException.FILE_ALREADY_EXISTS_ERROR));
-
-        // Check that no Definition data has been persisted.
-        assertEquals("Unexpected number of rows returned from case_type_items table",
-            0,
-            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
     }
 
     @Test

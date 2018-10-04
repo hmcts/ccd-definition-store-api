@@ -72,14 +72,10 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     @ExceptionHandler(FileStorageException.class)
-    public void handleFileExistsException(HttpServletResponse response,
-                                          FileStorageException fileStorageException) throws IOException {
+    public void handleFileStorageException(HttpServletResponse response,
+                                           FileStorageException fileStorageException) throws IOException {
         log.error("Exception thrown: {}", fileStorageException.getMessage(), fileStorageException);
-        if (fileStorageException.getMessage().equals(FileStorageException.FILE_ALREADY_EXISTS_ERROR)) {
-            response.sendError(HttpStatus.BAD_REQUEST.value());
-        } else {
-            response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
+        response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
     private String flattenExceptionMessages(RuntimeException ex) {
