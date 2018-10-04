@@ -20,7 +20,7 @@ public class ElasticSearchConfiguration {
 
     @Bean
     public RestHighLevelClient restHighLevelClient() {
-        RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort()));
+        RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort())).setMaxRetryTimeoutMillis(60000);
         RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
             requestConfigBuilder.setConnectTimeout(5000)
             .setSocketTimeout(60000);
