@@ -1,5 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,11 +16,6 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -48,7 +49,8 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
     public void shouldCrateMappingForDataAndDataClassification() {
         CaseFieldEntity fieldA = newTextField("fieldA").build();
         CaseFieldEntity fieldB = newTextField("fieldB").build();
-        caseType.withField(fieldA).withField(fieldB);
+        CaseFieldEntity fieldC = newField("fieldC", "Label").build();
+        caseType.withField(fieldA).withField(fieldB).withField(fieldC);
 
         String result = mappingGenerator.generateMapping(caseType.build());
 
