@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import javax.annotation.PreDestroy;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
@@ -11,20 +13,13 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 
 @Component
 @Slf4j
@@ -39,16 +34,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
     public HighLevelCCDElasticClient(CcdElasticSearchProperties config, RestHighLevelClient elasticClient) {
         this.config = config;
         this.elasticClient = elasticClient;
-    }
-
-    @Override
-    public boolean indexExists(String indexName) throws IOException {
-        RestClient lowLevelClient = elasticClient.getLowLevelClient();
-        Request request = new Request("HEAD", "/" + indexName + "?allow_no_indices=false");
-        Response response = lowLevelClient.performRequest(request);
-        boolean exists = response.getStatusLine().getStatusCode() == 200;
-        log.info("index {} exists: {}", indexName, exists);
-        return exists;
     }
 
     @Override
@@ -83,17 +68,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         log.info("alias {} exists: {}", alias, exists);
         return exists;
     }
-
-    @PreDestroy
-    public void cleanup() {
-        try {
-            log.info("Closing the ES REST client");
-            this.elasticClient.close();
-        } catch (IOException ioe) {
-            log.error("Problem occurred when closing the ES REST client", ioe);
-        }
-    }
-
 
     public GetAliasesResponse getAlias(String alias) throws IOException {
         GetAliasesRequest request = new GetAliasesRequest(alias);
