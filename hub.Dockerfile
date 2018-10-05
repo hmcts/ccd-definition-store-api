@@ -12,8 +12,8 @@ RUN gradle assemble
 FROM hmcts/cnp-java-base:openjdk-jre-8-alpine-1.4
 
 ENV APP case-definition-store-api.jar
-ENV APPLICATION_TOTAL_MEMORY 768M
-ENV APPLICATION_SIZE_ON_DISK_IN_MB 86
+ENV APPLICATION_TOTAL_MEMORY 950M
+ENV APPLICATION_SIZE_ON_DISK_IN_MB 90
 
 ENV JAVA_OPTS "-Djava.security.egd=file:/dev/./urandom"
 
