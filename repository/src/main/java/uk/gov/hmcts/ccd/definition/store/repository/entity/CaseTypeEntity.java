@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Parameter;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -19,7 +14,13 @@ import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
+
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Parameter;
+import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 @Table(name = "case_type")
 @Entity
@@ -88,6 +89,11 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<CaseTypeUserRoleEntity> caseTypeUserRoleEntities = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private final List<CaseRoleEntity> caseRoles = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -237,5 +243,20 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public Optional<CaseFieldEntity> findCaseField(String reference) {
         return this.caseFields.stream().filter(cf -> cf.getReference().equals(reference)).findFirst();
+    }
+
+    public List<CaseRoleEntity> getCaseRoles() {
+        return caseRoles;
+    }
+
+    public CaseTypeEntity addCaseRole(final CaseRoleEntity caseRoleEntity) {
+        caseRoleEntity.setCaseType(this);
+        caseRoles.add(caseRoleEntity);
+        return this;
+    }
+
+    public CaseTypeEntity addCaseRoles(final Collection<CaseRoleEntity> caseRoleEntities) {
+        caseRoleEntities.forEach(cr -> addCaseRole(cr));
+        return this;
     }
 }

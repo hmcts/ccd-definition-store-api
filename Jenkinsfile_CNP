@@ -28,7 +28,18 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withPipeline(type, product, app) {
-    loadVaultSecrets(secrets)
+    onMaster {
+        enableSlackNotifications('#ccd-master-builds')
+    }
+    onDemo {
+        enableSlackNotifications('#ccd-demo-builds')
+    }
+    onPR {
+        enableSlackNotifications('#ccd-pr-builds')
+    }
+
     enableDbMigration()
-    enableSlackNotifications('#ccd-notifications')
+    enableDockerBuild()
+
+    loadVaultSecrets(secrets)
 }

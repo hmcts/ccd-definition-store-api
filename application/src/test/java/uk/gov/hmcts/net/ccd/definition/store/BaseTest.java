@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,6 +27,8 @@ import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
 import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
@@ -41,6 +43,9 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -49,7 +54,7 @@ import static org.junit.Assert.assertEquals;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 public abstract class BaseTest {
-    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V35_RDM-2237.xlsx";
+    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V36_RDM-2385.xlsx";
     public static final String IMPORT_URL = "/import";
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject
@@ -64,6 +69,9 @@ public abstract class BaseTest {
     @Inject
     private WorkBasketUserDefaultService workBasketUserDefaultService;
 
+    @Autowired
+    private ImportServiceImpl importService;
+
     protected MockMvc mockMvc;
     protected JdbcTemplate jdbcTemplate;
     protected Map<String, Integer> userRoleIds;
@@ -72,7 +80,6 @@ public abstract class BaseTest {
 
     @Rule  // The @Rule 'wireMockRule' must be public
     public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
-
 
     @BeforeClass
     public static void init() {
@@ -85,9 +92,17 @@ public abstract class BaseTest {
         jdbcTemplate = new JdbcTemplate(db);
         final Integer port = wireMockRule.port();
         ReflectionTestUtils.setField(applicationParams, "userProfileHost", "http://localhost:" + port);
-        final SecurityUtils securityUtils = Mockito.mock(SecurityUtils.class);
-        Mockito.when(securityUtils.authorizationHeaders()).thenReturn(new HttpHeaders());
+        final SecurityUtils securityUtils = mock(SecurityUtils.class);
+        when(securityUtils.authorizationHeaders()).thenReturn(new HttpHeaders());
         ReflectionTestUtils.setField(workBasketUserDefaultService, "securityUtils", securityUtils);
+
+        final IDAMProperties idamProperties = new IDAMProperties();
+        idamProperties.setId("445");
+        idamProperties.setEmail("user@hmcts.net");
+
+        // Override getUserDetails to avoid calling IdAM with invalid authorization
+        doReturn(idamProperties).when(importService).getUserDetails();
+
         userRoleIds = new UserRoleSetup(jdbcTemplate).addUserRoleTestData();
     }
 

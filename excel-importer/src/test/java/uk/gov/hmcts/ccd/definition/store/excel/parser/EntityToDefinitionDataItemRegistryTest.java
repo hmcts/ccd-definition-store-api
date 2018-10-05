@@ -1,13 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
-
-import static org.junit.Assert.assertEquals;
-
-import java.util.Optional;
 
 public class EntityToDefinitionDataItemRegistryTest {
 

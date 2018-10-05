@@ -8,6 +8,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -16,6 +23,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
@@ -25,6 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -39,6 +49,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -68,12 +79,10 @@ public class ImportServiceImplTest {
     public static final String BAD_FILE = "CCD_TestDefinition_V12.xlsx";
     private static final String GOOD_FILE = "CCD_TestDefinition.xlsx";
     private static final String JURISDICTION_NAME = "TEST";
+    private static final String TEST_ADDRESS_BOOK_CASE_TYPE = "TestAddressBookCase";
+    private static final String TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE = "TestComplexAddressBookCase";
 
     private ImportServiceImpl service;
-
-    private SpreadsheetParser spreadsheetParser;
-
-    private ParserFactory parserFactory;
 
     @Mock
     private FieldTypeService fieldTypeService;
@@ -106,6 +115,27 @@ public class ImportServiceImplTest {
     private MetadataCaseFieldEntityFactory metadataCaseFieldEntityFactory;
 
     @Mock
+    private SecurityUtils securityUtils;
+
+    @Mock
+    private RestTemplate restTemplate;
+
+    @Mock
+    private ApplicationParams applicationParams;
+
+    @Captor
+    private ArgumentCaptor<String> idamUserProfileURLCaptor;
+
+    @Captor
+    private ArgumentCaptor<HttpMethod> httpMethodCaptor;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity> requestEntityCaptor;
+
+    @Captor
+    private ArgumentCaptor<Class<IDAMProperties>> idamPropertiesClassCaptor;
+
+    @Mock
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Captor
@@ -134,9 +164,10 @@ public class ImportServiceImplTest {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
-        parserFactory = new ParserFactory(new ShowConditionParser(), new EntityToDefinitionDataItemRegistry(), registry);
+        final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
+            new EntityToDefinitionDataItemRegistry(), registry);
 
-        spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
+        final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
         service = new ImportServiceImpl(spreadsheetValidator,
                                         spreadsheetParser,
@@ -148,7 +179,10 @@ public class ImportServiceImplTest {
                                         userRoleRepository,
                                         workBasketUserDefaultService,
                                         caseFieldRepository,
-                                        applicationEventPublisher);
+                                        applicationEventPublisher,
+                                        securityUtils,
+                                        restTemplate,
+                                        applicationParams);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
@@ -209,19 +243,45 @@ public class ImportServiceImplTest {
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
-        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA)).willReturn(Collections.singletonList
-            (caseRef));
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
         CaseFieldEntity state = new CaseFieldEntity();
         state.setReference("[STATE]");
-        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class))).willReturn(state);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+        setupMocksForIdam();
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        service.importFormDefinitions(inputStream);
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream);
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertEquals(2, metadata.getCaseTypes().size());
+        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
+        assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
+        assertEquals("user@hmcts.net", metadata.getUserId());
+        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE,
+            metadata.getCaseTypesAsString());
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
+    }
+
+    @Test
+    public void shouldGetUserDetails() {
+        final HttpEntity requestEntity = setupMocksForIdam();
+        final IDAMProperties expectedIdamProperties = service.getUserDetails();
+        assertEquals("445", expectedIdamProperties.getId());
+        assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
+
+        verify(restTemplate).exchange(idamUserProfileURLCaptor.capture(),
+                                      httpMethodCaptor.capture(),
+                                      requestEntityCaptor.capture(),
+                                      idamPropertiesClassCaptor.capture());
+        assertEquals("http://idam.local/details", idamUserProfileURLCaptor.getValue());
+        assertEquals(HttpMethod.GET, httpMethodCaptor.getValue());
+        assertEquals(requestEntity, requestEntityCaptor.getValue());
+        assertEquals(IDAMProperties.class, idamPropertiesClassCaptor.getValue());
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {
@@ -230,4 +290,18 @@ public class ImportServiceImplTest {
         return fieldTypeEntity;
     }
 
+    private HttpEntity setupMocksForIdam() {
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, "ey123.ey456");
+        given(securityUtils.userAuthorizationHeaders()).willReturn(httpHeaders);
+        final HttpEntity requestEntity = new HttpEntity(securityUtils.userAuthorizationHeaders());
+        given(applicationParams.idamUserProfileURL()).willReturn("http://idam.local/details");
+        final IDAMProperties idamProperties = new IDAMProperties();
+        idamProperties.setId("445");
+        idamProperties.setEmail("user@hmcts.net");
+        final ResponseEntity<IDAMProperties> responseEntity = new ResponseEntity<>(idamProperties, HttpStatus.OK);
+        given(restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
+            IDAMProperties.class)).willReturn(responseEntity);
+        return requestEntity;
+    }
 }
