@@ -61,7 +61,9 @@
             <column name="security_classification" type="security_classification" defaultValue="PUBLIC">
                 <constraints nullable="true"/>
             </column>
-            <column name="dtype" type="varchar(10)" />
+            <column name="dtype" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
 
         <!-- copy table data to the new case_field_acl table -->
