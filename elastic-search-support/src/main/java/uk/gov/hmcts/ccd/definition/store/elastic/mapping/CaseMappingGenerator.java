@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toList;
 public class CaseMappingGenerator extends MappingGenerator {
 
     public String generateMapping(CaseTypeEntity caseType) {
-        log.debug("creating mapping for case type: {}", caseType.getReference());
+        log.info("creating mapping for case type: {}", caseType.getReference());
 
         String mapping = newJson(Unchecked.consumer((JsonWriter jw) -> {
             jw.name("dynamic");
@@ -37,22 +37,22 @@ public class CaseMappingGenerator extends MappingGenerator {
     }
 
     private void propertiesMapping(JsonWriter jw) {
-        log.debug("generating case properties mapping");
+        log.info("generating case properties mapping");
         config.getCasePredefinedMappings().forEach(Unchecked.biConsumer((property, mapping) -> {
             jw.name(property);
             jw.jsonValue(mapping);
-            log.debug("property: {}, mapping: {}", property, mapping);
+            log.info("property: {}, mapping: {}", property, mapping);
         }));
     }
 
     private void dataMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
-        log.debug("generating case data mapping");
+        log.info("generating case data mapping");
         jw.name(DATA);
         genericDataMapping(jw, caseType, typeMapper -> typeMapper::dataMapping);
     }
 
     private void dataClassificationMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
-        log.debug("generating case data classification mapping");
+        log.info("generating case data classification mapping");
         jw.name(DATA_CLASSIFICATION);
         genericDataMapping(jw, caseType, typeMapper -> typeMapper::dataClassificationMapping);
     }
@@ -71,17 +71,9 @@ public class CaseMappingGenerator extends MappingGenerator {
 
             jw.name(property);
             jw.jsonValue(mapping);
-            log.debug("property: {}, mapping: {}", property, mapping);
+            log.info("property: {}, mapping: {}", property, mapping);
         }
         jw.endObject();
         jw.endObject();
-    }
-
-    private boolean shouldIgnore(CaseFieldEntity field) {
-        boolean ignored = config.getCcdIgnoredTypes().contains(field.getFieldType().getReference());
-        if (ignored) {
-            log.debug("field {} of type {} ignored", field.getReference(), field.getBaseTypeString());
-        }
-        return ignored;
     }
 }

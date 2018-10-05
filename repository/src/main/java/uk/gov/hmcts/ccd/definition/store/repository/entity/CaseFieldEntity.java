@@ -31,7 +31,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "case_field")
 @Entity
-@TypeDefs({
+@TypeDefs( {
     @TypeDef(
         name = "pgsql_securityclassification_enum",
         typeClass = PostgreSQLEnumType.class,
@@ -44,7 +44,7 @@ import static javax.persistence.GenerationType.IDENTITY;
         parameters = @Parameter(name = "type",
             value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType")
     )})
-public class CaseFieldEntity implements  FieldEntity, Serializable {
+public class CaseFieldEntity implements FieldEntity, Serializable {
 
     @Id
     @Column(name = "id")
