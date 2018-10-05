@@ -23,7 +23,13 @@
       "type": "long"
     },
     "state": {
-      "type": "keyword"
+      "type":"text",
+      "fields":{
+        "keyword":{
+          "type":"keyword",
+          "ignore_above":256
+        }
+      }
     },
     "created_date": {
       "type": "date"
@@ -35,13 +41,22 @@
       "type": "keyword"
     },
     "case_type_id": {
-      "type": "keyword"
+      "type":"text",
+      "fields":{
+        "keyword":{
+          "type":"keyword",
+          "ignore_above":256
+        }
+      }
     },
     "@timestamp": {
       "enabled": false
     },
     "@version": {
       "enabled": false
+    },
+    "index_id":{
+      "enabled":false
     },
     "data": {
       "properties": {

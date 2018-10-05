@@ -31,6 +31,10 @@ public class StubComplexTypeMappingGenerator extends ComplexTypeMappingGenerator
         return newArrayList(type);
     }
 
+    public boolean shouldIgnore(FieldEntity field) {
+        return field.getBaseTypeString().equals("Label");
+    }
+
     protected String securityClassificationMapping() {
         return "securityClassificationMapping";
     }

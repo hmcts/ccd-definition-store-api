@@ -30,4 +30,8 @@ public class StubTypeMappingGenerator extends TypeMappingGenerator {
     public List<String> getMappedTypes() {
         return newArrayList(type);
     }
+
+    public boolean shouldIgnore(FieldEntity field) {
+        return field.getBaseTypeString().equals("Label");
+    }
 }

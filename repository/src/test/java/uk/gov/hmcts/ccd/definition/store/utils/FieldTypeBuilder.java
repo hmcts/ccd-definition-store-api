@@ -64,4 +64,8 @@ public class FieldTypeBuilder {
     public static FieldTypeEntity textFieldType() {
         return newType("Text").build();
     }
+
+    public static FieldTypeEntity labelFieldType() {
+        return newType("Label").build();
+    }
 }

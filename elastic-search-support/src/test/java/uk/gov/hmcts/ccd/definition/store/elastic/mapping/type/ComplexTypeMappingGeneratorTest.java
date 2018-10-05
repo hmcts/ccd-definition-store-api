@@ -18,6 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
@@ -63,6 +64,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         CaseFieldBuilder complexField = newField("complexField", "SomeComplexType1");
         complexField.withComplexField("field1", textFieldType());
         complexField.withComplexField("field2", textFieldType());
+        complexField.withComplexField("field3", labelFieldType());
 
         FieldTypeBuilder complexType = newType("SomeComplexType2");
         complexField.withComplexField("nestedComplexField", complexType.buildComplex());
