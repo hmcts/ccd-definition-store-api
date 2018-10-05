@@ -80,10 +80,6 @@ variable "authorised-services" {
 // ELASTIC SEARCH
 ////////////////////////////////
 
-variable "elastic_search_host" {
-  default = ""
-}
-
 variable "elastic_search_port" {
   default = "9200"
 }

@@ -35,6 +35,12 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
 
+data "azurerm_key_vault_secret" "ccd_elastic_search_url" {
+  count = "${var.elastic_search_enabled == "false" ? 0 : 1}"
+  name = "ccd-ELASTIC-SEARCH-URL"
+  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+}
+
 module "case-definition-store-api" {
   source   = "git@github.com:contino/moj-module-webapp?ref=master"
   product  = "${local.app_full_name}"
@@ -61,7 +67,7 @@ module "case-definition-store-api" {
 
     USER_PROFILE_HOST = "http://ccd-user-profile-api-${local.env_ase_url}"
 
-    ELASTIC_SEARCH_HOST = "${var.elastic_search_host}"
+    ELASTIC_SEARCH_HOST = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_url.*.value)}"}"
     ELASTIC_SEARCH_PORT = "${var.elastic_search_port}"
     ELASTIC_SEARCH_ENABLED = "${var.elastic_search_enabled}"
     ELASTIC_SEARCH_INDEX_SHARDS = "${var.elastic_search_index_shards}"
