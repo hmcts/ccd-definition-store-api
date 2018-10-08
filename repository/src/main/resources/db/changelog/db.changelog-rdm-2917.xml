@@ -337,7 +337,7 @@
 
         <!-- copy table data to the new event_acl table -->
         <sql>
-            insert into event_acl select * from event_acl;
+            insert into event_acl select * from event_user_role;
         </sql>
 
         <!-- Add new role_id column to the event_acl table -->
