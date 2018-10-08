@@ -20,10 +20,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
     parameters = @org.hibernate.annotations.Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="dtype", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("USERROLE")
 public class UserRoleEntity implements Serializable {
-    //public class UserRoleEntity extends RoleEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)

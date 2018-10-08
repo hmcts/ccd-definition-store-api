@@ -68,7 +68,7 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    void shouldParseEntity_withUserRoleFound() {
+    void shouldParseEntityWithUserRoleFound() {
 
         final String role = "CaseWorker 1";
 
@@ -95,7 +95,7 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withCaseRoleFound() {
+    public void shouldParseEntityWithCaseRoleFound() {
         final String caseRole = "[CLAIMANT]";
 
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
@@ -121,7 +121,7 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withUserRoleNotFound() {
+    public void shouldParseEntityWithUserRoleNotFound() {
 
         final String role = "CaseWorker 2";
 
@@ -144,7 +144,7 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withInvalidCrud() {
+    public void shouldParseEntityWithInvalidCrud() {
 
         final String role = "CaseWorker 1";
 
@@ -166,7 +166,7 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withInvalidCrudAndUserNotFound() {
+    public void shouldParseEntityWithInvalidCrudAndUserNotFound() {
 
         final String role = "CaseWorker 2";
 

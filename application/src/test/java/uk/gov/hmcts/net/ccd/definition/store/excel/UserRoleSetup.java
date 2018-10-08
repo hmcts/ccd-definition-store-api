@@ -1,5 +1,7 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,9 +22,12 @@ public class UserRoleSetup {
         jdbcTemplate.update("delete from case_field_acl");
         jdbcTemplate.update("delete from state_acl");
         jdbcTemplate.update("delete from role");
-        jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) values ('CaseWorker1', 'CaseWorker1', 'PUBLIC', 'USERROLE')");
-        jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) values ('CaseWorker2', 'CaseWorker2', 'PRIVATE', 'USERROLE')");
-        jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) values ('CaseWorker3', 'CaseWorker3', 'RESTRICTED', 'USERROLE')");
+        jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) "
+            + "values ('CaseWorker1', 'CaseWorker1', 'PUBLIC', 'USERROLE')");
+        jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) "
+            + "values ('CaseWorker2', 'CaseWorker2', 'PRIVATE', 'USERROLE')");
+        jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) "
+            + "values ('CaseWorker3', 'CaseWorker3', 'RESTRICTED', 'USERROLE')");
 
         final List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from role");
         return list

@@ -25,10 +25,6 @@ public class DefinitionFileUploadMetadata {
         return caseTypes;
     }
 
-    public void setCaseTypes(final List<String> caseTypes) {
-        this.caseTypes = caseTypes;
-    }
-
     public String getUserId() {
         return userId;
     }

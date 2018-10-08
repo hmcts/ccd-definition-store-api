@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class EventACLEntity extends Authorisation implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable=false)
+    @JoinColumn(name = "event_id", nullable = false)
     private EventEntity event;
 
     public EventEntity getEvent() {

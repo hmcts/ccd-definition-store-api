@@ -1,5 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -7,15 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-
-import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
 
 public class CaseFieldEntityACLValidatorImplTest {
 
@@ -49,7 +49,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveValidationError_whenUserNotFound() {
+    public void shouldHaveValidationErrorWhenUserNotFound() {
 
         caseFieldUserRole.setUserRole(null);
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
@@ -61,7 +61,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveNoValidationError_whenUserFound() {
+    public void shouldHaveNoValidationErrorWhenUserFound() {
 
         caseFieldUserRole.setUserRole(userRole);
 
