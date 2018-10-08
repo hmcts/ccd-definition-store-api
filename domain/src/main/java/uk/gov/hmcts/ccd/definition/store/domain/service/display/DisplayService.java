@@ -14,9 +14,8 @@ import java.util.stream.Collectors;
 @Service
 public class DisplayService {
 
-    private DisplayGroupAdapterService displayGroupAdapterService;
     private GenericLayoutRepository genericLayoutRepository;
-
+    private DisplayGroupAdapterService displayGroupAdapterService;
     private DisplayGroupRepository displayGroupRepository;
     private EntityToResponseDTOMapper entityToResponseDTOMapper;
 
@@ -41,12 +40,12 @@ public class DisplayService {
 
     public CaseTabCollection findTabStructureForCaseType(String caseTypeId) {
         return mapToCaseTabCollection(this.displayGroupRepository.findTabsByCaseTypeReference(caseTypeId), caseTypeId);
-
     }
 
     public WorkbasketInputDefinition findWorkBasketInputDefinitionForCaseType(String caseTypeId) {
         return mapToWorkBasketInputDefinition(this.genericLayoutRepository.findWorkbasketInputByCaseTypeReference(caseTypeId), caseTypeId);
     }
+
     public WorkBasketResult findWorkBasketDefinitionForCaseType(String caseTypeId) {
         return mapToWorkBasketResult(this.genericLayoutRepository.findWorkbasketByCaseTypeReference(caseTypeId), caseTypeId);
     }
