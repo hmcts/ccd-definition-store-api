@@ -13,7 +13,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -66,6 +69,13 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     String caseTypeValidation(CaseTypeValidationException e) {
         log.error("Exception thrown {}", e.getMessage(), e);
         return getMessagesAsString(e.getErrors());
+    }
+
+    @ExceptionHandler(FileStorageException.class)
+    public void handleFileStorageException(HttpServletResponse response,
+                                           FileStorageException fileStorageException) throws IOException {
+        log.error("Exception thrown: {}", fileStorageException.getMessage(), fileStorageException);
+        response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
     private String flattenExceptionMessages(RuntimeException ex) {
