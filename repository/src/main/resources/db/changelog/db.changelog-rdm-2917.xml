@@ -10,13 +10,13 @@
             <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
-            <column name="reference"  type="varchar(40)" >
+            <column name="reference"  type="varchar(255)" >
                 <constraints nullable="false" />
             </column>
-            <column name="name" type="varchar(40)">
+            <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description"  type="varchar(128)" >
+            <column name="description"  type="varchar(255)" >
                 <constraints nullable="true" />
             </column>
             <column name="case_type_id" type="integer">
@@ -25,17 +25,20 @@
             <column name="created_at" type="datetime" defaultValue="now()">
                 <constraints nullable="false"/>
             </column>
+            <column name="user_role_id" type="integer" >
+                <constraints nullable="true"/>
+            </column>
+            <column name="security_classification" type="security_classification" defaultValue="PUBLIC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dtype" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addPrimaryKey columnNames="id"
                        constraintName="pk_role"
                        tableName="role"/>
-
-        <addForeignKeyConstraint baseColumnNames="case_type_id"
-                                 baseTableName="role"
-                                 constraintName="fk_role_case_type_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="case_type"/>
 
         <addUniqueConstraint columnNames="case_type_id, reference"
                              constraintName="unique_role_case_type_id_role_reference"
@@ -48,34 +51,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="case_type"/>
 
-        <!-- Change precision of reference, name and description columns in role table -->
-        <modifyDataType columnName="reference" newDataType="varchar(255)" tableName="role"/>
-        <modifyDataType columnName="name" newDataType="varchar(255)" tableName="role"/>
-        <modifyDataType columnName="description" newDataType="varchar(255)" tableName="role"/>
-
-        <!-- Add new security_classification, user_role_id and dtype fields to the role table -->
-        <addColumn tableName="role">
-            <column name="user_role_id" type="integer" >
-                <constraints nullable="true"/>
-            </column>
-            <column name="security_classification" type="security_classification" defaultValue="PUBLIC">
-                <constraints nullable="true"/>
-            </column>
-            <column name="dtype" type="varchar(10)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-
         <!-- copy table data to the new case_field_acl table -->
         <sql>
             insert into role (reference, name, description, case_type_id, security_classification, dtype)
               select reference, name, description, case_type_id, 'PUBLIC','CASEROLE' as dtype from case_role;
         </sql>
-        <!-- Add not null constraint for security_classification column in role table-->
-        <addNotNullConstraint columnDataType="security_classification"
-                              columnName="security_classification"
-                              defaultNullValue="PUBLIC"
-                              tableName="role"/>
 
         <!-- Add check constraint 'case_type_id is not null when role entity type is case role' -->
         <sql>
@@ -100,8 +80,6 @@
         </sql>
         <!-- END - role table -->
 
-
-
         <!-- START - case_field_acl table -->
         <!-- create the new case_field_acl table -->
         <createTable tableName="case_field_acl">
@@ -110,6 +88,9 @@
             </column>
             <column name="case_field_id" type="integer">
                 <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="integer" >
+                <constraints nullable="true"/>
             </column>
             <column name="user_role_id" type="integer">
                 <constraints nullable="true"/>
@@ -160,18 +141,6 @@
                              constraintName="unique_case_field_acl_case_field_id_user_role_id"
                              tableName="case_field_acl"/>
 
-        <!-- copy table data to the new case_field_acl table -->
-        <sql>
-            insert into case_field_acl select * from case_field_user_role;
-        </sql>
-
-        <!-- Add new role_id column to the case_field_acl table -->
-        <addColumn tableName="case_field_acl">
-            <column name="role_id" type="integer" >
-                <constraints nullable="true"/>
-            </column>
-        </addColumn>
-
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="case_field_acl"
@@ -184,6 +153,11 @@
                              constraintName="unique_case_field_acl_case_field_id_role_id"
                              tableName="case_field_acl"/>
 
+
+        <!-- copy table data to the new case_field_acl table -->
+        <sql>
+            insert into case_field_acl select * from case_field_user_role;
+        </sql>
 
         <!-- alter case_field_acl_id sequence value for integrity -->
         <sql>
@@ -201,8 +175,6 @@
         <addNotNullConstraint columnDataType="integer" columnName="role_id" tableName="case_field_acl"/>
         <!-- END - case_field_acl table -->
 
-
-
         <!-- START - case_type_acl table -->
         <!-- create the new case_type_acl table -->
         <createTable tableName="case_type_acl">
@@ -211,6 +183,9 @@
             </column>
             <column name="case_type_id" type="integer">
                 <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="integer" >
+                <constraints nullable="true"/>
             </column>
             <column name="user_role_id" type="integer">
                 <constraints nullable="true"/>
@@ -261,18 +236,6 @@
                              constraintName="unique_case_type_acl_case_type_id_user_role_id"
                              tableName="case_type_acl"/>
 
-        <!-- copy table data to the new case_type_acl table -->
-        <sql>
-            insert into case_type_acl select * from case_type_user_role;
-        </sql>
-
-        <!-- Add new role_id column to the case_type_acl table -->
-        <addColumn tableName="case_type_acl">
-            <column name="role_id" type="integer" >
-                <constraints nullable="true"/>
-            </column>
-        </addColumn>
-
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="case_type_acl"
@@ -284,6 +247,11 @@
         <addUniqueConstraint columnNames="case_type_id, role_id"
                              constraintName="unique_case_type_acl_case_type_id_role_id"
                              tableName="case_type_acl"/>
+
+        <!-- copy table data to the new case_type_acl table -->
+        <sql>
+            insert into case_type_acl select * from case_type_user_role;
+        </sql>
 
         <!-- alter case_type_acl_id sequence value for integrity -->
         <sql>
@@ -301,8 +269,6 @@
         <addNotNullConstraint columnDataType="integer" columnName="role_id" tableName="case_type_acl"/>
         <!-- END - case_type_acl table -->
 
-
-
         <!-- START - event_acl table -->
         <!-- create the new event_acl table -->
         <createTable tableName="event_acl">
@@ -311,6 +277,9 @@
             </column>
             <column name="event_id" type="integer">
                 <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="integer" >
+                <constraints nullable="true"/>
             </column>
             <column name="user_role_id" type="integer">
                 <constraints nullable="true"/>
@@ -361,18 +330,6 @@
                              constraintName="unique_event_acl_event_id_user_role_id"
                              tableName="event_acl"/>
 
-        <!-- copy table data to the new event_acl table -->
-        <sql>
-            insert into event_acl select * from event_acl;
-        </sql>
-
-        <!-- Add new role_id column to the event_acl table -->
-        <addColumn tableName="event_acl">
-            <column name="role_id" type="integer" >
-                <constraints nullable="true"/>
-            </column>
-        </addColumn>
-
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="event_acl"
@@ -384,6 +341,11 @@
         <addUniqueConstraint columnNames="event_id, role_id"
                              constraintName="unique_event_acl_event_id_role_id"
                              tableName="event_acl"/>
+
+        <!-- copy table data to the new event_acl table -->
+        <sql>
+            insert into event_acl select * from event_acl;
+        </sql>
 
         <!-- alter event_acl_id sequence value for integrity -->
         <sql>
@@ -401,8 +363,6 @@
         <addNotNullConstraint columnDataType="integer" columnName="role_id" tableName="event_acl"/>
         <!-- END - event_acl table -->
 
-
-
         <!-- START - state_acl table -->
         <!-- create the new state_acl table -->
         <createTable tableName="state_acl">
@@ -411,6 +371,9 @@
             </column>
             <column name="state_id" type="integer">
                 <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="integer" >
+                <constraints nullable="true"/>
             </column>
             <column name="user_role_id" type="integer">
                 <constraints nullable="true"/>
@@ -460,18 +423,6 @@
                              constraintName="unique_state_acl_state_id_user_role_id"
                              tableName="state_acl"/>
 
-        <!-- copy table data to the new state_acl table -->
-        <sql>
-            insert into state_acl select * from state_user_role;
-        </sql>
-
-        <!-- Add new role_id column to the state_acl table -->
-        <addColumn tableName="state_acl">
-            <column name="role_id" type="integer" >
-                <constraints nullable="true"/>
-            </column>
-        </addColumn>
-
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="state_acl"
@@ -483,6 +434,11 @@
         <addUniqueConstraint columnNames="state_id, role_id"
                              constraintName="unique_state_acl_state_id_role_id"
                              tableName="state_acl"/>
+
+        <!-- copy table data to the new state_acl table -->
+        <sql>
+            insert into state_acl select * from state_user_role;
+        </sql>
 
         <!-- alter state_acl_id sequence value for integrity -->
         <sql>

@@ -1,17 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.state;
 
-import org.junit.Before;
-import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 public class StateEntityACLValidatorImplTest {
     private StateEntity stateEntity;
@@ -21,7 +21,7 @@ public class StateEntityACLValidatorImplTest {
     private StateEntityValidationContext stateEntityValidationContext;
 
     @Before
-    public void setup() {
+    public void setUp() {
         validator = new StateEntityACLValidatorImpl();
         stateACLEntity = new StateACLEntity();
         userRoleEntity = new UserRoleEntity();
@@ -36,7 +36,7 @@ public class StateEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveValidationError_whenUserNotFound() {
+    public void shouldHaveValidationErrorWhenUserNotFound() {
         stateACLEntity.setUserRole(null);
 
         final ValidationResult result = validator.validate(stateEntity, stateEntityValidationContext);
@@ -48,7 +48,7 @@ public class StateEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveNoValidationError_whenUserFound() {
+    public void shouldHaveNoValidationErrorWhenUserFound() {
         stateACLEntity.setUserRole(userRoleEntity);
 
         final ValidationResult result = validator.validate(stateEntity, stateEntityValidationContext);

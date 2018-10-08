@@ -42,7 +42,7 @@ public class RoleRepositoryTest {
     private UserRoleRepository userRoleRepository;
 
     @Autowired
-    CaseTypeRepository caseTypeRepository;
+    private CaseTypeRepository caseTypeRepository;
 
     @Autowired
     private EntityManager entityManager;
@@ -63,7 +63,7 @@ public class RoleRepositoryTest {
 
     private JurisdictionEntity testJurisdiction;
 
-    final CaseTypeEntity caseType = new CaseTypeEntity();
+    private final CaseTypeEntity caseType = new CaseTypeEntity();
 
     @Before
     public void setUp() {
@@ -144,7 +144,7 @@ public class RoleRepositoryTest {
         assertThat(role.getId(), is(notNullValue()));
         assertThat(role.getCreatedAt(), is(notNullValue()));
         assertThat(role.getReference(), is(USER_ROLE_REFERENCE));
-        assertThat(role.getSecurityClassification(), is(SecurityClassification.PUBLIC));
+        assertThat(role.getSecurityClassification(), is(PUBLIC));
     }
 
     @Test
@@ -171,7 +171,7 @@ public class RoleRepositoryTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void shouldFail_whenCreateDuplicateUserRoles() {
+    public void shouldFailWhenCreateDuplicateUserRoles() {
         final UserRoleEntity entity = new UserRoleEntity();
         entity.setReference("xyz = '3'");
         entity.setSecurityClassification(RESTRICTED);
