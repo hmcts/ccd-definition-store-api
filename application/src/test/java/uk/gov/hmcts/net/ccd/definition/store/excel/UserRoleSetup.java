@@ -1,7 +1,5 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
