@@ -296,6 +296,7 @@ class UserRoleControllerTest {
             ;
         }
     }
+
     private UserRole buildUserRole(final String role) {
         return buildUserRole(role, null);
     }

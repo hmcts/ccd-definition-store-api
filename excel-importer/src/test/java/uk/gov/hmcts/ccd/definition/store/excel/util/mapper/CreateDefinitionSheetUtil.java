@@ -11,6 +11,7 @@ import java.util.Map;
  */
 class CreateDefinitionSheetUtil {
     private CreateDefinitionSheetUtil() {}
+
     /**
      * Create a DefinitionDataItem for the given Map of columns and their attribute
      * @param attributes Map of column values for each Column
