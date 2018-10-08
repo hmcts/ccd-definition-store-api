@@ -36,7 +36,6 @@ public class ElasticSearchConfiguration {
         restHighLevelClient = new RestHighLevelClient(builder);
     }
 
-
     @Bean
     public RestHighLevelClient restHighLevelClient() {
         return restHighLevelClient;
