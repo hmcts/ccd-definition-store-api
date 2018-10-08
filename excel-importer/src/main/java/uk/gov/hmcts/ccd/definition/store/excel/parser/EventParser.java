@@ -11,19 +11,18 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
+import static uk.gov.hmcts.ccd.definition.store.excel.parser.WebhookParser.parseWebhook;
 
 public class EventParser {
     private static final Logger logger = LoggerFactory.getLogger(EventParser.class);
     public static final String WILDCARD = "*";
     public static final String PRE_STATE_SEPARATOR = ";";
-    public static final String WEBHOOK_RETRIES_SEPARATOR = ",";
 
     private final ParseContext parseContext;
     private final EventCaseFieldParser eventCaseFieldParser;
@@ -119,25 +118,6 @@ public class EventParser {
         event.setWebhookPostSubmit(parseWebhook(eventDefinition, ColumnName.CALLBACK_URL_SUBMITTED_EVENT, ColumnName.RETRIES_TIMEOUT_URL_SUBMITTED_EVENT));
 
         return event;
-    }
-
-    private WebhookEntity parseWebhook(DefinitionDataItem eventDefinition, ColumnName urlColumn, ColumnName retriesColumn) {
-        WebhookEntity webhook = null;
-
-        final String url = eventDefinition.getString(urlColumn);
-        if (!StringUtils.isBlank(url)) {
-            webhook = new WebhookEntity();
-            webhook.setUrl(url);
-
-            final String retriesRaw = eventDefinition.getString(retriesColumn);
-            if (!StringUtils.isBlank(retriesRaw)) {
-                for (String retry : retriesRaw.split(WEBHOOK_RETRIES_SEPARATOR)) {
-                    webhook.addTimeout(Integer.valueOf(retry));
-                }
-            }
-        }
-
-        return webhook;
     }
 
     private void parseEventCaseFields(CaseTypeEntity caseType, List<EventEntity> events, Map<String, DefinitionSheet> definitionSheets) {
