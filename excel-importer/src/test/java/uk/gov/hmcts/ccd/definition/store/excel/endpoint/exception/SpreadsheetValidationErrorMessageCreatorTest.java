@@ -16,6 +16,9 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEn
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
@@ -52,20 +55,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldUserRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeUserRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventUserRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.Optional;
 
@@ -1079,6 +1069,78 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             "default message",
             classUnderTest.createErrorMessage(
                 new EventEntityCanSaveDraftValidatorImpl.ValidationError("default message", eventEntity))
+        );
+    }
+
+    @Test
+    public void testCreateErrorMessage_CaseRoleEntityMandatoryFieldsValidatorImplValidationError_customMessageReturned() {
+
+        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_ROLE.toString());
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(caseRoleEntity))).thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals("Custom message. WorkSheet 'CaseRoles'",
+                     classUnderTest.createErrorMessage(
+                         new CaseRoleEntityMandatoryFieldsValidatorImpl.ValidationError("Custom message", caseRoleEntity))
+        );
+    }
+
+    @Test
+    public void testCreateErrorMessage_CaseRoleEntityMandatoryFieldsValidatorImplValidationError_defaultMessageReturned() {
+        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
+        assertEquals(
+            "default message",
+            classUnderTest.createErrorMessage(
+                new CaseRoleEntityMandatoryFieldsValidatorImpl.ValidationError("default message", caseRoleEntity))
+        );
+    }
+
+    @Test
+    public void testCreateErrorMessage_CaseRoleEntityFieldValueValidatorImplValidationError_customMessageReturned() {
+
+        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_ROLE.toString());
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(caseRoleEntity))).thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals("Custom message. WorkSheet 'CaseRoles'",
+                     classUnderTest.createErrorMessage(
+                         new CaseRoleEntityFieldValueValidatorImpl.ValidationError("Custom message", caseRoleEntity))
+        );
+    }
+
+    @Test
+    public void testCreateErrorMessage_CaseRoleEntityFieldValueValidatorImplValidationError_defaultMessageReturned() {
+        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
+        assertEquals(
+            "default message",
+            classUnderTest.createErrorMessage(
+                new CaseRoleEntityFieldValueValidatorImpl.ValidationError("default message", caseRoleEntity))
+        );
+    }
+
+    @Test
+    public void testCreateErrorMessage_CaseRoleEntityUniquenessValidatorImplValidationError_customMessageReturned() {
+
+        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_ROLE.toString());
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(caseRoleEntity))).thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals("Custom message. WorkSheet 'CaseRoles'",
+                     classUnderTest.createErrorMessage(
+                         new CaseRoleEntityUniquenessValidatorImpl.ValidationError("Custom message", caseRoleEntity))
+        );
+    }
+
+    @Test
+    public void testCreateErrorMessage_CaseRoleEntityUniquenessValidatorImplValidationError_defaultMessageReturned() {
+        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
+        assertEquals(
+            "default message",
+            classUnderTest.createErrorMessage(
+                new CaseRoleEntityUniquenessValidatorImpl.ValidationError("default message", caseRoleEntity))
         );
     }
 

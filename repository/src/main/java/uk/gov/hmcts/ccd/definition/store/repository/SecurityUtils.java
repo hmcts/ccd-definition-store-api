@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
-import uk.gov.hmcts.reform.auth.checker.spring.useronly.UserDetails;
+import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import javax.inject.Named;
@@ -25,10 +25,18 @@ public class SecurityUtils {
         return headers;
     }
 
-    private UserDetails currentUser() {
+    public ServiceAndUserDetails getCurrentUser() {
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return (ServiceAndUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
         return null;
+    }
+
+    public HttpHeaders userAuthorizationHeaders() {
+        final ServiceAndUserDetails serviceAndUser =
+            (ServiceAndUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, serviceAndUser.getPassword());
+        return headers;
     }
 }

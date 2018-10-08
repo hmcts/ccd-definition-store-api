@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 

@@ -294,6 +294,115 @@ class EntityToResponseDTOMapperTest {
         }
     }
 
+
+    @Nested
+    @DisplayName("Should return a CaseEventLite which matches the CaseEventLiteEntity")
+    class MapEventLiteEntityTests {
+
+        @Test
+        void testMapEventLiteEntity() {
+
+            StateLiteEntity preState = new StateLiteEntity();
+            preState.setReference("some state");
+
+            EventLiteEntity eventLiteEntity = new EventLiteEntity();
+            eventLiteEntity.setId(1);
+            eventLiteEntity.setCanCreate(false);
+            eventLiteEntity.setName("Some name");
+            eventLiteEntity.setReference("Some reference");
+            eventLiteEntity.setDescription("Some Description");
+            eventLiteEntity.getPreStates().add(preState);
+
+            CaseEventLite caseEventLite = classUnderTest.map(eventLiteEntity);
+
+            assertEquals(eventLiteEntity.getDescription(), caseEventLite.getDescription());
+            assertEquals(eventLiteEntity.getName(), caseEventLite.getName());
+            assertEquals(eventLiteEntity.getPreStates().size(), caseEventLite.getPreStates().size());
+            assertEquals(eventLiteEntity.getReference(), caseEventLite.getId());
+
+        }
+
+        @Test
+        void testMapEmptyJurisdictionEntity() {
+
+            EventLiteEntity eventLiteEntity = new EventLiteEntity();
+            eventLiteEntity.setCanCreate(true);
+
+            CaseEventLite caseEventLite = classUnderTest.map(eventLiteEntity);
+
+            assertNull(caseEventLite.getDescription());
+            assertNull(caseEventLite.getName());
+            assertEquals(0, caseEventLite.getPreStates().size());
+            assertNull(caseEventLite.getId());
+
+        }
+    }
+
+    @Nested
+    @DisplayName("Should return a CaseTypeLite which matches the CaseTypeLiteEntity")
+    class MapCaseTypeLiteEntityTests {
+
+        @Test
+        void testMapCaseTypeLiteEntity() {
+
+            // Set up
+            JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
+            Jurisdiction jurisdiction = new Jurisdiction();
+            when(spyOnClassUnderTest.map(jurisdictionEntity)).thenReturn(jurisdiction);
+
+            EventLiteEntity eventEntity1 = new EventLiteEntity();
+            EventLiteEntity eventEntity2 = new EventLiteEntity();
+            EventLiteEntity eventEntity3 = new EventLiteEntity();
+            CaseEventLite caseEvent1 = new CaseEventLite();
+            CaseEventLite caseEvent2 = new CaseEventLite();
+            CaseEventLite caseEvent3 = new CaseEventLite();
+            when(spyOnClassUnderTest.map(eventEntity1)).thenReturn(caseEvent1);
+            when(spyOnClassUnderTest.map(eventEntity2)).thenReturn(caseEvent2);
+            when(spyOnClassUnderTest.map(eventEntity3)).thenReturn(caseEvent3);
+
+            StateLiteEntity stateEntity1 = new StateLiteEntity();
+            StateLiteEntity stateEntity2 = new StateLiteEntity();
+            StateLiteEntity stateEntity3 = new StateLiteEntity();
+            CaseStateLite caseState1 = new CaseStateLite();
+            CaseStateLite caseState2 = new CaseStateLite();
+            CaseStateLite caseState3 = new CaseStateLite();
+            when(spyOnClassUnderTest.map(stateEntity1)).thenReturn(caseState1);
+            when(spyOnClassUnderTest.map(stateEntity2)).thenReturn(caseState2);
+            when(spyOnClassUnderTest.map(stateEntity3)).thenReturn(caseState3);
+
+            CaseTypeLiteEntity caseTypeLiteEntity = new CaseTypeLiteEntity();
+            caseTypeLiteEntity.setName("some state name");
+            caseTypeLiteEntity.setReference("some state ref");
+            caseTypeLiteEntity.setDescription("some state description");
+            caseTypeLiteEntity.addEvent(eventEntity1).addEvent(eventEntity2).addEvent(eventEntity3);
+            caseTypeLiteEntity.addState(stateEntity1).addState(stateEntity2).addState(stateEntity3);
+            caseTypeLiteEntity.setJurisdiction(jurisdictionEntity);
+
+            CaseTypeLite caseTypeLite = classUnderTest.map(caseTypeLiteEntity);
+
+            assertEquals(caseTypeLiteEntity.getDescription(), caseTypeLite.getDescription());
+            assertEquals(caseTypeLiteEntity.getName(), caseTypeLite.getName());
+            assertEquals(caseTypeLiteEntity.getReference(), caseTypeLite.getId());
+
+            assertEquals(3, caseTypeLite.getEvents().size());
+
+            assertEquals(3, caseTypeLite.getStates().size());
+        }
+
+        @Test
+        void testMapEmptyCaseTypeLiteEntity() {
+
+            CaseTypeLiteEntity caseTypeLiteEntity = new CaseTypeLiteEntity();
+
+            CaseTypeLite caseTypeLite = classUnderTest.map(caseTypeLiteEntity);
+
+            assertNull(caseTypeLite.getDescription());
+            assertNull(caseTypeLite.getName());
+            assertNull(caseTypeLite.getId());
+
+        }
+    }
+
     @Nested
     @DisplayName("Should create a CaseEvent matching EventEntity fields, with the following exceptions/amendments:" +
         "- preStates should be empty if canCreate is true " +
@@ -837,6 +946,30 @@ class EntityToResponseDTOMapperTest {
 
         }
 
+    }
+
+    @Nested
+    @DisplayName("Should return a CaseRole that matches CaseRoleEntity")
+    class CaseRoleEntityTests {
+        private final String REFERENCE = "Ref";
+        private final String NAME = "Name";
+        private final String DESCRIPTION = "Some description";
+
+        @Test
+        void shouldReturnCaseRole() {
+            CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
+            caseRoleEntity.setReference(REFERENCE);
+            caseRoleEntity.setName(NAME);
+            caseRoleEntity.setDescription(DESCRIPTION);
+
+            final CaseRole caseRole = classUnderTest.map(caseRoleEntity);
+
+            assertAll(
+                () -> assertThat(caseRole.getId(), is(caseRoleEntity.getReference())),
+                () -> assertThat(caseRole.getName(), is(caseRoleEntity.getName())),
+                () -> assertThat(caseRole.getDescription(), is(caseRoleEntity.getDescription()))
+            );
+        }
     }
 
     @Nested

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -133,6 +134,57 @@ class UserRoleServiceImplTest {
     }
 
     @Nested
+    @DisplayName("Create Role Tests")
+    class CreateTests {
+        @Test
+        @DisplayName("should create role is saved")
+        void shouldCreate_whenCreateRole() {
+
+            final String role = "create";
+            final ArgumentCaptor<UserRoleEntity> argumentCaptor = ArgumentCaptor.forClass(UserRoleEntity.class);
+
+            givenUserRole(role, RESTRICTED);
+            givenEntityWithRole(role);
+
+            doReturn(Optional.empty()).when(repository).findTopByRole(role);
+            doReturn(entity).when(repository).save(argumentCaptor.capture());
+
+            final UserRole saved = service.createRole(mockUserRole).getResponseBody();
+            final UserRoleEntity captured = argumentCaptor.getValue();
+
+            verify(repository).save(any(UserRoleEntity.class));
+            assertThat(captured.getRole(), is(role));
+            assertThat(captured.getSecurityClassification(), is(RESTRICTED));
+
+
+            verify(entity, never()).setSecurityClassification(any());
+            verify(entity, never()).setRole(anyString());
+
+            assertThat(saved.getRole(), is(role));
+            assertThat(saved.getSecurityClassification(), is(RESTRICTED));
+
+        }
+
+        @Test
+        @DisplayName("should throw exception when role duplicate role is being saved")
+        void shouldThrowExceptionwhenCreateRole() {
+
+            final String role = "create";
+            final ArgumentCaptor<UserRoleEntity> argumentCaptor = ArgumentCaptor.forClass(UserRoleEntity.class);
+            final UserRoleEntity savedEntity = mock(UserRoleEntity.class);
+
+            givenUserRole(role, PUBLIC);
+            givenEntityWithRole(role);
+            givenEntityWithRole(role, PUBLIC, savedEntity);
+
+            doReturn(Optional.of(entity)).when(repository).findTopByRole(role);
+
+            Throwable thrown = assertThrows(DuplicateUserRoleException.class, () -> service.createRole(mockUserRole));
+            assertEquals("User role already exists", thrown.getMessage());
+        }
+    }
+
+    @Nested
     @DisplayName("GetRoles Tests")
     class GetRolesTests {
         @Test
@@ -166,6 +218,44 @@ class UserRoleServiceImplTest {
             doReturn(Collections.EMPTY_LIST).when(repository).findByRoleIn(Arrays.asList(roleNames));
 
             List<UserRole> userRoles = service.getRoles(Arrays.asList(roleNames));
+
+            assertThat(userRoles.size(), is(0));
+        }
+    }
+
+    @Nested
+    @DisplayName("Get All Roles Tests")
+    class GetAllRolesTests {
+        @Test
+        @DisplayName("should return all userRoles")
+        void getRoles() {
+            String[] roleNames = {"role1", "role2", "role3"};
+            UserRoleEntity entity2 = mock(UserRoleEntity.class);
+            givenUserRole(roleNames[0], PUBLIC);
+            givenEntityWithRole(roleNames[0], RESTRICTED, entity);
+            givenUserRole(roleNames[2], PUBLIC);
+            givenEntityWithRole(roleNames[2], PUBLIC, entity2);
+
+            doReturn(Arrays.asList(entity, entity2)).when(repository).findAll();
+
+            List<UserRole> userRoles = service.getRoles();
+
+            assertAll(
+                () -> assertThat(userRoles.get(0).getId(), is(-3)),
+                () -> assertThat(userRoles.get(0).getRole(), is(roleNames[0])),
+                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(RESTRICTED)),
+                () -> assertThat(userRoles.get(1).getId(), is(-3)),
+                () -> assertThat(userRoles.get(1).getRole(), is(roleNames[2])),
+                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(PUBLIC))
+            );
+        }
+
+        @Test
+        @DisplayName("should return empty if none are available")
+        void getNonExistentRoles() {
+            doReturn(Collections.EMPTY_LIST).when(repository).findAll();
+
+            List<UserRole> userRoles = service.getRoles();
 
             assertThat(userRoles.size(), is(0));
         }
