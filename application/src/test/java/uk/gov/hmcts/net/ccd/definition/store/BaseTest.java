@@ -26,6 +26,7 @@ import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -39,6 +40,9 @@ import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClient;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
@@ -69,6 +73,19 @@ public abstract class BaseTest {
 
     @Autowired
     private ImportServiceImpl importService;
+
+    @MockBean
+    protected FileStorageService fileStorageService;
+
+    // Mock the AzureBlobStorageClient component, to prevent it being initialised (which requires connection to Azure
+    // Storage) during application startup when testing
+    @MockBean
+    private AzureBlobStorageClient storageClient;
+
+    // Mock the AzureStorageConfiguration component, to prevent it being initialised (which requires connection to Azure
+    // Storage) during application startup when testing
+    @MockBean
+    private AzureStorageConfiguration azureStorageConfiguration;
 
     protected MockMvc mockMvc;
     protected JdbcTemplate jdbcTemplate;
@@ -102,6 +119,9 @@ public abstract class BaseTest {
         doReturn(idamProperties).when(importService).getUserDetails();
 
         userRoleIds = new UserRoleSetup(jdbcTemplate).addUserRoleTestData();
+
+        // Enable Definition file upload to Azure (mocked)
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
     }
 
     protected DisplayItemsData mapDisplayItemsData(ResultSet resultSet, Integer i) throws SQLException {
