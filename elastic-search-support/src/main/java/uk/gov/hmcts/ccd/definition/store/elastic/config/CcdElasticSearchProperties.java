@@ -21,6 +21,7 @@ public class CcdElasticSearchProperties {
     private Map<String, String> casePredefinedMappings;
     private List<String> ccdIgnoredTypes;
     private String securityClassificationMapping;
+    private boolean enabled;
 
     public String getHost() {
         return host;
@@ -124,5 +125,13 @@ public class CcdElasticSearchProperties {
 
     public void setDynamic(String dynamic) {
         this.dynamic = dynamic;
+    }
+
+    public boolean isElasticSearchEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

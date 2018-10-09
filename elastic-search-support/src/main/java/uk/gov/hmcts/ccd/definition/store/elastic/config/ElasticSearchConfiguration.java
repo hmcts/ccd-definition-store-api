@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("uk.gov.hmcts.ccd.definition.store.elastic")
 @EnableConfigurationProperties(value = CcdElasticSearchProperties.class)
-@ConditionalOnProperty(name = "elasticsearch.enabled")
 @Slf4j
 public class ElasticSearchConfiguration {
 
@@ -31,12 +30,15 @@ public class ElasticSearchConfiguration {
 
     @PostConstruct
     public void init() {
-        RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort())).setMaxRetryTimeoutMillis(60000);
-        RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
-            requestConfigBuilder.setConnectTimeout(5000)
-                .setSocketTimeout(60000);
-        builder.setRequestConfigCallback(requestConfigCallback);
-        restHighLevelClient = new RestHighLevelClient(builder);
+
+        if (config.isElasticSearchEnabled()) {
+            RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort())).setMaxRetryTimeoutMillis(60000);
+            RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
+                requestConfigBuilder.setConnectTimeout(5000)
+                    .setSocketTimeout(60000);
+            builder.setRequestConfigCallback(requestConfigCallback);
+            restHighLevelClient = new RestHighLevelClient(builder);
+        }
     }
 
     @Bean
