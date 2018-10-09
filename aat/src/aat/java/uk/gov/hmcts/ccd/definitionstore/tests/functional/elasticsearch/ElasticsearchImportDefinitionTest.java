@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.hasKey;
@@ -11,11 +12,12 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
@@ -37,39 +39,60 @@ class ElasticsearchImportDefinitionTest extends BaseTest {
     static void setUp() {
         // stop execution of these tests if the env variable is not set
         boolean elasticsearchEnabled = ofNullable(System.getenv("ELASTIC_SEARCH_ENABLED")).map(Boolean::valueOf).orElse(false);
-        assumeTrue(!elasticsearchEnabled, () -> "Ignoring Elasticsearch tests, variable ELASTIC_SEARCH_ENABLED not set");
+        assumeTrue(elasticsearchEnabled, () -> "Ignoring Elasticsearch tests, variable ELASTIC_SEARCH_ENABLED not set");
     }
 
-    @Nested
-    @DisplayName("successful run")
-    class SuccessfulRun {
+    @Test
+    @DisplayName("should import a valid definition multiple times and create Elasticsearch index, alias and field mappings")
+    void shouldImportValidDefinitionMultipleTimes() {
+        // invoke definition import
+        asAutoTestImporter().get()
+            .given()
+            .multiPart(new File(DEFINITION_FILE))
+            .expect()
+            .statusCode(201)
+            .when()
+            .post("/import");
 
-        @Test
-        @DisplayName("should import a valid definition multiple times and create Elasticsearch index, alias and field mappings")
-        void shouldImportValidDefinitionMultipleTimes() {
-            // invoke definition import
-            asAutoTestImporter().get()
-                .given()
-                .multiPart(new File(DEFINITION_FILE))
-                .expect()
-                .statusCode(201)
-                .when()
-                .post("/import");
+        verifyIndexAndFieldMappings(false);
 
-            verifyIndexAndFieldMappings(false);
+        // invoke definition import second time
+        asAutoTestImporter().get()
+            .given()
+            .multiPart(new File(DEFINITION_FILE_WITH_NEW_FIELD))
+            .expect()
+            .statusCode(201)
+            .when()
+            .post("/import");
 
-            // invoke definition import second time
-            asAutoTestImporter().get()
-                .given()
-                .multiPart(new File(DEFINITION_FILE_WITH_NEW_FIELD))
-                .expect()
-                .statusCode(201)
-                .when()
-                .post("/import");
+        verifyIndexAndFieldMappings(true);
+    }
 
-            verifyIndexAndFieldMappings(true);
-        }
+    @AfterEach
+    void tearDown() {
+        removeAlias();
+        deleteIndex();
+    }
 
+    private void removeAlias() {
+        asElasticsearchApiUser()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"actions\":[{\"remove\":{\"index\":\"" + CASE_INDEX_NAME + "\",\"alias\":\"" + CASE_INDEX_ALIAS + "\"}}]}")
+            .when()
+            .post("_aliases")
+            .then()
+            .statusCode(200);
+    }
+
+    private void deleteIndex() {
+        // deletes the index
+        asElasticsearchApiUser()
+            .when()
+            .delete(CASE_INDEX_NAME)
+            .then()
+            .statusCode(200)
+            .body("acknowledged", equalTo(true));
     }
 
     private void verifyIndexAndFieldMappings(boolean verifyNewFields) {
