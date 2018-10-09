@@ -26,8 +26,10 @@ class ElasticsearchImportDefinitionTest extends BaseTest {
 
     private static final String DEFINITION_FILE = "src/resource/CCD_TEST_ES.xlsx";
     private static final String DEFINITION_FILE_WITH_NEW_FIELD = "src/resource/CCD_TEST_ES_WithNewField.xlsx";
+
     private static final String CASE_INDEX_NAME = "es_test_cases-000001";
     private static final String CASE_INDEX_ALIAS = "es_test_cases";
+    private static final String LONG_FIELD_TYPE = "long";
     private static final String TEXT_FIELD_TYPE = "text";
     private static final String DATE_FIELD_TYPE = "date";
     private static final String NUMBER_FIELD_TYPE = "double";
@@ -121,7 +123,7 @@ class ElasticsearchImportDefinitionTest extends BaseTest {
             asElasticsearchApiUser()
                 .given()
                 .contentType(ContentType.JSON)
-                .body("{\"actions\":[{\"remove\":{\"index\":\""+CASE_INDEX_NAME+"\",\"alias\":\""+CASE_INDEX_ALIAS+"\"}}]}")
+                .body("{\"actions\":[{\"remove\":{\"index\":\"" + CASE_INDEX_NAME + "\",\"alias\":\"" + CASE_INDEX_ALIAS + "\"}}]}")
                 .when()
                 .post("_aliases")
                 .then()
@@ -138,7 +140,32 @@ class ElasticsearchImportDefinitionTest extends BaseTest {
             .statusCode(200);
 
         verifyIndexAndAlias(response);
+        verifyMetadataFields(response);
+        verifyCaseDataFields(response, verifyNewFields);
+    }
 
+    private RequestSpecification asElasticsearchApiUser() {
+        return RestAssured.given(new RequestSpecBuilder()
+                                     .setBaseUri(aat.getElasticsearchBaseUri())
+                                     .build());
+    }
+
+    private void verifyIndexAndAlias(ValidatableResponse response) {
+        response
+            .body("", hasKey(CASE_INDEX_NAME))
+            .body(CASE_INDEX_NAME + ".aliases", hasKey(CASE_INDEX_ALIAS));
+    }
+
+    private void verifyMetadataFields(ValidatableResponse response) {
+        response.root(CASE_INDEX_NAME + ".mappings.case.properties");
+
+        verifyFieldsAndType(response, LONG_FIELD_TYPE, "id");
+        verifyFieldsAndType(response, TEXT_FIELD_TYPE, "jurisdiction", "reference", "state");
+        verifyFieldsAndType(response, DATE_FIELD_TYPE, "last_modified", "created_date");
+        verifyFieldsAndType(response, KEYWORD_FIELD_TYPE, "security_classification");
+    }
+
+    private void verifyCaseDataFields(ValidatableResponse response, boolean verifyNewFields) {
         response.root(CASE_INDEX_NAME + ".mappings.case.properties.data.properties");
 
         verifyAddressField(response);
@@ -154,32 +181,20 @@ class ElasticsearchImportDefinitionTest extends BaseTest {
         }
     }
 
-    private RequestSpecification asElasticsearchApiUser() {
-        return RestAssured.given(new RequestSpecBuilder()
-                                     .setBaseUri(aat.getElasticsearchBaseUri())
-                                     .build());
+    private void verifyAddressField(ValidatableResponse response) {
+        response.appendRoot("AddressUKField.properties");
+        verifyFieldsAndType(response, TEXT_FIELD_TYPE, "AddressLine1", "PostCode", "Country");
+        response.detachRoot("AddressUKField.properties");
     }
 
-    private void verifyIndexAndAlias(ValidatableResponse responseBody) {
-        responseBody
-            .body("", hasKey(CASE_INDEX_NAME))
-            .body(CASE_INDEX_NAME + ".aliases", hasKey(CASE_INDEX_ALIAS));
-    }
-
-    private void verifyAddressField(ValidatableResponse responseBody) {
-        responseBody.appendRoot("AddressUKField.properties");
-        verifyFieldsAndType(responseBody, TEXT_FIELD_TYPE, "AddressLine1", "PostCode", "Country");
-        responseBody.detachRoot("AddressUKField.properties");
-    }
-
-    private void verifyFieldsAndType(ValidatableResponse responseBody, String type, String... fields) {
-        Stream.of(fields).forEach(field -> responseBody
+    private void verifyFieldsAndType(ValidatableResponse response, String type, String... fields) {
+        Stream.of(fields).forEach(field -> response
             .body("", hasKey(field))
             .body(field + ".type", is(type)));
     }
 
-    private void verifyFieldsDoNotOccurInResponse(ValidatableResponse responseBody, String... fields) {
-        Stream.of(fields).forEach(field -> responseBody.body("", not(hasKey(field))));
+    private void verifyFieldsDoNotOccurInResponse(ValidatableResponse response, String... fields) {
+        Stream.of(fields).forEach(field -> response.body("", not(hasKey(field))));
     }
 
 }
