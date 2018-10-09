@@ -9,6 +9,7 @@ import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.Definitio
 import uk.gov.hmcts.ccd.definition.store.excel.util.DateTimeStringGenerator;
 
 @Service(value = "azureBlobStorageClient")
+@ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
 public class AzureBlobStorageClient implements FileStorageClient {
 
     private final CloudBlobContainer cloudBlobContainer;

@@ -41,8 +41,8 @@ public class ImportController {
 
     @Autowired
     public ImportController(ImportServiceImpl importService,
-                            FileStorageService fileStorageService,
-                            AzureStorageConfiguration azureStorageConfiguration) {
+                            @Autowired(required = false) FileStorageService fileStorageService,
+                            @Autowired(required = false) AzureStorageConfiguration azureStorageConfiguration) {
         this.importService = importService;
         this.fileStorageService = fileStorageService;
         this.azureStorageConfiguration = azureStorageConfiguration;
@@ -63,9 +63,11 @@ public class ImportController {
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes));
 
-            if (azureStorageConfiguration.isAzureUploadEnabled()) {
-                LOG.info("Uploading Definition file to Azure Storage...");
-                fileStorageService.uploadFile(file, metadata);
+            if (azureStorageConfiguration != null && azureStorageConfiguration.isAzureUploadEnabled()) {
+                if (fileStorageService != null) {
+                    LOG.info("Uploading Definition file to Azure Storage...");
+                    fileStorageService.uploadFile(file, metadata);
+                }
             }
 
             return new ResponseEntity<>("Case Definition data successfully imported", HttpStatus.CREATED);

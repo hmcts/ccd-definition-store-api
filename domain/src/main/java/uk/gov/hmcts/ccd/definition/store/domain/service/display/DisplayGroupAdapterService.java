@@ -31,7 +31,7 @@ public class DisplayGroupAdapterService {
     }
 
     public WizardPageCollection findWizardPagesByCaseTypeId(String caseTypeReference, String eventReference) {
-        Optional<CaseTypeEntity> caseTypeEntity = this.caseTypeRepository.findCurrentVersionForReference(caseTypeReference);
+        Optional<CaseTypeEntity> caseTypeEntity = caseTypeRepository.findCurrentVersionForReference(caseTypeReference);
         if (caseTypeEntity.isPresent()) {
             List<EventEntity> events = eventRepository.findByReferenceAndCaseTypeId(eventReference, caseTypeEntity.get().getId());
             if (events.size() == 1) {
@@ -42,6 +42,12 @@ public class DisplayGroupAdapterService {
                     wizardPage.setId(displayGroupEntity.getReference());
                     wizardPage.setLabel(displayGroupEntity.getLabel());
                     wizardPage.setOrder(displayGroupEntity.getOrder());
+
+                    Optional.ofNullable(displayGroupEntity.getWebhookMidEvent()).ifPresent(webhookEntity -> {
+                        wizardPage.setCallBackURLMidEvent(webhookEntity.getUrl());
+                        wizardPage.setRetriesTimeoutMidEvent(webhookEntity.getTimeouts());
+                    });
+
                     wizardPage.setShowCondition(displayGroupEntity.getShowCondition());
                     displayGroupEntity.getDisplayGroupCaseFields().forEach(displayGroupCaseFieldEntity -> {
                         WizardPageField wizardPageField = new WizardPageField();
