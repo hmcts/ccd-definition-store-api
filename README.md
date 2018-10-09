@@ -17,6 +17,9 @@ Definitions are imported as an Excel spreadsheet which are parsed, persisted and
 
 Spring Boot and Spring Data are used to persist the data in a PostgreSQL database. The database schema is created and maintained by Liquibase changesets applied during application startup.
 
+Moreover, if the feature is enabled, the ElasticSearch cluster is initialised when a definition file is imported. For each case type, an index, an alias, 
+and a mapping is created on ElasticSearch. 
+
 ## Getting started
 
 ### Prerequisites
