@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules.CaseTypeValidationResult;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.DuplicateFoundException;
 
 import java.io.IOException;
@@ -99,5 +100,17 @@ class ControllerExceptionHandlerTest {
             );
         }
     }
+
+    @Test
+    void elasticSearchInitialisationException() {
+        Map<String, String> details = handler.elasticSearchInitialisationException(
+            new ElasticSearchInitialisationException(new ArrayIndexOutOfBoundsException("test")));
+
+        assertAll(
+            () -> assertThat(details, is(notNullValue())),
+            () -> assertThat(details.get("message"), containsString("ElasticSearch initialisation exception"))
+        );
+    }
+
 
 }

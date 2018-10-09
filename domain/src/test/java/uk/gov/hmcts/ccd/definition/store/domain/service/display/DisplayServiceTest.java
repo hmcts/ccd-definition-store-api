@@ -27,10 +27,13 @@ import static org.mockito.Mockito.when;
 public class DisplayServiceTest {
 
     @Mock
-    private DisplayGroupRepository displayGroupRepository;
+    private GenericLayoutRepository genericLayoutRepository;
 
     @Mock
-    private GenericLayoutRepository genericLayoutRepository;
+    private DisplayGroupAdapterService displayGroupAdapterService;
+
+    @Mock
+    private DisplayGroupRepository displayGroupRepository;
 
     @Mock
     private EntityToResponseDTOMapper entityToResponseDTOMapper;
@@ -308,4 +311,17 @@ public class DisplayServiceTest {
 
     }
 
+    @Nested
+    class FindWizardPageForCaseType {
+
+        @Test
+        public void delegatesToDisplayGroupAdapterService() {
+            String caseTypeId = "CaseTypeId";
+            String createCaseEvent = "createCaseEvent";
+
+            classUnderTest.findWizardPageForCaseType(caseTypeId, createCaseEvent);
+
+            verify(displayGroupAdapterService).findWizardPagesByCaseTypeId(caseTypeId, createCaseEvent);
+        }
+    }
 }

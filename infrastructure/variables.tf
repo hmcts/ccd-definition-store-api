@@ -87,3 +87,35 @@ variable "idam_api_url" {
 variable "authorised-services" {
   default = "ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp"
 }
+
+////////////////////////////////
+// ELASTIC SEARCH
+////////////////////////////////
+
+variable "elastic_search_port" {
+  default = "9200"
+}
+
+variable "elastic_search_enabled" {
+  default = "false"
+}
+
+variable "elastic_search_index_shards" {
+  default = "2"
+}
+
+variable "elastic_search_index_shards_replicas" {
+  default = "1"
+}
+
+variable "elastic_search_fail_on_import" {
+  default = "false"
+}
+
+variable "elastic_search_dynamc" {
+  default = "strict"
+}
+
+variable "elastic_search_case_index_name_format" {
+  default = "%s_cases"
+}

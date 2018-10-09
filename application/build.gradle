@@ -12,6 +12,7 @@ dependencies {
     compile project(':app-insights')
     compile project(':rest-api')
     compile project(':excel-importer')
+    compile project(':elastic-search-support')
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
