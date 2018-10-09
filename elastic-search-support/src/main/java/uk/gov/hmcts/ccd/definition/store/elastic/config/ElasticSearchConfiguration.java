@@ -10,6 +10,8 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("uk.gov.hmcts.ccd.definition.store.elastic")
 @EnableConfigurationProperties(value = CcdElasticSearchProperties.class)
+@ConditionalOnProperty(name = "elasticsearch.enabled")
 @Slf4j
 public class ElasticSearchConfiguration {
 
