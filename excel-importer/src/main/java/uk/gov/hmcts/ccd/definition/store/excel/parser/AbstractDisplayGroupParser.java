@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static uk.gov.hmcts.ccd.definition.store.excel.parser.WebhookParser.parseWebhook;
 
 public abstract class AbstractDisplayGroupParser implements FieldShowConditionParser {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -124,6 +125,9 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         group.setOrder(sample.getInteger(this.displayGroupOrder));
         group.setType(this.displayGroupType);
         group.setPurpose(this.displayGroupPurpose);
+        group.setWebhookMidEvent(parseWebhook(sample,
+            ColumnName.CALLBACK_URL_MID_EVENT, ColumnName.RETRIES_TIMEOUT_URL_MID_EVENT));
+
         String eventId = sample.getString(ColumnName.CASE_EVENT_ID);
         if (eventId != null) { // eventId is only for Wizards and not mandatory
             group.setEvent(parseContext.getEventForCaseType(caseType.getReference(), eventId));

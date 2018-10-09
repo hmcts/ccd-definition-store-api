@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @ApiModel(description = "")
@@ -15,6 +16,8 @@ public class WizardPage {
     private Integer order = null;
     private List<WizardPageField> wizardPageFields = new ArrayList<>();
     private String showCondition;
+    private String callBackURLMidEvent;
+    private List<Integer> retriesTimeoutMidEvent;
 
     @ApiModelProperty(value = "")
     @JsonProperty("id")
@@ -53,6 +56,26 @@ public class WizardPage {
 
     public void setWizardPageFields(List<WizardPageField> wizardPageFields) {
         this.wizardPageFields = wizardPageFields;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("callback_url_mid_event")
+    public String getCallBackURLMidEvent() {
+        return callBackURLMidEvent;
+    }
+
+    public void setCallBackURLMidEvent(String callBackURLMidEvent) {
+        this.callBackURLMidEvent = callBackURLMidEvent;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("retries_timeout_mid_event")
+    public List<Integer> getRetriesTimeoutMidEvent() {
+        return retriesTimeoutMidEvent == null ? Collections.emptyList() : retriesTimeoutMidEvent;
+    }
+
+    public void setRetriesTimeoutMidEvent(List<Integer> retriesTimeoutMidEvent) {
+        this.retriesTimeoutMidEvent = retriesTimeoutMidEvent;
     }
 
     public void setShowCondition(String showCondition) {
