@@ -36,7 +36,7 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
         eventCaseField.setShowSummaryChangeOption(eventCaseFieldDefinition.getBoolean(ColumnName.SHOW_SUMMARY_CHANGE_OPTION));
         eventCaseField.setShowSummaryContentOption(eventCaseFieldDefinition.getInteger(ColumnName.SHOW_SUMMARY_CONTENT_OPTION));
         eventCaseField.setLabel(eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_FIELD_LABEL));
-        eventCaseField.setHint(eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_FIELD_HINT));
+        eventCaseField.setHintText(eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_FIELD_HINT));
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(eventCaseField, eventCaseFieldDefinition);
 
         return eventCaseField;

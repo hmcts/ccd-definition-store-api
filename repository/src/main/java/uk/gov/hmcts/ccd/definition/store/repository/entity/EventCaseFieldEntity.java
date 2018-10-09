@@ -53,8 +53,8 @@ public class EventCaseFieldEntity implements Serializable {
     @Column(name = "label")
     private String label;
 
-    @Column(name = "hint")
-    private String hint;
+    @Column(name = "hint_text")
+    private String hintText;
 
     public DisplayContext getDisplayContext() {
         return displayContext;
@@ -112,11 +112,11 @@ public class EventCaseFieldEntity implements Serializable {
         this.label = label;
     }
 
-    public String getHint() {
-        return hint;
+    public String getHintText() {
+        return hintText;
     }
 
-    public void setHint(String hint) {
-        this.hint = hint;
+    public void setHintText(String hintText) {
+        this.hintText = hintText;
     }
 }

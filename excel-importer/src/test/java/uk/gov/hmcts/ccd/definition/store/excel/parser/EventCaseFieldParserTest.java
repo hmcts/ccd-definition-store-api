@@ -67,7 +67,7 @@ public class EventCaseFieldParserTest {
         assertEquals(displayContext.getDisplayContext(), eventCaseFieldEntity.getDisplayContext());
         assertEquals(PARSED_SHOW_CONDITION, eventCaseFieldEntity.getShowCondition());
         assertEquals(label, eventCaseFieldEntity.getLabel());
-        assertEquals(hint, eventCaseFieldEntity.getHint());
+        assertEquals(hint, eventCaseFieldEntity.getHintText());
 
         verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(eq(eventCaseFieldEntity),eq(definitionDataItem));
         verify(parseContext).getCaseFieldForCaseType(eq(caseTypeId), eq(caseFieldId));
