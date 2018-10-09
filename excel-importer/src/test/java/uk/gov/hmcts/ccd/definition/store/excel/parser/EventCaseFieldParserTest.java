@@ -71,8 +71,8 @@ public class EventCaseFieldParserTest {
 
         verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(eq(eventCaseFieldEntity),eq(definitionDataItem));
         verify(parseContext).getCaseFieldForCaseType(eq(caseTypeId), eq(caseFieldId));
-        verify(definitionDataItem).getString(ColumnName.LABEL);
-        verify(definitionDataItem).getString(ColumnName.HINT_TEXT);
+        verify(definitionDataItem).getString(ColumnName.CASE_EVENT_FIELD_LABEL);
+        verify(definitionDataItem).getString(ColumnName.CASE_EVENT_FIELD_HINT);
     }
 
     @Test
@@ -106,8 +106,8 @@ public class EventCaseFieldParserTest {
         when(definitionDataItem.getString(eq(ColumnName.CASE_FIELD_ID))).thenReturn(caseFieldId);
         when(definitionDataItem.getDisplayContext()).thenReturn(displayContext);
         when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn(showCondition);
-        when(definitionDataItem.getString(ColumnName.LABEL)).thenReturn(label);
-        when(definitionDataItem.getString(ColumnName.HINT_TEXT)).thenReturn(hint);
+        when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_LABEL)).thenReturn(label);
+        when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_HINT)).thenReturn(hint);
 
         return definitionDataItem;
     }
