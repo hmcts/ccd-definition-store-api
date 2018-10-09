@@ -1,12 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.io.Serializable;
+
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 @Table(name = "event_case_field")
 @Entity
@@ -41,6 +49,12 @@ public class EventCaseFieldEntity implements Serializable {
 
     @Column(name = "show_summary_content_option")
     private Integer showSummaryContentOption;
+
+    @Column(name = "label")
+    private String label;
+
+    @Column(name = "hint")
+    private String hint;
 
     public DisplayContext getDisplayContext() {
         return displayContext;
@@ -88,5 +102,21 @@ public class EventCaseFieldEntity implements Serializable {
 
     public void setShowSummaryContentOption(Integer showSummaryContentOption) {
         this.showSummaryContentOption = showSummaryContentOption;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }
