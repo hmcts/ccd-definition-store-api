@@ -117,8 +117,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage
-        (ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError
+    public String createErrorMessage(ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError
              complexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) {
         return String.format("%s values cannot have lower security classification than case field; " + "%s entry " +
                                  "with" + " id '%s' has a security classification of '%s' " + "but %s entry with id "

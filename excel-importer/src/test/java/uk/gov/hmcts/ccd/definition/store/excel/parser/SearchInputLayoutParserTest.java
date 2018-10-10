@@ -25,7 +25,7 @@ public class SearchInputLayoutParserTest {
     private Map<String, DefinitionSheet> definitionSheets;
 
     @Before
-    public void setup(){
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
@@ -43,13 +43,13 @@ public class SearchInputLayoutParserTest {
 
     @Test(expected = MapperException.class)
     @DisplayName("Should Fail when no worksheet provided")
-    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided(){
+    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
         classUnderTest.getDefinitionSheet(definitionSheets);
     }
 
     @Test(expected = SpreadsheetParsingException.class)
     @DisplayName("Should fail when no values provided in SearchInputFields worksheet")
-    public void shouldFailWhenNoDataInWorksheet(){
+    public void shouldFailWhenNoDataInWorksheet() {
         final DefinitionSheet sheet = new DefinitionSheet();
         definitionSheets.put(SEARCH_INPUT_FIELD.getName(), sheet);
         classUnderTest.parseAll(definitionSheets);
@@ -57,7 +57,7 @@ public class SearchInputLayoutParserTest {
 
     @Test
     @DisplayName("Should return name")
-    public void shouldReturnNameWhenAsked(){
+    public void shouldReturnNameWhenAsked() {
         assertThat(classUnderTest.getLayoutName(), is("Search Inputs"));
     }
 }

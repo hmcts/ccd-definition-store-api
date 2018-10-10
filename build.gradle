@@ -120,8 +120,8 @@ allprojects {
     }
 
     checkstyle {
-        maxWarnings = 999  // In the Ideal world this should be 0
-        toolVersion = '8.8'
+        maxWarnings = 156  // In the Ideal world this should be 0
+        toolVersion = '8.12'
         configDir = new File(rootDir, 'config/checkstyle')
     }
 
@@ -275,7 +275,7 @@ subprojects {
 
     checkstyle {
         maxWarnings = 999  // In the Ideal world this should be 0
-        toolVersion = '8.8'
+        toolVersion = '8.12'
         configDir = new File(rootDir, 'config/checkstyle')
     }
 

@@ -28,11 +28,17 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
     DisplayGroupCaseFieldsValidatorImpl testObj;
 
     @Mock
-    DisplayGroupCaseFieldValidator validator1, validator2;
+    DisplayGroupCaseFieldValidator validator1;
     @Mock
-    DisplayGroupCaseFieldEntity e1, e2;
+    DisplayGroupCaseFieldValidator validator2;
     @Mock
-    ValidationError ve1, ve2;
+    DisplayGroupCaseFieldEntity e1;
+    @Mock
+    DisplayGroupCaseFieldEntity e2;
+    @Mock
+    ValidationError ve1;
+    @Mock
+    ValidationError ve2;
 
 
     @Before

@@ -33,7 +33,7 @@ public class CaseFieldEntityComplexFieldsValidatorImpl implements CaseFieldEntit
         ValidationResult validationResult = new ValidationResult();
 
         for (CaseFieldComplexFieldEntityValidator complexFieldEntityValidator : this.complexFieldEntityValidators) {
-            for(ComplexFieldEntity complexFieldEntity : caseField.getFieldType().getComplexFields()) {
+            for (ComplexFieldEntity complexFieldEntity : caseField.getFieldType().getComplexFields()) {
                 validationResult.merge(
                     complexFieldEntityValidator.validate(
                         complexFieldEntity,

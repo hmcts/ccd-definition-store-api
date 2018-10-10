@@ -15,7 +15,7 @@ public class JurisdictionEntity implements Serializable, Versionable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @Column(name = "created_at")

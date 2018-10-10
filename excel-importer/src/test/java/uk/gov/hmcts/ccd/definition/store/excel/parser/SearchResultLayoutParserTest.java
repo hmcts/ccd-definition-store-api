@@ -24,7 +24,7 @@ public class SearchResultLayoutParserTest {
     private Map<String, DefinitionSheet> definitionSheets;
 
     @Before
-    public void setup(){
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
         definitionSheets = new HashMap<>();
@@ -33,13 +33,13 @@ public class SearchResultLayoutParserTest {
 
     @Test(expected = MapperException.class)
     @DisplayName("Should Fail when no worksheet provided")
-    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided(){
+    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
         classUnderTest.getDefinitionSheet(definitionSheets);
     }
 
     @Test
     @DisplayName("Should return name")
-    public void shouldReturnNameWhenAsked(){
+    public void shouldReturnNameWhenAsked() {
         assertThat(classUnderTest.getLayoutName(), is("Search Results"));
     }
 }
