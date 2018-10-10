@@ -29,3 +29,7 @@ output "OAUTH2_CLIENT_ID" {
 output "OAUTH2_REDIRECT_URI" {
   value = "${local.oauth2_redirect_uri}"
 }
+
+output "ELASTIC_SEARCH_ENABLED" {
+  value = "${var.elastic_search_enabled}"
+}
