@@ -1,5 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.*;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.BDDMockito.given;
+import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,15 +19,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-
-import java.util.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.BDDMockito.given;
-import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthorisationCaseFieldParserTest {
@@ -63,7 +63,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withUserRoleFound() {
+    public void shouldParseEntityWithUserRoleFound() {
 
         final String role = "CaseWorker 1";
 
@@ -90,7 +90,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withCaseRoleFound() {
+    public void shouldParseEntityWithCaseRoleFound() {
 
         final String caseRole = "[CLAIMANT]";
 
@@ -117,7 +117,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withUserRoleNotFound() {
+    public void shouldParseEntityWithUserRoleNotFound() {
 
         final String role = "CaseWorker 2";
 
@@ -140,7 +140,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withInvalidCrud() {
+    public void shouldParseEntityWithInvalidCrud() {
 
         final String role = "CaseWorker 1";
 
@@ -163,7 +163,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withInvalidCrudAndUserNotFound() {
+    public void shouldParseEntityWithInvalidCrudAndUserNotFound() {
 
         final String role = "CaseWorker 2";
 

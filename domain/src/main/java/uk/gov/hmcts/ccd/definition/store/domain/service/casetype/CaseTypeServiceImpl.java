@@ -36,7 +36,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                                EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
-                               MetadataFieldService metadataFieldService) {
+                               MetadataFieldService metadataFieldService
+    ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
         this.legacyCaseTypeValidator = legacyCaseTypeValidator;
@@ -63,7 +64,6 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         } else {
             throw new ValidationException(validationResult);
         }
-
     }
 
     @Override
