@@ -63,7 +63,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withUserRoleFound() {
+    public void shouldParseEntityWithUserRoleFound() {
 
         final String role = "CaseWorker 1";
 
@@ -89,7 +89,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withCaseRoleFound() {
+    public void shouldParseEntityWithCaseRoleFound() {
 
         final String caseRole = "[CLAIMANT]";
 
@@ -115,7 +115,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withUserRoleNotFound() {
+    public void shouldParseEntityWithUserRoleNotFound() {
 
         final String role = "CaseWorker 2";
 
@@ -137,7 +137,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withInvalidCrud() {
+    public void shouldParseEntityWithInvalidCrud() {
 
         final String role = "CaseWorker 1";
 
@@ -159,7 +159,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntity_withInvalidCrudAndUserNotFound() {
+    public void shouldParseEntityWithInvalidCrudAndUserNotFound() {
 
         final String role = "CaseWorker 2";
 

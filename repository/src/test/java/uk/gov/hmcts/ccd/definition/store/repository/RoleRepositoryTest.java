@@ -117,7 +117,7 @@ public class RoleRepositoryTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void shouldFail_whenCreateDuplicateCaseRoles() {
+    public void shouldFailWhenCreateDuplicateCaseRoles() {
         final CaseRoleEntity entity = new CaseRoleEntity();
         entity.setReference(CASE_ROLE_REFERENCE);
         entity.setSecurityClassification(RESTRICTED);
