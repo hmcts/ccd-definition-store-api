@@ -26,7 +26,7 @@ public class CaseTypeEntityEventValidatorImpl implements CaseTypeEntityValidator
         ValidationResult validationResult = new ValidationResult();
 
         for (EventEntityValidator eventEntityValidator : eventEntityValidators) {
-            for(EventEntity eventEntity : caseType.getEvents()) {
+            for (EventEntity eventEntity : caseType.getEvents()) {
                 validationResult.merge(eventEntityValidator.validate(
                     eventEntity,
                     new EventEntityValidationContext(caseType)

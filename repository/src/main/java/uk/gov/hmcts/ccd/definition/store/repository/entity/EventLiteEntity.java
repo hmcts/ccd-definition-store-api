@@ -40,8 +40,8 @@ public class EventLiteEntity implements Serializable, Referencable {
     @Fetch(value = SUBSELECT)
     @JoinTable(
         name = "event_pre_state",
-        joinColumns = @JoinColumn(name="event_id", referencedColumnName="id"),
-        inverseJoinColumns = @JoinColumn(name="state_id", referencedColumnName="id")
+        joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "state_id", referencedColumnName = "id")
     )
     private final List<StateLiteEntity> preStates = new ArrayList<>();
 

@@ -31,7 +31,7 @@ public class ColumnNameTest {
     }
 
     private void assertRequired(SheetName sheetName, List<ColumnName> requiredColumns) {
-        for(ColumnName columnName : ColumnName.values()) {
+        for (ColumnName columnName : ColumnName.values()) {
             boolean required
                 = requiredColumns.contains(columnName);
             assertEquals(

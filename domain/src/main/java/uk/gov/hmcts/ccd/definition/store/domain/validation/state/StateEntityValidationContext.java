@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.state;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
-public class StateEntityValidationContext implements ValidationContext{
+public class StateEntityValidationContext implements ValidationContext {
 
     private final String caseName;
 

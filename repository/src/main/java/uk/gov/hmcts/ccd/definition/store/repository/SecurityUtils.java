@@ -19,6 +19,7 @@ public class SecurityUtils {
     public SecurityUtils(final AuthTokenGenerator authTokenGenerator) {
         this.authTokenGenerator = authTokenGenerator;
     }
+
     public HttpHeaders authorizationHeaders() {
         final HttpHeaders headers = new HttpHeaders();
         headers.add("ServiceAuthorization", authTokenGenerator.generate());
