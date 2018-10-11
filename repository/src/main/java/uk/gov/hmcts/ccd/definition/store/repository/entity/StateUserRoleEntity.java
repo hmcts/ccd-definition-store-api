@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class StateUserRoleEntity extends Authorisation implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "state_id", nullable=false)
+    @JoinColumn(name = "state_id", nullable = false)
     private StateEntity stateEntity;
 
     public StateEntity getStateEntity() {
@@ -16,7 +16,7 @@ public class StateUserRoleEntity extends Authorisation implements Serializable {
     }
 
     public void setStateEntity(final StateEntity stateEntity) {
-        this.stateEntity= stateEntity;
+        this.stateEntity = stateEntity;
     }
 
 }

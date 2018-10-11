@@ -26,7 +26,7 @@ public class CaseTypeEntityCaseRoleValidatorImpl implements CaseTypeEntityValida
         ValidationResult validationResult = new ValidationResult();
 
         for (CaseRoleEntityValidator caseRoleEntityValidator : caseRoleEntityValidators) {
-            for(CaseRoleEntity caseRoleEntity : caseType.getCaseRoles()) {
+            for (CaseRoleEntity caseRoleEntity : caseType.getCaseRoles()) {
                 validationResult.merge(caseRoleEntityValidator.validate(
                     caseRoleEntity,
                     new CaseRoleEntityValidationContext(caseType)

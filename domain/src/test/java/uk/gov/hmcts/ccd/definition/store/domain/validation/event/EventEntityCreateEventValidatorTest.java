@@ -32,7 +32,7 @@ public class EventEntityCreateEventValidatorTest {
         ValidationResult validationResult = classUnderTest.validate(eventEntity, null);
 
         assertEquals(isValid, validationResult.isValid());
-        assertEquals(isValid ? 0: 1, validationResult.getValidationErrors().size());
+        assertEquals(isValid ? 0 : 1, validationResult.getValidationErrors().size());
         if (!isValid) {
             ValidationError validationError = validationResult.getValidationErrors().get(0);
             assertTrue(validationError instanceof CreateEventDoesNotHavePostStateValidationError);

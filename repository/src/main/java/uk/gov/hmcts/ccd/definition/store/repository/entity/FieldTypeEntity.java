@@ -19,7 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class FieldTypeEntity implements Serializable, Versionable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @Column(name = "created_at")
