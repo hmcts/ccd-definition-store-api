@@ -17,7 +17,7 @@ public class DisplayGroupEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -44,7 +44,7 @@ public class DisplayGroupEntity implements Serializable {
     private DisplayGroupPurpose purpose;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "case_type_id", nullable=false)
+    @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
     @ManyToOne(fetch = LAZY)

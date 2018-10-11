@@ -35,7 +35,8 @@ public class CaseFieldTypeParser {
 
         logger.debug("Case field types parsing: {} fields detected", caseFields.size());
 
-        for (DefinitionDataItem caseField : caseFields) {// TODO Check for already existing types with same identity
+        for (DefinitionDataItem caseField : caseFields) {
+            // TODO Check for already existing types with same identity
             final String caseTypeId = caseField.getString(ColumnName.CASE_TYPE_ID);
             final String fieldId = caseField.getString(ColumnName.ID);
 

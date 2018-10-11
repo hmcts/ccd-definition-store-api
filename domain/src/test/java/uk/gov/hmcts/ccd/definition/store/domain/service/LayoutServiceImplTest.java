@@ -83,7 +83,7 @@ public class LayoutServiceImplTest {
         verify(genericRepository).save(genericLayoutCaptor.capture());
         Collection<GenericLayoutEntity> savedDisplayGroupEntities = genericLayoutCaptor.getValue();
         assertEquals(2, savedDisplayGroupEntities.size());
-        assertThat(savedDisplayGroupEntities, allOf( hasItem(entity1), hasItem(entity2)));
+        assertThat(savedDisplayGroupEntities, allOf(hasItem(entity1), hasItem(entity2)));
     }
 
     @Test(expected = ValidationException.class)
@@ -110,6 +110,6 @@ public class LayoutServiceImplTest {
         verify(displayGroupRepository).save(displayGroupCaptor.capture());
         Collection<DisplayGroupEntity> savedDisplayGroupEntities = displayGroupCaptor.getValue();
         assertEquals(2, savedDisplayGroupEntities.size());
-        assertThat(savedDisplayGroupEntities, allOf( hasItem(dg1), hasItem(dg2)));
+        assertThat(savedDisplayGroupEntities, allOf(hasItem(dg1), hasItem(dg2)));
     }
 }
