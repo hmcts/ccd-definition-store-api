@@ -64,7 +64,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
 
     @AfterEach
     void tearDown() {
-        deleteIndex(CASE_INDEX_NAME, CASE_INDEX_ALIAS);
+        deleteIndexAndAlias(CASE_INDEX_NAME, CASE_INDEX_ALIAS);
     }
 
     private void verifyIndexAndFieldMappings(boolean verifyNewFields) {

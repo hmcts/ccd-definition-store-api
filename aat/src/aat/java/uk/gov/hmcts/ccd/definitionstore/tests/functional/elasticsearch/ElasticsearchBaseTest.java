@@ -15,7 +15,7 @@ abstract class ElasticsearchBaseTest extends BaseTest {
         super(aat);
     }
 
-    void deleteIndex(String indexName, String indexAlias) {
+    void deleteIndexAndAlias(String indexName, String indexAlias) {
         deleteIndexAlias(indexName, indexAlias);
         deleteIndex(indexName);
     }
