@@ -11,7 +11,7 @@ public abstract class Authorisation {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @NotNull
@@ -28,7 +28,7 @@ public abstract class Authorisation {
     private Boolean delete;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_role_id", nullable=false)
+    @JoinColumn(name = "user_role_id", nullable = false)
     private UserRoleEntity userRole;
 
     @Column(name = "live_from")

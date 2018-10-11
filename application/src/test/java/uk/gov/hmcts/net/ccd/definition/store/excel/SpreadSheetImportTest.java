@@ -81,8 +81,7 @@ public class SpreadSheetImportTest extends BaseTest {
             "\"work_basket_default_case_type\":\"TestAddressBookCase\"," +
             "\"work_basket_default_state\":\"CaseEnteredIntoLegacy\"}]";
         WireMock.verify(1,
-                        putRequestedFor(urlEqualTo("/user-profile/users")).withRequestBody(equalTo
-                                                                                               (expectedUserProfiles)));
+                        putRequestedFor(urlEqualTo("/user-profile/users")).withRequestBody(equalTo(expectedUserProfiles)));
 
         // Check the HTTP GET request for the imported Case Type returns the correct response.
         MvcResult getCaseTypesMvcResult = mockMvc.perform(MockMvcRequestBuilders.get(CASE_TYPE_DEF_URL)

@@ -1,0 +1,17 @@
+{
+  "dynamic": "dynamicConfig",
+  "properties":{
+    "data": {
+      "properties": {
+        "fieldA": "dataMapping",
+        "fieldB": "dataMapping"
+      }
+    },
+    "data_classification": {
+      "properties": {
+        "fieldA": "dataClassificationMapping",
+        "fieldB": "dataClassificationMapping"
+      }
+    }
+  }
+}

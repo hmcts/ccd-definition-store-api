@@ -26,7 +26,7 @@ public class CaseTypeEntityCaseFieldsValidatorImpl implements CaseTypeEntityVali
         ValidationResult validationResult = new ValidationResult();
 
         for (CaseFieldEntityValidator caseFieldEntityValidator : caseFieldEntityValidators) {
-            for(CaseFieldEntity caseField : caseType.getCaseFields()) {
+            for (CaseFieldEntity caseField : caseType.getCaseFields()) {
                 validationResult.merge(
                     caseFieldEntityValidator.validate(
                         caseField,

@@ -267,6 +267,7 @@ public class CaseTypeObjectGraphTest {
         assertThat(expected.getUserRole().getRole(), is(actual.getUserRole().getRole()));
         assertThat(expected.getUserRole().getSecurityClassification(), is(actual.getUserRole().getSecurityClassification()));
     }
+
     private void assertStateUserRoleEntity(final StateEntity stateEntity,
                                               final StateUserRoleEntity expected,
                                               final StateUserRoleEntity actual) {

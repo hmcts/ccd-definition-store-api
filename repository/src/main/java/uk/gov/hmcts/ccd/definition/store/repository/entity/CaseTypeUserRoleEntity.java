@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class CaseTypeUserRoleEntity extends Authorisation implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "case_type_id", nullable=false)
+    @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
     public CaseTypeEntity getCaseType() {

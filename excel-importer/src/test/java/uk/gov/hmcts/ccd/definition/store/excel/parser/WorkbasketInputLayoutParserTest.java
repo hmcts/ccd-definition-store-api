@@ -25,7 +25,7 @@ public class WorkbasketInputLayoutParserTest {
     private Map<String, DefinitionSheet> definitionSheets;
 
     @Before
-    public void setup(){
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
         definitionSheets = new HashMap<>();
@@ -34,13 +34,13 @@ public class WorkbasketInputLayoutParserTest {
 
     @Test(expected = MapperException.class)
     @DisplayName("Should Fail when no worksheet provided")
-    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided(){
+    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
         classUnderTest.getDefinitionSheet(definitionSheets);
     }
 
     @Test
     @DisplayName("Should now fail when no values provided in WorkbasketInputFields worksheet")
-    public void shouldNotFailWhenNoDataInWorksheet(){
+    public void shouldNotFailWhenNoDataInWorksheet() {
         final DefinitionSheet sheet = new DefinitionSheet();
         definitionSheets.put(WORK_BASKET_INPUT_FIELD.getName(), sheet);
         classUnderTest.parseAll(definitionSheets);
@@ -48,7 +48,7 @@ public class WorkbasketInputLayoutParserTest {
 
     @Test
     @DisplayName("Should return name")
-    public void shouldReturnNameWhenAsked(){
+    public void shouldReturnNameWhenAsked() {
         assertThat(classUnderTest.getLayoutName(), is(WORK_BASKET_INPUT_FIELD.getName()));
     }
 }

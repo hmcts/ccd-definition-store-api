@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class CaseRoleInterceptor extends EmptyInterceptor {
     @Override
     public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
-        if (entity instanceof CaseRoleEntity){
+        if (entity instanceof CaseRoleEntity) {
             CaseRoleEntity caseRoleEntity = (CaseRoleEntity) entity;
             caseRoleEntity.setReference(caseRoleEntity.getReference().toUpperCase());
         }

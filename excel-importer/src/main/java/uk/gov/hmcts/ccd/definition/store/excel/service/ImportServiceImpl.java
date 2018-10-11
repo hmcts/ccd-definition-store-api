@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
@@ -59,6 +61,7 @@ public class ImportServiceImpl implements ImportService {
     private final UserRoleRepository userRoleRepository;
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
     private final CaseFieldRepository caseFieldRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final SecurityUtils securityUtils;
     private final RestTemplate restTemplate;
     private final ApplicationParams applicationParams;
@@ -74,6 +77,7 @@ public class ImportServiceImpl implements ImportService {
                              UserRoleRepository userRoleRepository,
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
+                             ApplicationEventPublisher applicationEventPublisher,
                              SecurityUtils securityUtils,
                              RestTemplate restTemplate,
                              ApplicationParams applicationParams) {
@@ -90,6 +94,7 @@ public class ImportServiceImpl implements ImportService {
         this.securityUtils = securityUtils;
         this.restTemplate = restTemplate;
         this.applicationParams = applicationParams;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     /**
@@ -156,10 +161,11 @@ public class ImportServiceImpl implements ImportService {
 
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
-        caseTypeService.createAll(jurisdiction, parsedCaseTypes.getNewResults());
+        List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
+        caseTypeService.createAll(jurisdiction, caseTypes);
 
         logger.info("Importing spreadsheet: Case types: OK: {} case types imported",
-                    parsedCaseTypes.getNewResults().size());
+                    caseTypes.size());
 
         /*
             5 - UI definition
@@ -171,8 +177,7 @@ public class ImportServiceImpl implements ImportService {
         final ParseResult<GenericLayoutEntity> genericsResult = layoutParser.parseAllGenerics(definitionSheets);
         layoutService.createGenerics(genericsResult.getNewResults());
 
-        final ParseResult<DisplayGroupEntity> displayGroupsResult = layoutParser.parseAllDisplayGroups
-            (definitionSheets);
+        final ParseResult<DisplayGroupEntity> displayGroupsResult = layoutParser.parseAllDisplayGroups(definitionSheets);
         layoutService.createDisplayGroups(displayGroupsResult.getNewResults());
 
         logger.info("Importing spreadsheet: UI definition: OK");
@@ -187,8 +192,9 @@ public class ImportServiceImpl implements ImportService {
         workBasketUserDefaultService.saveWorkBasketUserDefaults(workBasketUserDefaults,
                                                                 jurisdiction,
                                                                 parsedCaseTypes.getAllResults());
-
         logger.info("Importing spreadsheet: User profiles: OK");
+
+        applicationEventPublisher.publishEvent(new DefinitionImportedEvent(caseTypes));
 
         logger.info("Importing spreadsheet: OK: For jurisdiction {}", jurisdiction.getReference());
 

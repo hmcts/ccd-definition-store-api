@@ -26,7 +26,7 @@ public class CaseTypeEntityStateValidatorImpl implements CaseTypeEntityValidator
         ValidationResult validationResult = new ValidationResult();
 
         for (StateEntityValidator stateEntityValidator : stateEntityValidators) {
-            for(StateEntity stateEntity : caseType.getStates()) {
+            for (StateEntity stateEntity : caseType.getStates()) {
                 validationResult.merge(stateEntityValidator.validate(
                     stateEntity,
                     new StateEntityValidationContext(caseType)

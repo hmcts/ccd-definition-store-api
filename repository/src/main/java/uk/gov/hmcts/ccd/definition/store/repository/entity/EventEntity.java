@@ -25,13 +25,13 @@ import static org.hibernate.annotations.FetchMode.SUBSELECT;
 @TypeDef(
     name = "pgsql_securityclassification_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name="type", value="uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
+    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
 public class EventEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -56,7 +56,7 @@ public class EventEntity implements Serializable {
     private Integer order;
 
     @Column(name = "security_classification")
-    @Type( type = "pgsql_securityclassification_enum" )
+    @Type(type = "pgsql_securityclassification_enum")
     private SecurityClassification securityClassification;
 
     @Column(name = "show_summary")
@@ -70,15 +70,15 @@ public class EventEntity implements Serializable {
     private StateEntity postState;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "case_type_id", nullable=false)
+    @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
     @ManyToMany(fetch = EAGER)
     @Fetch(value = SUBSELECT)
     @JoinTable(
         name = "event_pre_state",
-        joinColumns = @JoinColumn(name="event_id", referencedColumnName="id"),
-        inverseJoinColumns = @JoinColumn(name="state_id", referencedColumnName="id")
+        joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "state_id", referencedColumnName = "id")
     )
     private final List<StateEntity> preStates = new ArrayList<>();
 

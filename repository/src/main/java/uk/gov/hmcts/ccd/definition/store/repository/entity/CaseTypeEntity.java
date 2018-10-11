@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -26,13 +27,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 @TypeDef(
     name = "pgsql_securityclassification_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name="type", value="uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
+    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
 public class CaseTypeEntity implements Serializable, Versionable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @Column(name = "created_at")
@@ -66,7 +67,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     private WebhookEntity printWebhook;
 
     @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "jurisdiction_id", nullable=false)
+    @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
@@ -238,6 +239,10 @@ public class CaseTypeEntity implements Serializable, Versionable {
     public CaseTypeEntity addCaseTypeUserRoles(final Collection<CaseTypeUserRoleEntity> caseTypeUserRoleEntities) {
         caseTypeUserRoleEntities.forEach(e -> addCaseTypeUserRole(e));
         return this;
+    }
+
+    public Optional<CaseFieldEntity> findCaseField(String reference) {
+        return this.caseFields.stream().filter(cf -> cf.getReference().equals(reference)).findFirst();
     }
 
     public List<CaseRoleEntity> getCaseRoles() {

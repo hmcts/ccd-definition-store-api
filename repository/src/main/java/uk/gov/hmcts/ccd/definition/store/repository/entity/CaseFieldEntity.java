@@ -44,7 +44,7 @@ import static javax.persistence.GenerationType.IDENTITY;
         parameters = @Parameter(name = "type",
             value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType")
     )})
-public class CaseFieldEntity implements Serializable {
+public class CaseFieldEntity implements FieldEntity, Serializable {
 
     @Id
     @Column(name = "id")
@@ -98,6 +98,7 @@ public class CaseFieldEntity implements Serializable {
         return id;
     }
 
+    @Override
     public String getReference() {
         return reference;
     }
@@ -154,6 +155,7 @@ public class CaseFieldEntity implements Serializable {
         this.securityClassification = securityClassification;
     }
 
+    @Override
     public FieldTypeEntity getFieldType() {
         return fieldType;
     }

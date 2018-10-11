@@ -47,6 +47,15 @@ dependencyCheck {
     }
 }
 
+//spring boot dependency override
+//overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.0 of Elastic
+ext['elasticsearch.version'] = '6.4.0'
+ext['javax-validation.version'] = '2.0.1.Final'
+ext['hibernate-validator.version'] = '6.0.10.Final'
+//overriding log4j2 default version 2.7 because of vulnerability issues
+ext['log4j2.version'] = '2.11.1'
+// end
+
 ext {
     junitJupiterVersion = '5.3.1'
     junitVintageVersion = '5.2.0'
@@ -84,6 +93,7 @@ allprojects {
 
     ext {
         hibernateVersion = '5.2.16.Final'
+        elasticSearchVersion = '6.4.0'
     }
 
     dependencies {
@@ -93,6 +103,8 @@ allprojects {
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
         compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
         compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
+        compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
+        runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testCompile 'io.github.openfeign:feign-jackson:9.7.0'
         testCompile 'io.github.openfeign.form:feign-form:3.3.0'
@@ -104,16 +116,25 @@ allprojects {
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
         testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
         testRuntime "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
+        testCompile 'org.mockito:mockito-junit-jupiter:2.21.0'
     }
 
     checkstyle {
-        maxWarnings = 999  // In the Ideal world this should be 0
-        toolVersion = '8.8'
+        maxWarnings = 156  // In the Ideal world this should be 0
+        toolVersion = '8.12'
         configDir = new File(rootDir, 'config/checkstyle')
     }
 
     checkstyleMain.shouldRunAfter(compileJava)
     test.shouldRunAfter(checkstyleTest)
+
+    configurations.all {
+        resolutionStrategy {
+            dependencySubstitution {
+                substitute module('org.elasticsearch:elasticsearch') with module("org.elasticsearch:elasticsearch:${elasticSearchVersion}")
+            }
+        }
+    }
 }
 
 sourceCompatibility = 1.8
@@ -159,7 +180,6 @@ subprojects {
         compile "org.hibernate:hibernate-core:${hibernateVersion}"
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
-
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
 
@@ -173,10 +193,11 @@ subprojects {
         testCompile "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
         testCompile "org.springframework:spring-test:4.3.16.RELEASE"
         testCompile "org.springframework:spring-webmvc:4.3.16.RELEASE"
-        testCompile ("org.mockito:mockito-core:1.10.19") {
+        testCompile ("org.mockito:mockito-core:2.21.0") {
             exclude group: 'org.hamcrest'
         }
         testCompile "org.mockito:mockito-all:1.10.19"
+        testCompile 'org.mockito:mockito-junit-jupiter:2.21.0'
         testCompile 'com.github.npathai:hamcrest-optional:2.0.0'
         testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '1.2.4.RELEASE'
         testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
@@ -254,7 +275,7 @@ subprojects {
 
     checkstyle {
         maxWarnings = 999  // In the Ideal world this should be 0
-        toolVersion = '8.8'
+        toolVersion = '8.12'
         configDir = new File(rootDir, 'config/checkstyle')
     }
 

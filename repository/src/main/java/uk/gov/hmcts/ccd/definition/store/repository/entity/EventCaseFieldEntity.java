@@ -13,24 +13,24 @@ import java.io.Serializable;
 @TypeDef(
     name = "pgsql_displaycontext_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @org.hibernate.annotations.Parameter(name="type", value="uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
+    parameters = @org.hibernate.annotations.Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
 )
 public class EventCaseFieldEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable=false)
+    @JoinColumn(name = "event_id", nullable = false)
     private EventEntity event;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "case_field_id", nullable=false)
+    @JoinColumn(name = "case_field_id", nullable = false)
     private CaseFieldEntity caseField;
 
-    @Column(name = "display_context", nullable=false)
-    @Type( type = "pgsql_displaycontext_enum" )
+    @Column(name = "display_context", nullable = false)
+    @Type(type = "pgsql_displaycontext_enum")
     private DisplayContext displayContext;
 
     @Column(name = "show_condition")

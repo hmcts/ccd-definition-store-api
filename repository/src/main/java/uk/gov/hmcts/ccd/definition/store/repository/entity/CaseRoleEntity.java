@@ -14,7 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 public class CaseRoleEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @Column(name = "reference", nullable = false)

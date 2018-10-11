@@ -1,0 +1,12 @@
+{
+  "properties": {
+    "classification": "securityClassificationMapping",
+    "value": {
+      "properties": {
+        "field1": "dataClassificationMapping",
+        "field2": "dataClassificationMapping",
+        "nestedComplexField": "dataClassificationMappingForComplexType"
+      }
+    }
+  }
+}
