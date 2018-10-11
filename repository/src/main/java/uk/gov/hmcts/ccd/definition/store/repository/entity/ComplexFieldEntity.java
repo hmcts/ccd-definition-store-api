@@ -1,17 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-
-import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.io.Serializable;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "complex_field")
 @Entity

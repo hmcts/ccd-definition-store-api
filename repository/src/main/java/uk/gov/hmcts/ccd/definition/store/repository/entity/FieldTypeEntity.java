@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import com.google.common.base.MoreObjects;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,6 +8,11 @@ import java.util.List;
 import java.util.UUID;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
+import com.google.common.base.MoreObjects;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Table(name = "field_type")
 @Entity
