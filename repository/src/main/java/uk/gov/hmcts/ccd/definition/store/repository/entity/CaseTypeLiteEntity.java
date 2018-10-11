@@ -121,4 +121,5 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
     public CaseTypeLiteEntity addEvent(@NotNull final EventLiteEntity event) {
         events.add(event);
         return this;
-    }}
+    }
+}

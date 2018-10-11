@@ -66,4 +66,5 @@ public class RestEndPointExceptionHandlerTest {
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertThat(response.getBody().toString(), equalTo("Not found message"));
-    }}
+    }
+}

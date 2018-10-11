@@ -12,7 +12,7 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "live_from")
@@ -22,11 +22,11 @@ public abstract class GenericLayoutEntity implements Serializable {
     private LocalDate liveTo;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "case_type_id", nullable=false)
+    @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
     @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "case_field_id", nullable=false)
+    @JoinColumn(name = "case_field_id", nullable = false)
     private CaseFieldEntity caseField;
 
     @Column(name = "label")

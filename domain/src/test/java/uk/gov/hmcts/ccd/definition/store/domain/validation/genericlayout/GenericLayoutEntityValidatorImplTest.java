@@ -132,7 +132,7 @@ class GenericLayoutEntityValidatorImplTest {
 
             assertAll(
                 () -> assertTrue(entity instanceof SearchResultCaseFieldEntity),
-                () ->assertThat(result.isValid(), is(true))
+                () -> assertThat(result.isValid(), is(true))
             );
         }
 

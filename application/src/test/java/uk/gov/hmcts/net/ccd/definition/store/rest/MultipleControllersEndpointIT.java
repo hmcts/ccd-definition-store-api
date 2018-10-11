@@ -196,8 +196,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
             () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(1)),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
                                                                                         containsString("Contact Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("id", containsString
-                ("createCaseContactPage")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("id", containsString("createCaseContactPage")))),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("wizardPageFields",
                                                                                         hasItem(hasProperty("caseFieldId", containsString("ContectEmail"))))))
         );
