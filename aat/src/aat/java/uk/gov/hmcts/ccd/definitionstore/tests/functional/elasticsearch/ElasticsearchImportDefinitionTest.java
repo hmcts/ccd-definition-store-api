@@ -10,8 +10,8 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import io.restassured.response.ValidatableResponse;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
@@ -34,6 +34,11 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
         // stop execution of these tests if elasticsearch is not enabled
         boolean elasticsearchEnabled = ofNullable(System.getenv("ELASTIC_SEARCH_ENABLED")).map(Boolean::valueOf).orElse(false);
         assumeTrue(elasticsearchEnabled, () -> "Ignoring Elasticsearch tests, variable ELASTIC_SEARCH_ENABLED not set");
+    }
+
+    @BeforeEach
+    void cleanUp() {
+        deleteIndexAndAlias(CASE_INDEX_NAME, CASE_INDEX_ALIAS);
     }
 
     @Test
@@ -60,11 +65,6 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             .post("/import");
 
         verifyIndexAndFieldMappings(true);
-    }
-
-    @AfterEach
-    void tearDown() {
-        deleteIndexAndAlias(CASE_INDEX_NAME, CASE_INDEX_ALIAS);
     }
 
     private void verifyIndexAndFieldMappings(boolean verifyNewFields) {

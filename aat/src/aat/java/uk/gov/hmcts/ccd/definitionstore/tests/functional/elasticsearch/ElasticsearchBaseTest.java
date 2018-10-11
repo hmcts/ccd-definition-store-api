@@ -6,9 +6,11 @@ import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
+@Slf4j
 abstract class ElasticsearchBaseTest extends BaseTest {
 
     ElasticsearchBaseTest(AATHelper aat) {
@@ -16,8 +18,14 @@ abstract class ElasticsearchBaseTest extends BaseTest {
     }
 
     void deleteIndexAndAlias(String indexName, String indexAlias) {
-        deleteIndexAlias(indexName, indexAlias);
-        deleteIndex(indexName);
+        ValidatableResponse response = getIndexInformation(indexAlias);
+        try {
+            response.statusCode(200);
+            deleteIndexAlias(indexName, indexAlias);
+            deleteIndex(indexName);
+        } catch (AssertionError e) {
+            log.error(indexName + " index does not exist");
+        }
     }
 
     private void deleteIndexAlias(String indexName, String indexAlias) {
@@ -43,8 +51,7 @@ abstract class ElasticsearchBaseTest extends BaseTest {
         return asElasticsearchApiUser()
             .when()
             .get(indexAlias)
-            .then()
-            .statusCode(200);
+            .then();
     }
 
     private RequestSpecification asElasticsearchApiUser() {
