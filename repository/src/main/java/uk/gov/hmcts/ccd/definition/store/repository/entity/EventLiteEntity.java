@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.Fetch;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,6 +8,8 @@ import java.util.List;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.FetchMode.SUBSELECT;
+
+import org.hibernate.annotations.Fetch;
 
 /**
  * A "lite" version of the {@link EventEntity} class that contains selected Event fields (id, reference, name, and
@@ -40,8 +40,8 @@ public class EventLiteEntity implements Serializable, Referencable {
     @Fetch(value = SUBSELECT)
     @JoinTable(
         name = "event_pre_state",
-        joinColumns = @JoinColumn(name="event_id", referencedColumnName="id"),
-        inverseJoinColumns = @JoinColumn(name="state_id", referencedColumnName="id")
+        joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "state_id", referencedColumnName = "id")
     )
     private final List<StateLiteEntity> preStates = new ArrayList<>();
 

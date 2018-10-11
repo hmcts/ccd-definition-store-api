@@ -1,13 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class EventEntityCreateEventValidatorTest {
 
@@ -32,7 +32,7 @@ public class EventEntityCreateEventValidatorTest {
         ValidationResult validationResult = classUnderTest.validate(eventEntity, null);
 
         assertEquals(isValid, validationResult.isValid());
-        assertEquals(isValid ? 0: 1, validationResult.getValidationErrors().size());
+        assertEquals(isValid ? 0 : 1, validationResult.getValidationErrors().size());
         if (!isValid) {
             ValidationError validationError = validationResult.getValidationErrors().get(0);
             assertTrue(validationError instanceof CreateEventDoesNotHavePostStateValidationError);

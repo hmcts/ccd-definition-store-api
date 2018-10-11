@@ -1,16 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
-
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.Map;
+
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
 
 /**
  * Util class to assist with creating mock Case Definitions in tests
  */
 class CreateDefinitionSheetUtil {
     private CreateDefinitionSheetUtil() {}
+
     /**
      * Create a DefinitionDataItem for the given Map of columns and their attribute
      * @param attributes Map of column values for each Column

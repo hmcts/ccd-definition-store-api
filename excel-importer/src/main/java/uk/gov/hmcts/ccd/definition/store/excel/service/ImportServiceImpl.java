@@ -164,8 +164,7 @@ public class ImportServiceImpl implements ImportService {
         final ParseResult<GenericLayoutEntity> genericsResult = layoutParser.parseAllGenerics(definitionSheets);
         layoutService.createGenerics(genericsResult.getNewResults());
 
-        final ParseResult<DisplayGroupEntity> displayGroupsResult = layoutParser.parseAllDisplayGroups
-            (definitionSheets);
+        final ParseResult<DisplayGroupEntity> displayGroupsResult = layoutParser.parseAllDisplayGroups(definitionSheets);
         layoutService.createDisplayGroups(displayGroupsResult.getNewResults());
 
         logger.info("Importing spreadsheet: UI definition: OK");

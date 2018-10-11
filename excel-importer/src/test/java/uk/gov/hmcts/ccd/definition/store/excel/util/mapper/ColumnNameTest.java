@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class ColumnNameTest {
 
@@ -31,7 +31,7 @@ public class ColumnNameTest {
     }
 
     private void assertRequired(SheetName sheetName, List<ColumnName> requiredColumns) {
-        for(ColumnName columnName : ColumnName.values()) {
+        for (ColumnName columnName : ColumnName.values()) {
             boolean required
                 = requiredColumns.contains(columnName);
             assertEquals(

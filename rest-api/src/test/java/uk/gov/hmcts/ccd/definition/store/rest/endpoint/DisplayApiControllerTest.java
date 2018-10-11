@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 
 public class DisplayApiControllerTest {
 
@@ -15,13 +15,13 @@ public class DisplayApiControllerTest {
     private DisplayService displayService;
 
     @Before
-    public void setup(){
-        displayService= mock(DisplayService.class);
+    public void setup() {
+        displayService = mock(DisplayService.class);
         subject = new DisplayApiController(displayService);
     }
 
     @Test
-    public void  getSearchInputDefinitionDisplay(){
+    public void  getSearchInputDefinitionDisplay() {
         SearchInputDefinition searchInputDefinition = new SearchInputDefinition();
         when(displayService.findSearchInputDefinitionForCaseType("XXX")).thenReturn(searchInputDefinition);
         subject.displaySearchInputDefinitionIdGet("XXX");
@@ -29,7 +29,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void  getSearchResultDefinitionDisplay(){
+    public void  getSearchResultDefinitionDisplay() {
         SearchResultDefinition searchResultDefinition = new SearchResultDefinition();
         when(displayService.findSearchResultDefinitionForCaseType("XXX")).thenReturn(searchResultDefinition);
         subject.displaySearchResultDefinitionIdGet("XXX");
@@ -37,7 +37,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void  shouldReturnWorkbasketInputDefinition(){
+    public void  shouldReturnWorkbasketInputDefinition() {
         WorkbasketInputDefinition workbasketInputDefinition = new WorkbasketInputDefinition();
         when(displayService.findWorkBasketInputDefinitionForCaseType("XXX")).thenReturn(workbasketInputDefinition);
         subject.displayWorkBasketInputDefinitionIdGet("XXX");
@@ -45,7 +45,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void  shouldReturnTabStructure(){
+    public void  shouldReturnTabStructure() {
         CaseTabCollection caseTabCollection = new CaseTabCollection();
         when(displayService.findTabStructureForCaseType("XXX")).thenReturn(caseTabCollection);
         subject.displayTabStructureIdGet("XXX");
@@ -53,7 +53,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void  getWorkBasketItemResultDisplay(){
+    public void  getWorkBasketItemResultDisplay() {
         WorkBasketResult workBasketResult = new WorkBasketResult();
         when(displayService.findWorkBasketDefinitionForCaseType("XXX")).thenReturn(workBasketResult);
         subject.displayWorkBasketDefinitionIdGet("XXX");

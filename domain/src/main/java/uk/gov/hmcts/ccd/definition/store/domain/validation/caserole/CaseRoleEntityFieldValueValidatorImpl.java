@@ -34,7 +34,7 @@ public class CaseRoleEntityFieldValueValidatorImpl implements CaseRoleEntityVali
             validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
                 String.format("CaseRole name cannot be null for case type '%s'",
                     caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
-        } else if(caseRoleEntity.getName().length() > NAME_MAX_LENGTH) {
+        } else if (caseRoleEntity.getName().length() > NAME_MAX_LENGTH) {
             validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
                 String.format("CaseRole name must be less than %s characters long for case type '%s'", NAME_MAX_LENGTH,
                     caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));

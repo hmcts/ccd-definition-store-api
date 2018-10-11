@@ -1,3 +1,5 @@
 #idam_api_url = "http://idam-api-idam-saat.service.core-compute-saat.internal"
 asp_name = "ccd-definition-store-api-saat"
 asp_rg = "ccd-definition-store-api-saat"
+elastic_search_enabled = "true"
+elastic_search_fail_on_import = "true"
