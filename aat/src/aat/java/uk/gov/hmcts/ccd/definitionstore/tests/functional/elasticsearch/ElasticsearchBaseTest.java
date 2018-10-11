@@ -6,12 +6,14 @@ import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
-@Slf4j
 abstract class ElasticsearchBaseTest extends BaseTest {
+
+    private final Logger log = LoggerFactory.getLogger(ElasticsearchBaseTest.class);
 
     ElasticsearchBaseTest(AATHelper aat) {
         super(aat);
@@ -24,7 +26,7 @@ abstract class ElasticsearchBaseTest extends BaseTest {
             deleteIndexAlias(indexName, indexAlias);
             deleteIndex(indexName);
         } catch (AssertionError e) {
-            log.error(indexName + " index does not exist");
+            log.warn("{} index does not exist", indexName);
         }
     }
 
