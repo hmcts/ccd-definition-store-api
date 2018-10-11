@@ -34,6 +34,7 @@ elasticsearch:
   ccdIgnoredTypes:
     - Label
     - CasePaymentHistoryViewer
+    - CaseLink
   typeMappings:
     Text: ${elasticsearch.elasticMappings.defaultText}
     TextArea: ${elasticsearch.elasticMappings.defaultText}
