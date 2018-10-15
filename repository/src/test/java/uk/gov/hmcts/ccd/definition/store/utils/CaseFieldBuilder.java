@@ -13,7 +13,7 @@ public class CaseFieldBuilder {
 
     private String reference;
     private String fieldTypeReference;
-    private List<ComplexFieldEntity> complexFields = newArrayList();
+    private List<ComplexFieldEntity> fieldsForComplex = newArrayList();
 
     private CaseFieldBuilder(String reference) {
         this.reference = reference;
@@ -24,11 +24,11 @@ public class CaseFieldBuilder {
         return this;
     }
 
-    public CaseFieldBuilder withComplexField(String reference, FieldTypeEntity fieldType) {
-        ComplexFieldEntity complexField = new ComplexFieldEntity();
-        complexField.setReference(reference);
-        complexField.setFieldType(fieldType);
-        this.complexFields.add(complexField);
+    public CaseFieldBuilder addFieldToComplex(String reference, FieldTypeEntity fieldType) {
+        ComplexFieldEntity field = new ComplexFieldEntity();
+        field.setReference(reference);
+        field.setFieldType(fieldType);
+        this.fieldsForComplex.add(field);
         return this;
     }
 
@@ -36,7 +36,7 @@ public class CaseFieldBuilder {
         CaseFieldEntity field = new CaseFieldEntity();
         field.setReference(this.reference);
         FieldTypeEntity typeEntity = newType(fieldTypeReference).build();
-        typeEntity.addComplexFields(complexFields);
+        typeEntity.addComplexFields(fieldsForComplex);
         FieldTypeEntity baseTypeEntity = newType("Complex").build();
         typeEntity.setBaseFieldType(baseTypeEntity);
         field.setFieldType(typeEntity);

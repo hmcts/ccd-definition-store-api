@@ -50,7 +50,7 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
         CaseFieldEntity fieldA = newTextField("fieldA").build();
         CaseFieldEntity fieldB = newTextField("fieldB").build();
         CaseFieldEntity fieldC = newField("fieldC", "Label").build();
-        caseType.withField(fieldA).withField(fieldB).withField(fieldC);
+        caseType.addField(fieldA).addField(fieldB).addField(fieldC);
 
         String result = mappingGenerator.generateMapping(caseType.build());
 

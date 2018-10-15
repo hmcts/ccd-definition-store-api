@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 import com.google.gson.stream.JsonWriter;
 import org.jooq.lambda.Unchecked;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
@@ -39,8 +40,24 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
             jw.beginObject();
             jw.name(ID);
             jw.jsonValue(disabled());
-            jw.name(CLASSIFICATION);
-            jw.jsonValue(collectionTypeDataClassificationMapping(field));
+            if (!field.isCollectionOfComplex()) {
+                jw.name(CLASSIFICATION);
+                jw.jsonValue(securityClassificationMapping());
+            } else {
+                jw.name(VALUE);
+                jw.beginObject();
+                jw.name(PROPERTIES);
+                jw.beginObject();
+                List<ComplexFieldEntity> complexFields = field.getFieldType().getCollectionFieldType().getComplexFields();
+                for (ComplexFieldEntity complexField: complexFields) {
+                    TypeMappingGenerator typeMapper = getTypeMapper(complexField.getBaseTypeString());
+                    String mapping = typeMapper.dataClassificationMapping(complexField);
+                    jw.name(complexField.getReference());
+                    jw.jsonValue(mapping);
+                }
+                jw.endObject();
+                jw.endObject();
+            }
             jw.endObject();
             jw.endObject();
             jw.endObject();
@@ -59,15 +76,6 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
             return mapper.dataMapping(collectionFieldType.getComplexFields());
         } else {
             return getConfiguredMapping(collectionFieldType.getReference());
-        }
-    }
-
-    private String collectionTypeDataClassificationMapping(FieldEntity field) {
-        if (field.isCollectionOfComplex()) {
-            ComplexTypeMappingGenerator mapper = (ComplexTypeMappingGenerator) getTypeMapper(COMPLEX);
-            return mapper.dataClassificationMapping(field.getFieldType().getCollectionFieldType().getComplexFields());
-        } else {
-            return securityClassificationMapping();
         }
     }
 }
