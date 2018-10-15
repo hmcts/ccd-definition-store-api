@@ -28,10 +28,6 @@
         <cpe>cpe:/a:h2database:h2</cpe>
     </suppress>
     <suppress>
-        <gav regex="true">^org\.postgresql:postgresql:.*$</gav>
-        <cpe>cpe:/a:postgresql:postgresql</cpe>
-    </suppress>
-    <suppress>
         <notes>tomcat embed is not used in production</notes>
         <gav regex="true">^.*tomcat-embed-.*$</gav>
         <cpe>cpe:/a:apache:tomcat</cpe>
