@@ -68,7 +68,7 @@ data "azurerm_key_vault_secret" "ccd_elastic_search_url" {
 
 data "azurerm_key_vault_secret" "ccd_elastic_search_password" {
   count = "${var.elastic_search_enabled == "false" ? 0 : 1}"
-  name = "ccd-ELASTIC-SEARCH-PASSOWRD"
+  name = "ccd-ELASTIC-SEARCH-PASSWORD"
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
 
