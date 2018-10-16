@@ -24,7 +24,7 @@ public class CaseTypeBuilder {
         return this;
     }
 
-    public CaseTypeBuilder withField(CaseFieldEntity field) {
+    public CaseTypeBuilder addField(CaseFieldEntity field) {
         fields.add(field);
         return this;
     }

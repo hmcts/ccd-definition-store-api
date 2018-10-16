@@ -66,6 +66,12 @@ data "azurerm_key_vault_secret" "ccd_elastic_search_url" {
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
 
+data "azurerm_key_vault_secret" "ccd_elastic_search_password" {
+  count = "${var.elastic_search_enabled == "false" ? 0 : 1}"
+  name = "ccd-ELASTIC-SEARCH-PASSWORD"
+  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+}
+
 module "case-definition-store-api" {
   source   = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product  = "${local.app_full_name}"
@@ -102,6 +108,7 @@ module "case-definition-store-api" {
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED = "true"
 
     ELASTIC_SEARCH_HOST = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_url.*.value)}"}"
+    ELASTIC_SEARCH_PASSWORD = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_password.*.value)}"}"
     ELASTIC_SEARCH_PORT = "${var.elastic_search_port}"
     ELASTIC_SEARCH_ENABLED = "${var.elastic_search_enabled}"
     ELASTIC_SEARCH_INDEX_SHARDS = "${var.elastic_search_index_shards}"

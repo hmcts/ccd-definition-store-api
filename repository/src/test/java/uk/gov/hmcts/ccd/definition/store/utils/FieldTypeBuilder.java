@@ -10,8 +10,8 @@ import static com.google.common.collect.Lists.newArrayList;
 public class FieldTypeBuilder {
 
     private String reference;
-    private List<ComplexFieldEntity> complexFields = newArrayList();
-    private FieldTypeEntity collectionFieldType;
+    private List<ComplexFieldEntity> fieldsForComplex = newArrayList();
+    private FieldTypeEntity fieldForCollection;
 
     private FieldTypeBuilder() {}
 
@@ -20,16 +20,16 @@ public class FieldTypeBuilder {
         return this;
     }
 
-    public FieldTypeBuilder withCollectionFieldType(FieldTypeEntity fieldTypeEntity) {
-        this.collectionFieldType = fieldTypeEntity;
+    public FieldTypeBuilder addFieldToCollection(FieldTypeEntity fieldTypeEntity) {
+        this.fieldForCollection = fieldTypeEntity;
         return this;
     }
 
-    public FieldTypeBuilder addComplexField(String reference, FieldTypeEntity fieldType) {
-        ComplexFieldEntity complexField = new ComplexFieldEntity();
-        complexField.setReference(reference);
-        complexField.setFieldType(fieldType);
-        this.complexFields.add(complexField);
+    public FieldTypeBuilder addFieldToComplex(String reference, FieldTypeEntity fieldType) {
+        ComplexFieldEntity field = new ComplexFieldEntity();
+        field.setReference(reference);
+        field.setFieldType(fieldType);
+        this.fieldsForComplex.add(field);
         return this;
     }
 
@@ -42,7 +42,7 @@ public class FieldTypeBuilder {
     public FieldTypeEntity buildComplex() {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(this.reference);
-        fieldTypeEntity.addComplexFields(complexFields);
+        fieldTypeEntity.addComplexFields(fieldsForComplex);
         fieldTypeEntity.setBaseFieldType(newType("Complex").build());
         return fieldTypeEntity;
     }
@@ -50,7 +50,7 @@ public class FieldTypeBuilder {
     public FieldTypeEntity buildCollection() {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(this.reference);
-        fieldTypeEntity.setCollectionFieldType(collectionFieldType);
+        fieldTypeEntity.setCollectionFieldType(fieldForCollection);
         fieldTypeEntity.setBaseFieldType(newType("Collection").build());
         return fieldTypeEntity;
     }
