@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.Fetch;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -109,7 +107,6 @@ public class EventLiteEntity implements Serializable, Referencable {
     }
 
     public EventLiteEntity addEventACL(final EventLiteACLEntity eventLiteACLEntity) {
-        eventLiteACLEntity.setEventEntity(this);
         eventACLs.add(eventLiteACLEntity);
         return this;
     }

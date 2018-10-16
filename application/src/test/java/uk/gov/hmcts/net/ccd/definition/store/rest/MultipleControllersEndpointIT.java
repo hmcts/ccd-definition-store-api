@@ -11,7 +11,9 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.*;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PRIVATE;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.type.TypeFactory;

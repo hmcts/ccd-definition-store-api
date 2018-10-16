@@ -134,7 +134,6 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
     }
 
     public CaseTypeLiteEntity addCaseTypeACL(final CaseTypeLiteACLEntity caseTypeLiteACLEntity) {
-        caseTypeLiteACLEntity.setCaseType(this);
         caseTypeLiteACLEntities.add(caseTypeLiteACLEntity);
         return this;
     }
