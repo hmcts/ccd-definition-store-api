@@ -8,10 +8,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityUserRoleValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 
 import java.util.Arrays;
 
@@ -29,7 +29,7 @@ public class CaseTypeEntityStateValidatorImplTest {
     private StateEntityCrudValidatorImpl crudValidatorImpl;
 
     @Mock
-    private StateEntityUserRoleValidatorImpl userRoleValidatorImpl;
+    private StateEntityACLValidatorImpl userRoleValidatorImpl;
 
     @InjectMocks
     private CaseTypeEntityStateValidatorImpl classUnderTest;
@@ -60,10 +60,10 @@ public class CaseTypeEntityStateValidatorImplTest {
     @Test
     public void shouldReturnValidationResultWithValidationErrorWhenThereAreErrors() {
         ValidationResult vr1 = new ValidationResult();
-        vr1.addError(new StateEntityUserRoleValidatorImpl.ValidationError("Default user role validation error message...", new StateUserRoleEntity()));
+        vr1.addError(new StateEntityACLValidatorImpl.ValidationError("Default user role validation error message...", new StateACLEntity()));
         when(crudValidatorImpl.validate(any(), any())).thenReturn(vr1);
         ValidationResult vr2 = new ValidationResult();
-        vr1.addError(new StateEntityCrudValidatorImpl.ValidationError("Default crud validation error message...", new StateUserRoleEntity()));
+        vr1.addError(new StateEntityCrudValidatorImpl.ValidationError("Default crud validation error message...", new StateACLEntity()));
         caseType.addState(new StateEntity());
         when(userRoleValidatorImpl.validate(any(), any())).thenReturn(vr2);
 

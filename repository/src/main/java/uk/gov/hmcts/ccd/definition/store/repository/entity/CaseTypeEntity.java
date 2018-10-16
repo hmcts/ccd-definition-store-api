@@ -88,7 +88,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
-    private final List<CaseTypeUserRoleEntity> caseTypeUserRoleEntities = new ArrayList<>();
+    private final List<CaseTypeACLEntity> caseTypeACLEntities = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -226,18 +226,18 @@ public class CaseTypeEntity implements Serializable, Versionable {
         this.jurisdiction = jurisdiction;
     }
 
-    public List<CaseTypeUserRoleEntity> getCaseTypeUserRoleEntities() {
-        return caseTypeUserRoleEntities;
+    public List<CaseTypeACLEntity> getCaseTypeACLEntities() {
+        return caseTypeACLEntities;
     }
 
-    public CaseTypeEntity addCaseTypeUserRole(final CaseTypeUserRoleEntity caseTypeUserRoleEntity) {
-        caseTypeUserRoleEntity.setCaseType(this);
-        caseTypeUserRoleEntities.add(caseTypeUserRoleEntity);
+    public CaseTypeEntity addCaseTypeACL(final CaseTypeACLEntity caseTypeACLEntity) {
+        caseTypeACLEntity.setCaseType(this);
+        caseTypeACLEntities.add(caseTypeACLEntity);
         return this;
     }
 
-    public CaseTypeEntity addCaseTypeUserRoles(final Collection<CaseTypeUserRoleEntity> caseTypeUserRoleEntities) {
-        caseTypeUserRoleEntities.forEach(e -> addCaseTypeUserRole(e));
+    public CaseTypeEntity addCaseTypeACLEntities(final Collection<CaseTypeACLEntity> caseTypeACLEntities) {
+        caseTypeACLEntities.forEach(e -> addCaseTypeACL(e));
         return this;
     }
 

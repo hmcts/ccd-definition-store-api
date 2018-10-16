@@ -1,5 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
+
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -8,23 +14,15 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
-
 interface AuthorisationParser {
 
     default void parseUserRole(final Authorisation entity,
                                final DefinitionDataItem definition,
                                final ParseContext parseContext) {
         final String userRole = definition.getString(ColumnName.USER_ROLE);
+        final String caseType = definition.getString(ColumnName.CASE_TYPE_ID);
 
-        final Optional<UserRoleEntity> userRoleEntity = parseContext.getUserRole(userRole);
-        if (userRoleEntity.isPresent()) {
-            entity.setUserRole(userRoleEntity.get());
-        }
+        parseContext.getRole(caseType, userRole).ifPresent(roleEntity -> entity.setUserRole((UserRoleEntity) roleEntity));
     }
 
     default void parseCrud(final Authorisation entity, final DefinitionDataItem definition) {

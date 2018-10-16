@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import static org.hamcrest.core.Is.is;
@@ -19,7 +19,7 @@ public class CaseFieldEntityCrudValidatorImplTest {
 
     private CaseFieldEntity caseField;
 
-    private CaseFieldUserRoleEntity caseFieldUserRole;
+    private CaseFieldACLEntity caseFieldUserRole;
 
     private CaseFieldEntityValidationContext context;
 
@@ -28,14 +28,14 @@ public class CaseFieldEntityCrudValidatorImplTest {
 
         validator = new CaseFieldEntityCrudValidatorImpl();
 
-        caseFieldUserRole = new CaseFieldUserRoleEntity();
+        caseFieldUserRole = new CaseFieldACLEntity();
 
         caseType = new CaseTypeEntity();
         caseType.setReference("case type");
 
         caseField = new CaseFieldEntity();
         caseField.setReference("case field");
-        caseField.addCaseFieldUserRole(caseFieldUserRole);
+        caseField.addCaseFieldACL(caseFieldUserRole);
 
         context = new CaseFieldEntityValidationContext(caseType);
     }

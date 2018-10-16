@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;

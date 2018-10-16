@@ -5,7 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.CrudValidator.isValidCrud;
@@ -18,7 +18,7 @@ public class StateEntityCrudValidatorImpl implements StateEntityValidator {
                                      final StateEntityValidationContext stateEntityValidationContext) {
         final ValidationResult validationResult = new ValidationResult();
 
-        for (StateUserRoleEntity entity : stateEntity.getStateUserRoles()) {
+        for (StateACLEntity entity : stateEntity.getStateACLEntities()) {
             if (!isValidCrud(entity.getCrudAsString())) {
                 String message = String.format("Invalid CRUD value '%s' for case type '%s', state '%s'",
                     defaultString(entity.getCrudAsString()),
@@ -31,9 +31,9 @@ public class StateEntityCrudValidatorImpl implements StateEntityValidator {
         return validationResult;
     }
 
-    public static class ValidationError extends SimpleValidationError<StateUserRoleEntity> {
+    public static class ValidationError extends SimpleValidationError<StateACLEntity> {
 
-        public ValidationError(String defaultMessage, StateUserRoleEntity entity) {
+        public ValidationError(String defaultMessage, StateACLEntity entity) {
             super(defaultMessage, entity);
         }
 

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.CrudValidator.isValidCrud;
 
@@ -16,7 +16,7 @@ public class EventEntityCrudValidatorImpl implements EventEntityValidator {
                                      final EventEntityValidationContext eventEntityValidationContext) {
         final ValidationResult validationResult = new ValidationResult();
 
-        for (EventUserRoleEntity entity : event.getEventUserRoles()) {
+        for (EventACLEntity entity : event.getEventACLEntities()) {
             if (!isValidCrud(entity.getCrudAsString())) {
                 validationResult.addError(new EventEntityInvalidCrudValidationError(entity,
                     new AuthorisationEventValidationContext(event, eventEntityValidationContext)));

@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -25,9 +25,9 @@ public class CaseTypeEntityInvalidCrudValidationErrorTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        final CaseTypeUserRoleEntity caseTypeUserRoleEntity = buildCaseTypeUserRoleEntity("NGITB");
-        classUnderTest = new CaseTypeEntityInvalidCrudValidationError(caseTypeUserRoleEntity,
-            new AuthorisationValidationContext(caseTypeUserRoleEntity.getCaseType()));
+        final CaseTypeACLEntity caseTypeACLEntity = buildCaseTypeUserRoleEntity("NGITB");
+        classUnderTest = new CaseTypeEntityInvalidCrudValidationError(caseTypeACLEntity,
+            new AuthorisationValidationContext(caseTypeACLEntity.getCaseType()));
         when(mockValidationErrorMessageCreator.createErrorMessage(classUnderTest))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
     }

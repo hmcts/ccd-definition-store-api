@@ -3,15 +3,15 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 
 public class CaseTypeEntityInvalidUserRoleValidationError extends ValidationError {
 
-    private final CaseTypeUserRoleEntity entity;
+    private final CaseTypeACLEntity entity;
 
     private final AuthorisationValidationContext context;
 
-    public CaseTypeEntityInvalidUserRoleValidationError(final CaseTypeUserRoleEntity entity,
+    public CaseTypeEntityInvalidUserRoleValidationError(final CaseTypeACLEntity entity,
                                                  final AuthorisationValidationContext context) {
 
 
@@ -21,7 +21,7 @@ public class CaseTypeEntityInvalidUserRoleValidationError extends ValidationErro
         this.context = context;
     }
 
-    public CaseTypeUserRoleEntity getCaseTypeUserRoleEntity() {
+    public CaseTypeACLEntity getCaseTypeUserRoleEntity() {
         return entity;
     }
 
