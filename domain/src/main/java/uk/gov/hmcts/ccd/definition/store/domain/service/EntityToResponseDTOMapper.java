@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
@@ -16,11 +16,11 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseTypeEntity.liveFrom", target = "version.liveFrom")
     @Mapping(source = "caseTypeEntity.liveTo", target = "version.liveUntil")
     @Mapping(
-        expression = "java(" +
-            "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-            "               caseTypeEntity.getCaseTypeUserRoleEntities()" +
-            "           )" +
-            "       )",
+        expression = "java("
+            + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map("
+            + "               caseTypeEntity.getCaseTypeACLEntities()"
+            + "           )"
+            + "       )",
         target = "acls"
     )
     @Mapping(source = "caseTypeEntity.printWebhook.url", target = "printableDocumentsUrl")
@@ -38,11 +38,11 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "eventEntity.webhookPostSubmit.url", target = "callBackURLSubmittedEvent")
     @Mapping(source = "eventEntity.webhookPostSubmit.timeouts", target = "retriesTimeoutURLSubmittedEvent")
     @Mapping(
-        expression = "java(" +
-            "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-            "               eventEntity.getEventUserRoles()" +
-            "           )" +
-            "       )",
+        expression = "java("
+            + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map("
+            + "               eventEntity.getEventACLEntities()"
+            + "           )"
+            + "       )",
         target = "acls"
     )
     @Mapping(
@@ -70,11 +70,11 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "jurisdictionEntity.liveTo", target = "liveUntil")
     Jurisdiction map(JurisdictionEntity jurisdictionEntity);
 
-    @Mapping(expression = "java(" +
-        "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-        "               stateEntity.getStateUserRoles()" +
-        "           )" +
-        "       )",
+    @Mapping(expression = "java("
+        + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map("
+        + "               stateEntity.getStateACLEntities()"
+        + "           )"
+        + "       )",
         target = "acls")
     @Mapping(source = "stateEntity.reference", target = "id")
     CaseState map(StateEntity stateEntity);
@@ -86,11 +86,11 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseFieldEntity.caseType.reference", target = "caseTypeId")
     @Mapping(source = "caseFieldEntity.hint", target = "hintText")
     @Mapping(source = "caseFieldEntity.liveTo", target = "liveUntil")
-    @Mapping(expression = "java(" +
-        "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map(" +
-        "               caseFieldEntity.getCaseFieldUserRoles()" +
-        "           )" +
-        "       )",
+    @Mapping(expression = "java("
+        + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map("
+        + "               caseFieldEntity.getCaseFieldACLEntities()"
+        + "           )"
+        + "       )",
         target = "acls")
     @Mapping(expression = "java(caseFieldEntity.isMetadataField())", target = "metadata")
     CaseField map(CaseFieldEntity caseFieldEntity);
@@ -150,7 +150,7 @@ public interface EntityToResponseDTOMapper {
 
         static List<AccessControlList> map(List<? extends Authorisation> authorisation) {
             return authorisation.stream()
-                .map(auth -> new AccessControlList(auth.getUserRole().getRole(),
+                .map(auth -> new AccessControlList(auth.getUserRole().getReference(),
                                                    auth.getCreate(),
                                                    auth.getRead(),
                                                    auth.getUpdate(),

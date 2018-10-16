@@ -1,5 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,11 +14,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

@@ -1,5 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -12,16 +22,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.Generic
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
 
 public class LayoutServiceImplTest {
 

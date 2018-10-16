@@ -5,7 +5,7 @@ import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -19,7 +19,7 @@ public class EventEntityCrudValidatorImplTest {
 
     private EventEntity event;
 
-    private EventUserRoleEntity eventUserRole;
+    private EventACLEntity eventUserRole;
 
     private EventEntityValidationContext context;
 
@@ -28,14 +28,14 @@ public class EventEntityCrudValidatorImplTest {
 
         validator = new EventEntityCrudValidatorImpl();
 
-        eventUserRole = new EventUserRoleEntity();
+        eventUserRole = new EventACLEntity();
 
         caseType = new CaseTypeEntity();
         caseType.setReference("case type");
 
         event = new EventEntity();
         event.setReference("case event");
-        event.addEventUserRole(eventUserRole);
+        event.addEventACL(eventUserRole);
 
         context = new EventEntityValidationContext(caseType);
     }
