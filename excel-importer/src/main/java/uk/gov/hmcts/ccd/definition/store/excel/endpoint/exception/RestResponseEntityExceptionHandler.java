@@ -1,5 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -14,13 +21,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * Global exception handler for the Case Definition Importer {@link uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController
