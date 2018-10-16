@@ -8,7 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.util.Collection;
@@ -33,10 +33,10 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
         this.entityToDefinitionDataItemRegistry = registry;
     }
 
-    Collection<CaseFieldUserRoleEntity> parseAll(final Map<String, DefinitionSheet> definitionSheets,
-                                                 final CaseTypeEntity caseType,
-                                                 final CaseFieldEntity caseField) {
-        final List<CaseFieldUserRoleEntity> parseResults = Lists.newArrayList();
+    Collection<CaseFieldACLEntity> parseAll(final Map<String, DefinitionSheet> definitionSheets,
+                                            final CaseTypeEntity caseType,
+                                            final CaseFieldEntity caseField) {
+        final List<CaseFieldACLEntity> parseResults = Lists.newArrayList();
 
         final String caseTypeReference = caseType.getReference();
         final String caseFieldReference = caseField.getReference();
@@ -67,7 +67,7 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
             } else {
                 for (DefinitionDataItem definition : collect.get(caseFieldReference)) {
 
-                    final CaseFieldUserRoleEntity entity = new CaseFieldUserRoleEntity();
+                    final CaseFieldACLEntity entity = new CaseFieldACLEntity();
 
                     parseUserRole(entity, definition, parseContext);
                     parseCrud(entity, definition);

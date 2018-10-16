@@ -4,9 +4,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-@Table(name = "case_type_user_role")
+@Table(name = "case_type_acl")
 @Entity
-public class CaseTypeUserRoleEntity extends Authorisation implements Serializable {
+public class CaseTypeACLEntity extends Authorisation implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_type_id", nullable = false)

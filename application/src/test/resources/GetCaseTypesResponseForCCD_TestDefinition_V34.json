@@ -297,6 +297,13 @@
       "read": true,
       "update": true,
       "delete": true
+    },
+    {
+      "role" : "[DEFENDANT]",
+      "create" : true,
+      "read" : true,
+      "update" : true,
+      "delete" : true
     }
   ],
   "case_fields": [
@@ -756,6 +763,13 @@
           "read": true,
           "update": false,
           "delete": false
+        },
+        {
+          "role" : "[CLAIMANT]",
+          "create" : false,
+          "read" : true,
+          "update" : false,
+          "delete" : false
         }
       ],
       "show_condition": null

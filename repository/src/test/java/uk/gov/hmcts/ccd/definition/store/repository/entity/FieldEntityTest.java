@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
-import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
+
+import org.junit.Test;
+import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
+import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 public class FieldEntityTest {
 

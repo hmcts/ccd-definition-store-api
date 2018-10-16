@@ -50,7 +50,7 @@ class UserRoleServiceImplTest {
             final String role = "role";
             givenEntityWithRole(role);
 
-            doReturn(Optional.of(entity)).when(repository).findTopByRole(role);
+            doReturn(Optional.of(entity)).when(repository).findTopByReference(role);
 
             final UserRole userRole = service.getRole(role);
 
@@ -65,7 +65,7 @@ class UserRoleServiceImplTest {
 
             final String role = "roleX";
 
-            doReturn(Optional.empty()).when(repository).findTopByRole(role);
+            doReturn(Optional.empty()).when(repository).findTopByReference(role);
 
             Throwable thrown = assertThrows(NotFoundException.class, () -> service.getRole(role));
             assertEquals("Role 'roleX' is not found", thrown.getMessage());
@@ -85,19 +85,19 @@ class UserRoleServiceImplTest {
             givenUserRole(role, RESTRICTED);
             givenEntityWithRole(role);
 
-            doReturn(Optional.empty()).when(repository).findTopByRole(role);
+            doReturn(Optional.empty()).when(repository).findTopByReference(role);
             doReturn(entity).when(repository).save(argumentCaptor.capture());
 
             final UserRole saved = service.saveRole(mockUserRole).getResponseBody();
             final UserRoleEntity captured = argumentCaptor.getValue();
 
             verify(repository).save(any(UserRoleEntity.class));
-            assertThat(captured.getRole(), is(role));
+            assertThat(captured.getReference(), is(role));
             assertThat(captured.getSecurityClassification(), is(RESTRICTED));
 
 
             verify(entity, never()).setSecurityClassification(any());
-            verify(entity, never()).setRole(anyString());
+            verify(entity, never()).setReference(anyString());
 
             assertThat(saved.getRole(), is(role));
             assertThat(saved.getSecurityClassification(), is(RESTRICTED));
@@ -116,17 +116,17 @@ class UserRoleServiceImplTest {
             givenEntityWithRole(role);
             givenEntityWithRole(role, PUBLIC, savedEntity);
 
-            doReturn(Optional.of(entity)).when(repository).findTopByRole(role);
+            doReturn(Optional.of(entity)).when(repository).findTopByReference(role);
             doReturn(savedEntity).when(repository).save(argumentCaptor.capture());
 
             final UserRole saved = service.saveRole(mockUserRole).getResponseBody();
             final UserRoleEntity captured = argumentCaptor.getValue();
 
             verify(repository).save(any(UserRoleEntity.class));
-            assertThat(captured.getRole(), is(role));
+            assertThat(captured.getReference(), is(role));
 
             verify(entity).setSecurityClassification(PUBLIC);
-            verify(entity, never()).setRole(anyString());
+            verify(entity, never()).setReference(anyString());
 
             assertThat(saved.getRole(), is(role));
             assertThat(saved.getSecurityClassification(), is(PUBLIC));
@@ -146,19 +146,19 @@ class UserRoleServiceImplTest {
             givenUserRole(role, RESTRICTED);
             givenEntityWithRole(role);
 
-            doReturn(Optional.empty()).when(repository).findTopByRole(role);
+            doReturn(Optional.empty()).when(repository).findTopByReference(role);
             doReturn(entity).when(repository).save(argumentCaptor.capture());
 
             final UserRole saved = service.createRole(mockUserRole).getResponseBody();
             final UserRoleEntity captured = argumentCaptor.getValue();
 
             verify(repository).save(any(UserRoleEntity.class));
-            assertThat(captured.getRole(), is(role));
+            assertThat(captured.getReference(), is(role));
             assertThat(captured.getSecurityClassification(), is(RESTRICTED));
 
 
             verify(entity, never()).setSecurityClassification(any());
-            verify(entity, never()).setRole(anyString());
+            verify(entity, never()).setReference(anyString());
 
             assertThat(saved.getRole(), is(role));
             assertThat(saved.getSecurityClassification(), is(RESTRICTED));
@@ -177,7 +177,7 @@ class UserRoleServiceImplTest {
             givenEntityWithRole(role);
             givenEntityWithRole(role, PUBLIC, savedEntity);
 
-            doReturn(Optional.of(entity)).when(repository).findTopByRole(role);
+            doReturn(Optional.of(entity)).when(repository).findTopByReference(role);
 
             Throwable thrown = assertThrows(DuplicateUserRoleException.class, () -> service.createRole(mockUserRole));
             assertEquals("User role already exists", thrown.getMessage());
@@ -197,7 +197,7 @@ class UserRoleServiceImplTest {
             givenUserRole(roleNames[2], PUBLIC);
             givenEntityWithRole(roleNames[2], PUBLIC, entity2);
 
-            doReturn(Arrays.asList(entity, entity2)).when(repository).findByRoleIn(Arrays.asList(roleNames));
+            doReturn(Arrays.asList(entity, entity2)).when(repository).findByReferenceIn(Arrays.asList(roleNames));
 
             List<UserRole> userRoles = service.getRoles(Arrays.asList(roleNames));
 
@@ -215,7 +215,7 @@ class UserRoleServiceImplTest {
         @DisplayName("should return empty if given roles are undefined")
         void getNonExistentRoles() {
             String[] roleNames = {"role1", "role2", "role3"};
-            doReturn(Collections.EMPTY_LIST).when(repository).findByRoleIn(Arrays.asList(roleNames));
+            doReturn(Collections.EMPTY_LIST).when(repository).findByReferenceIn(Arrays.asList(roleNames));
 
             List<UserRole> userRoles = service.getRoles(Arrays.asList(roleNames));
 
@@ -267,7 +267,7 @@ class UserRoleServiceImplTest {
 
     private void givenEntityWithRole(final String role, SecurityClassification sc, UserRoleEntity e) {
         given(e.getId()).willReturn(-3);
-        given(e.getRole()).willReturn(role);
+        given(e.getReference()).willReturn(role);
         given(e.getSecurityClassification()).willReturn(sc);
         given(e.getCreatedAt()).willReturn(LocalDateTime.of(2011, 6, 5, 23, 59, 59));
     }
