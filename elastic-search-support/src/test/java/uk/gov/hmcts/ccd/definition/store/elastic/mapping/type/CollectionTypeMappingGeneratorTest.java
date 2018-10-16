@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +14,13 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerato
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -93,7 +94,7 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
 
     private CaseFieldEntity newCollectionField() {
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .withCollectionFieldType(textFieldType()).buildCollection();
+                .addFieldToCollection(textFieldType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");
@@ -103,7 +104,7 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
 
     private CaseFieldEntity newCollectionOfComplexField() {
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .withCollectionFieldType(newComplexType()).buildCollection();
+                .addFieldToCollection(newComplexType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");
@@ -113,7 +114,8 @@ public class CollectionTypeMappingGeneratorTest extends AbstractMapperTest imple
 
     private FieldTypeEntity newComplexType() {
         FieldTypeBuilder complexType = newType("Person");
-        complexType.addComplexField("forename", textFieldType());
+        complexType.addFieldToComplex("forename", textFieldType());
+        complexType.addFieldToComplex("aLabel", labelFieldType());
         return complexType.buildComplex();
     }
 }

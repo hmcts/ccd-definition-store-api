@@ -62,12 +62,12 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
 
     private CaseFieldEntity newComplexField() {
         CaseFieldBuilder complexField = newField("complexField", "SomeComplexType1");
-        complexField.withComplexField("field1", textFieldType());
-        complexField.withComplexField("field2", textFieldType());
-        complexField.withComplexField("field3", labelFieldType());
+        complexField.addFieldToComplex("field1", textFieldType());
+        complexField.addFieldToComplex("field2", textFieldType());
+        complexField.addFieldToComplex("field3", labelFieldType());
 
         FieldTypeBuilder complexType = newType("SomeComplexType2");
-        complexField.withComplexField("nestedComplexField", complexType.buildComplex());
+        complexField.addFieldToComplex("nestedComplexField", complexType.buildComplex());
 
         return complexField.buildComplex();
     }

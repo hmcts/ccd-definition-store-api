@@ -48,10 +48,10 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
     }
 
     @Override
-    public boolean upsertMapping(String indexName, String caseTypeMapping) throws IOException {
-        log.info("upsert mapping of most recent index for alias {}", indexName);
-        GetAliasesResponse aliasesResponse = getAlias(indexName);
-        String currentIndex = getCurrentAliasIndex(indexName, aliasesResponse);
+    public boolean upsertMapping(String aliasName, String caseTypeMapping) throws IOException {
+        log.info("upsert mapping of most recent index for alias {}", aliasName);
+        GetAliasesResponse aliasesResponse = getAlias(aliasName);
+        String currentIndex = getCurrentAliasIndex(aliasName, aliasesResponse);
         log.info("upsert mapping of index {}", currentIndex);
         PutMappingRequest request = new PutMappingRequest(currentIndex);
         request.type(config.getCasesIndexType());

@@ -4,14 +4,9 @@
     "value": {
       "properties": {
         "id": "disabledMapping",
-        "classification": {
+        "value": {
           "properties": {
-            "classification": "securityClassificationMapping",
-            "value": {
-              "properties": {
-                "forename": "dataClassificationMapping"
-              }
-            }
+            "forename": "dataClassificationMapping"
           }
         }
       }
