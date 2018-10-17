@@ -21,8 +21,8 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     private static final String DEFINITION_FILE = "src/resource/CCD_CNP_27.xlsx";
     private static final String DEFINITION_FILE_WITH_NEW_FIELD = "src/resource/CCD_CNP_27_WithNewField.xlsx";
 
-    private static final String CASE_INDEX_NAME = "aat_cases-000001";
-    private static final String CASE_INDEX_ALIAS = "aat_cases";
+    private static final String CASE_INDEX_NAME = "mapper_cases-000001";
+    private static final String CASE_INDEX_ALIAS = "mapper_cases";
     private static final String TEXT_FIELD_TYPE = "text";
 
     protected ElasticsearchImportDefinitionTest(AATHelper aat) {
