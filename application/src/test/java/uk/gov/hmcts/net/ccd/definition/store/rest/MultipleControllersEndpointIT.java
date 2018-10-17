@@ -222,6 +222,27 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     @Test
+    public void shouldSaveUserRole() throws Exception {
+        final String URL = ROLES_URL.substring(0, ROLES_URL.length() - 4);
+        MvcResult result = mockMvc
+            .perform(MockMvcRequestBuilders
+                .put(URL)
+                .contentType("application/json")
+                .accept("application/json")
+                .content("{\"role\":\"to-delete-1\",\"security_classification\":\"PUBLIC\"}"))
+            .andExpect(MockMvcResultMatchers.status().isCreated())
+            .andReturn();
+        final UserRole userRole = mapper.readValue(result.getResponse().getContentAsString(),
+            TypeFactory.defaultInstance().constructType(new TypeReference<UserRole>() {
+            }));
+        assertAll(
+            () -> assertThat(userRole.getSecurityClassification(), is(PUBLIC)),
+            () -> assertThat(userRole.getRole(), is("to-delete-1")),
+            () -> assertThat(userRole.getId(), is(notNullValue()))
+        );
+    }
+
+    @Test
     public void shouldReturnNoUserRolesWhenUndefinedRolesQueried() throws Exception {
         final String URL = String.format(ROLES_URL, "Nayab,Fatih,Andrzej,Mario");
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
