@@ -4,14 +4,14 @@ import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 
 public class CaseTypeEntityInvalidCrudValidationError extends ValidationError {
 
-    private final CaseTypeUserRoleEntity entity;
+    private final CaseTypeACLEntity entity;
     private final AuthorisationValidationContext context;
 
-    public CaseTypeEntityInvalidCrudValidationError(final CaseTypeUserRoleEntity entity,
+    public CaseTypeEntityInvalidCrudValidationError(final CaseTypeACLEntity entity,
                                                     final AuthorisationValidationContext context) {
         super(String.format("Invalid CRUD value '%s' for case type '%s'",
             StringUtils.defaultString(entity.getCrudAsString()),
@@ -20,7 +20,7 @@ public class CaseTypeEntityInvalidCrudValidationError extends ValidationError {
         this.context = context;
     }
 
-    public CaseTypeUserRoleEntity getCaseTypeUserRoleEntity() {
+    public CaseTypeACLEntity getCaseTypeUserRoleEntity() {
         return entity;
     }
 

@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Parameter;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -19,6 +14,11 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static org.hibernate.annotations.FetchMode.SUBSELECT;
+
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Parameter;
+import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 @Table(name = "event")
 @Entity
@@ -101,7 +101,7 @@ public class EventEntity implements Serializable {
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "event_id")
-    private final List<EventUserRoleEntity> eventUserRoles = new ArrayList<>();
+    private final List<EventACLEntity> eventACLEntities = new ArrayList<>();
 
     @Column(name = "show_event_notes")
     private Boolean showEventNotes;
@@ -260,18 +260,18 @@ public class EventEntity implements Serializable {
         return eventCaseFields;
     }
 
-    public List<EventUserRoleEntity> getEventUserRoles() {
-        return eventUserRoles;
+    public List<EventACLEntity> getEventACLEntities() {
+        return eventACLEntities;
     }
 
-    public EventEntity addEventUserRole(final EventUserRoleEntity eventUserRole) {
-        eventUserRole.setEventEntity(this);
-        eventUserRoles.add(eventUserRole);
+    public EventEntity addEventACL(final EventACLEntity eventACLEntity) {
+        eventACLEntity.setEventEntity(this);
+        eventACLEntities.add(eventACLEntity);
         return this;
     }
 
-    public EventEntity addEventUserRoles(final Collection<EventUserRoleEntity> entities) {
-        entities.forEach(e -> addEventUserRole(e));
+    public EventEntity addEventACLEntities(final Collection<EventACLEntity> eventACLEntities) {
+        eventACLEntities.forEach(e -> addEventACL(e));
         return this;
     }
 

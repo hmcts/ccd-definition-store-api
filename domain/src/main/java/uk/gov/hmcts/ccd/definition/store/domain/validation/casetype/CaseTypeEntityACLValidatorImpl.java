@@ -4,16 +4,16 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 
 @Component
-public class CaseTypeEntityUserRoleValidatorImpl implements CaseTypeEntityValidator {
+public class CaseTypeEntityACLValidatorImpl implements CaseTypeEntityValidator {
 
     @Override
     public ValidationResult validate(final CaseTypeEntity caseType) {
         final ValidationResult validationResult = new ValidationResult();
 
-        for (CaseTypeUserRoleEntity entity : caseType.getCaseTypeUserRoleEntities()) {
+        for (CaseTypeACLEntity entity : caseType.getCaseTypeACLEntities()) {
 
             if (null == entity.getUserRole()) {
                 validationResult.addError(new CaseTypeEntityInvalidUserRoleValidationError(entity,
