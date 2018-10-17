@@ -11,9 +11,9 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
+import static org.hibernate.annotations.FetchMode.SUBSELECT;
 
 import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 /**
  * A "lite" version of the {@link CaseTypeEntity} class that contains selected Case Type fields (id, reference, name,
@@ -46,17 +46,17 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
     private JurisdictionEntity jurisdiction;
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(value = SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<StateEntity> states = new ArrayList<>();
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(value = SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<EventLiteEntity> events = new ArrayList<>();
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(value = SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<CaseTypeLiteACLEntity> caseTypeLiteACLEntities = new ArrayList<>();
 

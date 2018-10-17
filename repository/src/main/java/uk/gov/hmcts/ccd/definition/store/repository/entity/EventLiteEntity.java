@@ -12,7 +12,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.FetchMode.SUBSELECT;
 
 import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 /**
  * A "lite" version of the {@link EventEntity} class that contains selected Event fields (id, reference, name, and
@@ -49,7 +48,7 @@ public class EventLiteEntity implements Serializable, Referencable {
     private final List<StateEntity> preStates = new ArrayList<>();
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(value = SUBSELECT)
     @JoinColumn(name = "event_id")
     private final List<EventLiteACLEntity> eventACLs = new ArrayList<>();
 
