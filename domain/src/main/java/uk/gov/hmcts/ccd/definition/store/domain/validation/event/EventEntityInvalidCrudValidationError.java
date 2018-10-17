@@ -3,23 +3,23 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 public class EventEntityInvalidCrudValidationError extends ValidationError {
 
     private final AuthorisationEventValidationContext authorisationEventValidationContext;
-    private final EventUserRoleEntity eventUserRoleEntity;
+    private final EventACLEntity eventACLEntity;
 
-    public EventEntityInvalidCrudValidationError(final EventUserRoleEntity entity,
+    public EventEntityInvalidCrudValidationError(final EventACLEntity entity,
                                                  final AuthorisationEventValidationContext context) {
         super(String.format("Invalid CRUD value '%s' for case type '%s', event '%s'",
             defaultString(entity.getCrudAsString()),
             context.getCaseReference(),
             context.getEventReference()));
 
-        this.eventUserRoleEntity = entity;
+        this.eventACLEntity = entity;
         this.authorisationEventValidationContext = context;
     }
 
@@ -27,8 +27,8 @@ public class EventEntityInvalidCrudValidationError extends ValidationError {
         return authorisationEventValidationContext;
     }
 
-    public EventUserRoleEntity getEventUserRoleEntity() {
-        return eventUserRoleEntity;
+    public EventACLEntity getEventACLEntity() {
+        return eventACLEntity;
     }
 
     @Override

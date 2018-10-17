@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 @Table(name = "event_case_field")
 @Entity

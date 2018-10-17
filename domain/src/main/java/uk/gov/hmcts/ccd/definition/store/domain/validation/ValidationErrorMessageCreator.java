@@ -36,7 +36,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventC
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldOrderSummaryCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityUserRoleValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.userprofile.UserProfileValidatorImpl;
 
 public interface ValidationErrorMessageCreator {
@@ -102,7 +102,7 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(GenericLayoutEntityValidatorImpl.ValidationError error);
 
-    String createErrorMessage(StateEntityUserRoleValidatorImpl.ValidationError error);
+    String createErrorMessage(StateEntityACLValidatorImpl.ValidationError error);
 
     String createErrorMessage(StateEntityCrudValidatorImpl.ValidationError error);
 

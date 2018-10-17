@@ -1,5 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.*;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.BDDMockito.given;
+import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,19 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateUserRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-
-import java.util.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.BDDMockito.given;
-import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthorisationCaseStateParserTest {
@@ -36,13 +33,15 @@ public class AuthorisationCaseStateParserTest {
     @Mock
     private UserRoleEntity mockUserRoleEntity;
 
+    private CaseRoleEntity caseRoleEntity;
+
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     @Before
     public void setup() {
         final ParseContext context = new ParseContext();
         final String role = "CaseWorker 1";
-        given(mockUserRoleEntity.getRole()).willReturn(role);
+        given(mockUserRoleEntity.getReference()).willReturn(role);
         context.registerUserRoles(Arrays.asList(mockUserRoleEntity));
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
@@ -54,10 +53,17 @@ public class AuthorisationCaseStateParserTest {
         definitionSheets.put(AUTHORISATION_CASE_STATE.getName(), definitionSheet);
         definitionSheets.put(CASE_TYPE.getName(), buildSheetForCaseType());
         definitionSheets.put(STATE.getName(), buildSheetForCaseState());
+
+
+        final String caseRole = "[CLAIMANT]";
+        caseRoleEntity = new CaseRoleEntity();
+        caseRoleEntity.setReference(caseRole);
+        caseRoleEntity.setCaseType(caseTypeEntity);
+        context.registerCaseRoles(Arrays.asList(caseRoleEntity));
     }
 
     @Test
-    public void shouldParseEntity_withUserRoleFound() {
+    public void shouldParseEntityWithUserRoleFound() {
 
         final String role = "CaseWorker 1";
 
@@ -67,23 +73,49 @@ public class AuthorisationCaseStateParserTest {
         item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
-        final Collection<StateUserRoleEntity> entities = subject.parseAll(definitionSheets, caseTypeEntity, stateEntity);
+        final Collection<StateACLEntity> entities = subject.parseAll(definitionSheets, caseTypeEntity, stateEntity);
         assertThat(entities.size(), is(1));
 
-        final StateUserRoleEntity stateUserRoleEntity = new ArrayList<>(entities).get(0);
-        assertThat(stateUserRoleEntity.getCrudAsString(), is("CCCd"));
-        assertThat(stateUserRoleEntity.getId(), is(nullValue()));
-        assertThat(stateUserRoleEntity.getUserRole(), is(mockUserRoleEntity));
-        assertThat(stateUserRoleEntity.getCreate(), is(true));
-        assertThat(stateUserRoleEntity.getUpdate(), is(false));
-        assertThat(stateUserRoleEntity.getRead(), is(false));
-        assertThat(stateUserRoleEntity.getDelete(), is(true));
+        final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
+        assertThat(stateACLEntity.getCrudAsString(), is("CCCd"));
+        assertThat(stateACLEntity.getId(), is(nullValue()));
+        assertThat(stateACLEntity.getUserRole(), is(mockUserRoleEntity));
+        assertThat(stateACLEntity.getCreate(), is(true));
+        assertThat(stateACLEntity.getUpdate(), is(false));
+        assertThat(stateACLEntity.getRead(), is(false));
+        assertThat(stateACLEntity.getDelete(), is(true));
 
-        assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateUserRoleEntity), is(Optional.of(item1)));
+        assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
     }
 
     @Test
-    public void shouldParseEntity_withUserRoleNotFound() {
+    public void shouldParseEntityWithCaseRoleFound() {
+
+        final String caseRole = "[CLAIMANT]";
+
+        final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_TYPE.getName());
+        item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item1.addAttribute(ColumnName.STATE_ID.toString(), CASE_STATE_UNDER_TEST);
+        item1.addAttribute(ColumnName.USER_ROLE.toString(), caseRole);
+        item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
+        definitionSheet.addDataItem(item1);
+        final Collection<StateACLEntity> entities = subject.parseAll(definitionSheets, caseTypeEntity, stateEntity);
+        assertThat(entities.size(), is(1));
+
+        final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
+        assertThat(stateACLEntity.getCrudAsString(), is("CCCd"));
+        assertThat(stateACLEntity.getId(), is(nullValue()));
+        assertThat(stateACLEntity.getUserRole(), is(caseRoleEntity));
+        assertThat(stateACLEntity.getCreate(), is(true));
+        assertThat(stateACLEntity.getUpdate(), is(false));
+        assertThat(stateACLEntity.getRead(), is(false));
+        assertThat(stateACLEntity.getDelete(), is(true));
+
+        assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
+    }
+
+    @Test
+    public void shouldParseEntityWithUserRoleNotFound() {
 
         final String role = "CaseWorker 2";
 
@@ -93,19 +125,19 @@ public class AuthorisationCaseStateParserTest {
         item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
-        final Collection<StateUserRoleEntity> entities = subject.parseAll(definitionSheets, caseTypeEntity, stateEntity);
+        final Collection<StateACLEntity> entities = subject.parseAll(definitionSheets, caseTypeEntity, stateEntity);
         assertThat(entities.size(), is(1));
 
-        final StateUserRoleEntity stateUserRoleEntity = new ArrayList<>(entities).get(0);
-        assertThat(stateUserRoleEntity.getCrudAsString(), is("CCCd"));
-        assertThat(stateUserRoleEntity.getId(), is(nullValue()));
-        assertThat(stateUserRoleEntity.getUserRole(), is(nullValue()));
+        final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
+        assertThat(stateACLEntity.getCrudAsString(), is("CCCd"));
+        assertThat(stateACLEntity.getId(), is(nullValue()));
+        assertThat(stateACLEntity.getUserRole(), is(nullValue()));
 
-        assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateUserRoleEntity), is(Optional.of(item1)));
+        assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
     }
 
     @Test
-    public void shouldParseEntity_withInvalidCrud() {
+    public void shouldParseEntityWithInvalidCrud() {
 
         final String role = "CaseWorker 1";
 
@@ -115,19 +147,19 @@ public class AuthorisationCaseStateParserTest {
         item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(ColumnName.CRUD.toString(), " X y  ");
         definitionSheet.addDataItem(item1);
-        final Collection<StateUserRoleEntity> entities = subject.parseAll(definitionSheets, caseTypeEntity, stateEntity);
+        final Collection<StateACLEntity> entities = subject.parseAll(definitionSheets, caseTypeEntity, stateEntity);
         assertThat(entities.size(), is(1));
 
-        final StateUserRoleEntity stateUserRoleEntity = new ArrayList<>(entities).get(0);
-        assertThat(stateUserRoleEntity.getCrudAsString(), is("X y"));
-        assertThat(stateUserRoleEntity.getId(), is(nullValue()));
-        assertThat(stateUserRoleEntity.getUserRole(), is(mockUserRoleEntity));
+        final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
+        assertThat(stateACLEntity.getCrudAsString(), is("X y"));
+        assertThat(stateACLEntity.getId(), is(nullValue()));
+        assertThat(stateACLEntity.getUserRole(), is(mockUserRoleEntity));
 
-        assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateUserRoleEntity), is(Optional.of(item1)));
+        assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
     }
 
     @Test
-    public void shouldParseEntity_withInvalidCrudAndUserNotFound() {
+    public void shouldParseEntityWithInvalidCrudAndUserNotFound() {
 
         final String role = "CaseWorker 2";
 
@@ -137,15 +169,15 @@ public class AuthorisationCaseStateParserTest {
         item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(ColumnName.CRUD.toString(), " X y  ");
         definitionSheet.addDataItem(item1);
-        final Collection<StateUserRoleEntity> entities = subject.parseAll(definitionSheets, caseTypeEntity, stateEntity);
+        final Collection<StateACLEntity> entities = subject.parseAll(definitionSheets, caseTypeEntity, stateEntity);
         assertThat(entities.size(), is(1));
 
-        final StateUserRoleEntity stateUserRoleEntityeUserRoleEntity = new ArrayList<>(entities).get(0);
-        assertThat(stateUserRoleEntityeUserRoleEntity.getCrudAsString(), is("X y"));
-        assertThat(stateUserRoleEntityeUserRoleEntity.getId(), is(nullValue()));
-        assertThat(stateUserRoleEntityeUserRoleEntity.getUserRole(), is(nullValue()));
+        final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
+        assertThat(stateACLEntity.getCrudAsString(), is("X y"));
+        assertThat(stateACLEntity.getId(), is(nullValue()));
+        assertThat(stateACLEntity.getUserRole(), is(nullValue()));
 
-        assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateUserRoleEntityeUserRoleEntity), is(Optional.of(item1)));
+        assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
     }
 
     private DefinitionSheet buildSheetForCaseState() {

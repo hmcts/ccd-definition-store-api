@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateUserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,8 +32,8 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
     }
 
-    public Collection<StateUserRoleEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseTypeEntity, StateEntity stateEntity) {
-        Collection<StateUserRoleEntity> parseResults = Lists.newArrayList();
+    public Collection<StateACLEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseTypeEntity, StateEntity stateEntity) {
+        Collection<StateACLEntity> parseResults = Lists.newArrayList();
 
         final String caseTypeReference = caseTypeEntity.getReference();
         final String stateReference = stateEntity.getReference();
@@ -57,7 +57,7 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
                 // and let validation handles this Exception
             } else {
                 for (DefinitionDataItem definition : collect.get(stateReference)) {
-                    StateUserRoleEntity entity = new StateUserRoleEntity();
+                    StateACLEntity entity = new StateACLEntity();
 
                     parseUserRole(entity, definition, parseContext);
                     parseCrud(entity, definition);

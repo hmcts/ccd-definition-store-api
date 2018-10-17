@@ -3,9 +3,9 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Table(name = "case_field_user_role")
+@Table(name = "case_field_acl")
 @Entity
-public class CaseFieldUserRoleEntity extends Authorisation implements Serializable {
+public class CaseFieldACLEntity extends Authorisation implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_field_id", nullable = false)

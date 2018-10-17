@@ -1,5 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,16 +20,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -61,9 +61,9 @@ public class CaseTypeObjectGraphTest {
 
         jurisdiction = helper.createJurisdiction();
         fieldType = helper.createType(jurisdiction);
-        userRole1 = helper.createUserRole("user role 1", SecurityClassification.PUBLIC);
-        userRole2 = helper.createUserRole("user role 2", SecurityClassification.PRIVATE);
-        userRole3 = helper.createUserRole("user role 3", SecurityClassification.RESTRICTED);
+        userRole1 = helper.createUserRole("user role 1", "user role 1", SecurityClassification.PUBLIC);
+        userRole2 = helper.createUserRole("user role 2", "user role 2", SecurityClassification.PRIVATE);
+        userRole3 = helper.createUserRole("user role 3", "user role 3", SecurityClassification.RESTRICTED);
     }
 
     @Test
@@ -81,8 +81,8 @@ public class CaseTypeObjectGraphTest {
         cf.setLiveFrom(LocalDate.of(2017, 8, 31));
         cf.setSecurityClassification(SecurityClassification.RESTRICTED);
 
-        cf.addCaseFieldUserRole(createCaseFieldUserRoleEntity(userRole1, true, false, false, true));
-        cf.addCaseFieldUserRole(createCaseFieldUserRoleEntity(userRole2, true, true, false, true));
+        cf.addCaseFieldACL(createCaseFieldUserRoleEntity(userRole1, true, false, false, true));
+        cf.addCaseFieldACL(createCaseFieldUserRoleEntity(userRole2, true, true, false, true));
 
         caseType.addCaseField(cf);
 
@@ -92,10 +92,10 @@ public class CaseTypeObjectGraphTest {
         final StateEntity s1 = createState("stateId", "stateName", "desc", 3, TODAY, TOMORROW);
         final StateEntity s2 = createState("stateId2", "stateName2", "desc2", 3, TODAY, TOMORROW);
 
-        final StateUserRoleEntity stateUserRoleEntity1 = createStateUserRoleEntity(userRole1, false, false, true, true);
-        final StateUserRoleEntity stateUserRoleEntity2 = createStateUserRoleEntity(userRole2, false, true, true, false);
-        s1.addStateUserRole(stateUserRoleEntity1);
-        s1.addStateUserRole(stateUserRoleEntity2);
+        final StateACLEntity stateACLEntity1 = createStateUserRoleEntity(userRole1, false, false, true, true);
+        final StateACLEntity stateACLEntity2 = createStateUserRoleEntity(userRole2, false, true, true, false);
+        s1.addStateACL(stateACLEntity1);
+        s1.addStateACL(stateACLEntity2);
 
         WebhookEntity h1 = createWebHook("url1", 3, 5, 6, 7, 8);
         WebhookEntity h2 = createWebHook("url2", 3, 50, 6, 20);
@@ -106,12 +106,12 @@ public class CaseTypeObjectGraphTest {
         caseType.addState(s1);
         caseType.addState(s2);
 
-        final CaseTypeUserRoleEntity cture1 = createCaseTypeUserRoleEntity(userRole1, false, false, true, true);
-        final CaseTypeUserRoleEntity cture2 = createCaseTypeUserRoleEntity(userRole2, false, true, true, false);
-        final CaseTypeUserRoleEntity cture3 = createCaseTypeUserRoleEntity(userRole3, true, false, true, true);
-        caseType.addCaseTypeUserRole(cture1);
-        caseType.addCaseTypeUserRole(cture2);
-        caseType.addCaseTypeUserRole(cture3);
+        final CaseTypeACLEntity cture1 = createCaseTypeUserRoleEntity(userRole1, false, false, true, true);
+        final CaseTypeACLEntity cture2 = createCaseTypeUserRoleEntity(userRole2, false, true, true, false);
+        final CaseTypeACLEntity cture3 = createCaseTypeUserRoleEntity(userRole3, true, false, true, true);
+        caseType.addCaseTypeACL(cture1);
+        caseType.addCaseTypeACL(cture2);
+        caseType.addCaseTypeACL(cture3);
 
         e1.setPostState(s1);
 
@@ -124,10 +124,10 @@ public class CaseTypeObjectGraphTest {
 
         e1.setSecurityClassification(SecurityClassification.PRIVATE);
 
-        e1.addEventUserRole(createEventUserRoleEntity(userRole1, true, false, false, true));
-        e1.addEventUserRole(createEventUserRoleEntity(userRole2, false, false, false, true));
-        e2.addEventUserRole(createEventUserRoleEntity(userRole1, true, true, false, true));
-        e2.addEventUserRole(createEventUserRoleEntity(userRole3, false, true, false, true));
+        e1.addEventACL(createEventUserRoleEntity(userRole1, true, false, false, true));
+        e1.addEventACL(createEventUserRoleEntity(userRole2, false, false, false, true));
+        e2.addEventACL(createEventUserRoleEntity(userRole1, true, true, false, true));
+        e2.addEventACL(createEventUserRoleEntity(userRole3, false, true, false, true));
 
         final CaseTypeEntity saved = versionedCaseTypeRepository.save(caseType);
 
@@ -166,8 +166,8 @@ public class CaseTypeObjectGraphTest {
         assertThat(fetchedState1.getReference(), equalTo("stateId"));
         assertThat(fetchedState1.getLiveFrom(), equalTo(TODAY));
         assertThat(fetchedState1.getLiveTo(), equalTo(TOMORROW));
-        assertStateUserRoleEntity(fetchedState1, stateUserRoleEntity1, fetchedState1.getStateUserRoles().get(0));
-        assertStateUserRoleEntity(fetchedState1, stateUserRoleEntity2, fetchedState1.getStateUserRoles().get(1));
+        assertStateUserRoleEntity(fetchedState1, stateACLEntity1, fetchedState1.getStateACLEntities().get(0));
+        assertStateUserRoleEntity(fetchedState1, stateACLEntity2, fetchedState1.getStateACLEntities().get(1));
 
         // Check case field
         assertThat(fetched.getCaseFields(), hasSize(1));
@@ -184,38 +184,38 @@ public class CaseTypeObjectGraphTest {
         fetched.getEvents().get(0).setSecurityClassification(SecurityClassification.PUBLIC);
 
         // Check authorisation case types
-        assertThat(fetched.getCaseTypeUserRoleEntities(), hasSize(3));
-        assertCaseTypeUserRoleEntity(fetched, cture1, fetched.getCaseTypeUserRoleEntities().get(0));
-        assertCaseTypeUserRoleEntity(fetched, cture2, fetched.getCaseTypeUserRoleEntities().get(1));
-        assertCaseTypeUserRoleEntity(fetched, cture3, fetched.getCaseTypeUserRoleEntities().get(2));
+        assertThat(fetched.getCaseTypeACLEntities(), hasSize(3));
+        assertCaseTypeUserRoleEntity(fetched, cture1, fetched.getCaseTypeACLEntities().get(0));
+        assertCaseTypeUserRoleEntity(fetched, cture2, fetched.getCaseTypeACLEntities().get(1));
+        assertCaseTypeUserRoleEntity(fetched, cture3, fetched.getCaseTypeACLEntities().get(2));
 
 
         // Check authorisation case fields
-        assertThat(caseField.getCaseFieldUserRoles().size(), equalTo(2));
-        assertThat(caseField.getCaseFieldUserRoles().get(0).getUserRole().getRole(), equalTo("user role 1"));
-        assertThat(caseField.getCaseFieldUserRoles().get(1).getUserRole().getRole(), equalTo("user role 2"));
-        assertThat(caseField.getCaseFieldUserRoles().get(0).getCreate(), equalTo(true));
-        assertThat(caseField.getCaseFieldUserRoles().get(0).getRead(), equalTo(false));
-        assertThat(caseField.getCaseFieldUserRoles().get(0).getUpdate(), equalTo(false));
-        assertThat(caseField.getCaseFieldUserRoles().get(0).getDelete(), equalTo(true));
-        assertThat(caseField.getCaseFieldUserRoles().get(1).getCreate(), equalTo(true));
-        assertThat(caseField.getCaseFieldUserRoles().get(1).getRead(), equalTo(true));
-        assertThat(caseField.getCaseFieldUserRoles().get(1).getUpdate(), equalTo(false));
-        assertThat(caseField.getCaseFieldUserRoles().get(1).getDelete(), equalTo(true));
+        assertThat(caseField.getCaseFieldACLEntities().size(), equalTo(2));
+        assertThat(caseField.getCaseFieldACLEntities().get(0).getUserRole().getReference(), equalTo("user role 1"));
+        assertThat(caseField.getCaseFieldACLEntities().get(1).getUserRole().getReference(), equalTo("user role 2"));
+        assertThat(caseField.getCaseFieldACLEntities().get(0).getCreate(), equalTo(true));
+        assertThat(caseField.getCaseFieldACLEntities().get(0).getRead(), equalTo(false));
+        assertThat(caseField.getCaseFieldACLEntities().get(0).getUpdate(), equalTo(false));
+        assertThat(caseField.getCaseFieldACLEntities().get(0).getDelete(), equalTo(true));
+        assertThat(caseField.getCaseFieldACLEntities().get(1).getCreate(), equalTo(true));
+        assertThat(caseField.getCaseFieldACLEntities().get(1).getRead(), equalTo(true));
+        assertThat(caseField.getCaseFieldACLEntities().get(1).getUpdate(), equalTo(false));
+        assertThat(caseField.getCaseFieldACLEntities().get(1).getDelete(), equalTo(true));
 
         // Check authorisation case events
         final EventEntity eventEntity1 = findEventEntity(fetchedEvents, e1);
         final EventEntity eventEntity2 = findEventEntity(fetchedEvents, e2);
 
-        final EventUserRoleEntity eventUserRoleEntity1 = findFetchedEventUserRoleEntity(eventEntity1, "user role 1");
-        final EventUserRoleEntity eventUserRoleEntity2 = findFetchedEventUserRoleEntity(eventEntity1, "user role 2");
-        final EventUserRoleEntity eventUserRoleEntity3 = findFetchedEventUserRoleEntity(eventEntity2, "user role 1");
-        final EventUserRoleEntity eventUserRoleEntity4 = findFetchedEventUserRoleEntity(eventEntity2, "user role 3");
+        final EventACLEntity eventACLEntity1 = findFetchedEventUserRoleEntity(eventEntity1, "user role 1");
+        final EventACLEntity eventACLEntity2 = findFetchedEventUserRoleEntity(eventEntity1, "user role 2");
+        final EventACLEntity eventACLEntity3 = findFetchedEventUserRoleEntity(eventEntity2, "user role 1");
+        final EventACLEntity eventACLEntity4 = findFetchedEventUserRoleEntity(eventEntity2, "user role 3");
 
-        assertEventUserRoleEntity(eventUserRoleEntity1, true, false, false, true);
-        assertEventUserRoleEntity(eventUserRoleEntity2, false, false, false, true);
-        assertEventUserRoleEntity(eventUserRoleEntity3, true, true, false, true);
-        assertEventUserRoleEntity(eventUserRoleEntity4, false, true, false, true);
+        assertEventUserRoleEntity(eventACLEntity1, true, false, false, true);
+        assertEventUserRoleEntity(eventACLEntity2, false, false, false, true);
+        assertEventUserRoleEntity(eventACLEntity3, true, true, false, true);
+        assertEventUserRoleEntity(eventACLEntity4, false, true, false, true);
 
         versionedCaseTypeRepository.save(fetched);
 
@@ -227,24 +227,24 @@ public class CaseTypeObjectGraphTest {
 
     }
 
-    private void assertEventUserRoleEntity(final EventUserRoleEntity entity,
+    private void assertEventUserRoleEntity(final EventACLEntity entity,
                                            final boolean canCreate,
                                            final boolean canRead,
                                            final boolean canUpdate,
                                            final boolean canDelete) {
         final String reasonPrefix = String.format("Case type '%s, Event '%s', User Role '%s' ",
-                entity.getEvent().getCaseType().getReference(), entity.getEvent().getReference(), entity.getUserRole().getRole());
+                entity.getEvent().getCaseType().getReference(), entity.getEvent().getReference(), entity.getUserRole().getReference());
         assertThat(reasonPrefix + "can create", entity.getCreate(), is(canCreate));
         assertThat(reasonPrefix + "can read", entity.getRead(), is(canRead));
         assertThat(reasonPrefix + "can update", entity.getUpdate(), is(canUpdate));
         assertThat(reasonPrefix + "can delete", entity.getDelete(), is(canDelete));
     }
 
-    private EventUserRoleEntity findFetchedEventUserRoleEntity(final EventEntity eventEntity, final String userRole) {
+    private EventACLEntity findFetchedEventUserRoleEntity(final EventEntity eventEntity, final String userRole) {
         // @formatter:off
-        return eventEntity.getEventUserRoles()
+        return eventEntity.getEventACLEntities()
             .stream()
-            .filter(r -> StringUtils.equals(userRole, r.getUserRole().getRole()))
+            .filter(r -> StringUtils.equals(userRole, r.getUserRole().getReference()))
             .findFirst()
             .get();
         // @formatter:on
@@ -261,18 +261,18 @@ public class CaseTypeObjectGraphTest {
     }
 
     private void assertCaseTypeUserRoleEntity(final CaseTypeEntity caseType,
-                                              final CaseTypeUserRoleEntity expected,
-                                              final CaseTypeUserRoleEntity actual) {
+                                              final CaseTypeACLEntity expected,
+                                              final CaseTypeACLEntity actual) {
         assertThat(expected.getCaseType().getReference(), is(caseType.getReference()));
-        assertThat(expected.getUserRole().getRole(), is(actual.getUserRole().getRole()));
+        assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
         assertThat(expected.getUserRole().getSecurityClassification(), is(actual.getUserRole().getSecurityClassification()));
     }
 
     private void assertStateUserRoleEntity(final StateEntity stateEntity,
-                                              final StateUserRoleEntity expected,
-                                              final StateUserRoleEntity actual) {
+                                              final StateACLEntity expected,
+                                              final StateACLEntity actual) {
         assertThat(expected.getStateEntity().getReference(), is(stateEntity.getReference()));
-        assertThat(expected.getUserRole().getRole(), is(actual.getUserRole().getRole()));
+        assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
         assertThat(expected.getUserRole().getSecurityClassification(), is(actual.getUserRole().getSecurityClassification()));
     }
 
@@ -289,32 +289,32 @@ public class CaseTypeObjectGraphTest {
         entity.setDelete(canDelete);
     }
 
-    private CaseTypeUserRoleEntity createCaseTypeUserRoleEntity(final UserRoleEntity userRole,
-                                                                final Boolean canCreate,
-                                                                final Boolean canRead,
-                                                                final Boolean canUpdate,
-                                                                final Boolean canDelete) {
-        final CaseTypeUserRoleEntity entity = new CaseTypeUserRoleEntity();
+    private CaseTypeACLEntity createCaseTypeUserRoleEntity(final UserRoleEntity userRole,
+                                                           final Boolean canCreate,
+                                                           final Boolean canRead,
+                                                           final Boolean canUpdate,
+                                                           final Boolean canDelete) {
+        final CaseTypeACLEntity entity = new CaseTypeACLEntity();
         setAuthorisationData(entity, userRole, canCreate, canRead, canUpdate, canDelete);
         return entity;
     }
 
-    private CaseFieldUserRoleEntity createCaseFieldUserRoleEntity(final UserRoleEntity userRole,
-                                                                  final Boolean canCreate,
-                                                                  final Boolean canRead,
-                                                                  final Boolean canUpdate,
-                                                                  final Boolean canDelete) {
-        final CaseFieldUserRoleEntity entity = new CaseFieldUserRoleEntity();
+    private CaseFieldACLEntity createCaseFieldUserRoleEntity(final UserRoleEntity userRole,
+                                                             final Boolean canCreate,
+                                                             final Boolean canRead,
+                                                             final Boolean canUpdate,
+                                                             final Boolean canDelete) {
+        final CaseFieldACLEntity entity = new CaseFieldACLEntity();
         setAuthorisationData(entity, userRole, canCreate, canRead, canUpdate, canDelete);
         return entity;
     }
 
-    private EventUserRoleEntity createEventUserRoleEntity(final UserRoleEntity role,
-                                                          final Boolean canCreate,
-                                                          final Boolean canRead,
-                                                          final Boolean canUpdate,
-                                                          final Boolean canDelete) {
-        EventUserRoleEntity e = new EventUserRoleEntity();
+    private EventACLEntity createEventUserRoleEntity(final UserRoleEntity role,
+                                                     final Boolean canCreate,
+                                                     final Boolean canRead,
+                                                     final Boolean canUpdate,
+                                                     final Boolean canDelete) {
+        EventACLEntity e = new EventACLEntity();
         e.setUserRole(role);
         e.setCreate(canCreate);
         e.setRead(canRead);
@@ -323,12 +323,12 @@ public class CaseTypeObjectGraphTest {
         return e;
     }
 
-    private StateUserRoleEntity createStateUserRoleEntity(final UserRoleEntity userRole,
-                                                             final Boolean canCreate,
-                                                             final Boolean canRead,
-                                                             final Boolean canUpdate,
-                                                             final Boolean canDelete) {
-        final StateUserRoleEntity entity = new StateUserRoleEntity();
+    private StateACLEntity createStateUserRoleEntity(final UserRoleEntity userRole,
+                                                     final Boolean canCreate,
+                                                     final Boolean canRead,
+                                                     final Boolean canUpdate,
+                                                     final Boolean canDelete) {
+        final StateACLEntity entity = new StateACLEntity();
         setAuthorisationData(entity, userRole, canCreate, canRead, canUpdate, canDelete);
         return entity;
     }

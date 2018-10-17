@@ -1,14 +1,21 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
 public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Integer> {
 
-    Optional<UserRoleEntity> findTopByRole(String role);
+    Optional<UserRoleEntity> findTopByReference(String reference);
 
-    List<UserRoleEntity> findByRoleIn(List<String> role);
+    List<UserRoleEntity> findByReferenceIn(List<String> reference);
+
+    @Override
+    @Query(
+        value = "SELECT * FROM role r WHERE r.dtype='USERROLE'",
+        nativeQuery = true)
+    List<UserRoleEntity> findAll();
 }
