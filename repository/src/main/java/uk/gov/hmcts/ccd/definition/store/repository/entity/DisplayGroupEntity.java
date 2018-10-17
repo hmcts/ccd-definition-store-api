@@ -1,15 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.apache.commons.lang3.StringUtils;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Table(name = "display_group")
 @Entity

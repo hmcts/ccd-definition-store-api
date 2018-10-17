@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface FieldTypeRepository extends VersionedDefinitionRepository<FieldTypeEntity, Integer> {
 

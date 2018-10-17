@@ -250,6 +250,7 @@ public class SpreadSheetImportTest extends BaseTest {
         assertFieldTypes();
         assertLayout();
         assertCaseRoles();
+        assertCaseTypeACLs();
     }
 
     private void assertJurisdiction() {
@@ -365,12 +366,25 @@ public class SpreadSheetImportTest extends BaseTest {
                                        hasColumn(is("reference"), startsWith("PersonLastNameWithValidation-"))))));
     }
 
+    private void assertCaseTypeACLs() {
+        List<Map<String, Object>> allCaseTypeACLs = jdbcTemplate.queryForList("SELECT * FROM case_type_acl");
+        assertThat(allCaseTypeACLs, hasSize(8));
+
+        List<Map<String, Object>> acls1 = jdbcTemplate.queryForList("SELECT * FROM case_type_acl where "
+            + "case_type_id = ?", caseTypesId.get("TestAddressBookCase"));
+        assertThat(acls1, hasSize(4));
+
+        List<Map<String, Object>> acls2 = jdbcTemplate.queryForList("SELECT * FROM case_type_acl where "
+            + "case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
+        assertThat(acls2, hasSize(4));
+    }
+
     private void assertCaseRoles() {
-        List<Map<String, Object>> allCaseRoles = jdbcTemplate.queryForList("SELECT * FROM case_role");
+        List<Map<String, Object>> allCaseRoles = jdbcTemplate.queryForList("SELECT * FROM role WHERE role.dtype = 'CASEROLE'");
         assertThat(allCaseRoles, hasSize(6));
 
-        List<Map<String, Object>> caseTypeCaseRoles = jdbcTemplate.queryForList("SELECT * FROM case_role where " +
-            "case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
+        List<Map<String, Object>> caseTypeCaseRoles = jdbcTemplate.queryForList("SELECT * FROM role where "
+            + "case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
         assertThat(caseTypeCaseRoles, allOf(
             hasItem(allOf(
                 hasColumn("name", "Claimant"),

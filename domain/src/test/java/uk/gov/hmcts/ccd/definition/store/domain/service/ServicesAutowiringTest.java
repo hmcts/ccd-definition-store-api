@@ -1,5 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -15,22 +24,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ccd.definition.store.AppInsights;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntitySecurityClassificationValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityUserRoleValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityCaseFieldsValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityCrudValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityEventValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntitySecurityClassificationValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityUserRoleValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntitySecurityClassificationValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCreateEventValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCrudValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEventCaseFieldsValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntitySecurityClassificationValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityUserRoleValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldLabelCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldShowConditionValidatorImpl;
@@ -39,15 +39,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeCo
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.*;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -69,7 +60,7 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
             CaseTypeEntitySecurityClassificationValidatorImpl.class,
             CaseTypeEntityCaseFieldsValidatorImpl.class,
             CaseTypeEntityEventValidatorImpl.class,
-            CaseTypeEntityUserRoleValidatorImpl.class,
+            CaseTypeEntityACLValidatorImpl.class,
             CaseTypeEntityCrudValidatorImpl.class
         );
 
@@ -81,7 +72,7 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
             ),
             CaseFieldEntitySecurityClassificationValidatorImpl.class,
             CaseFieldEntityComplexFieldsValidatorImpl.class,
-            CaseFieldEntityUserRoleValidatorImpl.class,
+            CaseFieldEntityACLValidatorImpl.class,
             CaseFieldEntityCrudValidatorImpl.class
         );
 
@@ -112,7 +103,7 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
             EventEntityEventCaseFieldsValidatorImpl.class,
             EventEntitySecurityClassificationValidatorImpl.class,
             EventEntityCrudValidatorImpl.class,
-            EventEntityUserRoleValidatorImpl.class,
+            EventEntityACLValidatorImpl.class,
             EventEntityCreateEventValidator.class
         );
 

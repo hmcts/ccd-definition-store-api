@@ -1,5 +1,10 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
+import javax.annotation.PreDestroy;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.concurrent.ThreadLocalRandom;
+
 import com.opentable.db.postgres.embedded.EmbeddedPostgres;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -12,11 +17,6 @@ import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.web.context.ContextCleanupListener;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
-
-import javax.annotation.PreDestroy;
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Configuration
 public class TestConfiguration extends ContextCleanupListener {

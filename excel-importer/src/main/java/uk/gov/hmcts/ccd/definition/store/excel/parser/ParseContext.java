@@ -1,19 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
+
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.apache.commons.collections4.map.MultiKeyMap;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 /**
  * Accumulate everything that has been parsed so far and which is required for a subsequent parse stage. This is not meant
@@ -29,6 +25,7 @@ public class ParseContext {
     private final Map<String, FieldTypeEntity> allTypes = Maps.newHashMap();
     private final Set<CaseTypeEntity> caseTypes = Sets.newHashSet();
     private final Map<String, UserRoleEntity> userRoles = Maps.newHashMap();
+    private final MultiKeyMap<String, CaseRoleEntity> caseRoles = new MultiKeyMap();
 
     /**
      * Accumulate Field types by case type and field IDs for subsequent linking to case fields.
@@ -227,15 +224,31 @@ public class ParseContext {
         return Optional.ofNullable(baseTypes.get(reference));
     }
 
-    public Optional<UserRoleEntity> getUserRole(final String role) {
-        return Optional.ofNullable(userRoles.get(role));
+    public Optional<UserRoleEntity> getRole(String caseType, final String role) {
+        Optional<UserRoleEntity> userRoleEntity = Optional.ofNullable(userRoles.get(role));
+        if (userRoleEntity.isPresent()) {
+            return userRoleEntity;
+        } else {
+            return Optional.ofNullable(caseRoles.get(caseType, role));
+        }
+
+    }
+
+    public void registerCaseRoles(List<CaseRoleEntity> caseRoleEntityList) {
+        caseRoleEntityList.stream().forEach(caseRoleEntity ->
+            caseRoles.put(
+                caseRoleEntity.getCaseType().getReference(),
+                caseRoleEntity.getReference(),
+                caseRoleEntity
+            )
+        );
     }
 
     public ParseContext registerUserRoles(final List<UserRoleEntity> userRoleList) {
         userRoles.clear();
         userRoles.putAll(userRoleList
                              .stream()
-                             .collect(toMap(UserRoleEntity::getRole, u -> u)));
+                             .collect(toMap(UserRoleEntity::getReference, u -> u)));
         return this;
     }
 

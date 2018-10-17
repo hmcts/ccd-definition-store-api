@@ -28,10 +28,6 @@
         <cpe>cpe:/a:h2database:h2</cpe>
     </suppress>
     <suppress>
-        <gav regex="true">^org\.postgresql:postgresql:.*$</gav>
-        <cpe>cpe:/a:postgresql:postgresql</cpe>
-    </suppress>
-    <suppress>
         <notes>tomcat embed is not used in production</notes>
         <gav regex="true">^.*tomcat-embed-.*$</gav>
         <cpe>cpe:/a:apache:tomcat</cpe>
@@ -69,5 +65,9 @@
         <notes>CVE-2018-13661: we aren't using this for Ethereum, The mintToken function of a smart contract implementation for APP, an Ethereum token, has an integer overflow that allows the owner of the contract to set the balance of an arbitrary user to any value.</notes>
         <gav regex="true">^uk\.gov\.hmcts\.ccd\.definition:app-insights:.*$</gav>
         <cpe>cpe:/a:app_project:app</cpe>
+    </suppress>
+    <suppress>
+        <notes>CVE-2016-7048: only for Postgres lt 9.6 and we use 9.6 on Azure.  Also only impacts the installer.</notes>
+        <cve>CVE-2016-7048</cve>
     </suppress>
 </suppressions>
