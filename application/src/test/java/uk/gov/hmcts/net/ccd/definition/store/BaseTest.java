@@ -10,7 +10,9 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -56,9 +58,8 @@ import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 public abstract class BaseTest {
-    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V37_RDM-2917.xlsx";
+    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V37_RDM-1202.xlsx";
     public static final String IMPORT_URL = "/import";
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject
     protected DataSource db;
 
