@@ -1,5 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +14,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificati
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CaseTypeParser {
     private static final Logger logger = LoggerFactory.getLogger(CaseTypeParser.class);

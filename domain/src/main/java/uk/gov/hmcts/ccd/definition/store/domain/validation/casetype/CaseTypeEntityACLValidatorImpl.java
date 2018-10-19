@@ -3,8 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 @Component
 public class CaseTypeEntityACLValidatorImpl implements CaseTypeEntityValidator {
