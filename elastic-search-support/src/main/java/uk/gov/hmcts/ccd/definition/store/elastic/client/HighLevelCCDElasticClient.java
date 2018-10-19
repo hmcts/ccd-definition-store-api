@@ -20,10 +20,6 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 
-/**
- * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new HighLevelCCDElasticClient on each import
- * and we close it once the import is completed. The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
- */
 @Slf4j
 public class HighLevelCCDElasticClient implements CCDElasticClient {
 
