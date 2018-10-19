@@ -13,6 +13,7 @@ public class UserRoleModelMapper {
     public static UserRoleEntity toEntity(@NotNull UserRole model) {
         final UserRoleEntity entity = new UserRoleEntity();
         entity.setReference(model.getRole());
+        entity.setName(model.getRole());
         entity.setSecurityClassification(model.getSecurityClassification());
         return entity;
     }
