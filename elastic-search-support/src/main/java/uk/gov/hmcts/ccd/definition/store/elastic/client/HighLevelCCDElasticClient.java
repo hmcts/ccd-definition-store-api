@@ -18,10 +18,12 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 
-@Component
+/**
+ * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new HighLevelCCDElasticClient on each import
+ * and we close it once the import is completed. The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
+ */
 @Slf4j
 public class HighLevelCCDElasticClient implements CCDElasticClient {
 
@@ -67,6 +69,16 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         boolean exists = elasticClient.indices().existsAlias(request, RequestOptions.DEFAULT);
         log.info("alias {} exists: {}", alias, exists);
         return exists;
+    }
+
+    @Override
+    public void close() {
+        try {
+            log.info("Closing the ES REST client");
+            this.elasticClient.close();
+        } catch (IOException ioe) {
+            log.error("Problem occurred when closing the ES REST client", ioe);
+        }
     }
 
     public GetAliasesResponse getAlias(String alias) throws IOException {

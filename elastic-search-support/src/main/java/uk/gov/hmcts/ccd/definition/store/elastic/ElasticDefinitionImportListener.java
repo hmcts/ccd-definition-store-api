@@ -1,15 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import java.io.IOException;
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
+import org.springframework.beans.factory.ObjectFactory;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-
-import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
@@ -20,18 +21,25 @@ public abstract class ElasticDefinitionImportListener {
 
     private CaseMappingGenerator mappingGenerator;
 
-    private CCDElasticClient elasticClient;
+    private ObjectFactory<HighLevelCCDElasticClient> clientFactory;
 
-    public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator, CCDElasticClient elasticClient) {
+    public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
+                                           ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
         this.config = config;
         this.mappingGenerator = mappingGenerator;
-        this.elasticClient = elasticClient;
+        this.clientFactory = clientFactory;
     }
 
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
 
+    /**
+     * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new HighLevelCCDElasticClient on each import
+     * and we close it once the import is completed. The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
+     */
     protected void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) {
+        HighLevelCCDElasticClient elasticClient = null;
         try {
+            elasticClient = clientFactory.getObject();
             for (CaseTypeEntity caseType : caseTypes) {
                 String baseIndexName = baseIndexName(caseType);
 
@@ -46,6 +54,8 @@ public abstract class ElasticDefinitionImportListener {
             }
         } catch (Exception exc) {
             throw new ElasticSearchInitialisationException(exc);
+        } finally {
+            elasticClient.close();
         }
     }
 

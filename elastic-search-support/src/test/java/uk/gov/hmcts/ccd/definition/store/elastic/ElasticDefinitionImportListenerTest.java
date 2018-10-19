@@ -1,18 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
-
 import java.io.IOException;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -23,6 +10,22 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectFactory;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
+
 @ExtendWith(MockitoExtension.class)
 public class ElasticDefinitionImportListenerTest {
 
@@ -30,7 +33,10 @@ public class ElasticDefinitionImportListenerTest {
     private TestDefinitionImportListener listener;
 
     @Mock
-    private CCDElasticClient ccdElasticClient;
+    private HighLevelCCDElasticClient ccdElasticClient;
+
+    @Mock
+    private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
 
     @Mock
     private CcdElasticSearchProperties config;
@@ -40,6 +46,22 @@ public class ElasticDefinitionImportListenerTest {
 
     private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseTypeA").build();
     private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
+
+    @BeforeEach
+    public void setUp() {
+        when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
+    }
+
+    @Test
+    public void createsAndClosesANewElasticClientOnEachImortToSaveResources() throws IOException {
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
+
+        listener.onDefinitionImported(newEvent(caseA, caseB));
+
+        verify(clientObjectFactory).getObject();
+        verify(ccdElasticClient).close();
+    }
 
     @Test
     public void createsIndexIfNotExists() throws IOException {
@@ -90,8 +112,9 @@ public class ElasticDefinitionImportListenerTest {
 
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {
 
-        public TestDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator, CCDElasticClient elasticClient) {
-            super(config, mappingGenerator, elasticClient);
+        public TestDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
+                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
+            super(config, mappingGenerator, clientFactory);
         }
 
         @Override
