@@ -6,6 +6,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
@@ -13,7 +14,10 @@ import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
@@ -25,6 +29,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.ElasticSearchConfiguration;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
@@ -54,7 +59,15 @@ public class CaseMappingGenerationIT implements TestUtils {
     private CaseMappingGenerator mappingGenerator;
 
     @MockBean
-    private CCDElasticClient client;
+    private HighLevelCCDElasticClient client;
+
+    @Mock
+    private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
+
+    @BeforeEach
+    public void setUp() {
+        when(clientObjectFactory.getObject()).thenReturn(client);
+    }
 
     @Test
     public void testListeningToDefinitionImportedEvent() throws IOException {
