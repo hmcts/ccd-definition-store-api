@@ -55,7 +55,9 @@ public abstract class ElasticDefinitionImportListener {
         } catch (Exception exc) {
             throw new ElasticSearchInitialisationException(exc);
         } finally {
-            elasticClient.close();
+            if (elasticClient != null) {
+                elasticClient.close();
+            }
         }
     }
 

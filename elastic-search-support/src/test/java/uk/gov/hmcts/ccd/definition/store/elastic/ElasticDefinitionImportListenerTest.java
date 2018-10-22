@@ -63,6 +63,16 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
+    public void closesClientEvenInCaseOfErrors() {
+        when(config.getCasesIndexNameFormat()).thenThrow(new RuntimeException("test"));
+
+        assertThrows(RuntimeException.class, () -> {
+            listener.onDefinitionImported(newEvent(caseA, caseB));
+            verify(ccdElasticClient).close();
+        });
+    }
+
+    @Test
     public void createsIndexIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
