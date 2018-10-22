@@ -7,12 +7,13 @@ import java.util.List;
  * A "lite" version of the {@link CaseType} class that contains selected CaseType fields (id, description, and name) for
  * display purposes.
  */
-public class CaseTypeLite {
+public class CaseTypeLite implements HasAcls {
     private String id = null;
     private String description = null;
     private String name;
-    private List<CaseStateLite> states = new ArrayList<>();
+    private List<CaseState> states = new ArrayList<>();
     private List<CaseEventLite> events = new ArrayList<>();
+    private List<AccessControlList> acls = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -38,11 +39,11 @@ public class CaseTypeLite {
         this.name = name;
     }
 
-    public List<CaseStateLite> getStates() {
+    public List<CaseState> getStates() {
         return states;
     }
 
-    public void setStates(List<CaseStateLite> states) {
+    public void setStates(List<CaseState> states) {
         this.states = states;
     }
 
@@ -52,5 +53,14 @@ public class CaseTypeLite {
 
     public void setEvents(List<CaseEventLite> events) {
         this.events = events;
+    }
+
+    public List<AccessControlList> getAcls() {
+        return acls;
+    }
+
+    @Override
+    public void setAcls(List<AccessControlList> acls) {
+        this.acls = acls;
     }
 }

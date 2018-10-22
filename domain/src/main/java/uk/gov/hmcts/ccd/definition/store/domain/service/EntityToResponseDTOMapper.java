@@ -27,6 +27,14 @@ public interface EntityToResponseDTOMapper {
     CaseType map(CaseTypeEntity caseTypeEntity);
 
     @Mapping(source = "caseTypeLiteEntity.reference", target = "id")
+    @Mapping(
+        expression = "java("
+            + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map("
+            + "               caseTypeLiteEntity.getCaseTypeLiteACLEntities()"
+            + "           )"
+            + "       )",
+        target = "acls"
+    )
     CaseTypeLite map(CaseTypeLiteEntity caseTypeLiteEntity);
 
     @Mapping(source = "eventEntity.reference", target = "id")
@@ -46,9 +54,9 @@ public interface EntityToResponseDTOMapper {
         target = "acls"
     )
     @Mapping(
-        expression = "java(eventEntity.isCanCreate() ? java.util.Collections.emptyList() " +
-            ": eventEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") " +
-            ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+        expression = "java(eventEntity.isCanCreate() ? java.util.Collections.emptyList() "
+            + ": eventEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") "
+            + ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
     @Mapping(
@@ -58,12 +66,20 @@ public interface EntityToResponseDTOMapper {
     CaseEvent map(EventEntity eventEntity);
 
     @Mapping(
-        expression = "java(eventLiteEntity.isCanCreate() ? java.util.Collections.emptyList() " +
-            ": eventLiteEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") " +
-            ": eventLiteEntity.getPreStates().stream().map(StateLiteEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+        expression = "java(eventLiteEntity.isCanCreate() ? java.util.Collections.emptyList() "
+            + ": eventLiteEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") "
+            + ": eventLiteEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
     @Mapping(source = "eventLiteEntity.reference", target = "id")
+    @Mapping(
+        expression = "java("
+            + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map("
+            + "               eventLiteEntity.getEventLiteACLs()"
+            + "           )"
+            + "       )",
+        target = "acls"
+    )
     CaseEventLite map(EventLiteEntity eventLiteEntity);
 
     @Mapping(source = "jurisdictionEntity.reference", target = "id")
@@ -78,9 +94,6 @@ public interface EntityToResponseDTOMapper {
         target = "acls")
     @Mapping(source = "stateEntity.reference", target = "id")
     CaseState map(StateEntity stateEntity);
-
-    @Mapping(source = "stateLiteEntity.reference", target = "id")
-    CaseStateLite map(StateLiteEntity stateLiteEntity);
 
     @Mapping(source = "caseFieldEntity.reference", target = "id")
     @Mapping(source = "caseFieldEntity.caseType.reference", target = "caseTypeId")
