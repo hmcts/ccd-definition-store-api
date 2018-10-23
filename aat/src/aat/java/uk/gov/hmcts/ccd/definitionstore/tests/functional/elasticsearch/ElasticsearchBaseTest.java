@@ -40,7 +40,6 @@ abstract class ElasticsearchBaseTest extends BaseTest {
     }
 
     private void deleteIndex(String indexName) {
-        // deletes the index
         asElasticsearchApiUser()
             .when()
             .delete(indexName)
