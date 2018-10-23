@@ -83,7 +83,7 @@ public class CaseEventField {
     /**
      * event case field label
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(value = "")
     @JsonProperty("label")
     public String getLabel() {
         return label;
