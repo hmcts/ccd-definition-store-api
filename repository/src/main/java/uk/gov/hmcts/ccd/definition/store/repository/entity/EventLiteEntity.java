@@ -3,8 +3,10 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.FetchMode.SUBSELECT;
@@ -43,7 +45,12 @@ public class EventLiteEntity implements Serializable, Referencable {
         joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "state_id", referencedColumnName = "id")
     )
-    private final List<StateLiteEntity> preStates = new ArrayList<>();
+    private final List<StateEntity> preStates = new ArrayList<>();
+
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = SUBSELECT)
+    @JoinColumn(name = "event_id")
+    private final List<EventLiteACLEntity> eventACLs = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -90,7 +97,21 @@ public class EventLiteEntity implements Serializable, Referencable {
         this.description = description;
     }
 
-    public List<StateLiteEntity> getPreStates() {
+    public List<StateEntity> getPreStates() {
         return preStates;
+    }
+
+    public List<EventLiteACLEntity> getEventLiteACLs() {
+        return eventACLs;
+    }
+
+    public EventLiteEntity addEventACL(final EventLiteACLEntity eventLiteACLEntity) {
+        eventACLs.add(eventLiteACLEntity);
+        return this;
+    }
+
+    public EventLiteEntity addEventACLs(final Collection<EventLiteACLEntity> entities) {
+        entities.forEach(e -> addEventACL(e));
+        return this;
     }
 }
