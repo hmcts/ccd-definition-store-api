@@ -1,18 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A "lite" version of the {@link CaseEvent} class that contains selected Event fields (id, name, and description) for
  * display purposes.
  */
-public class CaseEventLite {
+public class CaseEventLite implements HasAcls {
     private String id = null;
     private String name = null;
     private String description = null;
+    private List<AccessControlList> acls = new ArrayList<>();
 
     @JsonProperty("pre_states")
     private List<String> preStates = new ArrayList<>();
@@ -47,5 +48,14 @@ public class CaseEventLite {
 
     public void setPreStates(List<String> preStates) {
         this.preStates = preStates;
+    }
+
+    public List<AccessControlList> getAcls() {
+        return acls;
+    }
+
+    @Override
+    public void setAcls(List<AccessControlList> acls) {
+        this.acls = acls;
     }
 }
