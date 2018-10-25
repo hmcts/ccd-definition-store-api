@@ -1,12 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import java.io.IOException;
 
 @Component
 public class TestHelper {
@@ -75,4 +80,16 @@ public class TestHelper {
         return ecf;
     }
 
+    public DefinitionEntity buildDefinition(final JurisdictionEntity jurisdiction,
+                                            final String description) throws IOException {
+        final DefinitionEntity definitionEntity = new DefinitionEntity();
+        definitionEntity.setJurisdiction(jurisdiction);
+        definitionEntity.setDescription(description);
+        final ObjectMapper mapper = new ObjectMapper();
+        final JsonNode data = mapper.readTree("{\"Field1\": \"Value1\", \"Field2\": []}");
+        definitionEntity.setData(data);
+        definitionEntity.setAuthor("ccd@hmcts");
+        definitionEntity.setDeleted(false);
+        return definitionEntity;
+    }
 }
