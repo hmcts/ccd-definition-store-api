@@ -1,9 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 public class UserRoleModelMapper {
 
@@ -13,13 +12,8 @@ public class UserRoleModelMapper {
 
     public static UserRoleEntity toEntity(@NotNull UserRole model) {
         final UserRoleEntity entity = new UserRoleEntity();
-        if (null != model.getLiveFrom()) {
-            entity.setLiveFrom(LocalDate.parse(model.getLiveFrom()));
-        }
-        if (null != model.getLiveTo()) {
-            entity.setLiveTo(LocalDate.parse(model.getLiveTo()));
-        }
-        entity.setRole(model.getRole());
+        entity.setReference(model.getRole());
+        entity.setName(model.getRole());
         entity.setSecurityClassification(model.getSecurityClassification());
         return entity;
     }
@@ -28,11 +22,8 @@ public class UserRoleModelMapper {
         final UserRole model = new UserRole();
         model.setCreatedAt(entity.getCreatedAt().toString());
         model.setId(entity.getId());
-        model.setLiveFrom(entity.getLiveFrom() == null ? null : entity.getLiveFrom().toString());
-        model.setLiveTo(entity.getLiveTo() == null ? null : entity.getLiveTo().toString());
-        model.setRole(entity.getRole());
+        model.setRole(entity.getReference());
         model.setSecurityClassification(entity.getSecurityClassification());
         return model;
     }
-
 }

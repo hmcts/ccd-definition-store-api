@@ -1,19 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_TYPE;
+
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeUserRoleEntity;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_TYPE;
 
 class AuthorisationCaseTypeParser implements AuthorisationParser {
 
@@ -28,10 +28,10 @@ class AuthorisationCaseTypeParser implements AuthorisationParser {
         this.entityToDefinitionDataItemRegistry = registry;
     }
 
-    Collection<CaseTypeUserRoleEntity> parseAll(final Map<String, DefinitionSheet> definitionSheets,
-                                                final CaseTypeEntity caseType) {
+    Collection<CaseTypeACLEntity> parseAll(final Map<String, DefinitionSheet> definitionSheets,
+                                           final CaseTypeEntity caseType) {
 
-        final List<CaseTypeUserRoleEntity> parseResults = Lists.newArrayList();
+        final List<CaseTypeACLEntity> parseResults = Lists.newArrayList();
 
         final String caseTypeReference = caseType.getReference();
         LOG.debug("Parsing AuthorisationCaseType for case type {}...", caseTypeReference);
@@ -52,7 +52,7 @@ class AuthorisationCaseTypeParser implements AuthorisationParser {
 
             for (DefinitionDataItem definition : dataItems) {
 
-                final CaseTypeUserRoleEntity entity = new CaseTypeUserRoleEntity();
+                final CaseTypeACLEntity entity = new CaseTypeACLEntity();
                 parseUserRole(entity, definition, parseContext);
                 parseCrud(entity, definition);
 

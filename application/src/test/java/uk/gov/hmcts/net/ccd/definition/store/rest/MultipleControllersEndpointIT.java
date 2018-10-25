@@ -1,5 +1,20 @@
 package uk.gov.hmcts.net.ccd.definition.store.rest;
 
+import java.io.InputStream;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PRIVATE;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.http.HttpStatus;
@@ -11,20 +26,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
-
-import java.io.InputStream;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.*;
 
 public class MultipleControllersEndpointIT extends BaseTest {
     private static final String WIZARD_PAGE_STRUCTURE_URL_1 =
@@ -196,8 +197,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
             () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(1)),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
                                                                                         containsString("Contact Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("id", containsString
-                ("createCaseContactPage")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("id", containsString("createCaseContactPage")))),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("wizardPageFields",
                                                                                         hasItem(hasProperty("caseFieldId", containsString("ContectEmail"))))))
         );
@@ -218,6 +218,27 @@ public class MultipleControllersEndpointIT extends BaseTest {
             () -> assertThat(userRoles.get(0).getSecurityClassification(), is(PUBLIC)),
             () -> assertThat(userRoles.get(1).getSecurityClassification(), is(PRIVATE)),
             () -> assertThat(userRoles.get(2).getSecurityClassification(), is(RESTRICTED))
+        );
+    }
+
+    @Test
+    public void shouldSaveUserRole() throws Exception {
+        final String URL = ROLES_URL.substring(0, ROLES_URL.length() - 4);
+        MvcResult result = mockMvc
+            .perform(MockMvcRequestBuilders
+                .put(URL)
+                .contentType("application/json")
+                .accept("application/json")
+                .content("{\"role\":\"to-delete-1\",\"security_classification\":\"PUBLIC\"}"))
+            .andExpect(MockMvcResultMatchers.status().isCreated())
+            .andReturn();
+        final UserRole userRole = mapper.readValue(result.getResponse().getContentAsString(),
+            TypeFactory.defaultInstance().constructType(new TypeReference<UserRole>() {
+            }));
+        assertAll(
+            () -> assertThat(userRole.getSecurityClassification(), is(PUBLIC)),
+            () -> assertThat(userRole.getRole(), is("to-delete-1")),
+            () -> assertThat(userRole.getId(), is(notNullValue()))
         );
     }
 

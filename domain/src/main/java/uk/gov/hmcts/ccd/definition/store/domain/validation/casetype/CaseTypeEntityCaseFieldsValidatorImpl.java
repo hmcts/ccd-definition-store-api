@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -7,8 +9,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEn
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-
-import java.util.List;
 
 @Component
 public class CaseTypeEntityCaseFieldsValidatorImpl implements CaseTypeEntityValidator {
@@ -26,7 +26,7 @@ public class CaseTypeEntityCaseFieldsValidatorImpl implements CaseTypeEntityVali
         ValidationResult validationResult = new ValidationResult();
 
         for (CaseFieldEntityValidator caseFieldEntityValidator : caseFieldEntityValidators) {
-            for(CaseFieldEntity caseField : caseType.getCaseFields()) {
+            for (CaseFieldEntity caseField : caseType.getCaseFields()) {
                 validationResult.merge(
                     caseFieldEntityValidator.validate(
                         caseField,

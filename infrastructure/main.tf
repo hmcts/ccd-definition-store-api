@@ -60,6 +60,18 @@ data "azurerm_key_vault_secret" "storageaccount_secondary_connection_string" {
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
 
+data "azurerm_key_vault_secret" "ccd_elastic_search_url" {
+  count = "${var.elastic_search_enabled == "false" ? 0 : 1}"
+  name = "ccd-ELASTIC-SEARCH-URL"
+  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+}
+
+data "azurerm_key_vault_secret" "ccd_elastic_search_password" {
+  count = "${var.elastic_search_enabled == "false" ? 0 : 1}"
+  name = "ccd-ELASTIC-SEARCH-PASSWORD"
+  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+}
+
 module "case-definition-store-api" {
   source   = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product  = "${local.app_full_name}"
@@ -94,7 +106,18 @@ module "case-definition-store-api" {
     AZURE_STORAGE_CONNECTION_STRING = "${data.azurerm_key_vault_secret.storageaccount_primary_connection_string.value}"
     AZURE_STORAGE_BLOB_CONTAINER_REFERENCE = "${azurerm_storage_container.imports_container.name}"
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED = "true"
+
+    ELASTIC_SEARCH_HOST = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_url.*.value)}"}"
+    ELASTIC_SEARCH_PASSWORD = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_password.*.value)}"}"
+    ELASTIC_SEARCH_PORT = "${var.elastic_search_port}"
+    ELASTIC_SEARCH_ENABLED = "${var.elastic_search_enabled}"
+    ELASTIC_SEARCH_INDEX_SHARDS = "${var.elastic_search_index_shards}"
+    ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS = "${var.elastic_search_index_shards_replicas}"
+    ELASTIC_SEARCH_FAIL_ON_IMPORT = "${var.elastic_search_fail_on_import}"
+    ELASTIC_SEARCH_DYNAMIC = "${var.elastic_search_dynamc}"
+    ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT = "${var.elastic_search_case_index_name_format}"
   }
+  common_tags = "${var.common_tags}"
 }
 
 module "definition-store-db" {

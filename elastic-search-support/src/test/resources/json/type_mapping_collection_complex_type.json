@@ -1,0 +1,10 @@
+{
+  "properties": {
+    "id": "disabledMapping",
+    "value": {
+      "properties": {
+        "forename": "dataMapping"
+      }
+    }
+  }
+}

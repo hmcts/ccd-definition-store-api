@@ -1,16 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventUserRoleEntity;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +9,17 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_EVENT;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT;
+
+import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 class AuthorisationCaseEventParser implements AuthorisationParser {
 
@@ -33,10 +33,10 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
         this.entityToDefinitionDataItemRegistry = registry;
     }
 
-    Collection<EventUserRoleEntity> parseAll(final Map<String, DefinitionSheet> definitionSheets,
-                                                 final CaseTypeEntity caseType,
-                                                 final EventEntity event) {
-        final List<EventUserRoleEntity> parseResults = Lists.newArrayList();
+    Collection<EventACLEntity> parseAll(final Map<String, DefinitionSheet> definitionSheets,
+                                        final CaseTypeEntity caseType,
+                                        final EventEntity event) {
+        final List<EventACLEntity> parseResults = Lists.newArrayList();
 
         final String caseTypeReference = caseType.getReference();
         final String eventReference = event.getReference();
@@ -62,7 +62,7 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
                 // and let validation handles this Exception
             } else {
                 for (DefinitionDataItem definition : collect.get(eventReference)) {
-                    EventUserRoleEntity entity = new EventUserRoleEntity();
+                    EventACLEntity entity = new EventACLEntity();
 
                     parseUserRole(entity, definition, parseContext);
                     parseCrud(entity, definition);

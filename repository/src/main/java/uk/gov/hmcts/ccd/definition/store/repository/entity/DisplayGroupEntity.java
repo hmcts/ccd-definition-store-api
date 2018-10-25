@@ -1,15 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.apache.commons.lang3.StringUtils;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Table(name = "display_group")
 @Entity
@@ -17,7 +18,7 @@ public class DisplayGroupEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -44,7 +45,7 @@ public class DisplayGroupEntity implements Serializable {
     private DisplayGroupPurpose purpose;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "case_type_id", nullable=false)
+    @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
     @ManyToOne(fetch = LAZY)

@@ -1,5 +1,19 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
+import javax.inject.Inject;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,20 +51,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
 import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
 
-import javax.inject.Inject;
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
     CaseDataAPIApplication.class,
@@ -58,7 +58,7 @@ import static org.mockito.Mockito.when;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 public abstract class BaseTest {
-    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V36_RDM-2385.xlsx";
+    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V37_RDM-2917.xlsx";
     public static final String IMPORT_URL = "/import";
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject

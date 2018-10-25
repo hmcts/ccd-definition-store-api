@@ -1,17 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("Generic Layout Entity Validator Implementation Tests")
 class GenericLayoutEntityValidatorImplTest {
@@ -132,7 +132,7 @@ class GenericLayoutEntityValidatorImplTest {
 
             assertAll(
                 () -> assertTrue(entity instanceof SearchResultCaseFieldEntity),
-                () ->assertThat(result.isValid(), is(true))
+                () -> assertThat(result.isValid(), is(true))
             );
         }
 

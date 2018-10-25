@@ -1,5 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_INPUT_FIELD;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -8,13 +15,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperExceptio
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_INPUT_FIELD;
 
 @DisplayName("SearchInputLayoutParser Tests")
 public class SearchInputLayoutParserTest {
@@ -25,7 +25,7 @@ public class SearchInputLayoutParserTest {
     private Map<String, DefinitionSheet> definitionSheets;
 
     @Before
-    public void setup(){
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
@@ -43,13 +43,13 @@ public class SearchInputLayoutParserTest {
 
     @Test(expected = MapperException.class)
     @DisplayName("Should Fail when no worksheet provided")
-    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided(){
+    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
         classUnderTest.getDefinitionSheet(definitionSheets);
     }
 
     @Test(expected = SpreadsheetParsingException.class)
     @DisplayName("Should fail when no values provided in SearchInputFields worksheet")
-    public void shouldFailWhenNoDataInWorksheet(){
+    public void shouldFailWhenNoDataInWorksheet() {
         final DefinitionSheet sheet = new DefinitionSheet();
         definitionSheets.put(SEARCH_INPUT_FIELD.getName(), sheet);
         classUnderTest.parseAll(definitionSheets);
@@ -57,7 +57,7 @@ public class SearchInputLayoutParserTest {
 
     @Test
     @DisplayName("Should return name")
-    public void shouldReturnNameWhenAsked(){
+    public void shouldReturnNameWhenAsked() {
         assertThat(classUnderTest.getLayoutName(), is("Search Inputs"));
     }
 }

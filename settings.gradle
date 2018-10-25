@@ -8,3 +8,5 @@ include 'excel-importer'
 include 'application'
 include 'aat'
 include 'integration-tests'
+include 'elastic-search-support'
+

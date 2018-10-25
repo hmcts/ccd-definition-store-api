@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.apache.commons.lang3.StringUtils;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Table(name = "display_group_case_field")
 @Entity
@@ -13,7 +13,7 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "live_from")

@@ -1,25 +1,25 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
+import static org.apache.commons.lang3.StringUtils.defaultString;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldUserRoleEntity;
-
-import static org.apache.commons.lang3.StringUtils.defaultString;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 
 public class CaseFieldEntityInvalidCrudValidationError extends ValidationError {
 
     private final AuthorisationCaseFieldValidationContext authorisationCaseFieldValidationContext;
-    private final CaseFieldUserRoleEntity caseFieldUserRoleEntity;
+    private final CaseFieldACLEntity caseFieldACLEntity;
 
-    public CaseFieldEntityInvalidCrudValidationError(final CaseFieldUserRoleEntity entity,
+    public CaseFieldEntityInvalidCrudValidationError(final CaseFieldACLEntity entity,
                                                      final AuthorisationCaseFieldValidationContext context) {
         super(String.format("Invalid CRUD value '%s' for case type '%s', case field '%s'",
             defaultString(entity.getCrudAsString()),
             context.getCaseReference(),
             context.getCaseFieldReference()));
 
-        this.caseFieldUserRoleEntity = entity;
+        this.caseFieldACLEntity = entity;
         this.authorisationCaseFieldValidationContext = context;
     }
 
@@ -27,8 +27,8 @@ public class CaseFieldEntityInvalidCrudValidationError extends ValidationError {
         return authorisationCaseFieldValidationContext;
     }
 
-    public CaseFieldUserRoleEntity getCaseFieldUserRoleEntity() {
-        return caseFieldUserRoleEntity;
+    public CaseFieldACLEntity getCaseFieldACLEntity() {
+        return caseFieldACLEntity;
     }
 
     @Override

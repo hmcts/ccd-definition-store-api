@@ -1,19 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.state;
 
-import org.junit.Before;
-import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateUserRoleEntity;
-
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
 
+import org.junit.Before;
+import org.junit.Test;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+
 public class StateEntityCrudValidatorImplTest {
     private StateEntity stateEntity;
-    private StateUserRoleEntity userRoleEntity;
+    private StateACLEntity userRoleEntity;
     private StateEntityValidationContext context;
     private StateEntityCrudValidatorImpl validator;
 
@@ -22,13 +22,13 @@ public class StateEntityCrudValidatorImplTest {
 
         validator = new StateEntityCrudValidatorImpl();
 
-        userRoleEntity = new StateUserRoleEntity();
+        userRoleEntity = new StateACLEntity();
         CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference("case type");
 
         stateEntity = new StateEntity();
         stateEntity.setReference("case state");
-        stateEntity.addStateUserRole(userRoleEntity);
+        stateEntity.addStateACL(userRoleEntity);
 
         context = new StateEntityValidationContext(caseType);
     }

@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -19,8 +21,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 
-import java.util.List;
-
 public class DisplayGroupCaseFieldsValidatorImplTest {
 
     private static final List<DisplayGroupEntity> UNUSED_DISPLAY_GROUPS = Lists.newArrayList();
@@ -28,11 +28,17 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
     DisplayGroupCaseFieldsValidatorImpl testObj;
 
     @Mock
-    DisplayGroupCaseFieldValidator validator1, validator2;
+    DisplayGroupCaseFieldValidator validator1;
     @Mock
-    DisplayGroupCaseFieldEntity e1, e2;
+    DisplayGroupCaseFieldValidator validator2;
     @Mock
-    ValidationError ve1, ve2;
+    DisplayGroupCaseFieldEntity e1;
+    @Mock
+    DisplayGroupCaseFieldEntity e2;
+    @Mock
+    ValidationError ve1;
+    @Mock
+    ValidationError ve2;
 
 
     @Before

@@ -1,18 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,6 +9,9 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Table(name = "state")
 @Entity
@@ -56,7 +47,7 @@ public class StateEntity implements Serializable, Referencable {
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "state_id")
-    private final List<StateUserRoleEntity> stateUserRoles = new ArrayList<>();
+    private final List<StateACLEntity> stateACLEntities = new ArrayList<>();
 
     @Column(name = "title_display")
     private String titleDisplay;
@@ -122,8 +113,8 @@ public class StateEntity implements Serializable, Referencable {
         return caseType;
     }
 
-    public List<StateUserRoleEntity> getStateUserRoles() {
-        return stateUserRoles;
+    public List<StateACLEntity> getStateACLEntities() {
+        return stateACLEntities;
     }
 
     public String getTitleDisplay() {
@@ -134,14 +125,14 @@ public class StateEntity implements Serializable, Referencable {
         this.titleDisplay = titleDisplay;
     }
 
-    public StateEntity addStateUserRole(final StateUserRoleEntity stateUserRoleEntity) {
-        stateUserRoleEntity.setStateEntity(this);
-        stateUserRoles.add(stateUserRoleEntity);
+    public StateEntity addStateACL(final StateACLEntity stateACLEntity) {
+        stateACLEntity.setStateEntity(this);
+        stateACLEntities.add(stateACLEntity);
         return this;
     }
 
-    public StateEntity addStateUserRoles(final Collection<StateUserRoleEntity> entities) {
-        entities.forEach(e -> addStateUserRole(e));
+    public StateEntity addStateACLEntities(final Collection<StateACLEntity> stateACLEntities) {
+        stateACLEntities.forEach(e -> addStateACL(e));
         return this;
     }
 }

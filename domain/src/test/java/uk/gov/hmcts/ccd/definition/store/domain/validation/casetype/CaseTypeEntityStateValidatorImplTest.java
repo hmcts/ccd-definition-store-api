@@ -1,18 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.DisplayName;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityUserRoleValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateUserRoleEntity;
-
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
@@ -20,6 +7,19 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
 @DisplayName("CaseType Entity Validator Implementation Tests")
 public class CaseTypeEntityStateValidatorImplTest {
@@ -29,7 +29,7 @@ public class CaseTypeEntityStateValidatorImplTest {
     private StateEntityCrudValidatorImpl crudValidatorImpl;
 
     @Mock
-    private StateEntityUserRoleValidatorImpl userRoleValidatorImpl;
+    private StateEntityACLValidatorImpl userRoleValidatorImpl;
 
     @InjectMocks
     private CaseTypeEntityStateValidatorImpl classUnderTest;
@@ -60,10 +60,10 @@ public class CaseTypeEntityStateValidatorImplTest {
     @Test
     public void shouldReturnValidationResultWithValidationErrorWhenThereAreErrors() {
         ValidationResult vr1 = new ValidationResult();
-        vr1.addError(new StateEntityUserRoleValidatorImpl.ValidationError("Default user role validation error message...", new StateUserRoleEntity()));
+        vr1.addError(new StateEntityACLValidatorImpl.ValidationError("Default user role validation error message...", new StateACLEntity()));
         when(crudValidatorImpl.validate(any(), any())).thenReturn(vr1);
         ValidationResult vr2 = new ValidationResult();
-        vr1.addError(new StateEntityCrudValidatorImpl.ValidationError("Default crud validation error message...", new StateUserRoleEntity()));
+        vr1.addError(new StateEntityCrudValidatorImpl.ValidationError("Default crud validation error message...", new StateACLEntity()));
         caseType.addState(new StateEntity());
         when(userRoleValidatorImpl.validate(any(), any())).thenReturn(vr2);
 

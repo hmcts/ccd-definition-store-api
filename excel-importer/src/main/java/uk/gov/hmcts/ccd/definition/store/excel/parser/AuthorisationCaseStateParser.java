@@ -1,5 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.STATE_ID;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_STATE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
+
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,16 +21,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateUserRoleEntity;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.groupingBy;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.*;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_STATE;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
 
 class AuthorisationCaseStateParser implements AuthorisationParser {
 
@@ -32,8 +37,8 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
     }
 
-    public Collection<StateUserRoleEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseTypeEntity, StateEntity stateEntity) {
-        Collection<StateUserRoleEntity> parseResults = Lists.newArrayList();
+    public Collection<StateACLEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseTypeEntity, StateEntity stateEntity) {
+        Collection<StateACLEntity> parseResults = Lists.newArrayList();
 
         final String caseTypeReference = caseTypeEntity.getReference();
         final String stateReference = stateEntity.getReference();
@@ -57,7 +62,7 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
                 // and let validation handles this Exception
             } else {
                 for (DefinitionDataItem definition : collect.get(stateReference)) {
-                    StateUserRoleEntity entity = new StateUserRoleEntity();
+                    StateACLEntity entity = new StateACLEntity();
 
                     parseUserRole(entity, definition, parseContext);
                     parseCrud(entity, definition);

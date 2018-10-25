@@ -1,5 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
@@ -13,13 +20,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositor
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
 
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
@@ -36,7 +36,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                                EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
-                               MetadataFieldService metadataFieldService) {
+                               MetadataFieldService metadataFieldService
+    ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
         this.legacyCaseTypeValidator = legacyCaseTypeValidator;
@@ -63,7 +64,6 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         } else {
             throw new ValidationException(validationResult);
         }
-
     }
 
     @Override

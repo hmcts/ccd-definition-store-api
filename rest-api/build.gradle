@@ -10,9 +10,11 @@ ext {
 
 dependencies {
     compile project(':domain')
+    compile project(':elastic-search-support')
     testCompile project(path: ':domain', configuration: 'testOutput')
     testCompile project(":domain").sourceSets.main.output
     testCompile project(":repository").sourceSets.main.output
+    testCompile project(":elastic-search-support").sourceSets.main.output
     compile "org.springframework.boot:spring-boot-starter-web"
     testCompile "org.springframework.boot:spring-boot-test"
     testCompile "org.assertj:assertj-core"

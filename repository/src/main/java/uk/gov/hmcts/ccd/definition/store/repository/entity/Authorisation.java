@@ -3,15 +3,18 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @MappedSuperclass
 public abstract class Authorisation {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @NotNull
@@ -28,7 +31,7 @@ public abstract class Authorisation {
     private Boolean delete;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_role_id", nullable=false)
+    @JoinColumn(name = "role_id", nullable = false)
     private UserRoleEntity userRole;
 
     @Column(name = "live_from")
@@ -36,6 +39,10 @@ public abstract class Authorisation {
 
     @Column(name = "live_to")
     private LocalDate liveTo;
+
+    @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     /**
      * Used for holding value during parsing.
@@ -101,6 +108,10 @@ public abstract class Authorisation {
 
     public void setLiveTo(final LocalDate liveTo) {
         this.liveTo = liveTo;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public String getCrudAsString() {

@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import static uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator.ValidationContext;
-
 import java.util.List;
+
+import static uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator.ValidationContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ public class CaseFieldEntityComplexFieldsValidatorImpl implements CaseFieldEntit
         ValidationResult validationResult = new ValidationResult();
 
         for (CaseFieldComplexFieldEntityValidator complexFieldEntityValidator : this.complexFieldEntityValidators) {
-            for(ComplexFieldEntity complexFieldEntity : caseField.getFieldType().getComplexFields()) {
+            for (ComplexFieldEntity complexFieldEntity : caseField.getFieldType().getComplexFields()) {
                 validationResult.merge(
                     complexFieldEntityValidator.validate(
                         complexFieldEntity,
