@@ -9,4 +9,6 @@ public interface CCDElasticClient {
     boolean upsertMapping(String aliasName, String caseTypeMapping) throws IOException;
 
     boolean aliasExists(String alias) throws IOException;
+
+    void close();
 }

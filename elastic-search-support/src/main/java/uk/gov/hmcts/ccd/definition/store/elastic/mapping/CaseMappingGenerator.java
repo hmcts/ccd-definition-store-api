@@ -1,5 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
+
 import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
@@ -7,12 +13,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toList;
 
 @Component
 @Slf4j
