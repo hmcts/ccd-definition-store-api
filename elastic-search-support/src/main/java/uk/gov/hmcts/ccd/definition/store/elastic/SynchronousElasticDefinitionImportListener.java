@@ -1,11 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ccd.definition.store.elastic.client.CCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
@@ -17,9 +18,9 @@ public class SynchronousElasticDefinitionImportListener extends ElasticDefinitio
 
     @Autowired
     public SynchronousElasticDefinitionImportListener(CcdElasticSearchProperties config,
-        CaseMappingGenerator mappingGenerator,
-        CCDElasticClient elasticClient) {
-        super(config, mappingGenerator, elasticClient);
+                                                      CaseMappingGenerator mappingGenerator,
+                                                      ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
+        super(config, mappingGenerator, clientFactory);
     }
 
     @EventListener
