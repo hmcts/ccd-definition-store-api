@@ -10,6 +10,8 @@ public enum ColumnName {
     CALLBACK_URL_MID_EVENT("CallBackURLMidEvent"),
     CAN_SAVE_DRAFT("CanSaveDraft"),
     CASE_EVENT_ID("CaseEventID"),
+    CASE_EVENT_FIELD_LABEL("CaseEventFieldLabel"),
+    CASE_EVENT_FIELD_HINT("CaseEventFieldHint"),
     CASE_FIELD_ID("CaseFieldID"),
     CASE_TYPE_ID("CaseTypeID"),
     CHANNEL("Channel"),
