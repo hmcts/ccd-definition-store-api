@@ -70,4 +70,8 @@
         <notes>CVE-2016-7048: only for Postgres lt 9.6 and we use 9.6 on Azure.  Also only impacts the installer.</notes>
         <cve>CVE-2016-7048</cve>
     </suppress>
+    <suppress>
+        <notes>"Untrusted search path vulnerability in PostgreSQL before 7.3.19, 7.4.x before 7.4.17, 8.0.x before 8.0.13, 8.1.x before 8.1.9, and 8.2.x before 8.2.4 allows remote authenticated users, when permitted to call a SECURITY DEFINER function, to gain the privileges of the function owner, related to "search_path settings.".  The versions of PostgreSQL are too old we're on at least 9.6 on Azure.</notes>
+        <cve>CVE-2007-2138</cve>
+    </suppress>
 </suppressions>
