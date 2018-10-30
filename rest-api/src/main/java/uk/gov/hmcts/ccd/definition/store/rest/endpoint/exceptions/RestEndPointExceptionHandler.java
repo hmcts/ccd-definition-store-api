@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 
 import javax.persistence.OptimisticLockException;
@@ -60,6 +61,13 @@ public class RestEndPointExceptionHandler extends ResponseEntityExceptionHandler
         log.error("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
             HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(value = {BadRequestException.class})
+    ResponseEntity<Object> handleBadRequest(BadRequestException ex, WebRequest request) {
+        log.error("Exception thrown '{}'", ex.getMessage(), ex);
+        return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
+            HttpStatus.BAD_REQUEST, request);
     }
 
     private String flattenExceptionMessages(Throwable ex) {

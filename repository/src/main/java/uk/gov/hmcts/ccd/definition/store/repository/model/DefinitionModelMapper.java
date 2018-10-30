@@ -16,18 +16,17 @@ public class DefinitionModelMapper {
     private final ObjectMapper mapper = new ObjectMapper();
     private final TypeReference stringJsonMapType = new TypeReference<Map<String, JsonNode>>() {};
 
+    /**
+     * Maps a Definition model object to its corresponding entity class. Note: The Jurisdiction object within a
+     * Definition is deliberately not mapped. The Jurisdiction is always expected to exist already, so the actual
+     * JurisdictionEntity needs to be retrieved then set on the resultant DefinitionEntity, post mapping.
+     *
+     * @param definition The Definition to be mapped
+     * @return A DefinitionEntity with the mappings. Note: The JurisdictionEntity will be null and needs to be set post
+     * mapping with the proper, retrieved entity
+     */
     public DefinitionEntity toEntity(@NotNull final Definition definition) {
         final DefinitionEntity definitionEntity = new DefinitionEntity();
-        final JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
-        if (definition.getJurisdiction() != null) {
-            final Jurisdiction jurisdiction = definition.getJurisdiction();
-            jurisdictionEntity.setReference(jurisdiction.getId());
-            jurisdictionEntity.setLiveFrom(jurisdiction.getLiveFrom());
-            jurisdictionEntity.setLiveTo(jurisdiction.getLiveUntil());
-            jurisdictionEntity.setName(jurisdiction.getName());
-            jurisdictionEntity.setDescription(jurisdiction.getDescription());
-        }
-        definitionEntity.setJurisdiction(jurisdictionEntity);
         definitionEntity.setCaseTypes(definition.getCaseTypes());
         definitionEntity.setDescription(definition.getDescription());
         definitionEntity.setVersion(definition.getVersion());
@@ -44,6 +43,12 @@ public class DefinitionModelMapper {
         return definitionEntity;
     }
 
+    /**
+     * Maps a DefinitionEntity to its corresponding model class.
+     *
+     * @param definitionEntity The DefinitionEntity to be mapped
+     * @return A Definition model object with the mappings
+     */
     public Definition toModel(@NotNull final DefinitionEntity definitionEntity) {
         final Definition definition = new Definition();
         if (definitionEntity.getJurisdiction() != null) {

@@ -38,7 +38,6 @@ class DefinitionModelMapperTest {
     private JurisdictionEntity jurisdictionEntity;
 
     private Definition definition;
-    private Jurisdiction jurisdiction;
 
     @InjectMocks
     private DefinitionModelMapper classUnderTest;
@@ -48,7 +47,6 @@ class DefinitionModelMapperTest {
         MockitoAnnotations.initMocks(this);
         setupMockJurisdictionEntity();
         setupMockDefinitionEntity();
-        jurisdiction = createJurisdiction();
         definition = createDefinition();
     }
 
@@ -57,11 +55,9 @@ class DefinitionModelMapperTest {
     void shouldReturnPopulatedEntity() {
         final DefinitionEntity entity = classUnderTest.toEntity(definition);
         assertThat(entity.getId(), is(nullValue()));
-        assertThat(entity.getJurisdiction().getReference(), is(definition.getJurisdiction().getId()));
-        assertThat(entity.getJurisdiction().getLiveFrom(), is(definition.getJurisdiction().getLiveFrom()));
-        assertThat(entity.getJurisdiction().getLiveTo(), is(definition.getJurisdiction().getLiveUntil()));
-        assertThat(entity.getJurisdiction().getName(), is(definition.getJurisdiction().getName()));
-        assertThat(entity.getJurisdiction().getDescription(), is(definition.getJurisdiction().getDescription()));
+        // The Jurisdiction is expected not to be mapped deliberately; it will always be an existing entity, so it
+        // should be retrieved and set on the DefinitionEntity, post mapping
+        assertThat(entity.getJurisdiction(), is(nullValue()));
         assertThat(entity.getCaseTypes(), is(definition.getCaseTypes()));
         assertThat(entity.getDescription(), is(definition.getDescription()));
         assertThat(entity.getVersion(), is(definition.getVersion()));
@@ -111,7 +107,6 @@ class DefinitionModelMapperTest {
 
     private Definition createDefinition() throws IOException {
         final Definition definition = new Definition();
-        definition.setJurisdiction(jurisdiction);
         definition.setCaseTypes("CaseType1,CaseType2");
         definition.setDescription("Description");
         definition.setVersion(2);
@@ -138,17 +133,5 @@ class DefinitionModelMapperTest {
             .atZone(ZoneId.systemDefault()).toInstant()));
         when(jurisdictionEntity.getName()).thenReturn("Test 2 Jurisdiction");
         when(jurisdictionEntity.getDescription()).thenReturn("Second jurisdiction used for testing");
-    }
-
-    private Jurisdiction createJurisdiction() {
-        final Jurisdiction jurisdiction = new Jurisdiction();
-        jurisdiction.setId("TEST");
-        jurisdiction.setName("Test Jurisdiction");
-        jurisdiction.setDescription("Jurisdiction used for testing");
-        jurisdiction.setLiveFrom(Date.from(LocalDate.of(2018, 10, 12).atStartOfDay()
-            .atZone(ZoneId.systemDefault()).toInstant()));
-        jurisdiction.setLiveUntil(Date.from(LocalDate.of(2028, 10, 12).atStartOfDay()
-            .atZone(ZoneId.systemDefault()).toInstant()));
-        return jurisdiction;
     }
 }

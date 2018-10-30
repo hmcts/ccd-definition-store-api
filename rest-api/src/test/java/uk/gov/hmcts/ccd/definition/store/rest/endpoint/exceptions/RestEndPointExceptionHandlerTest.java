@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 
 
@@ -24,7 +25,7 @@ public class RestEndPointExceptionHandlerTest {
     }
 
     @Test
-    public void handleException_shouldAggregateInnerMessages() throws Exception {
+    public void handleException_shouldAggregateInnerMessages() {
         final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
 
         final ResponseEntity<Object> response = exceptionHandler.handleException(exception, mock(WebRequest.class));
@@ -34,7 +35,7 @@ public class RestEndPointExceptionHandlerTest {
     }
 
     @Test
-    public void handleException_shouldStopMessageAggregationAtDepth5() throws Exception {
+    public void handleException_shouldStopMessageAggregationAtDepth5() {
         final RuntimeException exception = new RuntimeException("Depth 1",
             new Exception("Depth 2",
                 new Exception("Depth 3",
@@ -66,5 +67,15 @@ public class RestEndPointExceptionHandlerTest {
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertThat(response.getBody().toString(), equalTo("Not found message"));
+    }
+
+    @Test
+    public void handleBadRequest() {
+        final BadRequestException exception = new BadRequestException("Invalid request");
+
+        final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
+
+        assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(response.getBody().toString(), equalTo("Invalid request"));
     }
 }
