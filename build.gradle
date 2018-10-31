@@ -97,26 +97,7 @@ allprojects {
     }
 
     dependencies {
-        compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: reformLogging
-        compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: reformLogging
-        compile "org.hibernate:hibernate-core:${hibernateVersion}"
-        compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
-        compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
-        compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
-        compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
-        runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
-        testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        testCompile 'io.github.openfeign:feign-jackson:9.7.0'
-        testCompile 'io.github.openfeign.form:feign-form:3.3.0'
-        testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        testCompile "org.exparity:hamcrest-date:2.0.4"
-        testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        testCompile "io.rest-assured:rest-assured:3.1.0"
-        testCompile "org.exparity:hamcrest-date:2.0.4"
-        testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
-        testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
-        testRuntime "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
-        testCompile 'org.mockito:mockito-junit-jupiter:2.21.0'
+        // None for parent project; all in subprojects
     }
 
     checkstyle {
@@ -179,6 +160,10 @@ subprojects {
         compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: reformLogging
         compile "org.hibernate:hibernate-core:${hibernateVersion}"
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
+        compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
+        compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
+        compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
+        runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
@@ -201,6 +186,11 @@ subprojects {
         testCompile 'com.github.npathai:hamcrest-optional:2.0.0'
         testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '1.2.4.RELEASE'
         testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
+        testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+        testCompile 'io.github.openfeign:feign-jackson:9.7.0'
+        testCompile 'io.github.openfeign.form:feign-form:3.3.0'
+        testCompile "org.exparity:hamcrest-date:2.0.4"
+        testCompile "io.rest-assured:rest-assured:3.1.0"
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
@@ -403,5 +393,3 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
             "${buildDir}/reports/jacoco/jacocoTestReport.xml"
     ]
 }
-
-
