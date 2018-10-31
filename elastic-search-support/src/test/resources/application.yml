@@ -51,7 +51,7 @@ elasticsearch:
     FixedListEdit: ${elasticsearch.elasticMappings.defaultText}
     MultiSelectList: ${elasticsearch.elasticMappings.defaultText}
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_cases}
-  casesIndexType: case
+  casesIndexType: _doc
   casePredefinedMappings:
     reference: ${elasticsearch.elasticMappings.defaultText}
     jurisdiction: ${elasticsearch.elasticMappings.defaultText}

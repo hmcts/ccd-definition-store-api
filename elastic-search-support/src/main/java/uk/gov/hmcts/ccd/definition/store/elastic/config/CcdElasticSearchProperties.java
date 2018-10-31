@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("elasticsearch")
 public class CcdElasticSearchProperties {

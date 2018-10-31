@@ -12,6 +12,8 @@ public class CaseEventField {
     private String showCondition;
     private Boolean showSummaryChangeOption = null;
     private Integer showSummaryContentOption = null;
+    private String label = null;
+    private String hintText = null;
 
     /**
      * Foriegn key to CaseField.id
@@ -76,5 +78,31 @@ public class CaseEventField {
 
     public void setShowSummaryContentOption(Integer showSummaryContentOption) {
         this.showSummaryContentOption = showSummaryContentOption;
+    }
+
+    /**
+     * event case field label
+     **/
+    @ApiModelProperty(value = "")
+    @JsonProperty("label")
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    /**
+     * event case field hint text
+     **/
+    @ApiModelProperty(value = "")
+    @JsonProperty("hint_text")
+    public String getHintText() {
+        return hintText;
+    }
+
+    public void setHintText(String hintText) {
+        this.hintText = hintText;
     }
 }

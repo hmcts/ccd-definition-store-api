@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.ComplexTypeMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
-
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.ComplexTypeMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 public class StubComplexTypeMappingGenerator extends ComplexTypeMappingGenerator {
 
