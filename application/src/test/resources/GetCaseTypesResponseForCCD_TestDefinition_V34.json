@@ -27,35 +27,45 @@
           "display_context": "OPTIONAL",
           "show_condition": null,
           "show_summary_change_option": null,
-          "show_summary_content_option": null
+          "show_summary_content_option": null,
+          "label": null,
+          "hint_text": null
         },
         {
           "case_field_id": "PersonOrderSummary",
           "display_context": "MANDATORY",
           "show_condition": null,
           "show_summary_change_option": true,
-          "show_summary_content_option": null
+          "show_summary_content_option": null,
+          "label": null,
+          "hint_text": null
         },
         {
           "case_field_id": "PersonCasePaymentHistoryViewer",
           "display_context": "READONLY",
           "show_condition": null,
           "show_summary_change_option": false,
-          "show_summary_content_option": null
+          "show_summary_content_option": null,
+          "label": null,
+          "hint_text": null
         },
         {
           "case_field_id": "PersonFirstName",
           "display_context": "MANDATORY",
           "show_condition": null,
           "show_summary_change_option": false,
-          "show_summary_content_option": null
+          "show_summary_content_option": null,
+          "label": "CreateCase FirstName Label Override",
+          "hint_text": "CreateCase FirstName Hint Override"
         },
         {
           "case_field_id": "PersonLastNameWithValidation",
           "display_context": "OPTIONAL",
           "show_condition": null,
           "show_summary_change_option": true,
-          "show_summary_content_option": null
+          "show_summary_content_option": null,
+          "label": null,
+          "hint_text": null
         }
       ],
       "pre_states": [],
@@ -110,35 +120,45 @@
           "display_context": "READONLY",
           "show_condition": null,
           "show_summary_change_option": true,
-          "show_summary_content_option": 2
+          "show_summary_content_option": 2,
+          "label": "LegacyCase FirstName Label Override",
+          "hint_text": "LegacyCase FirstName Hint Override"
         },
         {
           "case_field_id": "PersonLastName",
           "display_context": "OPTIONAL",
           "show_condition": null,
           "show_summary_change_option": null,
-          "show_summary_content_option": 1
+          "show_summary_content_option": 1,
+          "label": null,
+          "hint_text": null
         },
         {
           "case_field_id": "PersonAddress",
           "display_context": "OPTIONAL",
           "show_condition": null,
           "show_summary_change_option": true,
-          "show_summary_content_option": null
+          "show_summary_content_option": null,
+          "label": null,
+          "hint_text": null
         },
         {
           "case_field_id": "PersonHasSecondAddress",
           "display_context": "OPTIONAL",
           "show_condition": null,
           "show_summary_change_option": false,
-          "show_summary_content_option": null
+          "show_summary_content_option": null,
+          "label": null,
+          "hint_text": null
         },
         {
           "case_field_id": "PersonSecondAddress",
           "display_context": "OPTIONAL",
           "show_condition": "PersonHasSecondAddress=\"Yes\"",
           "show_summary_change_option": null,
-          "show_summary_content_option": null
+          "show_summary_content_option": null,
+          "label": null,
+          "hint_text": null
         }
       ],
       "pre_states": [
