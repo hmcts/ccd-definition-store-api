@@ -59,7 +59,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             entity = toEntity(userRole);
             return new ServiceResponse<>(toModel(repository.save(entity)), CREATE);
         } else {
-            throw new DuplicateUserRoleException("User role already exists");
+                        throw new DuplicateUserRoleException("User role already exists");
         }
     }
 

@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * Parses Field types defined as part of tab `FixedLists`.
- * Because the spreadsheet doesn't specify if a list is intended to be used as a fixed list type or multi-select list type,
+ * Because the spreadsheet doesn't specify if a list is intended to be used as a fixed list type or radio list type or multi-select list type,
  * at the moment both version of the type will be created.
  */
 public class ListFieldTypeParser {
@@ -25,20 +25,24 @@ public class ListFieldTypeParser {
     private static final Logger logger = LoggerFactory.getLogger(ListFieldTypeParser.class);
 
     private static final String FIXED_LIST_TYPE = "FixedList";
+    private static final String FIXED_RADIO_LIST_TYPE = "FixedRadioList";
     private static final String MULTI_LIST_TYPE = "MultiSelectList";
     private final ParseContext parseContext;
     private final FieldTypeEntity fixedListBaseType;
+    private final FieldTypeEntity fixedRadioListBaseType;
     private final FieldTypeEntity multiListBaseType;
 
     public ListFieldTypeParser(ParseContext parseContext) {
         this.parseContext = parseContext;
         fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException("No base type found for: " + FIXED_LIST_TYPE));
+        fixedRadioListBaseType = parseContext.getBaseType(FIXED_RADIO_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException("No base type found for: " + FIXED_RADIO_LIST_TYPE));
         multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException("No base type found for: " + MULTI_LIST_TYPE));
+
     }
 
     /**
      * Extract list types from `FixedLists` tab.
-     * Because the intent of the list is currently unknown, each list is extracted once as `FixedList` and once as `MultiSelectList`.
+     * Because the intent of the list is currently unknown, each list is extracted once as `FixedList` , once as 'FixedRadioList' and once as `MultiSelectList`.
      *
      * @param definitionSheets
      */
@@ -74,6 +78,19 @@ public class ListFieldTypeParser {
         fixedListType.addListItems(fixedListItems);
         parseContext.addToAllTypes(fixedListType);
         result.addNew(fixedListType);
+
+        // Add as FixedRadioList
+        final List<FieldTypeListItemEntity> fixedRadioListItems = elements.stream()
+            .map(this::parseListItem)
+            .collect(toList());
+
+        final FieldTypeEntity fixedRadioListType = new FieldTypeEntity();
+        fixedRadioListType.setBaseFieldType(fixedRadioListBaseType);
+        fixedRadioListType.setReference(ReferenceUtils.listReference(FIXED_RADIO_LIST_TYPE, listDataItems.getKey()));
+        fixedRadioListType.setJurisdiction(parseContext.getJurisdiction());
+        fixedRadioListType.addListItems(fixedRadioListItems);
+        parseContext.addToAllTypes(fixedRadioListType);
+        result.addNew(fixedRadioListType);
 
         // Add as MultiSelectList
         final List<FieldTypeListItemEntity> multiListItems = elements.stream()
