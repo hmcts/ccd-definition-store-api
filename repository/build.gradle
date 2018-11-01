@@ -12,7 +12,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa") {
         exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
-    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
+    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '1.0.4'
     compile "commons-beanutils:commons-beanutils"
     compile "org.apache.commons:commons-lang3:3.7"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
