@@ -16,11 +16,9 @@ dependencies {
     compile project(':rest-api')
     testCompile "org.springframework.boot:spring-boot-starter-web"
     testCompile "org.springframework.boot:spring-boot-starter-actuator"
-    testCompile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
     testCompile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     testCompile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
     testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
-    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 }
 
 // To help obscure gradle problem

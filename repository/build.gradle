@@ -12,7 +12,6 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa") {
         exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
-    compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
     compile "commons-beanutils:commons-beanutils"
     compile "org.apache.commons:commons-lang3:3.7"
@@ -24,4 +23,5 @@ dependencies {
     compile "org.glassfish:javax.el:3.0.0"
     testCompile "org.liquibase:liquibase-core"
     testCompile "org.assertj:assertj-core"
+    compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.3.2'
 }

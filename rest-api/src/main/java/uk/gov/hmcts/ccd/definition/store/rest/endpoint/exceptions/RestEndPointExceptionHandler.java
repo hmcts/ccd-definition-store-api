@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 
 import javax.persistence.OptimisticLockException;
@@ -28,38 +29,45 @@ public class RestEndPointExceptionHandler extends ResponseEntityExceptionHandler
     private static Logger log = LoggerFactory.getLogger(RestEndPointExceptionHandler.class);
 
     @ExceptionHandler(value = {IOException.class, PersistenceException.class})
-    ResponseEntity<Object> handleException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleException(RuntimeException ex, WebRequest request) {
         log.error("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
             HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(value = {OptimisticLockException.class})
-    ResponseEntity<Object> handleConflict(PersistenceException ex, WebRequest request) {
+    public ResponseEntity<Object> handleConflict(PersistenceException ex, WebRequest request) {
         log.error("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
             HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(value = {ConcurrencyFailureException.class})
-    ResponseEntity<Object> handleConcurrencyFailure(ConcurrencyFailureException ex, WebRequest request) {
+    public ResponseEntity<Object> handleConcurrencyFailure(ConcurrencyFailureException ex, WebRequest request) {
         log.error("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
             HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(value = {NotFoundException.class})
-    ResponseEntity<Object> handleNotFound(NotFoundException ex, WebRequest request) {
+    public ResponseEntity<Object> handleNotFound(NotFoundException ex, WebRequest request) {
         log.error("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
             HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
-    ResponseEntity<Object> handleConstraintVioldation(ConstraintViolationException ex, WebRequest request) {
+    public ResponseEntity<Object> handleConstraintVioldation(ConstraintViolationException ex, WebRequest request) {
         log.error("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
             HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(value = {BadRequestException.class})
+    public ResponseEntity<Object> handleBadRequest(BadRequestException ex, WebRequest request) {
+        log.error("Exception thrown '{}'", ex.getMessage(), ex);
+        return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
+            HttpStatus.BAD_REQUEST, request);
     }
 
     private String flattenExceptionMessages(Throwable ex) {
