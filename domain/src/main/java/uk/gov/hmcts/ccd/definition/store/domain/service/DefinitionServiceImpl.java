@@ -11,8 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
-
-import java.util.Optional;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
 
@@ -36,21 +35,30 @@ public class DefinitionServiceImpl implements DefinitionService {
 
     @Override
     public ServiceResponse<Definition> createDraftDefinition(final Definition definition) {
-        return Optional.ofNullable(definition.getJurisdiction())
-            .map((jurisdiction) -> {
-                // Retrieve the corresponding JurisdictionEntity for the Jurisdiction reference in the Definition
-                return jurisdictionRepository.findFirstByReferenceOrderByVersionDesc(jurisdiction.getId())
-                    .map((jurisdictionEntity) -> {
-                        LOG.info("Creating draft Definition for " + jurisdiction.getId() + " jurisdiction...");
-                        // If found, this then needs to be attached to the mapped DefinitionEntity, prior to persisting
-                        final DefinitionEntity definitionEntity = mapper.toEntity(definition);
-                        definitionEntity.setJurisdiction(jurisdictionEntity);
-                        return new ServiceResponse<>(mapper.toModel(
-                            decoratedRepository.save(definitionEntity)), CREATE);
-                    })
-                    .orElseThrow(() -> new BadRequestException(
-                        "Jurisdiction " + jurisdiction.getId() + " could not be retrieved or does not exist"));
-            })
-            .orElseThrow(() -> new BadRequestException("No Jurisdiction present in Definition"));
+        if (definition.getDescription() == null) {
+            throw new BadRequestException("Definition description cannot be null");
+        }
+
+        if (definition.getAuthor() == null) {
+            throw new BadRequestException("Definition author cannot be null");
+        }
+
+        if (definition.getJurisdiction() == null) {
+            throw new BadRequestException("No Jurisdiction present in Definition");
+        } else {
+            Jurisdiction jurisdiction = definition.getJurisdiction();
+            // Retrieve the corresponding JurisdictionEntity for the Jurisdiction reference in the Definition
+            return jurisdictionRepository.findFirstByReferenceOrderByVersionDesc(jurisdiction.getId())
+                .map((jurisdictionEntity) -> {
+                    LOG.info("Creating draft Definition for " + jurisdiction.getId() + " jurisdiction...");
+                    // If found, this then needs to be attached to the mapped DefinitionEntity, prior to persisting
+                    final DefinitionEntity definitionEntity = mapper.toEntity(definition);
+                    definitionEntity.setJurisdiction(jurisdictionEntity);
+                    return new ServiceResponse<>(mapper.toModel(
+                        decoratedRepository.save(definitionEntity)), CREATE);
+                })
+                .orElseThrow(() -> new BadRequestException(
+                    "Jurisdiction " + jurisdiction.getId() + " could not be retrieved or does not exist"));
+        }
     }
 }

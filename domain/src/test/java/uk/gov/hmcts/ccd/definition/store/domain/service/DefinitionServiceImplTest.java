@@ -91,14 +91,17 @@ class DefinitionServiceImplTest {
         assertThat(capturedEntity.getJurisdiction().getId(), is(jurisdictionEntity.getId()));
         assertThat(capturedEntity.getDescription(), is(definitionEntity.getDescription()));
         assertThat(capturedEntity.getStatus(), is(nullValue()));
+        assertThat(capturedEntity.getAuthor(), is(definitionEntity.getAuthor()));
 
         verify(persistedEntity, never()).setJurisdiction(any(JurisdictionEntity.class));
         verify(persistedEntity, never()).setDescription(anyString());
         verify(persistedEntity, never()).setStatus(any(DefinitionStatus.class));
+        verify(persistedEntity, never()).setAuthor(anyString());
 
         assertThat(saved.getJurisdiction().getId(), is(definition.getJurisdiction().getId()));
         assertThat(saved.getDescription(), is(definition.getDescription()));
         assertThat(saved.getStatus(), is(DefinitionStatus.DRAFT));
+        assertThat(saved.getAuthor(), is(definition.getAuthor()));
     }
 
     @Test
@@ -121,6 +124,26 @@ class DefinitionServiceImplTest {
         assertThat(exception.getMessage(), is("Jurisdiction TEST could not be retrieved or does not exist"));
     }
 
+    @Test
+    @DisplayName("Should throw an exception if the Definition description is null")
+    void shouldThrowExceptionIfDefinitionDescriptionIsNull() {
+        when(definition.getDescription()).thenReturn(null);
+
+        Throwable exception =
+            assertThrows(BadRequestException.class, () -> classUnderTest.createDraftDefinition(definition));
+        assertThat(exception.getMessage(), is("Definition description cannot be null"));
+    }
+
+    @Test
+    @DisplayName("Should throw an exception if the Definition author is null")
+    void shouldThrowExceptionIfDefinitionAuthorIsNull() {
+        when(definition.getAuthor()).thenReturn(null);
+
+        Throwable exception =
+            assertThrows(BadRequestException.class, () -> classUnderTest.createDraftDefinition(definition));
+        assertThat(exception.getMessage(), is("Definition author cannot be null"));
+    }
+
     private void setupMockJurisdictionEntity() {
         when(jurisdictionEntity.getId()).thenReturn(1);
     }
@@ -130,6 +153,7 @@ class DefinitionServiceImplTest {
                                      final DefinitionStatus status) {
         when(definition.getDescription()).thenReturn(description);
         when(definition.getStatus()).thenReturn(status);
+        when(definition.getAuthor()).thenReturn("ccd@hmcts");
         final Jurisdiction jurisdiction = mock(Jurisdiction.class);
         when(definition.getJurisdiction()).thenReturn(jurisdiction);
         when(jurisdiction.getId()).thenReturn("TEST");
@@ -137,5 +161,6 @@ class DefinitionServiceImplTest {
 
     private void setupMockDefinitionEntity(final String description) {
         when(definitionEntity.getDescription()).thenReturn(description);
+        when(definitionEntity.getAuthor()).thenReturn("ccd@hmcts");
     }
 }
