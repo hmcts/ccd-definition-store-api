@@ -25,7 +25,7 @@ public class RestEndPointExceptionHandlerTest {
     }
 
     @Test
-    public void handleException_shouldAggregateInnerMessages() {
+    public void handleExceptionShouldAggregateInnerMessages() {
         final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
 
         final ResponseEntity<Object> response = exceptionHandler.handleException(exception, mock(WebRequest.class));
@@ -35,7 +35,7 @@ public class RestEndPointExceptionHandlerTest {
     }
 
     @Test
-    public void handleException_shouldStopMessageAggregationAtDepth5() {
+    public void handleExceptionShouldStopMessageAggregationAtDepth5() {
         final RuntimeException exception = new RuntimeException("Depth 1",
             new Exception("Depth 2",
                 new Exception("Depth 3",
@@ -50,7 +50,7 @@ public class RestEndPointExceptionHandlerTest {
     }
 
     @Test
-    public void handleConflict_whenOptimisticLockExceptionHappens() {
+    public void handleConflictWhenOptimisticLockExceptionHappens() {
         final OptimisticLockException exception = new OptimisticLockException("Outer message", new Exception("Inner message"));
 
         final ResponseEntity<Object> response = exceptionHandler.handleConflict(exception, mock(WebRequest.class));
