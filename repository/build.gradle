@@ -23,5 +23,5 @@ dependencies {
     compile "org.glassfish:javax.el:3.0.0"
     testCompile "org.liquibase:liquibase-core"
     testCompile "org.assertj:assertj-core"
-    compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.3.2'
+    compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.3.3'
 }
