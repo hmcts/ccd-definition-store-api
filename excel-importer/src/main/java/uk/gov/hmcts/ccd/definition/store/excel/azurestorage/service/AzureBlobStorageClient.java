@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
@@ -37,11 +38,11 @@ public class AzureBlobStorageClient implements FileStorageClient {
 
     @Override
     public void uploadFile(MultipartFile multipartFile, DefinitionFileUploadMetadata metadata) {
-        try {
+        try (final InputStream inputStream = multipartFile.getInputStream()) {
             final CloudBlockBlob blob = getCloudFile(dateTimeStringGenerator.generateCurrentDateTime()
                 + "_" + multipartFile.getOriginalFilename());
             blob.setMetadata(createMetadataMap(metadata));
-            blob.upload(multipartFile.getInputStream(), multipartFile.getSize());
+            blob.upload(inputStream, multipartFile.getSize());
 
         } catch (URISyntaxException | StorageException | IOException e) {
             throw new FileStorageException(e);

@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.endpoint;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.URI_IMPORT;
 
@@ -54,9 +55,10 @@ public class ImportController {
         if (file == null || file.getSize() == 0) {
             throw new IOException("No file present or file has zero length");
         } else {
-
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            IOUtils.copy(file.getInputStream(), baos);
+            try (final InputStream inputStream = file.getInputStream()) {
+                IOUtils.copy(inputStream, baos);
+            }
             byte[] bytes = baos.toByteArray();
 
             LOG.info("Importing Definition file...");

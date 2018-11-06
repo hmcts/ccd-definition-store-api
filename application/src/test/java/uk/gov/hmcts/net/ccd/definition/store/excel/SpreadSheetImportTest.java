@@ -65,14 +65,16 @@ public class SpreadSheetImportTest extends BaseTest {
 
         givenUserProfileReturnsSuccess();
 
-        InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                                  .file(file)
-                                                  .header(AUTHORIZATION, "Bearer testUser")) //
-            .andReturn();
+        try (final InputStream inputStream =
+                 new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
+            MockMultipartFile file = new MockMultipartFile("file", inputStream);
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+                .file(file)
+                .header(AUTHORIZATION, "Bearer testUser")) //
+                .andReturn();
 
-        assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+        }
 
         final String expectedUserProfiles = "[{\"id\":\"user1@hmcts.net\"," +
             "\"work_basket_default_jurisdiction\":\"TEST\"," +
@@ -102,25 +104,27 @@ public class SpreadSheetImportTest extends BaseTest {
     @Test
     @Transactional
     public void importValidDefinitionFileUserProfileHas403Response() throws Exception {
+        try (final InputStream inputStream =
+                 new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
 
-        final InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
-        final MockMultipartFile file = new MockMultipartFile("file", inputStream);
+            final MockMultipartFile file = new MockMultipartFile("file", inputStream);
 
-        // Given wiremock returns http status 403
-        WireMock.givenThat(WireMock.put(WireMock.urlEqualTo("/user-profile/users"))
-                               .willReturn(WireMock.aResponse().withStatus(403)));
+            // Given wiremock returns http status 403
+            WireMock.givenThat(WireMock.put(WireMock.urlEqualTo("/user-profile/users"))
+                .willReturn(WireMock.aResponse().withStatus(403)));
 
-        // when I import a definition file
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                               .file(file)
-                                               .header(AUTHORIZATION, "Bearer testUser")).andReturn();
+            // when I import a definition file
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+                .file(file)
+                .header(AUTHORIZATION, "Bearer testUser")).andReturn();
 
-        assertResponseCode(result, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+            assertResponseCode(result, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 
-        // Check the error response message.
-        assertThat("Incorrect HTTP response",
-                   result.getResponse().getContentAsString(),
-                   allOf(containsString("Problem updating user profile"), containsString("403 Forbidden")));
+            // Check the error response message.
+            assertThat("Incorrect HTTP response",
+                result.getResponse().getContentAsString(),
+                allOf(containsString("Problem updating user profile"), containsString("403 Forbidden")));
+        }
     }
 
     /**
