@@ -113,7 +113,7 @@ variable "elastic_search_fail_on_import" {
 }
 
 variable "elastic_search_dynamc" {
-  default = "strict"
+  default = "false"
 }
 
 variable "elastic_search_case_index_name_format" {
