@@ -11,7 +11,7 @@ elasticsearch:
     disabled: '{"enabled": false}'
     defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
     defaultKeyword: '{"type" : "keyword"}'
-    defaultDate: '{"type" : "date"}'
+    defaultDate: '{"type" : "date", "ignore_malformed": true}'
     defaultBoolean: '{"type" : "boolean"}'
     defaultLong: '{"type" : "long"}'
     defaultDouble: '{"type" : "double"}'
