@@ -110,6 +110,7 @@ module "case-definition-store-api" {
     ELASTIC_SEARCH_HOST = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_url.*.value)}"}"
     ELASTIC_SEARCH_PASSWORD = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_password.*.value)}"}"
     ELASTIC_SEARCH_PORT = "${var.elastic_search_port}"
+    ELASTIC_SEARCH_SCHEME = "http"
     ELASTIC_SEARCH_ENABLED = "${var.elastic_search_enabled}"
     ELASTIC_SEARCH_INDEX_SHARDS = "${var.elastic_search_index_shards}"
     ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS = "${var.elastic_search_index_shards_replicas}"
