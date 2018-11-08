@@ -80,7 +80,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     }
 
     private void verifyCaseDataFields(ValidatableResponse response, boolean verifyNewFields) {
-        response.root(CASE_INDEX_NAME + ".mappings.case.properties.data.properties");
+        response.root(CASE_INDEX_NAME + ".mappings." + DOC_TYPE + ".properties.data.properties");
         if (verifyNewFields) {
             verifyFieldsAndType(response, TEXT_FIELD_TYPE, "NewTextField");
         } else {
