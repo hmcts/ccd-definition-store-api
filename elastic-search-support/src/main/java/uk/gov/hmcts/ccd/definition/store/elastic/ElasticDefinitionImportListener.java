@@ -38,6 +38,7 @@ public abstract class ElasticDefinitionImportListener {
      */
     protected void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) {
         HighLevelCCDElasticClient elasticClient = null;
+        String caseMapping = null;
         try {
             elasticClient = clientFactory.getObject();
             for (CaseTypeEntity caseType : caseTypes) {
@@ -49,10 +50,13 @@ public abstract class ElasticDefinitionImportListener {
                     elasticClient.createIndex(actualIndexName, alias);
                 }
 
-                String caseMapping = mappingGenerator.generateMapping(caseType);
+                caseMapping = mappingGenerator.generateMapping(caseType);
                 elasticClient.upsertMapping(baseIndexName, caseMapping);
             }
         } catch (Exception exc) {
+            if (caseMapping != null) {
+                log.error("elastic search initialisation error on import. Case mapping: {}", caseMapping);
+            }
             throw new ElasticSearchInitialisationException(exc);
         } finally {
             if (elasticClient != null) {
