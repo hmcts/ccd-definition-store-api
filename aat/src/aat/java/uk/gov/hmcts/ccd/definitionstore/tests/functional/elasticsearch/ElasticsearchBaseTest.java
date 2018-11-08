@@ -15,6 +15,8 @@ abstract class ElasticsearchBaseTest extends BaseTest {
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchBaseTest.class);
 
+    protected static final String DEFAULT_DOC_TYPE = "_doc";
+
     ElasticsearchBaseTest(AATHelper aat) {
         super(aat);
     }
