@@ -33,3 +33,19 @@ output "OAUTH2_REDIRECT_URI" {
 output "ELASTIC_SEARCH_ENABLED" {
   value = "${var.elastic_search_enabled}"
 }
+
+output "ELASTIC_SEARCH_HOST" {
+  value = "${local.elastic_search_host}"
+}
+
+output "ELASTIC_SEARCH_PASSWORD" {
+  value = "${local.elastic_search_password}"
+}
+
+output "ELASTIC_SEARCH_PORT" {
+  value = "${var.elastic_search_port}"
+}
+
+output "ELASTIC_SEARCH_SCHEME" {
+  value = "${var.elastic_search_scheme}"
+}
