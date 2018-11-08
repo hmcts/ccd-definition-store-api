@@ -92,12 +92,16 @@ variable "authorised-services" {
 // ELASTIC SEARCH
 ////////////////////////////////
 
+variable "elastic_search_enabled" {
+  default = "false"
+}
+
 variable "elastic_search_port" {
   default = "9200"
 }
 
-variable "elastic_search_enabled" {
-  default = "false"
+variable "elastic_search_scheme" {
+  default = "http"
 }
 
 variable "elastic_search_index_shards" {
