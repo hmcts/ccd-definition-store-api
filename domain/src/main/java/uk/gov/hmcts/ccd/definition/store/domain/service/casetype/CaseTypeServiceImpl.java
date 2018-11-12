@@ -14,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyC
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
@@ -50,12 +51,13 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     public void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes) {
 
         ValidationResult validationResult = new ValidationResult();
-
+        List<CaseType> allCaseTypes = findAll();
         caseTypes.forEach(
             caseTypeEntity -> {
                 caseTypeEntity.setJurisdiction(jurisdiction);
                 legacyCaseTypeValidator.validateCaseType(caseTypeEntity);
                 validationResult.merge(validate(caseTypeEntity));
+                validateUniqueCaseTypeReference(validationResult, allCaseTypes, caseTypeEntity);
             }
         );
 
@@ -64,6 +66,31 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         } else {
             throw new ValidationException(validationResult);
         }
+    }
+
+    private void validateUniqueCaseTypeReference(ValidationResult validationResult, List<CaseType> allCaseTypes, CaseTypeEntity caseTypeEntity) {
+        allCaseTypes
+            .stream()
+            .filter(caseType -> sameCaseTypeIdsButDifferentJurisdictionIds(caseTypeEntity, caseType))
+            .findAny()
+            .ifPresent(caseType -> validationResult.addError(new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseType)));
+    }
+
+    private boolean sameCaseTypeIdsButDifferentJurisdictionIds(CaseTypeEntity caseTypeEntity, CaseType caseType) {
+        return caseType.getId().equals(caseTypeEntity.getReference()) &&
+            !caseType.getJurisdiction().getId().equals(caseTypeEntity.getJurisdiction().getReference());
+    }
+
+    @Override
+    public List<CaseType> findAll() {
+        Optional<List<CaseTypeEntity>> caseTypeEntities
+            = Optional.ofNullable(repository.findAll());
+
+        return caseTypeEntities.orElse(Collections.emptyList())
+            .stream()
+            .map(dtoMapper::map)
+            .map(this::addMetadataFields)
+            .collect(toList());
     }
 
     @Override
