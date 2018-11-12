@@ -20,6 +20,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldInvalidShowConditionError;
@@ -53,6 +54,19 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             caseTypeEntityMissingSecurityClassificationValidationError.getCaseTypeEntity(),
             caseTypeEntityMissingSecurityClassificationValidationError.getCaseTypeEntity().getReference(),
             caseTypeEntityMissingSecurityClassificationValidationError.getDefaultMessage());
+    }
+
+    @Override
+    public String createErrorMessage(CaseTypeEntityNonUniqueReferenceValidationError
+                                         error) {
+        return newMessageIfDefinitionExists(error,
+                                            error.getCaseTypeEntity(),
+                                            def -> String.format(
+                                                "Case Type with name '%s' already exists for '%s' jurisdiction on tab '%s'. Case types must be unique across all existing jurisdictions.",
+                                                error.getCaseTypeEntity().getReference(),
+                                                error.getExistingCaseType().getJurisdiction().getName(),
+                                                def.getSheetName())
+                                            );
     }
 
     @Override

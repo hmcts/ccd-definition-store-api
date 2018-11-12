@@ -41,16 +41,23 @@ public class CaseTypeRepositoryTest {
     private static final String CASE_TYPE_REFERENCE = "id";
 
     private JurisdictionEntity testJurisdiction;
+    private JurisdictionEntity testJurisdiction2;
 
     @Before
     public void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
+        this.testJurisdiction2 = testHelper.createJurisdiction("DIVORCE", "Divorce", "Divorce jurisdiction");
 
+        setupCaseTypeEntity("id", "Test case", testJurisdiction);
+        setupCaseTypeEntity("id2", "Test case2", testJurisdiction2);
+    }
+
+    private void setupCaseTypeEntity(String id, String name, JurisdictionEntity jurisdictionEntity) {
         final CaseTypeEntity caseType = new CaseTypeEntity();
-        caseType.setReference("id");
-        caseType.setName("Test case");
+        caseType.setReference(id);
+        caseType.setName(name);
         caseType.setVersion(1);
-        caseType.setJurisdiction(testJurisdiction);
+        caseType.setJurisdiction(jurisdictionEntity);
         caseType.setSecurityClassification(SecurityClassification.PUBLIC);
         saveCaseTypeClearAndFlushSession(caseType);
         caseType.setVersion(2);
@@ -87,6 +94,15 @@ public class CaseTypeRepositoryTest {
         List<CaseTypeEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
         assertTrue(caseTypeEntityOptional.isEmpty());
+    }
+
+    @Test
+    public void severalVersionsOfCaseTypesForJurisdictions_findAllCaseTypes() {
+        List<CaseTypeEntity> caseTypeEntityOptional
+            = classUnderTest.findAll();
+        assertTrue(caseTypeEntityOptional.size() == 2);
+        assertEquals(3, caseTypeEntityOptional.get(0).getVersion().intValue());
+        assertEquals(3, caseTypeEntityOptional.get(1).getVersion().intValue());
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {

@@ -21,4 +21,7 @@ public interface CaseTypeRepository extends VersionedDefinitionRepository<CaseTy
     @Query("select c from CaseTypeEntity c where c.version in (select max(cm.version) from CaseTypeEntity cm where cm.reference=c.reference) and c.jurisdiction.reference=:jurisdictionReference")
     List<CaseTypeEntity> findByJurisdictionId(@Param("jurisdictionReference") String jurisdiction);
 
+    @Query("select c from CaseTypeEntity c where c.version in (select max(cm.version) from CaseTypeEntity as cm where cm.reference = c.reference)")
+    List<CaseTypeEntity> findAll();
+
 }

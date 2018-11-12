@@ -25,6 +25,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
@@ -38,6 +39,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 
 public class SpreadsheetValidationErrorMessageCreatorTest {
 
@@ -90,6 +93,28 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                 caseTypeEntityMissingSecurityClassificationValidationError
             )
         );
+
+    }
+
+    @Test
+    public void testCaseTypeEntityNonUniqueReferenceValidationError_defaultMessageReturned() {
+
+        CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Name");
+        CaseType caseType = caseType("Case Type Name", "Jurisdiction Name");
+        CaseTypeEntityNonUniqueReferenceValidationError caseTypeEntityNonUniqueReferenceValidationError
+            = new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseType);
+        assertEquals(
+            caseTypeEntityNonUniqueReferenceValidationError.getDefaultMessage(),
+            classUnderTest.createErrorMessage(
+                caseTypeEntityNonUniqueReferenceValidationError
+            )
+        );
+
+        assertCaseTypeEntityNonUniqueReferenceValidationErrorForEntityFromDataDefinitionItem(
+            "Case Type with name 'Case Type Name' already exists for 'Jurisdiction Name' jurisdiction on tab 'CaseType'. Case types must be unique across all existing jurisdictions.",
+            caseTypeEntity,
+            caseType,
+            definitionDataItem(SheetName.CASE_TYPE, ColumnName.CASE_TYPE_ID, "Other Case Type Reference"));
 
     }
 
@@ -1124,6 +1149,15 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         return caseTypeEntity;
     }
 
+    private CaseType caseType(String reference, String jurisdictionReference) {
+        CaseType caseType = new CaseType();
+        caseType.setId(reference);
+        Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setName(jurisdictionReference);
+        caseType.setJurisdiction(jurisdiction);
+        return caseType;
+    }
+
     private CaseFieldEntity caseFieldEntity(String reference,
                                             SecurityClassification securityClassification) {
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
@@ -1272,6 +1306,26 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             classUnderTest.createErrorMessage(
                 new CaseTypeEntityMissingSecurityClassificationValidationError(
                     caseTypeEntity
+                )
+            )
+        );
+
+    }
+
+    private void assertCaseTypeEntityNonUniqueReferenceValidationErrorForEntityFromDataDefinitionItem(
+        String message,
+        CaseTypeEntity caseTypeEntity,
+        CaseType caseType,
+        Optional<DefinitionDataItem> definitionDataItem) {
+
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(caseTypeEntity))).thenReturn(definitionDataItem);
+
+        assertEquals(
+            message,
+            classUnderTest.createErrorMessage(
+                new CaseTypeEntityNonUniqueReferenceValidationError(
+                    caseTypeEntity,
+                    caseType
                 )
             )
         );

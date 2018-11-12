@@ -1,8 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
+import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.collection.IsEmptyCollection;
+import org.hamcrest.core.IsCollectionContaining;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -51,11 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 
@@ -387,6 +386,55 @@ class CaseTypeServiceImplTest {
             return eventEntity;
         }
 
+    }
+
+    @Nested
+    class FindAllCaseTypesTests {
+
+        private final CaseType caseType1 = new CaseType();
+        private final CaseType caseType2 = new CaseType();
+        private final CaseTypeEntity caseTypeEntity1 = new CaseTypeEntity();
+        private final CaseTypeEntity caseTypeEntity2 = new CaseTypeEntity();
+        private final List<CaseTypeEntity> caseTypeEntities = Lists.newArrayList(caseTypeEntity1, caseTypeEntity2);
+        private final CaseField metadataField = new CaseField();
+        private final List<CaseType> caseTypes = Lists.newArrayList();
+
+        @BeforeEach
+        void setup() {
+            metadataField.setId(MetadataField.STATE.getReference());
+            FieldType fieldType = new FieldType();
+            fieldType.setType(BASE_FIXED_LIST);
+            metadataField.setFieldType(fieldType);
+
+            when(caseTypeRepository.findAll()).thenReturn(caseTypeEntities);
+            when(dtoMapper.map(caseTypeEntity1)).thenReturn(caseType1);
+            when(dtoMapper.map(caseTypeEntity2)).thenReturn(caseType2);
+            when(metadataFieldService.getCaseMetadataFields()).thenReturn(singletonList(metadataField));
+        }
+
+        @Test
+        @DisplayName("Should call the mapper with the values returned from the repository and return the mapped values")
+        void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
+            List<CaseType> caseTypes = classUnderTest.findAll();
+
+            verify(caseTypeRepository).findAll();
+            verify(dtoMapper).map(same(caseTypeEntity1));
+            verify(dtoMapper).map(same(caseTypeEntity2));
+            verify(metadataFieldService, times(2)).getCaseMetadataFields();
+            assertThat(caseTypes, IsCollectionContaining.hasItems(caseType1, caseType2));
+        }
+
+        @Test
+        @DisplayName("Should return empty list when the repository returns empty list")
+        void shouldReturnEmptyList_whenRepositoryReturnsEmptyList() {
+            when(caseTypeRepository.findAll()).thenReturn(Lists.emptyList());
+            List<CaseType> caseTypes = classUnderTest.findAll();
+
+            verify(caseTypeRepository).findAll();
+            verify(dtoMapper,never()).map(any(CaseTypeEntity.class));
+            verify(metadataFieldService, never()).getCaseMetadataFields();
+            assertThat(caseTypes, IsEmptyCollection.empty());
+        }
     }
 
     @Nested
