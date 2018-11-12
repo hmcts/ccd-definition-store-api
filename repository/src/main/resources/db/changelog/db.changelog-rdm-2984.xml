@@ -1,0 +1,13 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-2984" author="andrzej.folga@hmcts.net">
+        <dropUniqueConstraint constraintName="unique_case_type_reference_version"
+                              tableName="case_type"/>
+        <addUniqueConstraint columnNames="reference, version"
+                             constraintName="unique_case_type_reference_version"
+                             tableName="case_type"/>
+    </changeSet>
+    
+</databaseChangeLog>
