@@ -35,7 +35,7 @@ public class CaseTypeEntityNonUniqueReferenceValidationErrorTest {
 
     @Test
     public void testDefaultMessage() {
-        assertEquals("Case Type with name 'Charley says Dont talk to strangers' already exists for 'Charley's Jurisdiction' jurisdiction. Case types must be unique across all existing jurisdictions.",
+        assertEquals("Case Type with reference 'Charley says Dont talk to strangers' already exists for 'Charley's Jurisdiction' jurisdiction. Case types must be unique across all existing jurisdictions.",
                      classUnderTest.getDefaultMessage());
     }
 
@@ -47,13 +47,13 @@ public class CaseTypeEntityNonUniqueReferenceValidationErrorTest {
 
     private CaseTypeEntity caseTypeEntityWithReference(String name) {
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-        caseTypeEntity.setName(name);
+        caseTypeEntity.setReference(name);
         return caseTypeEntity;
     }
 
     private CaseType caseTypeWithIdAndWithJurisdictionWithId(String name, String jurisdictionName) {
         CaseType caseType = new CaseType();
-        caseType.setName(name);
+        caseType.setId(name);
         Jurisdiction jurisdictionEntity = new Jurisdiction();
         jurisdictionEntity.setName(jurisdictionName);
         caseType.setJurisdiction(jurisdictionEntity);
