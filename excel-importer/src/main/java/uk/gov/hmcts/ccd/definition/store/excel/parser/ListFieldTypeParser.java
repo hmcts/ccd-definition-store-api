@@ -27,6 +27,7 @@ public class ListFieldTypeParser {
     private static final String FIXED_LIST_TYPE = "FixedList";
     private static final String FIXED_RADIO_LIST_TYPE = "FixedRadioList";
     private static final String MULTI_LIST_TYPE = "MultiSelectList";
+    public static final String NO_BASE_TYPE_FOUND = "No base type found for: ";
     private final ParseContext parseContext;
     private final FieldTypeEntity fixedListBaseType;
     private final FieldTypeEntity fixedRadioListBaseType;
@@ -34,9 +35,9 @@ public class ListFieldTypeParser {
 
     public ListFieldTypeParser(ParseContext parseContext) {
         this.parseContext = parseContext;
-        fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException("No base type found for: " + FIXED_LIST_TYPE));
-        fixedRadioListBaseType = parseContext.getBaseType(FIXED_RADIO_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException("No base type found for: " + FIXED_RADIO_LIST_TYPE));
-        multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException("No base type found for: " + MULTI_LIST_TYPE));
+        fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException(NO_BASE_TYPE_FOUND + FIXED_LIST_TYPE));
+        fixedRadioListBaseType = parseContext.getBaseType(FIXED_RADIO_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException(NO_BASE_TYPE_FOUND + FIXED_RADIO_LIST_TYPE));
+        multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException(NO_BASE_TYPE_FOUND + MULTI_LIST_TYPE));
 
     }
 
