@@ -73,7 +73,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             .stream()
             .filter(caseType -> sameCaseTypeIdsButDifferentJurisdictionIds(caseTypeEntity, caseType))
             .findAny()
-            .ifPresent(caseType -> validationResult.addError(new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseType)));
+            .ifPresent(caseType -> validationResult.addError(
+                new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseType.getJurisdiction().getName())));
     }
 
     private boolean sameCaseTypeIdsButDifferentJurisdictionIds(CaseTypeEntity caseTypeEntity, CaseType caseType) {

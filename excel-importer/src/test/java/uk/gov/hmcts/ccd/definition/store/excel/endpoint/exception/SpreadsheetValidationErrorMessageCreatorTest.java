@@ -39,8 +39,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
-import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 
 public class SpreadsheetValidationErrorMessageCreatorTest {
 
@@ -100,9 +98,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void testCaseTypeEntityNonUniqueReferenceValidationError_defaultMessageReturned() {
 
         CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Name");
-        CaseType caseType = caseType("Case Type Name", "Jurisdiction Name");
+        String existingJurisdictionName = "Jurisdiction Name";
         CaseTypeEntityNonUniqueReferenceValidationError caseTypeEntityNonUniqueReferenceValidationError
-            = new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseType);
+            = new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, existingJurisdictionName);
         assertEquals(
             caseTypeEntityNonUniqueReferenceValidationError.getDefaultMessage(),
             classUnderTest.createErrorMessage(
@@ -113,7 +111,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertCaseTypeEntityNonUniqueReferenceValidationErrorForEntityFromDataDefinitionItem(
             "Case Type with name 'Case Type Name' already exists for 'Jurisdiction Name' jurisdiction on tab 'CaseType'. Case types must be unique across all existing jurisdictions.",
             caseTypeEntity,
-            caseType,
+            existingJurisdictionName,
             definitionDataItem(SheetName.CASE_TYPE, ColumnName.CASE_TYPE_ID, "Other Case Type Reference"));
 
     }
@@ -1149,15 +1147,6 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         return caseTypeEntity;
     }
 
-    private CaseType caseType(String reference, String jurisdictionReference) {
-        CaseType caseType = new CaseType();
-        caseType.setId(reference);
-        Jurisdiction jurisdiction = new Jurisdiction();
-        jurisdiction.setName(jurisdictionReference);
-        caseType.setJurisdiction(jurisdiction);
-        return caseType;
-    }
-
     private CaseFieldEntity caseFieldEntity(String reference,
                                             SecurityClassification securityClassification) {
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
@@ -1315,7 +1304,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     private void assertCaseTypeEntityNonUniqueReferenceValidationErrorForEntityFromDataDefinitionItem(
         String message,
         CaseTypeEntity caseTypeEntity,
-        CaseType caseType,
+        String existingJurisdictionName,
         Optional<DefinitionDataItem> definitionDataItem) {
 
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(caseTypeEntity))).thenReturn(definitionDataItem);
@@ -1325,7 +1314,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             classUnderTest.createErrorMessage(
                 new CaseTypeEntityNonUniqueReferenceValidationError(
                     caseTypeEntity,
-                    caseType
+                    existingJurisdictionName
                 )
             )
         );

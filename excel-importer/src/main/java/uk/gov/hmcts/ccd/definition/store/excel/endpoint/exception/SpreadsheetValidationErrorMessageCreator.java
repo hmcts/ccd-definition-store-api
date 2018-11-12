@@ -64,7 +64,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                                             def -> String.format(
                                                 "Case Type with name '%s' already exists for '%s' jurisdiction on tab '%s'. Case types must be unique across all existing jurisdictions.",
                                                 error.getCaseTypeEntity().getReference(),
-                                                error.getExistingCaseType().getJurisdiction().getName(),
+                                                error.getExistingJurisdictionName(),
                                                 def.getSheetName())
                                             );
     }

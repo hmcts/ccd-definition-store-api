@@ -49,7 +49,7 @@ public class DefinitionServiceImpl implements DefinitionService {
             Jurisdiction jurisdiction = definition.getJurisdiction();
             // Retrieve the corresponding JurisdictionEntity for the Jurisdiction reference in the Definition
             return jurisdictionRepository.findFirstByReferenceOrderByVersionDesc(jurisdiction.getId())
-                .map((jurisdictionEntity) -> {
+                .map(jurisdictionEntity -> {
                     LOG.info("Creating draft Definition for " + jurisdiction.getId() + " jurisdiction...");
                     // If found, this then needs to be attached to the mapped DefinitionEntity, prior to persisting
                     final DefinitionEntity definitionEntity = mapper.toEntity(definition);

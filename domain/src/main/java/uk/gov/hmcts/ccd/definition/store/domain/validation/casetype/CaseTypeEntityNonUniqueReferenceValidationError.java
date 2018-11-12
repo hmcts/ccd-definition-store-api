@@ -3,31 +3,30 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 
 public class CaseTypeEntityNonUniqueReferenceValidationError extends ValidationError {
 
     private CaseTypeEntity caseTypeEntity;
-    private CaseType existingCaseType;
+    private String existingJurisdictionName;
 
-    public CaseTypeEntityNonUniqueReferenceValidationError(CaseTypeEntity caseTypeEntity, CaseType existingCaseType) {
+    public CaseTypeEntityNonUniqueReferenceValidationError(CaseTypeEntity caseTypeEntity, String existingJurisdictionName) {
         super(
             String.format(
                 "Case Type with reference '%s' already exists for '%s' jurisdiction. Case types must be unique across all existing jurisdictions.",
                 caseTypeEntity.getReference(),
-                existingCaseType.getJurisdiction().getName()
+                existingJurisdictionName
             )
         );
         this.caseTypeEntity = caseTypeEntity;
-        this.existingCaseType = existingCaseType;
+        this.existingJurisdictionName = existingJurisdictionName;
     }
 
     public CaseTypeEntity getCaseTypeEntity() {
         return caseTypeEntity;
     }
 
-    public CaseType getExistingCaseType() {
-        return existingCaseType;
+    public String getExistingJurisdictionName() {
+        return existingJurisdictionName;
     }
 
     @Override

@@ -6,8 +6,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
-import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -29,8 +27,7 @@ public class CaseTypeEntityNonUniqueReferenceValidationErrorTest {
         when(mockValidationErrorMessageCreator.createErrorMessage(any(CaseTypeEntityNonUniqueReferenceValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
         classUnderTest = new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntityWithReference("Charley says Dont talk to strangers"),
-                                                                             caseTypeWithIdAndWithJurisdictionWithId("Charley says Dont talk to strangers",
-                                                                                                                     "Charley's Jurisdiction"));
+                                                                             "Charley's Jurisdiction");
     }
 
     @Test
@@ -49,15 +46,6 @@ public class CaseTypeEntityNonUniqueReferenceValidationErrorTest {
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference(name);
         return caseTypeEntity;
-    }
-
-    private CaseType caseTypeWithIdAndWithJurisdictionWithId(String name, String jurisdictionName) {
-        CaseType caseType = new CaseType();
-        caseType.setId(name);
-        Jurisdiction jurisdictionEntity = new Jurisdiction();
-        jurisdictionEntity.setName(jurisdictionName);
-        caseType.setJurisdiction(jurisdictionEntity);
-        return caseType;
     }
 
 }
