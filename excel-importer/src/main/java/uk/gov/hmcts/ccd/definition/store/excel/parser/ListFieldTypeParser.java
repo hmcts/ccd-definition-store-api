@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.ReferenceUtils;
@@ -35,9 +36,9 @@ public class ListFieldTypeParser {
 
     public ListFieldTypeParser(ParseContext parseContext) {
         this.parseContext = parseContext;
-        fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException(NO_BASE_TYPE_FOUND + FIXED_LIST_TYPE));
-        fixedRadioListBaseType = parseContext.getBaseType(FIXED_RADIO_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException(NO_BASE_TYPE_FOUND + FIXED_RADIO_LIST_TYPE));
-        multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() -> new SpreadsheetParsingException(NO_BASE_TYPE_FOUND + MULTI_LIST_TYPE));
+        fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_LIST_TYPE));
+        fixedRadioListBaseType = parseContext.getBaseType(FIXED_RADIO_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_RADIO_LIST_TYPE));
+        multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + MULTI_LIST_TYPE));
 
     }
 

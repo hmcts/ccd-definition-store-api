@@ -26,6 +26,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParse
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
@@ -191,7 +192,7 @@ public class ImportServiceImplTest {
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test(expected = InvalidImportException.class)
     public void shouldNotImportDefinition() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));

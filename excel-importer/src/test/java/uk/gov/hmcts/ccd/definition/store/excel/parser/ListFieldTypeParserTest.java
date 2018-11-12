@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -48,19 +49,19 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         definitionSheet = new DefinitionSheet();
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test(expected = InvalidImportException.class)
     public void shouldFail_whenNoBaseTypeFoundForFixedList() {
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.empty());
 
         try {
             new ListFieldTypeParser(parseContext);
-        } catch (SpreadsheetParsingException ex) {
+        } catch (InvalidImportException ex) {
             Assertions.assertThat(ex).hasMessage("No base type found for: FixedList");
             throw ex;
         }
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test(expected = InvalidImportException.class)
     public void shouldFail_whenNoBaseTypeFoundForMultiSelectList() {
 
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
@@ -69,7 +70,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
 
         try {
             new ListFieldTypeParser(parseContext);
-        } catch (SpreadsheetParsingException ex) {
+        } catch (InvalidImportException ex) {
             Assertions.assertThat(ex).hasMessage("No base type found for: MultiSelectList");
             throw ex;
         }
