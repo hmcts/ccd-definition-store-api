@@ -2,6 +2,10 @@ jar {
     baseName = 'definition-store-repository'
 }
 
+bootRepackage {
+    enabled = false
+}
+
 ext {
     limits = [  // A lot of the model objects are not covered
         'class' : 57
