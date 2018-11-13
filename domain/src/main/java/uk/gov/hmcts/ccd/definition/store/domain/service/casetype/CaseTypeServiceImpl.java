@@ -56,7 +56,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                 caseTypeEntity.setJurisdiction(jurisdiction);
                 legacyCaseTypeValidator.validateCaseType(caseTypeEntity);
                 validationResult.merge(validate(caseTypeEntity));
-                if (findCaseTypeExists(caseTypeEntity.getReference(), jurisdiction.getReference())) {
+                if (caseTypeExists(caseTypeEntity.getReference(), jurisdiction.getReference())) {
                     validationResult.addError(
                         new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseTypeEntity.getJurisdiction().getName()));
                 }
@@ -71,8 +71,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     @Override
-    public boolean findCaseTypeExists(String reference, String jurisdictionId) {
-        return repository.findCaseTypeExists(reference, jurisdictionId) > 0;
+    public boolean caseTypeExists(String reference, String jurisdictionId) {
+        return repository.caseTypeExists(reference, jurisdictionId) > 0;
     }
 
     @Override

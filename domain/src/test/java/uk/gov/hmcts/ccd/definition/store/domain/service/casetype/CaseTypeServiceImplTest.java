@@ -267,7 +267,7 @@ class CaseTypeServiceImplTest {
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
                 inOrder.verify(caseTypeEntityValidator2).validate(
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
-                inOrder.verify(caseTypeRepository).findCaseTypeExists(caseTypeEntity.getReference(), jurisdiction.getReference());
+                inOrder.verify(caseTypeRepository).caseTypeExists(caseTypeEntity.getReference(), jurisdiction.getReference());
             }
 
             if (shouldSave) {
@@ -407,22 +407,22 @@ class CaseTypeServiceImplTest {
         @Test
         @DisplayName("Should return a present result if case type for jurisdiction other then given exist")
         void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
-            when(caseTypeRepository.findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(2);
+            when(caseTypeRepository.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(2);
 
-            Optional<Boolean> caseTypeExists = classUnderTest.findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            Optional<Boolean> caseTypeExists = classUnderTest.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
             assertThat(caseTypeExists.isPresent(), is(true));
-            verify(caseTypeRepository).findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            verify(caseTypeRepository).caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
         }
 
         @Test
         @DisplayName("Should return an absent result if case type for jurisdiction other then given does no exist")
         void shouldReturnEmptyList_whenRepositoryReturnsEmptyList() {
-            when(caseTypeRepository.findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(0);
-            Optional<Boolean> caseTypeExists = classUnderTest.findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            when(caseTypeRepository.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(0);
+            Optional<Boolean> caseTypeExists = classUnderTest.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
             assertThat(caseTypeExists.isPresent(), is(false));
-            verify(caseTypeRepository).findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            verify(caseTypeRepository).caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
         }
     }
 

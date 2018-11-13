@@ -12,7 +12,7 @@ public interface CaseTypeService {
 
     void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes);
 
-    boolean findCaseTypeExists(String reference, String jurisdictionId);
+    boolean caseTypeExists(String reference, String jurisdictionId);
 
     List<CaseType> findByJurisdictionId(String jurisdictionId);
 
