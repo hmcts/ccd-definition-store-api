@@ -16,9 +16,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -45,10 +43,8 @@ public class CaseTypeRepositoryTest {
     @Before
     public void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
-        JurisdictionEntity testJurisdiction2 = testHelper.createJurisdiction("DIVORCE", "Divorce", "Divorce jurisdiction");
 
         setupCaseTypeEntity("id", "Test case", testJurisdiction);
-        setupCaseTypeEntity("id2", "Test case2", testJurisdiction2);
     }
 
     private void setupCaseTypeEntity(String id, String name, JurisdictionEntity jurisdictionEntity) {
@@ -96,12 +92,15 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void severalVersionsOfCaseTypesForJurisdictionsFindAllCaseTypes() {
-        List<CaseTypeEntity> caseTypeEntityOptional
-            = classUnderTest.findAll();
-        assertTrue(caseTypeEntityOptional.size() == 2);
-        assertEquals(3, caseTypeEntityOptional.get(0).getVersion().intValue());
-        assertEquals(3, caseTypeEntityOptional.get(1).getVersion().intValue());
+    public void shouldReturnZeroCountThatExistWithExcludedJurisdictionIfCaseTypeIsOfExcludedJurisdiction() {
+        Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, testJurisdiction.getReference());
+        assertEquals(0, result.intValue());
+    }
+
+    @Test
+    public void shouldReturnAPositiveCountThatExistWithExcludedJurisdictionIfCaseTypeIsNotOfExcludedJurisdiction() {
+        Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, "OtherJurisdiction");
+        assertEquals(1, result.intValue());
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {

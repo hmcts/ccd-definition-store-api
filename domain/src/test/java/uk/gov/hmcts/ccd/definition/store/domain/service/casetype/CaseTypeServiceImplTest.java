@@ -399,13 +399,13 @@ class CaseTypeServiceImplTest {
     }
 
     @Nested
-    class HasCaseType {
+    class CaseTypeExists {
 
         private static final String CASE_TYPE_REFERENCE = "TestAddressBookCase";
         private static final String JURISDICTION_REFERENCE = "TEST";
 
         @Test
-        @DisplayName("Should return a present result if case type for jurisdiction other then given exist")
+        @DisplayName("Should return true if case type for jurisdiction other then given exist")
         void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
             when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(2);
 
@@ -416,7 +416,7 @@ class CaseTypeServiceImplTest {
         }
 
         @Test
-        @DisplayName("Should return an absent result if case type for jurisdiction other then given does no exist")
+        @DisplayName("Should return false if case type for jurisdiction other then given does no exist")
         void shouldReturnEmptyList_whenRepositoryReturnsEmptyList() {
             when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(0);
             Boolean caseTypeExists = classUnderTest.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
