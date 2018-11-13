@@ -106,7 +106,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                 caseTypeEntityNonUniqueReferenceValidationError
             )
         );
+    }
 
+    @Test
+    public void testCaseTypeEntityNonUniqueReferenceValidationError_customMessageReturned() {
+
+        CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Name");
         assertCaseTypeEntityNonUniqueReferenceValidationErrorForEntityFromDataDefinitionItem(
             "Case Type with name 'Case Type Name' on tab 'CaseType' already exists. "
                 + "Case types must be unique across all existing jurisdictions.",
