@@ -32,7 +32,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFac
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
@@ -156,19 +155,19 @@ public class ImportServiceImplTest {
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
         service = new ImportServiceImpl(spreadsheetValidator,
-                                        spreadsheetParser,
-                                        parserFactory,
-                                        fieldTypeService,
-                                        jurisdictionService,
-                                        caseTypeService,
-                                        layoutService,
-                                        userRoleRepository,
-                                        workBasketUserDefaultService,
-                                        caseFieldRepository,
-                                        applicationEventPublisher,
-                                        securityUtils,
-                                        restTemplate,
-                                        applicationParams);
+            spreadsheetParser,
+            parserFactory,
+            fieldTypeService,
+            jurisdictionService,
+            caseTypeService,
+            layoutService,
+            userRoleRepository,
+            workBasketUserDefaultService,
+            caseFieldRepository,
+            applicationEventPublisher,
+            securityUtils,
+            restTemplate,
+            applicationParams);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
@@ -197,8 +196,8 @@ public class ImportServiceImplTest {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
-                                                                        multiSelectBaseType,
-                                                                        complexType));
+            multiSelectBaseType,
+            complexType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BAD_FILE);
@@ -211,23 +210,23 @@ public class ImportServiceImplTest {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
-                                                                        multiSelectBaseType,
-                                                                        complexType,
-                                                                        textBaseType,
-                                                                        numberBaseType,
-                                                                        emailBaseType,
-                                                                        yesNoBaseType,
-                                                                        dateBaseType,
-                                                                        dateTimeBaseType,
-                                                                        postCodeBaseType,
-                                                                        moneyGBPBaseType,
-                                                                        phoneUKBaseType,
-                                                                        textAreaBaseType,
-                                                                        collectionBaseType,
-                                                                        documentBaseType,
-                                                                        labelBaseType,
-                                                                        casePaymentHistoryViewerBaseType,
-                                                                        fixedListRadioTypeBaseType));
+            multiSelectBaseType,
+            complexType,
+            textBaseType,
+            numberBaseType,
+            emailBaseType,
+            yesNoBaseType,
+            dateBaseType,
+            dateTimeBaseType,
+            postCodeBaseType,
+            moneyGBPBaseType,
+            phoneUKBaseType,
+            textAreaBaseType,
+            collectionBaseType,
+            documentBaseType,
+            labelBaseType,
+            casePaymentHistoryViewerBaseType,
+            fixedListRadioTypeBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -263,9 +262,9 @@ public class ImportServiceImplTest {
         assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
 
         verify(restTemplate).exchange(idamUserProfileURLCaptor.capture(),
-                                      httpMethodCaptor.capture(),
-                                      requestEntityCaptor.capture(),
-                                      idamPropertiesClassCaptor.capture());
+            httpMethodCaptor.capture(),
+            requestEntityCaptor.capture(),
+            idamPropertiesClassCaptor.capture());
         assertEquals("http://idam.local/details", idamUserProfileURLCaptor.getValue());
         assertEquals(HttpMethod.GET, httpMethodCaptor.getValue());
         assertEquals(requestEntity, requestEntityCaptor.getValue());

@@ -45,15 +45,15 @@ class LayoutParserTest {
         final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry = new
             EntityToDefinitionDataItemRegistry();
         underTest = new LayoutParser(new WorkbasketInputLayoutParser(context, entityToDefinitionDataItemRegistry),
-                                     new WorkbasketLayoutParser(context, entityToDefinitionDataItemRegistry),
-                                     new SearchInputLayoutParser(context, entityToDefinitionDataItemRegistry),
-                                     new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry),
-                                     new CaseTypeTabParser(context,
-                                                           showConditionParser,
-                                                           entityToDefinitionDataItemRegistry),
-                                     new WizardPageParser(context,
-                                                          showConditionParser,
-                                                          entityToDefinitionDataItemRegistry));
+            new WorkbasketLayoutParser(context, entityToDefinitionDataItemRegistry),
+            new SearchInputLayoutParser(context, entityToDefinitionDataItemRegistry),
+            new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry),
+            new CaseTypeTabParser(context,
+                showConditionParser,
+                entityToDefinitionDataItemRegistry),
+            new WizardPageParser(context,
+                showConditionParser,
+                entityToDefinitionDataItemRegistry));
 
         definitionSheets = new HashMap<>();
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), buildSheetForGenerics(WORK_BASKET_RESULT_FIELDS));
@@ -70,10 +70,10 @@ class LayoutParserTest {
         final ParseResult<GenericLayoutEntity> parseResult = underTest.parseAllGenerics(definitionSheets);
         final List<GenericLayoutEntity> results = parseResult.getAllResults();
         assertAll(() -> assertThat(results.size(), is(4)),
-                  () -> assertGenericLayoutEntityIsPresent(results, WorkBasketInputCaseFieldEntity.class),
-                  () -> assertGenericLayoutEntityIsPresent(results, WorkBasketCaseFieldEntity.class),
-                  () -> assertGenericLayoutEntityIsPresent(results, SearchInputCaseFieldEntity.class),
-                  () -> assertGenericLayoutEntityIsPresent(results, SearchResultCaseFieldEntity.class));
+            () -> assertGenericLayoutEntityIsPresent(results, WorkBasketInputCaseFieldEntity.class),
+            () -> assertGenericLayoutEntityIsPresent(results, WorkBasketCaseFieldEntity.class),
+            () -> assertGenericLayoutEntityIsPresent(results, SearchInputCaseFieldEntity.class),
+            () -> assertGenericLayoutEntityIsPresent(results, SearchResultCaseFieldEntity.class));
     }
 
     @Test
@@ -82,14 +82,14 @@ class LayoutParserTest {
         final ParseResult<DisplayGroupEntity> parseResult = underTest.parseAllDisplayGroups(definitionSheets);
         final List<DisplayGroupEntity> results = parseResult.getAllResults();
         assertAll(() -> assertThat(results.size(), is(2)),
-                  () -> assertDisplayGroupEntity(results,
-                                                 "SolicitorOverview",
-                                                 DisplayGroupType.TAB,
-                                                 DisplayGroupPurpose.VIEW),
-                  () -> assertDisplayGroupEntity(results,
-                                                 "office is that waypage ngi",
-                                                 DisplayGroupType.PAGE,
-                                                 DisplayGroupPurpose.EDIT));
+            () -> assertDisplayGroupEntity(results,
+                "SolicitorOverview",
+                DisplayGroupType.TAB,
+                DisplayGroupPurpose.VIEW),
+            () -> assertDisplayGroupEntity(results,
+                "office is that waypage ngi",
+                DisplayGroupType.PAGE,
+                DisplayGroupPurpose.EDIT));
     }
 
     private void assertGenericLayoutEntityIsPresent(final List<GenericLayoutEntity> results, Class<?> clazz) {
@@ -107,7 +107,7 @@ class LayoutParserTest {
                                           final DisplayGroupPurpose purpose) {
         final DisplayGroupEntity entity = results.stream()
             .filter(o -> StringUtils.equals(reference,
-                                            o.getReference()) && type == o.getType() && purpose == o.getPurpose())
+                o.getReference()) && type == o.getType() && purpose == o.getPurpose())
             .findFirst()
             .orElseThrow(() -> new RuntimeException("entity is not found by '" + reference + "'"));
         assertThat(entity.getCaseType(), is(caseTypeEntity));

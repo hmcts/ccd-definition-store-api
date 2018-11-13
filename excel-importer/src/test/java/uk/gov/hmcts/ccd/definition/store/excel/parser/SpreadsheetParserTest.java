@@ -37,18 +37,16 @@ public class SpreadsheetParserTest {
         assertThat(map.size(), is(16));
 
         assertThat(map.keySet(), containsInAnyOrder("SearchInputFields", "UserProfile", "CaseField",
-                                                    "ComplexTypes", "WorkBasketResultFields", "CaseTypeTab",
-                                                    "FixedLists", "CaseEvent", "Jurisdiction",
-                                                    "SearchResultFields", "AuthorisationCaseField", "CaseType", "State",
-                                                    "AuthorisationCaseType",
-                                                    "AuthorisationCaseEvent", "CaseEventFieldRestriction"
+            "ComplexTypes", "WorkBasketResultFields", "CaseTypeTab",
+            "FixedLists", "CaseEvent", "Jurisdiction",
+            "SearchResultFields", "AuthorisationCaseField", "CaseType", "State",
+            "AuthorisationCaseType",
+            "AuthorisationCaseEvent", "CaseEventFieldRestriction"
         ));
     }
 
     /**
      * Helps test coverage.
-     *
-     * @throws Exception
      */
     @Test(expected = NullPointerException.class)
     public void shouldFail_whenInvalidInputStream() throws Exception {
