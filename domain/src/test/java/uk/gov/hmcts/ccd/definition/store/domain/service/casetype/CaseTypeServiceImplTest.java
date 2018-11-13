@@ -1,11 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
-import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.collection.IsEmptyCollection;
-import org.hamcrest.core.IsCollectionContaining;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -58,13 +55,16 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 
 class CaseTypeServiceImplTest {
 
+    private static final String JURISDICTION_REFERENCE = "TEST";
+    private static final String CASE_TYPE_REFERENCE_1 = "TestAddressBookCase1";
+    private static final String CASE_TYPE_REFERENCE_2 = "TestAddressBookCase2";
+    private static final String CASE_TYPE_REFERENCE_3 = "TestAddressBookCase3";
     private static final int DEFAULT_VERSION = 69;
 
     @Mock
@@ -104,6 +104,10 @@ class CaseTypeServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+        caseTypeEntity1.setReference(CASE_TYPE_REFERENCE_1);
+        caseTypeEntity2.setReference(CASE_TYPE_REFERENCE_2);
+        caseTypeEntity3.setReference(CASE_TYPE_REFERENCE_3);
+        jurisdiction.setReference(JURISDICTION_REFERENCE);
 
         classUnderTest = new CaseTypeServiceImpl(
             caseTypeRepository,
@@ -263,6 +267,7 @@ class CaseTypeServiceImplTest {
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
                 inOrder.verify(caseTypeEntityValidator2).validate(
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
+                inOrder.verify(caseTypeRepository).findCaseTypeExists(caseTypeEntity.getReference(), jurisdiction.getReference());
             }
 
             if (shouldSave) {
@@ -394,51 +399,30 @@ class CaseTypeServiceImplTest {
     }
 
     @Nested
-    class FindAllCaseTypesTests {
+    class HasCaseType {
 
-        private final CaseType caseType1 = new CaseType();
-        private final CaseType caseType2 = new CaseType();
-        private final CaseTypeEntity caseTypeEntity1 = new CaseTypeEntity();
-        private final CaseTypeEntity caseTypeEntity2 = new CaseTypeEntity();
-        private final List<CaseTypeEntity> caseTypeEntities = Lists.newArrayList(caseTypeEntity1, caseTypeEntity2);
-        private final CaseField metadataField = new CaseField();
-        private final List<CaseType> caseTypes = Lists.newArrayList();
-
-        @BeforeEach
-        void setup() {
-            metadataField.setId(MetadataField.STATE.getReference());
-            FieldType fieldType = new FieldType();
-            fieldType.setType(BASE_FIXED_LIST);
-            metadataField.setFieldType(fieldType);
-
-            when(caseTypeRepository.findAll()).thenReturn(caseTypeEntities);
-            when(dtoMapper.map(caseTypeEntity1)).thenReturn(caseType1);
-            when(dtoMapper.map(caseTypeEntity2)).thenReturn(caseType2);
-            when(metadataFieldService.getCaseMetadataFields()).thenReturn(singletonList(metadataField));
-        }
+        private static final String CASE_TYPE_REFERENCE = "TestAddressBookCase";
+        private static final String JURISDICTION_REFERENCE = "TEST";
 
         @Test
-        @DisplayName("Should call the mapper with the values returned from the repository and return the mapped values")
+        @DisplayName("Should return a present result if case type for jurisdiction other then given exist")
         void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
-            List<CaseType> caseTypes = classUnderTest.findAll();
+            when(caseTypeRepository.findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(2);
 
-            assertThat(caseTypes, IsCollectionContaining.hasItems(caseType1, caseType2));
-            verify(caseTypeRepository).findAll();
-            verify(dtoMapper).map(same(caseTypeEntity1));
-            verify(dtoMapper).map(same(caseTypeEntity2));
-            verify(metadataFieldService, times(2)).getCaseMetadataFields();
+            Optional<Boolean> caseTypeExists = classUnderTest.findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+
+            assertThat(caseTypeExists.isPresent(), is(true));
+            verify(caseTypeRepository).findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
         }
 
         @Test
-        @DisplayName("Should return empty list when the repository returns empty list")
+        @DisplayName("Should return an absent result if case type for jurisdiction other then given does no exist")
         void shouldReturnEmptyList_whenRepositoryReturnsEmptyList() {
-            when(caseTypeRepository.findAll()).thenReturn(Lists.emptyList());
-            List<CaseType> caseTypes = classUnderTest.findAll();
+            when(caseTypeRepository.findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(0);
+            Optional<Boolean> caseTypeExists = classUnderTest.findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
-            verify(caseTypeRepository).findAll();
-            verify(dtoMapper,never()).map(any(CaseTypeEntity.class));
-            verify(metadataFieldService, never()).getCaseMetadataFields();
-            assertThat(caseTypes, IsEmptyCollection.empty());
+            assertThat(caseTypeExists.isPresent(), is(false));
+            verify(caseTypeRepository).findCaseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
         }
     }
 

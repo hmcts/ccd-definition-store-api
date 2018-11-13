@@ -51,13 +51,17 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     public void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes) {
 
         ValidationResult validationResult = new ValidationResult();
-        List<CaseType> allCaseTypes = findAll();
         caseTypes.forEach(
             caseTypeEntity -> {
                 caseTypeEntity.setJurisdiction(jurisdiction);
                 legacyCaseTypeValidator.validateCaseType(caseTypeEntity);
                 validationResult.merge(validate(caseTypeEntity));
-                validateUniqueCaseTypeReference(validationResult, allCaseTypes, caseTypeEntity);
+                findCaseTypeExists(caseTypeEntity.getReference(), jurisdiction.getReference())
+                    .ifPresent(exists ->
+                        validationResult.addError(
+                            new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseTypeEntity.getJurisdiction().getName()))
+                );
+
             }
         );
 
@@ -68,30 +72,9 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         }
     }
 
-    private void validateUniqueCaseTypeReference(ValidationResult validationResult, List<CaseType> allCaseTypes, CaseTypeEntity caseTypeEntity) {
-        allCaseTypes
-            .stream()
-            .filter(caseType -> sameCaseTypeIdsButDifferentJurisdictionIds(caseTypeEntity, caseType))
-            .findAny()
-            .ifPresent(caseType -> validationResult.addError(
-                new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseType.getJurisdiction().getName())));
-    }
-
-    private boolean sameCaseTypeIdsButDifferentJurisdictionIds(CaseTypeEntity caseTypeEntity, CaseType caseType) {
-        return caseType.getId().equals(caseTypeEntity.getReference())
-            && !caseType.getJurisdiction().getId().equals(caseTypeEntity.getJurisdiction().getReference());
-    }
-
     @Override
-    public List<CaseType> findAll() {
-        Optional<List<CaseTypeEntity>> caseTypeEntities
-            = Optional.ofNullable(repository.findAll());
-
-        return caseTypeEntities.orElse(Collections.emptyList())
-            .stream()
-            .map(dtoMapper::map)
-            .map(this::addMetadataFields)
-            .collect(toList());
+    public Optional<Boolean> findCaseTypeExists(String reference, String jurisdictionId) {
+        return repository.findCaseTypeExists(reference, jurisdictionId) > 0 ? Optional.of(true) : Optional.empty();
     }
 
     @Override
