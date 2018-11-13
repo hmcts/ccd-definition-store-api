@@ -62,10 +62,9 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
                                             error.getCaseTypeEntity(),
                                             def -> String.format(
-                                                "Case Type with name '%s' already exists for '%s' jurisdiction on tab '%s'. "
+                                                "Case Type with name '%s' on tab '%s' already exists. "
                                                     + "Case types must be unique across all existing jurisdictions.",
                                                 error.getCaseTypeEntity().getReference(),
-                                                error.getExistingJurisdictionName(),
                                                 def.getSheetName())
                                             );
     }

@@ -406,10 +406,10 @@ class CaseTypeServiceImplTest {
 
         @Test
         @DisplayName("Should return true if case type for jurisdiction other then given exist")
-        void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
+        void shouldReturnTrue_whenCaseTypeForJurisdictionOtherThanGivenExist() {
             when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(2);
 
-            boolean caseTypeExists = classUnderTest.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
             assertThat(caseTypeExists, is(true));
             verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
@@ -417,9 +417,9 @@ class CaseTypeServiceImplTest {
 
         @Test
         @DisplayName("Should return false if case type for jurisdiction other then given does no exist")
-        void shouldReturnEmptyList_whenRepositoryReturnsEmptyList() {
+        void shouldReturnFalse_whenCaseTypeForJurisdictionOtherThanGivenDoesNotExist() {
             when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(0);
-            Boolean caseTypeExists = classUnderTest.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            Boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
             assertThat(caseTypeExists, is(false));
             verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);

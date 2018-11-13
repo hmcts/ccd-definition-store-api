@@ -7,26 +7,19 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 public class CaseTypeEntityNonUniqueReferenceValidationError extends ValidationError {
 
     private CaseTypeEntity caseTypeEntity;
-    private String existingJurisdictionName;
 
-    public CaseTypeEntityNonUniqueReferenceValidationError(CaseTypeEntity caseTypeEntity, String existingJurisdictionName) {
+    public CaseTypeEntityNonUniqueReferenceValidationError(CaseTypeEntity caseTypeEntity) {
         super(
             String.format(
-                "Case Type with reference '%s' already exists for '%s' jurisdiction. Case types must be unique across all existing jurisdictions.",
-                caseTypeEntity.getReference(),
-                existingJurisdictionName
+                "Case Type with reference '%s' already exists. Case types must be unique across all existing jurisdictions.",
+                caseTypeEntity.getReference()
             )
         );
         this.caseTypeEntity = caseTypeEntity;
-        this.existingJurisdictionName = existingJurisdictionName;
     }
 
     public CaseTypeEntity getCaseTypeEntity() {
         return caseTypeEntity;
-    }
-
-    public String getExistingJurisdictionName() {
-        return existingJurisdictionName;
     }
 
     @Override

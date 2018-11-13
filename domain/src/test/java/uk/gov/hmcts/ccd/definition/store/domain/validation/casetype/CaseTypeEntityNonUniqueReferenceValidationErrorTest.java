@@ -26,13 +26,12 @@ public class CaseTypeEntityNonUniqueReferenceValidationErrorTest {
         MockitoAnnotations.initMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(any(CaseTypeEntityNonUniqueReferenceValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
-        classUnderTest = new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntityWithReference("Charley says Dont talk to strangers"),
-                                                                             "Charley's Jurisdiction");
+        classUnderTest = new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntityWithReference("Charley says Dont talk to strangers"));
     }
 
     @Test
     public void testDefaultMessage() {
-        assertEquals("Case Type with reference 'Charley says Dont talk to strangers' already exists for 'Charley's Jurisdiction' jurisdiction. "
+        assertEquals("Case Type with reference 'Charley says Dont talk to strangers' already exists. "
                          + "Case types must be unique across all existing jurisdictions.",
                      classUnderTest.getDefaultMessage());
     }

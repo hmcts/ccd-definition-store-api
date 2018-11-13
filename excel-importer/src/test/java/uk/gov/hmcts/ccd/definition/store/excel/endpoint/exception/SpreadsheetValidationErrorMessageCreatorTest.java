@@ -98,9 +98,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void testCaseTypeEntityNonUniqueReferenceValidationError_defaultMessageReturned() {
 
         CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Name");
-        String existingJurisdictionName = "Jurisdiction Name";
         CaseTypeEntityNonUniqueReferenceValidationError caseTypeEntityNonUniqueReferenceValidationError
-            = new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, existingJurisdictionName);
+            = new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity);
         assertEquals(
             caseTypeEntityNonUniqueReferenceValidationError.getDefaultMessage(),
             classUnderTest.createErrorMessage(
@@ -109,10 +108,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         );
 
         assertCaseTypeEntityNonUniqueReferenceValidationErrorForEntityFromDataDefinitionItem(
-            "Case Type with name 'Case Type Name' already exists for 'Jurisdiction Name' jurisdiction on tab 'CaseType'. "
+            "Case Type with name 'Case Type Name' on tab 'CaseType' already exists. "
                 + "Case types must be unique across all existing jurisdictions.",
             caseTypeEntity,
-            existingJurisdictionName,
             definitionDataItem(SheetName.CASE_TYPE, ColumnName.CASE_TYPE_ID, "Other Case Type Reference"));
 
     }
@@ -1305,7 +1303,6 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     private void assertCaseTypeEntityNonUniqueReferenceValidationErrorForEntityFromDataDefinitionItem(
         String message,
         CaseTypeEntity caseTypeEntity,
-        String existingJurisdictionName,
         Optional<DefinitionDataItem> definitionDataItem) {
 
         when(entityToDefinitionDataItemRegistry.getForEntity(eq(caseTypeEntity))).thenReturn(definitionDataItem);
@@ -1313,10 +1310,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals(
             message,
             classUnderTest.createErrorMessage(
-                new CaseTypeEntityNonUniqueReferenceValidationError(
-                    caseTypeEntity,
-                    existingJurisdictionName
-                )
+                new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity)
             )
         );
 
