@@ -29,3 +29,11 @@ sourceSets {
         }
     }
 }
+
+bootRepackage {
+    enabled = false
+}
+
+jar {
+    enabled = false
+}

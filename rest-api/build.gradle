@@ -19,3 +19,7 @@ dependencies {
     testCompile "org.springframework.boot:spring-boot-test"
     testCompile "org.assertj:assertj-core"
 }
+
+bootRepackage {
+    enabled = false
+}
