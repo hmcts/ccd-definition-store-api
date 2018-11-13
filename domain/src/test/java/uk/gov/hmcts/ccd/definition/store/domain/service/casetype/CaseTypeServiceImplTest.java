@@ -409,9 +409,9 @@ class CaseTypeServiceImplTest {
         void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
             when(caseTypeRepository.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(2);
 
-            Optional<Boolean> caseTypeExists = classUnderTest.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            boolean caseTypeExists = classUnderTest.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
-            assertThat(caseTypeExists.isPresent(), is(true));
+            assertThat(caseTypeExists, is(true));
             verify(caseTypeRepository).caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
         }
 
@@ -419,9 +419,9 @@ class CaseTypeServiceImplTest {
         @DisplayName("Should return an absent result if case type for jurisdiction other then given does no exist")
         void shouldReturnEmptyList_whenRepositoryReturnsEmptyList() {
             when(caseTypeRepository.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(0);
-            Optional<Boolean> caseTypeExists = classUnderTest.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            Boolean caseTypeExists = classUnderTest.caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
-            assertThat(caseTypeExists.isPresent(), is(false));
+            assertThat(caseTypeExists, is(false));
             verify(caseTypeRepository).caseTypeExists(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
         }
     }
