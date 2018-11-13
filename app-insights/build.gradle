@@ -1,3 +1,7 @@
 dependencies {
-    compile "org.springframework:spring-context:5.0.7.RELEASE"
+    // compile "org.springframework:spring-context:5.0.7.RELEASE"
+}
+
+bootRepackage {
+    enabled = false
 }

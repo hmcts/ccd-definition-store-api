@@ -8,6 +8,10 @@ jar {
     }
 }
 
+bootRepackage {
+    enabled = false
+}
+
 dependencies {
     compile project(':app-insights')
     compile project(':rest-api')
@@ -15,14 +19,9 @@ dependencies {
     compile project(':elastic-search-support')
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "uk.gov.hmcts.reform.auth:auth-checker-lib:${authCheckerVersion}"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
-    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
     runtime "org.liquibase:liquibase-core"
-    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-    testCompile "io.rest-assured:rest-assured:3.1.0"
-    testCompile "org.exparity:hamcrest-date:2.0.4"
     testCompile project(":app-insights").sourceSets.main.output
 }

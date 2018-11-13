@@ -39,6 +39,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeCo
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.*;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -256,6 +257,18 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public CaseRoleRepository caseRoleRepository() {
             return mock(CaseRoleRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public DraftDefinitionRepositoryDecorator draftDefinitionRepositoryDecorator() {
+            return mock(DraftDefinitionRepositoryDecorator.class);
+        }
+
+        @Bean
+        @Primary
+        public DefinitionModelMapper definitionModelMapper() {
+            return mock(DefinitionModelMapper.class);
         }
     }
 }

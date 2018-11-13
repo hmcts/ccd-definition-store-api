@@ -40,38 +40,40 @@ public class MultipleControllersEndpointIT extends BaseTest {
     @Test
     public void shouldReturnCaseType() throws Exception {
         givenUserProfileReturnsSuccess();
-        InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                                  .file(file)
-                                                  .header(AUTHORIZATION, "Bearer testUser"))
-            .andReturn();
-        assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
-        final String CASE_TYPE = "TestAddressBookCase";
-        final String URL = String.format(CASE_TYPE_URL, CASE_TYPE);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(jsonPath("$.id").value(CASE_TYPE))
-            .andReturn();
+        try (final InputStream inputStream =
+                 new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
+            MockMultipartFile file = new MockMultipartFile("file", inputStream);
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+                .file(file)
+                .header(AUTHORIZATION, "Bearer testUser"))
+                .andReturn();
+            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+            final String CASE_TYPE = "TestAddressBookCase";
+            final String URL = String.format(CASE_TYPE_URL, CASE_TYPE);
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.id").value(CASE_TYPE))
+                .andReturn();
 
-        final CaseType caseType = mapper.readValue(result.getResponse()
-                                                       .getContentAsString(), TypeFactory.defaultInstance().constructType(CaseType.class));
-        assertAll(
-            () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
-                             hasProperty("caseFields", hasItem(allOf(
-                                 hasProperty("showSummaryContentOption", equalTo(2)),
-                                 hasProperty("caseFieldId", containsString("PersonFirstName")))))),
-            () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
-                             hasProperty("caseFields", hasItem(allOf(
-                                 hasProperty("showSummaryContentOption", equalTo(1)),
-                                 hasProperty("caseFieldId", containsString("PersonLastName")))))),
-            () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("createCase")).findFirst().get(),
-                             hasProperty("showEventNotes", equalTo(true))),
-            () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
-                             hasProperty("showEventNotes", equalTo(false))),
-            () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("stopCase")).findFirst().get(),
-                             hasProperty("showEventNotes", nullValue()))
-        );
+            final CaseType caseType = mapper.readValue(result.getResponse()
+                .getContentAsString(), TypeFactory.defaultInstance().constructType(CaseType.class));
+            assertAll(
+                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                    hasProperty("caseFields", hasItem(allOf(
+                        hasProperty("showSummaryContentOption", equalTo(2)),
+                        hasProperty("caseFieldId", containsString("PersonFirstName")))))),
+                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                    hasProperty("caseFields", hasItem(allOf(
+                        hasProperty("showSummaryContentOption", equalTo(1)),
+                        hasProperty("caseFieldId", containsString("PersonLastName")))))),
+                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("createCase")).findFirst().get(),
+                    hasProperty("showEventNotes", equalTo(true))),
+                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                    hasProperty("showEventNotes", equalTo(false))),
+                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("stopCase")).findFirst().get(),
+                    hasProperty("showEventNotes", nullValue()))
+            );
+        }
     }
 
     // To be @Nested - DisplayAPI Controller
