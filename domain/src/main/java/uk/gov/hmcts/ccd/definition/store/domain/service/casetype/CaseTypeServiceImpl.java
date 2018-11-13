@@ -56,12 +56,10 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                 caseTypeEntity.setJurisdiction(jurisdiction);
                 legacyCaseTypeValidator.validateCaseType(caseTypeEntity);
                 validationResult.merge(validate(caseTypeEntity));
-                findCaseTypeExists(caseTypeEntity.getReference(), jurisdiction.getReference())
-                    .ifPresent(exists ->
-                        validationResult.addError(
-                            new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseTypeEntity.getJurisdiction().getName()))
-                );
-
+                if (findCaseTypeExists(caseTypeEntity.getReference(), jurisdiction.getReference())) {
+                    validationResult.addError(
+                        new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity, caseTypeEntity.getJurisdiction().getName()));
+                }
             }
         );
 
@@ -73,8 +71,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     @Override
-    public Optional<Boolean> findCaseTypeExists(String reference, String jurisdictionId) {
-        return repository.findCaseTypeExists(reference, jurisdictionId) > 0 ? Optional.of(true) : Optional.empty();
+    public boolean findCaseTypeExists(String reference, String jurisdictionId) {
+        return repository.findCaseTypeExists(reference, jurisdictionId) > 0;
     }
 
     @Override
