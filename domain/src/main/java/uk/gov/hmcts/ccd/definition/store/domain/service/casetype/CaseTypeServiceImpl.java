@@ -72,7 +72,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
 
     @Override
     public boolean caseTypeExists(String reference, String jurisdictionId) {
-        return repository.caseTypeExists(reference, jurisdictionId) > 0;
+        return repository.caseTypeExistsInAnyJurisdiction(reference, jurisdictionId) > 0;
     }
 
     @Override

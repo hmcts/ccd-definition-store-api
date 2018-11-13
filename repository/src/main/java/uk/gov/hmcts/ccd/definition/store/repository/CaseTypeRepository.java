@@ -22,5 +22,5 @@ public interface CaseTypeRepository extends VersionedDefinitionRepository<CaseTy
     List<CaseTypeEntity> findByJurisdictionId(@Param("jurisdictionReference") String jurisdiction);
 
     @Query("select count(c) from CaseTypeEntity c where c.reference=:caseTypeReference and c.jurisdiction.reference<>:excludedJurisdictionReference")
-    Integer caseTypeExists(@Param("caseTypeReference") String caseTypeReference, @Param("excludedJurisdictionReference") String excludedJurisdictionReference);
+    Integer caseTypeExistsInAnyJurisdiction(@Param("caseTypeReference") String caseTypeReference, @Param("excludedJurisdictionReference") String excludedJurisdictionReference);
 }
