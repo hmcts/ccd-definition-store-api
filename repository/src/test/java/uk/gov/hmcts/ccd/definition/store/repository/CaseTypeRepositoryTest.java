@@ -92,13 +92,13 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void shouldReturnZeroCountThatExistWithExcludedJurisdictionIfCaseTypeIsOfExcludedJurisdiction() {
+    public void shouldReturnZeroCountIfCaseTypeIsOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, testJurisdiction.getReference());
         assertEquals(0, result.intValue());
     }
 
     @Test
-    public void shouldReturnAPositiveCountThatExistWithExcludedJurisdictionIfCaseTypeIsNotOfExcludedJurisdiction() {
+    public void shouldReturnAPositiveCountIfCaseTypeIsNotOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, "OtherJurisdiction");
         assertEquals(1, result.intValue());
     }
