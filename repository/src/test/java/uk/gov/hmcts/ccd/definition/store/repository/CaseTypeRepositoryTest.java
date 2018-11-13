@@ -41,12 +41,11 @@ public class CaseTypeRepositoryTest {
     private static final String CASE_TYPE_REFERENCE = "id";
 
     private JurisdictionEntity testJurisdiction;
-    private JurisdictionEntity testJurisdiction2;
 
     @Before
     public void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
-        this.testJurisdiction2 = testHelper.createJurisdiction("DIVORCE", "Divorce", "Divorce jurisdiction");
+        JurisdictionEntity testJurisdiction2 = testHelper.createJurisdiction("DIVORCE", "Divorce", "Divorce jurisdiction");
 
         setupCaseTypeEntity("id", "Test case", testJurisdiction);
         setupCaseTypeEntity("id2", "Test case2", testJurisdiction2);
@@ -97,7 +96,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void severalVersionsOfCaseTypesForJurisdictions_findAllCaseTypes() {
+    public void severalVersionsOfCaseTypesForJurisdictionsFindAllCaseTypes() {
         List<CaseTypeEntity> caseTypeEntityOptional
             = classUnderTest.findAll();
         assertTrue(caseTypeEntityOptional.size() == 2);

@@ -54,7 +54,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 
@@ -417,11 +422,11 @@ class CaseTypeServiceImplTest {
         void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
             List<CaseType> caseTypes = classUnderTest.findAll();
 
+            assertThat(caseTypes, IsCollectionContaining.hasItems(caseType1, caseType2));
             verify(caseTypeRepository).findAll();
             verify(dtoMapper).map(same(caseTypeEntity1));
             verify(dtoMapper).map(same(caseTypeEntity2));
             verify(metadataFieldService, times(2)).getCaseMetadataFields();
-            assertThat(caseTypes, IsCollectionContaining.hasItems(caseType1, caseType2));
         }
 
         @Test

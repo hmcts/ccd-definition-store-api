@@ -78,8 +78,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     private boolean sameCaseTypeIdsButDifferentJurisdictionIds(CaseTypeEntity caseTypeEntity, CaseType caseType) {
-        return caseType.getId().equals(caseTypeEntity.getReference()) &&
-            !caseType.getJurisdiction().getId().equals(caseTypeEntity.getJurisdiction().getReference());
+        return caseType.getId().equals(caseTypeEntity.getReference())
+            && !caseType.getJurisdiction().getId().equals(caseTypeEntity.getJurisdiction().getReference());
     }
 
     @Override
