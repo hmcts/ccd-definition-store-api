@@ -20,7 +20,7 @@ dependencies {
     compile "org.apache.poi:poi-ooxml:3.17"
     compile group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.0-beta.5'
-    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.0-beta.5'
+    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.0-RC.4'
 }
 
 bootRepackage {
