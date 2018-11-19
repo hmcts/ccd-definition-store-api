@@ -12,16 +12,16 @@ import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDeta
 import static org.springframework.http.HttpMethod.GET;
 
 @Service
-public class CaseWorkerProfileService {
+public class IdamProfileService {
 
     private final SecurityUtils securityUtils;
     private final RestTemplate restTemplate;
     private ApplicationParams applicationParams;
 
     @Autowired
-    CaseWorkerProfileService(final SecurityUtils securityUtils,
-                                        final RestTemplate restTemplate,
-                                        final ApplicationParams applicationParams) {
+    IdamProfileService(final SecurityUtils securityUtils,
+                       final RestTemplate restTemplate,
+                       final ApplicationParams applicationParams) {
 
         this.securityUtils = securityUtils;
         this.restTemplate = restTemplate;
