@@ -52,13 +52,13 @@ class StateParserTest {
     void testParseAll() {
         final Collection<StateEntity> stateEntities = underTest.parseAll(definitionSheets, caseTypeEntity);
         assertAll(() -> assertThat(stateEntities, hasSize(1)),
-                  () -> {
-                      final StateEntity s = new ArrayList<>(stateEntities).get(0);
-                      assertThat(s.getReference(), is(STATE_ID));
-                      assertThat(s.getCaseType(), is(nullValue()));
-                      assertThat(s.getTitleDisplay(), is(EXPECTED_TITLE_DISPLAY));
-                      assertThat(context.getStateForCaseType(CASE_TYPE_ID, STATE_ID), is(s));
-                  });
+            () -> {
+                final StateEntity s = new ArrayList<>(stateEntities).get(0);
+                assertThat(s.getReference(), is(STATE_ID));
+                assertThat(s.getCaseType(), is(nullValue()));
+                assertThat(s.getTitleDisplay(), is(EXPECTED_TITLE_DISPLAY));
+                assertThat(context.getStateForCaseType(CASE_TYPE_ID, STATE_ID), is(s));
+            });
     }
 
     private CaseTypeEntity buildCaseTypeEntity() {

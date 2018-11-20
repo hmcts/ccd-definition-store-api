@@ -61,32 +61,31 @@ class StateMetadataCaseFieldEntityFactoryTest {
         CaseFieldEntity caseField = factory.createCaseFieldEntity(parseContext, caseType);
 
         assertAll(() -> assertThat(caseField, notNullValue()),
-                  () -> assertThat(caseField.getReference(), is(STATE.getReference())),
-                  () -> assertThat(caseField.getFieldType(), is(stateFixedListType)),
-                  () -> assertThat(caseField.getSecurityClassification(), is(SecurityClassification.PUBLIC)),
-                  () -> assertThat(caseField.getLabel(), is(STATE.getLabel())),
-                  () -> assertThat(caseField.getHidden(), is(false)),
-                  () -> assertThat(caseField.getLiveFrom(), is(LocalDate.now())),
-                  () -> assertThat(caseField.getDataFieldType(), is(DataFieldType.METADATA)));
+            () -> assertThat(caseField.getReference(), is(STATE.getReference())),
+            () -> assertThat(caseField.getFieldType(), is(stateFixedListType)),
+            () -> assertThat(caseField.getSecurityClassification(), is(SecurityClassification.PUBLIC)),
+            () -> assertThat(caseField.getLabel(), is(STATE.getLabel())),
+            () -> assertThat(caseField.getHidden(), is(false)),
+            () -> assertThat(caseField.getLiveFrom(), is(LocalDate.now())),
+            () -> assertThat(caseField.getDataFieldType(), is(DataFieldType.METADATA)));
     }
 
     @Test
     @DisplayName("should create and save fixed list for states")
     void shouldCreateAndSaveFixedListForStates() {
-        CaseTypeEntity caseType = new CaseTypeEntity();
         FieldTypeEntity fixedListBaseType = new FieldTypeEntity();
         FieldTypeEntity stateFixedListType = new FieldTypeEntity();
         stateFixedListType.setReference("stateFixedList");
 
         when(parseContext.getBaseType(BASE_FIXED_LIST)).thenReturn(Optional.of(fixedListBaseType));
         when(repository.save(any(FieldTypeEntity.class))).thenReturn(stateFixedListType);
-
+        CaseTypeEntity caseType = new CaseTypeEntity();
         CaseFieldEntity caseField = factory.createCaseFieldEntity(parseContext, caseType);
 
         assertAll(() -> assertThat(caseField, notNullValue()),
-                  () -> assertThat(caseField.getFieldType(), equalTo(stateFixedListType)),
-                  () -> verify(parseContext).getBaseType(BASE_FIXED_LIST),
-                  () -> verify(repository).save(any(FieldTypeEntity.class)));
+            () -> assertThat(caseField.getFieldType(), equalTo(stateFixedListType)),
+            () -> verify(parseContext).getBaseType(BASE_FIXED_LIST),
+            () -> verify(repository).save(any(FieldTypeEntity.class)));
     }
 
     @Test
