@@ -12,6 +12,8 @@ public interface CaseTypeService {
 
     void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes);
 
+    boolean caseTypeExistsInAnyJurisdiction(String reference, String jurisdictionId);
+
     List<CaseType> findByJurisdictionId(String jurisdictionId);
 
     Optional<CaseType> findByCaseTypeId(String id);

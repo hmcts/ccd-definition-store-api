@@ -51,16 +51,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 
 class CaseTypeServiceImplTest {
 
+    private static final String JURISDICTION_REFERENCE = "TEST";
+    private static final String CASE_TYPE_REFERENCE_1 = "TestAddressBookCase1";
+    private static final String CASE_TYPE_REFERENCE_2 = "TestAddressBookCase2";
+    private static final String CASE_TYPE_REFERENCE_3 = "TestAddressBookCase3";
     private static final int DEFAULT_VERSION = 69;
 
     @Mock
@@ -100,6 +104,10 @@ class CaseTypeServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+        caseTypeEntity1.setReference(CASE_TYPE_REFERENCE_1);
+        caseTypeEntity2.setReference(CASE_TYPE_REFERENCE_2);
+        caseTypeEntity3.setReference(CASE_TYPE_REFERENCE_3);
+        jurisdiction.setReference(JURISDICTION_REFERENCE);
 
         classUnderTest = new CaseTypeServiceImpl(
             caseTypeRepository,
@@ -259,6 +267,7 @@ class CaseTypeServiceImplTest {
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
                 inOrder.verify(caseTypeEntityValidator2).validate(
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
+                inOrder.verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(caseTypeEntity.getReference(), jurisdiction.getReference());
             }
 
             if (shouldSave) {
@@ -387,6 +396,34 @@ class CaseTypeServiceImplTest {
             return eventEntity;
         }
 
+    }
+
+    @Nested
+    class CaseTypeExists {
+
+        private static final String CASE_TYPE_REFERENCE = "TestAddressBookCase";
+        private static final String JURISDICTION_REFERENCE = "TEST";
+
+        @Test
+        @DisplayName("Should return true if case type for jurisdiction other then given exist")
+        void shouldReturnTrue_whenCaseTypeForJurisdictionOtherThanGivenExist() {
+            when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(2);
+
+            boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+
+            assertThat(caseTypeExists, is(true));
+            verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+        }
+
+        @Test
+        @DisplayName("Should return false if case type for jurisdiction other then given does no exist")
+        void shouldReturnFalse_whenCaseTypeForJurisdictionOtherThanGivenDoesNotExist() {
+            when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(0);
+            Boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+
+            assertThat(caseTypeExists, is(false));
+            verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+        }
     }
 
     @Nested
