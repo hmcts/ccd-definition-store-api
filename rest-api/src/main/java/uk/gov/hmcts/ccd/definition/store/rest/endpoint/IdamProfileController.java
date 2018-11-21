@@ -13,7 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileService;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@Api(value = "/api/data")
+@Api(value = "/api")
 @RequestMapping(value = "/api")
 class IdamProfileController {
 
@@ -24,7 +24,7 @@ class IdamProfileController {
         this.idamProfileService = idamProfileService;
     }
 
-    @RequestMapping(value = "/data/idam/profile", method = GET, produces = {"application/json"})
+    @RequestMapping(value = "/idam/profile", method = GET, produces = {"application/json"})
     @ApiOperation(value = "Gets idam profile from current logged in user", response = IDAMProperties.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),

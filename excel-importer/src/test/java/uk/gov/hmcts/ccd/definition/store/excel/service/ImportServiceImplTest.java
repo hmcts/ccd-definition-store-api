@@ -8,14 +8,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -23,9 +19,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
@@ -34,13 +29,14 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileService;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -49,9 +45,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -115,10 +111,7 @@ public class ImportServiceImplTest {
     private MetadataCaseFieldEntityFactory metadataCaseFieldEntityFactory;
 
     @Mock
-    private SecurityUtils securityUtils;
-
-    @Mock
-    private RestTemplate restTemplate;
+    private IdamProfileService idamProfileService;
 
     @Mock
     private ApplicationParams applicationParams;
@@ -180,8 +173,7 @@ public class ImportServiceImplTest {
                                         workBasketUserDefaultService,
                                         caseFieldRepository,
                                         applicationEventPublisher,
-                                        securityUtils,
-                                        restTemplate,
+                                        idamProfileService,
                                         applicationParams);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
@@ -249,7 +241,6 @@ public class ImportServiceImplTest {
         state.setReference("[STATE]");
         given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
             .willReturn(state);
-        setupMocksForIdam();
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
@@ -269,18 +260,12 @@ public class ImportServiceImplTest {
 
     @Test
     public void shouldGetUserDetails() {
-        final HttpEntity requestEntity = setupMocksForIdam();
         final IDAMProperties expectedIdamProperties = service.getUserDetails();
         assertEquals("445", expectedIdamProperties.getId());
         assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
 
-        verify(restTemplate).exchange(idamUserProfileURLCaptor.capture(),
-                                      httpMethodCaptor.capture(),
-                                      requestEntityCaptor.capture(),
-                                      idamPropertiesClassCaptor.capture());
         assertEquals("http://idam.local/details", idamUserProfileURLCaptor.getValue());
         assertEquals(HttpMethod.GET, httpMethodCaptor.getValue());
-        assertEquals(requestEntity, requestEntityCaptor.getValue());
         assertEquals(IDAMProperties.class, idamPropertiesClassCaptor.getValue());
     }
 
@@ -288,20 +273,5 @@ public class ImportServiceImplTest {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(reference);
         return fieldTypeEntity;
-    }
-
-    private HttpEntity setupMocksForIdam() {
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, "ey123.ey456");
-        given(securityUtils.userAuthorizationHeaders()).willReturn(httpHeaders);
-        final HttpEntity requestEntity = new HttpEntity(securityUtils.userAuthorizationHeaders());
-        given(applicationParams.idamUserProfileURL()).willReturn("http://idam.local/details");
-        final IDAMProperties idamProperties = new IDAMProperties();
-        idamProperties.setId("445");
-        idamProperties.setEmail("user@hmcts.net");
-        final ResponseEntity<IDAMProperties> responseEntity = new ResponseEntity<>(idamProperties, HttpStatus.OK);
-        given(restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
-            IDAMProperties.class)).willReturn(responseEntity);
-        return requestEntity;
     }
 }
