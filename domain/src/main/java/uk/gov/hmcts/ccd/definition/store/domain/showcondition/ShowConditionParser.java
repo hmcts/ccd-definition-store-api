@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.showcondition;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ShowConditionParser {
@@ -15,7 +15,7 @@ public class ShowConditionParser {
 
     private static final String AND_CONDITION_REGEX = "\\sAND\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String AND_OPERATOR = " AND ";
-    private static final Pattern EQUALITY_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(=)\\s*?(\".*\")\\s*?");
+    private static final Pattern EQUALITY_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\")\\s*?");
 
     public ShowCondition parseShowCondition(String rawShowConditionString) throws InvalidShowConditionException {
         try {
