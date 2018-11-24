@@ -23,7 +23,11 @@ public class ShowConditionParser {
                 String[] andConditions = rawShowConditionString.split(AND_CONDITION_REGEX);
                 Optional<ShowCondition> optShowCondition = buildShowCondition(andConditions);
                 if (optShowCondition.isPresent()) {
-                    return optShowCondition.get();
+                    ShowCondition showCondition = optShowCondition.get();
+                    if(showCondition.getFieldsWithSubtypes().stream().noneMatch(this::fieldContainsEmpties)
+                        && showCondition.getFields().stream().noneMatch(this::fieldContainsEmpties)) {
+                        return showCondition;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -31,6 +35,10 @@ public class ShowConditionParser {
             // Do nothing; we're throwing InvalidShowConditionException below
         }
         throw new InvalidShowConditionException(rawShowConditionString);
+    }
+
+    private boolean fieldContainsEmpties(String field) {
+        return field.contains(" ") || field.contains("..");
     }
 
     private Optional<ShowCondition> buildShowCondition(String[] andConditions) {
