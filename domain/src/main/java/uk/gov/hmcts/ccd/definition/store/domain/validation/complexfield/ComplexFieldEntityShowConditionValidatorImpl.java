@@ -9,12 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParse
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 
-/**
- * @deprecated This should not be here. Complex fields will have new optional Excel tab called
- * ComplexTypeToCaseEvent https://tools.hmcts.net/jira/browse/RDM-3327
- */
 @Component
-@Deprecated
 public class ComplexFieldEntityShowConditionValidatorImpl implements ComplexFieldValidator {
 
     private final ShowConditionParser showConditionExtractor;

@@ -24,7 +24,7 @@ public class ShowConditionParser {
                 Optional<ShowCondition> optShowCondition = buildShowCondition(andConditions);
                 if (optShowCondition.isPresent()) {
                     ShowCondition showCondition = optShowCondition.get();
-                    if(showCondition.getFieldsWithSubtypes().stream().noneMatch(this::fieldContainsEmpties)
+                    if (showCondition.getFieldsWithSubtypes().stream().noneMatch(this::fieldContainsEmpties)
                         && showCondition.getFields().stream().noneMatch(this::fieldContainsEmpties)) {
                         return showCondition;
                     }
