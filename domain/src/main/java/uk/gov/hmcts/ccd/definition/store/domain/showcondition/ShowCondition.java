@@ -31,7 +31,7 @@ public class ShowCondition {
 
     private static String dropSubtypes(String field) {
         if (field.contains(".")) {
-            return field.substring(0, field.indexOf("."));
+            return field.substring(0, field.indexOf('.'));
         } else {
             return field;
         }

@@ -12,6 +12,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class CaseFieldEntityUtil {
 
+    private CaseFieldEntityUtil() { }
+
     public static List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
         List<String> allSubTypePossibilities = new ArrayList<>();
         prepare(allSubTypePossibilities, "",
