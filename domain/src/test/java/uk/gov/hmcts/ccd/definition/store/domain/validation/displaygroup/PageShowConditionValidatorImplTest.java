@@ -129,7 +129,7 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void TabShowCondition_shouldAddErrorForInvalidShowConditionForCustomComplexField() throws InvalidShowConditionException {
+    public void shouldAddErrorForInvalidShowConditionForCustomComplexField() throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode";
         String invalidShowCondition = matchingCaseFieldKey + "=\"UK\"";
