@@ -1,19 +1,5 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
-import javax.inject.Inject;
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -45,11 +31,25 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClient;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
 import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
 import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
+
+import javax.inject.Inject;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
