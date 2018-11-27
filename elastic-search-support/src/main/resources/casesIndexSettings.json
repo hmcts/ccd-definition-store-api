@@ -16,5 +16,10 @@
         "replacement":""
       }
     }
+  },
+  "mapping" : {
+    "total_fields" : {
+      "limit" : "6000"
+    }
   }
 }

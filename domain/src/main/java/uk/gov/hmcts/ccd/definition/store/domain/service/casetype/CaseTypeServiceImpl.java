@@ -14,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyC
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
@@ -50,12 +51,15 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     public void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes) {
 
         ValidationResult validationResult = new ValidationResult();
-
         caseTypes.forEach(
             caseTypeEntity -> {
                 caseTypeEntity.setJurisdiction(jurisdiction);
                 legacyCaseTypeValidator.validateCaseType(caseTypeEntity);
                 validationResult.merge(validate(caseTypeEntity));
+                if (caseTypeExistsInAnyJurisdiction(caseTypeEntity.getReference(), jurisdiction.getReference())) {
+                    validationResult.addError(
+                        new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity));
+                }
             }
         );
 
@@ -64,6 +68,11 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         } else {
             throw new ValidationException(validationResult);
         }
+    }
+
+    @Override
+    public boolean caseTypeExistsInAnyJurisdiction(String reference, String jurisdictionId) {
+        return repository.caseTypeExistsInAnyJurisdiction(reference, jurisdictionId) > 0;
     }
 
     @Override

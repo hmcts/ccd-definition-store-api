@@ -7,6 +7,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldInvalidShowConditionError;
@@ -23,6 +24,9 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(CaseTypeEntityMissingSecurityClassificationValidationError
                                   caseTypeEntityMissingSecurityClassificationValidationError);
+
+    String createErrorMessage(CaseTypeEntityNonUniqueReferenceValidationError
+                                  caseTypeEntityNonUniqueReferenceValidationError);
 
     String createErrorMessage(CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError
                                   classUnderTest);

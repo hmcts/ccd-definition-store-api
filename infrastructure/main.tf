@@ -31,6 +31,9 @@ locals {
   custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
   default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
   oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
+
+  elastic_search_host = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_url.*.value)}"}"
+  elastic_search_password = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_password.*.value)}"}"
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
@@ -107,9 +110,10 @@ module "case-definition-store-api" {
     AZURE_STORAGE_BLOB_CONTAINER_REFERENCE = "${azurerm_storage_container.imports_container.name}"
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED = "true"
 
-    ELASTIC_SEARCH_HOST = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_url.*.value)}"}"
-    ELASTIC_SEARCH_PASSWORD = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_password.*.value)}"}"
+    ELASTIC_SEARCH_HOST = "${local.elastic_search_host}"
+    ELASTIC_SEARCH_PASSWORD = "${local.elastic_search_password}"
     ELASTIC_SEARCH_PORT = "${var.elastic_search_port}"
+    ELASTIC_SEARCH_SCHEME = "${var.elastic_search_scheme}"
     ELASTIC_SEARCH_ENABLED = "${var.elastic_search_enabled}"
     ELASTIC_SEARCH_INDEX_SHARDS = "${var.elastic_search_index_shards}"
     ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS = "${var.elastic_search_index_shards_replicas}"

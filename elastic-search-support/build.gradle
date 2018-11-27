@@ -2,7 +2,9 @@ jar {
     baseName = 'definition-store-elastic-search-support'
 }
 
-
+bootRepackage {
+    enabled = false
+}
 
 dependencies {
 

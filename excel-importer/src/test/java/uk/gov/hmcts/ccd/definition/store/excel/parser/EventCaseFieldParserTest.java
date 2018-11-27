@@ -43,14 +43,14 @@ public class EventCaseFieldParserTest {
     @Before
     public void setUp() throws InvalidShowConditionException {
         MockitoAnnotations.initMocks(this);
-        when(parseContext.getCaseFieldForCaseType(any(),any())).thenReturn(CASE_FIELD);
+        when(parseContext.getCaseFieldForCaseType(any(), any())).thenReturn(CASE_FIELD);
         when(showConditionParser.parseShowCondition(any())).thenReturn(
             new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build()
         );
     }
 
     @Test
-    public void definitionDataItemHasValidShowCondition_parseEventCaseFieldCalled_parsedEventEntityWithShowConditionSetToResultOfShowConditionParsingAddedToRegistryAndReturned() {
+    public void defDataItemHasValidShowConditionParseEveCaseFldCalledParsedEventEntityWithShowCondtionSetToRsltOfShowConditionParsngAddToRegstryReturned() {
 
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
@@ -69,14 +69,14 @@ public class EventCaseFieldParserTest {
         assertEquals(label, eventCaseFieldEntity.getLabel());
         assertEquals(hint, eventCaseFieldEntity.getHintText());
 
-        verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(eq(eventCaseFieldEntity),eq(definitionDataItem));
+        verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(eq(eventCaseFieldEntity), eq(definitionDataItem));
         verify(parseContext).getCaseFieldForCaseType(eq(caseTypeId), eq(caseFieldId));
         verify(definitionDataItem).getString(ColumnName.CASE_EVENT_FIELD_LABEL);
         verify(definitionDataItem).getString(ColumnName.CASE_EVENT_FIELD_HINT);
     }
 
     @Test
-    public void definitionDataItemHasInValidShowCondition_parseEventCaseFieldCalled_parsedEventEntityWithShowConditionSetToOriginalShowConditionAddedToRegistryAndReturned()
+    public void defDataItemHasInValidShowConditionParseEventCaseFldCalledParsedEventEntityWithShowConditionSetToOrgShowConditionAddedToRegistryAndReturned()
         throws InvalidShowConditionException {
 
         String caseFieldId = "Case Field Id";
@@ -96,7 +96,7 @@ public class EventCaseFieldParserTest {
         assertEquals(displayContext.getDisplayContext(), eventCaseFieldEntity.getDisplayContext());
         assertEquals(originalShowCondition, eventCaseFieldEntity.getShowCondition());
 
-        verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(eq(eventCaseFieldEntity),eq(definitionDataItem));
+        verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(eq(eventCaseFieldEntity), eq(definitionDataItem));
         verify(parseContext).getCaseFieldForCaseType(eq(caseTypeId), eq(caseFieldId));
     }
 

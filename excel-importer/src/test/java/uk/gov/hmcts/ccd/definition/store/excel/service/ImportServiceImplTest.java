@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -21,12 +21,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -48,8 +48,9 @@ import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_PAYMENT_HISTORY_VIEWER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
@@ -65,6 +66,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_M
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_NUMBER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_PHONE_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_POST_CODE;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
@@ -151,6 +153,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity documentBaseType;
     private FieldTypeEntity labelBaseType;
     private FieldTypeEntity casePaymentHistoryViewerBaseType;
+    private FieldTypeEntity fixedListRadioTypeBaseType;
 
     @Before
     public void setup() {
@@ -193,17 +196,25 @@ public class ImportServiceImplTest {
         documentBaseType = buildBaseType(BASE_DOCUMENT);
         labelBaseType = buildBaseType(BASE_LABEL);
         casePaymentHistoryViewerBaseType = buildBaseType(BASE_CASE_PAYMENT_HISTORY_VIEWER);
+        fixedListRadioTypeBaseType = buildBaseType(BASE_RADIO_FIXED_LIST);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
+
+        final IDAMProperties idamProperties = new IDAMProperties();
+        idamProperties.setId("445");
+        idamProperties.setEmail("user@hmcts.net");
+
+        // Override getUserDetails to avoid calling IdAM with invalid authorization
+        doReturn(idamProperties).when(idamProfileService).getLoggedInUserDetails();
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test(expected = InvalidImportException.class)
     public void shouldNotImportDefinition() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
-                                                                        multiSelectBaseType,
-                                                                        complexType));
+            multiSelectBaseType,
+            complexType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BAD_FILE);
@@ -216,22 +227,23 @@ public class ImportServiceImplTest {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
-                                                                        multiSelectBaseType,
-                                                                        complexType,
-                                                                        textBaseType,
-                                                                        numberBaseType,
-                                                                        emailBaseType,
-                                                                        yesNoBaseType,
-                                                                        dateBaseType,
-                                                                        dateTimeBaseType,
-                                                                        postCodeBaseType,
-                                                                        moneyGBPBaseType,
-                                                                        phoneUKBaseType,
-                                                                        textAreaBaseType,
-                                                                        collectionBaseType,
-                                                                        documentBaseType,
-                                                                        labelBaseType,
-                                                                        casePaymentHistoryViewerBaseType));
+            multiSelectBaseType,
+            complexType,
+            textBaseType,
+            numberBaseType,
+            emailBaseType,
+            yesNoBaseType,
+            dateBaseType,
+            dateTimeBaseType,
+            postCodeBaseType,
+            moneyGBPBaseType,
+            phoneUKBaseType,
+            textAreaBaseType,
+            collectionBaseType,
+            documentBaseType,
+            labelBaseType,
+            casePaymentHistoryViewerBaseType,
+            fixedListRadioTypeBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -263,10 +275,6 @@ public class ImportServiceImplTest {
         final IDAMProperties expectedIdamProperties = service.getUserDetails();
         assertEquals("445", expectedIdamProperties.getId());
         assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
-
-        assertEquals("http://idam.local/details", idamUserProfileURLCaptor.getValue());
-        assertEquals(HttpMethod.GET, httpMethodCaptor.getValue());
-        assertEquals(IDAMProperties.class, idamPropertiesClassCaptor.getValue());
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {

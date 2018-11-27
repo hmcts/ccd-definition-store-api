@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,6 @@ public class ImportServiceImpl implements ImportService {
     private final CaseFieldRepository caseFieldRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final IdamProfileService idamProfileService;
-    private final ApplicationParams applicationParams;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -86,7 +86,6 @@ public class ImportServiceImpl implements ImportService {
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
         this.idamProfileService = idamProfileService;
-        this.applicationParams = applicationParams;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -208,6 +207,7 @@ public class ImportServiceImpl implements ImportService {
         return metadata;
     }
 
+    @VisibleForTesting
     public IDAMProperties getUserDetails() {
         return idamProfileService.getLoggedInUserDetails();
     }

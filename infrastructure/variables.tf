@@ -92,12 +92,16 @@ variable "authorised-services" {
 // ELASTIC SEARCH
 ////////////////////////////////
 
+variable "elastic_search_enabled" {
+  default = "false"
+}
+
 variable "elastic_search_port" {
   default = "9200"
 }
 
-variable "elastic_search_enabled" {
-  default = "false"
+variable "elastic_search_scheme" {
+  default = "http"
 }
 
 variable "elastic_search_index_shards" {
@@ -113,7 +117,7 @@ variable "elastic_search_fail_on_import" {
 }
 
 variable "elastic_search_dynamc" {
-  default = "strict"
+  default = "false"
 }
 
 variable "elastic_search_case_index_name_format" {

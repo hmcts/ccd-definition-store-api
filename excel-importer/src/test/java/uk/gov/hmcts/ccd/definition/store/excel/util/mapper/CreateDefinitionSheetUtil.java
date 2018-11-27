@@ -10,10 +10,12 @@ import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.Definitio
  * Util class to assist with creating mock Case Definitions in tests
  */
 class CreateDefinitionSheetUtil {
-    private CreateDefinitionSheetUtil() {}
+    private CreateDefinitionSheetUtil() {
+    }
 
     /**
      * Create a DefinitionDataItem for the given Map of columns and their attribute
+     *
      * @param attributes Map of column values for each Column
      * @return the created DefinitionDataItem
      */
@@ -27,13 +29,14 @@ class CreateDefinitionSheetUtil {
 
     /**
      * Create a Case Field
-     * @param id - case field id
-     * @param caseTypeId - linked case type id
-     * @param shortDesc - case type description
-     * @param hintText - case field hint text
-     * @param fieldType - case field type
-     * @param hidden - boolean to indicate if case field is hidden
-     * @param regEx - regular expression for case field
+     *
+     * @param id            - case field id
+     * @param caseTypeId    - linked case type id
+     * @param shortDesc     - case type description
+     * @param hintText      - case field hint text
+     * @param fieldType     - case field type
+     * @param hidden        - boolean to indicate if case field is hidden
+     * @param regEx         - regular expression for case field
      * @param securityLabel - security label for case field
      * @param fixedListCode
      * @return the created Case Field
@@ -58,8 +61,9 @@ class CreateDefinitionSheetUtil {
 
     /**
      * Create a Case State
-     * @param id - case state id
-     * @param shortDesc - case state description
+     *
+     * @param id         - case state id
+     * @param shortDesc  - case state description
      * @param caseTypeId - linked case type id
      * @return the created Case State
      */
@@ -73,19 +77,21 @@ class CreateDefinitionSheetUtil {
 
     /**
      * Create a Case Event
-     * @param id - case event id
-     * @param name - case event name
-     * @param desc - case event description
-     * @param preState - valid case event pre-states
+     *
+     * @param id        - case event id
+     * @param name      - case event name
+     * @param desc      - case event description
+     * @param preState  - valid case event pre-states
      * @param postState - case event post-state
      * @return the created CaseEvent
      */
     static DefinitionDataItem createCaseEventItem(String id, String name, String desc, String preState, String postState, String caseTypeId) {
-        return createCaseEventItem(id, name, desc,preState, postState, caseTypeId, null, null, null, null, null, null);
+        return createCaseEventItem(id, name, desc, preState, postState, caseTypeId, null, null, null, null, null, null);
     }
 
     /**
      * Creates a Case Event.
+     *
      * @param id
      * @param name
      * @param desc
@@ -130,9 +136,10 @@ class CreateDefinitionSheetUtil {
 
     /**
      * Create a Work Basket Result Field
-     * @param caseTypeId - linked case type id
-     * @param caseFieldId - linked case field id
-     * @param label - label for result field
+     *
+     * @param caseTypeId   - linked case type id
+     * @param caseFieldId  - linked case field id
+     * @param label        - label for result field
      * @param displayOrder - display order of result field
      * @return the created Work Basket Result Field
      */
@@ -147,14 +154,15 @@ class CreateDefinitionSheetUtil {
 
     /**
      * Create a Case Tab Collection
-     * @param liveFrom - live from date
-     * @param liveTo - live to date
-     * @param caseTypeId - linked case type id
-     * @param channel - linked channel
-     * @param tabId - tab id
-     * @param tabLabel - tab label
-     * @param tabDisplayOrder - tab display order
-     * @param caseFieldId - linked case field id
+     *
+     * @param liveFrom             - live from date
+     * @param liveTo               - live to date
+     * @param caseTypeId           - linked case type id
+     * @param channel              - linked channel
+     * @param tabId                - tab id
+     * @param tabLabel             - tab label
+     * @param tabDisplayOrder      - tab display order
+     * @param caseFieldId          - linked case field id
      * @param tabFieldDisplayOrder - tab field display order
      * @return the created Case Tab Collection
      */

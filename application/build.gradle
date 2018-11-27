@@ -8,6 +8,10 @@ jar {
     }
 }
 
+bootRepackage {
+    enabled = false
+}
+
 dependencies {
     compile project(':app-insights')
     compile project(':rest-api')

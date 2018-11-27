@@ -47,3 +47,11 @@ task functional(type: Test) {
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
     useJUnitPlatform()
 }
+
+bootRepackage {
+    enabled = false
+}
+
+jar {
+    enabled = false
+}

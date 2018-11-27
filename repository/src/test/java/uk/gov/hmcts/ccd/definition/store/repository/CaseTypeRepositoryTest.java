@@ -16,9 +16,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -46,11 +44,15 @@ public class CaseTypeRepositoryTest {
     public void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
 
+        setupCaseTypeEntity("id", "Test case", testJurisdiction);
+    }
+
+    private void setupCaseTypeEntity(String id, String name, JurisdictionEntity jurisdictionEntity) {
         final CaseTypeEntity caseType = new CaseTypeEntity();
-        caseType.setReference("id");
-        caseType.setName("Test case");
+        caseType.setReference(id);
+        caseType.setName(name);
         caseType.setVersion(1);
-        caseType.setJurisdiction(testJurisdiction);
+        caseType.setJurisdiction(jurisdictionEntity);
         caseType.setSecurityClassification(SecurityClassification.PUBLIC);
         saveCaseTypeClearAndFlushSession(caseType);
         caseType.setVersion(2);
@@ -87,6 +89,18 @@ public class CaseTypeRepositoryTest {
         List<CaseTypeEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
         assertTrue(caseTypeEntityOptional.isEmpty());
+    }
+
+    @Test
+    public void shouldReturnZeroCountIfCaseTypeIsOfExcludedJurisdiction() {
+        Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, testJurisdiction.getReference());
+        assertEquals(0, result.intValue());
+    }
+
+    @Test
+    public void shouldReturnAPositiveCountIfCaseTypeIsNotOfExcludedJurisdiction() {
+        Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, "OtherJurisdiction");
+        assertEquals(1, result.intValue());
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {

@@ -62,6 +62,38 @@ class ShowConditionParserTest {
         assertThrows(InvalidShowConditionException.class, () -> classUnderTest.parseShowCondition(" AND field1=\"ABC\""));
     }
 
+    @Test
+    void shouldParseContainsWithSingleValueCorrectly() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition("field1 CONTAINS \"ABCDEFG\"");
+
+        assertThat(sc.getShowConditionExpression(), is("field1CONTAINS\"ABCDEFG\""));
+        assertThat(sc.getFields(), hasItems("field1"));
+    }
+
+    @Test
+    void shouldParseContainsCorrectly() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition("field1 CONTAINS \"ABC,CDE,EFG,JKL\"");
+
+        assertThat(sc.getShowConditionExpression(), is("field1CONTAINS\"ABC,CDE,EFG,JKL\""));
+        assertThat(sc.getFields(), hasItems("field1"));
+    }
+
+    @Test
+    void shouldParseMultipleContainsCorrectly() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition("field1 CONTAINS \"ABC,CDE,EFG,JKL\" AND  field2 CONTAINS \"1,3,5,7,88\"");
+
+        assertThat(sc.getShowConditionExpression(), is("field1CONTAINS\"ABC,CDE,EFG,JKL\" AND field2CONTAINS\"1,3,5,7,88\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2"));
+    }
+
+    @Test
+    void shouldParseMixedEqualsANDContainsCorrectly() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition("field1 = \"ABCDEFG\" AND  field2 CONTAINS \"1,3,5,7,88\"");
+
+        assertThat(sc.getShowConditionExpression(), is("field1=\"ABCDEFG\" AND field2CONTAINS\"1,3,5,7,88\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2"));
+    }
+
     private void assertShowCondition(ShowCondition showCondition) {
         assertEquals("SomeField=\"Some String\"", showCondition.getShowConditionExpression());
         assertEquals("SomeField", showCondition.getFields().get(0));
