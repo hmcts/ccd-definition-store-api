@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -52,7 +53,7 @@ class IdamProfileServiceTest {
         service = new IdamProfileService(securityUtils, restTemplate, applicationParams);
     }
 
-
+    @DisplayName("Should get logged in user details")
     @Test
     public void shouldGetLoggedInUserDetails() {
         final HttpEntity requestEntity = setupMocksForIdam();
