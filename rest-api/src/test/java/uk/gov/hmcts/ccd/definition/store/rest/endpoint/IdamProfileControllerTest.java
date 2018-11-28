@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
-import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileService;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.util.List;
 
@@ -33,15 +33,15 @@ class IdamProfileControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private IdamProfileService idamProfileService;
+    private IdamProfileClient idamProfileClient;
 
     private IDAMProperties idamProperties;
 
     @BeforeEach
     void setUp() {
         idamProperties = buildIdamProperties();
-        given(idamProfileService.getLoggedInUserDetails()).willReturn(idamProperties);
-        final IdamProfileController controller = new IdamProfileController(idamProfileService);
+        given(idamProfileClient.getLoggedInUserDetails()).willReturn(idamProperties);
+        final IdamProfileController controller = new IdamProfileController(idamProfileClient);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                                  .setControllerAdvice(new RestEndPointExceptionHandler())
                                  .build();

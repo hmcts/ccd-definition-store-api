@@ -36,7 +36,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
-import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileService;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -113,7 +113,7 @@ public class ImportServiceImplTest {
     private MetadataCaseFieldEntityFactory metadataCaseFieldEntityFactory;
 
     @Mock
-    private IdamProfileService idamProfileService;
+    private IdamProfileClient idamProfileClient;
 
     @Mock
     private ApplicationParams applicationParams;
@@ -175,8 +175,7 @@ public class ImportServiceImplTest {
                                         userRoleRepository,
                                         workBasketUserDefaultService,
                                         caseFieldRepository,
-                                        applicationEventPublisher,
-                                        idamProfileService,
+                                        applicationEventPublisher, idamProfileClient,
                                         applicationParams);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
@@ -205,7 +204,7 @@ public class ImportServiceImplTest {
         idamProperties.setEmail("user@hmcts.net");
 
         // Override getUserDetails to avoid calling IdAM with invalid authorization
-        doReturn(idamProperties).when(idamProfileService).getLoggedInUserDetails();
+        doReturn(idamProperties).when(idamProfileClient).getLoggedInUserDetails();
     }
 
     @Test(expected = InvalidImportException.class)
@@ -268,13 +267,6 @@ public class ImportServiceImplTest {
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
-    }
-
-    @Test
-    public void shouldGetUserDetails() {
-        final IDAMProperties expectedIdamProperties = service.getUserDetails();
-        assertEquals("445", expectedIdamProperties.getId());
-        assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {

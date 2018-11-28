@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class IdamProfileServiceTest {
 
-    private IdamProfileService service;
+    private IdamProfileClient client;
 
     @Mock
     private SecurityUtils securityUtils;
@@ -50,14 +50,14 @@ class IdamProfileServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new IdamProfileService(securityUtils, restTemplate, applicationParams);
+        client = new IdamProfileClient(securityUtils, restTemplate, applicationParams);
     }
 
     @DisplayName("Should get logged in user details")
     @Test
     public void shouldGetLoggedInUserDetails() {
         final HttpEntity requestEntity = setupMocksForIdam();
-        final IDAMProperties expectedIdamProperties = service.getLoggedInUserDetails();
+        final IDAMProperties expectedIdamProperties = client.getLoggedInUserDetails();
         assertEquals("445", expectedIdamProperties.getId());
         assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
 

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
-import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileService;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -17,11 +17,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = "/api")
 class IdamProfileController {
 
-    private final IdamProfileService idamProfileService;
+    private final IdamProfileClient idamProfileClient;
 
     @Autowired
-    IdamProfileController(final IdamProfileService idamProfileService) {
-        this.idamProfileService = idamProfileService;
+    IdamProfileController(final IdamProfileClient idamProfileService) {
+        this.idamProfileClient = idamProfileService;
     }
 
     @RequestMapping(value = "/idam/profile", method = GET, produces = {"application/json"})
@@ -31,7 +31,7 @@ class IdamProfileController {
         @ApiResponse(code = 200, message = "Unexpected error")
     })
     IDAMProperties getIdamProfile() {
-        return idamProfileService.getLoggedInUserDetails();
+        return idamProfileClient.getLoggedInUserDetails();
     }
 
 }

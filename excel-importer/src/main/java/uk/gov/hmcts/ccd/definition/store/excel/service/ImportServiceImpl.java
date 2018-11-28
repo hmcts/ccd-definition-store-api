@@ -36,7 +36,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
-import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileService;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +59,7 @@ public class ImportServiceImpl implements ImportService {
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
     private final CaseFieldRepository caseFieldRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final IdamProfileService idamProfileService;
+    private final IdamProfileClient idamProfileClient;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -73,7 +73,7 @@ public class ImportServiceImpl implements ImportService {
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
                              ApplicationEventPublisher applicationEventPublisher,
-                             IdamProfileService idamProfileService,
+                             IdamProfileClient idamProfileService,
                              ApplicationParams applicationParams) {
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
@@ -85,7 +85,7 @@ public class ImportServiceImpl implements ImportService {
         this.userRoleRepository = userRoleRepository;
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
-        this.idamProfileService = idamProfileService;
+        this.idamProfileClient = idamProfileService;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -207,9 +207,9 @@ public class ImportServiceImpl implements ImportService {
         return metadata;
     }
 
-    @VisibleForTesting
+    @VisibleForTesting  // used by BaseTest
     public IDAMProperties getUserDetails() {
-        return idamProfileService.getLoggedInUserDetails();
+        return idamProfileClient.getLoggedInUserDetails();
     }
 
     private JurisdictionEntity importJurisdiction(JurisdictionEntity jurisdiction) {
