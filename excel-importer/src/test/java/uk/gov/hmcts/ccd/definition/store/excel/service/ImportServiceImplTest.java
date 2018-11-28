@@ -175,7 +175,8 @@ public class ImportServiceImplTest {
                                         userRoleRepository,
                                         workBasketUserDefaultService,
                                         caseFieldRepository,
-                                        applicationEventPublisher, idamProfileClient,
+                                        applicationEventPublisher,
+                                        idamProfileClient,
                                         applicationParams);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);

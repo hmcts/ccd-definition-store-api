@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -73,8 +72,7 @@ public class ImportServiceImpl implements ImportService {
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
                              ApplicationEventPublisher applicationEventPublisher,
-                             IdamProfileClient idamProfileService,
-                             ApplicationParams applicationParams) {
+                             IdamProfileClient idamProfileClient) {
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
         this.parserFactory = parserFactory;
@@ -85,7 +83,7 @@ public class ImportServiceImpl implements ImportService {
         this.userRoleRepository = userRoleRepository;
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
-        this.idamProfileClient = idamProfileService;
+        this.idamProfileClient = idamProfileClient;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
