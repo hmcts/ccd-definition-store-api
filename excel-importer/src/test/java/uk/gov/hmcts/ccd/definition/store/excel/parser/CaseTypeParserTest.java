@@ -1,5 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,14 +21,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
-
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CaseTypeParserTest extends ParserTestBase {
@@ -57,6 +57,9 @@ public class CaseTypeParserTest extends ParserTestBase {
     @Mock
     private CaseRoleParser caseRoleParser;
 
+    @Mock
+    private SearchAliasFieldParser searchAliasFieldParser;
+
     @Before
     public void setup() {
 
@@ -73,7 +76,8 @@ public class CaseTypeParserTest extends ParserTestBase {
             authorisationCaseEventParser,
             authorisationCaseStateParser,
             metadataCaseFieldParser,
-            caseRoleParser);
+            caseRoleParser,
+            searchAliasFieldParser);
         given(parseContext.getJurisdiction()).willReturn(jurisdiction);
     }
 

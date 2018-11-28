@@ -1,7 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -17,8 +22,12 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
@@ -31,6 +40,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 )
 public class CaseTypeEntity implements Serializable, Versionable {
 
+    private static final long serialVersionUID = 542723327314434924L;
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)
@@ -95,6 +105,11 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "case_type_id")
     private final List<CaseRoleEntity> caseRoles = new ArrayList<>();
 
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private final List<SearchAliasFieldEntity> searchAliasFields = new ArrayList<>();
+
     public Integer getId() {
         return id;
     }
@@ -150,6 +165,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
         return states;
     }
 
+    @Override
     public String getReference() {
         return reference;
     }
@@ -158,10 +174,12 @@ public class CaseTypeEntity implements Serializable, Versionable {
         this.reference = reference;
     }
 
+    @Override
     public Integer getVersion() {
         return version;
     }
 
+    @Override
     public void setVersion(final Integer version) {
         this.version = version;
     }
@@ -259,4 +277,14 @@ public class CaseTypeEntity implements Serializable, Versionable {
         caseRoleEntities.forEach(cr -> addCaseRole(cr));
         return this;
     }
+
+    public List<SearchAliasFieldEntity> getSearchAliasFields() {
+        return searchAliasFields;
+    }
+
+    public CaseTypeEntity addSearchAliasFields(List<SearchAliasFieldEntity> searchAliasFields) {
+        this.searchAliasFields.addAll(searchAliasFields);
+        return this;
+    }
+
 }

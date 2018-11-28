@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-
-import java.util.Map;
 
 @Component
 public class ParserFactory {
@@ -56,7 +56,8 @@ public class ParserFactory {
             new AuthorisationCaseEventParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseStateParser(context, entityToDefinitionDataItemRegistry),
             new MetadataCaseFieldParser(context, metadataCaseFieldEntityFactoryRegistry),
-            new CaseRoleParser(context));
+            new CaseRoleParser(context),
+            new SearchAliasFieldParser(context));
     }
 
     public LayoutParser createLayoutParser(ParseContext parseContext) {

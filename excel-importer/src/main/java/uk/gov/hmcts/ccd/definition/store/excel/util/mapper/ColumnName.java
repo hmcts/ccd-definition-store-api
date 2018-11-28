@@ -51,6 +51,7 @@ public enum ColumnName {
     FIELD_SHOW_CONDITION("FieldShowCondition"),
     PAGE_SHOW_CONDITION("PageShowCondition"),
     TAB_SHOW_CONDITION("TabShowCondition"),
+    SEARCH_ALIAS_ID("SearchAliasID"),
     SHOW_SUMMARY("ShowSummary"),
     SHOW_EVENT_NOTES("ShowEventNotes"),
     SHOW_SUMMARY_CHANGE_OPTION("ShowSummaryChangeOption"),
