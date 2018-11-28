@@ -203,7 +203,6 @@ public class ImportServiceImplTest {
         idamProperties.setId("445");
         idamProperties.setEmail("user@hmcts.net");
 
-        // Override getUserDetails to avoid calling IdAM with invalid authorization
         doReturn(idamProperties).when(idamProfileClient).getLoggedInUserDetails();
     }
 
