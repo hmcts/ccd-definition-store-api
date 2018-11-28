@@ -11,7 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -115,9 +114,6 @@ public class ImportServiceImplTest {
     @Mock
     private IdamProfileClient idamProfileClient;
 
-    @Mock
-    private ApplicationParams applicationParams;
-
     @Captor
     private ArgumentCaptor<String> idamUserProfileURLCaptor;
 
@@ -176,8 +172,7 @@ public class ImportServiceImplTest {
                                         workBasketUserDefaultService,
                                         caseFieldRepository,
                                         applicationEventPublisher,
-                                        idamProfileClient,
-                                        applicationParams);
+                                        idamProfileClient);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
