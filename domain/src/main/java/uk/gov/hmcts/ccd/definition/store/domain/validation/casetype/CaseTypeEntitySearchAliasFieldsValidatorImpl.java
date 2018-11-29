@@ -7,7 +7,6 @@ import static java.util.Optional.ofNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -26,10 +25,7 @@ public class CaseTypeEntitySearchAliasFieldsValidatorImpl implements CaseTypeEnt
         ValidationResult validationResult = new ValidationResult();
 
         ofNullable(caseType.getSearchAliasFields()).ifPresent(searchAliasFields -> searchAliasFields.forEach(searchAliasField -> {
-            searchAliasFieldValidators.forEach(validator -> validationResult.merge(validator.validate(searchAliasField,
-                                                                                                      new SearchAliasFieldValidationContext(
-                                                                                                          caseType.getReference(),
-                                                                                                          searchAliasField.getCaseField().getReference()))));
+            searchAliasFieldValidators.forEach(validator -> validationResult.merge(validator.validate(searchAliasField)));
         }));
 
         return validationResult;

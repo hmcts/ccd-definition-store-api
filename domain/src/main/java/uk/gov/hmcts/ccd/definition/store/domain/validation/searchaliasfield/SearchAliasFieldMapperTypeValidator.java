@@ -7,17 +7,17 @@ import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 
 @Component
-public class SearchAliasFieldMapperTypeValidatorImpl implements SearchAliasFieldValidator {
+public class SearchAliasFieldMapperTypeValidator implements SearchAliasFieldValidator {
 
     private final SearchAliasFieldRepository repository;
 
     @Autowired
-    public SearchAliasFieldMapperTypeValidatorImpl(SearchAliasFieldRepository repository) {
+    public SearchAliasFieldMapperTypeValidator(SearchAliasFieldRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public ValidationResult validate(SearchAliasFieldEntity caseField, SearchAliasFieldValidationContext context) {
+    public ValidationResult validate(SearchAliasFieldEntity caseField) {
 
         ValidationResult validationResult = new ValidationResult();
 

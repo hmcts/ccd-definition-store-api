@@ -10,23 +10,24 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 
 @Component
-public class SearchAliasFieldNameValidatorImpl implements SearchAliasFieldValidator {
+public class SearchAliasFieldNameValidator implements SearchAliasFieldValidator {
 
     private static final Pattern SEARCH_ALIAS_FIELD_NAME_PATTERN = Pattern.compile("^[A-Za-z][A-Za-z0-9_]{1,}$");
 
     @Override
-    public ValidationResult validate(SearchAliasFieldEntity searchAliasField, SearchAliasFieldValidationContext context) {
+    public ValidationResult validate(SearchAliasFieldEntity searchAliasField) {
 
         ValidationResult validationResult = new ValidationResult();
 
         Matcher matcher = SEARCH_ALIAS_FIELD_NAME_PATTERN.matcher(searchAliasField.getReference());
         if (!matcher.matches()) {
-            validationResult.addError(new ValidationError(String.format("Invalid search alias field name '%s' for case type '%s', case field '%s'. The name "
-                                                                            + "should start with a letter, be exclusively composed of lowercase and/or "
+            validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case type '%s' and case field '%s'. The ID "
+                                                                            + "must start with a letter, be exclusively composed of lowercase and/or "
                                                                             + "uppercase letters, numbers and underscores, with a minimum length of 2.",
                                                                         defaultString(searchAliasField.getReference()),
-                                                                        context.getCaseType(),
-                                                                        context.getCaseField()), searchAliasField));
+                                                                        searchAliasField.getCaseType().getReference(),
+                                                                        searchAliasField.getCaseField().getReference()),
+                                                          searchAliasField));
         }
 
         return validationResult;

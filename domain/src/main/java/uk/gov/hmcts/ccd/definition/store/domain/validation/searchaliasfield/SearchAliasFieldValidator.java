@@ -6,7 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntit
 
 public interface SearchAliasFieldValidator {
 
-    ValidationResult validate(SearchAliasFieldEntity searchAliasFieldEntity, SearchAliasFieldValidationContext context);
+    ValidationResult validate(SearchAliasFieldEntity searchAliasFieldEntity);
 
     class ValidationError extends SimpleValidationError<SearchAliasFieldEntity> {
 
