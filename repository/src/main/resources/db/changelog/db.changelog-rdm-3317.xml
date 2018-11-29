@@ -20,12 +20,10 @@
             <column name="case_type_id" type="integer">
                 <constraints nullable="false"/>
             </column>
-            <column name="case_field_id" type="integer">
+            <column name="case_field_path" type="varchar(200)">
                 <constraints nullable="false"/>
             </column>
-            <column name="mapper_field_type" type="varchar(20)">
-                <constraints nullable="false"/>
-            </column>
+
         </createTable>
 
         <addPrimaryKey columnNames="id"
@@ -37,12 +35,6 @@
                                  constraintName="fk_search_alias_field_case_type_id"
                                  referencedColumnNames="id"
                                  referencedTableName="case_type"/>
-
-        <addForeignKeyConstraint baseColumnNames="case_field_id"
-                                 baseTableName="search_alias_field"
-                                 constraintName="fk_search_alias_field_case_field_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="case_field"/>
 
         <addUniqueConstraint columnNames="reference, case_type_id"
                              constraintName="unique_search_alias_field_reference_case_type"
