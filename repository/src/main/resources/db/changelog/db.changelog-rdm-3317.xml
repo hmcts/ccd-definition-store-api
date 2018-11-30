@@ -23,6 +23,9 @@
             <column name="case_field_path" type="varchar(200)">
                 <constraints nullable="false"/>
             </column>
+            <column name="field_type" type="varchar(70)">
+                <constraints nullable="false"/>
+            </column>
 
         </createTable>
 
