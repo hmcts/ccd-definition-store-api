@@ -45,11 +45,11 @@ public class SearchAliasFieldParser {
 
     private SearchAliasFieldEntity parseSearchAliasField(DefinitionDataItem dataItem, CaseTypeEntity caseType) {
         SearchAliasFieldEntity searchAliasField = new SearchAliasFieldEntity();
+        searchAliasField.setCaseType(caseType);
         searchAliasField.setReference(dataItem.getString(ColumnName.SEARCH_ALIAS_ID));
         searchAliasField.setLiveFrom(dataItem.getLocalDate(ColumnName.LIVE_FROM));
         searchAliasField.setLiveTo(dataItem.getLocalDate(ColumnName.LIVE_TO));
-        searchAliasField.setCaseType(caseType);
-        searchAliasField.setCaseField(parseContext.getCaseFieldForCaseType(caseType.getReference(), dataItem.getString(ColumnName.CASE_FIELD_ID)));
+        searchAliasField.setCaseFieldPath(dataItem.getString(ColumnName.CASE_FIELD_ID));
 
         return searchAliasField;
     }

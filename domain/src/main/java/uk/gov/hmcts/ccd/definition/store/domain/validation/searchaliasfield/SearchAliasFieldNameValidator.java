@@ -26,7 +26,7 @@ public class SearchAliasFieldNameValidator implements SearchAliasFieldValidator 
                                                                             + "uppercase letters, numbers and underscores, with a minimum length of 2.",
                                                                         defaultString(searchAliasField.getReference()),
                                                                         searchAliasField.getCaseType().getReference(),
-                                                                        searchAliasField.getCaseField().getReference()),
+                                                                        searchAliasField.getCaseFieldPath()),
                                                           searchAliasField));
         }
 

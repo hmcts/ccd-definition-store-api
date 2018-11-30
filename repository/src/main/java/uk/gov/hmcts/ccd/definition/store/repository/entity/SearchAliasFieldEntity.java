@@ -6,12 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -39,12 +37,8 @@ public class SearchAliasFieldEntity implements Serializable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
-    @OneToOne(fetch = EAGER)
-    @JoinColumn(name = "case_field_id", nullable = false)
-    private CaseFieldEntity caseField;
-
-    @Column(name = "mapper_field_type", nullable = false)
-    private String mapperFieldType;
+    @Column(name = "case_field_path")
+    private String caseFieldPath;
 
     public Integer getId() {
         return id;
@@ -82,19 +76,12 @@ public class SearchAliasFieldEntity implements Serializable {
         this.caseType = caseType;
     }
 
-    public CaseFieldEntity getCaseField() {
-        return caseField;
+    public String getCaseFieldPath() {
+        return caseFieldPath;
     }
 
-    public void setCaseField(CaseFieldEntity caseField) {
-        this.caseField = caseField;
+    public void setCaseFieldPath(String caseFieldPath) {
+        this.caseFieldPath = caseFieldPath;
     }
 
-    public String getMapperFieldType() {
-        return mapperFieldType;
-    }
-
-    public void setMapperFieldType(String mapperFieldType) {
-        this.mapperFieldType = mapperFieldType;
-    }
 }
