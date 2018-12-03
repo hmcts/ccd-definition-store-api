@@ -5,6 +5,7 @@ import com.microsoft.azure.storage.blob.BlobProperties;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import static java.util.Collections.sort;
 
 @Service
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
+@Slf4j
 public class AzureImportAuditsClient {
 
     public static final String USER_ID = "UserID";
@@ -58,6 +60,7 @@ public class AzureImportAuditsClient {
             }
         }
         sort(audits, (o1, o2) -> o1.getOrder().compareTo(o2.getOrder()));
+        log.info("Returning {} audits", audits.size());
         return audits;
     }
 }

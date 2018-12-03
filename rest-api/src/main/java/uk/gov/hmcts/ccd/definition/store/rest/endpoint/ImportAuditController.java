@@ -34,7 +34,7 @@ class ImportAuditController {
         @ApiResponse(code = 200, message = "Import audits")
     })
     Collection<ImportAudit> fetchAllAudits() throws StorageException {
-        log.info("azureBlobStorageClient is {}", azureImportAuditsClient);
+        log.info("AzureImportAuditsClient is {}", azureImportAuditsClient);
         if (null != azureImportAuditsClient) {
             return azureImportAuditsClient.fetchAllImportAudits();
         } else {
