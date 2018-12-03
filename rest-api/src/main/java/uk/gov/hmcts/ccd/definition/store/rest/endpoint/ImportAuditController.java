@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,7 @@ import java.util.Collection;
 @RestController
 @Api(value = "/api/import-audits")
 @RequestMapping(value = "/api")
+@Slf4j
 class ImportAuditController {
 
     private final AzureBlobStorageClient azureBlobStorageClient;
@@ -32,6 +34,7 @@ class ImportAuditController {
         @ApiResponse(code = 200, message = "Import audits")
     })
     Collection<ImportAudit> fetchAllAudits() throws StorageException {
+        log.info("azureBlobStorageClient is {}", azureBlobStorageClient);
         if (null != azureBlobStorageClient) {
             return azureBlobStorageClient.fetchAllAudits();
         } else {
