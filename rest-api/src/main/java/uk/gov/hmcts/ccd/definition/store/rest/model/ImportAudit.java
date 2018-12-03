@@ -13,7 +13,7 @@ public class ImportAudit {
     @Getter
     @Setter
     @JsonProperty("date_imported")
-    private LocalDate dateImported;
+    private String dateImported;
 
     @Getter
     @Setter
@@ -36,4 +36,8 @@ public class ImportAudit {
     @Getter
     @Setter
     private Date order;
+
+    public void setDateImported(LocalDate date) {
+        this.dateImported = date.toString();
+    }
 }
