@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-@Service(value = "azureBlobStorageClient")
+@Service
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
 public class AzureBlobStorageClient {
 

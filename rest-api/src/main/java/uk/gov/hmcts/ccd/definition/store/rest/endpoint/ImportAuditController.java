@@ -22,7 +22,6 @@ class ImportAuditController {
         this.azureBlobStorageClient = azureBlobStorageClient;
     }
 
-
     Collection<ImportAudit> fetchAllAudits() throws StorageException {
         return azureBlobStorageClient.fetchAllAudits();
     }
