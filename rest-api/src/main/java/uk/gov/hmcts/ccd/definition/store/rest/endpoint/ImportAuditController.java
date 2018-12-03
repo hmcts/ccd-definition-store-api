@@ -10,6 +10,8 @@ import uk.gov.hmcts.ccd.definition.store.rest.service.AzureBlobStorageClient;
 
 import java.util.Collection;
 
+import static java.util.Collections.emptyList;
+
 @RestController
 @Api(value = "/api/import-audits")
 @RequestMapping(value = "/api/import-audits")
@@ -18,11 +20,15 @@ class ImportAuditController {
     private final AzureBlobStorageClient azureBlobStorageClient;
 
     @Autowired
-    ImportAuditController(final AzureBlobStorageClient azureBlobStorageClient) {
+    ImportAuditController(@Autowired(required = false) final AzureBlobStorageClient azureBlobStorageClient) {
         this.azureBlobStorageClient = azureBlobStorageClient;
     }
 
     Collection<ImportAudit> fetchAllAudits() throws StorageException {
-        return azureBlobStorageClient.fetchAllAudits();
+        if (null != azureBlobStorageClient) {
+            return azureBlobStorageClient.fetchAllAudits();
+        } else {
+            return emptyList();
+        }
     }
 }

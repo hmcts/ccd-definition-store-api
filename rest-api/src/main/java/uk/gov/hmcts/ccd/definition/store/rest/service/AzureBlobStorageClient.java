@@ -13,9 +13,10 @@ import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import static java.util.Collections.sort;
 
 @Service
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
@@ -32,7 +33,7 @@ public class AzureBlobStorageClient {
     }
 
     /**
-     *
+     * Fetches All import audits.
      * @return import audits in reverse chronological order
      * @throws StorageException
      */
@@ -56,7 +57,7 @@ public class AzureBlobStorageClient {
                 audits.add(audit);
             }
         }
-        Collections.sort(audits, (o1, o2) -> o1.getOrder().compareTo(o2.getOrder()));
+        sort(audits, (o1, o2) -> o1.getOrder().compareTo(o2.getOrder()));
         return audits;
     }
 }
