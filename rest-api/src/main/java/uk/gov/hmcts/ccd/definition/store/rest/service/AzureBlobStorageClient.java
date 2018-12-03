@@ -6,7 +6,6 @@ import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
@@ -19,7 +18,7 @@ import java.util.List;
 import static java.util.Collections.sort;
 
 @Service
-@ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
+//@ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
 public class AzureBlobStorageClient {
 
     public static final String USER_ID = "UserID";
