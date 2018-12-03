@@ -14,8 +14,6 @@ import uk.gov.hmcts.ccd.definition.store.rest.service.AzureBlobStorageClient;
 
 import java.util.Collection;
 
-import static java.util.Collections.emptyList;
-
 @RestController
 @Api(value = "/api/import-audits")
 @RequestMapping(value = "/api")
@@ -37,7 +35,7 @@ class ImportAuditController {
         if (null != azureBlobStorageClient) {
             return azureBlobStorageClient.fetchAllAudits();
         } else {
-            return emptyList();
+            return null;
         }
     }
 }
