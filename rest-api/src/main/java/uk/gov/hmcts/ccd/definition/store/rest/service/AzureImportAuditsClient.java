@@ -59,7 +59,7 @@ public class AzureImportAuditsClient {
                 audits.add(audit);
             }
         }
-        sort(audits, (o1, o2) -> o1.getOrder().compareTo(o2.getOrder()));
+        sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
         log.info("Returning {} audits", audits.size());
         return audits;
     }
