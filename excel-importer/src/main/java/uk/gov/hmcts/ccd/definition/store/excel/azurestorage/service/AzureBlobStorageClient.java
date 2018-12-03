@@ -17,8 +17,8 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
-import static uk.gov.hmcts.ccd.definition.store.rest.service.AzureBlobStorageClient.CASE_TYPES;
-import static uk.gov.hmcts.ccd.definition.store.rest.service.AzureBlobStorageClient.USER_ID;
+import static uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient.CASE_TYPES;
+import static uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient.USER_ID;
 
 @Service(value = "azureBlobStorageClient")
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")

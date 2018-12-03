@@ -6,6 +6,7 @@ import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
@@ -18,8 +19,8 @@ import java.util.List;
 import static java.util.Collections.sort;
 
 @Service
-//@ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
-public class AzureBlobStorageClient {
+@ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
+public class AzureImportAuditsClient {
 
     public static final String USER_ID = "UserID";
     public static final String CASE_TYPES = "CaseTypes";
@@ -27,7 +28,7 @@ public class AzureBlobStorageClient {
     private final CloudBlobContainer cloudBlobContainer;
 
     @Autowired
-    public AzureBlobStorageClient(CloudBlobContainer cloudBlobContainer) {
+    public AzureImportAuditsClient(CloudBlobContainer cloudBlobContainer) {
         this.cloudBlobContainer = cloudBlobContainer;
     }
 
@@ -36,7 +37,7 @@ public class AzureBlobStorageClient {
      * @return import audits in reverse chronological order
      * @throws StorageException
      */
-    public List<ImportAudit> fetchAllAudits() throws StorageException {
+    public List<ImportAudit> fetchAllImportAudits() throws StorageException {
         List<ImportAudit> audits = new ArrayList<>();
         for (ListBlobItem lbi : cloudBlobContainer.listBlobs()) {
             if (lbi instanceof CloudBlockBlob) {

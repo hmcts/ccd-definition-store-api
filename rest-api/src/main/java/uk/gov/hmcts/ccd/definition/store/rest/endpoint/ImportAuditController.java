@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
-import uk.gov.hmcts.ccd.definition.store.rest.service.AzureBlobStorageClient;
+import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
 
 import java.util.Collection;
 
@@ -21,11 +21,11 @@ import java.util.Collection;
 @Slf4j
 class ImportAuditController {
 
-    private final AzureBlobStorageClient azureBlobStorageClient;
+    private final AzureImportAuditsClient azureImportAuditsClient;
 
     @Autowired
-    ImportAuditController(@Autowired(required = false) final AzureBlobStorageClient azureBlobStorageClient) {
-        this.azureBlobStorageClient = azureBlobStorageClient;
+    ImportAuditController(@Autowired(required = false) final AzureImportAuditsClient azureImportAuditsClient) {
+        this.azureImportAuditsClient = azureImportAuditsClient;
     }
 
     @RequestMapping(value = "/import-audits", method = RequestMethod.GET, produces = {"application/json"})
@@ -34,9 +34,9 @@ class ImportAuditController {
         @ApiResponse(code = 200, message = "Import audits")
     })
     Collection<ImportAudit> fetchAllAudits() throws StorageException {
-        log.info("azureBlobStorageClient is {}", azureBlobStorageClient);
-        if (null != azureBlobStorageClient) {
-            return azureBlobStorageClient.fetchAllAudits();
+        log.info("azureBlobStorageClient is {}", azureImportAuditsClient);
+        if (null != azureImportAuditsClient) {
+            return azureImportAuditsClient.fetchAllImportAudits();
         } else {
             return null;
         }
