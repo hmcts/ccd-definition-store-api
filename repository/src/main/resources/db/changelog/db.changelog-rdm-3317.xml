@@ -23,7 +23,7 @@
             <column name="case_field_path" type="varchar(200)">
                 <constraints nullable="false"/>
             </column>
-            <column name="field_type" type="varchar(70)">
+            <column name="field_type_id" type="integer">
                 <constraints nullable="false"/>
             </column>
 
@@ -38,6 +38,12 @@
                                  constraintName="fk_search_alias_field_case_type_id"
                                  referencedColumnNames="id"
                                  referencedTableName="case_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="field_type_id"
+                                 baseTableName="search_alias_field"
+                                 constraintName="fk_search_alias_field_field_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="field_type"/>
 
         <addUniqueConstraint columnNames="reference, case_type_id"
                              constraintName="unique_search_alias_field_reference_case_type"
