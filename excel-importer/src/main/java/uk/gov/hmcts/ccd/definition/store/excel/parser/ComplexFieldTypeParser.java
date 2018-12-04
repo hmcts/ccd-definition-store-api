@@ -1,5 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static java.util.stream.Collectors.toList;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -12,13 +19,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import static java.util.stream.Collectors.toList;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
-
 /**
  * Parses Field types defined as part of tab `ComplexTypes`.
  * This includes Complex types themselves and the custom simple types they use.
@@ -26,8 +26,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_C
 public class ComplexFieldTypeParser implements FieldShowConditionParser {
     private static final Logger logger = LoggerFactory.getLogger(ComplexFieldTypeParser.class);
 
-    private ParseContext parseContext;
-    private ShowConditionParser showConditionParser;
+    private final ParseContext parseContext;
+    private final ShowConditionParser showConditionParser;
 
     private final FieldTypeEntity complexBaseType;
     private final FieldTypeParser fieldTypeParser;
@@ -111,6 +111,8 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(complexField, definitionDataItem);
 
         result.add(resultEntry);
+
+        parseContext.registerComplexField(complexField.getReference(), complexField);
 
         return complexField;
     }

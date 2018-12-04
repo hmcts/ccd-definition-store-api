@@ -8,15 +8,21 @@ import java.util.stream.Collectors;
 import static java.util.Optional.ofNullable;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 
 @Slf4j
 public class SearchAliasFieldParser {
+
+    private static final String NESTED_FIELD_SEPARATOR_REGEX = "\\.";
 
     private final ParseContext parseContext;
 
@@ -45,12 +51,41 @@ public class SearchAliasFieldParser {
 
     private SearchAliasFieldEntity parseSearchAliasField(DefinitionDataItem dataItem, CaseTypeEntity caseType) {
         SearchAliasFieldEntity searchAliasField = new SearchAliasFieldEntity();
+
         searchAliasField.setCaseType(caseType);
         searchAliasField.setReference(dataItem.getString(ColumnName.SEARCH_ALIAS_ID));
         searchAliasField.setLiveFrom(dataItem.getLocalDate(ColumnName.LIVE_FROM));
         searchAliasField.setLiveTo(dataItem.getLocalDate(ColumnName.LIVE_TO));
-        searchAliasField.setCaseFieldPath(dataItem.getString(ColumnName.CASE_FIELD_ID));
+        String caseFieldPath = dataItem.getString(ColumnName.CASE_FIELD_ID);
+        searchAliasField.setCaseFieldPath(caseFieldPath);
+        searchAliasField.setFieldType(deriveCaseFieldType(caseFieldPath, caseType));
 
         return searchAliasField;
+    }
+
+    private FieldTypeEntity deriveCaseFieldType(String caseFieldPath, CaseTypeEntity caseType) {
+        if (StringUtils.isEmpty(caseFieldPath)) {
+            return null;
+        }
+        String[] fields = caseFieldPath.split(NESTED_FIELD_SEPARATOR_REGEX);
+        CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(caseType.getReference(), fields[0]);
+        if (caseField.isComplexFieldType()) {
+            return deriveComplexFieldType(skipFirstElementAndJoinArray(fields));
+        } else {
+            return caseField.getFieldType();
+        }
+    }
+
+    private FieldTypeEntity deriveComplexFieldType(String fieldPath) {
+        String[] fields = fieldPath.split(NESTED_FIELD_SEPARATOR_REGEX);
+        ComplexFieldEntity complexField = parseContext.getComplexField(fields[0]);
+        if (complexField.isComplexFieldType()) {
+            return deriveComplexFieldType(skipFirstElementAndJoinArray(fields));
+        }
+        return complexField.getFieldType();
+    }
+
+    private String skipFirstElementAndJoinArray(String[] array) {
+        return StringUtils.join(array, ".", 1, array.length);
     }
 }

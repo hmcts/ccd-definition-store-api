@@ -37,8 +37,12 @@ public class SearchAliasFieldEntity implements Serializable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
-    @Column(name = "case_field_path")
+    @Column(name = "case_field_path", nullable = false)
     private String caseFieldPath;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "field_type_id", nullable = false)
+    private FieldTypeEntity fieldType;
 
     public Integer getId() {
         return id;
@@ -84,4 +88,11 @@ public class SearchAliasFieldEntity implements Serializable {
         this.caseFieldPath = caseFieldPath;
     }
 
+    public FieldTypeEntity getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(FieldTypeEntity fieldType) {
+        this.fieldType = fieldType;
+    }
 }
