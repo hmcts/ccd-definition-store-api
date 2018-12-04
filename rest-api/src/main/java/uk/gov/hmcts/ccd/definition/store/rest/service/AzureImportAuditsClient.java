@@ -5,7 +5,6 @@ import com.microsoft.azure.storage.blob.BlobProperties;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,7 +21,6 @@ import static java.util.Collections.sort;
 
 @Service
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
-@Slf4j
 public class AzureImportAuditsClient {
 
     public static final String USER_ID = "UserID";
@@ -48,19 +47,19 @@ public class AzureImportAuditsClient {
                 final ImportAudit audit = new ImportAudit();
                 final BlobProperties properties = cbb.getProperties();
                 final HashMap<String, String> metadata = cbb.getMetadata();
-                audit.setDateImported(Instant.ofEpochMilli(properties.getCreatedTime().getTime())
+                final Date createdTime = properties.getCreatedTime();
+                audit.setDateImported(Instant.ofEpochMilli(createdTime.getTime())
                                              .atZone(ZoneId.systemDefault())
                                              .toLocalDate());
                 audit.setWhoImported(metadata.get(USER_ID));
                 audit.setCaseType(metadata.get(CASE_TYPES));
                 audit.setFilename(cbb.getName());
                 audit.setUri(cbb.getUri());
-                audit.setOrder(properties.getCreatedTime());
+                audit.setOrder(createdTime);
                 audits.add(audit);
             }
         }
         sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
-        log.info("Returning {} audits", audits.size());
         return audits;
     }
 }

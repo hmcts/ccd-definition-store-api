@@ -78,7 +78,7 @@ public abstract class BaseTest {
     @MockBean
     protected FileStorageService fileStorageService;
 
-    // Mock the AzureImportAuditsClient component, to prevent it being initialised (which requires connection to Azure
+    // Mock the AzureBlobStorageClient component, to prevent it being initialised (which requires connection to Azure
     // Storage) during application startup when testing
     @MockBean
     private AzureBlobStorageClient storageClient;

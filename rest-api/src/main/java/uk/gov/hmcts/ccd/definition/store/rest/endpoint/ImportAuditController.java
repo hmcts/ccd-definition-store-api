@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import com.microsoft.azure.storage.StorageException;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -15,8 +14,9 @@ import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
 
 import java.util.Collection;
 
+import static java.util.Collections.emptyList;
+
 @RestController
-@Api(value = "/api/import-audits")
 @RequestMapping(value = "/api")
 @Slf4j
 class ImportAuditController {
@@ -34,11 +34,10 @@ class ImportAuditController {
         @ApiResponse(code = 200, message = "Import audits")
     })
     Collection<ImportAudit> fetchAllAudits() throws StorageException {
-        log.info("AzureImportAuditsClient is {}", azureImportAuditsClient);
         if (null != azureImportAuditsClient) {
             return azureImportAuditsClient.fetchAllImportAudits();
         } else {
-            return null;
+            return emptyList();
         }
     }
 }
