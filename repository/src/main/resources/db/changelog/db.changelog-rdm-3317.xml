@@ -8,12 +8,6 @@
             <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
-            <column name="live_from" type="date">
-                <constraints nullable="true"/>
-            </column>
-            <column name="live_to" type="date">
-                <constraints nullable="true"/>
-            </column>
             <column name="reference" type="varchar(40)">
                 <constraints nullable="false"/>
             </column>
@@ -26,7 +20,6 @@
             <column name="field_type_id" type="integer">
                 <constraints nullable="false"/>
             </column>
-
         </createTable>
 
         <addPrimaryKey columnNames="id"
