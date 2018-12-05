@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
 
 public interface FieldEntity {
@@ -15,6 +16,10 @@ public interface FieldEntity {
         } else {
             return getFieldType().getReference();
         }
+    }
+
+    default FieldTypeEntity getBaseType() {
+        return ofNullable(this.getFieldType().getBaseFieldType()).orElse(this.getFieldType());
     }
 
     default boolean isCollectionOfComplex() {

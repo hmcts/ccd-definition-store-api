@@ -28,9 +28,10 @@ public class SearchAliasFieldMapperTypeValidator implements SearchAliasFieldVali
         List<SearchAliasFieldEntity> searchAliasFields = repository.findByReference(searchAliasField.getReference());
         searchAliasFields.forEach(field -> {
             if (!field.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference())) {
-                validationResult.addError(new ValidationError(String.format("Search alias type for '%s' is invalid. This search alias ID has been already "
-                                                                                + "registered as '%s' for case type '%s'",
+                validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for type '%s'. This search alias ID has been "
+                                                                                + "already registered as '%s' for case type '%s'",
                                                                             defaultString(searchAliasField.getReference()),
+                                                                            searchAliasField.getFieldType().getReference(),
                                                                             field.getFieldType().getReference(),
                                                                             field.getCaseType().getReference()),
                                                               searchAliasField));

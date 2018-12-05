@@ -32,6 +32,7 @@ elasticsearch:
                     }
                  }'
     alias: '{"type": "alias", "path": "data.<caseFieldPathPlaceHolder>"}'
+    aliasTextSort: '{"type": "alias", "path": "data.<caseFieldPathPlaceHolder>.keyword"}'
   ccdIgnoredTypes:
     - Label
     - CasePaymentHistoryViewer
@@ -65,4 +66,4 @@ elasticsearch:
     '@timestamp': ${elasticsearch.elasticMappings.disabled}
     '@version': ${elasticsearch.elasticMappings.disabled}
     index_id: ${elasticsearch.elasticMappings.disabled}
-    securityClassificationMapping: ${elasticsearch.elasticMappings.defaultKeyword}
+  securityClassificationMapping: ${elasticsearch.elasticMappings.defaultKeyword}

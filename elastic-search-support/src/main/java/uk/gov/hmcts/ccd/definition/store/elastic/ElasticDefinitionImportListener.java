@@ -17,11 +17,11 @@ public abstract class ElasticDefinitionImportListener {
 
     private static final String FIRST_INDEX_SUFFIX = "-000001";
 
-    private CcdElasticSearchProperties config;
+    private final CcdElasticSearchProperties config;
 
-    private CaseMappingGenerator mappingGenerator;
+    private final CaseMappingGenerator mappingGenerator;
 
-    private ObjectFactory<HighLevelCCDElasticClient> clientFactory;
+    private final ObjectFactory<HighLevelCCDElasticClient> clientFactory;
 
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
@@ -51,6 +51,7 @@ public abstract class ElasticDefinitionImportListener {
                 }
 
                 caseMapping = mappingGenerator.generateMapping(caseType);
+                log.info("case mapping: {}", caseMapping);
                 elasticClient.upsertMapping(baseIndexName, caseMapping);
             }
         } catch (Exception exc) {

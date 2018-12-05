@@ -8,7 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -26,12 +25,6 @@ public class SearchAliasFieldEntity implements Serializable {
 
     @Column(name = "reference", nullable = false)
     private String reference;
-
-    @Column(name = "live_from")
-    private LocalDate liveFrom;
-
-    @Column(name = "live_to")
-    private LocalDate liveTo;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id", nullable = false)
@@ -54,22 +47,6 @@ public class SearchAliasFieldEntity implements Serializable {
 
     public void setReference(String reference) {
         this.reference = reference;
-    }
-
-    public LocalDate getLiveFrom() {
-        return liveFrom;
-    }
-
-    public void setLiveFrom(LocalDate liveFrom) {
-        this.liveFrom = liveFrom;
-    }
-
-    public LocalDate getLiveTo() {
-        return liveTo;
-    }
-
-    public void setLiveTo(LocalDate liveTo) {
-        this.liveTo = liveTo;
     }
 
     public CaseTypeEntity getCaseType() {

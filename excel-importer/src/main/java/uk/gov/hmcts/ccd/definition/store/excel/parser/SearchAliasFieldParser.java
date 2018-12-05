@@ -54,8 +54,6 @@ public class SearchAliasFieldParser {
 
         searchAliasField.setCaseType(caseType);
         searchAliasField.setReference(dataItem.getString(ColumnName.SEARCH_ALIAS_ID));
-        searchAliasField.setLiveFrom(dataItem.getLocalDate(ColumnName.LIVE_FROM));
-        searchAliasField.setLiveTo(dataItem.getLocalDate(ColumnName.LIVE_TO));
         String caseFieldPath = dataItem.getString(ColumnName.CASE_FIELD_ID);
         searchAliasField.setCaseFieldPath(caseFieldPath);
         searchAliasField.setFieldType(deriveCaseFieldType(caseFieldPath, caseType));
@@ -72,7 +70,7 @@ public class SearchAliasFieldParser {
         if (caseField.isComplexFieldType()) {
             return deriveComplexFieldType(skipFirstElementAndJoinArray(fields));
         } else {
-            return caseField.getFieldType();
+            return caseField.getBaseType();
         }
     }
 
@@ -82,7 +80,7 @@ public class SearchAliasFieldParser {
         if (complexField.isComplexFieldType()) {
             return deriveComplexFieldType(skipFirstElementAndJoinArray(fields));
         }
-        return complexField.getFieldType();
+        return complexField.getBaseType();
     }
 
     private String skipFirstElementAndJoinArray(String[] array) {

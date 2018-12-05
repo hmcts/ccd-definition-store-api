@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntit
 public interface SearchAliasFieldRepository extends JpaRepository<SearchAliasFieldEntity, Long> {
 
     @Query("select s from SearchAliasFieldEntity s "
-               + "where s.reference=:reference "
+               + "where s.reference=?1 "
                + "and s.caseType = (select c from CaseTypeEntity c "
                                     + "where c.reference=s.caseType.reference "
                                     + "and c.version = (select max(cm.version) from CaseTypeEntity as cm "
