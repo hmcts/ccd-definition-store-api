@@ -512,8 +512,4 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return withWorkSheetName(validationError);
     }
 
-    @Override
-    public String createErrorMessage(SearchAliasFieldNameValidator.ValidationError validationError) {
-        return withWorkSheetName(validationError);
-    }
 }

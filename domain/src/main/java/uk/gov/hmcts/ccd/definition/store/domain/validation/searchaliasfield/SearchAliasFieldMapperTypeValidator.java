@@ -2,8 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield;
 
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.defaultString;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -28,10 +26,10 @@ public class SearchAliasFieldMapperTypeValidator implements SearchAliasFieldVali
         List<SearchAliasFieldEntity> searchAliasFields = repository.findByReference(searchAliasField.getReference());
         searchAliasFields.forEach(field -> {
             if (!field.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference())) {
-                validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for type '%s'. This search alias ID has been "
+                validationResult.addError(new ValidationError(String.format("Invalid search alias type '%s'. The search alias ID '%s' has been "
                                                                                 + "already registered as '%s' for case type '%s'",
-                                                                            defaultString(searchAliasField.getReference()),
                                                                             searchAliasField.getFieldType().getReference(),
+                                                                            searchAliasField.getReference(),
                                                                             field.getFieldType().getReference(),
                                                                             field.getCaseType().getReference()),
                                                               searchAliasField));
