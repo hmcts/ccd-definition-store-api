@@ -8,7 +8,6 @@ import static java.util.stream.Collectors.toList;
 
 import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.jooq.lambda.Unchecked;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
@@ -84,7 +83,7 @@ public class CaseMappingGenerator extends MappingGenerator {
     }
 
     private void aliasMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
-        if (CollectionUtils.isNotEmpty(caseType.getSearchAliasFields())) {
+        if (!caseType.getSearchAliasFields().isEmpty()) {
             log.info("generating search alias field mapping");
             jw.name(ALIAS);
             jw.beginObject();

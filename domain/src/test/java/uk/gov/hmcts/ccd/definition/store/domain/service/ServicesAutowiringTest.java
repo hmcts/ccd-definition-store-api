@@ -28,16 +28,41 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEn
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntitySecurityClassificationValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityACLValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityCaseFieldsValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityCrudValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityEventValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntitySearchAliasFieldsValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntitySecurityClassificationValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntitySecurityClassificationValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityACLValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCreateEventValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCrudValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEventCaseFieldsValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntitySecurityClassificationValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldLabelCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldShowConditionValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.BaseReferenceFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeComplexFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldMapperTypeValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldNameValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.DraftDefinitionRepositoryDecorator;
+import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
@@ -62,7 +87,8 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
             CaseTypeEntityCaseFieldsValidatorImpl.class,
             CaseTypeEntityEventValidatorImpl.class,
             CaseTypeEntityACLValidatorImpl.class,
-            CaseTypeEntityCrudValidatorImpl.class
+            CaseTypeEntityCrudValidatorImpl.class,
+            CaseTypeEntitySearchAliasFieldsValidatorImpl.class
         );
 
         // Check the CaseTypeEntityCaseFieldsValidatorImpl class has the required validator(s) wired in
@@ -127,6 +153,18 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
             EventCaseFieldShowConditionValidatorImpl.class,
             EventCaseFieldDisplayContextValidatorImpl.class
         );
+
+        // Check the CaseTypeEntitySearchAliasFieldsValidatorImpl class has the required validator(s) wired in
+        assertListOfComponentsContainInstances(
+            (List) ReflectionTestUtils.getField(
+                getValidator(caseTypeEntityValidators, CaseTypeEntitySearchAliasFieldsValidatorImpl.class),
+                "searchAliasFieldValidators"
+            ),
+            SearchAliasFieldMapperTypeValidator.class,
+            SearchAliasFieldUnicityValidator.class,
+            SearchAliasFieldNameValidator.class
+        );
+
     }
 
     @Test
@@ -269,6 +307,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public DefinitionModelMapper definitionModelMapper() {
             return mock(DefinitionModelMapper.class);
+        }
+
+        @Bean
+        @Primary
+        public SearchAliasFieldRepository searchAliasFieldRepository() {
+            return mock(SearchAliasFieldRepository.class);
         }
     }
 }

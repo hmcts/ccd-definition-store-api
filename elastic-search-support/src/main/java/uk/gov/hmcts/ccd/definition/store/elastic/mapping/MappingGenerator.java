@@ -31,7 +31,7 @@ public abstract class MappingGenerator implements JsonGenerator, Injectable {
     @Autowired
     protected CcdElasticSearchProperties config;
 
-    private Map<String, TypeMappingGenerator> typeMappers;
+    protected Map<String, TypeMappingGenerator> typeMappers;
 
     @Override
     public void inject(TypeMappersManager typeMappersManager) {

@@ -44,7 +44,8 @@ public class CaseTypeParser {
                           AuthorisationCaseEventParser authorisationCaseEventParser,
                           AuthorisationCaseStateParser authorisationCaseStateParser,
                           MetadataCaseFieldParser metadataCaseFieldParser,
-                          CaseRoleParser caseRoleParser, SearchAliasFieldParser searchAliasFieldParser) {
+                          CaseRoleParser caseRoleParser,
+                          SearchAliasFieldParser searchAliasFieldParser) {
         this.parseContext = parseContext;
         this.caseFieldParser = caseFieldParser;
         this.stateParser = stateParser;

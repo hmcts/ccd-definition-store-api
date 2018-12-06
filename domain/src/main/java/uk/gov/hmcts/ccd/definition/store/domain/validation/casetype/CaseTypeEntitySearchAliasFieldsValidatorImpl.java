@@ -2,8 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
 import java.util.List;
 
-import static java.util.Optional.ofNullable;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -24,9 +22,9 @@ public class CaseTypeEntitySearchAliasFieldsValidatorImpl implements CaseTypeEnt
     public ValidationResult validate(CaseTypeEntity caseType) {
         ValidationResult validationResult = new ValidationResult();
 
-        ofNullable(caseType.getSearchAliasFields()).ifPresent(searchAliasFields -> searchAliasFields.forEach(searchAliasField -> {
-            searchAliasFieldValidators.forEach(validator -> validationResult.merge(validator.validate(searchAliasField)));
-        }));
+        caseType.getSearchAliasFields()
+            .forEach(searchAliasField -> searchAliasFieldValidators
+                .forEach(validator -> validationResult.merge(validator.validate(searchAliasField))));
 
         return validationResult;
     }

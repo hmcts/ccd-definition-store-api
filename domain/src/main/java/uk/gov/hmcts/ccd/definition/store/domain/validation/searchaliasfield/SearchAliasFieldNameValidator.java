@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
@@ -17,8 +16,7 @@ public class SearchAliasFieldNameValidator implements SearchAliasFieldValidator 
 
         ValidationResult validationResult = new ValidationResult();
 
-        Matcher matcher = SEARCH_ALIAS_FIELD_NAME_PATTERN.matcher(searchAliasField.getReference());
-        if (!matcher.matches()) {
+        if (!SEARCH_ALIAS_FIELD_NAME_PATTERN.matcher(searchAliasField.getReference()).matches()) {
             validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case type '%s' and case field '%s'. The ID "
                                                                             + "must start with a letter, be exclusively composed of lowercase and/or "
                                                                             + "uppercase letters, numbers and underscores, with a minimum length of 2.",
