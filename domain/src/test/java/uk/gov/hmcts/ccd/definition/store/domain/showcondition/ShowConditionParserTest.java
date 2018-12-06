@@ -1,13 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.domain.showcondition;
 
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import org.junit.jupiter.api.Test;
 
 class ShowConditionParserTest {
 
@@ -21,17 +21,37 @@ class ShowConditionParserTest {
         assertShowCondition(classUnderTest.parseShowCondition("SomeField= \"Some String\""));
         assertShowCondition(classUnderTest.parseShowCondition(" SomeField=\"Some String\" "));
         assertShowCondition(classUnderTest.parseShowCondition("  SomeField = \"Some String\" "));
-
     }
 
     @Test
-    void testInValidShowCondition() {
+    void shouldParseComplexFieldCorrectly() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(
+                "field1.subType1.subType2= \"ABC AND XYZ\"  AND field2=\"some value\" ");
 
+        assertThat(sc.getShowConditionExpression(),
+            is("field1.subType1.subType2=\"ABC AND XYZ\" AND field2=\"some value\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2"));
+        assertThat(sc.getFieldsWithSubtypes(), hasItems("field1.subType1.subType2"));
+    }
+
+    @Test
+    void testInvalidShowConditionWithSubtypes() {
+        assertInvalidShowCondition("aaa..bbb=\"some-value\"");
+        assertInvalidShowCondition("aaa. .bbb=\"some-value\"");
+        assertInvalidShowCondition("aaa. x.bbb=\"some-value\"");
+        assertInvalidShowCondition("aaa.x .bbb=\"some-value\"");
+        assertInvalidShowCondition("aaa.Some Field.bbb=\"some-value\"");
+    }
+
+    @Test
+    void testInvalidShowCondition() {
+        assertInvalidShowCondition("");
+        assertInvalidShowCondition(" ");
+        assertInvalidShowCondition("Some Field =\"Some String\"");
         assertInvalidShowCondition("SomeField=\"Some String");
         assertInvalidShowCondition("SomeField =Some String\"");
         assertInvalidShowCondition("SomeField \"Some String\"");
         assertInvalidShowCondition(" SomeField\"Some String\" ");
-
     }
 
     @Test

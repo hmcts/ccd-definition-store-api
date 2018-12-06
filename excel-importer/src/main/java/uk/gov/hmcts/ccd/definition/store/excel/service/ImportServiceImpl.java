@@ -107,7 +107,6 @@ public class ImportServiceImpl implements ImportService {
 
         final ParseContext parseContext = new ParseContext();
         parseContext.registerUserRoles(userRoleRepository.findAll());
-        parseContext.addToAllTypes(fieldTypeService.getPredefinedComplexTypes());
 
         /*
             1 - Jurisdiction
@@ -128,6 +127,7 @@ public class ImportServiceImpl implements ImportService {
 
         // Initialise parse context with existing types
         parseContext.addBaseTypes(fieldTypeService.getBaseTypes());
+        parseContext.addToAllTypes(fieldTypeService.getPredefinedComplexTypes());
         parseContext.addToAllTypes(fieldTypeService.getTypesByJurisdiction(jurisdiction.getReference()));
 
         final FieldsTypeParser fieldsTypeParser = parserFactory.createFieldsTypeParser(parseContext);

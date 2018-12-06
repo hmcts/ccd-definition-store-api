@@ -6,9 +6,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditi
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +33,8 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
         ValidationResult validationResult = new ValidationResult();
         List<DisplayGroupEntity> allTabDisplayGroups = getAllTabDisplayGroups(thisDisplayGroup, allDisplayGroups);
 
-        if (tabPreconditions(thisDisplayGroup)) {
+        // Excel CaseTypeTab.TabShowCondition
+        if (hasTabShowCondition(thisDisplayGroup)) {
             ShowCondition showCondition;
             try {
                 showCondition = showConditionParser.parseShowCondition(thisDisplayGroup.getShowCondition());
@@ -40,6 +43,17 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                 return validationResult;
             }
 
+            List<String> allSubTypePossibilities = CaseFieldEntityUtil
+                .buildDottedComplexFieldPossibilities(thisDisplayGroup.getCaseType().getCaseFields().stream()
+                    .map(FieldEntity.class::cast).collect(Collectors.toList()));
+
+            showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
+                if (!allSubTypePossibilities.contains(showConditionField)) {
+                    validationResult.addError(
+                        new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
+                }
+            });
+
             showCondition.getFields().forEach(showConditionField -> {
                 if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)) {
                     validationResult.addError(new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
@@ -47,7 +61,8 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
             });
         }
 
-        if (tabFieldsPreconditions(thisDisplayGroup)) {
+        // Excel CaseTypeTab.FieldShowCondition
+        if (hasFieldShowCondition(thisDisplayGroup)) {
             for (DisplayGroupCaseFieldEntity caseField : thisDisplayGroup.getDisplayGroupCaseFields()) {
                 if (caseField.getShowCondition() != null) {
                     ShowCondition showCondition;
@@ -57,6 +72,16 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                         validationResult.addError(new DisplayGroupInvalidTabFieldShowCondition(caseField));
                         return validationResult;
                     }
+
+                    List<String> allSubTypePossibilities = CaseFieldEntityUtil
+                        .buildDottedComplexFieldPossibilities(thisDisplayGroup.getCaseType().getCaseFields());
+
+                    showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
+                        if (!allSubTypePossibilities.contains(showConditionField)) {
+                            validationResult.addError(
+                                new DisplayGroupInvalidTabFieldShowCondition(showConditionField, caseField));
+                        }
+                    });
 
                     showCondition.getFields().forEach(showConditionField -> {
                         if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)) {
@@ -81,14 +106,14 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
         return tabDisplayGroups.stream().anyMatch(tdg -> tdg.hasField(showConditionField));
     }
 
-    private boolean tabPreconditions(DisplayGroupEntity displayGroup) {
+    private boolean hasTabShowCondition(DisplayGroupEntity displayGroup) {
         List<Predicate<DisplayGroupEntity>> preconditions = new ArrayList<>();
         preconditions.add(DisplayGroupEntity::hasShowCondition);
         preconditions.add(dg -> dg.getType() == DisplayGroupType.TAB);
         return preconditions.stream().allMatch(p -> p.test(displayGroup));
     }
 
-    private boolean tabFieldsPreconditions(DisplayGroupEntity displayGroup) {
+    private boolean hasFieldShowCondition(DisplayGroupEntity displayGroup) {
         List<Predicate<DisplayGroupEntity>> preconditions = new ArrayList<>();
         preconditions.add(dg -> !isAllDisplayGroupCaseFieldsShowConditionBlank(dg));
         preconditions.add(dg -> dg.getType() == DisplayGroupType.TAB);
