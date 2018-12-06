@@ -1,13 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +10,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+
+import javax.persistence.EntityManager;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -36,9 +35,6 @@ public class CaseTypeRepositoryTest {
 
     @Autowired
     private TestHelper testHelper;
-
-    @Autowired
-    private SearchAliasFieldRepository searchAliasFieldRepository;
 
     private static final String CASE_TYPE_REFERENCE = "id";
 
@@ -67,9 +63,6 @@ public class CaseTypeRepositoryTest {
 
     @Test
     public void severalVersionsOfCaseTypeExistForReference_findCurrentCaseTypeReturnsCurrentVersionOfCaseType() {
-
-        searchAliasFieldRepository.findByReference("reference");
-
         Optional<CaseTypeEntity> caseTypeEntityOptional
             = classUnderTest.findCurrentVersionForReference(CASE_TYPE_REFERENCE);
         assertTrue(caseTypeEntityOptional.isPresent());
