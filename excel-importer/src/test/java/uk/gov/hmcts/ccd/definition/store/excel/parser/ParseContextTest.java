@@ -1,5 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import org.assertj.core.api.Assertions;
+import org.junit.Before;
+import org.junit.Test;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
@@ -9,19 +18,8 @@ import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-
-import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
 public class ParseContextTest {
 
@@ -258,21 +256,5 @@ public class ParseContextTest {
         CaseFieldEntity response = parseContext.getCaseFieldForCaseType("caseTypeId", metadataFieldName);
 
         assertThat(response, is(metadataField));
-    }
-
-    @Test
-    public void shouldRegisterAndGetComplexField() {
-        String reference = "complexField";
-        ComplexFieldEntity complexField = new ComplexFieldEntity();
-        complexField.setReference(reference);
-
-        parseContext.registerComplexField(reference, complexField);
-        ComplexFieldEntity registeredComplexField = parseContext.getComplexField(reference);
-        assertThat(registeredComplexField, is(complexField));
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenComplexFieldNotFound() {
-        assertThrows(SpreadsheetParsingException.class, () -> parseContext.getComplexField("very complex"));
     }
 }

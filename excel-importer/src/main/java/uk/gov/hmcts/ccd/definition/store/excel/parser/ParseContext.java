@@ -1,29 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.map.MultiKeyMap;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 /**
  * Accumulate everything that has been parsed so far and which is required for a subsequent parse stage. This is not meant
@@ -67,14 +53,9 @@ public class ParseContext {
     private final Map<String, Map<String, CaseRoleEntity>> caseRolesByCaseTypes = Maps.newHashMap();
 
     /**
-     * Accumulate metadata fields for linking to layouts
+     * Store metadata fields for linking to layouts
      */
     private final Map<String, CaseFieldEntity> metadataFields = new HashMap<>();
-
-    /**
-     * Accumulate complex fields for linking to search alias field
-     */
-    private final Map<String, ComplexFieldEntity> complexFields = new HashMap<>();
 
     public JurisdictionEntity getJurisdiction() {
         return jurisdiction;
@@ -236,19 +217,19 @@ public class ParseContext {
     }
 
     public Optional<FieldTypeEntity> getType(String reference) {
-        return ofNullable(allTypes.get(reference));
+        return Optional.ofNullable(allTypes.get(reference));
     }
 
     public Optional<FieldTypeEntity> getBaseType(String reference) {
-        return ofNullable(baseTypes.get(reference));
+        return Optional.ofNullable(baseTypes.get(reference));
     }
 
     public Optional<UserRoleEntity> getRole(String caseType, final String role) {
-        Optional<UserRoleEntity> userRoleEntity = ofNullable(userRoles.get(role));
+        Optional<UserRoleEntity> userRoleEntity = Optional.ofNullable(userRoles.get(role));
         if (userRoleEntity.isPresent()) {
             return userRoleEntity;
         } else {
-            return ofNullable(caseRoles.get(caseType, role));
+            return Optional.ofNullable(caseRoles.get(caseType, role));
         }
 
     }
@@ -300,14 +281,5 @@ public class ParseContext {
         metadataFields.putAll(fields.stream()
                                   .filter(Objects::nonNull)
                                   .collect(toMap(CaseFieldEntity::getReference, Function.identity())));
-    }
-
-    public void registerComplexField(String reference, ComplexFieldEntity complexField) {
-        complexFields.put(reference, complexField);
-    }
-
-    public ComplexFieldEntity getComplexField(String reference) {
-        return ofNullable(complexFields.get(reference)).orElseThrow(() -> new SpreadsheetParsingException(
-            String.format("Unknown complex field %s", reference)));
     }
 }

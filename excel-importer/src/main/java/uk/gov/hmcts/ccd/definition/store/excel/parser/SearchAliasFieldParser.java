@@ -68,22 +68,33 @@ public class SearchAliasFieldParser {
         String[] fields = caseFieldPath.split(NESTED_FIELD_SEPARATOR_REGEX);
         CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(caseType.getReference(), fields[0]);
         if (caseField.isComplexFieldType()) {
-            return deriveComplexFieldType(skipFirstElementAndJoinArray(fields));
+            return deriveComplexFieldType(caseField.getFieldType().getReference(), skipFirstElementAndJoinArray(fields));
         } else {
             return caseField.getBaseType();
         }
     }
 
-    private FieldTypeEntity deriveComplexFieldType(String fieldPath) {
+    private FieldTypeEntity deriveComplexFieldType(String complexFieldType, String fieldPath) {
         String[] fields = fieldPath.split(NESTED_FIELD_SEPARATOR_REGEX);
-        ComplexFieldEntity complexField = parseContext.getComplexField(fields[0]);
+        FieldTypeEntity complexType = parseContext.getType(complexFieldType)
+            .orElseThrow(() -> createInvalidPathException(fieldPath));
+
+        ComplexFieldEntity complexField = complexType.getComplexFields().stream()
+            .filter(field -> field.getReference().equalsIgnoreCase(fields[0]))
+            .findFirst()
+            .orElseThrow(() -> createInvalidPathException(fieldPath));
+
         if (complexField.isComplexFieldType()) {
-            return deriveComplexFieldType(skipFirstElementAndJoinArray(fields));
+            return deriveComplexFieldType(complexField.getFieldType().getReference(), skipFirstElementAndJoinArray(fields));
         }
         return complexField.getBaseType();
     }
 
     private String skipFirstElementAndJoinArray(String[] array) {
         return StringUtils.join(array, ".", 1, array.length);
+    }
+
+    private SpreadsheetParsingException createInvalidPathException(String fieldPath) {
+        return new SpreadsheetParsingException("Invalid search alias case field path: " + fieldPath);
     }
 }

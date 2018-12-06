@@ -78,7 +78,6 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
         caseType.addSearchAliasField(searchAliasField);
 
         String result = mappingGenerator.generateMapping(caseType.build());
-        System.out.println(result);
         assertThat(result, equalToJSONInFile(readFileFromClasspath("json/case_mapping_generator_search_alias.json")));
     }
 }
