@@ -18,8 +18,8 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.utils.SearchAliasFieldBuilder;
 
 class SearchAliasFieldMapperTypeValidatorTest {
 
@@ -43,11 +43,7 @@ class SearchAliasFieldMapperTypeValidatorTest {
         @Test
         @DisplayName("should return no validation error")
         void shouldReturnNoErrors() {
-            FieldTypeEntity fieldType = new FieldTypeEntity();
-            fieldType.setReference(BASE_TEXT);
-            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldEntity();
-            searchAliasField.setFieldType(fieldType);
-            searchAliasField.setReference(SEARCH_ALIAS_REFERENCE);
+            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE).withFieldType(BASE_TEXT).build();
             when(repository.findByReference(SEARCH_ALIAS_REFERENCE)).thenReturn(Collections.singletonList(searchAliasField));
 
             ValidationResult validationResult = validator.validate(searchAliasField);
@@ -64,19 +60,16 @@ class SearchAliasFieldMapperTypeValidatorTest {
         @Test
         @DisplayName("should return validation error")
         void shouldReturnValidationErrors() {
-            FieldTypeEntity numberType = new FieldTypeEntity();
-            numberType.setReference(BASE_NUMBER);
-            SearchAliasFieldEntity existingField = new SearchAliasFieldEntity();
-            existingField.setFieldType(numberType);
-            existingField.setReference(SEARCH_ALIAS_REFERENCE);
-            existingField.setCaseType(new CaseTypeEntity());
+            SearchAliasFieldEntity existingField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE)
+                .withFieldType(BASE_NUMBER)
+                .withCaseType(new CaseTypeEntity())
+                .build();
             when(repository.findByReference(SEARCH_ALIAS_REFERENCE)).thenReturn(Collections.singletonList(existingField));
 
-            FieldTypeEntity textType = new FieldTypeEntity();
-            textType.setReference(BASE_TEXT);
-            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldEntity();
-            searchAliasField.setFieldType(textType);
-            searchAliasField.setReference(SEARCH_ALIAS_REFERENCE);
+            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE)
+                .withFieldType(BASE_TEXT)
+                .withCaseType(new CaseTypeEntity())
+                .build();
 
             ValidationResult validationResult = validator.validate(searchAliasField);
             assertThat(validationResult.getValidationErrors().size(), is(1));

@@ -99,6 +99,7 @@ public class CaseTypeParserTest extends ParserTestBase {
                                   stateParser,
                                   metadataCaseFieldParser,
                                   eventParser,
+                                  searchAliasFieldParser,
                                   authorisationCaseTypeParser);
 
         assertAll(
@@ -110,6 +111,7 @@ public class CaseTypeParserTest extends ParserTestBase {
             () -> inOrder.verify(stateParser).parseAll(definitionSheets, caseTypeEntity),
             () -> inOrder.verify(metadataCaseFieldParser).parseAll(caseTypeEntity),
             () -> inOrder.verify(eventParser).parseAll(definitionSheets, caseTypeEntity),
+            () -> inOrder.verify(searchAliasFieldParser).parseAll(definitionSheets, caseTypeEntity),
             () -> inOrder.verify(authorisationCaseTypeParser).parseAll(definitionSheets, caseTypeEntity)
         );
     }

@@ -1,0 +1,19 @@
+{
+  "dynamic": "dynamicConfig",
+  "properties": {
+    "data": {
+      "properties": {
+      }
+    },
+    "data_classification": {
+      "properties": {
+      }
+    },
+    "alias": {
+      "properties": {
+        "aliasFieldA": "aliasMapping.caseFieldPath",
+        "aliasFieldA_sort": "aliasTextSortMapping.caseFieldPath"
+      }
+    }
+  }
+}

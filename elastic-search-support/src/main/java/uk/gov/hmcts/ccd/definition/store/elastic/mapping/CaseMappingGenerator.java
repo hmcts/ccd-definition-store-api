@@ -10,9 +10,7 @@ import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.jooq.lambda.Unchecked;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -22,15 +20,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntit
 @Slf4j
 public class CaseMappingGenerator extends MappingGenerator {
 
-    private static final String ALIAS_CASE_FIELD_PATH_PLACE_HOLDER = "<caseFieldPathPlaceHolder>";
     private static final String ALIAS_TEXT_SORT_SUFFIX = "_sort";
-
-    private final CcdElasticSearchProperties config;
-
-    @Autowired
-    public CaseMappingGenerator(CcdElasticSearchProperties config) {
-        this.config = config;
-    }
+    static final String ALIAS_CASE_FIELD_PATH_PLACE_HOLDER = "<caseFieldPathPlaceHolder>";
 
     public String generateMapping(CaseTypeEntity caseType) {
         log.info("creating mapping for case type: {}", caseType.getReference());
@@ -115,7 +106,7 @@ public class CaseMappingGenerator extends MappingGenerator {
     private void aliasTextSortMapping(JsonWriter jw, SearchAliasFieldEntity searchAliasField) throws IOException {
         String fieldType = config.getTypeMappings().get(searchAliasField.getFieldType().getReference());
         // If the elasticsearch field type is text then create alias with a suffix '_sort' pointing to the type 'field.keyword' of the text field. As sorting
-        // on full text is disabled by default (due to memory issues), the alternative is to use the text field's keyword for sorting.
+        // on full text is disabled by default (due to high memory consumption), the alternative is to use the text field's keyword for sorting.
         if (config.getElasticMappings().get(DEFAULT_TEXT).equalsIgnoreCase(fieldType)) {
             jw.name(searchAliasField.getReference() + ALIAS_TEXT_SORT_SUFFIX);
             String aliasMapping = config.getElasticMappings().get(ALIAS_TEXT_SORT).replace(ALIAS_CASE_FIELD_PATH_PLACE_HOLDER,
