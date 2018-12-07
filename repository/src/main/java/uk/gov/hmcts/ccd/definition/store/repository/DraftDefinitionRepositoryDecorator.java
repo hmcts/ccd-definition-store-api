@@ -25,4 +25,8 @@ public class DraftDefinitionRepositoryDecorator {
         }
         return repository.save(definitionEntity);
     }
+
+    public DefinitionEntity findLatestByJurisdictionId(final String jurisdiction) {
+        return repository.findLatestByJurisdictionId(jurisdiction);
+    }
 }

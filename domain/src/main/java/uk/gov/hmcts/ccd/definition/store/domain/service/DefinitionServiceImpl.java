@@ -61,4 +61,9 @@ public class DefinitionServiceImpl implements DefinitionService {
                     "Jurisdiction " + jurisdiction.getId() + " could not be retrieved or does not exist"));
         }
     }
+
+    @Override
+    public DefinitionEntity findLatestByJurisdictionId(final String jurisdiction) {
+        return decoratedRepository.findLatestByJurisdictionId(jurisdiction);
+    }
 }
