@@ -7,6 +7,9 @@
         <addColumn tableName="event_case_field">
             <column name="display_context_parameter" type="varchar(1000)"/>
         </addColumn>
+        <addColumn tableName="display_group_case_field">
+            <column name="display_context_parameter" type="varchar(1000)"/>
+        </addColumn>
 
     </changeSet>
 
