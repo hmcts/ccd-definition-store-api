@@ -58,7 +58,7 @@ import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 public abstract class BaseTest {
-    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V38_RDM-1202.xlsx";
+    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V39_RDM-3317.xlsx";
     public static final String IMPORT_URL = "/import";
     @Inject
     protected DataSource db;
