@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -142,22 +142,30 @@ class SearchAliasFieldParserTest {
             }
 
             @Test
-            @DisplayName("should throw exception when complex type is invalid")
+            @DisplayName("should set field type as null when complex type is invalid")
             void shouldThrowParsingExceptionForInvalidComplexField() {
                 when(parseContext.getType("company")).thenReturn(Optional.empty());
 
-                assertThrows(SpreadsheetParsingException.class, () -> parser.parseAll(createDefinitionSheet(), caseType));
+                List<SearchAliasFieldEntity> fields = parser.parseAll(createDefinitionSheet(), caseType);
+
+                assertThat(fields.isEmpty(), is(false));
+                SearchAliasFieldEntity entity = fields.get(0);
+                assertThat(entity.getFieldType(), is(nullValue()));
 
                 verify(parseContext).getCaseFieldForCaseType(COMPLEX_CASE_TYPE_ID, "company");
                 verify(parseContext, times(1)).getType(anyString());
             }
 
             @Test
-            @DisplayName("should throw exception when nested complex field is invalid")
+            @DisplayName("should set field type as null when nested complex field is invalid")
             void shouldThrowParsingExceptionForInvalidNestedComplexField() {
                 when(parseContext.getType("address")).thenReturn(Optional.empty());
 
-                assertThrows(SpreadsheetParsingException.class, () -> parser.parseAll(createDefinitionSheet(), caseType));
+                List<SearchAliasFieldEntity> fields = parser.parseAll(createDefinitionSheet(), caseType);
+
+                assertThat(fields.isEmpty(), is(false));
+                SearchAliasFieldEntity entity = fields.get(0);
+                assertThat(entity.getFieldType(), is(nullValue()));
 
                 verify(parseContext).getCaseFieldForCaseType(COMPLEX_CASE_TYPE_ID, "company");
                 verify(parseContext, times(2)).getType(anyString());

@@ -47,8 +47,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventC
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.BaseReferenceFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeComplexFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldMapperTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldNameValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
@@ -160,7 +160,7 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
                 getValidator(caseTypeEntityValidators, CaseTypeEntitySearchAliasFieldsValidatorImpl.class),
                 "searchAliasFieldValidators"
             ),
-            SearchAliasFieldMapperTypeValidator.class,
+            SearchAliasFieldTypeValidator.class,
             SearchAliasFieldUnicityValidator.class,
             SearchAliasFieldNameValidator.class
         );

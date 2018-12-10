@@ -7,12 +7,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 
 @Component
-public class SearchAliasFieldMapperTypeValidator implements SearchAliasFieldValidator {
+public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator {
 
     private final SearchAliasFieldRepository repository;
 
     @Autowired
-    public SearchAliasFieldMapperTypeValidator(SearchAliasFieldRepository repository) {
+    public SearchAliasFieldTypeValidator(SearchAliasFieldRepository repository) {
         this.repository = repository;
     }
 
@@ -20,6 +20,14 @@ public class SearchAliasFieldMapperTypeValidator implements SearchAliasFieldVali
     public ValidationResult validate(SearchAliasFieldEntity searchAliasField) {
 
         ValidationResult validationResult = new ValidationResult();
+
+        if (searchAliasField.getFieldType() == null) {
+            validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case type '%s' and case field '%s'.",
+                                                                        searchAliasField.getReference(),
+                                                                        searchAliasField.getCaseType().getReference(),
+                                                                        searchAliasField.getCaseFieldPath()),
+                                                          searchAliasField));
+        }
 
         repository.findByReference(searchAliasField.getReference())
             .forEach(field -> {

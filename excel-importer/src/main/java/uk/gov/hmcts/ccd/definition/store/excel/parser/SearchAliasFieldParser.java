@@ -15,7 +15,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 
@@ -76,25 +75,20 @@ public class SearchAliasFieldParser {
 
     private FieldTypeEntity deriveComplexFieldType(String complexFieldType, String fieldPath) {
         String[] fields = fieldPath.split(NESTED_FIELD_SEPARATOR_REGEX);
-        FieldTypeEntity complexType = parseContext.getType(complexFieldType)
-            .orElseThrow(() -> createInvalidPathException(fieldPath));
-
-        ComplexFieldEntity complexField = complexType.getComplexFields().stream()
+        return parseContext.getType(complexFieldType)
+            .map(complexType -> complexType.getComplexFields().stream()
             .filter(field -> field.getReference().equalsIgnoreCase(fields[0]))
-            .findFirst()
-            .orElseThrow(() -> createInvalidPathException(fieldPath));
-
-        if (complexField.isComplexFieldType()) {
-            return deriveComplexFieldType(complexField.getFieldType().getReference(), skipFirstElementAndJoinArray(fields));
-        }
-        return complexField.getBaseType();
+                .findFirst().map(complexField -> {
+                    if (complexField.isComplexFieldType()) {
+                        return deriveComplexFieldType(complexField.getFieldType().getReference(), skipFirstElementAndJoinArray(fields));
+                    }
+                    return complexField.getBaseType();
+                }).orElse(null))
+            .orElse(null);
     }
 
     private String skipFirstElementAndJoinArray(String[] array) {
         return StringUtils.join(array, ".", 1, array.length);
     }
 
-    private SpreadsheetParsingException createInvalidPathException(String fieldPath) {
-        return new SpreadsheetParsingException("Invalid search alias case field path: " + fieldPath);
-    }
 }
