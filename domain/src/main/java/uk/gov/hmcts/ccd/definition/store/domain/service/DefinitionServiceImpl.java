@@ -63,7 +63,8 @@ public class DefinitionServiceImpl implements DefinitionService {
     }
 
     @Override
-    public DefinitionEntity findLatestByJurisdictionId(final String jurisdiction) {
-        return decoratedRepository.findLatestByJurisdictionId(jurisdiction);
+    public Definition findLatestByJurisdictionId(final String jurisdiction) {
+        final DefinitionEntity entity = decoratedRepository.findLatestByJurisdictionId(jurisdiction);
+        return null == entity ? null : mapper.toModel(entity);
     }
 }

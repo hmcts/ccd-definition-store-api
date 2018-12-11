@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.domain.service.DefinitionService;
@@ -56,8 +57,7 @@ public class DraftDefinitionController {
         notes = "Finds a draft Definition for the specified Jurisdiction"
     )
     @ApiResponse(code = 200, message = "Draft Definition found")
-
-    DefinitionEntity findLatestByJurisdictionId(final String jurisdiction) {
+    Definition findLatestByJurisdictionId(@RequestParam("jurisdiction") final String jurisdiction) {
         return definitionService.findLatestByJurisdictionId(jurisdiction);
     }
 }
