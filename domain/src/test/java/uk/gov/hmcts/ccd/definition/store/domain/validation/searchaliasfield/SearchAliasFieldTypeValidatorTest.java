@@ -26,7 +26,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.SearchAliasFieldBuilder;
 class SearchAliasFieldTypeValidatorTest {
 
     private static final String SEARCH_ALIAS_REFERENCE = "alias";
-    
+
     private final CaseTypeEntity caseType = new CaseTypeBuilder().withReference("caseType").build();
 
     @Mock
@@ -68,7 +68,7 @@ class SearchAliasFieldTypeValidatorTest {
 
             ValidationResult result1 = validator.validate(searchAliasField);
             assertThat(result1.getValidationErrors().size(), is(1));
-            assertThat(result1.getValidationErrors().get(0).getDefaultMessage(), startsWith("Invalid search alias ID"));
+            assertThat(result1.getValidationErrors().get(0).getDefaultMessage(), startsWith("Invalid case field"));
         }
 
     }

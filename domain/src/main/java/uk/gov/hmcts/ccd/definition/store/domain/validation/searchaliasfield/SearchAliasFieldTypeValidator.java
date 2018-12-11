@@ -22,10 +22,10 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
         ValidationResult validationResult = new ValidationResult();
 
         if (searchAliasField.getFieldType() == null) {
-            validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case type '%s' and case field '%s'.",
+            validationResult.addError(new ValidationError(String.format("Invalid case field '%s' for search alias ID '%s' and case type '%s'.",
+                                                                        searchAliasField.getCaseFieldPath(),
                                                                         searchAliasField.getReference(),
-                                                                        searchAliasField.getCaseType().getReference(),
-                                                                        searchAliasField.getCaseFieldPath()),
+                                                                        searchAliasField.getCaseType().getReference()),
                                                           searchAliasField));
         }
 
