@@ -174,18 +174,21 @@ class SearchAliasFieldParserTest {
     }
 
     private Map<String, DefinitionSheet> createDefinitionSheet() {
-        Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
-        DefinitionSheet sheet = new DefinitionSheet();
         DefinitionDataItem dataItem1 = new DefinitionDataItem(SheetName.SEARCH_ALIAS.getName());
         dataItem1.addAttribute(ColumnName.SEARCH_ALIAS_ID, SEARCH_ALIAS_ID);
         dataItem1.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID);
         dataItem1.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
-        sheet.addDataItem(dataItem1);
+
         DefinitionDataItem dataItem2 = new DefinitionDataItem(SheetName.SEARCH_ALIAS.getName());
         dataItem2.addAttribute(ColumnName.SEARCH_ALIAS_ID, COMPLEX_SEARCH_ALIAS_ID);
         dataItem2.addAttribute(ColumnName.CASE_FIELD_ID, COMPLEX_CASE_FIELD_ID);
         dataItem2.addAttribute(ColumnName.CASE_TYPE_ID, COMPLEX_CASE_TYPE_ID);
+
+        DefinitionSheet sheet = new DefinitionSheet();
+        sheet.addDataItem(dataItem1);
         sheet.addDataItem(dataItem2);
+
+        Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
         definitionSheets.put(SheetName.SEARCH_ALIAS.getName(), sheet);
 
         return definitionSheets;
