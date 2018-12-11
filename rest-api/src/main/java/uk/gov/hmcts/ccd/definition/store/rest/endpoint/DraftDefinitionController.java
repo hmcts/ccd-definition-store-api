@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,8 +57,6 @@ public class DraftDefinitionController {
     )
     @ApiResponse(code = 200, message = "Draft Definition found")
     Definition findLatestByJurisdictionId(@RequestParam("jurisdiction") final String jurisdiction) {
-        LoggerFactory.getLogger(DraftDefinitionController.class)
-        .error("Jurisdiction is {}", jurisdiction);
         return definitionService.findLatestByJurisdictionId(jurisdiction);
     }
 }
