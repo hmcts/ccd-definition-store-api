@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.util.UriTemplate;
 import uk.gov.hmcts.ccd.definition.store.domain.service.DefinitionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
@@ -22,12 +24,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Matchers.any;
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
+
 
 class DraftDefinitionControllerTest {
 
@@ -38,12 +45,23 @@ class DraftDefinitionControllerTest {
         Charset.forName(StandardCharsets.UTF_8.name())
     );
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final String URL_API_JURISDICTIONS = "/api/drafts";
+    private static final UriTemplate URI_TEMPLATE_GET_DRAFTS =
+        new UriTemplate(URL_API_JURISDICTIONS + "?jurisdiction={jurisdiction}");
+    private static final UriTemplate URI_TEMPLATE_ONE_DRAFT =
+        new UriTemplate(URL_API_DRAFT + "?jurisdiction={jurisdiction}&version={version}");
     private MockMvc mockMvc;
 
     @Mock
     private DefinitionService definitionService;
 
     private Definition definition;
+
+    private Map<String, Object> uriVariables;
+
+    private Definition def2;
+
+    private Definition def3;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -53,9 +71,13 @@ class DraftDefinitionControllerTest {
             .setControllerAdvice(new RestEndPointExceptionHandler())
             .build();
         definition = createDefinition();
+        def2 = createDefinition();
+        def3 = createDefinition();
+        uriVariables = new HashMap<>();
+
     }
 
-    @DisplayName("Should create a draft Definition")
+    @DisplayName("Should return 201 when creating a draft Definition")
     @Test
     void shouldCreateDraftDefinition() throws Exception {
         when(definitionService.createDraftDefinition(any(Definition.class)))
@@ -67,6 +89,48 @@ class DraftDefinitionControllerTest {
                 .content(MAPPER.writeValueAsBytes(definition)))
             .andExpect(status().isCreated());
         verify(definitionService).createDraftDefinition(any(Definition.class));
+    }
+
+    @DisplayName("should return 200 when finding definitions")
+    @Test
+    void shouldReturn200WhenFindDefinitions() throws Exception {
+        when(definitionService.findByJurisdictionId("jurisdiction")).thenReturn(asList(def3, def2));
+        uriVariables.put("jurisdiction", "jurisdiction");
+        final MvcResult
+            mvcResult =
+            mockMvc.perform(get(URI_TEMPLATE_GET_DRAFTS.expand(uriVariables)))
+                   .andExpect(status().isOk())
+                   .andReturn();
+        assertThat(mvcResult.getResponse().getContentAsString(),
+                   is("[{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null," +
+                      "\"live_until\":null,\"case_types\":[]},\"description\":\"Description\","
+                      + "\"version\":null,\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},"
+                      + "\"author\":\"ccd2@hmcts\",\"status\":null,\"case_types\":\"CaseType1,CaseType2\","
+                      + "\"created_at\":null,\"last_modified\":null,\"deleted\":false},"
+                      + "{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null,"
+                      + "\"live_until\":null,\"case_types\":[]},\"description\":\"Description\","
+                      + "\"version\":null,\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},"
+                      + "\"author\":\"ccd2@hmcts\",\"status\":null,\"case_types\":\"CaseType1,CaseType2\","
+                      + "\"created_at\":null,\"last_modified\":null,\"deleted\":false}]"));
+    }
+
+    @DisplayName("should return 200 when finding a draft by jurisdiction and version")
+    @Test
+    void shouldReturn200WhenFindByJurisdictionAndVersion() throws Exception {
+        when(definitionService.findByJurisdictionIdAndVersion("jurisdiction", -1)).thenReturn(def2);
+        uriVariables.put("jurisdiction", "jurisdiction");
+        uriVariables.put("version", -1);
+        final MvcResult
+            mvcResult =
+            mockMvc.perform(get(URI_TEMPLATE_ONE_DRAFT.expand(uriVariables)))
+                   .andExpect(status().isOk())
+                   .andReturn();
+        assertThat(mvcResult.getResponse().getContentAsString(),
+                   is("{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null,"
+                      + "\"live_until\":null,\"case_types\":[]},\"description\":\"Description\",\"version\":null,"
+                      + "\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},\"author\":\"ccd2@hmcts\","
+                      + "\"status\":null,\"case_types\":\"CaseType1,CaseType2\",\"created_at\":null,"
+                      + "\"last_modified\":null,\"deleted\":false}"));
     }
 
     private Definition createDefinition() throws IOException {
@@ -85,4 +149,5 @@ class DraftDefinitionControllerTest {
         definition.setDeleted(false);
         return definition;
     }
+
 }

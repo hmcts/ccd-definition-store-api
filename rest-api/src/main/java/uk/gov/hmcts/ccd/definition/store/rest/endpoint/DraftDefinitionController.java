@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -18,12 +17,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse
 import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@Api(value = "/api/draft")
 @RequestMapping(value = "/api")
 public class DraftDefinitionController {
 
@@ -49,6 +48,17 @@ public class DraftDefinitionController {
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
     }
 
+    @GetMapping("/drafts")
+    @ResponseStatus(OK)
+    @ApiOperation(
+        value = "Finds a draft Definition by jurisdiction",
+        notes = "Finds a draft Definition for the specified Jurisdiction"
+    )
+    @ApiResponse(code = 200, message = "Draft Definition found")
+    List<Definition> findByJurisdictionId(@RequestParam("jurisdiction") final String jurisdiction) {
+        return definitionService.findByJurisdictionId(jurisdiction);
+    }
+
     @GetMapping("/draft")
     @ResponseStatus(OK)
     @ApiOperation(
@@ -56,7 +66,9 @@ public class DraftDefinitionController {
         notes = "Finds a draft Definition for the specified Jurisdiction"
     )
     @ApiResponse(code = 200, message = "Draft Definition found")
-    Definition findLatestByJurisdictionId(@RequestParam("jurisdiction") final String jurisdiction) {
-        return definitionService.findLatestByJurisdictionId(jurisdiction);
+    Definition findByJurisdictionIdAndVersion(
+        @RequestParam("jurisdiction") final String jurisdiction,
+        @RequestParam(value = "version", required = false) final Integer version) {
+        return definitionService.findByJurisdictionIdAndVersion(jurisdiction, version);
     }
 }

@@ -13,6 +13,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
 
 @Service
@@ -63,8 +66,16 @@ public class DefinitionServiceImpl implements DefinitionService {
     }
 
     @Override
-    public Definition findLatestByJurisdictionId(final String jurisdiction) {
-        final DefinitionEntity entity = decoratedRepository.findLatestByJurisdictionId(jurisdiction);
+    public List<Definition> findByJurisdictionId(String jurisdiction) {
+        return decoratedRepository.findByJurisdictionId(jurisdiction)
+                                  .stream()
+                                  .map(mapper::toModel)
+                                  .collect(toList());
+    }
+
+    @Override
+    public Definition findByJurisdictionIdAndVersion(final String jurisdiction, final Integer version) {
+        final DefinitionEntity entity = decoratedRepository.findByJurisdictionIdAndVersion(jurisdiction, version);
         return null == entity ? null : mapper.toModel(entity);
     }
 }
