@@ -17,7 +17,7 @@ public class CaseTypeValidationResult {
     }
 
     /**
-     * Add the given error to errors
+     * Add the given error to errors.
      *
      * @param error - error to be added
      */
@@ -36,7 +36,7 @@ public class CaseTypeValidationResult {
     }
 
     /**
-     * @return the list of errors
+     * @return the list of errors.
      */
     public Set<String> getErrors() {
         return this.errors;

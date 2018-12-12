@@ -65,7 +65,16 @@
       "show_summary_content_option" : null,
       "label" : null,
       "hint_text" : null
-    } ],
+    }, {
+      "case_field_id" : "referenceCollection",
+      "display_context" : "OPTIONAL",
+      "display_context_parameter" : "#TABLE(Title, FirstName, MiddleName)",
+      "show_condition" : null,
+      "show_summary_change_option" : null,
+      "show_summary_content_option" : null,
+      "label" : null,
+      "hint_text" : null
+  } ],
     "pre_states" : [ ],
     "post_state" : "CaseCreated",
     "callback_url_about_to_start_event" : "http://localhost:8080/about_to_start",
@@ -393,157 +402,168 @@
       "delete" : false
     } ],
     "show_condition" : null
-  }, {
-    "metadata" : false,
-    "id" : "PersonAddress",
-    "case_type_id" : "TestAddressBookCase",
-    "label" : "Address",
-    "hint_text" : null,
-    "field_type" : {
-      "id" : "Address",
-      "type" : "Complex",
-      "min" : null,
-      "max" : null,
-      "regular_expression" : null,
-      "fixed_list_items" : [ ],
-      "complex_fields" : [ {
-        "metadata" : false,
-        "id" : "AddressLine1",
-        "case_type_id" : null,
-        "label" : "Address Line 1",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
+  },
+    {
+      "metadata": false,
+      "id": "PersonAddress",
+      "case_type_id": "TestAddressBookCase",
+      "label": "Address",
+      "hint_text": null,
+      "field_type": {
+        "id": "Address",
+        "type": "Complex",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [
+          {
+            "metadata": false,
+            "id": "AddressLine1",
+            "case_type_id": null,
+            "label": "Address Line 1",
+            "hint_text": null,
+            "field_type": {
+              "id": "Text",
+              "type": "Text",
+              "min": null,
+              "max": null,
+              "regular_expression": null,
+              "fixed_list_items": [],
+              "complex_fields": [],
+              "collection_field_type": null
+            },
+            "hidden": null,
+            "security_classification": "RESTRICTED",
+            "live_from": null,
+            "live_until": null,
+            "acls": null,
+            "show_condition": null
+          },
+          {
+            "metadata": false,
+            "id": "AddressLine2",
+            "case_type_id": null,
+            "label": "Address Line 2",
+            "hint_text": null,
+            "field_type": {
+              "id": "Text",
+              "type": "Text",
+              "min": null,
+              "max": null,
+              "regular_expression": null,
+              "fixed_list_items": [],
+              "complex_fields": [],
+              "collection_field_type": null
+            },
+            "hidden": null,
+            "security_classification": "PRIVATE",
+            "live_from": null,
+            "live_until": null,
+            "acls": null,
+            "show_condition": null
+          },
+          {
+            "metadata": false,
+            "id": "AddressLine3",
+            "case_type_id": null,
+            "label": "Address Line 3",
+            "hint_text": null,
+            "field_type": {
+              "id": "Text",
+              "type": "Text",
+              "min": null,
+              "max": null,
+              "regular_expression": null,
+              "fixed_list_items": [],
+              "complex_fields": [],
+              "collection_field_type": null
+            },
+            "hidden": null,
+            "security_classification": "PRIVATE",
+            "live_from": null,
+            "live_until": null,
+            "acls": null,
+            "show_condition": null
+          },
+          {
+            "metadata": false,
+            "id": "Country",
+            "case_type_id": null,
+            "label": "Country",
+            "hint_text": null,
+            "field_type": {
+              "id": "Text",
+              "type": "Text",
+              "min": null,
+              "max": null,
+              "regular_expression": null,
+              "fixed_list_items": [],
+              "complex_fields": [],
+              "collection_field_type": null
+            },
+            "hidden": null,
+            "security_classification": "RESTRICTED",
+            "live_from": null,
+            "live_until": null,
+            "acls": null,
+            "show_condition": null
+          },
+          {
+            "metadata": false,
+            "id": "Postcode",
+            "case_type_id": null,
+            "label": "Postcode",
+            "hint_text": null,
+            "field_type": {
+              "id": "Postcode",
+              "type": "Postcode",
+              "min": null,
+              "max": null,
+              "regular_expression": "^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$",
+              "fixed_list_items": [],
+              "complex_fields": [],
+              "collection_field_type": null
+            },
+            "hidden": null,
+            "security_classification": "PRIVATE",
+            "live_from": null,
+            "live_until": null,
+            "acls": null,
+            "show_condition": "Country=\"Italy\""
+          }
+        ],
+        "collection_field_type": null
+      },
+      "hidden": null,
+      "security_classification": "PRIVATE",
+      "live_from": "2017-01-01",
+      "live_until": null,
+      "acls": [
+        {
+          "role": "CaseWorker1",
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false
         },
-        "hidden" : null,
-        "security_classification" : "RESTRICTED",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "show_condition" : null
-      }, {
-        "metadata" : false,
-        "id" : "AddressLine2",
-        "case_type_id" : null,
-        "label" : "Address Line 2",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
+        {
+          "role": "CaseWorker2",
+          "create": true,
+          "read": false,
+          "update": false,
+          "delete": false
         },
-        "hidden" : null,
-        "security_classification" : "PRIVATE",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "show_condition" : null
-      }, {
-        "metadata" : false,
-        "id" : "AddressLine3",
-        "case_type_id" : null,
-        "label" : "Address Line 3",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
-        "hidden" : null,
-        "security_classification" : "PRIVATE",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "show_condition" : null
-      }, {
-        "metadata" : false,
-        "id" : "Country",
-        "case_type_id" : null,
-        "label" : "Country",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
-        "hidden" : null,
-        "security_classification" : "RESTRICTED",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "show_condition" : null
-      }, {
-        "metadata" : false,
-        "id" : "Postcode",
-        "case_type_id" : null,
-        "label" : "Postcode",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Postcode",
-          "type" : "Postcode",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : "^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$",
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
-        "hidden" : null,
-        "security_classification" : "PRIVATE",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "show_condition" : "Country=\"Italy\""
-      } ],
-      "collection_field_type" : null
-    },
-    "hidden" : null,
-    "security_classification" : "PRIVATE",
-    "live_from" : "2017-01-01",
-    "live_until" : null,
-    "acls" : [ {
-      "role" : "CaseWorker1",
-      "create" : false,
-      "read" : true,
-      "update" : false,
-      "delete" : false
-    }, {
-      "role" : "CaseWorker2",
-      "create" : true,
-      "read" : false,
-      "update" : false,
-      "delete" : false
-    }, {
-      "role" : "CaseWorker3",
-      "create" : true,
-      "read" : true,
-      "update" : true,
-      "delete" : false
-    } ],
-    "show_condition" : null
-  }, {
+        {
+          "role": "CaseWorker3",
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false
+        }
+      ],
+      "show_condition": null
+    } , {
     "metadata" : false,
     "id" : "PersonHasSecondAddress",
     "case_type_id" : "TestAddressBookCase",
@@ -1483,8 +1503,171 @@
       "update" : true,
       "delete" : false
     } ],
-    "show_condition" : null
-  }, {
+      "show_condition": null
+    }, {
+      "metadata": false,
+      "id": "referenceCollection",
+      "case_type_id": "TestAddressBookCase",
+      "label": "Reference Collection",
+      "hint_text": null,
+      "field_type": {
+        "id": "referenceCollection-<GUID-REMOVED>",
+        "type": "Collection",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": {
+          "id" : "Person",
+          "type" : "Complex",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ {
+            "metadata" : false,
+            "id" : "Title",
+            "case_type_id" : null,
+            "label" : "Title",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "FirstName",
+            "case_type_id" : null,
+            "label" : "First Name",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "RESTRICTED",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "MiddleName",
+            "case_type_id" : null,
+            "label" : "Middle Name",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PRIVATE",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "LastName",
+            "case_type_id" : null,
+            "label" : "Last Name",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "DateOfBirth",
+            "case_type_id" : null,
+            "label" : "Date Of Birth",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Date",
+              "type" : "Date",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "RESTRICTED",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "NationalInsuranceNumber",
+            "case_type_id" : null,
+            "label" : "National Insurance Number",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PRIVATE",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          } ],
+          "collection_field_type": null
+        }
+      },
+      "hidden": null,
+      "security_classification": "PRIVATE",
+      "live_from": "2017-01-01",
+      "live_until": null,
+      "acls": [],
+      "show_condition": null
+    }, {
     "metadata" : true,
     "id" : "[STATE]",
     "case_type_id" : "TestAddressBookCase",
@@ -1511,7 +1694,7 @@
     },
     "hidden" : false,
     "security_classification" : "PRIVATE",
-    "live_from" : "2018-12-07",
+    "live_from" : "#date",
     "live_until" : null,
     "acls" : [ ],
     "show_condition" : null
@@ -1533,7 +1716,7 @@
     },
     "hidden" : false,
     "security_classification" : "PUBLIC",
-    "live_from" : "2018-12-07",
+    "live_from" : "#date",
     "live_until" : null,
     "acls" : [ ],
     "show_condition" : null
@@ -1555,7 +1738,7 @@
     },
     "hidden" : false,
     "security_classification" : "PUBLIC",
-    "live_from" : "2018-12-07",
+    "live_from" : "#date",
     "live_until" : null,
     "acls" : [ ],
     "show_condition" : null
@@ -1577,7 +1760,7 @@
     },
     "hidden" : false,
     "security_classification" : "PUBLIC",
-    "live_from" : "2018-12-07",
+    "live_from" : "#date",
     "live_until" : null,
     "acls" : [ ],
     "show_condition" : null
@@ -1599,7 +1782,7 @@
     },
     "hidden" : false,
     "security_classification" : "PUBLIC",
-    "live_from" : "2018-12-07",
+    "live_from" : "#date",
     "live_until" : null,
     "acls" : [ ],
     "show_condition" : null
@@ -1621,7 +1804,7 @@
     },
     "hidden" : false,
     "security_classification" : "PUBLIC",
-    "live_from" : "2018-12-07",
+    "live_from" : "#date",
     "live_until" : null,
     "acls" : [ ],
     "show_condition" : null
@@ -1643,7 +1826,7 @@
     },
     "hidden" : false,
     "security_classification" : "PUBLIC",
-    "live_from" : "2018-12-07",
+    "live_from" : "#date",
     "live_until" : null,
     "acls" : [ ],
     "show_condition" : null

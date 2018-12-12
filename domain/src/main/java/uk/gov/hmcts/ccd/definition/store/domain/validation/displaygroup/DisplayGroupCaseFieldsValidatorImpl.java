@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import java.util.List;
 
 /**
- * Composite validator which applies a list of DisplayGroupCaseFieldValidator to all the fields of a DisplayGroupEntity
+ * Composite validator which applies a list of DisplayGroupCaseFieldValidator to all the fields of a DisplayGroupEntity.
  */
 @Component
 public class DisplayGroupCaseFieldsValidatorImpl implements DisplayGroupValidator {

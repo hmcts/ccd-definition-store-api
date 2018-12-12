@@ -7,35 +7,33 @@ import static org.junit.Assert.assertThat;
 
 public class CrudValidatorTest {
 
-    private CrudValidator validator = new CrudValidator();
-
     @Test
     public void validateBlankCrud() {
-        final boolean result = validator.isValidCrud("   ");
+        final boolean result = CrudValidator.isValidCrud("   ");
         assertThat(result, is(false));
     }
 
     @Test
     public void validateLongCrud() {
-        final boolean result = validator.isValidCrud("CRUDcr");
+        final boolean result = CrudValidator.isValidCrud("CRUDcr");
         assertThat(result, is(false));
     }
 
     @Test
     public void validateNullCrud() {
-        final boolean result = validator.isValidCrud(null);
+        final boolean result = CrudValidator.isValidCrud(null);
         assertThat(result, is(false));
     }
 
     @Test
     public void validateInvalidCrud() {
-        final boolean result = validator.isValidCrud("xcr");
+        final boolean result = CrudValidator.isValidCrud("xcr");
         assertThat(result, is(false));
     }
 
     @Test
     public void shouldHaveEmptyResult_whenValidCrud() {
-        final boolean result = validator.isValidCrud("cr U ");
+        final boolean result = CrudValidator.isValidCrud("cr U ");
         assertThat(result, is(true));
     }
 }

@@ -10,9 +10,9 @@ import java.util.List;
 @Service
 /**
  * @deprecated
-// This component is deprecated; new validation should be part of the package
-// uk.gov.hmcts.ccd.definition.store.domain.validation
-// and new validators should be re-written to replace the validators called by this class
+// This component is deprecated; new validation should be part of the package.
+// uk.gov.hmcts.ccd.definition.store.domain.validation.
+// and new validators should be re-written to replace the validators called by this class.
  */
 @Deprecated
 public class LegacyCaseTypeValidator {
@@ -31,15 +31,17 @@ public class LegacyCaseTypeValidator {
      */
     public void validateCaseType(CaseTypeEntity caseTypeEntity) {
         // If the Case Type Item has no Case Type then do not continue with validation
-        if (caseTypeEntity == null)
+        if (caseTypeEntity == null) {
             throw new CaseTypeValidationException(new CaseTypeValidationResult("No Case Type provided"));
+        }
 
         // Perform validation
         CaseTypeValidationResult result = new CaseTypeValidationResult();
         for (ValidationRule rule : this.rules) {
             String ruleResult = rule.validate(caseTypeEntity);
-            if (ruleResult != null)
+            if (ruleResult != null) {
                 result.addError(ruleResult);
+            }
         }
 
         if (!result.validationPassed())

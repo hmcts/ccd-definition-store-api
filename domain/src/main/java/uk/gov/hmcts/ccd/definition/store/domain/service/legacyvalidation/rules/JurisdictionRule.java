@@ -14,7 +14,9 @@ public class JurisdictionRule implements ValidationRule {
     private static final String FROM_AFTER_UNTIL = "The Live From date must be before the Live Until date";
 
     /**
-     * Validate that a valid Jurisdiction has been provided
+     * Validate that a valid Jurisdiction has been provided.
+     *
+     *Should  with appropriate message when validation fails.
      *
      * @param caseTypeEntity - Case Type being validated
      */
@@ -24,16 +26,19 @@ public class JurisdictionRule implements ValidationRule {
         if (jurisdiction == null)
             return NULL_JURISDICTION;
 
-        if (jurisdiction.getName() == null)
+        if (jurisdiction.getName() == null) {
             return NULL_JURISDICTION_NAME;
+        }
 
-        if (jurisdiction.getLiveFrom() == null)
+        if (jurisdiction.getLiveFrom() == null) {
             return NULL_LIVE_FROM;
+        }
 
         if (jurisdiction.getLiveFrom() != null
                 && jurisdiction.getLiveTo() != null
-                    && !jurisdiction.getLiveFrom().before(jurisdiction.getLiveTo()))
+                    && !jurisdiction.getLiveFrom().before(jurisdiction.getLiveTo())) {
             return FROM_AFTER_UNTIL;
+        }
 
         return null;
     }
