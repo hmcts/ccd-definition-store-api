@@ -84,6 +84,7 @@
     </suppress>
     <suppress>
         <notes>Suppress issues related to the current slf4j which is brought in my a lot of dependencies</notes>
-        <cve>CVE-2018-8088</cve>
+        <gav regex="true">^.*slf4j.*$</gav>
+        <cpe>cpe:/a:slf4j:slf4j:1.7.25</cpe>
     </suppress>
 </suppressions>
