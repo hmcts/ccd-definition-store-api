@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,31 +66,39 @@ public class SearchAliasFieldParser {
         if (StringUtils.isEmpty(caseFieldPath)) {
             return null;
         }
-        String[] fields = caseFieldPath.split(NESTED_FIELD_SEPARATOR_REGEX);
-        CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(caseType.getReference(), fields[0]);
+        List<String> fields = parseCaseFieldPath(caseFieldPath);
+        CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(caseType.getReference(), fields.remove(0));
         if (caseField.isComplexFieldType()) {
-            return deriveComplexFieldType(caseField.getFieldType().getReference(), skipFirstElementAndJoinArray(fields));
+            return deriveComplexFieldType(caseField.getFieldType().getReference(), fields);
         } else {
             return caseField.getBaseType();
         }
     }
 
-    private FieldTypeEntity deriveComplexFieldType(String complexFieldType, String fieldPath) {
-        String[] fields = fieldPath.split(NESTED_FIELD_SEPARATOR_REGEX);
+    /**
+     * Recursive method to get field type of the leaf field in an object notation e.g. Company.BusinessAddress.Postcode
+     */
+    private FieldTypeEntity deriveComplexFieldType(String complexFieldType, List<String> fields) {
+        if (fields.isEmpty()) {
+            return null;
+        }
         return parseContext.getType(complexFieldType)
             .map(complexType -> complexType.getComplexFields().stream()
-            .filter(field -> field.getReference().equalsIgnoreCase(fields[0]))
+                .filter(field -> field.getReference().equalsIgnoreCase(fields.remove(0)))
                 .findFirst().map(complexField -> {
                     if (complexField.isComplexFieldType()) {
-                        return deriveComplexFieldType(complexField.getFieldType().getReference(), skipFirstElementAndJoinArray(fields));
+                        return deriveComplexFieldType(complexField.getFieldType().getReference(), fields);
                     }
                     return complexField.getBaseType();
                 }).orElse(null))
             .orElse(null);
     }
 
-    private String skipFirstElementAndJoinArray(String[] array) {
-        return StringUtils.join(array, ".", 1, array.length);
+    /**
+     * e.g. input Company.BusinessAddress.Postcode would produce output ["Company", "BusinessAddress", "Postcode"]
+     */
+    private List<String> parseCaseFieldPath(String caseFieldPath) {
+        return new LinkedList<>(Arrays.asList(caseFieldPath.split(NESTED_FIELD_SEPARATOR_REGEX)));
     }
 
 }

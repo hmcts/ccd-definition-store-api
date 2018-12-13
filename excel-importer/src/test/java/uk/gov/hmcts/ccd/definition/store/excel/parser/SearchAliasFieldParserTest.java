@@ -143,7 +143,7 @@ class SearchAliasFieldParserTest {
 
             @Test
             @DisplayName("should set field type as null when complex type is invalid")
-            void shouldThrowParsingExceptionForInvalidComplexField() {
+            void shouldSetFieldTypeNullForInvalidComplexField() {
                 when(parseContext.getType("company")).thenReturn(Optional.empty());
 
                 List<SearchAliasFieldEntity> fields = parser.parseAll(createDefinitionSheet(), caseType);
@@ -158,7 +158,7 @@ class SearchAliasFieldParserTest {
 
             @Test
             @DisplayName("should set field type as null when nested complex field is invalid")
-            void shouldThrowParsingExceptionForInvalidNestedComplexField() {
+            void shouldSetFieldTypeNullForInvalidNestedComplexField() {
                 when(parseContext.getType("address")).thenReturn(Optional.empty());
 
                 List<SearchAliasFieldEntity> fields = parser.parseAll(createDefinitionSheet(), caseType);

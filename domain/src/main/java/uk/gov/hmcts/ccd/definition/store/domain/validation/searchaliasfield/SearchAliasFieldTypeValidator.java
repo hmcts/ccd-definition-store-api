@@ -22,25 +22,27 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
         ValidationResult validationResult = new ValidationResult();
 
         if (searchAliasField.getFieldType() == null) {
-            validationResult.addError(new ValidationError(String.format("Invalid case field '%s' for search alias ID '%s' and case type '%s'.",
+            validationResult.addError(new ValidationError(String.format("Invalid case field '%s' for search alias ID '%s' and case type '%s'. Case field "
+                                                                            + "should point to a concrete field with full object notation in case of a complex "
+                                                                            + "type.",
                                                                         searchAliasField.getCaseFieldPath(),
                                                                         searchAliasField.getReference(),
                                                                         searchAliasField.getCaseType().getReference()),
                                                           searchAliasField));
+        } else {
+            repository.findByReference(searchAliasField.getReference())
+                .forEach(field -> {
+                    if (!field.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference())) {
+                        validationResult.addError(new ValidationError(String.format("Invalid search alias type '%s'. The search alias ID '%s' has been "
+                                                                                        + "already registered as '%s' for case type '%s'",
+                                                                                    searchAliasField.getFieldType().getReference(),
+                                                                                    searchAliasField.getReference(),
+                                                                                    field.getFieldType().getReference(),
+                                                                                    field.getCaseType().getReference()),
+                                                                      searchAliasField));
+                    }
+                });
         }
-
-        repository.findByReference(searchAliasField.getReference())
-            .forEach(field -> {
-                if (!field.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference())) {
-                    validationResult.addError(new ValidationError(String.format("Invalid search alias type '%s'. The search alias ID '%s' has been "
-                                                                                    + "already registered as '%s' for case type '%s'",
-                                                                                searchAliasField.getFieldType().getReference(),
-                                                                                searchAliasField.getReference(),
-                                                                                field.getFieldType().getReference(),
-                                                                                field.getCaseType().getReference()),
-                                                                  searchAliasField));
-                }
-            });
 
         return validationResult;
     }
