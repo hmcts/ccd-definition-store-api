@@ -82,9 +82,12 @@ public class SearchAliasFieldParser {
         if (fields.isEmpty()) {
             return null;
         }
+        String field = fields.remove(0);
+
         return parseContext.getType(complexFieldType)
-            .map(complexType -> complexType.getComplexFields().stream()
-                .filter(field -> field.getReference().equalsIgnoreCase(fields.remove(0)))
+            .map(complexType -> complexType.getComplexFields()
+                .stream()
+                .filter(complexField -> complexField.getReference().equalsIgnoreCase(field))
                 .findFirst().map(complexField -> {
                     if (complexField.isComplexFieldType()) {
                         return deriveComplexFieldType(complexField.getFieldType().getReference(), fields);
