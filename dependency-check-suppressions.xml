@@ -83,7 +83,7 @@
         <cve>CVE-2018-10237</cve>
     </suppress>
     <suppress>
-        <notes>Suppress issues related to the current slf4j which is brought in by other dependencies.  CCD don't explicitly declare dependencies on slf4j</notes>
+        <notes>Suppress issues related to the current slf4j which is brought in by other dependencies.  CCD don't explicitly declare dependencies on slf4j.  Investigation notes can be found in RDM-3549</notes>
         <gav regex="true">^.*slf4j.*$</gav>
         <cpe>cpe:/a:slf4j:slf4j:1.7.25</cpe>
     </suppress>
