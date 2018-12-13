@@ -39,8 +39,6 @@ public class DraftDefinitionRepositoryDecoratorTest {
 
     private JurisdictionEntity testJurisdiction;
 
-    private JurisdictionEntity jurisdictionForFindTests;
-
     private DraftDefinitionRepositoryDecorator classUnderTest;
 
     private static final String JURISDICTION_ID = "G4TqDskxuR";
@@ -48,7 +46,9 @@ public class DraftDefinitionRepositoryDecoratorTest {
     @Before
     public void setUp() throws IOException {
         testJurisdiction = testHelper.createJurisdiction();
-        jurisdictionForFindTests = testHelper.createJurisdiction(JURISDICTION_ID, "lo0it9cg5E", "qdXfga0buG9cIum1yns8");
+        final JurisdictionEntity
+            jurisdictionForFindTests =
+            testHelper.createJurisdiction(JURISDICTION_ID, "lo0it9cg5E", "qdXfga0buG9cIum1yns8");
         classUnderTest = new DraftDefinitionRepositoryDecorator(repository);
         classUnderTest.save(testHelper.buildDefinition(jurisdictionForFindTests, "T1", PUBLISHED));
         classUnderTest.save(testHelper.buildDefinition(jurisdictionForFindTests, "T2", DRAFT));

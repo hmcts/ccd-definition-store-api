@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -196,9 +196,9 @@ class DefinitionServiceImplTest {
         when(mapper.toModel(definitionEntity3)).thenReturn(definition2);
         final List<Definition> found = classUnderTest.findByJurisdictionId("xyz");
         assertAll(() -> assertThat(found.size(), is(3)),
-                  () -> assertThat(found.get(0), is(definition)),
-                  () -> assertThat(found.get(1), is(persistedModel)),
-                  () -> assertThat(found.get(2), is(definition2)));
+            () -> assertThat(found.get(0), is(definition)),
+            () -> assertThat(found.get(1), is(persistedModel)),
+            () -> assertThat(found.get(2), is(definition2)));
     }
 
     @Test
