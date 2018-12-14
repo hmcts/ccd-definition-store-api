@@ -24,11 +24,11 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
             String removeBeginingSection = eventCaseFieldEntity.getDisplayContextParameter().indexOf("#LIST(") > -1
                 ? eventCaseFieldEntity.getDisplayContextParameter().replace("#LIST(", "") :
                 eventCaseFieldEntity.getDisplayContextParameter().replace("#TABLE(", "");
-            String result[] = removeBeginingSection.replace(")", "").split(",");
+            String[] result = removeBeginingSection.replace(")", "").split(",");
 
             for (String listCodeElementNames : result) {
                 if (!eventCaseFieldEntity.getCaseField().getFieldType().getCollectionFieldType().getComplexFields()
-                    .stream().filter(complexField -> complexField.getReference().equals(listCodeElementNames.trim())).findFirst().isPresent()) {
+                    .stream().anyMatch(complexField -> complexField.getReference().equals(listCodeElementNames.trim()))) {
                     validationResult.addError(new ValidationError(
                         String.format("ListCodeElement %s display context parameter is not one of the fields in collection", listCodeElementNames.trim())
                     ){});
