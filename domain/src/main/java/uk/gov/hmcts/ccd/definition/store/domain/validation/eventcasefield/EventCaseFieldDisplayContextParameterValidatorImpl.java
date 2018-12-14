@@ -21,20 +21,20 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
             });
         }
         if (StringUtils.isNotBlank(eventCaseFieldEntity.getDisplayContextParameter())) {
-            String removeBeginingSection = eventCaseFieldEntity.getDisplayContextParameter().indexOf("#LIST(") > -1
-                ? eventCaseFieldEntity.getDisplayContextParameter().replace("#LIST(", "") :
-                eventCaseFieldEntity.getDisplayContextParameter().replace("#TABLE(", "");
-            String[] result = removeBeginingSection.replace(")", "").split(",");
+                String removeBeginingSection = eventCaseFieldEntity.getDisplayContextParameter().indexOf("#LIST(") > -1
+                    ? eventCaseFieldEntity.getDisplayContextParameter().replace("#LIST(", "") :
+                    eventCaseFieldEntity.getDisplayContextParameter().replace("#TABLE(", "");
+                String[] result = removeBeginingSection.replace(")", "").split(",");
 
-            for (String listCodeElementNames : result) {
-                if (!eventCaseFieldEntity.getCaseField().getFieldType().getCollectionFieldType().getComplexFields()
-                    .stream().anyMatch(complexField -> complexField.getReference().equals(listCodeElementNames.trim()))) {
-                    validationResult.addError(new ValidationError(
-                        String.format("ListCodeElement %s display context parameter is not one of the fields in collection", listCodeElementNames.trim())
-                    ){});
+                for (String listCodeElementNames : result) {
+                    if (eventCaseFieldEntity.getCaseField().getFieldType().getCollectionFieldType().getComplexFields()
+                        .stream().noneMatch(complexField -> complexField.getReference().equals(listCodeElementNames.trim()))) {
+                        validationResult.addError(new ValidationError(
+                            String.format("ListCodeElement %s display context parameter is not one of the fields in collection", listCodeElementNames.trim())
+                        ) {
+                        });
+                    }
                 }
-            }
-
         }
 
         return validationResult;
