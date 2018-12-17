@@ -4,6 +4,7 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ToString
 public class ShowCondition {
@@ -11,7 +12,7 @@ public class ShowCondition {
     private final String showConditionExpression;
     private final List<String> fields;
 
-    public ShowCondition(String showConditionExpression, List<String> fields) {
+    private ShowCondition(String showConditionExpression, List<String> fields) {
         this.showConditionExpression = showConditionExpression;
         this.fields = fields;
     }
@@ -21,7 +22,19 @@ public class ShowCondition {
     }
 
     public List<String> getFields() {
-        return fields;
+        return fields.stream().map(ShowCondition::dropSubtypes).collect(Collectors.toList());
+    }
+
+    public List<String> getFieldsWithSubtypes() {
+        return fields.stream().filter(field -> field.contains(".")).collect(Collectors.toList());
+    }
+
+    private static String dropSubtypes(String field) {
+        if (field.contains(".")) {
+            return field.substring(0, field.indexOf('.'));
+        } else {
+            return field;
+        }
     }
 
     public static class Builder {

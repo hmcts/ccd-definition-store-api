@@ -7,6 +7,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditi
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 
@@ -28,6 +29,7 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
     public ValidationResult validate(DisplayGroupEntity displayGroup, List<DisplayGroupEntity> allDisplayGroups) {
         ValidationResult validationResult = new ValidationResult();
 
+        // from Excel CaseEventToFields.PageShowCondition column
         if (preconditions(displayGroup)) {
             ShowCondition showCondition;
             try {
@@ -36,6 +38,16 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
                 validationResult.addError(new DisplayGroupInvalidShowConditionError(displayGroup));
                 return validationResult;
             }
+
+            List<String> allSubTypePossibilities = CaseFieldEntityUtil
+                .buildDottedComplexFieldPossibilities(displayGroup.getCaseType().getCaseFields());
+
+            showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
+                if (!allSubTypePossibilities.contains(showConditionField)) {
+                    validationResult.addError(
+                        new DisplayGroupInvalidEventFieldShowCondition(showConditionField, displayGroup));
+                }
+            });
 
             showCondition.getFields().forEach(showConditionField -> {
                 if (!displayGroup.getEvent().hasField(showConditionField)) {
@@ -46,7 +58,7 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
         return validationResult;
     }
 
-    public boolean preconditions(DisplayGroupEntity displayGroup) {
+    private boolean preconditions(DisplayGroupEntity displayGroup) {
         List<Predicate<DisplayGroupEntity>> preconditions = new ArrayList<>();
         preconditions.add(dg -> !StringUtils.isBlank(dg.getShowCondition()));
         preconditions.add(dg -> dg.getType() == DisplayGroupType.PAGE);
