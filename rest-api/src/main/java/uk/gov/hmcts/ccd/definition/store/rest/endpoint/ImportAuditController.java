@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
@@ -28,7 +28,7 @@ class ImportAuditController {
         this.azureImportAuditsClient = azureImportAuditsClient;
     }
 
-    @RequestMapping(value = "/import-audits", method = RequestMethod.GET, produces = {"application/json"})
+    @GetMapping(value = "/import-audits", produces = {"application/json"})
     @ApiOperation(value = "Fetches import audits")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Import audits")
