@@ -36,7 +36,7 @@ public class AzureImportAuditsClient {
     /**
      * Fetches All import audits.
      * @return import audits in reverse chronological order
-     * @throws StorageException
+     * @throws StorageException Exception thrown when trying to connect to Azure Blob store
      */
     public List<ImportAudit> fetchAllImportAudits() throws StorageException {
         List<ImportAudit> audits = new ArrayList<>();

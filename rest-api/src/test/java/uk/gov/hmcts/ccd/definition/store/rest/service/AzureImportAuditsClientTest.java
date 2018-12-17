@@ -27,8 +27,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class, BlobProperties.class})
 public class AzureImportAuditsClientTest {
 
-    private CloudBlobContainer cloudBlobContainer;
-
     private AzureImportAuditsClient subject;
 
     private CloudBlockBlob b1;
@@ -41,7 +39,7 @@ public class AzureImportAuditsClientTest {
 
     @Before
     public void setUp() {
-        cloudBlobContainer = mock(CloudBlobContainer.class);
+        final CloudBlobContainer cloudBlobContainer = mock(CloudBlobContainer.class);
         b1 = mock(CloudBlockBlob.class);
         b2 = mock(CloudBlockBlob.class);
         p1 = mock(BlobProperties.class);
