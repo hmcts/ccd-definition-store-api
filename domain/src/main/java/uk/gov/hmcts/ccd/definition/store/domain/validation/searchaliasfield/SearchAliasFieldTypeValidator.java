@@ -22,9 +22,8 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
         ValidationResult validationResult = new ValidationResult();
 
         if (searchAliasField.getFieldType() == null) {
-            validationResult.addError(new ValidationError(String.format("Invalid case field '%s' for search alias ID '%s' and case type '%s'. Case field "
-                                                                            + "should point to a concrete field with full object notation in case of a complex "
-                                                                            + "type.",
+            validationResult.addError(new ValidationError(String.format("Invalid case field '%s' for search alias ID '%s' and case type '%s'. Case field should"
+                                                                            + " point to a concrete field with full object notation in case of a complex type.",
                                                                         searchAliasField.getCaseFieldPath(),
                                                                         searchAliasField.getReference(),
                                                                         searchAliasField.getCaseType().getReference()),
