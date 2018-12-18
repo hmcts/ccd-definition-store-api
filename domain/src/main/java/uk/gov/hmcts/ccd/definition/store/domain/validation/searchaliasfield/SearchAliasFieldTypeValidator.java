@@ -33,8 +33,8 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
             repository.findByReference(searchAliasField.getReference())
                 .forEach(field -> {
                     if (!field.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference())) {
-                        validationResult.addError(new ValidationError(String.format("Invalid search alias type '%s'. The search alias ID '%s' has been "
-                                                                                        + "already registered as '%s' for case type '%s'",
+                        validationResult.addError(new ValidationError(String.format("Invalid search alias type '%s' for search alias ID '%s'. This ID has "
+                                                                                        + "already been registered as '%s' for case type '%s'",
                                                                                     searchAliasField.getFieldType().getReference(),
                                                                                     searchAliasField.getReference(),
                                                                                     field.getFieldType().getReference(),
