@@ -30,14 +30,17 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
                                                           searchAliasField));
         } else {
             repository.findByReference(searchAliasField.getReference())
-                .forEach(field -> {
-                    if (!field.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference())) {
+                .stream()
+                .filter(aliasField -> !aliasField.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference()))
+                .findFirst()
+                .ifPresent(aliasField -> {
+                    if (!aliasField.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference())) {
                         validationResult.addError(new ValidationError(String.format("Invalid search alias type '%s' for search alias ID '%s'. This ID has "
                                                                                         + "already been registered as '%s' for case type '%s'",
                                                                                     searchAliasField.getFieldType().getReference(),
                                                                                     searchAliasField.getReference(),
-                                                                                    field.getFieldType().getReference(),
-                                                                                    field.getCaseType().getReference()),
+                                                                                    aliasField.getFieldType().getReference(),
+                                                                                    aliasField.getCaseType().getReference()),
                                                                       searchAliasField));
                     }
                 });

@@ -95,14 +95,14 @@ public class CaseMappingGenerator extends MappingGenerator {
                 jw.jsonValue(aliasMapping);
                 log.info("property: {}, alias mapping: {}", searchAliasField.getReference(), aliasMapping);
 
-                aliasTextSortMapping(jw, searchAliasField);
+                addAliasForTextFieldSorting(jw, searchAliasField);
             }
             jw.endObject();
             jw.endObject();
         }
     }
 
-    private void aliasTextSortMapping(JsonWriter jw, SearchAliasFieldEntity searchAliasField) throws IOException {
+    private void addAliasForTextFieldSorting(JsonWriter jw, SearchAliasFieldEntity searchAliasField) throws IOException {
         String fieldType = config.getTypeMappings().get(searchAliasField.getFieldType().getReference());
         // If the elasticsearch field type is text then create alias with a suffix '_sort' pointing to the type 'field.keyword' of the text field. As sorting
         // on full text is disabled by default (due to high memory consumption), the alternative is to use the text field's keyword for sorting.
