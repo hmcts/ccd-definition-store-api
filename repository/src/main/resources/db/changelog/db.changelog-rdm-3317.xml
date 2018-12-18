@@ -14,7 +14,7 @@
             <column name="case_type_id" type="integer">
                 <constraints nullable="false"/>
             </column>
-            <column name="case_field_path" type="varchar(200)">
+            <column name="case_field_path" type="varchar(500)">
                 <constraints nullable="false"/>
             </column>
             <column name="field_type_id" type="integer">
