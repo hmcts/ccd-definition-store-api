@@ -23,7 +23,7 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
     @Test
     public void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
-        EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase();
+        EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#TABLE(firstname)");
         eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);
         ValidationResult validationResult
             = new EventCaseFieldDisplayContextParameterValidatorImpl().validate(eventCaseFieldEntity, null);
@@ -32,6 +32,29 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
         assertEquals(2, validationResult.getValidationErrors().size());
         assertEquals("Display context parameter is not of type collection",validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",validationResult.getValidationErrors().get(1).getDefaultMessage());
+
+        eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#LIST(firstname)");
+        eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);
+        validationResult
+            = new EventCaseFieldDisplayContextParameterValidatorImpl().validate(eventCaseFieldEntity, null);
+
+        assertFalse(validationResult.isValid());
+        assertEquals(2, validationResult.getValidationErrors().size());
+        assertEquals("Display context parameter is not of type collection",validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",validationResult.getValidationErrors().get(1).getDefaultMessage());
+    }
+
+    @Test
+    public void shouldFireValidationErrorWhenDisplayContextParamFormatIncorrect() {
+        EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#sss(firstname)");
+        eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);
+        ValidationResult validationResult
+            = new EventCaseFieldDisplayContextParameterValidatorImpl().validate(eventCaseFieldEntity, null);
+
+        assertFalse(validationResult.isValid());
+        assertEquals(2, validationResult.getValidationErrors().size());
+        assertEquals("Display context parameter is not of type collection",validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("DisplayContextParameter text should begin with #LIST( or #TABLE(",validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
 
     private EventCaseFieldEntity eventCaseFieldEntity() {
@@ -55,10 +78,10 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
         return eventCaseFieldEntity;
     }
 
-    private EventCaseFieldEntity eventCaseFieldEntityFailureCase() {
+    private EventCaseFieldEntity eventCaseFieldEntityFailureCase(final String displayContextParameter) {
 
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
-        eventCaseFieldEntity.setDisplayContextParameter("#TABLE(firstname)");
+        eventCaseFieldEntity.setDisplayContextParameter(displayContextParameter);
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
         caseFieldEntity.setReference("Case1");
         FieldTypeEntity fieldType = new FieldTypeEntity();
