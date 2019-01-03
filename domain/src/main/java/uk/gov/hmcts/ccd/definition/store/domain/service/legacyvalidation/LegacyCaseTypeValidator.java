@@ -25,7 +25,7 @@ public class LegacyCaseTypeValidator {
     }
 
     /**
-     * Run all validation rules for the Case Type and collate all errors in the result
+     * Run all validation rules for the Case Type and collate all errors in the result.
      *
      * @param caseTypeItem - Case Type to be validated
      */
@@ -44,7 +44,8 @@ public class LegacyCaseTypeValidator {
             }
         }
 
-        if (!result.validationPassed())
+        if (!result.validationPassed()) {
             throw new CaseTypeValidationException(result);
+        }
     }
 }

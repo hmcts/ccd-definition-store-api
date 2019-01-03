@@ -15,7 +15,6 @@ public class JurisdictionRule implements ValidationRule {
 
     /**
      * Validate that a valid Jurisdiction has been provided.
-     *
      *Should  with appropriate message when validation fails.
      *
      * @param caseTypeEntity - Case Type being validated
@@ -23,9 +22,9 @@ public class JurisdictionRule implements ValidationRule {
     @Override
     public String validate(CaseTypeEntity caseTypeEntity) {
         JurisdictionEntity jurisdiction = caseTypeEntity.getJurisdiction();
-        if (jurisdiction == null)
+        if (jurisdiction == null) {
             return NULL_JURISDICTION;
-
+        }
         if (jurisdiction.getName() == null) {
             return NULL_JURISDICTION_NAME;
         }

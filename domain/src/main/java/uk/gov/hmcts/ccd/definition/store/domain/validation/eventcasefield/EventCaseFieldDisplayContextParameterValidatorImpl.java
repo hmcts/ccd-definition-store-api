@@ -10,6 +10,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 @Component
 public class EventCaseFieldDisplayContextParameterValidatorImpl implements EventCaseFieldEntityValidator {
 
+    /**
+     * Validate event case field entity to contain display context as per #List/TABLE(DisplayContextParameter,DisplayContextParameter) format.
+     * @param eventCaseFieldEntity object
+     * @param eventCaseFieldEntityValidationContext object
+     * @return ValidationResult object
+     */
     @Override
     public ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
@@ -21,6 +27,11 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
             });
         }
         if (StringUtils.isNotBlank(eventCaseFieldEntity.getDisplayContextParameter())) {
+
+            if (!eventCaseFieldEntity.getDisplayContextParameter().startsWith("#LIST(")
+                && !eventCaseFieldEntity.getDisplayContextParameter().startsWith("#TABLE(")) {
+                validationResult.addError(new ValidationError("DisplayContextParameter text should begin with #LIST( or #TABLE("){});
+            } else {
                 String removeBeginingSection = eventCaseFieldEntity.getDisplayContextParameter().indexOf("#LIST(") > -1
                     ? eventCaseFieldEntity.getDisplayContextParameter().replace("#LIST(", "") :
                     eventCaseFieldEntity.getDisplayContextParameter().replace("#TABLE(", "");
@@ -35,6 +46,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
                         });
                     }
                 }
+            }
+
         }
 
         return validationResult;
