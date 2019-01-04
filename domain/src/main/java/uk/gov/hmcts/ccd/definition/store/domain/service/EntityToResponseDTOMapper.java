@@ -5,8 +5,45 @@ import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventLite;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseState;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTab;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTabField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
 
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
@@ -151,6 +188,10 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
+
+    @Mapping(source = "searchAliasFieldEntity.reference", target = "id")
+    @Mapping(source = "searchAliasFieldEntity.caseType.reference", target = "caseTypeId")
+    SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
