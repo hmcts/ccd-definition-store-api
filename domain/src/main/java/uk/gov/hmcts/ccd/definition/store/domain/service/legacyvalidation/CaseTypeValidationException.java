@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Exception thrown when validation of a Case Type fails
+ * CaseTypeValidationException for runtime expections.
+ * Exception thrown when validation of a Case Type fails.
  */
 public class CaseTypeValidationException extends RuntimeException {
 
@@ -19,6 +20,7 @@ public class CaseTypeValidationException extends RuntimeException {
     }
 
     /**
+     * Get list of errors.
      * @return the list of errors
      */
     public Set<String> getErrors() {

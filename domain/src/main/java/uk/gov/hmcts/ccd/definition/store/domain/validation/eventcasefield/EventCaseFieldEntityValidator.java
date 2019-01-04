@@ -4,7 +4,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
-public interface EventCaseFieldEntityValidator {
+public interface    EventCaseFieldEntityValidator {
 
     ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
                               EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext);

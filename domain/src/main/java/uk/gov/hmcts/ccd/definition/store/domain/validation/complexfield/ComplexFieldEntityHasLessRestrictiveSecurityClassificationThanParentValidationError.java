@@ -12,16 +12,17 @@ public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParen
 
     private ValidationContext complexFieldEntityValidationContext;
 
-    public ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(ComplexFieldEntity complexFieldEntity, ValidationContext validationContext) {
+    public ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(ComplexFieldEntity complexFieldEntity,
+                                                                                               ValidationContext validationContext) {
         super(String.format(
-                "Security classification for ComplexField with reference '%s' " +
-                        "has a less restrictive security classification of '%s' than its parent CaseField '%s' " +
-                        "which is '%s'.",
-                complexFieldEntity.getReference(),
-                complexFieldEntity.getSecurityClassification(),
-                validationContext.getCaseFieldReference(),
-                validationContext.getParentSecurityClassification()
-                )
+            "Security classification for ComplexField with reference '%s' "
+                + "has a less restrictive security classification of '%s' than its parent CaseField '%s' "
+                + "which is '%s'.",
+            complexFieldEntity.getReference(),
+            complexFieldEntity.getSecurityClassification(),
+            validationContext.getCaseFieldReference(),
+            validationContext.getParentSecurityClassification()
+            )
         );
         this.complexFieldEntity = complexFieldEntity;
         this.complexFieldEntityValidationContext = validationContext;
