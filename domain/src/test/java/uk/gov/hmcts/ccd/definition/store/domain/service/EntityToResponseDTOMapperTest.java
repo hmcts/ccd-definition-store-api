@@ -2,7 +2,11 @@ package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -25,8 +29,54 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventLite;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseState;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTab;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTabField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
 
 class EntityToResponseDTOMapperTest {
 
@@ -36,7 +86,7 @@ class EntityToResponseDTOMapperTest {
 
     private static final String LIVE_TO = "2018-03-03";
 
-    private EntityToResponseDTOMapper classUnderTest = new EntityToResponseDTOMapperImpl();
+    private final EntityToResponseDTOMapper classUnderTest = new EntityToResponseDTOMapperImpl();
 
     private EntityToResponseDTOMapper spyOnClassUnderTest;
 
@@ -137,6 +187,13 @@ class EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(caseFieldEntity2)).thenReturn(caseField2);
             when(spyOnClassUnderTest.map(caseFieldEntity3)).thenReturn(caseField3);
 
+            SearchAliasFieldEntity searchAliasFieldEntity1 = new SearchAliasFieldEntity();
+            SearchAliasFieldEntity searchAliasFieldEntity2 = new SearchAliasFieldEntity();
+            SearchAliasField searchAliasField1 = new SearchAliasField();
+            SearchAliasField searchAliasField2 = new SearchAliasField();
+            when(spyOnClassUnderTest.map(searchAliasFieldEntity1)).thenReturn(searchAliasField1);
+            when(spyOnClassUnderTest.map(searchAliasFieldEntity2)).thenReturn(searchAliasField2);
+
             CaseTypeACLEntity roleWithCreateOnly = caseTypeUserRoleEntity("role-with-create-only", true, false,
                                                                                false, false);
             CaseTypeACLEntity roleWithReadOnly = caseTypeUserRoleEntity("role-with-read-only", false, true, false,
@@ -151,7 +208,8 @@ class EntityToResponseDTOMapperTest {
                 Arrays.asList(eventEntity1, eventEntity2, eventEntity3),
                 Arrays.asList(stateEntity1, stateEntity2, stateEntity3),
                 Arrays.asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly),
-                Arrays.asList(caseFieldEntity1, caseFieldEntity2, caseFieldEntity3)
+                Arrays.asList(caseFieldEntity1, caseFieldEntity2, caseFieldEntity3),
+                Arrays.asList(searchAliasFieldEntity1, searchAliasFieldEntity2)
             );
 
             // Call the 'spied on' implementation
@@ -182,6 +240,8 @@ class EntityToResponseDTOMapperTest {
             assertEquals(3, caseType.getCaseFields().size());
             assertThat(caseType.getCaseFields(), hasItems(caseField1, caseField2, caseField3));
 
+            assertEquals(2, caseType.getSearchAliasFields().size());
+            assertThat(caseType.getSearchAliasFields(), hasItems(searchAliasField1, searchAliasField2));
         }
 
         @Test
@@ -211,7 +271,8 @@ class EntityToResponseDTOMapperTest {
                                               List<EventEntity> events,
                                               Collection<StateEntity> states,
                                               List<CaseTypeACLEntity> roles,
-                                              List<CaseFieldEntity> caseFieldEntities) {
+                                              List<CaseFieldEntity> caseFieldEntities,
+                                              List<SearchAliasFieldEntity> searchAliasFieldEntities) {
             CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
             caseTypeEntity.setVersion(69);
             caseTypeEntity.setLiveFrom(LocalDate.parse(LIVE_FROM));
@@ -229,6 +290,7 @@ class EntityToResponseDTOMapperTest {
             caseTypeEntity.addStates(states);
             caseTypeEntity.addCaseTypeACLEntities(roles);
             caseTypeEntity.addCaseFields(caseFieldEntities);
+            caseTypeEntity.addSearchAliasFields(searchAliasFieldEntities);
 
             return caseTypeEntity;
         }
