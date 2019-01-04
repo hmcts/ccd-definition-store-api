@@ -12,7 +12,7 @@
     "alias": {
       "properties": {
         "aliasFieldA": "aliasMapping.caseFieldPath",
-        "aliasFieldA_sort": "aliasTextSortMapping.caseFieldPath"
+        "aliasFieldA_keyword": "aliasTextSortMapping.caseFieldPath"
       }
     }
   }

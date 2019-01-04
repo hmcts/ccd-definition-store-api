@@ -19,7 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntit
 @Slf4j
 public class CaseMappingGenerator extends MappingGenerator {
 
-    private static final String ALIAS_TEXT_SORT_SUFFIX = "_sort";
+    private static final String ALIAS_TEXT_SORT_SUFFIX = "_keyword";
     static final String ALIAS_CASE_FIELD_PATH_PLACE_HOLDER = "<caseFieldPathPlaceHolder>";
 
     public String generateMapping(CaseTypeEntity caseType) {
@@ -104,7 +104,7 @@ public class CaseMappingGenerator extends MappingGenerator {
 
     private void addAliasForTextFieldSorting(JsonWriter jw, SearchAliasFieldEntity searchAliasField) throws IOException {
         String fieldType = config.getTypeMappings().get(searchAliasField.getFieldType().getReference());
-        // If the elasticsearch field type is text then create alias with a suffix '_sort' pointing to the type 'field.keyword' of the text field. As sorting
+        // If the elasticsearch field type is text then create alias with a suffix '_keyword' pointing to the type 'field.keyword' of the text field. As sorting
         // on full text is disabled by default (due to high memory consumption), the alternative is to use the text field's keyword for sorting.
         if (config.getElasticMappings().get(DEFAULT_TEXT).equalsIgnoreCase(fieldType)) {
             jw.name(searchAliasField.getReference() + ALIAS_TEXT_SORT_SUFFIX);
