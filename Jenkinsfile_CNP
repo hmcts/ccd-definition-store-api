@@ -31,6 +31,11 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     ]
 }
 
+def vaultOverrides = [
+    'preview': 'aat',
+    'spreview': 'saat'
+]
+
 withPipeline(type, product, app) {
     onMaster {
         enableSlackNotifications('#ccd-master-builds')
@@ -45,5 +50,6 @@ withPipeline(type, product, app) {
     enableDbMigration()
     enableDockerBuild()
 
+    overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
 }
