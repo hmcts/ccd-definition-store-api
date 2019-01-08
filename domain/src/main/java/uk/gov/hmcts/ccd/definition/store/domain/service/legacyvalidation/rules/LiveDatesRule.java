@@ -11,19 +11,20 @@ public class LiveDatesRule implements ValidationRule {
     private static final String FROM_AFTER_UNTIL = "The Live From date must be before the Live Until date";
 
     /**
-     * Validate the the Case Type's version information is valid
+     * Validate the the Case Type's version information is valid.
      *
      * @param caseTypeEntity - Case Type being validated
      */
     @Override
     public String validate(CaseTypeEntity caseTypeEntity) {
 
-        if (caseTypeEntity.getLiveFrom() == null)
+        if (caseTypeEntity.getLiveFrom() == null) {
             return NULL_LIVE_FROM;
+        }
 
-        if (caseTypeEntity.getLiveTo() != null && !caseTypeEntity.getLiveFrom().isBefore(caseTypeEntity.getLiveTo()))
+        if (caseTypeEntity.getLiveTo() != null && !caseTypeEntity.getLiveFrom().isBefore(caseTypeEntity.getLiveTo())) {
             return FROM_AFTER_UNTIL;
-
+        }
         return null;
     }
 }

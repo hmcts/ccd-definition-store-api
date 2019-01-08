@@ -8,13 +8,17 @@ def product = "ccd"
 
 def app = "definition-store-api"
 
-List<LinkedHashMap<String, Object>> secrets = [
-    secret('ccd-importer-autotest-email', 'CCD_IMPORT_AUTOTEST_EMAIL'),
-    secret('ccd-importer-autotest-password', 'CCD_IMPORT_AUTOTEST_PASSWORD'),
-    secret('ccd-caseworker-autotest-email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
-    secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
-    secret('ccd-api-gateway-s2s-secret', 'CCD_GW_SERVICE_SECRET'),
-    secret('ccd-api-gateway-oauth2-client-secret', 'OAUTH2_CLIENT_SECRET'),
+def secrets = [
+    'ccd-${env}': [
+        secret('ccd-importer-autotest-email', 'CCD_IMPORT_AUTOTEST_EMAIL'),
+        secret('ccd-importer-autotest-password', 'CCD_IMPORT_AUTOTEST_PASSWORD'),
+        secret('ccd-caseworker-autotest-email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
+        secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
+        secret('ccd-api-gateway-oauth2-client-secret', 'OAUTH2_CLIENT_SECRET'),
+    ],
+    's2s-${env}': [
+        secret('microservicekey-ccd-gw', 'CCD_GW_SERVICE_SECRET'),
+    ]
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
@@ -26,6 +30,11 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
         envVariable: envVar
     ]
 }
+
+def vaultOverrides = [
+    'preview': 'aat',
+    'spreview': 'saat'
+]
 
 withPipeline(type, product, app) {
     onMaster {
@@ -41,5 +50,6 @@ withPipeline(type, product, app) {
     enableDbMigration()
     enableDockerBuild()
 
+    overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
 }

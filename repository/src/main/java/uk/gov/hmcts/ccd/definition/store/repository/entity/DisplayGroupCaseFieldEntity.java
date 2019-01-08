@@ -30,6 +30,9 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
     @JoinColumn(name = "display_group_id", referencedColumnName = "id")
     private DisplayGroupEntity displayGroup;
 
+    @Column(name = "display_context_parameter")
+    private String displayContextParameter;
+
     @Column(name = "display_order")
     private Integer order;
 
@@ -97,5 +100,13 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
 
     public boolean hasShowCondition() {
         return !StringUtils.isBlank(showCondition);
+    }
+
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }

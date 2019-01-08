@@ -35,7 +35,8 @@ public class DisplayGroupAdapterService {
         if (caseTypeEntity.isPresent()) {
             List<EventEntity> events = eventRepository.findByReferenceAndCaseTypeId(eventReference, caseTypeEntity.get().getId());
             if (events.size() == 1) {
-                final List<DisplayGroupEntity> displayGroupEntityList = displayGroupRepository.findByTypeAndCaseTypeIdAndEventOrderByOrder(DisplayGroupType.PAGE, caseTypeEntity.get().getId(), events.get(0));
+                final List<DisplayGroupEntity> displayGroupEntityList = displayGroupRepository.findByTypeAndCaseTypeIdAndEventOrderByOrder(
+                    DisplayGroupType.PAGE, caseTypeEntity.get().getId(), events.get(0));
                 WizardPageCollection wizardPageCollection = new WizardPageCollection(caseTypeReference, eventReference);
                 displayGroupEntityList.forEach(displayGroupEntity -> {
                     WizardPage wizardPage = new WizardPage();

@@ -19,8 +19,8 @@ public class CaseRoleEntityMandatoryFieldsValidatorImpl implements CaseRoleEntit
                 caseRoleEntity));
         }
         if (caseRoleEntity.getReference() == null) {
-            validationResult.addError(new CaseRoleEntityMandatoryFieldsValidatorImpl.ValidationError("CaseRole ID is " +
-                "null", caseRoleEntity));
+            validationResult.addError(new CaseRoleEntityMandatoryFieldsValidatorImpl.ValidationError("CaseRole ID is "
+                + "null", caseRoleEntity));
         }
         if (caseRoleEntity.getName() == null) {
             String message = String.format("CaseName is null for caseRole '%s'", caseRoleEntity.getReference());

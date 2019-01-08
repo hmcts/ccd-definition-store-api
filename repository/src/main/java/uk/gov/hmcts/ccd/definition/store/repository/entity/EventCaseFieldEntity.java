@@ -41,6 +41,9 @@ public class EventCaseFieldEntity implements Serializable {
     @Type(type = "pgsql_displaycontext_enum")
     private DisplayContext displayContext;
 
+    @Column(name = "display_context_parameter")
+    private String displayContextParameter;
+
     @Column(name = "show_condition")
     private String showCondition;
 
@@ -118,5 +121,13 @@ public class EventCaseFieldEntity implements Serializable {
 
     public void setHintText(String hintText) {
         this.hintText = hintText;
+    }
+
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }

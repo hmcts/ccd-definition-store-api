@@ -6,7 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 public interface ValidationRule {
 
     /**
-     * Perform validation on the given Case Type
+     * Perform validation on the given Case Type.
      *
      * @param caseTypeEntity - Case Type being validated
      */
