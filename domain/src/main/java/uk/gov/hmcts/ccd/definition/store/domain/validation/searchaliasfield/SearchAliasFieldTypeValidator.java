@@ -35,10 +35,10 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
                 .findFirst()
                 .ifPresent(aliasField -> {
                     if (!aliasField.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference())) {
-                        validationResult.addError(new ValidationError(String.format("Invalid search alias type '%s' for search alias ID '%s'. This ID has "
-                                                                                        + "already been registered as '%s' for case type '%s'",
-                                                                                    searchAliasField.getFieldType().getReference(),
+                        validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case field '%s'. This search alias ID "
+                                                                                        + "has already been registered as '%s' for case type '%s'",
                                                                                     searchAliasField.getReference(),
+                                                                                    searchAliasField.getCaseFieldPath(),
                                                                                     aliasField.getFieldType().getReference(),
                                                                                     aliasField.getCaseType().getReference()),
                                                                       searchAliasField));
