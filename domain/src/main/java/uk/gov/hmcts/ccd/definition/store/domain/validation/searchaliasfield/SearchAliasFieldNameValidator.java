@@ -19,7 +19,7 @@ public class SearchAliasFieldNameValidator implements SearchAliasFieldValidator 
         if (!SEARCH_ALIAS_FIELD_NAME_PATTERN.matcher(searchAliasField.getReference()).matches()) {
             validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case type '%s' and case field '%s'. The ID "
                                                                             + "must start with a letter, be exclusively composed of lowercase and/or "
-                                                                            + "uppercase letters, numbers and underscores, with a minimum length of 2.",
+                                                                            + "uppercase letters, numbers and/or underscores, with a minimum length of 2.",
                                                                         searchAliasField.getReference(),
                                                                         searchAliasField.getCaseType().getReference(),
                                                                         searchAliasField.getCaseFieldPath()),

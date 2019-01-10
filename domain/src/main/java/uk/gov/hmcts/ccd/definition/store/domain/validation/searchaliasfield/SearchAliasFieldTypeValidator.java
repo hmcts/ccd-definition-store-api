@@ -36,11 +36,13 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
                 .ifPresent(aliasField -> {
                     if (!aliasField.getFieldType().getReference().equalsIgnoreCase(searchAliasField.getFieldType().getReference())) {
                         validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case field '%s'. This search alias ID "
-                                                                                        + "has already been registered as '%s' for case type '%s'",
+                                                                                        + "has already been registered for case type '%s', case field '%s'. "
+                                                                                        + "This search alias ID must be of type '%s'.",
                                                                                     searchAliasField.getReference(),
                                                                                     searchAliasField.getCaseFieldPath(),
-                                                                                    aliasField.getFieldType().getReference(),
-                                                                                    aliasField.getCaseType().getReference()),
+                                                                                    aliasField.getCaseType().getReference(),
+                                                                                    aliasField.getCaseFieldPath(),
+                                                                                    aliasField.getFieldType().getReference()),
                                                                       searchAliasField));
                     }
                 });
