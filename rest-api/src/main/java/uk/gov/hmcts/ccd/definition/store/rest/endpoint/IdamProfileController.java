@@ -5,12 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
 @Api(value = "/api")
@@ -24,7 +23,7 @@ class IdamProfileController {
         this.idamProfileClient = idamProfileService;
     }
 
-    @RequestMapping(value = "/idam/profile", method = GET, produces = {"application/json"})
+    @GetMapping(value = "/idam/profile", produces = {"application/json"})
     @ApiOperation(value = "Gets idam profile from current logged in user", response = IDAMProperties.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),

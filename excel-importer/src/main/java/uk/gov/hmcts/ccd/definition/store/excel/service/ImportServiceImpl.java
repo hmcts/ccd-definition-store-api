@@ -198,9 +198,7 @@ public class ImportServiceImpl implements ImportService {
             metadata.addCaseType(entity.getReference());
         }
 
-        if (userDetails != null) {
-            metadata.setUserId(userDetails.getEmail());
-        }
+        metadata.setUserId(userDetails.getEmail());
 
         return metadata;
     }
