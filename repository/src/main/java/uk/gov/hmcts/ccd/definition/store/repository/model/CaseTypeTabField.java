@@ -9,7 +9,7 @@ public class CaseTypeTabField {
     private CaseField caseField = null;
     private Integer order = null;
     private String showCondition = null;
-
+    private String displayContextParameter = null;
 
     @JsonProperty("case_field")
     public CaseField getCaseField() {
@@ -36,5 +36,14 @@ public class CaseTypeTabField {
 
     public void setShowCondition(String showCondition) {
         this.showCondition = showCondition;
+    }
+
+    @JsonProperty("display_context_parameter")
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }

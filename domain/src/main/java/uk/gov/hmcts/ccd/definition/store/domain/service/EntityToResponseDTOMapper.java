@@ -112,8 +112,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "fieldTypeEntity.listItems", target = "fixedListItems")
     @Mapping(source = "fieldTypeEntity.minimum", target = "min")
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
-    @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null" +
-        " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
+    @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null"
+        + " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
         target = "type")
     FieldType map(FieldTypeEntity fieldTypeEntity);
 
