@@ -1,3 +1,7 @@
+provider "azurerm" {
+  version = "1.19.0"
+}
+
 locals {
   app_full_name = "${var.product}-${var.component}"
 
@@ -9,6 +13,7 @@ locals {
   env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
 
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
+  s2s_vault_url = "https://s2s-${local.local_env}.vault.azure.net/"
 
   // Vault name
   previewVaultName = "${var.raw_product}-aat"
@@ -49,8 +54,8 @@ resource "azurerm_storage_container" "imports_container" {
 }
 
 data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
-  name = "ccd-definition-store-api-s2s-secret"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+  name = "microservicekey-ccd-definition"
+  vault_uri = "${local.s2s_vault_url}"
 }
 
 data "azurerm_key_vault_secret" "storageaccount_primary_connection_string" {

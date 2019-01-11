@@ -13,13 +13,13 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
     public EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(EventEntity eventEntity,
                                                                                         EventEntityValidationContext eventEntityValidationContext) {
         super(String.format(
-                "Security classification for Event with reference '%s' " +
-                "has a less restrictive security classification of '%s' than its parent CaseType '%s' " +
-                "which is '%s'.",
-                eventEntity.getReference(),
-                eventEntity.getSecurityClassification(),
-                eventEntityValidationContext.getCaseName(),
-                eventEntityValidationContext.getParentSecurityClassification()
+            "Security classification for Event with reference '%s' "
+                + "has a less restrictive security classification of '%s' than its parent CaseType '%s' "
+                + "which is '%s'.",
+            eventEntity.getReference(),
+            eventEntity.getSecurityClassification(),
+            eventEntityValidationContext.getCaseName(),
+            eventEntityValidationContext.getParentSecurityClassification()
             )
         );
         this.eventEntity = eventEntity;

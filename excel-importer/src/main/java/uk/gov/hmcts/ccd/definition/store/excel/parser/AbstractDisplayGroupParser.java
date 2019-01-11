@@ -36,6 +36,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     protected ColumnName displayGroupId;
     protected ColumnName displayGroupOrder;
     protected ColumnName displayGroupFieldDisplayOrder;
+    protected ColumnName displayContextParameter = ColumnName.DISPLAY_CONTEXT_PARAMETER;
+
     protected SheetName sheetName;
     protected Optional<ColumnName> groupShowConditionColumn = Optional.empty();
     protected Optional<ColumnName> fieldShowConditionColumn = Optional.empty();
@@ -160,6 +162,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         groupCaseField.setLiveFrom(groupCaseFieldDefinition.getLocalDate(ColumnName.LIVE_FROM));
         groupCaseField.setLiveTo(groupCaseFieldDefinition.getLocalDate(ColumnName.LIVE_TO));
         groupCaseField.setOrder(groupCaseFieldDefinition.getInteger(this.displayGroupFieldDisplayOrder));
+        groupCaseField.setDisplayContextParameter(groupCaseFieldDefinition.getString(this.displayContextParameter));
         this.columnId.ifPresent(cId -> groupCaseField.setColumnNumber(groupCaseFieldDefinition.getInteger(cId)));
         this.fieldShowConditionColumn.ifPresent(sC -> groupCaseField.setShowCondition(parseShowCondition(groupCaseFieldDefinition.getString(sC))));
 
