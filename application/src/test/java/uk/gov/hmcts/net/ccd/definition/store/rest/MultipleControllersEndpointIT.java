@@ -128,7 +128,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
         CaseTabCollection caseTabCollection = mapper.readValue(result.getResponse().getContentAsString(),
                                                                TypeFactory.defaultInstance().constructType(CaseTabCollection.class));
         assertAll(
-            () -> assertThat(caseTabCollection.getTabs(), hasSize(3)),
+            () -> assertThat(caseTabCollection.getTabs(), hasSize(4)),
             () -> assertThat(caseTabCollection.getTabs(), hasItem(allOf(hasProperty("showCondition", containsString("PersonLastName=\"Sparrow\"")),
                                                                         hasProperty("id", containsString("NameTab")),
                                                                         hasProperty("label", containsString("Name"))))),

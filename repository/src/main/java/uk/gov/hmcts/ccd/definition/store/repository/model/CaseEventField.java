@@ -9,6 +9,7 @@ public class CaseEventField {
 
     private String caseFieldId = null;
     private String displayContext = null;
+    private String displayContextParameter;
     private String showCondition;
     private Boolean showSummaryChangeOption = null;
     private Integer showSummaryContentOption = null;
@@ -104,5 +105,18 @@ public class CaseEventField {
 
     public void setHintText(String hintText) {
         this.hintText = hintText;
+    }
+
+    /**
+     * whether this field is optional, mandatory or read only for this event
+     **/
+    @ApiModelProperty(value = "")
+    @JsonProperty("display_context_parameter")
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }

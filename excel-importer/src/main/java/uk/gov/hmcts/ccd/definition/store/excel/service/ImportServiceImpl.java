@@ -1,19 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -21,17 +13,34 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.LayoutParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
-import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class ImportServiceImpl implements ImportService {
@@ -49,9 +58,7 @@ public class ImportServiceImpl implements ImportService {
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
     private final CaseFieldRepository caseFieldRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final SecurityUtils securityUtils;
-    private final RestTemplate restTemplate;
-    private final ApplicationParams applicationParams;
+    private final IdamProfileClient idamProfileClient;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -65,9 +72,7 @@ public class ImportServiceImpl implements ImportService {
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
                              ApplicationEventPublisher applicationEventPublisher,
-                             SecurityUtils securityUtils,
-                             RestTemplate restTemplate,
-                             ApplicationParams applicationParams) {
+                             IdamProfileClient idamProfileClient) {
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
         this.parserFactory = parserFactory;
@@ -78,9 +83,7 @@ public class ImportServiceImpl implements ImportService {
         this.userRoleRepository = userRoleRepository;
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
-        this.securityUtils = securityUtils;
-        this.restTemplate = restTemplate;
-        this.applicationParams = applicationParams;
+        this.idamProfileClient = idamProfileClient;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -176,9 +179,11 @@ public class ImportServiceImpl implements ImportService {
 
         final UserProfilesParser userProfilesParser = parserFactory.createUserProfileParser();
         final List<WorkBasketUserDefault> workBasketUserDefaults = userProfilesParser.parse(definitionSheets);
+        final IDAMProperties userDetails = getUserDetails();
         workBasketUserDefaultService.saveWorkBasketUserDefaults(workBasketUserDefaults,
                                                                 jurisdiction,
-                                                                parsedCaseTypes.getAllResults());
+                                                                parsedCaseTypes.getAllResults(),
+                                                                userDetails.getEmail());
         logger.info("Importing spreadsheet: User profiles: OK");
 
         applicationEventPublisher.publishEvent(new DefinitionImportedEvent(caseTypes));
@@ -193,19 +198,14 @@ public class ImportServiceImpl implements ImportService {
             metadata.addCaseType(entity.getReference());
         }
 
-        IDAMProperties userDetails = getUserDetails();
-        if (userDetails != null) {
-            metadata.setUserId(userDetails.getEmail());
-        }
+        metadata.setUserId(userDetails.getEmail());
 
         return metadata;
     }
 
+    @VisibleForTesting  // used by BaseTest
     public IDAMProperties getUserDetails() {
-        final HttpEntity<ServiceAndUserDetails> requestEntity =
-            new HttpEntity<>(securityUtils.userAuthorizationHeaders());
-        return restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
-            IDAMProperties.class).getBody();
+        return idamProfileClient.getLoggedInUserDetails();
     }
 
     private JurisdictionEntity importJurisdiction(JurisdictionEntity jurisdiction) {

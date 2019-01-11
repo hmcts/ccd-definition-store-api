@@ -16,8 +16,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseField
 public class DisplayGroupColumnNumberValidator implements DisplayGroupCaseFieldValidator {
 
     private List<Predicate<Integer>> rules = newArrayList(
-            Objects::isNull,
-            colNr -> newArrayList(1,2).contains(colNr)
+        Objects::isNull,
+        colNr -> newArrayList(1, 2).contains(colNr)
     );
 
     @Override
@@ -27,7 +27,7 @@ public class DisplayGroupColumnNumberValidator implements DisplayGroupCaseFieldV
             return ValidationResult.SUCCESS;
         } else {
             String message = String.format("Invalid page column number '%s' for case field '%s'",
-                    entity.getColumnNumber(), entity.getCaseField().getReference());
+                entity.getColumnNumber(), entity.getCaseField().getReference());
             return new ValidationResult(new ValidationError(message, entity));
         }
     }

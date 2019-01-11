@@ -25,6 +25,7 @@
         {
           "case_field_id": "HasOtherInfo",
           "display_context": "OPTIONAL",
+          "display_context_parameter" : null,
           "show_condition": null,
           "show_summary_change_option": null,
           "show_summary_content_option": null,
@@ -34,6 +35,7 @@
         {
           "case_field_id": "PersonOrderSummary",
           "display_context": "MANDATORY",
+          "display_context_parameter" : null,
           "show_condition": null,
           "show_summary_change_option": true,
           "show_summary_content_option": null,
@@ -43,6 +45,7 @@
         {
           "case_field_id": "PersonCasePaymentHistoryViewer",
           "display_context": "READONLY",
+          "display_context_parameter" : null,
           "show_condition": null,
           "show_summary_change_option": false,
           "show_summary_content_option": null,
@@ -52,6 +55,7 @@
         {
           "case_field_id": "PersonFirstName",
           "display_context": "MANDATORY",
+          "display_context_parameter" : null,
           "show_condition": null,
           "show_summary_change_option": false,
           "show_summary_content_option": null,
@@ -61,11 +65,21 @@
         {
           "case_field_id": "PersonLastNameWithValidation",
           "display_context": "OPTIONAL",
+          "display_context_parameter" : null,
           "show_condition": null,
           "show_summary_change_option": true,
           "show_summary_content_option": null,
           "label": null,
           "hint_text": null
+        }, {
+          "case_field_id" : "referenceCollection",
+          "display_context" : "OPTIONAL",
+          "display_context_parameter" : "#TABLE(Title, FirstName, MiddleName)",
+          "show_condition" : null,
+          "show_summary_change_option" : null,
+          "show_summary_content_option" : null,
+          "label" : null,
+          "hint_text" : null
         }
       ],
       "pre_states": [],
@@ -118,6 +132,7 @@
         {
           "case_field_id": "PersonFirstName",
           "display_context": "READONLY",
+          "display_context_parameter" : null,
           "show_condition": null,
           "show_summary_change_option": true,
           "show_summary_content_option": 2,
@@ -127,6 +142,7 @@
         {
           "case_field_id": "PersonLastName",
           "display_context": "OPTIONAL",
+          "display_context_parameter" : null,
           "show_condition": null,
           "show_summary_change_option": null,
           "show_summary_content_option": 1,
@@ -136,6 +152,7 @@
         {
           "case_field_id": "PersonAddress",
           "display_context": "OPTIONAL",
+          "display_context_parameter" : null,
           "show_condition": null,
           "show_summary_change_option": true,
           "show_summary_content_option": null,
@@ -145,6 +162,7 @@
         {
           "case_field_id": "PersonHasSecondAddress",
           "display_context": "OPTIONAL",
+          "display_context_parameter" : null,
           "show_condition": null,
           "show_summary_change_option": false,
           "show_summary_content_option": null,
@@ -154,6 +172,7 @@
         {
           "case_field_id": "PersonSecondAddress",
           "display_context": "OPTIONAL",
+          "display_context_parameter" : null,
           "show_condition": "PersonHasSecondAddress=\"Yes\"",
           "show_summary_change_option": null,
           "show_summary_content_option": null,
@@ -1604,6 +1623,169 @@
           "delete": false
         }
       ],
+      "show_condition" : null
+    }, {
+      "metadata" : false,
+      "id" : "referenceCollection",
+      "case_type_id" : "TestAddressBookCase",
+      "label" : "Reference Collection",
+      "hint_text" : null,
+      "field_type" : {
+        "id" : "referenceCollection-<GUID-REMOVED>",
+        "type" : "Collection",
+        "min" : null,
+        "max" : null,
+        "regular_expression" : null,
+        "fixed_list_items" : [ ],
+        "complex_fields" : [ ],
+        "collection_field_type" : {
+          "id" : "Person",
+          "type" : "Complex",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ {
+            "metadata" : false,
+            "id" : "Title",
+            "case_type_id" : null,
+            "label" : "Title",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "FirstName",
+            "case_type_id" : null,
+            "label" : "First Name",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "RESTRICTED",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "MiddleName",
+            "case_type_id" : null,
+            "label" : "Middle Name",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PRIVATE",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "LastName",
+            "case_type_id" : null,
+            "label" : "Last Name",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "DateOfBirth",
+            "case_type_id" : null,
+            "label" : "Date Of Birth",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Date",
+              "type" : "Date",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "RESTRICTED",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          }, {
+            "metadata" : false,
+            "id" : "NationalInsuranceNumber",
+            "case_type_id" : null,
+            "label" : "National Insurance Number",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PRIVATE",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "show_condition" : null
+          } ],
+          "collection_field_type" : null
+        }
+      },
+      "hidden" : null,
+      "security_classification" : "PRIVATE",
+      "live_from" : "2017-01-01",
+      "live_until" : null,
+      "acls" : [ ],
       "show_condition": null
     },
     {

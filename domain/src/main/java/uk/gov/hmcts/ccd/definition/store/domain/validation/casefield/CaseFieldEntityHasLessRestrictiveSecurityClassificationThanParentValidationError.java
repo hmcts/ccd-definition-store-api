@@ -13,13 +13,13 @@ public class CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentVa
     public CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(CaseFieldEntity caseFieldEntity,
                                                                                             CaseFieldEntityValidationContext caseFieldValidationContext) {
         super(String.format(
-                "Security classification for CaseField with reference '%s' " +
-                "has a less restrictive security classification of '%s' than its parent CaseType '%s' " +
-                "which is '%s'.",
-                caseFieldEntity.getReference(),
-                caseFieldEntity.getSecurityClassification(),
-                caseFieldValidationContext.getCaseName(),
-                caseFieldValidationContext.getParentSecurityClassification()
+            "Security classification for CaseField with reference '%s' "
+                + "has a less restrictive security classification of '%s' than its parent CaseType '%s' "
+                + "which is '%s'.",
+            caseFieldEntity.getReference(),
+            caseFieldEntity.getSecurityClassification(),
+            caseFieldValidationContext.getCaseName(),
+            caseFieldValidationContext.getParentSecurityClassification()
             )
         );
         this.caseFieldEntity = caseFieldEntity;
