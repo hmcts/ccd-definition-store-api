@@ -9,6 +9,7 @@ public class WizardPageField {
     private String caseFieldId = null;
     private Integer order = null;
     private Integer pageColumnNumber;
+    private String displayContext = null;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -35,5 +36,14 @@ public class WizardPageField {
 
     public void setPageColumnNumber(Integer number) {
         this.pageColumnNumber = number;
+    }
+
+    @JsonProperty("display_context")
+    public String getDisplayContext() {
+        return displayContext;
+    }
+
+    public void setDisplayContext(String displayContext) {
+        this.displayContext = displayContext;
     }
 }

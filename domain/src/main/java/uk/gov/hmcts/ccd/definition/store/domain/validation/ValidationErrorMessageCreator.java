@@ -15,6 +15,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexF
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityInvalidShowConditionError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
@@ -64,8 +66,14 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
                                   eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
 
+    String createErrorMessage(EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError
+                                  eventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError);
+
     String createErrorMessage(EventCaseFieldEntityInvalidShowConditionError
                                   eventCaseFieldEntityShowConditionInvalidError);
+
+    String createErrorMessage(EventComplexTypeEntityInvalidShowConditionError
+                                  eventComplexTypeEntityInvalidShowConditionError);
 
     String createErrorMessage(EventEntityMissingForPageTypeDisplayGroupError
                                   eventEntityMissingForPageTypeDisplayGroupError);
