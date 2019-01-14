@@ -43,8 +43,23 @@ public class DraftDefinitionController {
     public ResponseEntity<Definition> draftDefinitionCreate(
         @ApiParam(value = "Draft Definition", required = true)
         @RequestBody @NotNull final Definition definition) {
-        final ServiceResponse<Definition> serviceResponse = definitionService.createDraftDefinition(definition);
+        final ServiceResponse<Definition> serviceResponse = definitionService.saveDraftDefinition(definition);
         final ResponseEntity.BodyBuilder responseEntityBuilder = ResponseEntity.status(CREATED);
+        return responseEntityBuilder.body(serviceResponse.getResponseBody());
+    }
+
+    @PostMapping("/draft/save")
+    @ResponseStatus(OK)
+    @ApiOperation(
+        value = "Saves a draft Definition",
+        notes = "Saves a draft Definition for the specified Jurisdiction, incrementing the version number each time"
+    )
+    @ApiResponse(code = 200, message = "Draft Definition created")
+    public ResponseEntity<Definition> saveDraftDefinition(
+        @ApiParam(value = "Draft Definition", required = true)
+        @RequestBody @NotNull final Definition definition) {
+        final ServiceResponse<Definition> serviceResponse = definitionService.saveDraftDefinition(definition);
+        final ResponseEntity.BodyBuilder responseEntityBuilder = ResponseEntity.status(OK);
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
     }
 

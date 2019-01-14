@@ -97,7 +97,7 @@ class DefinitionServiceImplTest {
 
         when(mapper.toModel(any(DefinitionEntity.class))).thenReturn(persistedModel);
 
-        final Definition saved = classUnderTest.createDraftDefinition(definition).getResponseBody();
+        final Definition saved = classUnderTest.saveDraftDefinition(definition).getResponseBody();
 
         verify(jurisdictionRepository).findFirstByReferenceOrderByVersionDesc(anyString());
         verify(mapper).toEntity(any(Definition.class));
@@ -127,7 +127,7 @@ class DefinitionServiceImplTest {
         when(definition.getJurisdiction()).thenReturn(null);
 
         Throwable exception =
-            assertThrows(BadRequestException.class, () -> classUnderTest.createDraftDefinition(definition));
+            assertThrows(BadRequestException.class, () -> classUnderTest.preConditionCheck(definition));
         assertThat(exception.getMessage(), is("No Jurisdiction present in Definition"));
     }
 
@@ -137,7 +137,7 @@ class DefinitionServiceImplTest {
         when(jurisdictionRepository.findFirstByReferenceOrderByVersionDesc(anyString())).thenReturn(Optional.empty());
 
         Throwable exception =
-            assertThrows(BadRequestException.class, () -> classUnderTest.createDraftDefinition(definition));
+            assertThrows(BadRequestException.class, () -> classUnderTest.saveDraftDefinition(definition));
         assertThat(exception.getMessage(), is("Jurisdiction TEST could not be retrieved or does not exist"));
     }
 
@@ -147,7 +147,7 @@ class DefinitionServiceImplTest {
         when(definition.getDescription()).thenReturn(null);
 
         Throwable exception =
-            assertThrows(BadRequestException.class, () -> classUnderTest.createDraftDefinition(definition));
+            assertThrows(BadRequestException.class, () -> classUnderTest.preConditionCheck(definition));
         assertThat(exception.getMessage(), is("Definition description cannot be null"));
     }
 
@@ -157,7 +157,7 @@ class DefinitionServiceImplTest {
         when(definition.getAuthor()).thenReturn(null);
 
         Throwable exception =
-            assertThrows(BadRequestException.class, () -> classUnderTest.createDraftDefinition(definition));
+            assertThrows(BadRequestException.class, () -> classUnderTest.preConditionCheck(definition));
         assertThat(exception.getMessage(), is("Definition author cannot be null"));
     }
 

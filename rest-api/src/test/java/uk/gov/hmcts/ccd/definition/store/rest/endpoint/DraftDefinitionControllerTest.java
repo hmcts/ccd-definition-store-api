@@ -80,7 +80,7 @@ class DraftDefinitionControllerTest {
     @DisplayName("Should return 201 when creating a draft Definition")
     @Test
     void shouldCreateDraftDefinition() throws Exception {
-        when(definitionService.createDraftDefinition(any(Definition.class)))
+        when(definitionService.saveDraftDefinition(any(Definition.class)))
             .thenReturn(new ServiceResponse<>(definition, CREATE));
 
         mockMvc.perform(
@@ -88,7 +88,7 @@ class DraftDefinitionControllerTest {
                 .contentType(CONTENT_TYPE)
                 .content(MAPPER.writeValueAsBytes(definition)))
             .andExpect(status().isCreated());
-        verify(definitionService).createDraftDefinition(any(Definition.class));
+        verify(definitionService).saveDraftDefinition(any(Definition.class));
     }
 
     @DisplayName("should return 200 when finding definitions")

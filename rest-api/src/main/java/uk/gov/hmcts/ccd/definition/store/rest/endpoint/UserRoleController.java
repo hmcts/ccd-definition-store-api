@@ -34,9 +34,8 @@ class UserRoleController {
     @ApiOperation(value = "Update a user role", response = UserRole.class,
         notes = "a user role is created if it does not exist")
     @ApiResponses(value = {
-        @ApiResponse(code = 215, message = "User role is created"),
-        @ApiResponse(code = 205, message = "User role is updated successfully and the user agent SHOULD reset the document view"),
-        @ApiResponse(code = 409, message = "Bad request, for example, incorrect data")
+        @ApiResponse(code = 201, message = "User role is created"),
+        @ApiResponse(code = 205, message = "User role is updated successfully and the user agent SHOULD reset the document view")
     })
     ResponseEntity<UserRole> userRolePut(
         @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
@@ -47,13 +46,11 @@ class UserRoleController {
     }
 
     @RequestMapping(value = "/user-role", method = RequestMethod.POST, produces = {"application/json"})
-    @ResponseStatus(RESET_CONTENT)
-    @ApiOperation(value = "Update a user role", response = UserRole.class,
-        notes = "a user role is created if it does not exist")
+    @ResponseStatus(CREATED)
+    @ApiOperation(value = "Creates a user role", response = UserRole.class,
+        notes = "a user role is created")
     @ApiResponses(value = {
-        @ApiResponse(code = 215, message = "User role is created"),
-        @ApiResponse(code = 205, message = "User role is updated successfully and the user agent SHOULD reset the document view"),
-        @ApiResponse(code = 409, message = "Bad request, for example, incorrect data")
+        @ApiResponse(code = 201, message = "User role is created")
     })
     ResponseEntity<UserRole> userRoleCreate(
         @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
