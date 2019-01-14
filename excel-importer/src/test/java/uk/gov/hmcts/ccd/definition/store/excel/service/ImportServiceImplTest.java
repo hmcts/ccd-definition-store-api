@@ -7,15 +7,10 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -23,9 +18,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.IDAMProperties;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
@@ -34,13 +28,14 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -49,13 +44,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.*;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_PAYMENT_HISTORY_VIEWER;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE_TIME;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_EMAIL;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_LABEL;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MONEY_GBP;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MULTI_SELECT_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_NUMBER;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_PHONE_UK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_POST_CODE;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -99,13 +112,7 @@ public class ImportServiceImplTest {
     private MetadataCaseFieldEntityFactory metadataCaseFieldEntityFactory;
 
     @Mock
-    private SecurityUtils securityUtils;
-
-    @Mock
-    private RestTemplate restTemplate;
-
-    @Mock
-    private ApplicationParams applicationParams;
+    private IdamProfileClient idamProfileClient;
 
     @Captor
     private ArgumentCaptor<String> idamUserProfileURLCaptor;
@@ -155,19 +162,17 @@ public class ImportServiceImplTest {
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
         service = new ImportServiceImpl(spreadsheetValidator,
-            spreadsheetParser,
-            parserFactory,
-            fieldTypeService,
-            jurisdictionService,
-            caseTypeService,
-            layoutService,
-            userRoleRepository,
-            workBasketUserDefaultService,
-            caseFieldRepository,
-            applicationEventPublisher,
-            securityUtils,
-            restTemplate,
-            applicationParams);
+                                        spreadsheetParser,
+                                        parserFactory,
+                                        fieldTypeService,
+                                        jurisdictionService,
+                                        caseTypeService,
+                                        layoutService,
+                                        userRoleRepository,
+                                        workBasketUserDefaultService,
+                                        caseFieldRepository,
+                                        applicationEventPublisher,
+                                        idamProfileClient);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
@@ -189,6 +194,12 @@ public class ImportServiceImplTest {
         fixedListRadioTypeBaseType = buildBaseType(BASE_RADIO_FIXED_LIST);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
+
+        final IDAMProperties idamProperties = new IDAMProperties();
+        idamProperties.setId("445");
+        idamProperties.setEmail("user@hmcts.net");
+
+        doReturn(idamProperties).when(idamProfileClient).getLoggedInUserDetails();
     }
 
     @Test(expected = InvalidImportException.class)
@@ -236,7 +247,6 @@ public class ImportServiceImplTest {
         state.setReference("[STATE]");
         given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
             .willReturn(state);
-        setupMocksForIdam();
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
@@ -254,41 +264,9 @@ public class ImportServiceImplTest {
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
     }
 
-    @Test
-    public void shouldGetUserDetails() {
-        final HttpEntity requestEntity = setupMocksForIdam();
-        final IDAMProperties expectedIdamProperties = service.getUserDetails();
-        assertEquals("445", expectedIdamProperties.getId());
-        assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
-
-        verify(restTemplate).exchange(idamUserProfileURLCaptor.capture(),
-            httpMethodCaptor.capture(),
-            requestEntityCaptor.capture(),
-            idamPropertiesClassCaptor.capture());
-        assertEquals("http://idam.local/details", idamUserProfileURLCaptor.getValue());
-        assertEquals(HttpMethod.GET, httpMethodCaptor.getValue());
-        assertEquals(requestEntity, requestEntityCaptor.getValue());
-        assertEquals(IDAMProperties.class, idamPropertiesClassCaptor.getValue());
-    }
-
     private FieldTypeEntity buildBaseType(final String reference) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(reference);
         return fieldTypeEntity;
-    }
-
-    private HttpEntity setupMocksForIdam() {
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, "ey123.ey456");
-        given(securityUtils.userAuthorizationHeaders()).willReturn(httpHeaders);
-        final HttpEntity requestEntity = new HttpEntity(securityUtils.userAuthorizationHeaders());
-        given(applicationParams.idamUserProfileURL()).willReturn("http://idam.local/details");
-        final IDAMProperties idamProperties = new IDAMProperties();
-        idamProperties.setId("445");
-        idamProperties.setEmail("user@hmcts.net");
-        final ResponseEntity<IDAMProperties> responseEntity = new ResponseEntity<>(idamProperties, HttpStatus.OK);
-        given(restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
-            IDAMProperties.class)).willReturn(responseEntity);
-        return requestEntity;
     }
 }
