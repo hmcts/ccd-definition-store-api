@@ -32,6 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
 
@@ -39,6 +40,7 @@ import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOper
 class DraftDefinitionControllerTest {
 
     private static final String URL_API_DRAFT = "/api/draft";
+    private static final String URL_SAVE_API_DRAFT = "/api/draft/save";
     private static final MediaType CONTENT_TYPE = new MediaType(
         MediaType.APPLICATION_JSON.getType(),
         MediaType.APPLICATION_JSON.getSubtype(),
@@ -88,6 +90,20 @@ class DraftDefinitionControllerTest {
                 .contentType(CONTENT_TYPE)
                 .content(MAPPER.writeValueAsBytes(definition)))
             .andExpect(status().isCreated());
+        verify(definitionService).saveDraftDefinition(any(Definition.class));
+    }
+
+    @DisplayName("Should return 200 when saving a draft Definition")
+    @Test
+    void shouldSaveDraftDefinition() throws Exception {
+        when(definitionService.saveDraftDefinition(any(Definition.class)))
+            .thenReturn(new ServiceResponse<>(definition, CREATE));
+
+        mockMvc.perform(
+            put(URL_SAVE_API_DRAFT)
+                .contentType(CONTENT_TYPE)
+                .content(MAPPER.writeValueAsBytes(definition)))
+               .andExpect(status().isOk());
         verify(definitionService).saveDraftDefinition(any(Definition.class));
     }
 
