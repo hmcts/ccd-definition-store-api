@@ -95,8 +95,8 @@ class SearchAliasFieldTypeValidatorTest {
     class SearchAliasFieldTypeMisMatch {
 
         @Test
-        @DisplayName("should return validation error")
-        void shouldReturnValidationErrors() {
+        @DisplayName("should return validation error for existing alias with different field type")
+        void shouldReturnValidationErrorsExistingAlias() {
             SearchAliasFieldEntity existingField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE)
                 .withFieldType(BASE_NUMBER)
                 .withCaseType(new CaseTypeEntity())
@@ -111,6 +111,24 @@ class SearchAliasFieldTypeValidatorTest {
             ValidationResult validationResult = validator.validate(searchAliasField);
             assertThat(validationResult.getValidationErrors().size(), is(1));
             verify(repository).findByReference(SEARCH_ALIAS_REFERENCE);
+        }
+
+        @Test
+        @DisplayName("should return validation error for new alias with different field type")
+        void shouldReturnValidationErrorsNewAlias() {
+            SearchAliasFieldEntity searchAliasField1 = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE)
+                .withFieldType(BASE_TEXT)
+                .withCaseType(new CaseTypeEntity())
+                .build();
+
+            SearchAliasFieldEntity searchAliasField2 = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE)
+                .withFieldType(BASE_NUMBER)
+                .withCaseType(new CaseTypeEntity())
+                .build();
+
+            validator.validate(searchAliasField1);
+            ValidationResult validationResult1 = validator.validate(searchAliasField2);
+            assertThat(validationResult1.getValidationErrors().size(), is(1));
         }
 
     }
