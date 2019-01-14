@@ -148,6 +148,10 @@ public enum ColumnName {
                     columnName.equals(ColumnName.STATE_ID) ||
                     columnName.equals(ColumnName.USER_ROLE) ||
                     columnName.equals(ColumnName.CRUD);
+            case SEARCH_ALIAS:
+                return columnName.equals(ColumnName.CASE_TYPE_ID) ||
+                    columnName.equals(ColumnName.SEARCH_ALIAS_ID) ||
+                    columnName.equals(ColumnName.CASE_FIELD_ID);
             default:
                 return false;
             // @formatter:on
