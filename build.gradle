@@ -63,6 +63,7 @@ ext {
     springfoxSwaggerVersion = '2.9.0'
     authCheckerVersion = '2.1.2'
     hamcrestVersion = '1.3'
+    powermockVersion = '2.0.0-beta.5'
     reformLogging= '2.2.1'
     limits = [
         'instruction': 99,
@@ -165,6 +166,9 @@ subprojects {
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
+
+        compile group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
+
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
 
@@ -190,6 +194,8 @@ subprojects {
         testCompile 'io.github.openfeign.form:feign-form:3.3.0'
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "io.rest-assured:rest-assured:3.1.0"
+        testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
+        testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
