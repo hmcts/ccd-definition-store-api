@@ -53,8 +53,7 @@ public class DefinitionServiceImpl implements DefinitionService {
                 return new ServiceResponse<>(mapper.toModel(
                     decoratedRepository.save(definitionEntity)), CREATE);
             })
-            .orElseThrow(() -> new BadRequestException(
-                "Jurisdiction " + jurisdiction.getId() + " could not be retrieved or does not exist"));
+            .orElseThrow(() -> new BadRequestException(buildExceptionMessageJurisdictionNotExist(jurisdiction.getId())));
     }
 
     @Override
@@ -67,8 +66,7 @@ public class DefinitionServiceImpl implements DefinitionService {
             decoratedRepository.findLatestByJurisdictionId(jurisdictionId);
 
         if (latestDraftDefinition == null) {
-            throw new BadRequestException("Jurisdiction " + jurisdictionId
-                                          + " could not be retrieved or does not exist");
+            throw new BadRequestException(buildExceptionMessageJurisdictionNotExist(jurisdictionId));
         }
 
         if (latestDraftDefinition.getVersion() != definition.getVersion()) {
@@ -85,8 +83,7 @@ public class DefinitionServiceImpl implements DefinitionService {
                                              decoratedRepository.save(definitionEntity)), CREATE);
                                      })
                                      .orElseThrow(() -> new BadRequestException(
-                                         "Jurisdiction " + jurisdictionId
-                                         + " could not be retrieved or does not exist"));
+                                         buildExceptionMessageJurisdictionNotExist(jurisdictionId)));
     }
 
     @Override
@@ -128,5 +125,10 @@ public class DefinitionServiceImpl implements DefinitionService {
     public Definition findByJurisdictionIdAndVersion(final String jurisdiction, final Integer version) {
         final DefinitionEntity entity = decoratedRepository.findByJurisdictionIdAndVersion(jurisdiction, version);
         return null == entity ? null : mapper.toModel(entity);
+    }
+
+    private String buildExceptionMessageJurisdictionNotExist(final String jurisdictionId) {
+        return "Jurisdiction " + jurisdictionId
+               + " could not be retrieved or does not exist";
     }
 }
