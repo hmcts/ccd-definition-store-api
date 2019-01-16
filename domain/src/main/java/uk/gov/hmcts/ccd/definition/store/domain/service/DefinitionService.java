@@ -7,9 +7,13 @@ import java.util.List;
 
 public interface DefinitionService {
 
+    ServiceResponse<Definition> createDraftDefinition(Definition definition);
+
     ServiceResponse<Definition> saveDraftDefinition(Definition definition);
 
     Definition findByJurisdictionIdAndVersion(String jurisdiction, Integer version);
 
     List<Definition> findByJurisdictionId(String jurisdiction);
+
+    void deleteDraftDefinition(String jurisdiction);
 }

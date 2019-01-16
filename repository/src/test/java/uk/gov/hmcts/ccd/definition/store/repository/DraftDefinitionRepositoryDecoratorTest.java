@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.DRAFT;
@@ -67,6 +68,25 @@ public class DraftDefinitionRepositoryDecoratorTest {
         final DefinitionEntity definitionEntity2 = testHelper.buildDefinition(testJurisdiction, "Test definition");
         final DefinitionEntity savedDefinitionEntity2 = classUnderTest.save(definitionEntity2);
         assertThat(savedDefinitionEntity2.getVersion(), is(2));
+    }
+
+    @Test
+    public void shouldNotBeAbleToFindaDeletedDraftDefinition() throws Exception {
+        final DefinitionEntity definitionEntity1 = testHelper.buildDefinition(testJurisdiction,
+                                                                              "Test definition");
+        classUnderTest.save(definitionEntity1);
+
+        final DefinitionEntity
+            found =
+            classUnderTest.findLatestByJurisdictionId(testJurisdiction.getReference());
+        assertFalse(found.isDeleted());
+        assertThat(found.getVersion(), is(1));
+
+        final DefinitionEntity definitionEntity2 = testHelper.buildDefinition(testJurisdiction,
+                                                                              "Test definition",
+                                                                              true);
+        classUnderTest.save(definitionEntity2);
+        assertNull(classUnderTest.findLatestByJurisdictionId(testJurisdiction.getReference()));
     }
 
     @Test

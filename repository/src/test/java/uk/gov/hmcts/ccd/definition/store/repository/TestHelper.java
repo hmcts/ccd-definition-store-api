@@ -98,8 +98,14 @@ public class TestHelper {
         return definitionEntity;
     }
 
-    public DefinitionEntity buildDefinition(final JurisdictionEntity jurisdiction,
-                                            final String description) throws IOException {
+    protected DefinitionEntity buildDefinition(final JurisdictionEntity jurisdiction,
+                                               final String description) throws IOException {
+        return buildDefinition(jurisdiction, description, false);
+    }
+
+    protected DefinitionEntity buildDefinition(final JurisdictionEntity jurisdiction,
+                                               final String description,
+                                               final Boolean deleted) throws IOException {
         final DefinitionEntity definitionEntity = new DefinitionEntity();
         definitionEntity.setJurisdiction(jurisdiction);
         definitionEntity.setDescription(description);
@@ -107,7 +113,7 @@ public class TestHelper {
         final JsonNode data = mapper.readTree("{\"Field1\": \"Value1\", \"Field2\": []}");
         definitionEntity.setData(data);
         definitionEntity.setAuthor("ccd@hmcts");
-        definitionEntity.setDeleted(false);
+        definitionEntity.setDeleted(deleted);
         return definitionEntity;
     }
 }

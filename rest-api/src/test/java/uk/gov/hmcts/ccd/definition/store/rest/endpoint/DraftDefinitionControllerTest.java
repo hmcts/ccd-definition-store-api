@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
@@ -26,10 +27,12 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -82,7 +85,7 @@ class DraftDefinitionControllerTest {
     @DisplayName("Should return 201 when creating a draft Definition")
     @Test
     void shouldCreateDraftDefinition() throws Exception {
-        when(definitionService.saveDraftDefinition(any(Definition.class)))
+        when(definitionService.createDraftDefinition(any(Definition.class)))
             .thenReturn(new ServiceResponse<>(definition, CREATE));
 
         mockMvc.perform(
@@ -90,7 +93,7 @@ class DraftDefinitionControllerTest {
                 .contentType(CONTENT_TYPE)
                 .content(MAPPER.writeValueAsBytes(definition)))
             .andExpect(status().isCreated());
-        verify(definitionService).saveDraftDefinition(any(Definition.class));
+        verify(definitionService).createDraftDefinition(any(Definition.class));
     }
 
     @DisplayName("Should return 200 when saving a draft Definition")
@@ -99,12 +102,27 @@ class DraftDefinitionControllerTest {
         when(definitionService.saveDraftDefinition(any(Definition.class)))
             .thenReturn(new ServiceResponse<>(definition, CREATE));
 
-        mockMvc.perform(
-            put(URL_SAVE_API_DRAFT)
-                .contentType(CONTENT_TYPE)
-                .content(MAPPER.writeValueAsBytes(definition)))
+        mockMvc.perform(put(URL_SAVE_API_DRAFT)
+                            .contentType(CONTENT_TYPE)
+                            .content(MAPPER.writeValueAsBytes(definition)))
                .andExpect(status().isOk());
-        verify(definitionService).saveDraftDefinition(any(Definition.class));
+        ArgumentCaptor<Definition> argument = ArgumentCaptor.forClass(Definition.class);
+        verify(definitionService).saveDraftDefinition(argument.capture());
+
+        assertThat(argument.getValue(), not(definition));
+        assertThat(argument.getValue().getJurisdiction(), not(definition.getJurisdiction()));
+
+        assertThat(argument.getValue().getJurisdiction().getId(), is(definition.getJurisdiction().getId()));
+        assertThat(argument.getValue().getData(), is(definition.getData()));
+    }
+
+    @DisplayName("Should return 204 when deleting a draft Definition")
+    @Test
+    void shouldDeleteDraftDefinition() throws Exception {
+
+        mockMvc.perform(delete(URL_API_DRAFT + "/Test"))
+               .andExpect(status().isNoContent());
+        verify(definitionService).deleteDraftDefinition("Test");
     }
 
     @DisplayName("should return 200 when finding definitions")

@@ -12,8 +12,9 @@ public interface DraftDefinitionRepository extends DefinitionRepository<Definiti
     @Query("SELECT MAX(d.version) FROM DefinitionEntity d WHERE d.jurisdiction.reference = :jurisdictionReference")
     Optional<Integer> findLastVersion(@Param("jurisdictionReference") String jurisdiction);
 
-    @Query("SELECT d FROM DefinitionEntity d WHERE d.version = (SELECT MAX(dm.version) FROM DefinitionEntity dm"
-        + " WHERE dm.jurisdiction.reference = :jurisdictionReference)"
+    @Query("SELECT d FROM DefinitionEntity d WHERE d.deleted <> true"
+           + " AND d.version = (SELECT MAX(dm.version) FROM DefinitionEntity dm"
+           + " WHERE dm.jurisdiction.reference = :jurisdictionReference)"
            + " AND d.jurisdiction.reference = :jurisdictionReference")
     DefinitionEntity findLatestByJurisdictionId(@Param("jurisdictionReference") String jurisdiction);
 

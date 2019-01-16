@@ -5,7 +5,9 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -44,7 +47,7 @@ public class DraftDefinitionController {
     public ResponseEntity<Definition> draftDefinitionCreate(
         @ApiParam(value = "Draft Definition", required = true)
         @RequestBody @NotNull final Definition definition) {
-        final ServiceResponse<Definition> serviceResponse = definitionService.saveDraftDefinition(definition);
+        final ServiceResponse<Definition> serviceResponse = definitionService.createDraftDefinition(definition);
         final ResponseEntity.BodyBuilder responseEntityBuilder = ResponseEntity.status(CREATED);
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
     }
@@ -56,12 +59,24 @@ public class DraftDefinitionController {
         notes = "Saves a draft Definition for the specified Jurisdiction, incrementing the version number each time"
     )
     @ApiResponse(code = 200, message = "Draft Definition created")
-    public ResponseEntity<Definition> saveDraftDefinition(
+    ResponseEntity<Definition> saveDraftDefinition(
         @ApiParam(value = "Draft Definition", required = true)
         @RequestBody @NotNull final Definition definition) {
         final ServiceResponse<Definition> serviceResponse = definitionService.saveDraftDefinition(definition);
         final ResponseEntity.BodyBuilder responseEntityBuilder = ResponseEntity.status(OK);
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
+    }
+
+    @DeleteMapping("/draft/{jurisdiction}")
+    @ResponseStatus(NO_CONTENT)
+    @ApiOperation(
+        value = "Deletes a draft Definition",
+        notes = "The draft definition for the specified Jurisdiction is marked as deleted"
+    )
+    @ApiResponse(code = 204, message = "Draft Definition deleted")
+    void draftDefinitionDelete(
+        @ApiParam(value = "jurisdiction", required = true) @PathVariable("jurisdiction") String jurisdiction) {
+        definitionService.deleteDraftDefinition(jurisdiction);
     }
 
     @GetMapping("/drafts")

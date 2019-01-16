@@ -37,4 +37,8 @@ public class DraftDefinitionRepositoryDecorator {
     public List<DefinitionEntity> findByJurisdictionId(final String jurisdiction) {
         return repository.findByJurisdictionId(jurisdiction);
     }
+
+    public DefinitionEntity findLatestByJurisdictionId(final String jurisdiction) {
+        return repository.findLatestByJurisdictionId(jurisdiction);
+    }
 }
