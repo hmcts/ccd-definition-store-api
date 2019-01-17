@@ -15,7 +15,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.Assert.assertEquals;
@@ -256,6 +261,7 @@ public class SpreadSheetImportTest extends BaseTest {
         assertLayout();
         assertCaseRoles();
         assertCaseTypeACLs();
+        assertSearchAliases();
     }
 
     private void assertJurisdiction() {
@@ -637,6 +643,21 @@ public class SpreadSheetImportTest extends BaseTest {
                            hasColumn("case_field_id", caseFieldIds.get("referenceCollection"))))
                         )
                     );
+    }
+
+    private void assertSearchAliases() {
+        List<Map<String, Object>> searchAliasDefinition = jdbcTemplate.queryForList("SELECT * FROM search_alias_field");
+        assertThat(searchAliasDefinition, hasSize(3));
+
+        List<Map<String, Object>> caseTypeSearchAliasDefinition = jdbcTemplate.queryForList(
+            "SELECT * FROM search_alias_field where case_type_id = ?",
+            caseTypesId.get("TestComplexAddressBookCase"));
+        assertThat(caseTypeSearchAliasDefinition,
+                   allOf(hasItem(allOf(hasColumn("reference", "nameAlias"),
+                                       hasColumn("case_field_path", "PersonLastName"))
+                         ),
+                         hasItem(allOf(hasColumn("reference", "postcodeAlias"),
+                                       hasColumn("case_field_path", "PersonAddress.Postcode")))));
     }
 
     private Map<Object, Object> getIdsByReference(String query) {

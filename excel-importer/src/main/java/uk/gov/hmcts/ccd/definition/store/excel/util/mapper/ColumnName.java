@@ -52,6 +52,7 @@ public enum ColumnName {
     FIELD_SHOW_CONDITION("FieldShowCondition"),
     PAGE_SHOW_CONDITION("PageShowCondition"),
     TAB_SHOW_CONDITION("TabShowCondition"),
+    SEARCH_ALIAS_ID("SearchAliasID"),
     SHOW_SUMMARY("ShowSummary"),
     SHOW_EVENT_NOTES("ShowEventNotes"),
     SHOW_SUMMARY_CHANGE_OPTION("ShowSummaryChangeOption"),
@@ -147,6 +148,10 @@ public enum ColumnName {
                     columnName.equals(ColumnName.STATE_ID) ||
                     columnName.equals(ColumnName.USER_ROLE) ||
                     columnName.equals(ColumnName.CRUD);
+            case SEARCH_ALIAS:
+                return columnName.equals(ColumnName.CASE_TYPE_ID) ||
+                    columnName.equals(ColumnName.SEARCH_ALIAS_ID) ||
+                    columnName.equals(ColumnName.CASE_FIELD_ID);
             default:
                 return false;
             // @formatter:on
