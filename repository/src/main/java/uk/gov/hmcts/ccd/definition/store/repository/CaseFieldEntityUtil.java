@@ -4,6 +4,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -36,9 +37,10 @@ public class CaseFieldEntityUtil {
         String concatenationCharacter = isBlank(startingString) ? "" : ".";
         caseFieldEntities.forEach(caseFieldEntity -> {
             allSubTypePossibilities.add(startingString + concatenationCharacter + caseFieldEntity.getReference());
-            List<ComplexFieldEntity> complexFields = caseFieldEntity
+            List<ComplexFieldEntity> complexFields =
+                caseFieldEntity.getFieldType() != null ? caseFieldEntity
                 .getFieldType()
-                .getComplexFields();
+                .getComplexFields() : Collections.emptyList();
             prepare(allSubTypePossibilities,
                 startingString + concatenationCharacter + caseFieldEntity.getReference(),
                 complexFields.stream().map(FieldEntity.class::cast).collect(Collectors.toList()));

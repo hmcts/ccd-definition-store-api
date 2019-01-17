@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
@@ -15,10 +16,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPage;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageComplexFieldMask;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageField;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 @Service
 public class DisplayGroupAdapterService {
@@ -55,6 +61,12 @@ public class DisplayGroupAdapterService {
                         wizardPage.setRetriesTimeoutMidEvent(webhookEntity.getTimeouts());
                     });
 
+                    List<String> allSubTypePossibilities =
+                        displayGroupEntity.getEvent().getEventCaseFields() != null && displayGroupEntity.getEvent().getEventCaseFields().size() > 0 ?
+                            CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(displayGroupEntity.getEvent().getEventCaseFields()
+                            .stream().map(EventCaseFieldEntity::getCaseField)
+                            .collect(Collectors.toList())) : Collections.emptyList();
+
                     wizardPage.setShowCondition(displayGroupEntity.getShowCondition());
                     displayGroupEntity.getDisplayGroupCaseFields().forEach(displayGroupCaseFieldEntity -> {
 
@@ -62,34 +74,39 @@ public class DisplayGroupAdapterService {
                         EventCaseFieldEntity eventCaseFieldEntity = getEventCaseFieldEntityByReference(
                             reference, displayGroupEntity.getEvent());
 
-                        // TODO: add 'complexFieldMask'
-//                        if (DisplayContext.COMPLEX == eventCaseFieldEntity.getDisplayContext()) {
-//
-//                            eventCaseFieldEntity.getEventComplexTypes().forEach(eventComplexTypeEntity -> {
-//                                WizardPageField wizardPageField = new WizardPageField();
-////                                wizardPageField.setCaseFieldId(reference + "." + eventComplexTypeEntity.getReference());
-//                                wizardPageField.setCaseFieldId(reference);
-//                                wizardPageField.setOrder(eventComplexTypeEntity.getOrder());
-//                                wizardPageField.setPageColumnNumber(displayGroupCaseFieldEntity.getColumnNumber());
-//                                wizardPageField.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
-//                                LOG.info("CaseFieldId " + wizardPageField.getCaseFieldId());
-//                                LOG.info("Order " + wizardPageField.getOrder());
-//                                LOG.info("DisplayContext " + wizardPageField.getDisplayContext());
-//                                LOG.info(" -------------");
-//                                wizardPage.getWizardPageFields().add(wizardPageField);
-//                            });
-//                        } else {
-                            WizardPageField wizardPageField = new WizardPageField();
-                            wizardPageField.setCaseFieldId(reference);
-                            wizardPageField.setOrder(displayGroupCaseFieldEntity.getOrder());
-                            wizardPageField.setPageColumnNumber(displayGroupCaseFieldEntity.getColumnNumber());
-                            wizardPageField.setDisplayContext(eventCaseFieldEntity.getDisplayContext().toString());
-                            LOG.info("CaseFieldId " + wizardPageField.getCaseFieldId());
-                            LOG.info("Order " + wizardPageField.getOrder());
-                            LOG.info("DisplayContext " + wizardPageField.getDisplayContext());
-                            LOG.info(" -------------");
-                            wizardPage.getWizardPageFields().add(wizardPageField);
-//                        }
+                        WizardPageField wizardPageField = new WizardPageField();
+                        wizardPageField.setCaseFieldId(reference);
+                        wizardPageField.setOrder(displayGroupCaseFieldEntity.getOrder());
+                        wizardPageField.setPageColumnNumber(displayGroupCaseFieldEntity.getColumnNumber());
+                        wizardPageField.setDisplayContext(eventCaseFieldEntity.getDisplayContext());
+
+                        if (DisplayContext.COMPLEX == eventCaseFieldEntity.getDisplayContext()) {
+                            eventCaseFieldEntity.getEventComplexTypes().forEach(eventComplexTypeEntity -> {
+                                WizardPageComplexFieldMask mask = new WizardPageComplexFieldMask();
+                                mask.setComplexFieldId(eventComplexTypeEntity.getReference());
+                                mask.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
+                                mask.setOrder(eventComplexTypeEntity.getOrder());
+                                mask.setLabel(eventComplexTypeEntity.getLabel());
+                                mask.setHintText(eventComplexTypeEntity.getHint());
+                                mask.setShowCondition(eventComplexTypeEntity.getShowCondition());
+
+                                wizardPageField.addComplexFieldMask(mask);
+                            });
+
+                            List<String> complexFieldMaskIds = wizardPageField.getComplexFieldMaskList()
+                                .stream()
+                                .map(WizardPageComplexFieldMask::getComplexFieldId)
+                                .collect(Collectors.toList());
+
+                            List<String> hiddenFieldMaskToCreate = allSubTypePossibilities.stream()
+                                .filter(e -> e.startsWith(displayGroupCaseFieldEntity.getCaseField().getReference()))
+                                .filter(e -> !complexFieldMaskIds.contains(e))
+                                .collect(Collectors.toList());
+
+                            hiddenFieldMaskToCreate.forEach(hiddenFieldMask ->
+                                wizardPageField.addComplexFieldMask(hiddenWizardPageComplexFieldMask(hiddenFieldMask)));
+                        }
+                        wizardPage.getWizardPageFields().add(wizardPageField);
                     });
                     wizardPageCollection.getWizardPages().add(wizardPage);
                 });
@@ -105,6 +122,14 @@ public class DisplayGroupAdapterService {
         return eventCaseFieldEntities.stream()
             .filter(e -> reference.equals(e.getCaseField().getReference()))
             .findFirst()
-            .orElseThrow(() -> new MissingDisplayContextException("EventCaseFieldEntity missing displayContext."));
+            .orElseThrow(() -> new MissingEventCaseFieldEntityException(
+                format("EventCaseField.caseField %s missing", reference)));
+    }
+
+    private static WizardPageComplexFieldMask hiddenWizardPageComplexFieldMask(String reference) {
+        WizardPageComplexFieldMask mask = new WizardPageComplexFieldMask();
+        mask.setComplexFieldId(reference);
+        mask.setDisplayContext("HIDDEN");
+        return mask;
     }
 }
