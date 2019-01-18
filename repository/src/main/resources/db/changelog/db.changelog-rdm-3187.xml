@@ -7,6 +7,11 @@
             <column name="optimistic_lock" type="Integer">
             </column>
         </addColumn>
+
+        <addNotNullConstraint columnDataType="Integer"
+                              columnName="optimistic_lock"
+                              defaultNullValue="0"
+                              tableName="definition_designer"/>
     </changeSet>
 
 </databaseChangeLog>
