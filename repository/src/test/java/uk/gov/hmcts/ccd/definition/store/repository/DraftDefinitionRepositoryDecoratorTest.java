@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
@@ -116,14 +117,18 @@ public class DraftDefinitionRepositoryDecoratorTest {
     @Test
     public void shouldSimplySave() {
         final DefinitionEntity definitionEntity = classUnderTest.findByJurisdictionIdAndVersion(JURISDICTION_ID, 2);
-        Long l1 = definitionEntity.getOptimisticLock();
+        final Long l1 = definitionEntity.getOptimisticLock();
+        final LocalDateTime lastModified = definitionEntity.getLastModified();
         final String newCaseTypes = randomAlphanumeric(31);
         definitionEntity.setCaseTypes(newCaseTypes);
+
         final DefinitionEntity saved = classUnderTest.simpleSave(definitionEntity);
         syncDatabase();
+
         assertThat(saved.getVersion(), is(2));
         assertThat(saved.getCaseTypes(), is(newCaseTypes));
         assertThat(saved.getOptimisticLock(), not(l1));
+        assertTrue(saved.getLastModified().isAfter(lastModified));
     }
 
     private void syncDatabase() {
