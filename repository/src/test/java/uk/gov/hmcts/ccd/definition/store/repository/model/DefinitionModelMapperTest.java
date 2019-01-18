@@ -61,7 +61,8 @@ class DefinitionModelMapperTest {
         final DefinitionEntity entity = classUnderTest.toEntity(definition);
         assertAll(
             () -> assertThat(entity.getId(), is(nullValue())),
-            // The Jurisdiction is expected not to be mapped deliberately; it will always be an existing entity, so it
+            // The Jurisdiction is expected not to be mapped deliberately; it will always be an existing
+            // entity, so it
             // should be retrieved and set on the DefinitionEntity, post mapping
             () -> assertThat(entity.getJurisdiction(), is(nullValue())),
             () -> assertThat(entity.getCaseTypes(), is(definition.getCaseTypes())),
@@ -71,9 +72,8 @@ class DefinitionModelMapperTest {
             () -> assertThat(entity.getData(), is(mapper.convertValue(definition.getData(), JsonNode.class))),
             () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
             () -> assertThat(entity.getCreatedAt(), is(nullValue())),
-            () ->assertThat(entity.getLastModified(), is(definition.getLastModified())),
-            () -> assertThat(entity.isDeleted(), is(definition.isDeleted()))
-        );
+            () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
+            () -> assertThat(entity.isDeleted(), is(definition.isDeleted())));
     }
 
     @Test
@@ -90,9 +90,8 @@ class DefinitionModelMapperTest {
             () -> assertThat(mapper.writeValueAsString(entity.getData()), is("{}")),
             () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
             () -> assertThat(entity.getCreatedAt(), is(nullValue())),
-            () ->assertThat(entity.getLastModified(), is(nullValue())),
-            () -> assertThat(entity.isDeleted(), is(definition.isDeleted()))
-        );
+            () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
+            () -> assertThat(entity.isDeleted(), is(definition.isDeleted())));
     }
 
     @Test
@@ -110,9 +109,8 @@ class DefinitionModelMapperTest {
             () -> assertThat(entity.getData(), is(mapper.convertValue(definition.getData(), JsonNode.class))),
             () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
             () -> assertThat(entity.getCreatedAt(), is(nullValue())),
-            () ->assertThat(entity.getLastModified(), is(nullValue())),
-            () -> assertThat(entity.isDeleted(), is(definition.isDeleted()))
-                 );
+            () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
+            () -> assertThat(entity.isDeleted(), is(definition.isDeleted())));
     }
 
     @Test
@@ -130,9 +128,8 @@ class DefinitionModelMapperTest {
             () -> assertThat(mapper.writeValueAsString(entity.getData()), is("{}")),
             () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
             () -> assertThat(entity.getCreatedAt(), is(nullValue())),
-            () ->assertThat(entity.getLastModified(), is(definition.getLastModified())),
-            () -> assertThat(entity.isDeleted(), is(definition.isDeleted()))
-                 );
+            () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
+            () -> assertThat(entity.isDeleted(), is(definition.isDeleted())));
     }
 
     @Test

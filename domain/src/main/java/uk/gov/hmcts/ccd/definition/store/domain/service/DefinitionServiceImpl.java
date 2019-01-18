@@ -101,7 +101,7 @@ public class DefinitionServiceImpl implements DefinitionService {
         }
 
         if (definitionEntity.isDeleted()) {
-            throw new BadRequestException("draft definition is deleted");
+            throw new BadRequestException("Draft definition is deleted");
         }
 
         if (PUBLISHED == definitionEntity.getStatus()) {

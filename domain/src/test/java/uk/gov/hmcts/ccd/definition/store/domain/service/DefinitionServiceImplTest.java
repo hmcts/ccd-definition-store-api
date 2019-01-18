@@ -293,7 +293,7 @@ class DefinitionServiceImplTest {
         when(definitionEntity.isDeleted()).thenReturn(true);
         Throwable exception =
             assertThrows(BadRequestException.class, () -> classUnderTest.deleteDraftDefinition(JURISDICTION_ID, -99));
-        assertThat(exception.getMessage(), is("draft definition is deleted"));
+        assertThat(exception.getMessage(), is("Draft definition is deleted"));
         verify(definitionEntity, never()).setDeleted(true);
         verify(decoratedRepository, never()).simpleSave(definitionEntity);
     }

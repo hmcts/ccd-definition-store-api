@@ -60,6 +60,7 @@ public class DefinitionModelMapper {
         }
         definitionEntity.setAuthor(definition.getAuthor());
         definitionEntity.setDeleted(definition.isDeleted());
+        definitionEntity.setLastModified(definition.getLastModified());
     }
 
     /**
