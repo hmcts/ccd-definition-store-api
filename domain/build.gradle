@@ -40,6 +40,7 @@ dependencies {
     compile "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
     compileOnly "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
     testCompile project(":app-insights").sourceSets.main.output
+    testCompile project(":repository").sourceSets.test.output
 
     apt "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
 }

@@ -22,7 +22,8 @@ public enum SheetName {
     AUTHORISATION_CASE_TYPE("AuthorisationCaseType"),
     AUTHORISATION_CASE_FIELD("AuthorisationCaseField"),
     AUTHORISATION_CASE_EVENT("AuthorisationCaseEvent"),
-    AUTHORISATION_CASE_STATE("AuthorisationCaseState");
+    AUTHORISATION_CASE_STATE("AuthorisationCaseState"),
+    SEARCH_ALIAS("SearchAlias");
 
     private final String name;
 
