@@ -44,6 +44,25 @@ public class DefinitionModelMapper {
     }
 
     /**
+     * Maps a Definition model object to an existent entity class.
+     * @param definition definition to be mapped
+     * @param definitionEntity existent definition entity
+     */
+    public void toEntity(@NotNull final Definition definition,
+                         @NotNull final DefinitionEntity definitionEntity) {
+        definitionEntity.setCaseTypes(definition.getCaseTypes());
+        definitionEntity.setDescription(definition.getDescription());
+        definitionEntity.setStatus(definition.getStatus());
+        if (definition.getData() == null) {
+            definitionEntity.setData(mapper.createObjectNode());
+        } else {
+            definitionEntity.setData(mapper.convertValue(definition.getData(), JsonNode.class));
+        }
+        definitionEntity.setAuthor(definition.getAuthor());
+        definitionEntity.setDeleted(definition.isDeleted());
+    }
+
+    /**
      * Maps a DefinitionEntity to its corresponding model class.
      *
      * @param definitionEntity The DefinitionEntity to be mapped

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Component
 public class DraftDefinitionRepositoryDecorator {
 
-    private DraftDefinitionRepository repository;
+    private final DraftDefinitionRepository repository;
 
     @Autowired
     public DraftDefinitionRepositoryDecorator(DraftDefinitionRepository repository) {
@@ -36,5 +36,9 @@ public class DraftDefinitionRepositoryDecorator {
 
     public List<DefinitionEntity> findByJurisdictionId(final String jurisdiction) {
         return repository.findByJurisdictionId(jurisdiction);
+    }
+
+    public DefinitionEntity simpleSave(final DefinitionEntity definitionEntity) {
+        return repository.save(definitionEntity);
     }
 }

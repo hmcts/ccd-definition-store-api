@@ -12,4 +12,8 @@ public interface DefinitionService {
     Definition findByJurisdictionIdAndVersion(String jurisdiction, Integer version);
 
     List<Definition> findByJurisdictionId(String jurisdiction);
+
+    ServiceResponse<Definition> saveDraftDefinition(Definition definition);
+
+    void deleteDraftDefinition(String jurisdiction, Integer version);
 }

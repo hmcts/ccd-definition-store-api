@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -74,6 +75,7 @@ public class DefinitionEntity implements Serializable, Versionable {
 
     @Column(name = "last_modified", nullable = false, insertable = false)
     @UpdateTimestamp
+    @Version
     private LocalDateTime lastModified;
 
     @Column(name = "deleted", nullable = false)
