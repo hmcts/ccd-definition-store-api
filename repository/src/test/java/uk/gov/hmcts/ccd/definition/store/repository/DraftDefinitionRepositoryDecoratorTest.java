@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -105,6 +106,16 @@ public class DraftDefinitionRepositoryDecoratorTest {
     public void shouldFindAnEmptyListWhenNoMatchOnJurisdiction() {
         final List<DefinitionEntity> entities = classUnderTest.findByJurisdictionId("y");
         assertTrue(entities.isEmpty());
+    }
+
+    @Test
+    public void shouldSimplySave() {
+        final DefinitionEntity definitionEntity = classUnderTest.findByJurisdictionIdAndVersion(JURISDICTION_ID, 2);
+        final String newCaseTypes = RandomStringUtils.randomAlphanumeric(31);
+        definitionEntity.setCaseTypes(newCaseTypes);
+        final DefinitionEntity saved = classUnderTest.simpleSave(definitionEntity);
+        assertThat(saved.getVersion(), is(2));
+        assertThat(saved.getCaseTypes(), is(newCaseTypes));
     }
 
     private void assertDefinitionEntity(final DefinitionEntity definitionEntity,
