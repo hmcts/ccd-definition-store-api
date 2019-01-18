@@ -75,11 +75,14 @@ public class DefinitionEntity implements Serializable, Versionable {
 
     @Column(name = "last_modified", nullable = false, insertable = false)
     @UpdateTimestamp
-    @Version
     private LocalDateTime lastModified;
 
     @Column(name = "deleted", nullable = false)
     private Boolean deleted = Boolean.FALSE;
+
+    @Version
+    @Column(name = "optimistic_lock", nullable = false)
+    private Long optimisticLock;
 
     public Integer getId() {
         return id;
@@ -164,5 +167,9 @@ public class DefinitionEntity implements Serializable, Versionable {
     public String getReference() {
         // No-op
         return null;
+    }
+
+    public Long getOptimisticLock() {
+        return optimisticLock;
     }
 }
