@@ -14,7 +14,7 @@ public class CaseFieldEntityUtil {
 
     private CaseFieldEntityUtil() { }
 
-    public static List<String> buildDottedComplexFieldPossibilities(List<FieldEntity> caseFieldEntities) {
+    public static List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
         List<String> allSubTypePossibilities = new ArrayList<>();
         prepare(allSubTypePossibilities, "",
             caseFieldEntities);
@@ -29,7 +29,7 @@ public class CaseFieldEntityUtil {
 
     private static void prepare(List<String> allSubTypePossibilities,
                          String startingString,
-                         List<FieldEntity> caseFieldEntities) {
+                         List<? extends FieldEntity> caseFieldEntities) {
 
         String concatenationCharacter = isBlank(startingString) ? "" : ".";
         caseFieldEntities.forEach(caseFieldEntity -> {
