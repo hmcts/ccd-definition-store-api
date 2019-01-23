@@ -14,7 +14,7 @@ public class CaseFieldEntityUtil {
 
     private CaseFieldEntityUtil() { }
 
-    public static List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
+    public static List<String> buildDottedComplexFieldPossibilities(List<FieldEntity> caseFieldEntities) {
         List<String> allSubTypePossibilities = new ArrayList<>();
         prepare(allSubTypePossibilities, "",
             caseFieldEntities.stream().collect(Collectors.toList()));
