@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -78,6 +79,10 @@ public class DefinitionEntity implements Serializable, Versionable {
 
     @Column(name = "deleted", nullable = false)
     private Boolean deleted = Boolean.FALSE;
+
+    @Version
+    @Column(name = "optimistic_lock", nullable = false)
+    private Long optimisticLock;
 
     public Integer getId() {
         return id;
@@ -162,5 +167,9 @@ public class DefinitionEntity implements Serializable, Versionable {
     public String getReference() {
         // No-op
         return null;
+    }
+
+    public Long getOptimisticLock() {
+        return optimisticLock;
     }
 }

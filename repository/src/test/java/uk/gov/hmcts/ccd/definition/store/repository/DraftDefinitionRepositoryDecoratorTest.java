@@ -13,10 +13,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.DRAFT;
@@ -33,6 +36,9 @@ public class DraftDefinitionRepositoryDecoratorTest {
 
     @Autowired
     private DraftDefinitionRepository repository;
+
+    @Autowired
+    DraftDefinitionRepository draftDefinitionRepository;
 
     @Autowired
     private TestHelper testHelper;
@@ -53,6 +59,7 @@ public class DraftDefinitionRepositoryDecoratorTest {
         classUnderTest.save(testHelper.buildDefinition(jurisdictionForFindTests, "T1", PUBLISHED));
         classUnderTest.save(testHelper.buildDefinition(jurisdictionForFindTests, "T2", DRAFT));
         classUnderTest.save(testHelper.buildDefinition(jurisdictionForFindTests, "T3", DRAFT));
+        syncDatabase();
     }
 
     @Test
@@ -105,6 +112,27 @@ public class DraftDefinitionRepositoryDecoratorTest {
     public void shouldFindAnEmptyListWhenNoMatchOnJurisdiction() {
         final List<DefinitionEntity> entities = classUnderTest.findByJurisdictionId("y");
         assertTrue(entities.isEmpty());
+    }
+
+    @Test
+    public void shouldSimplySave() {
+        final DefinitionEntity definitionEntity = classUnderTest.findByJurisdictionIdAndVersion(JURISDICTION_ID, 2);
+        final Long l1 = definitionEntity.getOptimisticLock();
+        final LocalDateTime lastModified = definitionEntity.getLastModified();
+        final String newCaseTypes = randomAlphanumeric(31);
+        definitionEntity.setCaseTypes(newCaseTypes);
+
+        final DefinitionEntity saved = classUnderTest.simpleSave(definitionEntity);
+        syncDatabase();
+
+        assertThat(saved.getVersion(), is(2));
+        assertThat(saved.getCaseTypes(), is(newCaseTypes));
+        assertThat(saved.getOptimisticLock(), not(l1));
+        assertTrue(saved.getLastModified().isAfter(lastModified));
+    }
+
+    private void syncDatabase() {
+        draftDefinitionRepository.flush();
     }
 
     private void assertDefinitionEntity(final DefinitionEntity definitionEntity,

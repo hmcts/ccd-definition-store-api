@@ -8,6 +8,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
+import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.DraftDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
@@ -29,13 +30,18 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
+import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.UPDATE;
+import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.PUBLISHED;
 
 class DefinitionServiceImplTest {
+
+    private static final String JURISDICTION_ID = "TEST";
 
     @Mock
     private JurisdictionRepository jurisdictionRepository;
@@ -127,7 +133,7 @@ class DefinitionServiceImplTest {
         when(definition.getJurisdiction()).thenReturn(null);
 
         Throwable exception =
-            assertThrows(BadRequestException.class, () -> classUnderTest.createDraftDefinition(definition));
+            assertThrows(BadRequestException.class, () -> classUnderTest.preConditionCheck(definition));
         assertThat(exception.getMessage(), is("No Jurisdiction present in Definition"));
     }
 
@@ -147,7 +153,7 @@ class DefinitionServiceImplTest {
         when(definition.getDescription()).thenReturn(null);
 
         Throwable exception =
-            assertThrows(BadRequestException.class, () -> classUnderTest.createDraftDefinition(definition));
+            assertThrows(BadRequestException.class, () -> classUnderTest.preConditionCheck(definition));
         assertThat(exception.getMessage(), is("Definition description cannot be null"));
     }
 
@@ -157,7 +163,7 @@ class DefinitionServiceImplTest {
         when(definition.getAuthor()).thenReturn(null);
 
         Throwable exception =
-            assertThrows(BadRequestException.class, () -> classUnderTest.createDraftDefinition(definition));
+            assertThrows(BadRequestException.class, () -> classUnderTest.preConditionCheck(definition));
         assertThat(exception.getMessage(), is("Definition author cannot be null"));
     }
 
@@ -208,6 +214,90 @@ class DefinitionServiceImplTest {
         assertTrue(list.isEmpty());
     }
 
+    @Test
+    @DisplayName("Should save an existent draft Definition")
+    void shouldSaveDraftDefinition() {
+        when(definition.getVersion()).thenReturn(-9);
+        when(decoratedRepository.findByJurisdictionIdAndVersion(JURISDICTION_ID, -9)).thenReturn(definitionEntity);
+        final ServiceResponse<Definition> definitionServiceResponse = classUnderTest.saveDraftDefinition(definition);
+        assertThat(definitionServiceResponse.getOperation(), is(UPDATE));
+    }
+
+    @Test
+    @DisplayName("Should save a new draft Definition")
+    void shouldSaveNewDraftDefinition() {
+        when(jurisdictionRepository.findFirstByReferenceOrderByVersionDesc(JURISDICTION_ID))
+            .thenReturn(Optional.of(jurisdictionEntity));
+        when(definitionEntity.getJurisdiction()).thenReturn(jurisdictionEntity);
+        when(mapper.toEntity(definition)).thenReturn(definitionEntity);
+
+        final ServiceResponse<Definition> definitionServiceResponse = classUnderTest.saveDraftDefinition(definition);
+        assertThat(definitionServiceResponse.getOperation(), is(CREATE));
+    }
+
+    @Test
+    @DisplayName("Should not save a definition if it is published")
+    void shouldNotSavePublishedDefinition() {
+        when(definition.getVersion()).thenReturn(-33);
+        when(decoratedRepository.findByJurisdictionIdAndVersion(JURISDICTION_ID, -33)).thenReturn(definitionEntity);
+        when(definitionEntity.getStatus()).thenReturn(PUBLISHED);
+        Throwable exception =
+            assertThrows(BadRequestException.class, () -> classUnderTest.saveDraftDefinition(definition));
+        assertThat(exception.getMessage(), is("Definition is live"));
+    }
+
+    @Test
+    @DisplayName("Should not save a definition if it is deleted")
+    void shouldNotSaveDeletedDefinition() {
+        when(definition.getVersion()).thenReturn(-83);
+        when(decoratedRepository.findByJurisdictionIdAndVersion(JURISDICTION_ID, -83)).thenReturn(definitionEntity);
+        when(definitionEntity.isDeleted()).thenReturn(true);
+        Throwable exception =
+            assertThrows(BadRequestException.class, () -> classUnderTest.saveDraftDefinition(definition));
+        assertThat(exception.getMessage(), is("Definition is deleted"));
+    }
+
+    @Test
+    @DisplayName("Should delete a draft definition")
+    void shouldDeleteDefinition() {
+        when(decoratedRepository.findByJurisdictionIdAndVersion(JURISDICTION_ID, -98)).thenReturn(definitionEntity);
+        classUnderTest.deleteDraftDefinition(JURISDICTION_ID, -98);
+        verify(definitionEntity).setDeleted(true);
+        verify(decoratedRepository).simpleSave(definitionEntity);
+    }
+
+    @Test
+    @DisplayName("Should not delete a non existent draft definition")
+    void shouldNotDeleteNotExistDefinition() {
+        Throwable exception =
+            assertThrows(BadRequestException.class, () -> classUnderTest.deleteDraftDefinition(JURISDICTION_ID, -96));
+        assertThat(exception.getMessage(), is("Can't find draft definition"));
+    }
+
+    @Test
+    @DisplayName("Should not delete a published draft definition")
+    void shouldNotDeletePublishedDefinition() {
+        when(decoratedRepository.findByJurisdictionIdAndVersion(JURISDICTION_ID, -97)).thenReturn(definitionEntity);
+        when(definitionEntity.getStatus()).thenReturn(PUBLISHED);
+        Throwable exception =
+            assertThrows(BadRequestException.class, () -> classUnderTest.deleteDraftDefinition(JURISDICTION_ID, -97));
+        assertThat(exception.getMessage(), is("Definition is live"));
+        verify(definitionEntity, never()).setDeleted(true);
+        verify(decoratedRepository, never()).simpleSave(definitionEntity);
+    }
+
+    @Test
+    @DisplayName("Should not delete a deleted draft definition")
+    void shouldNotDeleteDeletedDefinition() {
+        when(decoratedRepository.findByJurisdictionIdAndVersion(JURISDICTION_ID, -99)).thenReturn(definitionEntity);
+        when(definitionEntity.isDeleted()).thenReturn(true);
+        Throwable exception =
+            assertThrows(BadRequestException.class, () -> classUnderTest.deleteDraftDefinition(JURISDICTION_ID, -99));
+        assertThat(exception.getMessage(), is("Draft definition is deleted"));
+        verify(definitionEntity, never()).setDeleted(true);
+        verify(decoratedRepository, never()).simpleSave(definitionEntity);
+    }
+
     private void setupMockJurisdictionEntity() {
         when(jurisdictionEntity.getId()).thenReturn(1);
     }
@@ -220,7 +310,7 @@ class DefinitionServiceImplTest {
         when(definition.getAuthor()).thenReturn("ccd@hmcts");
         final Jurisdiction jurisdiction = mock(Jurisdiction.class);
         when(definition.getJurisdiction()).thenReturn(jurisdiction);
-        when(jurisdiction.getId()).thenReturn("TEST");
+        when(jurisdiction.getId()).thenReturn(JURISDICTION_ID);
     }
 
     private void setupMockDefinitionEntity(final String description) {
