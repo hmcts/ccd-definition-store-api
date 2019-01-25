@@ -83,7 +83,11 @@
         <cve>CVE-2018-10237</cve>
     </suppress>
     <suppress>
-        <notes>Temporary suppression</notes>
+        <notes>jackson-databind 2.8.x will not get a fix for this CVE.  We need
+            to upgrade to 2.9.x. See
+            https://github.com/FasterXML/jackson-modules-java8/issues/90#issuecomment-450544881
+            and RDM-3796</notes>
+        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:2\.8\.11\.[3].*$</gav>
         <cve>CVE-2018-1000873</cve>
     </suppress>
     <suppress>
