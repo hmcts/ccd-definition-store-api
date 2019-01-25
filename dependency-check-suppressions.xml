@@ -112,8 +112,7 @@
     </suppress>
     <suppress>
         <notes>Temporary suppression</notes>
-        <cve>CVE-2018-19362
-        </cve>
+        <cve>CVE-2018-19362</cve>
     </suppress>
     <suppress>
         <notes>Temporary suppression of an issue related to the current stable slf4j which is brought in by other dependencies.
