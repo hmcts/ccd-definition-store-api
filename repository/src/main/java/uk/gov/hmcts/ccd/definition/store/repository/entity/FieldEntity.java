@@ -22,6 +22,10 @@ public interface FieldEntity {
         return ofNullable(this.getFieldType().getBaseFieldType()).orElse(this.getFieldType());
     }
 
+    default boolean isCollectionFieldType() {
+        return this.getFieldType().getCollectionFieldType() != null;
+    }
+
     default boolean isCollectionOfComplex() {
         FieldTypeEntity collectionFieldType = this.getFieldType().getCollectionFieldType();
         return collectionFieldType != null && !collectionFieldType.getComplexFields().isEmpty();

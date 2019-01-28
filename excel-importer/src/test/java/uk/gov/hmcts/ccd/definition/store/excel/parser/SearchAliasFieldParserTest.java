@@ -12,9 +12,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_NUMBER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +42,12 @@ class SearchAliasFieldParserTest {
     private static final String COMPLEX_CASE_TYPE_ID = "complexCaseType";
     private static final String COMPLEX_SEARCH_ALIAS_ID = "alias";
     private static final String COMPLEX_CASE_FIELD_ID = "company.businessAddress.addressLine1";
+    private static final String TEXT_COLLECTION_CASE_TYPE_ID = "textCollectionCaseType";
+    private static final String TEXT_COLLECTION_SEARCH_ALIAS_ID = "textCollectionAlias";
+    private static final String TEXT_COLLECTION_CASE_FIELD_ID = "names.value";
+    private static final String COMPLEX_COLLECTION_CASE_TYPE_ID = "complexCollectionCaseType";
+    private static final String COMPLEX_COLLECTION_SEARCH_ALIAS_ID = "complexCollectionAlias";
+    private static final String COMPLEX_COLLECTION_CASE_FIELD_ID = "companies.value.businessAddress.telephone";
 
     @Mock
     private ParseContext parseContext;
@@ -173,6 +181,71 @@ class SearchAliasFieldParserTest {
         }
     }
 
+    @Nested
+    @DisplayName("Collection field")
+    class CollectionField {
+
+        @BeforeEach
+        void setUp() {
+            FieldTypeEntity textCollectionFieldType = newType("textCollection").addFieldToCollection(textFieldType()).buildCollection();
+            CaseFieldEntity textCollectionField = new CaseFieldEntity();
+            textCollectionField.setReference("names");
+            textCollectionField.setFieldType(textCollectionFieldType);
+            when(parseContext.getCaseFieldForCaseType(TEXT_COLLECTION_CASE_TYPE_ID, "names")).thenReturn(textCollectionField);
+
+            FieldTypeEntity company = newType("company").addFieldToComplex("businessAddress", newType("address").buildComplex()).buildComplex();
+            when(parseContext.getType("company")).thenReturn(Optional.of(company));
+
+            FieldTypeEntity address = newType("address").addFieldToComplex("telephone", newType(BASE_NUMBER).build()).buildComplex();
+            when(parseContext.getType("address")).thenReturn(Optional.of(address));
+
+            FieldTypeEntity complexCollectionFieldType = newType("complexCollection").addFieldToCollection(company).buildCollection();
+            CaseFieldEntity companies = new CaseFieldEntity();
+            companies.setReference("companies");
+            companies.setFieldType(complexCollectionFieldType);
+            when(parseContext.getCaseFieldForCaseType(COMPLEX_COLLECTION_CASE_TYPE_ID, "companies")).thenReturn(companies);
+
+            when(parseContext.getBaseType(BASE_TEXT)).thenReturn(Optional.of(textFieldType()));
+        }
+
+        @Test
+        @DisplayName("should parse search alias field for collection of text fields")
+        void shouldSetFieldTypeAsTypeOfCollection() {
+            CaseTypeEntity caseType = new CaseTypeBuilder().withReference(TEXT_COLLECTION_CASE_TYPE_ID).build();
+
+            List<SearchAliasFieldEntity> fields = parser.parseAll(createDefinitionSheet(), caseType);
+
+            assertThat(fields.isEmpty(), is(false));
+            SearchAliasFieldEntity entity = fields.get(0);
+            assertThat(entity.getCaseType(), is(caseType));
+            assertThat(entity.getReference(), is(TEXT_COLLECTION_SEARCH_ALIAS_ID));
+            assertThat(entity.getCaseFieldPath(), is(TEXT_COLLECTION_CASE_FIELD_ID));
+            assertThat(entity.getFieldType().getReference(), is(BASE_TEXT));
+
+            verify(parseContext).getCaseFieldForCaseType(TEXT_COLLECTION_CASE_TYPE_ID, "names");
+        }
+
+        @Test
+        @DisplayName("should parse search alias field for collection of nested complex types")
+        void shouldParseForCollectionOfNestedComplexTypes() {
+            CaseTypeEntity caseType = new CaseTypeBuilder().withReference(COMPLEX_COLLECTION_CASE_TYPE_ID).build();
+
+            List<SearchAliasFieldEntity> fields = parser.parseAll(createDefinitionSheet(), caseType);
+
+            assertThat(fields.isEmpty(), is(false));
+            SearchAliasFieldEntity entity = fields.get(0);
+            assertThat(entity.getCaseType(), is(caseType));
+            assertThat(entity.getReference(), is(COMPLEX_COLLECTION_SEARCH_ALIAS_ID));
+            assertThat(entity.getCaseFieldPath(), is(COMPLEX_COLLECTION_CASE_FIELD_ID));
+            assertThat(entity.getFieldType().getReference(), is(BASE_NUMBER));
+
+            verify(parseContext).getCaseFieldForCaseType(COMPLEX_COLLECTION_CASE_TYPE_ID, "companies");
+            verify(parseContext).getType("company");
+            verify(parseContext).getType("address");
+        }
+
+    }
+
     private Map<String, DefinitionSheet> createDefinitionSheet() {
         DefinitionDataItem dataItem1 = new DefinitionDataItem(SheetName.SEARCH_ALIAS.getName());
         dataItem1.addAttribute(ColumnName.SEARCH_ALIAS_ID, SEARCH_ALIAS_ID);
@@ -184,9 +257,21 @@ class SearchAliasFieldParserTest {
         dataItem2.addAttribute(ColumnName.CASE_FIELD_ID, COMPLEX_CASE_FIELD_ID);
         dataItem2.addAttribute(ColumnName.CASE_TYPE_ID, COMPLEX_CASE_TYPE_ID);
 
+        DefinitionDataItem dataItem3 = new DefinitionDataItem(SheetName.SEARCH_ALIAS.getName());
+        dataItem3.addAttribute(ColumnName.SEARCH_ALIAS_ID, TEXT_COLLECTION_SEARCH_ALIAS_ID);
+        dataItem3.addAttribute(ColumnName.CASE_FIELD_ID, TEXT_COLLECTION_CASE_FIELD_ID);
+        dataItem3.addAttribute(ColumnName.CASE_TYPE_ID, TEXT_COLLECTION_CASE_TYPE_ID);
+
+        DefinitionDataItem dataItem4 = new DefinitionDataItem(SheetName.SEARCH_ALIAS.getName());
+        dataItem4.addAttribute(ColumnName.SEARCH_ALIAS_ID, COMPLEX_COLLECTION_SEARCH_ALIAS_ID);
+        dataItem4.addAttribute(ColumnName.CASE_FIELD_ID, COMPLEX_COLLECTION_CASE_FIELD_ID);
+        dataItem4.addAttribute(ColumnName.CASE_TYPE_ID, COMPLEX_COLLECTION_CASE_TYPE_ID);
+
         DefinitionSheet sheet = new DefinitionSheet();
         sheet.addDataItem(dataItem1);
         sheet.addDataItem(dataItem2);
+        sheet.addDataItem(dataItem3);
+        sheet.addDataItem(dataItem4);
 
         Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
         definitionSheets.put(SheetName.SEARCH_ALIAS.getName(), sheet);

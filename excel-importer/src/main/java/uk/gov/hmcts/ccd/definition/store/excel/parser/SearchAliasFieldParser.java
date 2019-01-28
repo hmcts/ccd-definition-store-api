@@ -24,6 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntit
 public class SearchAliasFieldParser {
 
     private static final String NESTED_FIELD_SEPARATOR_REGEX = "\\.";
+    private static final String COLLECTION_FIELD_VALUE = "value";
 
     private final ParseContext parseContext;
 
@@ -66,12 +67,29 @@ public class SearchAliasFieldParser {
         if (StringUtils.isEmpty(caseFieldPath)) {
             return null;
         }
-        List<String> fields = parseCaseFieldPath(caseFieldPath);
-        CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(caseType.getReference(), fields.remove(0));
+        List<String> fieldsInPath = parseCaseFieldPath(caseFieldPath);
+        CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(caseType.getReference(), fieldsInPath.remove(0));
         if (caseField.isComplexFieldType()) {
-            return deriveComplexFieldType(caseField.getFieldType().getReference(), fields);
+            return deriveComplexFieldType(caseField.getFieldType().getReference(), fieldsInPath);
+        } else if (caseField.isCollectionFieldType()) {
+            return deriveCollectionFieldType(caseField, fieldsInPath);
         } else {
             return caseField.getBaseType();
+        }
+    }
+
+    private FieldTypeEntity deriveCollectionFieldType(CaseFieldEntity caseField, List<String> fieldsInPath) {
+        if (caseField.isCollectionOfComplex()) {
+            removeCollectionValuePlaceholder(fieldsInPath);
+            return deriveComplexFieldType(caseField.getFieldType().getCollectionFieldType().getReference(), fieldsInPath);
+        } else {
+            return parseContext.getBaseType(caseField.getFieldType().getCollectionFieldType().getReference()).orElse(null);
+        }
+    }
+
+    private void removeCollectionValuePlaceholder(List<String> fieldsInPath) {
+        if (fieldsInPath.get(0).equalsIgnoreCase(COLLECTION_FIELD_VALUE)) {
+            fieldsInPath.remove(0);
         }
     }
 
