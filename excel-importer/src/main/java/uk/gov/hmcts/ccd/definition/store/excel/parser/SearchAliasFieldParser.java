@@ -11,6 +11,7 @@ import static java.util.Optional.ofNullable;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -79,8 +80,8 @@ public class SearchAliasFieldParser {
     }
 
     private FieldTypeEntity deriveCollectionFieldType(CaseFieldEntity caseField, List<String> fieldsInPath) {
+        removeCollectionValuePlaceholder(fieldsInPath);
         if (caseField.isCollectionOfComplex()) {
-            removeCollectionValuePlaceholder(fieldsInPath);
             return deriveComplexFieldType(caseField.getFieldType().getCollectionFieldType().getReference(), fieldsInPath);
         } else {
             return parseContext.getBaseType(caseField.getFieldType().getCollectionFieldType().getReference()).orElse(null);
@@ -88,8 +89,11 @@ public class SearchAliasFieldParser {
     }
 
     private void removeCollectionValuePlaceholder(List<String> fieldsInPath) {
-        if (fieldsInPath.get(0).equalsIgnoreCase(COLLECTION_FIELD_VALUE)) {
+        if (!fieldsInPath.isEmpty() && fieldsInPath.get(0).equalsIgnoreCase(COLLECTION_FIELD_VALUE)) {
             fieldsInPath.remove(0);
+        } else {
+            throw new MapperException(String.format("%s: A collection case field ID must be suffixed with '.%s'",
+                                                    SheetName.SEARCH_ALIAS.getName(), COLLECTION_FIELD_VALUE));
         }
     }
 

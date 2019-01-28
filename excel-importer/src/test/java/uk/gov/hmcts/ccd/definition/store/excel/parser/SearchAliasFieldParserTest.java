@@ -8,6 +8,7 @@ import java.util.Optional;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -242,6 +244,25 @@ class SearchAliasFieldParserTest {
             verify(parseContext).getCaseFieldForCaseType(COMPLEX_COLLECTION_CASE_TYPE_ID, "companies");
             verify(parseContext).getType("company");
             verify(parseContext).getType("address");
+        }
+
+        @Test
+        @DisplayName("should throw exception when collection field ID is not suffixed by .value")
+        void shouldThrowException() {
+            DefinitionDataItem dataItem1 = new DefinitionDataItem(SheetName.SEARCH_ALIAS.getName());
+            dataItem1.addAttribute(ColumnName.SEARCH_ALIAS_ID, TEXT_COLLECTION_SEARCH_ALIAS_ID);
+            dataItem1.addAttribute(ColumnName.CASE_FIELD_ID, "names");
+            dataItem1.addAttribute(ColumnName.CASE_TYPE_ID, TEXT_COLLECTION_CASE_TYPE_ID);
+
+            DefinitionSheet sheet = new DefinitionSheet();
+            sheet.addDataItem(dataItem1);
+
+            Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
+            definitionSheets.put(SheetName.SEARCH_ALIAS.getName(), sheet);
+
+            CaseTypeEntity caseType = new CaseTypeBuilder().withReference(TEXT_COLLECTION_CASE_TYPE_ID).build();
+
+            assertThrows(MapperException.class, () -> parser.parseAll(definitionSheets, caseType));
         }
 
     }
