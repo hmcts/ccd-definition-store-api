@@ -59,7 +59,7 @@ public class DraftDefinitionController {
         notes = "Saves a draft Definition for the specified Jurisdiction, incrementing the version number each time"
     )
     @ApiResponse(code = 200, message = "Draft Definition created")
-    ResponseEntity<Definition> saveDraftDefinition(
+    public ResponseEntity<Definition> saveDraftDefinition(
         @ApiParam(value = "Draft Definition", required = true)
         @RequestBody @NotNull final Definition definition) {
         final ServiceResponse<Definition> serviceResponse = definitionService.saveDraftDefinition(definition);
@@ -74,7 +74,7 @@ public class DraftDefinitionController {
         notes = "The draft definition for the specified Jurisdiction is marked as deleted"
     )
     @ApiResponse(code = 204, message = "Draft Definition deleted")
-    void draftDefinitionDelete(
+    public void draftDefinitionDelete(
         @ApiParam(value = "jurisdiction", required = true) @PathVariable("jurisdiction") String jurisdiction,
         @ApiParam(value = "version", required = true) @PathVariable("version") Integer version) {
         definitionService.deleteDraftDefinition(jurisdiction, version);
@@ -87,7 +87,7 @@ public class DraftDefinitionController {
         notes = "Finds a draft Definition for the specified Jurisdiction"
     )
     @ApiResponse(code = 200, message = "Draft Definition found")
-    List<Definition> findByJurisdictionId(@RequestParam("jurisdiction") final String jurisdiction) {
+    public List<Definition> findByJurisdictionId(@RequestParam("jurisdiction") final String jurisdiction) {
         return definitionService.findByJurisdictionId(jurisdiction);
     }
 
@@ -98,7 +98,7 @@ public class DraftDefinitionController {
         notes = "Finds a draft Definition for the specified Jurisdiction"
     )
     @ApiResponse(code = 200, message = "Draft Definition found")
-    Definition findByJurisdictionIdAndVersion(
+    public Definition findByJurisdictionIdAndVersion(
         @RequestParam("jurisdiction") final String jurisdiction,
         @RequestParam(value = "version", required = false) final Integer version) {
         return definitionService.findByJurisdictionIdAndVersion(jurisdiction, version);
