@@ -45,6 +45,9 @@ public class EventParserTest extends ParserTestBase {
     private EventCaseFieldParser eventCaseFieldParser;
 
     @Mock
+    private EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser;
+
+    @Mock
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     @Captor
@@ -63,6 +66,7 @@ public class EventParserTest extends ParserTestBase {
         eventParser = new EventParser(
             parseContext,
             eventCaseFieldParser,
+            eventCaseFieldComplexTypeParser,
             entityToDefinitionDataItemRegistry
         );
 
@@ -74,7 +78,6 @@ public class EventParserTest extends ParserTestBase {
         definitionSheets.put(SheetName.CASE_EVENT_TO_FIELDS.getName(), restrictionSheet);
 
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        given(mockAppender.getName()).willReturn("MOCK");
         root.addAppender(mockAppender);
         root.setLevel(Level.INFO);
     }

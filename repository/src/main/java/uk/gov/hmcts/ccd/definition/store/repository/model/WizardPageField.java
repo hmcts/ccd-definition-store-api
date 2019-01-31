@@ -52,7 +52,7 @@ public class WizardPageField {
         this.displayContext = displayContext != null ? displayContext.toString() : null;
     }
 
-    @JsonProperty("complex_field_mask")
+    @JsonProperty("complex_field_mask_list")
     public List<WizardPageComplexFieldMask> getComplexFieldMaskList() {
         return complexFieldMaskList;
     }

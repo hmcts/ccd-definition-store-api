@@ -121,7 +121,7 @@ class DisplayGroupAdapterServiceTest {
             EventEntity eventEntityMock = mock(EventEntity.class);
 
             EventComplexTypeEntity bailiffName = new EventComplexTypeEntity();
-            bailiffName.setReference("finalReturn.bailiffName");
+            bailiffName.setReference("bailiffName");
             bailiffName.setDisplayContext(DisplayContext.READONLY);
             bailiffName.setOrder(3);
             bailiffName.setHint("Hint text override");
@@ -129,12 +129,12 @@ class DisplayGroupAdapterServiceTest {
             bailiffName.setShowCondition("fieldName1.subField2=\"potato\"");
 
             EventComplexTypeEntity addressLine1 = new EventComplexTypeEntity();
-            addressLine1.setReference("finalReturn.addressAttended.AddressLine1");
+            addressLine1.setReference("addressAttended.AddressLine1");
             addressLine1.setDisplayContext(DisplayContext.MANDATORY);
             addressLine1.setOrder(1);
 
             EventComplexTypeEntity postcode = new EventComplexTypeEntity();
-            postcode.setReference("finalReturn.addressAttended.Postcode");
+            postcode.setReference("addressAttended.Postcode");
             postcode.setDisplayContext(DisplayContext.OPTIONAL);
             postcode.setOrder(2);
 

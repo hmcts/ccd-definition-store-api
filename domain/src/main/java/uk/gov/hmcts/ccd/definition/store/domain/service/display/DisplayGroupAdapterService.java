@@ -83,7 +83,7 @@ public class DisplayGroupAdapterService {
                         if (DisplayContext.COMPLEX == eventCaseFieldEntity.getDisplayContext()) {
                             eventCaseFieldEntity.getEventComplexTypes().forEach(eventComplexTypeEntity -> {
                                 WizardPageComplexFieldMask mask = new WizardPageComplexFieldMask();
-                                mask.setComplexFieldId(eventComplexTypeEntity.getReference());
+                                mask.setComplexFieldId(reference + "." +eventComplexTypeEntity.getReference());
                                 mask.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
                                 mask.setOrder(eventComplexTypeEntity.getOrder());
                                 mask.setLabel(eventComplexTypeEntity.getLabel());
