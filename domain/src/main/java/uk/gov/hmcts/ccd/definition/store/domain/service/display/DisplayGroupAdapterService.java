@@ -100,6 +100,7 @@ public class DisplayGroupAdapterService {
 
                             List<String> hiddenFieldMaskToCreate = allSubTypePossibilities.stream()
                                 .filter(e -> e.startsWith(displayGroupCaseFieldEntity.getCaseField().getReference()))
+                                .filter(e -> !e.equals(displayGroupCaseFieldEntity.getCaseField().getReference()))
                                 .filter(e -> !complexFieldMaskIds.contains(e))
                                 .collect(Collectors.toList());
 
