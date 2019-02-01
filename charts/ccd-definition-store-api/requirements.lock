@@ -1,0 +1,9 @@
+dependencies:
+- name: postgresql
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 3.1.4
+- name: java
+  repository: https://hmcts.azurecr.io/helm/v1/repo
+  version: 0.0.11
+digest: sha256:20821ec7cf772d0107329126a81980c1f548ab8ff0b438a1b2460957b6777ca8
+generated: 2019-01-30T14:05:27.367986Z
