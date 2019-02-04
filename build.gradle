@@ -290,12 +290,6 @@ subprojects {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-// tag::wrapper[]
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.9'
-}
-// end::wrapper[]
-
 sonarqube {
     properties {
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
