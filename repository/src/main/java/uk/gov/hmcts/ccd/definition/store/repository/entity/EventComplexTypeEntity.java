@@ -11,13 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import static javax.persistence.FetchType.LAZY;
 
 @Table(name = "event_case_field_complex_type")
 @Entity
-public class EventComplexTypeEntity {
+public class EventComplexTypeEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

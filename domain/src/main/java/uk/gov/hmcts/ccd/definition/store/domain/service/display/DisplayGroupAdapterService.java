@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
@@ -28,8 +26,6 @@ import static java.lang.String.format;
 
 @Service
 public class DisplayGroupAdapterService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DisplayGroupAdapterService.class);
 
     private DisplayGroupRepository displayGroupRepository;
     private CaseTypeRepository caseTypeRepository;
@@ -62,7 +58,7 @@ public class DisplayGroupAdapterService {
                     });
 
                     List<String> allSubTypePossibilities =
-                        displayGroupEntity.getEvent().getEventCaseFields() != null && displayGroupEntity.getEvent().getEventCaseFields().size() > 0
+                        displayGroupEntity.getEvent().getEventCaseFields() != null && !displayGroupEntity.getEvent().getEventCaseFields().isEmpty()
                             ? CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(displayGroupEntity.getEvent().getEventCaseFields()
                             .stream().map(EventCaseFieldEntity::getCaseField)
                             .collect(Collectors.toList())) : Collections.emptyList();
