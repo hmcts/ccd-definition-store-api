@@ -101,9 +101,11 @@ public class EventCaseFieldEntity implements Serializable {
     }
 
     public void addComplexFields(List<EventComplexTypeEntity> complexFields) {
-        for (EventComplexTypeEntity eventComplexTypeEntity : complexFields) {
-            eventComplexTypeEntity.setComplexFieldType(this);
-            this.eventComplexTypes.add(eventComplexTypeEntity);
+        if (complexFields != null) {
+            for (EventComplexTypeEntity eventComplexTypeEntity : complexFields) {
+                eventComplexTypeEntity.setComplexFieldType(this);
+                this.eventComplexTypes.add(eventComplexTypeEntity);
+            }
         }
     }
 

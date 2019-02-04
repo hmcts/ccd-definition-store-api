@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomple
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 
 public class EventComplexTypeEntityInvalidShowConditionError extends ValidationError {

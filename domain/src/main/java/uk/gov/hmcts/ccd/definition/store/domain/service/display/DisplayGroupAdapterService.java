@@ -62,8 +62,8 @@ public class DisplayGroupAdapterService {
                     });
 
                     List<String> allSubTypePossibilities =
-                        displayGroupEntity.getEvent().getEventCaseFields() != null && displayGroupEntity.getEvent().getEventCaseFields().size() > 0 ?
-                            CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(displayGroupEntity.getEvent().getEventCaseFields()
+                        displayGroupEntity.getEvent().getEventCaseFields() != null && displayGroupEntity.getEvent().getEventCaseFields().size() > 0
+                            ? CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(displayGroupEntity.getEvent().getEventCaseFields()
                             .stream().map(EventCaseFieldEntity::getCaseField)
                             .collect(Collectors.toList())) : Collections.emptyList();
 
@@ -83,7 +83,7 @@ public class DisplayGroupAdapterService {
                         if (DisplayContext.COMPLEX == eventCaseFieldEntity.getDisplayContext()) {
                             eventCaseFieldEntity.getEventComplexTypes().forEach(eventComplexTypeEntity -> {
                                 WizardPageComplexFieldMask mask = new WizardPageComplexFieldMask();
-                                mask.setComplexFieldId(reference + "." +eventComplexTypeEntity.getReference());
+                                mask.setComplexFieldId(reference + "." + eventComplexTypeEntity.getReference());
                                 mask.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
                                 mask.setOrder(eventComplexTypeEntity.getOrder());
                                 mask.setLabel(eventComplexTypeEntity.getLabel());

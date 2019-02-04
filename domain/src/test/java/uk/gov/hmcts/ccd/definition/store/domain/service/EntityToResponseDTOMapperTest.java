@@ -127,6 +127,7 @@ class EntityToResponseDTOMapperTest {
         return eventComplexTypeEntities.stream()
             .filter(e -> e.getReference().equals(reference)).findFirst().get();
     }
+
     private CaseEventFieldComplex findCaseEventFieldComplex(
         List<CaseEventFieldComplex> caseEventFieldComplexes, String reference) {
         return caseEventFieldComplexes.stream()

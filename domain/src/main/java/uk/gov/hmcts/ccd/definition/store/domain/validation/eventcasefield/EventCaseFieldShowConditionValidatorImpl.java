@@ -40,14 +40,16 @@ public class EventCaseFieldShowConditionValidatorImpl implements EventCaseFieldE
             validationResult.addError(
                 new EventCaseFieldEntityInvalidShowConditionError(
                     eventCaseFieldEntity,
-                    eventCaseFieldEntityValidationContext
-                )
-            );
+                    eventCaseFieldEntityValidationContext));
             return validationResult;
         }
 
+        List<EventCaseFieldEntity> allEventCaseFieldEntitiesForEventCase =
+            eventCaseFieldEntityValidationContext.getAllEventCaseFieldEntitiesForEventCase();
+
+
         List<String> allSubTypePossibilities = CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(
-            eventCaseFieldEntityValidationContext.getAllEventCaseFieldEntitiesForEventCase().stream()
+            allEventCaseFieldEntitiesForEventCase.stream()
                 .map(EventCaseFieldEntity::getCaseField)
                 .collect(Collectors.toList()));
 
@@ -63,17 +65,14 @@ public class EventCaseFieldShowConditionValidatorImpl implements EventCaseFieldE
         });
 
         showCondition.getFields().forEach(showConditionField -> {
-            if (!showConditionFieldExistsAtLeastOneEventCaseFieldEntity(
+            if (!forShowConditionFieldExistsAtLeastOneEventCaseFieldEntity(
                 showConditionField,
-                allOtherEventCaseFieldEntities(eventCaseFieldEntity, eventCaseFieldEntityValidationContext)
-            )) {
+                allOtherEventCaseFieldEntities(eventCaseFieldEntity, allEventCaseFieldEntitiesForEventCase))) {
                 validationResult.addError(
                     new EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError(
                         showConditionField,
                         eventCaseFieldEntityValidationContext,
-                        eventCaseFieldEntity
-                    )
-                );
+                        eventCaseFieldEntity));
             }
         });
 
@@ -81,18 +80,16 @@ public class EventCaseFieldShowConditionValidatorImpl implements EventCaseFieldE
     }
 
     private List<EventCaseFieldEntity> allOtherEventCaseFieldEntities(EventCaseFieldEntity eventCaseFieldEntity,
-                                                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
-        return eventCaseFieldEntityValidationContext.getAllEventCaseFieldEntitiesForEventCase()
-            .stream()
-            .filter(ecfe -> ecfe != eventCaseFieldEntity)
+                                                                      List<EventCaseFieldEntity> allEventCaseFieldEntitiesForEventCase) {
+        return allEventCaseFieldEntitiesForEventCase.stream()
+            .filter(element -> element != eventCaseFieldEntity)
             .collect(Collectors.toList());
     }
 
-    private boolean showConditionFieldExistsAtLeastOneEventCaseFieldEntity(String showConditionField,
-                                                                           List<EventCaseFieldEntity> eventCaseFieldEntities) {
+    private boolean forShowConditionFieldExistsAtLeastOneEventCaseFieldEntity(String showConditionField,
+                                                                              List<EventCaseFieldEntity> eventCaseFieldEntities) {
         return eventCaseFieldEntities
             .stream()
             .anyMatch(f -> f.getCaseField().getReference().equals(showConditionField));
     }
-
 }
