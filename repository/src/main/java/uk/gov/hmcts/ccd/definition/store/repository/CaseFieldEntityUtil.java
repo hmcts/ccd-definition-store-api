@@ -55,7 +55,7 @@ public class CaseFieldEntityUtil {
 
     private static boolean isCollection(FieldEntity caseFieldEntity) {
         return caseFieldEntity.getFieldType().getCollectionFieldType() != null &&
-            caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields() != null &&
-            !caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields().isEmpty();
+            caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields() != null
+            && !caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields().isEmpty();
     }
 }

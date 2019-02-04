@@ -268,8 +268,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
                                             error.getEventCaseFieldEntity(),
                                             def -> String.format(
-                                                "Unknown field '%s' for event '%s' in show condition: '%s' on tab " +
-                                                    "'%s'",
+                                                "Unknown field '%s' for event '%s' in show condition: '%s' on tab '%s'",
                                                 error.getShowConditionField(),
                                                 error.getEventId(),
                                                 def.getString(ColumnName.FIELD_SHOW_CONDITION),
@@ -293,10 +292,8 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
                                             error.getEventComplexTypeEntity(),
                                             def -> String.format(
-                                                "Unknown field '%s' for event '%s' and element '%s' in show " +
-                                                    "condition: " +
-                                                    "'%s' on " +
-                                                    "tab '%s'",
+                                                "Unknown field '%s' for event '%s' and element '%s' in show "
+                                                    + "condition: '%s' on tab '%s'",
                                                 error.getShowConditionField(),
                                                 error.getEventId(),
                                                 error.getEventComplexTypeEntity().getReference(),

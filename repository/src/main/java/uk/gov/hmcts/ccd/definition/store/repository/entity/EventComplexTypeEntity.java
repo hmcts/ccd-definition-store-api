@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
+import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +20,11 @@ import static javax.persistence.FetchType.LAZY;
 
 @Table(name = "event_case_field_complex_type")
 @Entity
+@TypeDef(
+    name = "pgsql_displaycontext_enum",
+    typeClass = PostgreSQLEnumType.class,
+    parameters = @org.hibernate.annotations.Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
+)
 public class EventComplexTypeEntity implements Serializable {
     @Id
     @Column(name = "id")

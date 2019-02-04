@@ -118,7 +118,7 @@ class EntityToResponseDTOMapperTest {
                 () -> assertEquals("order",
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(),ref1).getOrder(),
                     findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder())
-                     );
+            );
         }
     }
 

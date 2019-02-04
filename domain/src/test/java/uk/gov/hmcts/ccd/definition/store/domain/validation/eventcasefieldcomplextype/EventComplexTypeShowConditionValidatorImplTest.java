@@ -130,21 +130,15 @@ public class EventComplexTypeShowConditionValidatorImplTest {
     }
 
     @Test
-    public void invalidShowConditionExceptionThrown_validValidationResultReturned()
+    public void failsWithEventComplexTypeEntityInvalidShowConditionErrorForInvalidShowCondition()
         throws InvalidShowConditionException {
 
         String showCondition = "InvalidShowCondition";
         EventComplexTypeEntity eventComplexTypeEntityWithInvalidShowCondition = eventComplexTypeEntity("reference1",
             showCondition);
 
-        EventCaseFieldEntity eventCaseFieldWithEventComplexTypeEntity = eventCaseFieldEntity(
-            null,
-            asList(eventComplexTypeEntityWithInvalidShowCondition));
-
         EventCaseFieldEntityValidationContext eventCaseFieldEntityWithInvalidShowCondition =
-            new EventCaseFieldEntityValidationContext(
-            null, null
-        );
+            new EventCaseFieldEntityValidationContext(null, null);
 
         when(showConditionExtractor.parseShowCondition(any())).thenThrow(new InvalidShowConditionException(null));
 
@@ -161,7 +155,8 @@ public class EventComplexTypeShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldFailForInvalidShowCondition() throws InvalidShowConditionException {
+    public void failsWithEventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldErrorForInvalidShowCondition()
+        throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode";

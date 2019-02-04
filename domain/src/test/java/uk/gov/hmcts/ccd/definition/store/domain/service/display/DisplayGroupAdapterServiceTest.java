@@ -118,8 +118,6 @@ class DisplayGroupAdapterServiceTest {
 
         @Test
         public void findWizardPagesByCaseTypeIdForComplexTypes() {
-            EventEntity eventEntityMock = mock(EventEntity.class);
-
             EventComplexTypeEntity bailiffName = new EventComplexTypeEntity();
             bailiffName.setReference("bailiffName");
             bailiffName.setDisplayContext(DisplayContext.READONLY);
@@ -138,6 +136,7 @@ class DisplayGroupAdapterServiceTest {
             postcode.setDisplayContext(DisplayContext.OPTIONAL);
             postcode.setOrder(2);
 
+            EventEntity eventEntityMock = mock(EventEntity.class);
             given(eventEntityMock.getEventCaseFields()).willReturn(
                 singletonList(
                     eventCaseFieldEntity(
@@ -188,7 +187,8 @@ class DisplayGroupAdapterServiceTest {
             assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn", "finalReturn.bailiffName").getOrder(), is(3));
             assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(), is("Bailiff Name"));
             assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(), is("Hint text override"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn", "finalReturn.bailiffName").getShowCondition(), is("fieldName1.subField2=\"potato\""));
+            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+                "finalReturn.bailiffName").getShowCondition(), is("fieldName1.subField2=\"potato\""));
 
             assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
                 "finalReturn.dateOfVisit").getDisplayContext(), is("HIDDEN"));
@@ -272,12 +272,6 @@ class DisplayGroupAdapterServiceTest {
         return displayGroupCaseFieldEntity;
     }
 
-    private static CaseFieldEntity caseFieldEntity(String reference) {
-        CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
-        caseFieldEntity.setReference(reference);
-        return caseFieldEntity;
-    }
-
     private static FieldTypeEntity fieldTypeEntity(String reference, FieldTypeEntity baseFieldType,
                                                    List<ComplexFieldEntity> complexFieldEntities) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
@@ -291,6 +285,12 @@ class DisplayGroupAdapterServiceTest {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(reference);
         return fieldTypeEntity;
+    }
+
+    private static CaseFieldEntity caseFieldEntity(String reference) {
+        CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+        caseFieldEntity.setReference(reference);
+        return caseFieldEntity;
     }
 
     private static CaseFieldEntity caseFieldEntity(String reference, String label,

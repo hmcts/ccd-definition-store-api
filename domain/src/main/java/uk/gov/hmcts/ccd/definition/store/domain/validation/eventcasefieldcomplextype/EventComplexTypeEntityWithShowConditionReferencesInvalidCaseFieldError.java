@@ -21,9 +21,8 @@ public class EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldEr
                 "Unknown field '%s' for event '%s' in show condition: '%s'",
                 showConditionField,
                 validationContext.getEventId(),
-                eventComplexTypeEntity.getShowCondition()
-                         )
-             );
+                eventComplexTypeEntity.getShowCondition()));
+
         this.eventComplexTypeEntity = eventComplexTypeEntity;
         this.showConditionField = showConditionField;
         this.eventId = validationContext.getEventId();
