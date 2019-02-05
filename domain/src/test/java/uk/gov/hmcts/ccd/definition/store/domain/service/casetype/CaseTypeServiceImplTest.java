@@ -45,6 +45,7 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -125,21 +126,30 @@ class CaseTypeServiceImplTest {
             when(caseTypeRepository.findLastVersion(any())).thenReturn(Optional.of(DEFAULT_VERSION));
             when(caseTypeEntityValidator1.validate(any())).thenReturn(new ValidationResult());
             when(caseTypeEntityValidator2.validate(any())).thenReturn(new ValidationResult());
+            when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_1))
+                .thenReturn(Optional.of(caseTypeEntity1));
+            final CaseType caseType = new CaseType();
+            caseType.setId(CASE_TYPE_REFERENCE_1);
+            when(dtoMapper.map(same(caseTypeEntity1))).thenReturn(caseType);
+            when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_2))
+                .thenReturn(Optional.empty());
+            when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_3))
+                .thenReturn(Optional.empty());
         }
 
         @Test
         @DisplayName(
-            "Should add the jurisdiction to all items is list, validate and same them all if they are all valid")
-        public void shouldAddJurisdictionToAllCaseTypeEntitiesValidateThenSave_whenCaseTypeEntitesAreAllValid() {
+            "Should add the jurisdiction to all items in list, validate and save them all if they are all valid")
+        void shouldAddJurisdictionToAllCaseTypeEntitiesValidateThenSave_whenCaseTypeEntitiesAreAllValid() {
             classUnderTest.createAll(jurisdiction, caseTypeEntities);
             assertComponentsCalled(true, null);
         }
 
         @Test
         @DisplayName(
-            "Should add the jurisdiction to all items is list, validate and throw a ValidationException with details or all invalid entities "
-                + "if any are invalid")
-        public void shouldAddJurisdictionToAllCaseTypeEntitiesValidateAndThrowValidationResultWithoutSaving_whenAnyCaseTypeEntitesAreInValid() {
+            "Should add the jurisdiction to all items in list, validate and throw a ValidationException with details "
+                + "of all invalid entities if any are invalid")
+        void shouldAddJurisdictionToAllCaseTypeEntitiesValidateAndThrowValidationResultWithoutSaving_whenAnyCaseTypeEntitiesAreInValid() {
 
             when(caseTypeEntityValidator1.validate(eq(caseTypeEntity1)))
                 .thenReturn(validationResultWithError(
@@ -169,7 +179,7 @@ class CaseTypeServiceImplTest {
 
         @Test
         @DisplayName("Should throw propagate the CaseTypeValidationException thrown by the LegacyCaseTypeValidator")
-        public void shouldThrowCaseTypeValidationExceptionWithoutSaving_whenLegacyCaseTypeValidatorThrowsCaseTypeValidationException() {
+        void shouldThrowCaseTypeValidationExceptionWithoutSaving_whenLegacyCaseTypeValidatorThrowsCaseTypeValidationException() {
 
             CaseTypeValidationException caseTypeValidationException = new CaseTypeValidationException(
                 new CaseTypeValidationResult());
@@ -184,6 +194,35 @@ class CaseTypeServiceImplTest {
 
             assertComponentsCalled(false, caseTypeEntity2);
 
+        }
+
+        @Test
+        @DisplayName("Should throw a ValidationException if any of the Case Type IDs do not match their definitive "
+            + "spellings")
+        void shouldThrowValidationExceptionIfCaseTypeIdDoesNotMatchDefinitiveSpelling() {
+            final String CASE_TYPE_REFERENCE = "TESTAddressBookCase2";
+            final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference(CASE_TYPE_REFERENCE);
+            when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_2))
+                .thenReturn(Optional.of(caseTypeEntity));
+            final CaseType caseType = new CaseType();
+            caseType.setId(CASE_TYPE_REFERENCE);
+            when(dtoMapper.map(same(caseTypeEntity))).thenReturn(caseType);
+
+            ValidationException validationException
+                = assertThrows(ValidationException.class,
+                () -> classUnderTest.createAll(jurisdiction, caseTypeEntities));
+            verify(caseTypeRepository).findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_2);
+
+            ValidationResult validationResult = validationException.getValidationResult();
+            assertFalse(validationResult.isValid());
+            assertEquals(1, validationResult.getValidationErrors().size());
+
+            assertThat(validationResult.getValidationErrors(), hasItem(
+                matchesValidationErrorWithDefaultMessage("Definitive spelling of this Case Type ID is "
+                    + "'TESTAddressBookCase2' but the imported Case Type ID was 'TestAddressBookCase2'.")));
+
+            assertComponentsCalled(false, null);
         }
 
         private <T> Matcher<T> matchesValidationErrorWithDefaultMessage(String defaultMessage) {
@@ -267,6 +306,8 @@ class CaseTypeServiceImplTest {
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
                 inOrder.verify(caseTypeEntityValidator2).validate(
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
+                inOrder.verify(caseTypeRepository).findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(
+                    caseTypeEntity.getReference());
                 inOrder.verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(caseTypeEntity.getReference(), jurisdiction.getReference());
             }
 
@@ -384,9 +425,9 @@ class CaseTypeServiceImplTest {
             assertTrue(caseTypes.isEmpty());
         }
 
-        private CaseTypeEntity caseTypeEntity(EventEntity... eventEntites) {
+        private CaseTypeEntity caseTypeEntity(EventEntity... eventEntities) {
             CaseTypeEntity caseType = new CaseTypeEntity();
-            caseType.addEvents(Arrays.asList(eventEntites));
+            caseType.addEvents(Arrays.asList(eventEntities));
             return caseType;
         }
 
@@ -405,23 +446,23 @@ class CaseTypeServiceImplTest {
         private static final String JURISDICTION_REFERENCE = "TEST";
 
         @Test
-        @DisplayName("Should return true if case type for jurisdiction other then given exist")
+        @DisplayName("Should return true if case type for jurisdiction other than given exists")
         void shouldReturnTrue_whenCaseTypeForJurisdictionOtherThanGivenExist() {
             when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(2);
 
             boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
-            assertThat(caseTypeExists, is(true));
+            assertTrue(caseTypeExists);
             verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
         }
 
         @Test
-        @DisplayName("Should return false if case type for jurisdiction other then given does no exist")
+        @DisplayName("Should return false if case type for jurisdiction other than given does not exist")
         void shouldReturnFalse_whenCaseTypeForJurisdictionOtherThanGivenDoesNotExist() {
             when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(0);
             Boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
-            assertThat(caseTypeExists, is(false));
+            assertFalse(caseTypeExists);
             verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
         }
     }
@@ -453,7 +494,7 @@ class CaseTypeServiceImplTest {
 
             verify(caseTypeRepository).findCurrentVersionForReference(same(caseTypeId));
             verify(dtoMapper).map(same(caseTypeEntity));
-            assertThat(caseType.isPresent(), is(true));
+            assertTrue(caseType.isPresent());
             assertThat(caseType.get(), is(this.caseType));
         }
 
@@ -476,7 +517,7 @@ class CaseTypeServiceImplTest {
         void shouldReturnCaseTypeWithMetadataFieldsAndFixedListItems_whenMetadataFieldIsOfTypeFixedList() {
             Optional<CaseType> response = classUnderTest.findByCaseTypeId(caseTypeId);
 
-            assertThat(response.isPresent(), is(true));
+            assertTrue(response.isPresent());
             CaseType result = response.get();
             verifyResult(result);
             assertThat(result.getCaseFields().get(0), is(metadataField));
@@ -502,6 +543,7 @@ class CaseTypeServiceImplTest {
         void greenPath() {
             when(caseTypeRepository.findLastVersion(CASE_TYPE_REFERENCE)).thenReturn(Optional.of(789));
             Optional<CaseTypeVersionInformation> info = classUnderTest.findVersionInfoByCaseTypeId(CASE_TYPE_REFERENCE);
+            assertTrue(info.isPresent());
             assertThat(info.get().getVersion(), is(789));
         }
 
@@ -511,6 +553,37 @@ class CaseTypeServiceImplTest {
             when(caseTypeRepository.findLastVersion(CASE_TYPE_REFERENCE)).thenReturn(Optional.empty());
             Optional<CaseTypeVersionInformation> info = classUnderTest.findVersionInfoByCaseTypeId(CASE_TYPE_REFERENCE);
             assertFalse(info.isPresent());
+        }
+    }
+
+    @Nested
+    @DisplayName("Find definitive Case Type ID (reference)")
+    class FindDefinitiveCaseTypeId {
+
+        private static final String CASE_TYPE_REFERENCE = "testaddressbookcase1";
+        private final CaseType caseType = new CaseType();
+
+        @Test
+        @DisplayName("Definitive Case Type ID found")
+        void definitiveCaseTypeIdExists() {
+            when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE))
+                .thenReturn(Optional.of(caseTypeEntity1));
+            caseType.setId(CASE_TYPE_REFERENCE_1);
+            when(dtoMapper.map(same(caseTypeEntity1))).thenReturn(caseType);
+            String caseTypeId = classUnderTest.findDefinitiveCaseTypeId(CASE_TYPE_REFERENCE);
+            verify(caseTypeRepository).findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(
+                same(CASE_TYPE_REFERENCE));
+            verify(dtoMapper).map(same(caseTypeEntity1));
+            assertThat(caseTypeId, is(CASE_TYPE_REFERENCE_1));
+        }
+
+        @Test
+        @DisplayName("No Definitive Case Type ID found")
+        void definitiveCaseTypeIdDoesNotExist() {
+            when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE))
+                .thenReturn(Optional.empty());
+            String caseTypeId = classUnderTest.findDefinitiveCaseTypeId(CASE_TYPE_REFERENCE);
+            assertNull(caseTypeId);
         }
     }
 }

@@ -26,6 +26,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
@@ -1145,6 +1146,33 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         );
     }
 
+    @Test
+    public void testCaseTypeEntityReferenceSpellingValidationError_defaultMessageReturned() {
+
+        CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Name");
+        CaseTypeEntityReferenceSpellingValidationError caseTypeEntityReferenceSpellingValidationError
+            = new CaseTypeEntityReferenceSpellingValidationError("Definitive Case Type ID", caseTypeEntity);
+        assertEquals(
+            caseTypeEntityReferenceSpellingValidationError.getDefaultMessage(),
+            classUnderTest.createErrorMessage(
+                caseTypeEntityReferenceSpellingValidationError
+            )
+        );
+    }
+
+    @Test
+    public void testCaseTypeEntityReferenceSpellingValidationError_customMessageReturned() {
+
+        CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Reference");
+        assertCaseTypeEntityReferenceSpellingValidationErrorForEntityFromDataDefinitionItem(
+            "Case Type with ID 'Case Type Reference' on tab 'CaseType' already exists with the definitive spelling "
+                + "'Definitive Case Type Reference'. This spelling must be used for the Case Type ID.",
+            "Definitive Case Type Reference",
+            caseTypeEntity,
+            definitionDataItem(SheetName.CASE_TYPE, ColumnName.CASE_TYPE_ID, "Other Case Type Reference"));
+
+    }
+
     private CaseTypeEntity caseTypeEntity(String reference) {
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference(reference);
@@ -1375,5 +1403,20 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     }
 
+    private void assertCaseTypeEntityReferenceSpellingValidationErrorForEntityFromDataDefinitionItem(
+        String message,
+        String definitiveCaseTypeReference,
+        CaseTypeEntity caseTypeEntity,
+        Optional<DefinitionDataItem> definitionDataItem) {
 
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(caseTypeEntity))).thenReturn(definitionDataItem);
+
+        assertEquals(
+            message,
+            classUnderTest.createErrorMessage(
+                new CaseTypeEntityReferenceSpellingValidationError(definitiveCaseTypeReference, caseTypeEntity)
+            )
+        );
+
+    }
 }
