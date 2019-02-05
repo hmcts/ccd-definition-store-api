@@ -459,11 +459,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
             error.getCaseTypeEntity(),
             def -> String.format(
-                "Case Type with ID '%s' on tab '%s' already exists with the definitive spelling '%s'. "
-                    + "This spelling must be used for the Case Type ID.",
+                "Case Type with ID '%s' on tab '%s' already exists with the definitive spelling '%s'. %s",
                 error.getCaseTypeEntity().getReference(),
                 def.getSheetName(),
-                error.getDefinitiveCaseTypeReference())
+                error.getDefinitiveCaseTypeReference(),
+                "This spelling must be used for the Case Type ID.")
         );
     }
 
