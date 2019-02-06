@@ -75,6 +75,7 @@ public class CaseTypeRepositoryTest {
         createCaseTypeEntity(reference, name, 3, jurisdiction);
     }
 
+    @SuppressWarnings("squid:S2925") // Ignore Sonar warning about use of Thread.sleep()
     private void createMultipleSpellingsOfCaseTypeReference(String name, Integer version,
                                                             JurisdictionEntity jurisdiction)
         throws InterruptedException {

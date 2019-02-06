@@ -34,12 +34,14 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.userprofile.UserProfileValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 
 public class SpreadsheetValidationErrorMessageCreatorTest {
 
@@ -1047,6 +1049,15 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals("default message. WorkSheet 'CaseEventToFields'",
             classUnderTest.createErrorMessage(
                 new EventCaseFieldMetadataValidatorImpl.ValidationError("default message", entity))
+        );
+    }
+
+    @Test
+    public void shouldHaveValidationMessageForUserProfileValidationError() {
+        assertEquals("Invalid CaseType in workbasket user default; user: 'null', jurisdiction: 'null', "
+            + "case type: 'null', state: 'null'",
+            classUnderTest.createErrorMessage(
+                new UserProfileValidatorImpl.ValidationError("CaseType", new WorkBasketUserDefault()))
         );
     }
 
