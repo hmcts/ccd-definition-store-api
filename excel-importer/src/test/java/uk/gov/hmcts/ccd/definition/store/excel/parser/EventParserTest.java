@@ -197,7 +197,9 @@ public class EventParserTest extends ParserTestBase {
         DefinitionDataItem caseEventToFieldsDataItem = buildCaseEventToFieldsDataItem(EVENT_ID);
         caseEventToFieldsSheet.addDataItem(caseEventToFieldsDataItem);
 
-        when(eventCaseFieldParser.parseEventCaseField(any(), any())).thenReturn(new EventCaseFieldEntity());
+        EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
+        eventCaseFieldEntity.setCaseField(caseFieldEntity(FIELD_ID));
+        when(eventCaseFieldParser.parseEventCaseField(any(), any())).thenReturn(eventCaseFieldEntity);
 
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
 
