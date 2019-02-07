@@ -13,7 +13,7 @@ public class CaseTypeEntityReferenceSpellingValidationError extends ValidationEr
                                                           final CaseTypeEntity caseTypeEntity) {
         super(
             String.format(
-                "Definitive spelling of this Case Type ID is '%s' but the imported Case Type ID was '%s'.",
+                "Current spelling of this Case Type ID is '%s' but the imported Case Type ID was '%s'.",
                 definitiveCaseTypeReference, caseTypeEntity.getReference()
             )
         );

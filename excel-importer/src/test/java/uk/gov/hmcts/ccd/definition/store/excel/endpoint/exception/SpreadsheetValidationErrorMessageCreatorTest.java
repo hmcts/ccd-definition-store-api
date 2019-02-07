@@ -1176,7 +1176,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Reference");
         assertCaseTypeEntityReferenceSpellingValidationErrorForEntityFromDataDefinitionItem(
-            "Case Type with ID 'Case Type Reference' on tab 'CaseType' already exists with the definitive spelling "
+            "Case Type with ID 'Case Type Reference' on tab 'CaseType' already exists with the current spelling "
                 + "'Definitive Case Type Reference'. This spelling must be used for the Case Type ID.",
             "Definitive Case Type Reference",
             caseTypeEntity,

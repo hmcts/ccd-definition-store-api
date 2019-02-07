@@ -219,7 +219,7 @@ class CaseTypeServiceImplTest {
             assertEquals(1, validationResult.getValidationErrors().size());
 
             assertThat(validationResult.getValidationErrors(), hasItem(
-                matchesValidationErrorWithDefaultMessage("Definitive spelling of this Case Type ID is "
+                matchesValidationErrorWithDefaultMessage("Current spelling of this Case Type ID is "
                     + "'TESTAddressBookCase2' but the imported Case Type ID was 'TestAddressBookCase2'.")));
 
             assertComponentsCalled(false, null);

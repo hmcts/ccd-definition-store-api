@@ -33,7 +33,7 @@ public class CaseTypeEntityReferenceSpellingValidationErrorTest {
 
     @Test
     public void testDefaultMessage() {
-        assertEquals("Definitive spelling of this Case Type ID is 'Definitive spelling' but the imported Case Type "
+        assertEquals("Current spelling of this Case Type ID is 'Definitive spelling' but the imported Case Type "
             + "ID was 'Imported spelling'.", classUnderTest.getDefaultMessage());
     }
 
