@@ -16,27 +16,40 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventParserTest extends ParserTestBase {
 
     private static final String EVENT_ID = "event id";
+    private static final String FIELD_ID = "field id";
     private EventParser eventParser;
-    private DefinitionSheet restrictionSheet;
+    private DefinitionSheet caseEventToFieldsSheet;
+    private DefinitionSheet caseEventToComplexTypesSheet;
 
     @Mock
     private Appender mockAppender;
@@ -74,8 +87,10 @@ public class EventParserTest extends ParserTestBase {
         caseType.setReference(CASE_TYPE_UNDER_TEST);
 
         definitionSheets.put(SheetName.CASE_EVENT.getName(), definitionSheet);
-        restrictionSheet = new DefinitionSheet();
-        definitionSheets.put(SheetName.CASE_EVENT_TO_FIELDS.getName(), restrictionSheet);
+        caseEventToFieldsSheet = new DefinitionSheet();
+        definitionSheets.put(SheetName.CASE_EVENT_TO_FIELDS.getName(), caseEventToFieldsSheet);
+        caseEventToComplexTypesSheet = new DefinitionSheet();
+        definitionSheets.put(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName(), caseEventToComplexTypesSheet);
 
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
         root.addAppender(mockAppender);
@@ -180,7 +195,7 @@ public class EventParserTest extends ParserTestBase {
     public void shouldParseEvent() {
         definitionSheet.addDataItem(item);
         DefinitionDataItem caseEventToFieldsDataItem = buildCaseEventToFieldsDataItem(EVENT_ID);
-        restrictionSheet.addDataItem(caseEventToFieldsDataItem);
+        caseEventToFieldsSheet.addDataItem(caseEventToFieldsDataItem);
 
         when(eventCaseFieldParser.parseEventCaseField(any(), any())).thenReturn(new EventCaseFieldEntity());
 
@@ -199,7 +214,7 @@ public class EventParserTest extends ParserTestBase {
     @Test
     public void shouldParseEventWithoutRestrictionDataItem() {
         definitionSheet.addDataItem(item);
-        restrictionSheet.addDataItem(buildCaseEventToFieldsDataItem("EVENT_ID"));
+        caseEventToFieldsSheet.addDataItem(buildCaseEventToFieldsDataItem("EVENT_ID"));
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
         assertThat(eventEntities.size(), is(1));
         entity = new ArrayList<>(eventEntities).get(0);
@@ -210,6 +225,30 @@ public class EventParserTest extends ParserTestBase {
         verify(mockAppender, atLeastOnce()).doAppend(captorLoggingEvent.capture());
         assertLogged(captorLoggingEvent,
             "Parsing event case fields for case type Some Case Type and event event id: No event case fields found");
+    }
+
+    @Test
+    public void shouldParseEventWithCaseFieldComplexType() {
+        definitionSheet.addDataItem(item);
+        caseEventToFieldsSheet.addDataItem(buildCaseEventToFieldsDataItem(EVENT_ID));
+        DefinitionDataItem caseEventToComplexTypesDataItem = buildCaseEventToComplexTypesDataItem(EVENT_ID, FIELD_ID);
+        caseEventToComplexTypesSheet.addDataItem(caseEventToComplexTypesDataItem);
+
+        EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
+        eventCaseFieldEntity.setCaseField(caseFieldEntity(FIELD_ID));
+        eventCaseFieldEntity.setDisplayContext(DisplayContext.COMPLEX);
+        when(eventCaseFieldParser.parseEventCaseField(any(), any())).thenReturn(eventCaseFieldEntity);
+
+        EventComplexTypeEntity eventComplexTypeEntityMock = mock(EventComplexTypeEntity.class);
+        when(eventCaseFieldComplexTypeParser.parseEventCaseFieldComplexType(any()))
+            .thenReturn(Arrays.asList(eventComplexTypeEntityMock));
+
+        final Collection<EventEntity> events = eventParser.parseAll(definitionSheets, caseType);
+
+        verify(eventCaseFieldComplexTypeParser).parseEventCaseFieldComplexType(singletonList(caseEventToComplexTypesDataItem));
+
+        assertThat(events.size(), is(1));
+        entity = new ArrayList<>(events).get(0);
     }
 
     private void assertEvent(final EventEntity entity) {
@@ -238,5 +277,24 @@ public class EventParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "event fields");
         item.addAttribute(ColumnName.DISPLAY_CONTEXT.toString(), "READONLY");
         return item;
+    }
+
+    private DefinitionDataItem buildCaseEventToComplexTypesDataItem(final String eventId, final String fieldId) {
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName());
+        item.addAttribute(ColumnName.CASE_EVENT_ID.toString(), eventId);
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), fieldId);
+        item.addAttribute(ColumnName.LIST_ELEMENT_CODE.toString(), "event fields");
+        item.addAttribute(ColumnName.EVENT_ELEMENT_LABEL.toString(), "event fields");
+        item.addAttribute(ColumnName.EVENT_HINT_TEXT.toString(), "event fields");
+        item.addAttribute(ColumnName.FIELD_DISPLAY_ORDER.toString(), "event fields");
+        item.addAttribute(ColumnName.DISPLAY_CONTEXT.toString(), "READONLY");
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "READONLY");
+        return item;
+    }
+
+    private CaseFieldEntity caseFieldEntity(final String fieldId) {
+        CaseFieldEntity caseField = new CaseFieldEntity();
+        caseField.setReference(fieldId);
+        return caseField;
     }
 }
