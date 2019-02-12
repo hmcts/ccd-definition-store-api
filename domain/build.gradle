@@ -23,7 +23,7 @@ bootRepackage {
 
 ext {
     mapstructGenSourceDir = 'build/classes/java/main'
-    orgMapstructVersion='1.2.0.Final'
+    orgMapstructVersion='1.3.0.Final'
 }
 
 dependencies {
