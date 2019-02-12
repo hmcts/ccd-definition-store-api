@@ -15,6 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldSe
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
@@ -56,6 +57,11 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                 caseTypeEntity.setJurisdiction(jurisdiction);
                 legacyCaseTypeValidator.validateCaseType(caseTypeEntity);
                 validationResult.merge(validate(caseTypeEntity));
+                String definitiveCaseTypeId = findDefinitiveCaseTypeId(caseTypeEntity.getReference());
+                if (definitiveCaseTypeId != null && !caseTypeEntity.getReference().equals(definitiveCaseTypeId)) {
+                    validationResult.addError(
+                        new CaseTypeEntityReferenceSpellingValidationError(definitiveCaseTypeId, caseTypeEntity));
+                }
                 if (caseTypeExistsInAnyJurisdiction(caseTypeEntity.getReference(), jurisdiction.getReference())) {
                     validationResult.addError(
                         new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity));
@@ -98,6 +104,14 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     public Optional<CaseTypeVersionInformation> findVersionInfoByCaseTypeId(final String id) {
         return repository.findLastVersion(id)
             .map(CaseTypeVersionInformation::new);
+    }
+
+    @Override
+    public String findDefinitiveCaseTypeId(String id) {
+        return repository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(id)
+            .map(dtoMapper::map)
+            .map(CaseType::getId)
+            .orElse(null);
     }
 
     private ValidationResult validate(CaseTypeEntity caseTypeEntity) {

@@ -21,6 +21,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldInvalidShowConditionError;
@@ -57,8 +58,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(CaseTypeEntityNonUniqueReferenceValidationError
-                                         error) {
+    public String createErrorMessage(CaseTypeEntityNonUniqueReferenceValidationError error) {
         return newMessageIfDefinitionExists(error,
                                             error.getCaseTypeEntity(),
                                             def -> String.format(
@@ -449,6 +449,24 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return withWorkSheetName(error);
     }
 
+    @Override
+    public String createErrorMessage(UserProfileValidatorImpl.ValidationError validationError) {
+        return withWorkSheetName(validationError);
+    }
+
+    @Override
+    public String createErrorMessage(CaseTypeEntityReferenceSpellingValidationError error) {
+        return newMessageIfDefinitionExists(error,
+            error.getCaseTypeEntity(),
+            def -> String.format(
+                "Case Type with ID '%s' on tab '%s' already exists with the current spelling '%s'. %s",
+                error.getCaseTypeEntity().getReference(),
+                def.getSheetName(),
+                error.getDefinitiveCaseTypeReference(),
+                "This spelling must be used for the Case Type ID.")
+        );
+    }
+
     private String withWorkSheetName(SimpleValidationError<?> error) {
         return newMessageIfDefinitionExists(error,
                                             error.getEntity(),
@@ -484,10 +502,5 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                                      def.getSheetName());
             }
         }).orElse(defaultMessage);
-    }
-
-    @Override
-    public String createErrorMessage(UserProfileValidatorImpl.ValidationError validationError) {
-        return withWorkSheetName(validationError);
     }
 }
