@@ -181,7 +181,7 @@ subprojects {
         testRuntime "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
         testCompile "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
         testCompile "org.springframework:spring-test:4.3.16.RELEASE"
-        testCompile "org.springframework:spring-webmvc:4.3.16.RELEASE"
+        testCompile "org.springframework:spring-webmvc:5.1.4.RELEASE"
         testCompile ("org.mockito:mockito-core:2.21.0") {
             exclude group: 'org.hamcrest'
         }
