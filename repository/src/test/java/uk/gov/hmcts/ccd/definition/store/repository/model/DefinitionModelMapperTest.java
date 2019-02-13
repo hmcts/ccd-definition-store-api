@@ -24,6 +24,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
 class DefinitionModelMapperTest {
@@ -39,6 +40,8 @@ class DefinitionModelMapperTest {
 
     private Definition definition;
 
+    private Definition definitionWithNoData;
+
     @InjectMocks
     private DefinitionModelMapper classUnderTest;
 
@@ -48,25 +51,85 @@ class DefinitionModelMapperTest {
         setupMockJurisdictionEntity();
         setupMockDefinitionEntity();
         definition = createDefinition();
+        definitionWithNoData = createDefinition();
+        definitionWithNoData.setData(null);
     }
 
     @Test
     @DisplayName("Should map model to entity")
     void shouldReturnPopulatedEntity() {
         final DefinitionEntity entity = classUnderTest.toEntity(definition);
-        assertThat(entity.getId(), is(nullValue()));
-        // The Jurisdiction is expected not to be mapped deliberately; it will always be an existing entity, so it
-        // should be retrieved and set on the DefinitionEntity, post mapping
-        assertThat(entity.getJurisdiction(), is(nullValue()));
-        assertThat(entity.getCaseTypes(), is(definition.getCaseTypes()));
-        assertThat(entity.getDescription(), is(definition.getDescription()));
-        assertThat(entity.getVersion(), is(definition.getVersion()));
-        assertThat(entity.getStatus(), is(definition.getStatus()));
-        assertThat(entity.getData(), is(mapper.convertValue(definition.getData(), JsonNode.class)));
-        assertThat(entity.getAuthor(), is(definition.getAuthor()));
-        assertThat(entity.getCreatedAt(), is(nullValue()));
-        assertThat(entity.getLastModified(), is(definition.getLastModified()));
-        assertThat(entity.isDeleted(), is(definition.isDeleted()));
+        assertAll(
+            () -> assertThat(entity.getId(), is(nullValue())),
+            // The Jurisdiction is expected not to be mapped deliberately; it will always be an existing
+            // entity, so it
+            // should be retrieved and set on the DefinitionEntity, post mapping
+            () -> assertThat(entity.getJurisdiction(), is(nullValue())),
+            () -> assertThat(entity.getCaseTypes(), is(definition.getCaseTypes())),
+            () -> assertThat(entity.getDescription(), is(definition.getDescription())),
+            () -> assertThat(entity.getVersion(), is(definition.getVersion())),
+            () -> assertThat(entity.getStatus(), is(definition.getStatus())),
+            () -> assertThat(entity.getData(), is(mapper.convertValue(definition.getData(), JsonNode.class))),
+            () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
+            () -> assertThat(entity.getCreatedAt(), is(nullValue())),
+            () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
+            () -> assertThat(entity.isDeleted(), is(definition.isDeleted())));
+    }
+
+    @Test
+    @DisplayName("Should map model to entity even when there is no data")
+    void shouldReturnPopulatedEntityEvenWithNoData() throws Exception {
+        final DefinitionEntity entity = classUnderTest.toEntity(definitionWithNoData);
+        assertAll(
+            () -> assertThat(entity.getId(), is(nullValue())),
+            () -> assertThat(entity.getJurisdiction(), is(nullValue())),
+            () -> assertThat(entity.getCaseTypes(), is(definition.getCaseTypes())),
+            () -> assertThat(entity.getDescription(), is(definition.getDescription())),
+            () -> assertThat(entity.getVersion(), is(definition.getVersion())),
+            () -> assertThat(entity.getStatus(), is(definition.getStatus())),
+            () -> assertThat(mapper.writeValueAsString(entity.getData()), is("{}")),
+            () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
+            () -> assertThat(entity.getCreatedAt(), is(nullValue())),
+            () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
+            () -> assertThat(entity.isDeleted(), is(definition.isDeleted())));
+    }
+
+    @Test
+    @DisplayName("Should copy model to an existent entity")
+    void shouldCopyModelToExistentEntity() {
+        final DefinitionEntity entity = new DefinitionEntity();
+        classUnderTest.toEntity(definition, entity);
+        assertAll(
+            () -> assertThat(entity.getId(), is(nullValue())),
+            () -> assertThat(entity.getJurisdiction(), is(nullValue())),
+            () -> assertThat(entity.getCaseTypes(), is(definition.getCaseTypes())),
+            () -> assertThat(entity.getDescription(), is(definition.getDescription())),
+            () -> assertThat(entity.getVersion(), is(nullValue())),
+            () -> assertThat(entity.getStatus(), is(definition.getStatus())),
+            () -> assertThat(entity.getData(), is(mapper.convertValue(definition.getData(), JsonNode.class))),
+            () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
+            () -> assertThat(entity.getCreatedAt(), is(nullValue())),
+            () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
+            () -> assertThat(entity.isDeleted(), is(definition.isDeleted())));
+    }
+
+    @Test
+    @DisplayName("Should copy model to an existent entity, with no data")
+    void shouldCopyModelToExistentEntityWithNoData() throws Exception {
+        final DefinitionEntity entity = new DefinitionEntity();
+        classUnderTest.toEntity(definitionWithNoData, entity);
+        assertAll(
+            () -> assertThat(entity.getId(), is(nullValue())),
+            () -> assertThat(entity.getJurisdiction(), is(nullValue())),
+            () -> assertThat(entity.getCaseTypes(), is(definition.getCaseTypes())),
+            () -> assertThat(entity.getDescription(), is(definition.getDescription())),
+            () -> assertThat(entity.getVersion(), is(nullValue())),
+            () -> assertThat(entity.getStatus(), is(definition.getStatus())),
+            () -> assertThat(mapper.writeValueAsString(entity.getData()), is("{}")),
+            () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
+            () -> assertThat(entity.getCreatedAt(), is(nullValue())),
+            () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
+            () -> assertThat(entity.isDeleted(), is(definition.isDeleted())));
     }
 
     @Test

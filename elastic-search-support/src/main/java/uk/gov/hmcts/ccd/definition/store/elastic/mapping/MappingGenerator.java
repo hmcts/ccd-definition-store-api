@@ -18,6 +18,9 @@ public abstract class MappingGenerator implements JsonGenerator, Injectable {
 
     protected static final String DATA_CLASSIFICATION = "data_classification";
     protected static final String DATA = "data";
+    protected static final String ALIAS = "alias";
+    protected static final String ALIAS_TEXT_SORT = "aliasTextSort";
+    protected static final String DEFAULT_TEXT = "defaultText";
     protected static final String PROPERTIES = "properties";
     protected static final String ID = "id";
     protected static final String CLASSIFICATION = "classification";
@@ -30,6 +33,7 @@ public abstract class MappingGenerator implements JsonGenerator, Injectable {
 
     protected Map<String, TypeMappingGenerator> typeMappers;
 
+    @Override
     public void inject(TypeMappersManager typeMappersManager) {
         this.typeMappers = typeMappersManager.getTypeMappers();
     }

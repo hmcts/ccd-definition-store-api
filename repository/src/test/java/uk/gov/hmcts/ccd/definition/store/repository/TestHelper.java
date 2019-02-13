@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -80,6 +81,21 @@ public class TestHelper {
         ecf.setShowCondition(showCondition);
         ecf.setShowSummaryChangeOption(ssco);
         return ecf;
+    }
+
+    public DefinitionEntity buildDefinition(final JurisdictionEntity jurisdiction,
+                                            final String description,
+                                            final DefinitionStatus status) throws IOException {
+        final DefinitionEntity definitionEntity = new DefinitionEntity();
+        definitionEntity.setJurisdiction(jurisdiction);
+        definitionEntity.setDescription(description);
+        final ObjectMapper mapper = new ObjectMapper();
+        final JsonNode data = mapper.readTree("{\"FieldX\": \"ValueX\", \"FieldZ\": []}");
+        definitionEntity.setData(data);
+        definitionEntity.setAuthor("lrmgc2gp7g@example.com");
+        definitionEntity.setDeleted(false);
+        definitionEntity.setStatus(status);
+        return definitionEntity;
     }
 
     public DefinitionEntity buildDefinition(final JurisdictionEntity jurisdiction,

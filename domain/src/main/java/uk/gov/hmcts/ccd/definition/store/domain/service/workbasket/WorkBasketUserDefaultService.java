@@ -4,6 +4,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -47,23 +48,25 @@ public class WorkBasketUserDefaultService {
 
     public void saveWorkBasketUserDefaults(final List<WorkBasketUserDefault> workBasketUserDefaults,
                                            final JurisdictionEntity jurisdiction,
-                                           final List<CaseTypeEntity> caseTypes) {
+                                           final List<CaseTypeEntity> caseTypes,
+                                           final String actionedBy) {
         final ValidationResult userDefaultsValidationResults = userProfileValidator.validate(workBasketUserDefaults,
                                                                                              jurisdiction,
                                                                                              caseTypes);
         if (userDefaultsValidationResults.isValid()) {
-            putUserProfiles(workBasketUserDefaults);
+            putUserProfiles(workBasketUserDefaults, actionedBy);
         } else {
             throw new ValidationException(userDefaultsValidationResults);
         }
     }
 
-    private void putUserProfiles(final List<WorkBasketUserDefault> workBasketUserDefaults) {
+    private void putUserProfiles(final List<WorkBasketUserDefault> workBasketUserDefaults, final String actionedBy) {
         try {
             Instant start = Instant.now();
+            final HttpHeaders headers = securityUtils.authorizationHeaders();
+            headers.add("actionedBy", actionedBy);
             final HttpEntity<List<WorkBasketUserDefault>> requestEntity = new HttpEntity<>(workBasketUserDefaults,
-                                                                                           securityUtils
-                                                                                               .authorizationHeaders());
+                                                                                           headers);
             LOG.info("Updating user profile- URL {}", applicationParams.userProfilePutURL());
             restTemplate.exchange(applicationParams.userProfilePutURL(), HttpMethod.PUT, requestEntity, String.class);
             final Duration between = Duration.between(start, Instant.now());

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model;
+package uk.gov.hmcts.ccd.definition.store.rest.model;
 
 public class IDAMProperties {
     private String id;

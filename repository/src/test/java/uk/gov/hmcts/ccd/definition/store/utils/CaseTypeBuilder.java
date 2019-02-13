@@ -1,18 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 
 public class CaseTypeBuilder {
 
     private String jurisdictionReference;
     private String caseTypeReference;
-    private List<CaseFieldEntity> fields = newArrayList();
+    private final List<CaseFieldEntity> fields = new ArrayList<>();
+    private final List<SearchAliasFieldEntity> searchAliasFields = new ArrayList<>();
 
     public CaseTypeBuilder withJurisdiction(String reference) {
         this.jurisdictionReference = reference;
@@ -29,6 +30,11 @@ public class CaseTypeBuilder {
         return this;
     }
 
+    public CaseTypeBuilder addSearchAliasField(SearchAliasFieldEntity searchAliasField) {
+        this.searchAliasFields.add(searchAliasField);
+        return this;
+    }
+
     public CaseTypeEntity build() {
         final JurisdictionEntity jurisdiction = new JurisdictionEntity();
         jurisdiction.setReference(this.jurisdictionReference);
@@ -36,6 +42,7 @@ public class CaseTypeBuilder {
         caseType.setJurisdiction(jurisdiction);
         caseType.setReference(this.caseTypeReference);
         caseType.addCaseFields(this.fields);
+        caseType.addSearchAliasFields(this.searchAliasFields);
         return caseType;
     }
 }

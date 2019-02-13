@@ -1,0 +1,6 @@
+java:
+  environment:
+    IDAM_USER_URL: https://preprod-idamapi.reform.hmcts.net:3511
+    IDAM_S2S_URL: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
+    USER_PROFILE_HOST: http://ccd-user-profile-api-aat.service.core-compute-aat.internal
+    AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false

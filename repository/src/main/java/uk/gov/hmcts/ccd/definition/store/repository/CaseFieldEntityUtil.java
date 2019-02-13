@@ -16,8 +16,10 @@ public class CaseFieldEntityUtil {
 
     public static List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
         List<String> allSubTypePossibilities = new ArrayList<>();
+
+        //.<FieldEntity> added to fix a weird build error with some versions of the jdk
         prepare(allSubTypePossibilities, "",
-            caseFieldEntities.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+            caseFieldEntities.stream().filter(Objects::nonNull).collect(Collectors.<FieldEntity>toList()));
         return removeElementsThatAreNotTreeLeafs(allSubTypePossibilities);
     }
 
