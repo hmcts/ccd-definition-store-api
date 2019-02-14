@@ -4,21 +4,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 
 @ApiModel(description = "")
-public class WizardPageComplexFieldMask {
-    private String complexFieldId;
+public class WizardPageComplexFieldOverride {
+    private String complexFieldElementId;
     private String displayContext;
     private Integer order;
     private String label;
     private String hintText;
     private String showCondition;
 
-    @JsonProperty("complex_field_id")
-    public String getComplexFieldId() {
-        return complexFieldId;
+    @JsonProperty("complex_field_element_id")
+    public String getComplexFieldElementId() {
+        return complexFieldElementId;
     }
 
-    public void setComplexFieldId(String complexFieldId) {
-        this.complexFieldId = complexFieldId;
+    public void setComplexFieldElementId(String complexFieldElementId) {
+        this.complexFieldElementId = complexFieldElementId;
     }
 
     @JsonProperty("display_context")

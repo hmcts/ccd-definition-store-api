@@ -14,7 +14,7 @@ public class WizardPageField {
     private Integer order = null;
     private Integer pageColumnNumber;
     private String displayContext = null;
-    private List<WizardPageComplexFieldMask> complexFieldMaskList = new ArrayList<>();
+    private List<WizardPageComplexFieldOverride> complexFieldOverrides = new ArrayList<>();
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -52,12 +52,12 @@ public class WizardPageField {
         this.displayContext = displayContext != null ? displayContext.toString() : null;
     }
 
-    @JsonProperty("complex_field_mask_list")
-    public List<WizardPageComplexFieldMask> getComplexFieldMaskList() {
-        return complexFieldMaskList;
+    @JsonProperty("complex_field_overrides")
+    public List<WizardPageComplexFieldOverride> getComplexFieldOverrides() {
+        return complexFieldOverrides;
     }
 
-    public void addComplexFieldMask(WizardPageComplexFieldMask complexFieldMask) {
-        this.complexFieldMaskList.add(complexFieldMask);
+    public void addComplexFieldOverride(WizardPageComplexFieldOverride complexFieldOverride) {
+        this.complexFieldOverrides.add(complexFieldOverride);
     }
 }

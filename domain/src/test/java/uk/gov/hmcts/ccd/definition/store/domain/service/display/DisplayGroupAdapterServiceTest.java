@@ -23,7 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPage;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageComplexFieldMask;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageComplexFieldOverride;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageField;
 
 import java.util.List;
@@ -183,28 +183,28 @@ class DisplayGroupAdapterServiceTest {
             assertThat(findWizardPageField(wizardPage, "finalReturn").getOrder(), is(77));
             assertThat(findWizardPageField(wizardPage, "finalReturn").getPageColumnNumber(), is(66));
 
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn", "finalReturn.bailiffName").getDisplayContext(), is("READONLY"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn", "finalReturn.bailiffName").getOrder(), is(3));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(), is("Bailiff Name"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(), is("Hint text override"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getDisplayContext(), is("READONLY"));
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getOrder(), is(3));
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(), is("Bailiff Name"));
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(), is("Hint text override"));
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.bailiffName").getShowCondition(), is("fieldName1.subField2=\"potato\""));
 
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.dateOfVisit").getDisplayContext(), is("HIDDEN"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.AddressLine1").getDisplayContext(), is("MANDATORY"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.AddressLine2").getDisplayContext(), is("HIDDEN"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.AddressLine3").getDisplayContext(), is("HIDDEN"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.PostTown").getDisplayContext(), is("HIDDEN"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.County").getDisplayContext(), is("HIDDEN"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.Postcode").getDisplayContext(), is("OPTIONAL"));
-            assertThat(findWizardPageComplexFieldMask(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.Country").getDisplayContext(), is("HIDDEN"));
         }
 
@@ -237,12 +237,12 @@ class DisplayGroupAdapterServiceTest {
         return wizardPage.getWizardPageFields().stream().filter(e -> e.getCaseFieldId().equals(fieldId)).findFirst().get();
     }
 
-    private static WizardPageComplexFieldMask findWizardPageComplexFieldMask(WizardPage wizardPage, String fieldId,
-                                                                             String complexFieldId) {
+    private static WizardPageComplexFieldOverride findWizardPageComplexFieldOverride(WizardPage wizardPage, String fieldId,
+                                                                                     String complexFieldId) {
         WizardPageField wizardPageField =
             wizardPage.getWizardPageFields().stream().filter(e -> e.getCaseFieldId().equals(fieldId)).findFirst().get();
 
-        return wizardPageField.getComplexFieldMaskList().stream().filter(w -> w.getComplexFieldId().equals(complexFieldId)).findFirst().get();
+        return wizardPageField.getComplexFieldOverrides().stream().filter(w -> w.getComplexFieldElementId().equals(complexFieldId)).findFirst().get();
     }
 
     private static WebhookEntity webhookEntity() {

@@ -14,7 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPage;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageComplexFieldMask;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageComplexFieldOverride;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageField;
 
 import java.util.Collections;
@@ -78,30 +78,30 @@ public class DisplayGroupAdapterService {
 
                         if (DisplayContext.COMPLEX == eventCaseFieldEntity.getDisplayContext()) {
                             eventCaseFieldEntity.getEventComplexTypes().forEach(eventComplexTypeEntity -> {
-                                WizardPageComplexFieldMask mask = new WizardPageComplexFieldMask();
-                                mask.setComplexFieldId(reference + "." + eventComplexTypeEntity.getReference());
-                                mask.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
-                                mask.setOrder(eventComplexTypeEntity.getOrder());
-                                mask.setLabel(eventComplexTypeEntity.getLabel());
-                                mask.setHintText(eventComplexTypeEntity.getHint());
-                                mask.setShowCondition(eventComplexTypeEntity.getShowCondition());
+                                WizardPageComplexFieldOverride override = new WizardPageComplexFieldOverride();
+                                override.setComplexFieldElementId(reference + "." + eventComplexTypeEntity.getReference());
+                                override.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
+                                override.setOrder(eventComplexTypeEntity.getOrder());
+                                override.setLabel(eventComplexTypeEntity.getLabel());
+                                override.setHintText(eventComplexTypeEntity.getHint());
+                                override.setShowCondition(eventComplexTypeEntity.getShowCondition());
 
-                                wizardPageField.addComplexFieldMask(mask);
+                                wizardPageField.addComplexFieldOverride(override);
                             });
 
-                            List<String> complexFieldMaskIds = wizardPageField.getComplexFieldMaskList()
+                            List<String> complexFieldOverrideIds = wizardPageField.getComplexFieldOverrides()
                                 .stream()
-                                .map(WizardPageComplexFieldMask::getComplexFieldId)
+                                .map(WizardPageComplexFieldOverride::getComplexFieldElementId)
                                 .collect(Collectors.toList());
 
-                            List<String> hiddenFieldMaskToCreate = allSubTypePossibilities.stream()
+                            List<String> hiddenFieldOverrideToCreate = allSubTypePossibilities.stream()
                                 .filter(e -> e.startsWith(displayGroupCaseFieldEntity.getCaseField().getReference()))
                                 .filter(e -> !e.equals(displayGroupCaseFieldEntity.getCaseField().getReference()))
-                                .filter(e -> !complexFieldMaskIds.contains(e))
+                                .filter(e -> !complexFieldOverrideIds.contains(e))
                                 .collect(Collectors.toList());
 
-                            hiddenFieldMaskToCreate.forEach(hiddenFieldMask ->
-                                wizardPageField.addComplexFieldMask(hiddenWizardPageComplexFieldMask(hiddenFieldMask)));
+                            hiddenFieldOverrideToCreate.forEach(hiddenFieldOverride ->
+                                wizardPageField.addComplexFieldOverride(hiddenWizardPageComplexFieldOverride(hiddenFieldOverride)));
                         }
                         wizardPage.getWizardPageFields().add(wizardPageField);
                     });
@@ -123,10 +123,10 @@ public class DisplayGroupAdapterService {
                 format("EventCaseField.caseField %s missing", reference)));
     }
 
-    private static WizardPageComplexFieldMask hiddenWizardPageComplexFieldMask(String reference) {
-        WizardPageComplexFieldMask mask = new WizardPageComplexFieldMask();
-        mask.setComplexFieldId(reference);
-        mask.setDisplayContext("HIDDEN");
-        return mask;
+    private static WizardPageComplexFieldOverride hiddenWizardPageComplexFieldOverride(String reference) {
+        WizardPageComplexFieldOverride override = new WizardPageComplexFieldOverride();
+        override.setComplexFieldElementId(reference);
+        override.setDisplayContext("HIDDEN");
+        return override;
     }
 }
