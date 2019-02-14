@@ -58,7 +58,7 @@ ext['log4j2.version'] = '2.11.1'
 
 ext {
     junitJupiterVersion = '5.3.1'
-    junitVintageVersion = '5.2.0'
+    junitVintageVersion = '5.4.0'
     springBootVersion = '1.5.19.RELEASE'
     springfoxSwaggerVersion = '2.9.0'
     authCheckerVersion = '2.1.2'
