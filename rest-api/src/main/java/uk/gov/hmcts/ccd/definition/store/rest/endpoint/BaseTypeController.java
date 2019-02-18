@@ -51,7 +51,7 @@ public class BaseTypeController {
 //        for (Cookie c : httpServletRequest.getCookies()) {
 //            LOG.warn("name {} value {}", c.getName(), c.getValue());
 //        }
-        LOG.warn("getHeaderNames {}", httpServletRequest.getHeaderNames())
+        LOG.warn("getHeaderNames {}", httpServletRequest.getHeaderNames());
         return baseTypes.stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
     }
 }
