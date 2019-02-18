@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,8 @@ public class BaseTypeController {
 
     @Autowired
     public BaseTypeController(FieldTypeRepository fieldTypeRepository,
-                              EntityToResponseDTOMapper entityToResponseDTOMapper) {
+                              EntityToResponseDTOMapper entityToResponseDTOMapper,
+                              HttpServletRequest context) {
         this.baseTypes = fieldTypeRepository.findCurrentBaseTypes();
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
     }
@@ -37,7 +39,7 @@ public class BaseTypeController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "All valid base types")
     })
-    public List<FieldType> getBaseTypes() {
+    public List<FieldType> getBaseTypes(HttpServletRequest request) {
         return baseTypes.stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
     }
 }
