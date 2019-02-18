@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
 
 import static org.springframework.http.HttpMethod.GET;
@@ -27,11 +27,11 @@ public class IdamProfileClient {
         this.applicationParams = applicationParams;
     }
 
-    public IDAMProperties getLoggedInUserDetails() {
+    public IdamProperties getLoggedInUserDetails() {
         final HttpEntity<ServiceAndUserDetails>
             requestEntity =
             new HttpEntity<>(securityUtils.userAuthorizationHeaders());
-        return restTemplate.exchange(applicationParams.idamUserProfileURL(), GET, requestEntity, IDAMProperties.class)
+        return restTemplate.exchange(applicationParams.idamUserProfileURL(), GET, requestEntity, IdamProperties.class)
                            .getBody();
     }
 

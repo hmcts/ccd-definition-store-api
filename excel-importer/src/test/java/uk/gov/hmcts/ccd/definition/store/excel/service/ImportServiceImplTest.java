@@ -34,7 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.io.InputStream;
@@ -124,7 +124,7 @@ public class ImportServiceImplTest {
     private ArgumentCaptor<HttpEntity> requestEntityCaptor;
 
     @Captor
-    private ArgumentCaptor<Class<IDAMProperties>> idamPropertiesClassCaptor;
+    private ArgumentCaptor<Class<IdamProperties>> idamPropertiesClassCaptor;
 
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
@@ -195,7 +195,7 @@ public class ImportServiceImplTest {
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
-        final IDAMProperties idamProperties = new IDAMProperties();
+        final IdamProperties idamProperties = new IdamProperties();
         idamProperties.setId("445");
         idamProperties.setEmail("user@hmcts.net");
 

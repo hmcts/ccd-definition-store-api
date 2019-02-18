@@ -1,10 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
+import uk.gov.hmcts.ccd.definition.store.rest.configuration.AdminWebAuthorizationProperties;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -23,6 +25,9 @@ public class AuthCheckerConfiguration {
     @Value("#{'${casedefinitionstore.authorised.services}'.split(',')}")
     private List<String> authorisedServices;
 
+    @Autowired
+    private AdminWebAuthorizationProperties adminWebAuthorizationProperties;
+
     @Bean
     public Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor() {
         return request -> authorisedServices;
@@ -40,6 +45,9 @@ public class AuthCheckerConfiguration {
 
     private Collection<String> extractRoleFromRequest(final HttpServletRequest request) {
         if (request.getRequestURI().matches(REGEX_URI_IMPORT)) {
+            return Collections.singletonList(ROLE_CCD_IMPORT);
+        }
+        if (request.getRequestURI().matches("^/api/base-types/?$")) {
             return Collections.singletonList(ROLE_CCD_IMPORT);
         }
         return Collections.emptyList();
