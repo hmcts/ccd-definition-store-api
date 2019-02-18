@@ -42,7 +42,7 @@ public class AuthCheckerConfiguration {
         if (request.getRequestURI().matches(REGEX_URI_IMPORT)) {
             return Collections.singletonList(ROLE_CCD_IMPORT);
         }
-        if (request.getRequestURI().matches("^/api/base-types%")) {
+        if (request.getRequestURI().matches("^/api/base-types/?$")) {
             return Collections.singletonList(ROLE_CCD_IMPORT);
         }
         return Collections.emptyList();
