@@ -48,7 +48,7 @@ public class BaseTypeController {
     })
     public List<FieldType> getBaseTypes(HttpServletRequest request) {
         LOG.warn("httpServletRequest.getAuthType() {}", httpServletRequest.getAuthType());
-        LOG.warn("{}", httpServletRequest.getCookies());
+        LOG.warn("Cookies {}", httpServletRequest.getCookies());
         for (Cookie c : httpServletRequest.getCookies()) {
             LOG.warn("name {} value {}", c.getName(), c.getValue());
         }
