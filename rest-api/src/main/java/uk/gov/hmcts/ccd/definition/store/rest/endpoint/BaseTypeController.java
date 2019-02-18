@@ -47,12 +47,6 @@ public class BaseTypeController {
         @ApiResponse(code = 200, message = "All valid base types")
     })
     public List<FieldType> getBaseTypes(HttpServletRequest request) {
-        LOG.warn("httpServletRequest.getAuthType() {}", httpServletRequest.getAuthType());
-//        LOG.warn("Cookies {}", httpServletRequest.getCookies());
-//        for (Cookie c : httpServletRequest.getCookies()) {
-//            LOG.warn("name {} value {}", c.getName(), c.getValue());
-//        }
-        LOG.warn("getHeaderNames {}", httpServletRequest.getHeaderNames());
         final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             LOG.warn("header {}", headerNames.nextElement());
