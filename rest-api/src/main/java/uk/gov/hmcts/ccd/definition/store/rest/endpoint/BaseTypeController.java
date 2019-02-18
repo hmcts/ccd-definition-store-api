@@ -15,7 +15,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,10 +47,11 @@ public class BaseTypeController {
     })
     public List<FieldType> getBaseTypes(HttpServletRequest request) {
         LOG.warn("httpServletRequest.getAuthType() {}", httpServletRequest.getAuthType());
-        LOG.warn("Cookies {}", httpServletRequest.getCookies());
-        for (Cookie c : httpServletRequest.getCookies()) {
-            LOG.warn("name {} value {}", c.getName(), c.getValue());
-        }
+//        LOG.warn("Cookies {}", httpServletRequest.getCookies());
+//        for (Cookie c : httpServletRequest.getCookies()) {
+//            LOG.warn("name {} value {}", c.getName(), c.getValue());
+//        }
+        LOG.warn("getHeaderNames {}", httpServletRequest.getHeaderNames())
         return baseTypes.stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
     }
 }
