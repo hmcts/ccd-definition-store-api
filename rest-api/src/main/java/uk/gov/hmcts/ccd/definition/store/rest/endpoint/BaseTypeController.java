@@ -16,6 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,10 @@ public class BaseTypeController {
 //            LOG.warn("name {} value {}", c.getName(), c.getValue());
 //        }
         LOG.warn("getHeaderNames {}", httpServletRequest.getHeaderNames());
+        final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            LOG.warn("header {}", headerNames.nextElement());
+        }
         return baseTypes.stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
     }
 }
