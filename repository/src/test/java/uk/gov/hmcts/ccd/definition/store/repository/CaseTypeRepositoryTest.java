@@ -15,8 +15,10 @@ import javax.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -37,6 +39,10 @@ public class CaseTypeRepositoryTest {
     private TestHelper testHelper;
 
     private static final String CASE_TYPE_REFERENCE = "id";
+    private static final String TEST_CASE_TYPE_REFERENCE = "TestCase";
+    private static final String DEFINITIVE_CASE_TYPE_REFERENCE = "TESTCASE";
+    private static final String ANOTHER_CASE_TYPE_REFERENCE = "ANOTHERCASE";
+    private static final String DEFINITIVE_CASE_TYPE_REFERENCE_2 = "AnotherCase";
 
     private JurisdictionEntity testJurisdiction;
 
@@ -44,25 +50,56 @@ public class CaseTypeRepositoryTest {
     public void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
 
-        setupCaseTypeEntity("id", "Test case", testJurisdiction);
+        createMultipleVersionsOfCaseType(CASE_TYPE_REFERENCE, "Test case", testJurisdiction);
+        try {
+            createMultipleSpellingsOfCaseTypeReference("Test case", 1, testJurisdiction);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        createMultipleSpellingsOfCaseTypeReferenceWithSameTimestamp("Another case", 1, testJurisdiction);
     }
 
-    private void setupCaseTypeEntity(String id, String name, JurisdictionEntity jurisdictionEntity) {
+    private void createCaseTypeEntity(String reference, String name, Integer version, JurisdictionEntity jurisdiction) {
         final CaseTypeEntity caseType = new CaseTypeEntity();
-        caseType.setReference(id);
+        caseType.setReference(reference);
         caseType.setName(name);
-        caseType.setVersion(1);
-        caseType.setJurisdiction(jurisdictionEntity);
-        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+        caseType.setVersion(version);
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(PUBLIC);
         saveCaseTypeClearAndFlushSession(caseType);
-        caseType.setVersion(2);
-        saveCaseTypeClearAndFlushSession(caseType);
-        caseType.setVersion(3);
-        saveCaseTypeClearAndFlushSession(caseType);
+    }
+
+    private void createMultipleVersionsOfCaseType(String reference, String name, JurisdictionEntity jurisdiction) {
+        createCaseTypeEntity(reference, name, 1, jurisdiction);
+        createCaseTypeEntity(reference, name, 2, jurisdiction);
+        createCaseTypeEntity(reference, name, 3, jurisdiction);
+    }
+
+    @SuppressWarnings("squid:S2925") // Ignore Sonar warning about use of Thread.sleep()
+    private void createMultipleSpellingsOfCaseTypeReference(String name, Integer version,
+                                                            JurisdictionEntity jurisdiction)
+        throws InterruptedException {
+        createCaseTypeEntity("testcase", name, version, jurisdiction);
+        // Add delay to ensure different "createdAt" timestamp
+        Thread.sleep(100);
+        createCaseTypeEntity(TEST_CASE_TYPE_REFERENCE, name, version, jurisdiction);
+        // Add delay to ensure different "createdAt" timestamp
+        Thread.sleep(100);
+        createCaseTypeEntity(DEFINITIVE_CASE_TYPE_REFERENCE, name, version, jurisdiction);
+    }
+
+    private void createMultipleSpellingsOfCaseTypeReferenceWithSameTimestamp(String name, Integer version,
+                                                                             JurisdictionEntity jurisdiction) {
+        createCaseTypeEntity("anothercase", name, version, jurisdiction);
+        createCaseTypeEntity(ANOTHER_CASE_TYPE_REFERENCE, name, version, jurisdiction);
+        createCaseTypeEntity(DEFINITIVE_CASE_TYPE_REFERENCE_2, name, version, jurisdiction);
     }
 
     @Test
     public void severalVersionsOfCaseTypeExistForReference_findCurrentCaseTypeReturnsCurrentVersionOfCaseType() {
+        List<CaseTypeEntity> caseTypeEntities = classUnderTest.findAll().stream()
+            .filter(c -> c.getReference().equals(CASE_TYPE_REFERENCE)).collect(Collectors.toList());
+        assertEquals(3, caseTypeEntities.size());
         Optional<CaseTypeEntity> caseTypeEntityOptional
             = classUnderTest.findCurrentVersionForReference(CASE_TYPE_REFERENCE);
         assertTrue(caseTypeEntityOptional.isPresent());
@@ -78,17 +115,17 @@ public class CaseTypeRepositoryTest {
 
     @Test
     public void severalVersionsOfCaseTypeExistForJurisdiction_findByJurisdictionIdReturnsCurrentVersionOfCaseTypeForJurisdiction() {
-        List<CaseTypeEntity> caseTypeEntityOptional
+        List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
-        assertTrue(caseTypeEntityOptional.size() == 1);
-        assertEquals(3, caseTypeEntityOptional.get(0).getVersion().intValue());
+        assertEquals(7, caseTypeEntities.size());
+        assertEquals(3, caseTypeEntities.get(0).getVersion().intValue());
     }
 
     @Test
     public void caseTypeDoesNotExistForJurisdiction_emptyListReturned() {
-        List<CaseTypeEntity> caseTypeEntityOptional
+        List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
-        assertTrue(caseTypeEntityOptional.isEmpty());
+        assertTrue(caseTypeEntities.isEmpty());
     }
 
     @Test
@@ -100,7 +137,30 @@ public class CaseTypeRepositoryTest {
     @Test
     public void shouldReturnAPositiveCountIfCaseTypeIsNotOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, "OtherJurisdiction");
-        assertEquals(1, result.intValue());
+        assertEquals(3, result.intValue());
+    }
+
+    @Test
+    public void caseTypeReferenceHasSeveralSpellings_findDefinitiveReferenceReturnsLatestCreated() {
+        Optional<CaseTypeEntity> definitiveCaseTypeOptional =
+            classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(TEST_CASE_TYPE_REFERENCE);
+        assertTrue(definitiveCaseTypeOptional.isPresent());
+        assertEquals(DEFINITIVE_CASE_TYPE_REFERENCE, definitiveCaseTypeOptional.get().getReference());
+    }
+
+    @Test
+    public void caseTypeReferenceHasSeveralSpellingsAndSameTimestamp_findDefinitiveReferenceReturnsLatestCreated() {
+        Optional<CaseTypeEntity> definitiveCaseTypeOptional =
+            classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(ANOTHER_CASE_TYPE_REFERENCE);
+        assertTrue(definitiveCaseTypeOptional.isPresent());
+        assertEquals(DEFINITIVE_CASE_TYPE_REFERENCE_2, definitiveCaseTypeOptional.get().getReference());
+    }
+
+    @Test
+    public void definitiveCaseTypeReferenceDoesNotExistForReference_emptyOptionalReturned() {
+        Optional<CaseTypeEntity> definitiveCaseTypeOptional =
+            classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc("Dummy");
+        assertFalse(definitiveCaseTypeOptional.isPresent());
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {
