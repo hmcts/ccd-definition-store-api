@@ -49,7 +49,6 @@ public class CaseTypeServiceImpl implements CaseTypeService {
 
     @Override
     public void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes) {
-
         ValidationResult validationResult = new ValidationResult();
         caseTypes.forEach(
             caseTypeEntity -> {
