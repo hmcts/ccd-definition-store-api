@@ -60,5 +60,5 @@ withPipeline(type, product, app) {
     overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
 
-    //installCharts()
+    installCharts()
 }
