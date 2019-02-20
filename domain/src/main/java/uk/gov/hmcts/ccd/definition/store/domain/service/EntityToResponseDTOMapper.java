@@ -163,7 +163,18 @@ public interface EntityToResponseDTOMapper {
     FixedListItem map(FieldTypeListItemEntity fieldTypeListItemEntity);
 
     @Mapping(source = "eventCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(expression = "java("
+        + "       uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.EventComplexTypeEntityToCaseEventFieldComplexListMapper.map("
+        + "           eventCaseFieldEntity.getEventComplexTypes()"
+        + "       )"
+        + "   )",
+             target = "caseEventFieldComplex"
+    )
     CaseEventField map(EventCaseFieldEntity eventCaseFieldEntity);
+
+    List<CaseEventFieldComplex> map(List<EventComplexTypeEntity> eventComplexTypeEntities);
+
+    CaseEventFieldComplex map(EventComplexTypeEntity eventComplexTypeEntity);
 
     @Mapping(source = "complexFieldEntity.reference", target = "id")
     @Mapping(source = "complexFieldEntity.hint", target = "hintText")
