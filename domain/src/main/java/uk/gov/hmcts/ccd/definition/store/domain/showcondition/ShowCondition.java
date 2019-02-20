@@ -4,6 +4,7 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ToString
@@ -21,8 +22,8 @@ public class ShowCondition {
         return showConditionExpression;
     }
 
-    public List<String> getFields() {
-        return fields.stream().map(ShowCondition::dropSubtypes).collect(Collectors.toList());
+    public Set<String> getFields() {
+        return fields.stream().map(ShowCondition::dropSubtypes).collect(Collectors.toSet());
     }
 
     public List<String> getFieldsWithSubtypes() {

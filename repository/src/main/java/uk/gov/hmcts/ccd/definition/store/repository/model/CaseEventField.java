@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ApiModel(description = "")
 public class CaseEventField {
 
@@ -15,6 +18,7 @@ public class CaseEventField {
     private Integer showSummaryContentOption = null;
     private String label = null;
     private String hintText = null;
+    private List<CaseEventFieldComplex> caseEventFieldComplex = new ArrayList<>();
 
     /**
      * Foriegn key to CaseField.id
@@ -118,5 +122,15 @@ public class CaseEventField {
 
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("case_fields_complex")
+    public List<CaseEventFieldComplex> getCaseEventFieldComplex() {
+        return caseEventFieldComplex;
+    }
+
+    public void setCaseEventFieldComplex(List<CaseEventFieldComplex> eventComplexTypeEntities) {
+        this.caseEventFieldComplex = eventComplexTypeEntities;
     }
 }

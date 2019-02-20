@@ -43,6 +43,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseField
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteEntity;
@@ -61,6 +62,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFi
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventFieldComplex;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
@@ -113,15 +115,75 @@ class EntityToResponseDTOMapperTest {
 
             assertAll(
                 () -> assertEquals("displayContext", eventCaseFieldEntity.getDisplayContext().name(),
-                    caseEventField.getDisplayContext()),
+                                   caseEventField.getDisplayContext()),
                 () -> assertEquals("showCondition", eventCaseFieldEntity.getShowCondition(),
-                    caseEventField.getShowCondition()),
+                                   caseEventField.getShowCondition()),
                 () -> assertEquals("showSummaryChangeOption", eventCaseFieldEntity.getShowSummaryChangeOption(),
-                    caseEventField.getShowSummaryChangeOption()),
+                                   caseEventField.getShowSummaryChangeOption()),
                 () -> assertEquals("showSummaryContentOption", eventCaseFieldEntity.getShowSummaryContentOption(),
-                    caseEventField.getShowSummaryContentOption())
+                                   caseEventField.getShowSummaryContentOption())
             );
         }
+
+        @Test
+        void testMapEventCaseFieldEntityWithComplexFields() {
+            EventComplexTypeEntity eventComplexTypeEntity1 = new EventComplexTypeEntity();
+            String ref1 = "Some ref";
+            eventComplexTypeEntity1.setReference(ref1);
+            eventComplexTypeEntity1.setShowCondition("PersonFirstName=\"Anna\"");
+            eventComplexTypeEntity1.setOrder(1);
+            eventComplexTypeEntity1.setDisplayContext(DisplayContext.MANDATORY);
+            eventComplexTypeEntity1.setHint("Hint text");
+            eventComplexTypeEntity1.setLabel("Label text");
+
+            EventComplexTypeEntity eventComplexTypeEntity2 = new EventComplexTypeEntity();
+            String ref2 = "Some ref2";
+            eventComplexTypeEntity2.setReference(ref2);
+            eventComplexTypeEntity2.setShowCondition("PersonFirstName=\"Anna2\"");
+            eventComplexTypeEntity2.setOrder(2);
+            eventComplexTypeEntity2.setDisplayContext(DisplayContext.OPTIONAL);
+            eventComplexTypeEntity2.setHint("Hint text2");
+            eventComplexTypeEntity2.setLabel("Label text2");
+
+            EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
+            eventCaseFieldEntity.setShowSummaryChangeOption(true);
+            eventCaseFieldEntity.setShowSummaryContentOption(2);
+            eventCaseFieldEntity.setDisplayContext(DisplayContext.COMPLEX);
+            eventCaseFieldEntity.addComplexFields(Arrays.asList(eventComplexTypeEntity1, eventComplexTypeEntity2));
+
+            CaseEventField caseEventField = spyOnClassUnderTest.map(eventCaseFieldEntity);
+
+            assertAll(
+                () -> assertThat(caseEventField.getCaseEventFieldComplex().size(), is(2)),
+                () -> assertEquals("showCondition",
+                                   findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getShowCondition(),
+                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getShowCondition()),
+                () -> assertEquals("hint",
+                                   findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getHint(),
+                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getHint()),
+                () -> assertEquals("label",
+                                   findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getLabel(),
+                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getLabel()),
+                () -> assertEquals("displayContext",
+                                   findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDisplayContext(),
+                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContext()),
+                () -> assertEquals("order",
+                                   findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getOrder(),
+                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder())
+            );
+        }
+    }
+
+    private EventComplexTypeEntity findEventComplexTypeEntity(
+        List<EventComplexTypeEntity> eventComplexTypeEntities, String reference) {
+        return eventComplexTypeEntities.stream()
+            .filter(e -> e.getReference().equals(reference)).findFirst().get();
+    }
+
+    private CaseEventFieldComplex findCaseEventFieldComplex(
+        List<CaseEventFieldComplex> caseEventFieldComplexes, String reference) {
+        return caseEventFieldComplexes.stream()
+            .filter(e -> e.getReference().equals(reference)).findFirst().get();
     }
 
     @Nested
@@ -195,13 +257,13 @@ class EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(searchAliasFieldEntity2)).thenReturn(searchAliasField2);
 
             CaseTypeACLEntity roleWithCreateOnly = caseTypeUserRoleEntity("role-with-create-only", true, false,
-                                                                               false, false);
+                                                                          false, false);
             CaseTypeACLEntity roleWithReadOnly = caseTypeUserRoleEntity("role-with-read-only", false, true, false,
-                                                                             false);
+                                                                        false);
             CaseTypeACLEntity roleWithUpdateOnly = caseTypeUserRoleEntity("role-with-update-only", false, false,
-                                                                               true, false);
+                                                                          true, false);
             CaseTypeACLEntity roleWithDeleteOnly = caseTypeUserRoleEntity("role-with-delete-only", false, false,
-                                                                               false, true);
+                                                                          false, true);
 
             CaseTypeEntity caseTypeEntity = caseTypeEntity(
                 jurisdictionEntity,
@@ -495,9 +557,9 @@ class EntityToResponseDTOMapperTest {
 
     @Nested
     @DisplayName("Should create a CaseEvent matching EventEntity fields, with the following exceptions/amendments:" +
-        "- preStates should be empty if canCreate is true " +
-        "- preStates should default to a single 'wildcard' entry if not defined in entity" +
-        "- postState should default to 'wildcard' if not defined in entity")
+                     "- preStates should be empty if canCreate is true " +
+                     "- preStates should default to a single 'wildcard' entry if not defined in entity" +
+                     "- postState should default to 'wildcard' if not defined in entity")
     class MapEventEntityTests {
 
         @Test
@@ -671,13 +733,13 @@ class EntityToResponseDTOMapperTest {
                 Arrays.asList(eventCaseFieldEntity1, eventCaseFieldEntity2, eventCaseFieldEntity3));
 
             EventACLEntity roleWithCreateOnly = eventUserRoleEntity("role-with-create-only", true, false, false,
-                                                                         false);
+                                                                    false);
             EventACLEntity roleWithReadOnly = eventUserRoleEntity("role-with-read-only", false, true, false,
-                                                                       false);
+                                                                  false);
             EventACLEntity roleWithUpdateOnly = eventUserRoleEntity("role-with-update-only", false, false, true,
-                                                                         false);
+                                                                    false);
             EventACLEntity roleWithDeleteOnly = eventUserRoleEntity("role-with-delete-only", false, false, false,
-                                                                         true);
+                                                                    true);
             eventEntity.addEventACLEntities(
                 Arrays.asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
 
@@ -697,21 +759,21 @@ class EntityToResponseDTOMapperTest {
 
             assertEquals(eventEntity.getWebhookStart().getUrl(), caseEvent.getCallBackURLAboutToStartEvent());
             assertEquals(eventEntity.getWebhookStart().getTimeouts().size(),
-                caseEvent.getRetriesTimeoutAboutToStartEvent().size());
+                         caseEvent.getRetriesTimeoutAboutToStartEvent().size());
             assertThat(caseEvent.getRetriesTimeoutAboutToStartEvent(),
-                hasItems(startTimeout1, startTimeout2, startTimeout3));
+                       hasItems(startTimeout1, startTimeout2, startTimeout3));
 
             assertEquals(eventEntity.getWebhookPreSubmit().getUrl(), caseEvent.getCallBackURLAboutToSubmitEvent());
             assertEquals(eventEntity.getWebhookPreSubmit().getTimeouts().size(),
-                caseEvent.getRetriesTimeoutURLAboutToSubmitEvent().size());
+                         caseEvent.getRetriesTimeoutURLAboutToSubmitEvent().size());
             assertThat(caseEvent.getRetriesTimeoutURLAboutToSubmitEvent(),
-                hasItems(preSubmitTimeout1, preSubmitTimeout2, preSubmitTimeout3));
+                       hasItems(preSubmitTimeout1, preSubmitTimeout2, preSubmitTimeout3));
 
             assertEquals(eventEntity.getWebhookPostSubmit().getUrl(), caseEvent.getCallBackURLSubmittedEvent());
             assertEquals(eventEntity.getWebhookPostSubmit().getTimeouts().size(),
-                caseEvent.getRetriesTimeoutURLSubmittedEvent().size());
+                         caseEvent.getRetriesTimeoutURLSubmittedEvent().size());
             assertThat(caseEvent.getRetriesTimeoutURLSubmittedEvent(),
-                hasItems(postSubmitTimeout1, postSubmitTimeout2, postSubmitTimeout3));
+                       hasItems(postSubmitTimeout1, postSubmitTimeout2, postSubmitTimeout3));
 
             assertEquals(eventEntity.getSecurityClassification(), caseEvent.getSecurityClassification());
             assertAcls(eventEntity.getEventACLEntities(), caseEvent.getAcls());
@@ -761,13 +823,13 @@ class EntityToResponseDTOMapperTest {
             stateEntity.setDescription("description");
             stateEntity.setOrder(69);
             StateACLEntity roleWithCreateOnly = stateUserRoleEntity("role-with-create-only", true, false, false,
-                                                                         false);
+                                                                    false);
             StateACLEntity roleWithReadOnly = stateUserRoleEntity("role-with-read-only", false, true, false,
-                                                                       false);
+                                                                  false);
             StateACLEntity roleWithUpdateOnly = stateUserRoleEntity("role-with-update-only", false, false, true,
-                                                                         false);
+                                                                    false);
             StateACLEntity roleWithDeleteOnly = stateUserRoleEntity("role-with-delete-only", false, false, false,
-                                                                         true);
+                                                                    true);
             stateEntity.addStateACLEntities(
                 Arrays.asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
 
@@ -834,13 +896,13 @@ class EntityToResponseDTOMapperTest {
             caseFieldEntity.setDataFieldType(DataFieldType.METADATA);
 
             CaseFieldACLEntity roleWithCreateOnly = caseFieldUserRoleEntity("role-with-create-only", true, false,
-                                                                                 false, false);
+                                                                            false, false);
             CaseFieldACLEntity roleWithReadOnly = caseFieldUserRoleEntity("role-with-read-only", false, true,
-                                                                               false, false);
+                                                                          false, false);
             CaseFieldACLEntity roleWithUpdateOnly = caseFieldUserRoleEntity("role-with-update-only", false, false,
-                                                                                 true, false);
+                                                                            true, false);
             CaseFieldACLEntity roleWithDeleteOnly = caseFieldUserRoleEntity("role-with-delete-only", false, false,
-                                                                                 false, true);
+                                                                            false, true);
             caseFieldEntity.addCaseACLEntities(
                 Arrays.asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
 
@@ -1124,7 +1186,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(searchResultCaseFieldEntity.getOrder(), searchResultsField.getOrder());
             assertEquals(searchResultCaseFieldEntity.getLabel(), searchResultsField.getLabel());
             assertEquals(searchResultCaseFieldEntity.getCaseField().getReference(),
-                searchResultsField.getCaseFieldId());
+                         searchResultsField.getCaseFieldId());
             assertThat(searchResultsField.isMetadata(), is(false));
         }
 
@@ -1163,7 +1225,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(workBasketInputCaseFieldEntity.getOrder(), workbasketInputField.getOrder());
             assertEquals(workBasketInputCaseFieldEntity.getLabel(), workbasketInputField.getLabel());
             assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(),
-                workbasketInputField.getCaseFieldId());
+                         workbasketInputField.getCaseFieldId());
         }
 
     }
@@ -1249,9 +1311,9 @@ class EntityToResponseDTOMapperTest {
         assertEquals(authorisation.size(), accessControlList.size());
         for (Authorisation authItem : authorisation) {
             assertThat(accessControlList,
-                hasItem(
-                    aclWhichMatchesAuthorisation(authItem)
-                )
+                       hasItem(
+                           aclWhichMatchesAuthorisation(authItem)
+                       )
             );
         }
     }
