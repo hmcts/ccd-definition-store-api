@@ -1,12 +1,14 @@
-package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
+package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype;
 
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 
-public interface EventCaseFieldEntityValidator {
+public interface EventComplexTypeEntityValidator {
 
-    ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
+    ValidationResult validate(EventComplexTypeEntity eventCaseFieldEntity,
                               EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext);
 
     default boolean isMandatoryDisplayContext(EventCaseFieldEntity eventCaseFieldEntity) {

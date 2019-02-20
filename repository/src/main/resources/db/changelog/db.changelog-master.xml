@@ -54,5 +54,6 @@
     <include file="db/changelog/db.changelog-rdm-3187.xml"/>
     <include file="db/changelog/db.changelog-rdm-3781.xml"/>
     <include file="db/changelog/db.changelog-rdm-3576.xml"/>
+    <include file="db/changelog/db.changelog-rdm-3327.xml"/>
 
 </databaseChangeLog>

@@ -72,6 +72,66 @@ class EntityToResponseDTOMapperTest {
                     caseEventField.getShowSummaryContentOption())
             );
         }
+
+        @Test
+        void testMapEventCaseFieldEntityWithComplexFields() {
+            EventComplexTypeEntity eventComplexTypeEntity1 = new EventComplexTypeEntity();
+            String ref1 = "Some ref";
+            eventComplexTypeEntity1.setReference(ref1);
+            eventComplexTypeEntity1.setShowCondition("PersonFirstName=\"Anna\"");
+            eventComplexTypeEntity1.setOrder(1);
+            eventComplexTypeEntity1.setDisplayContext(DisplayContext.MANDATORY);
+            eventComplexTypeEntity1.setHint("Hint text");
+            eventComplexTypeEntity1.setLabel("Label text");
+
+            EventComplexTypeEntity eventComplexTypeEntity2 = new EventComplexTypeEntity();
+            String ref2 = "Some ref2";
+            eventComplexTypeEntity2.setReference(ref2);
+            eventComplexTypeEntity2.setShowCondition("PersonFirstName=\"Anna2\"");
+            eventComplexTypeEntity2.setOrder(2);
+            eventComplexTypeEntity2.setDisplayContext(DisplayContext.OPTIONAL);
+            eventComplexTypeEntity2.setHint("Hint text2");
+            eventComplexTypeEntity2.setLabel("Label text2");
+
+            EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
+            eventCaseFieldEntity.setShowSummaryChangeOption(true);
+            eventCaseFieldEntity.setShowSummaryContentOption(2);
+            eventCaseFieldEntity.setDisplayContext(DisplayContext.COMPLEX);
+            eventCaseFieldEntity.addComplexFields(Arrays.asList(eventComplexTypeEntity1, eventComplexTypeEntity2));
+
+            CaseEventField caseEventField = spyOnClassUnderTest.map(eventCaseFieldEntity);
+
+            assertAll(
+                () -> assertThat(caseEventField.getCaseEventFieldComplex().size(), is(2)),
+                () -> assertEquals("showCondition",
+                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(),ref1).getShowCondition(),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getShowCondition()),
+                () -> assertEquals("hint",
+                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(),ref1).getHint(),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getHint()),
+                () -> assertEquals("label",
+                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(),ref1).getLabel(),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getLabel()),
+                () -> assertEquals("displayContext",
+                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(),ref1).getDisplayContext(),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContext()),
+                () -> assertEquals("order",
+                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(),ref1).getOrder(),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder())
+            );
+        }
+    }
+
+    private EventComplexTypeEntity findEventComplexTypeEntity(
+        List<EventComplexTypeEntity> eventComplexTypeEntities, String reference) {
+        return eventComplexTypeEntities.stream()
+            .filter(e -> e.getReference().equals(reference)).findFirst().get();
+    }
+
+    private CaseEventFieldComplex findCaseEventFieldComplex(
+        List<CaseEventFieldComplex> caseEventFieldComplexes, String reference) {
+        return caseEventFieldComplexes.stream()
+            .filter(e -> e.getReference().equals(reference)).findFirst().get();
     }
 
     @Nested

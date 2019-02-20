@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -9,7 +10,9 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificationColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 import java.util.Collection;
@@ -21,18 +24,21 @@ import static uk.gov.hmcts.ccd.definition.store.excel.parser.WebhookParser.parse
 
 public class EventParser {
     private static final Logger logger = LoggerFactory.getLogger(EventParser.class);
-    public static final String WILDCARD = "*";
-    public static final String PRE_STATE_SEPARATOR = ";";
+    private static final String WILDCARD = "*";
+    private static final String PRE_STATE_SEPARATOR = ";";
 
     private final ParseContext parseContext;
     private final EventCaseFieldParser eventCaseFieldParser;
+    private final EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser;
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     public EventParser(ParseContext parseContext,
                        EventCaseFieldParser eventCaseFieldParser,
+                       EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser,
                        EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
         this.parseContext = parseContext;
         this.eventCaseFieldParser = eventCaseFieldParser;
+        this.eventCaseFieldComplexTypeParser = eventCaseFieldComplexTypeParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
     }
 
@@ -67,6 +73,8 @@ public class EventParser {
         }
 
         parseEventCaseFields(caseType, events, definitionSheets);
+
+        parseCaseEventComplexTypes(definitionSheets, events);
 
         logger.info("Parsing events for case type {}: OK: {} case fields parsed", caseTypeId, events.size());
 
@@ -156,4 +164,30 @@ public class EventParser {
         logger.debug("Parsing event case fields for case type {}: OK", caseTypeId);
     }
 
+    private void parseCaseEventComplexTypes(Map<String, DefinitionSheet> definitionSheets,
+                                            List<EventEntity> events) {
+        if (definitionSheets.containsKey(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName())) {
+            Map<Pair<String, String>, List<DefinitionDataItem>> caseEventToComplexTypeByEventIdAndCaseFieldId =
+                definitionSheets
+                    .get(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName())
+                    .getDataItems()
+                    .stream()
+                    .collect(groupingBy(p ->
+                        Pair.of(p.getString(ColumnName.CASE_EVENT_ID), p.getString(ColumnName.CASE_FIELD_ID))));
+
+            for (EventEntity event : events) {
+                for (EventCaseFieldEntity eventCaseFieldEntity : event.getEventCaseFields()) {
+                    List<DefinitionDataItem> definitionDataItems = caseEventToComplexTypeByEventIdAndCaseFieldId
+                        .get(Pair.of(
+                            eventCaseFieldEntity.getEvent().getReference(),
+                            eventCaseFieldEntity.getCaseField().getReference()));
+
+                    if (eventCaseFieldEntity.getDisplayContext() == DisplayContext.COMPLEX) {
+                        eventCaseFieldEntity.addComplexFields(eventCaseFieldComplexTypeParser
+                            .parseEventCaseFieldComplexType(definitionDataItems));
+                    }
+                }
+            }
+        }
+    }
 }
