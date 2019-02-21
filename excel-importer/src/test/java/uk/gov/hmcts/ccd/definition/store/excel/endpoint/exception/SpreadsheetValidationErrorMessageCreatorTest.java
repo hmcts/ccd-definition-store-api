@@ -1113,7 +1113,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         assertEquals("default message. WorkSheet 'CaseEventToFields'",
             classUnderTest.createErrorMessage(
-                new EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError("default message",
+                new EventCaseFieldCaseHistoryViewerCaseFieldValidator.ValidationError("default message",
                     entity))
         );
     }
