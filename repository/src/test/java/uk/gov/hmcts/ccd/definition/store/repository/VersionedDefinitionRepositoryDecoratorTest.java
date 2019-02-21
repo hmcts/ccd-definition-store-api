@@ -1,5 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import java.util.Optional;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,9 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -55,8 +58,9 @@ public class VersionedDefinitionRepositoryDecoratorTest {
 
         final CaseTypeEntity saved = versionedCaseTypeRepository.save(caseType);
 
-        CaseTypeEntity retrievedCaseType = versionedCaseTypeRepository.findOne(saved.getId());
-        assertThat(retrievedCaseType.getVersion(), is(1));
+        Optional<CaseTypeEntity> retrievedCaseType = versionedCaseTypeRepository.findById(saved.getId());
+        assertNotNull(retrievedCaseType.get());
+        assertThat(retrievedCaseType.get().getVersion(), is(1));
 
         final CaseTypeEntity caseType2 = new CaseTypeEntity();
         caseType2.setReference("id");

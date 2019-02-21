@@ -1,5 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.DRAFT;
+import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.PUBLISHED;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,19 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.DRAFT;
-import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.PUBLISHED;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -67,7 +69,9 @@ public class DraftDefinitionRepositoryDecoratorTest {
         final DefinitionEntity definitionEntity1 = testHelper.buildDefinition(testJurisdiction, "Test definition");
 
         final DefinitionEntity savedDefinitionEntity = classUnderTest.save(definitionEntity1);
-        final DefinitionEntity retrievedDefinitionEntity = repository.findOne(savedDefinitionEntity.getId());
+        final Optional<DefinitionEntity> optionalDefinitionEntity = repository.findById(savedDefinitionEntity.getId());
+        DefinitionEntity retrievedDefinitionEntity = optionalDefinitionEntity.get();
+        assertNotNull(retrievedDefinitionEntity);
         assertThat(retrievedDefinitionEntity.getVersion(), is(1));
         assertThat(retrievedDefinitionEntity.getStatus(), is(DRAFT));
 
