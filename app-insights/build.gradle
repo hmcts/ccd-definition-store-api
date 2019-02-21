@@ -2,6 +2,15 @@ dependencies {
     // compile "org.springframework:spring-context:5.0.7.RELEASE"
 }
 
-bootRepackage {
+jar {
+    enabled = true
+    manifest {
+        attributes 'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+    }
+    archiveName = 'app-insights.jar'
+}
+
+bootJar { 
     enabled = false
 }

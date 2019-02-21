@@ -30,7 +30,7 @@ sourceSets {
     }
 }
 
-bootRepackage {
+bootJar {
     enabled = false
 }
 

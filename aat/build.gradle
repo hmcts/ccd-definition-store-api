@@ -48,7 +48,7 @@ task functional(type: Test) {
     useJUnitPlatform()
 }
 
-bootRepackage {
+bootJar {
     enabled = false
 }
 

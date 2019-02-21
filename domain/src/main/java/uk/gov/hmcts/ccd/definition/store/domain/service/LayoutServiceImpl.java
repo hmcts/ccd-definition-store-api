@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -10,8 +12,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-
-import java.util.List;
 
 @Component
 public class LayoutServiceImpl implements LayoutService {
@@ -42,7 +42,7 @@ public class LayoutServiceImpl implements LayoutService {
         if (!result.isValid()) {
             throw new ValidationException(result);
         }
-        genericRepository.save(genericLayouts);
+        genericRepository.saveAll(genericLayouts);
     }
 
     @Override
@@ -57,6 +57,6 @@ public class LayoutServiceImpl implements LayoutService {
         if (!result.isValid()) {
             throw new ValidationException(result);
         }
-        displayGroupRepository.save(displayGroups);
+        displayGroupRepository.saveAll(displayGroups);
     }
 }

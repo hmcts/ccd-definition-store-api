@@ -1,6 +1,7 @@
 ext.applicationName = 'case-definition-store-api'
 
 jar {
+    enabled = true
     baseName = "${applicationName}"
     manifest {
         attributes 'Implementation-Title': "${applicationName}",
@@ -8,7 +9,7 @@ jar {
     }
 }
 
-bootRepackage {
+bootJar {
     enabled = false
 }
 
