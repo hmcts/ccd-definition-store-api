@@ -21,6 +21,7 @@ public class CaseType implements HasAcls {
     @JsonProperty("security_classification")
     private SecurityClassification securityClassification;
     private List<AccessControlList> acls = new ArrayList<>();
+    private final List<SearchAliasField> searchAliasFields = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -115,5 +116,15 @@ public class CaseType implements HasAcls {
     @Override
     public void setAcls(List<AccessControlList> acls) {
         this.acls = acls;
+    }
+
+    public List<SearchAliasField> getSearchAliasFields() {
+        return searchAliasFields;
+    }
+
+    public void setSearchAliasFields(List<SearchAliasField> searchAliasFields) {
+        if (searchAliasFields != null) {
+            this.searchAliasFields.addAll(searchAliasFields);
+        }
     }
 }
