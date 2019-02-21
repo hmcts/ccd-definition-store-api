@@ -367,6 +367,23 @@
       "delete" : true
     }
   ],
+  "searchAliasFields": [
+    {
+      "id": "nameAlias",
+      "caseTypeId": "TestAddressBookCase",
+      "caseFieldPath": "PersonLastName",
+      "fieldType": {
+        "id": "Text",
+        "type": "Text",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+      }
+    }
+  ],
   "case_fields": [
     {
       "metadata": false,
