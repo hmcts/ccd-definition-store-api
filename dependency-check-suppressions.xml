@@ -153,8 +153,4 @@
         <gav regex="true">^org\.springframework:spring-.+:.*$</gav>
         <cve>CVE-2018-15756</cve>
     </suppress>
-    <suppress>
-        <notes>Temporarily suppress pmd vulnerabilities. This is non prod dependency.</notes>
-        <cve>CVE-2019-7722</cve>
-    </suppress>
 </suppressions>
