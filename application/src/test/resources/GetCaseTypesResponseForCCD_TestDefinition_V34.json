@@ -30,7 +30,8 @@
           "show_summary_change_option": null,
           "show_summary_content_option": null,
           "label": null,
-          "hint_text": null
+          "hint_text": null,
+          "case_fields_complex" : [ ]
         },
         {
           "case_field_id": "PersonOrderSummary",
@@ -40,7 +41,8 @@
           "show_summary_change_option": true,
           "show_summary_content_option": null,
           "label": null,
-          "hint_text": null
+          "hint_text": null,
+          "case_fields_complex" : [ ]
         },
         {
           "case_field_id": "PersonCasePaymentHistoryViewer",
@@ -50,7 +52,8 @@
           "show_summary_change_option": false,
           "show_summary_content_option": null,
           "label": null,
-          "hint_text": null
+          "hint_text": null,
+          "case_fields_complex" : [ ]
         },
         {
           "case_field_id": "PersonFirstName",
@@ -60,7 +63,8 @@
           "show_summary_change_option": false,
           "show_summary_content_option": null,
           "label": "CreateCase FirstName Label Override",
-          "hint_text": "CreateCase FirstName Hint Override"
+          "hint_text": "CreateCase FirstName Hint Override",
+          "case_fields_complex" : [ ]
         },
         {
           "case_field_id": "PersonLastNameWithValidation",
@@ -70,7 +74,8 @@
           "show_summary_change_option": true,
           "show_summary_content_option": null,
           "label": null,
-          "hint_text": null
+          "hint_text": null,
+          "case_fields_complex" : [ ]
         }, {
           "case_field_id" : "referenceCollection",
           "display_context" : "OPTIONAL",
@@ -79,7 +84,8 @@
           "show_summary_change_option" : null,
           "show_summary_content_option" : null,
           "label" : null,
-          "hint_text" : null
+          "hint_text" : null,
+          "case_fields_complex" : [ ]
         }
       ],
       "pre_states": [],
@@ -137,7 +143,8 @@
           "show_summary_change_option": true,
           "show_summary_content_option": 2,
           "label": "LegacyCase FirstName Label Override",
-          "hint_text": "LegacyCase FirstName Hint Override"
+          "hint_text": "LegacyCase FirstName Hint Override",
+          "case_fields_complex" : [ ]
         },
         {
           "case_field_id": "PersonLastName",
@@ -147,7 +154,8 @@
           "show_summary_change_option": null,
           "show_summary_content_option": 1,
           "label": null,
-          "hint_text": null
+          "hint_text": null,
+          "case_fields_complex" : [ ]
         },
         {
           "case_field_id": "PersonAddress",
@@ -157,7 +165,8 @@
           "show_summary_change_option": true,
           "show_summary_content_option": null,
           "label": null,
-          "hint_text": null
+          "hint_text": null,
+          "case_fields_complex" : [ ]
         },
         {
           "case_field_id": "PersonHasSecondAddress",
@@ -167,7 +176,8 @@
           "show_summary_change_option": false,
           "show_summary_content_option": null,
           "label": null,
-          "hint_text": null
+          "hint_text": null,
+          "case_fields_complex" : [ ]
         },
         {
           "case_field_id": "PersonSecondAddress",
@@ -177,7 +187,8 @@
           "show_summary_change_option": null,
           "show_summary_content_option": null,
           "label": null,
-          "hint_text": null
+          "hint_text": null,
+          "case_fields_complex" : [ ]
         }
       ],
       "pre_states": [
@@ -343,6 +354,23 @@
       "read" : true,
       "update" : true,
       "delete" : true
+    }
+  ],
+  "searchAliasFields": [
+    {
+      "id": "nameAlias",
+      "caseTypeId": "TestAddressBookCase",
+      "caseFieldPath": "PersonLastName",
+      "fieldType": {
+        "id": "Text",
+        "type": "Text",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+      }
     }
   ],
   "case_fields": [

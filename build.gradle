@@ -38,6 +38,10 @@ apply plugin: 'org.owasp.dependencycheck'
 apply plugin: 'pmd'
 apply from: 'liquibase.gradle'
 
+pmd {
+    toolVersion = '6.11.0'
+}
+
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html

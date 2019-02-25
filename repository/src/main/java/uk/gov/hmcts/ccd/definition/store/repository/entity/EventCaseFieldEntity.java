@@ -1,5 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
+import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,13 +15,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 
 @Table(name = "event_case_field")
 @Entity
@@ -36,6 +44,11 @@ public class EventCaseFieldEntity implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "case_field_id", nullable = false)
     private CaseFieldEntity caseField;
+
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "event_case_field_id")
+    private final List<EventComplexTypeEntity> eventComplexTypes = new ArrayList<>();
 
     @Column(name = "display_context", nullable = false)
     @Type(type = "pgsql_displaycontext_enum")
@@ -81,6 +94,19 @@ public class EventCaseFieldEntity implements Serializable {
 
     public void setCaseField(final CaseFieldEntity caseField) {
         this.caseField = caseField;
+    }
+
+    public List<EventComplexTypeEntity> getEventComplexTypes() {
+        return eventComplexTypes;
+    }
+
+    public void addComplexFields(List<EventComplexTypeEntity> complexFields) {
+        if (complexFields != null) {
+            for (EventComplexTypeEntity eventComplexTypeEntity : complexFields) {
+                eventComplexTypeEntity.setComplexFieldType(this);
+                this.eventComplexTypes.add(eventComplexTypeEntity);
+            }
+        }
     }
 
     public String getShowCondition() {
