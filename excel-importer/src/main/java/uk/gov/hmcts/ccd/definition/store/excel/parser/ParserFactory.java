@@ -49,6 +49,7 @@ public class ParserFactory {
                     showConditionParser,
                     entityToDefinitionDataItemRegistry
                 ),
+                new EventCaseFieldComplexTypeParser(showConditionParser),
                 entityToDefinitionDataItemRegistry
             ),
             new AuthorisationCaseTypeParser(context, entityToDefinitionDataItemRegistry),

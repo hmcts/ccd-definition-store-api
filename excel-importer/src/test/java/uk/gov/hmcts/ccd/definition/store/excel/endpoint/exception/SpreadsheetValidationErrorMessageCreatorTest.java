@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -31,6 +32,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityInvalidShowConditionError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
@@ -516,7 +519,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventUserRoleEnttyInvalidCrud_createErrorMessageCalled_customMessageReturned() {
+    public void eventUserRoleEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventUserRoleEntity("user role", "Xcrud");
@@ -540,7 +543,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventUserRoleEnttyInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
+    public void eventUserRoleEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventUserRoleEntity("user role", "Xcrud");
@@ -596,7 +599,71 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                 eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
             )
         );
+    }
 
+    @Test
+    public void entityExistsInRegistry_EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError() {
+        EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
+        given(context.getEventId()).willReturn("EVENT ID");
+        EventComplexTypeEntity eventComplexTypeEntity = mock(EventComplexTypeEntity.class);
+        given(eventComplexTypeEntity.getReference()).willReturn("REFERENCE");
+
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.toString());
+        when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn("SHOW CONDITION");
+
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventComplexTypeEntity)))
+            .thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals(
+            "Unknown field 'SHOW CONDITION FIELD' for event 'EVENT ID' and element 'REFERENCE' in show condition: 'SHOW CONDITION' on tab 'EventToComplexTypes'",
+            classUnderTest.createErrorMessage(
+                new EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError("SHOW CONDITION FIELD",
+                    context,
+                    eventComplexTypeEntity
+                )));
+    }
+
+    @Test
+    public void entityDoesNotExistInRegistry_EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError_defaultMessage() {
+        EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
+        EventComplexTypeEntity eventComplexTypeEntity = new EventComplexTypeEntity();
+
+        EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError error =
+            new EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError("", context,
+                eventComplexTypeEntity);
+
+        assertEquals(error.getDefaultMessage(), classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void entityExistsInRegistry_EventComplexTypeEntityInvalidShowConditionError() {
+        EventComplexTypeEntity eventComplexTypeEntity = mock(EventComplexTypeEntity.class);
+        EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
+        given(context.getEventId()).willReturn("EVENT ID");
+
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.toString());
+        when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn("SHOW CONDITION");
+
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventComplexTypeEntity)))
+            .thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals(
+            "Invalid show condition 'SHOW CONDITION' for event 'EVENT ID' on tab 'EventToComplexTypes'",
+            classUnderTest.createErrorMessage(
+                new EventComplexTypeEntityInvalidShowConditionError(eventComplexTypeEntity, context)));
+    }
+
+    @Test
+    public void entityDoesNotExistInRegistry_EventComplexTypeEntityInvalidShowConditionError() {
+        EventComplexTypeEntity eventComplexTypeEntity = mock(EventComplexTypeEntity.class);
+        EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
+
+        EventComplexTypeEntityInvalidShowConditionError error =
+            new EventComplexTypeEntityInvalidShowConditionError(eventComplexTypeEntity, context);
+
+        assertEquals(error.getDefaultMessage(), classUnderTest.createErrorMessage(error));
     }
 
     @Test
@@ -618,10 +685,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             classUnderTest.createErrorMessage(
                 new EventCaseFieldEntityInvalidShowConditionError(
                     eventCaseFieldEntity,
-                    eventCaseFieldEntityValidationContext("EVENT ID")
-                )
-            )
-        );
+                    eventCaseFieldEntityValidationContext("EVENT ID"))));
     }
 
     @Test
