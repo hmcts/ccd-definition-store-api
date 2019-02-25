@@ -33,7 +33,7 @@ public class BaseTypeControllerTests extends BaseTest {
 
         FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
 
-        assertEquals("Unexpected number of Base Types", 18, baseTypes.length);
+        assertEquals("Unexpected number of Base Types", 19, baseTypes.length);
 
         assertEquals("Unexpected Base Type", "Text", baseTypes[0].getType());
         assertEquals("Unexpected Base Type Id", "Text", baseTypes[0].getId());
@@ -106,6 +106,10 @@ public class BaseTypeControllerTests extends BaseTest {
         assertEquals("Unexpected Base Type", "FixedRadioList", baseTypes[17].getType());
         assertEquals("Unexpected Base Type Id", "FixedRadioList", baseTypes[17].getId());
         assertNull("Unexpected Reg Ex", baseTypes[17].getRegularExpression());
+
+        assertEquals("Unexpected Base Type", "CaseHistoryViewer", baseTypes[18].getType());
+        assertEquals("Unexpected Base Type Id", "CaseHistoryViewer", baseTypes[18].getId());
+        assertNull("Unexpected Reg Ex", baseTypes[18].getRegularExpression());
 
     }
 }
