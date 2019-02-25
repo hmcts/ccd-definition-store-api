@@ -152,7 +152,7 @@ public class ImportServiceImpl implements ImportService {
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
         List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
-        caseTypeService.createAll(jurisdiction, caseTypes);
+        caseTypeService.createAll(jurisdiction, caseTypes); // runs validation
 
         logger.info("Importing spreadsheet: Case types: OK: {} case types imported",
                     caseTypes.size());

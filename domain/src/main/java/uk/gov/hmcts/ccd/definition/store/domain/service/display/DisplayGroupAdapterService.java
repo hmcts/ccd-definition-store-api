@@ -1,13 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPage;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
@@ -18,6 +22,8 @@ import java.util.Optional;
 
 @Service
 public class DisplayGroupAdapterService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DisplayGroupAdapterService.class);
 
     private DisplayGroupRepository displayGroupRepository;
     private CaseTypeRepository caseTypeRepository;
@@ -51,11 +57,39 @@ public class DisplayGroupAdapterService {
 
                     wizardPage.setShowCondition(displayGroupEntity.getShowCondition());
                     displayGroupEntity.getDisplayGroupCaseFields().forEach(displayGroupCaseFieldEntity -> {
-                        WizardPageField wizardPageField = new WizardPageField();
-                        wizardPageField.setCaseFieldId(displayGroupCaseFieldEntity.getCaseField().getReference());
-                        wizardPageField.setOrder(displayGroupCaseFieldEntity.getOrder());
-                        wizardPageField.setPageColumnNumber(displayGroupCaseFieldEntity.getColumnNumber());
-                        wizardPage.getWizardPageFields().add(wizardPageField);
+
+                        String reference = displayGroupCaseFieldEntity.getCaseField().getReference();
+                        EventCaseFieldEntity eventCaseFieldEntity = getEventCaseFieldEntityByReference(
+                            reference, displayGroupEntity.getEvent());
+
+                        // TODO: add 'complexFieldMask'
+//                        if (DisplayContext.COMPLEX == eventCaseFieldEntity.getDisplayContext()) {
+//
+//                            eventCaseFieldEntity.getEventComplexTypes().forEach(eventComplexTypeEntity -> {
+//                                WizardPageField wizardPageField = new WizardPageField();
+////                                wizardPageField.setCaseFieldId(reference + "." + eventComplexTypeEntity.getReference());
+//                                wizardPageField.setCaseFieldId(reference);
+//                                wizardPageField.setOrder(eventComplexTypeEntity.getOrder());
+//                                wizardPageField.setPageColumnNumber(displayGroupCaseFieldEntity.getColumnNumber());
+//                                wizardPageField.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
+//                                LOG.info("CaseFieldId " + wizardPageField.getCaseFieldId());
+//                                LOG.info("Order " + wizardPageField.getOrder());
+//                                LOG.info("DisplayContext " + wizardPageField.getDisplayContext());
+//                                LOG.info(" -------------");
+//                                wizardPage.getWizardPageFields().add(wizardPageField);
+//                            });
+//                        } else {
+                            WizardPageField wizardPageField = new WizardPageField();
+                            wizardPageField.setCaseFieldId(reference);
+                            wizardPageField.setOrder(displayGroupCaseFieldEntity.getOrder());
+                            wizardPageField.setPageColumnNumber(displayGroupCaseFieldEntity.getColumnNumber());
+                            wizardPageField.setDisplayContext(eventCaseFieldEntity.getDisplayContext().toString());
+                            LOG.info("CaseFieldId " + wizardPageField.getCaseFieldId());
+                            LOG.info("Order " + wizardPageField.getOrder());
+                            LOG.info("DisplayContext " + wizardPageField.getDisplayContext());
+                            LOG.info(" -------------");
+                            wizardPage.getWizardPageFields().add(wizardPageField);
+//                        }
                     });
                     wizardPageCollection.getWizardPages().add(wizardPage);
                 });
@@ -63,5 +97,14 @@ public class DisplayGroupAdapterService {
             }
         }
         return null;
+    }
+
+    private EventCaseFieldEntity getEventCaseFieldEntityByReference(String reference, EventEntity event) {
+        List<EventCaseFieldEntity> eventCaseFieldEntities = event.getEventCaseFields();
+
+        return eventCaseFieldEntities.stream()
+            .filter(e -> reference.equals(e.getCaseField().getReference()))
+            .findFirst()
+            .orElseThrow(() -> new MissingDisplayContextException("EventCaseFieldEntity missing displayContext."));
     }
 }

@@ -161,7 +161,19 @@ public interface EntityToResponseDTOMapper {
     FixedListItem map(FieldTypeListItemEntity fieldTypeListItemEntity);
 
     @Mapping(source = "eventCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(
+        expression = "java("
+            + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.EventComplexTypeEntityToCaseEventFieldComplexListMapper.map("
+            + "               eventCaseFieldEntity.getEventComplexTypes()"
+            + "           )"
+            + "       )",
+        target = "caseEventFieldComplex"
+    )
     CaseEventField map(EventCaseFieldEntity eventCaseFieldEntity);
+
+    List<CaseEventFieldComplex> map(List<EventComplexTypeEntity> eventComplexTypeEntities);
+
+    CaseEventFieldComplex map(EventComplexTypeEntity eventComplexTypeEntity);
 
     @Mapping(source = "complexFieldEntity.reference", target = "id")
     @Mapping(source = "complexFieldEntity.hint", target = "hintText")
@@ -189,9 +201,29 @@ public interface EntityToResponseDTOMapper {
     @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 
+<<<<<<< HEAD
     @Mapping(source = "searchAliasFieldEntity.reference", target = "id")
     @Mapping(source = "searchAliasFieldEntity.caseType.reference", target = "caseTypeId")
     SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
+=======
+    class EventComplexTypeEntityToCaseEventFieldComplexListMapper {
+
+        private EventComplexTypeEntityToCaseEventFieldComplexListMapper() {
+            // Default constructor
+        }
+
+        static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
+            return eventComplexTypeEntity.stream()
+                .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
+                    complexTypeEntity.getHint(),
+                    complexTypeEntity.getLabel(),
+                    complexTypeEntity.getOrder(),
+                    complexTypeEntity.getDisplayContext(),
+                    complexTypeEntity.getShowCondition()))
+                .collect(Collectors.toList());
+        }
+    }
+>>>>>>> fabe5fd4... [PREVIEW] RDM-3327 New Excel tab ComplexTypeToCaseEvent
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
