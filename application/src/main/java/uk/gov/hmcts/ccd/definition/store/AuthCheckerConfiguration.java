@@ -9,6 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
 import uk.gov.hmcts.ccd.definition.store.rest.configuration.AdminWebAuthorizationProperties;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -47,8 +48,8 @@ public class AuthCheckerConfiguration {
         if (request.getRequestURI().matches(REGEX_URI_IMPORT)) {
             return Collections.singletonList(ROLE_CCD_IMPORT);
         }
-        if (request.getRequestURI().matches("^/api/base-types/?$")) {
-            return Collections.singletonList(ROLE_CCD_IMPORT);
+        if (request.getRequestURI().matches("^/api/user-role/?$")) {
+            return new ArrayList<>(adminWebAuthorizationProperties.getManageUserProfile());
         }
         return Collections.emptyList();
     }
