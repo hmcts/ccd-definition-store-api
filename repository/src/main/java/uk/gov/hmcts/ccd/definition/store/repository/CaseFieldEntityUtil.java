@@ -4,6 +4,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,10 +17,10 @@ public class CaseFieldEntityUtil {
 
     public static List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
         List<String> allSubTypePossibilities = new ArrayList<>();
-
-        //.<FieldEntity> added to fix a weird build error with some versions of the jdk
-        prepare(allSubTypePossibilities, "",
-            caseFieldEntities.stream().filter(Objects::nonNull).collect(Collectors.<FieldEntity>toList()));
+        List<? extends FieldEntity> fieldEntities = caseFieldEntities.stream()
+            .filter(Objects::nonNull)
+            .collect(Collectors.<FieldEntity>toList());
+        prepare(allSubTypePossibilities, "", fieldEntities);
         return removeElementsThatAreNotTreeLeafs(allSubTypePossibilities);
     }
 
@@ -30,19 +31,31 @@ public class CaseFieldEntityUtil {
     }
 
     private static void prepare(List<String> allSubTypePossibilities,
-                         String startingString,
-                         List<FieldEntity> caseFieldEntities) {
+                                String startingString,
+                                List<? extends FieldEntity> caseFieldEntities) {
 
         String concatenationCharacter = isBlank(startingString) ? "" : ".";
         caseFieldEntities.forEach(caseFieldEntity -> {
             allSubTypePossibilities.add(startingString + concatenationCharacter + caseFieldEntity.getReference());
-            List<ComplexFieldEntity> complexFields = caseFieldEntity
-                .getFieldType()
-                .getComplexFields();
+
+            List<ComplexFieldEntity> complexFields;
+            if (caseFieldEntity.getFieldType() == null) {
+                complexFields = Collections.emptyList();
+            } else if (isCollection(caseFieldEntity)) {
+                complexFields = caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields();
+            } else {
+                complexFields = caseFieldEntity.getFieldType().getComplexFields();
+            }
+
             prepare(allSubTypePossibilities,
                 startingString + concatenationCharacter + caseFieldEntity.getReference(),
                 complexFields.stream().map(FieldEntity.class::cast).collect(Collectors.toList()));
         });
     }
 
+    private static boolean isCollection(FieldEntity caseFieldEntity) {
+        return caseFieldEntity.getFieldType().getCollectionFieldType() != null
+            && caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields() != null
+            && !caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields().isEmpty();
+    }
 }

@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -116,7 +117,7 @@ class ShowConditionParserTest {
 
     private void assertShowCondition(ShowCondition showCondition) {
         assertEquals("SomeField=\"Some String\"", showCondition.getShowConditionExpression());
-        assertEquals("SomeField", showCondition.getFields().get(0));
+        assertTrue("SomeField", showCondition.getFields().contains("SomeField"));
     }
 
     private void assertInvalidShowCondition(String invalidShowCondition) {
