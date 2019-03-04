@@ -7,6 +7,7 @@ public enum SheetName {
     JURISDICTION("Jurisdiction"),
     CASE_EVENT("CaseEvent"),
     CASE_EVENT_TO_FIELDS("CaseEventToFields"),
+    CASE_EVENT_TO_COMPLEX_TYPES("EventToComplexTypes"),
     CASE_FIELD("CaseField"),
     CASE_ROLE("CaseRoles"),
     CASE_TYPE("CaseType"),

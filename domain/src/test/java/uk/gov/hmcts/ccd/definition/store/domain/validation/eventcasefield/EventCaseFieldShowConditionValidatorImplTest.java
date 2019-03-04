@@ -66,13 +66,11 @@ public class EventCaseFieldShowConditionValidatorImplTest {
             asList(
                 eventCaseFieldEntity(
                     caseFieldEntity("NonMatchingCaseFieldId1"),
-                    null
-                                    ),
+                    null),
                 eventCaseFieldEntity(
                     caseFieldEntity(matchingCaseFieldId,
                         exampleFieldTypeEntityWithComplexFields()),
-                    null
-                                    ),
+                    null),
                 eventCaseFieldEntityWithShowCondition,
                 eventCaseFieldEntity(
                     caseFieldEntity("NonMatchingCaseFieldId2"),
@@ -108,13 +106,11 @@ public class EventCaseFieldShowConditionValidatorImplTest {
             asList(
                 eventCaseFieldEntity(
                     caseFieldEntity("NonMatchingCaseFieldId1"),
-                    null
-                                    ),
+                    null),
                 eventCaseFieldEntity(
                     caseFieldEntity(matchingCaseFieldId,
                         exampleFieldTypeEntityWithComplexFields()),
-                    null
-                                    )
+                    null)
                   ));
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
@@ -140,14 +136,11 @@ public class EventCaseFieldShowConditionValidatorImplTest {
             asList(
                 eventCaseFieldEntity(
                     caseFieldEntity("NonMatchingCaseFieldId1"),
-                    null
-                                    ),
+                    null),
                 eventCaseFieldEntity(
                     caseFieldEntity(matchingCaseFieldId,
-                        exampleFieldTypeEntityWithComplexFields()
-                                   ),
-                    null
-                                    ),
+                        exampleFieldTypeEntityWithComplexFields()),
+                    null),
                 eventCaseFieldEntityWithShowCondition,
                 eventCaseFieldEntity(
                     caseFieldEntity("NonMatchingCaseFieldId2"),

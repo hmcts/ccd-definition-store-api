@@ -29,6 +29,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexF
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityInvalidShowConditionError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
@@ -286,6 +288,31 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
+    public String createErrorMessage(EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError error) {
+        return newMessageIfDefinitionExists(error,
+                                            error.getEventComplexTypeEntity(),
+                                            def -> String.format(
+                                                "Unknown field '%s' for event '%s' and element '%s' in show "
+                                                    + "condition: '%s' on tab '%s'",
+                                                error.getShowConditionField(),
+                                                error.getEventId(),
+                                                error.getEventComplexTypeEntity().getReference(),
+                                                def.getString(ColumnName.FIELD_SHOW_CONDITION),
+                                                def.getSheetName()));
+    }
+
+    @Override
+    public String createErrorMessage(EventComplexTypeEntityInvalidShowConditionError error) {
+        return newMessageIfDefinitionExists(error,
+                                            error.getEventCaseFieldEntity(),
+                                            def -> String.format(
+                                                "Invalid show condition '%s' for event '%s' on tab '%s'",
+                                                def.getString(ColumnName.FIELD_SHOW_CONDITION),
+                                                error.getValidationContext().getEventId(),
+                                                def.getSheetName()));
+    }
+
+    @Override
     public String createErrorMessage(CaseFieldEntityInvalidMetadataFieldValidationError error) {
         return newMessageIfDefinitionExists(error,
                                             error.getMetadataField(),
@@ -391,6 +418,12 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(
         EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError validationError) {
+        return withWorkSheetName(validationError);
+    }
+
+    @Override
+    public String createErrorMessage(
+        EventCaseFieldCaseHistoryViewerCaseFieldValidator.ValidationError validationError) {
         return withWorkSheetName(validationError);
     }
 

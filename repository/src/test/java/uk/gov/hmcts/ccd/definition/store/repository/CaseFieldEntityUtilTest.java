@@ -34,6 +34,29 @@ public class CaseFieldEntityUtilTest {
         assertTrue(result.contains("field3"));
     }
 
+    @Test
+    public void createsValidPossibilitiesForComplexFieldInACollection() {
+
+        List<CaseFieldEntity> fieldTypeEntity = asList(caseFieldEntity("field1"),
+            caseFieldEntity("field2", exampleCollectionFieldTypeEntityWithComplexFields()),
+            caseFieldEntity("field3"));
+
+        List<String> result = CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(fieldTypeEntity);
+
+        assertThat(result.size(), is(6));
+        assertTrue(result.contains("field1"));
+        assertTrue(result.contains("field2.NamePrefix"));
+        assertTrue(result.contains("field2.FirstName"));
+        assertTrue(result.contains("field2.MiddleName"));
+        assertTrue(result.contains("field2.LastNameWithSomeCplxFields.LastName"));
+        assertTrue(result.contains("field3"));
+    }
+
+    private static FieldTypeEntity exampleCollectionFieldTypeEntityWithComplexFields() {
+        return collectionFieldTypeEntity("field2-9602da3a-137a-43c2-9c0c-676ca00a5443",
+            exampleFieldTypeEntityWithComplexFields());
+    }
+
     private static FieldTypeEntity exampleFieldTypeEntityWithComplexFields() {
         return fieldTypeEntity("FullName",
             asList(
@@ -72,6 +95,13 @@ public class CaseFieldEntityUtilTest {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(reference);
         fieldTypeEntity.addComplexFields(complexFieldEntityList);
+        return fieldTypeEntity;
+    }
+
+    private static FieldTypeEntity collectionFieldTypeEntity(String reference, FieldTypeEntity collectionFieldType) {
+        FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
+        fieldTypeEntity.setReference(reference);
+        fieldTypeEntity.setCollectionFieldType(collectionFieldType);
         return fieldTypeEntity;
     }
 
