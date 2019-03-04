@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.rest.model;
 
 import uk.gov.hmcts.ccd.definition.store.rest.configuration.AdminWebAuthorizationProperties;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -10,10 +9,9 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 
-public class AdminWebAuthorization implements Serializable {
+public class AdminWebAuthorization {
 
     private boolean canManageUserProfile;
-
 
     public boolean getCanManageUserProfile() {
         return canManageUserProfile;
