@@ -4,8 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,8 +13,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,19 +22,14 @@ import java.util.stream.Collectors;
 public class BaseTypeController {
 
     private EntityToResponseDTOMapper entityToResponseDTOMapper;
-    private final HttpServletRequest httpServletRequest;
 
     private List<FieldTypeEntity> baseTypes;
 
-    private static final Logger LOG = LoggerFactory.getLogger(BaseTypeController.class);
-
     @Autowired
     public BaseTypeController(FieldTypeRepository fieldTypeRepository,
-                              EntityToResponseDTOMapper entityToResponseDTOMapper,
-                              HttpServletRequest httpServletRequest) {
+                              EntityToResponseDTOMapper entityToResponseDTOMapper) {
         this.baseTypes = fieldTypeRepository.findCurrentBaseTypes();
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
-        this.httpServletRequest = httpServletRequest;
     }
 
     @RequestMapping(value = "/base-types", method = RequestMethod.GET, produces = {"application/json"})
@@ -46,11 +37,7 @@ public class BaseTypeController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "All valid base types")
     })
-    public List<FieldType> getBaseTypes(HttpServletRequest request) {
-        final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            LOG.warn("header {}", headerNames.nextElement());
-        }
+    public List<FieldType> getBaseTypes() {
         return baseTypes.stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
     }
 }
