@@ -29,6 +29,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasL
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCaseHistoryViewerCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityInvalidShowConditionError;
@@ -128,6 +129,8 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(EventCaseFieldOrderSummaryCaseFieldValidator.ValidationError validationError);
 
     String createErrorMessage(EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError validationError);
+
+    String createErrorMessage(EventCaseFieldCaseHistoryViewerCaseFieldValidator.ValidationError validationError);
 
     String createErrorMessage(EventCaseFieldMetadataValidatorImpl.ValidationError error);
 

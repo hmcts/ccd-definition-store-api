@@ -56,6 +56,17 @@
           "case_fields_complex" : [ ]
         },
         {
+          "case_field_id": "CaseHistoryViewer",
+          "display_context": "READONLY",
+          "display_context_parameter" : null,
+          "show_condition": null,
+          "show_summary_change_option": false,
+          "show_summary_content_option": null,
+          "label": null,
+          "hint_text": null,
+          "case_fields_complex" : [ ]
+        },
+        {
           "case_field_id": "PersonFirstName",
           "display_context": "MANDATORY",
           "display_context_parameter" : null,
@@ -1631,6 +1642,37 @@
       "field_type": {
         "id": "CasePaymentHistoryViewer",
         "type": "CasePaymentHistoryViewer",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+      },
+      "hidden": null,
+      "security_classification": "PRIVATE",
+      "live_from": "2017-01-01",
+      "live_until": null,
+      "acls": [
+        {
+          "role": "CaseWorker3",
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false
+        }
+      ],
+      "show_condition" : null
+    },
+    {
+      "metadata": false,
+      "id": "CaseHistoryViewer",
+      "case_type_id": "TestAddressBookCase",
+      "label": "Case History",
+      "hint_text": null,
+      "field_type": {
+        "id": "CaseHistoryViewer",
+        "type": "CaseHistoryViewer",
         "min": null,
         "max": null,
         "regular_expression": null,
