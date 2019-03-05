@@ -1,4 +1,4 @@
-capacity = "2"
+capacity = "4"
 asp_name = "ccd-definition-store-api-sprod"
 asp_rg = "ccd-definition-store-api-sprod"
 elastic_search_enabled = "true"

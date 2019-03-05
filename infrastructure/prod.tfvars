@@ -1,5 +1,5 @@
 idam_api_url = "https://idam-api.platform.hmcts.net"
-capacity = "2"
+capacity = "4"
 frontend_url = "https://www.ccd.platform.hmcts.net"
 asp_name = "ccd-definition-store-api-prod"
 asp_rg = "ccd-definition-store-api-prod"
