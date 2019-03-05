@@ -28,7 +28,8 @@ class IdamProfileController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
         @ApiResponse(code = 200, message = "Unexpected error")
-    }) IdamProperties getIdamProfile() {
+    })
+    public IdamProperties getIdamProfile() {
         return idamProfileClient.getLoggedInUserDetails();
     }
 
