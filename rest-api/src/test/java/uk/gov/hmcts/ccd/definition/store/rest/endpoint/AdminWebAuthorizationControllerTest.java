@@ -19,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
@@ -48,29 +49,56 @@ class AdminWebAuthorizationControllerTest {
                                  .build();
     }
 
+    @DisplayName("Should get old behaviour if admin web authorization feature is not enabled")
+    @Test
+    void oldBehaviour() throws Exception {
+        given(adminWebAuthorizationProperties.isEnabled()).willReturn(false);
+        final AdminWebAuthorization result = callApi();
+        assertAll(
+            () -> assertTrue(result.getCanManageUserProfile()),
+            () -> assertTrue(result.getCanImportDefinition()),
+            () -> assertTrue(result.getCanManageDefinition()),
+            () -> assertTrue(result.getCanManageUserRole())
+            );
+    }
+
     @DisplayName("Should get no admin web authorization")
     @Test
     void getNoAdminWebAuthorization() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(get("/api/idam/adminweb/authorization")).andExpect(status().isOk()).andReturn();
-        assertThat(mvcResult.getResponse().getContentType(), is("application/json;charset=UTF-8"));
-        final AdminWebAuthorization
-            response =
-            MAPPER.readValue(mvcResult.getResponse().getContentAsString(), AdminWebAuthorization.class);
-        assertFalse(response.getCanManageUserProfile());
+        given(adminWebAuthorizationProperties.isEnabled()).willReturn(true);
+        final AdminWebAuthorization response = callApi();
+        assertAll(
+            () -> assertFalse(response.getCanManageUserProfile()),
+            () -> assertFalse(response.getCanImportDefinition()),
+            () -> assertFalse(response.getCanManageDefinition()),
+            () -> assertFalse(response.getCanManageUserRole())
+        );
     }
 
     @DisplayName("Should get admin web authorization")
     @Test
     void getAdminWebAuthorization() throws Exception {
 
+        given(adminWebAuthorizationProperties.isEnabled()).willReturn(true);
         given(adminWebAuthorizationProperties.getManageUserProfile()).willReturn(asList("fly"));
 
-        final MvcResult mvcResult = mockMvc.perform(get("/api/idam/adminweb/authorization")).andExpect(status().isOk()).andReturn();
+        final AdminWebAuthorization response = callApi();
+        assertAll(
+            () -> assertTrue(response.getCanManageUserProfile()),
+            () -> assertFalse(response.getCanImportDefinition()),
+            () -> assertFalse(response.getCanManageDefinition()),
+            () -> assertFalse(response.getCanManageUserRole())
+        );
+    }
+
+    private AdminWebAuthorization callApi() throws Exception {
+        final MvcResult
+            mvcResult = mockMvc.perform(get("/api/idam/adminweb/authorization")).andExpect(status().isOk()).andReturn();
         assertThat(mvcResult.getResponse().getContentType(), is("application/json;charset=UTF-8"));
         final AdminWebAuthorization
             response =
             MAPPER.readValue(mvcResult.getResponse().getContentAsString(), AdminWebAuthorization.class);
-        assertTrue(response.getCanManageUserProfile());
+        return response;
     }
 
     private IdamProperties buildIdamProperties() {

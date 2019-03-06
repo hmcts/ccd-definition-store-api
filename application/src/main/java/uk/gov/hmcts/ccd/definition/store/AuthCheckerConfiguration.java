@@ -22,7 +22,7 @@ public class AuthCheckerConfiguration {
     @VisibleForTesting
     protected static final String ROLE_CCD_IMPORT = "ccd-import";
     private static final String REGEX_URI_IMPORT = "^" + ImportController.URI_IMPORT  + "/?$";
-    private static final String REGEX_URI_USER_ROLE = "^/api/" + UserRoleController.URI_USER_ROLE + "/?$";
+    private static final String REGEX_URI_USER_ROLE = "^/api" + UserRoleController.URI_USER_ROLE + "/?$";
 
     @Value("#{'${casedefinitionstore.authorised.services}'.split(',')}")
     private List<String> authorisedServices;
