@@ -1,0 +1,14 @@
+jar {
+    baseName = 'definition-store-access-management-export'
+}
+
+bootRepackage {
+    enabled = false
+}
+
+dependencies {
+    compile project(':domain')
+    compile 'uk.gov.hmcts.reform:am-lib:0.0.8'
+    testCompile project(":repository").sourceSets.test.output
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
