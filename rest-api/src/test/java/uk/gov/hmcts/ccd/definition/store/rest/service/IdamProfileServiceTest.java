@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -46,7 +46,7 @@ class IdamProfileServiceTest {
     private ArgumentCaptor<HttpEntity> requestEntityCaptor;
 
     @Captor
-    private ArgumentCaptor<Class<IDAMProperties>> idamPropertiesClassCaptor;
+    private ArgumentCaptor<Class<IdamProperties>> idamPropertiesClassCaptor;
 
     @BeforeEach
     void setUp() {
@@ -57,7 +57,7 @@ class IdamProfileServiceTest {
     @Test
     public void shouldGetLoggedInUserDetails() {
         final HttpEntity requestEntity = setupMocksForIdam();
-        final IDAMProperties expectedIdamProperties = client.getLoggedInUserDetails();
+        final IdamProperties expectedIdamProperties = client.getLoggedInUserDetails();
         assertEquals("445", expectedIdamProperties.getId());
         assertEquals("user@hmcts.net", expectedIdamProperties.getEmail());
 
@@ -68,7 +68,7 @@ class IdamProfileServiceTest {
         assertEquals("http://idam.local/details", idamUserProfileURLCaptor.getValue());
         assertEquals(HttpMethod.GET, httpMethodCaptor.getValue());
         assertEquals(requestEntity, requestEntityCaptor.getValue());
-        assertEquals(IDAMProperties.class, idamPropertiesClassCaptor.getValue());
+        assertEquals(IdamProperties.class, idamPropertiesClassCaptor.getValue());
     }
 
     private HttpEntity setupMocksForIdam() {
@@ -77,12 +77,12 @@ class IdamProfileServiceTest {
         given(securityUtils.userAuthorizationHeaders()).willReturn(httpHeaders);
         final HttpEntity requestEntity = new HttpEntity(securityUtils.userAuthorizationHeaders());
         given(applicationParams.idamUserProfileURL()).willReturn("http://idam.local/details");
-        final IDAMProperties idamProperties = new IDAMProperties();
+        final IdamProperties idamProperties = new IdamProperties();
         idamProperties.setId("445");
         idamProperties.setEmail("user@hmcts.net");
-        final ResponseEntity<IDAMProperties> responseEntity = new ResponseEntity<>(idamProperties, HttpStatus.OK);
+        final ResponseEntity<IdamProperties> responseEntity = new ResponseEntity<>(idamProperties, HttpStatus.OK);
         given(restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
-                                    IDAMProperties.class)).willReturn(responseEntity);
+                                    IdamProperties.class)).willReturn(responseEntity);
         return requestEntity;
     }
 }

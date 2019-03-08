@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.model;
 
-public class IDAMProperties {
+public class IdamProperties {
     private String id;
     private String email;
     private String forename;
