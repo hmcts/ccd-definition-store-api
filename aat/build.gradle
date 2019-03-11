@@ -1,5 +1,5 @@
 dependencies {
-    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
+    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
 }
 
 sourceSets {
@@ -21,7 +21,7 @@ task smoke(type: Test) {
     systemProperty "https.proxyHost", System.getProperty('https.proxyHost')
     systemProperty "https.proxyPort", System.getProperty('https.proxyPort')
 
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
 
     group = 'Delivery pipeline'
     description = 'Executes smoke tests against an AAT CCD Data Store instance'

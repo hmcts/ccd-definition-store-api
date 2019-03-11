@@ -9,11 +9,11 @@ USER gradle
 WORKDIR /home/gradle/src
 RUN gradle assemble
 
-FROM hmcts/cnp-java-base:openjdk-8u191-jre-alpine3.9-1.0
-
-ENV JAVA_OPTS "-Djava.security.egd=file:/dev/./urandom"
+ARG JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
+FROM hmcts/cnp-java-base:openjdk-8u191-jre-alpine3.9-2.0
 
 COPY --from=builder /home/gradle/src/build/libs/case-definition-store-api.jar /opt/app/
+COPY lib/AI-Agent.xml /opt/app/
 
 HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" curl --silent --fail http://localhost:4451/status/health
 
