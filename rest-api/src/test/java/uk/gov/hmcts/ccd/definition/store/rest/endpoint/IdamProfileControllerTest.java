@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.util.List;
@@ -35,7 +35,7 @@ class IdamProfileControllerTest {
     @Mock
     private IdamProfileClient idamProfileClient;
 
-    private IDAMProperties idamProperties;
+    private IdamProperties idamProperties;
 
     @BeforeEach
     void setUp() {
@@ -52,14 +52,14 @@ class IdamProfileControllerTest {
     public void shouldGetIdamProfile() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(get("/api/idam/profile")).andExpect(status().isOk()).andReturn();
         assertThat(mvcResult.getResponse().getContentType(), is("application/json;charset=UTF-8"));
-        final IDAMProperties
+        final IdamProperties
             response =
-            MAPPER.readValue(mvcResult.getResponse().getContentAsString(), IDAMProperties.class);
+            MAPPER.readValue(mvcResult.getResponse().getContentAsString(), IdamProperties.class);
         assertThat(MAPPER.writeValueAsString(response), is(MAPPER.writeValueAsString(idamProperties)));
     }
 
-    private IDAMProperties buildIdamProperties() {
-        final IDAMProperties properties = new IDAMProperties();
+    private IdamProperties buildIdamProperties() {
+        final IdamProperties properties = new IdamProperties();
         properties.setId(randomAlphanumeric(20));
         properties.setEmail(randomAlphabetic(19) + "@example.com");
         properties.setForename(randomAlphabetic(15));
