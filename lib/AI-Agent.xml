@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ApplicationInsightsAgent>
+    <AgentLogger>INFO</AgentLogger>
+    <Instrumentation>
+        <BuiltIn enabled="true">
+            <HTTP enabled="true"/>
+            <JDBC enabled="true"/>
+            <MaxStatementQueryLimitInMS>1000</MaxStatementQueryLimitInMS>
+        </BuiltIn>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository" type="Data">
+            <Method name="findByDataFieldTypeAndCaseTypeNull"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository" type="Data">
+            <Method name="findCaseRoleEntitiesByCaseType"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository" type="Data">
+            <Method name="findByJurisdictionId"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository" type="Data">
+            <Method name="findLastVersion"/>
+            <Method name="findCurrentVersionForReference"/>
+            <Method name="findByJurisdictionId"/>
+            <Method name="caseTypeExistsInAnyJurisdiction"/>
+            <Method name="findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository" type="Data">
+            <Method name="findTabsByCaseTypeReference"/>
+            <Method name="findByTypeAndCaseTypeIdAndEventOrderByOrder"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.DraftDefinitionRepository" type="Data">
+            <Method name="findLastVersion"/>
+            <Method name="findLatestByJurisdictionId"/>
+            <Method name="findByJurisdictionId"/>
+            <Method name="findByJurisdictionIdAndVersion"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.EventRepository" type="Data">
+            <Method name="findByReferenceAndCaseTypeId"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository" type="Data">
+            <Method name="findLastVersion"/>
+            <Method name="findCurrentBaseTypes"/>
+            <Method name="findBaseType"/>
+            <Method name="findPredefinedComplexTypes"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository" type="Data">
+            <Method name="findWorkbasketInputByCaseTypeReference"/>
+            <Method name="findWorkbasketByCaseTypeReference"/>
+            <Method name="findSearchInputsByCaseTypeReference"/>
+            <Method name="findSearchResultsByCaseTypeReference"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository" type="Data">
+            <Method name="findLastVersion"/>
+            <Method name="findAllLatestVersionByReference"/>
+            <Method name="findAllLatestVersion"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository" type="Data">
+            <Method name="findByReference"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.SearchInputCaseFieldRepository" type="Data">
+            <Method name="findByCaseTypeId"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.SearchResultCaseFieldRepository" type="Data">
+            <Method name="findByCaseTypeId"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository" type="Data">
+            <Method name="findTopByReference"/>
+            <Method name="findByReferenceIn"/>
+            <Method name="findAll"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepository" type="Data">
+            <Method name="findLastVersion"/>
+            <Method name="findFirstByReferenceOrderByVersionDesc"/>
+        </Class>
+    </Instrumentation>
+</ApplicationInsightsAgent>
