@@ -34,7 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.io.IOException;
@@ -179,7 +179,7 @@ public class ImportServiceImpl implements ImportService {
 
         final UserProfilesParser userProfilesParser = parserFactory.createUserProfileParser();
         final List<WorkBasketUserDefault> workBasketUserDefaults = userProfilesParser.parse(definitionSheets);
-        final IDAMProperties userDetails = getUserDetails();
+        final IdamProperties userDetails = getUserDetails();
         workBasketUserDefaultService.saveWorkBasketUserDefaults(workBasketUserDefaults,
                                                                 jurisdiction,
                                                                 parsedCaseTypes.getAllResults(),
@@ -204,7 +204,7 @@ public class ImportServiceImpl implements ImportService {
     }
 
     @VisibleForTesting  // used by BaseTest
-    public IDAMProperties getUserDetails() {
+    public IdamProperties getUserDetails() {
         return idamProfileClient.getLoggedInUserDetails();
     }
 
