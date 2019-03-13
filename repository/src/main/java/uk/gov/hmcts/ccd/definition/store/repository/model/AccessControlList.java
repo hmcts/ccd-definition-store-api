@@ -1,6 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-public class AccessControlList {
+import java.io.Serializable;
+
+public class AccessControlList implements Serializable {
+
+    private static final long serialVersionUID = -52550538371850043L;
 
     private String role;
 

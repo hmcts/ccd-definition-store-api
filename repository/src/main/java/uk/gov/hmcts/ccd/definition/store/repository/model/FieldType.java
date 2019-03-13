@@ -1,14 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @ApiModel(description = "")
-public class FieldType {
+public class FieldType implements Serializable {
+
+    private static final long serialVersionUID = -1517707526426590927L;
 
     private String id = null;
     private String type = null;

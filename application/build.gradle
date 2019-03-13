@@ -19,8 +19,10 @@ dependencies {
     compile project(':elastic-search-support')
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-cache"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    compile group: 'net.sf.ehcache', name: 'ehcache'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
     runtime "org.liquibase:liquibase-core"
     testCompile project(":app-insights").sourceSets.main.output

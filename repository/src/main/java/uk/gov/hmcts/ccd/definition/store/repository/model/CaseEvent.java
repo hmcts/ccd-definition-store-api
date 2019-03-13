@@ -1,16 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 @ApiModel(description = "")
-public class CaseEvent implements HasAcls {
+public class CaseEvent implements HasAcls, Serializable {
+
+    private static final long serialVersionUID = -2691601540176003124L;
 
     private String id = null;
     private String name = null;
@@ -33,6 +36,7 @@ public class CaseEvent implements HasAcls {
     private String endButtonLabel = null;
 
     /**
+     *
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("id")
@@ -45,6 +49,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("name")
@@ -57,6 +62,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("description")
@@ -88,6 +94,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("pre_states")
@@ -100,6 +107,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("post_state")
@@ -112,6 +120,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("callback_url_about_to_start_event")
@@ -124,6 +133,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("retries_timeout_about_to_start_event")
@@ -136,6 +146,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("callback_url_about_to_submit_event")
@@ -148,6 +159,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("retries_timeout_url_about_to_submit_event")
@@ -160,6 +172,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("callback_url_submitted_event")
@@ -172,6 +185,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("retries_timeout_url_submitted_event")
@@ -203,6 +217,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      */
     @ApiModelProperty(value = "")
     @JsonProperty("show_summary")
@@ -215,6 +230,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     *
      */
     @ApiModelProperty(value = "")
     @JsonProperty("show_event_notes")

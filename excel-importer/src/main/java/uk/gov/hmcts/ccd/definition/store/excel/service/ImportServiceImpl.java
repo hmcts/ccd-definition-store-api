@@ -1,5 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+
 import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +14,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.cache.CaseDefinitionCacheEvictor;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
@@ -37,11 +43,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 @Component
 public class ImportServiceImpl implements ImportService {
 
@@ -59,6 +60,7 @@ public class ImportServiceImpl implements ImportService {
     private final CaseFieldRepository caseFieldRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final IdamProfileClient idamProfileClient;
+    private final CaseDefinitionCacheEvictor caseDefinitionCacheEvictor;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -72,7 +74,8 @@ public class ImportServiceImpl implements ImportService {
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
                              ApplicationEventPublisher applicationEventPublisher,
-                             IdamProfileClient idamProfileClient) {
+                             IdamProfileClient idamProfileClient,
+                             CaseDefinitionCacheEvictor caseDefinitionCacheEvictor) {
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
         this.parserFactory = parserFactory;
@@ -85,17 +88,18 @@ public class ImportServiceImpl implements ImportService {
         this.caseFieldRepository = caseFieldRepository;
         this.idamProfileClient = idamProfileClient;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.caseDefinitionCacheEvictor = caseDefinitionCacheEvictor;
     }
 
     /**
      * Imports the Case Definition data and inserts it into the database.
      *
      * @param inputStream the Case Definition data as an <code>InputStream</code>
+     * @return A {@link DefinitionFileUploadMetadata} instance containing the Jurisdiction and Case Types from the
+     * Definition data, and the user ID of the account used for importing the Definition
      * @throws IOException            in the event that there is a problem reading in the data
      * @throws InvalidImportException if any of the Case Definition sheets fails checks for a definition name and a row
      *                                of attribute headers
-     * @return A {@link DefinitionFileUploadMetadata} instance containing the Jurisdiction and Case Types from the
-     *         Definition data, and the user ID of the account used for importing the Definition
      */
     @Override
     public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream) throws IOException {
@@ -199,6 +203,9 @@ public class ImportServiceImpl implements ImportService {
         }
 
         metadata.setUserId(userDetails.getEmail());
+
+        logger.info("Clearing the case definition cache");
+        caseTypes.forEach(caseType -> caseDefinitionCacheEvictor.evictCaseTypeDefinition(caseType.getReference()));
 
         return metadata;
     }

@@ -7,7 +7,9 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
@@ -24,6 +26,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 
 @Component
+@Slf4j
 public class CaseTypeServiceImpl implements CaseTypeService {
 
     private final CaseTypeRepository repository;
@@ -94,14 +97,18 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     @Override
+    @Cacheable(value = "caseTypeDefinitionCache", key = "#id")
     public Optional<CaseType> findByCaseTypeId(String id) {
+        log.info("Finding latest case type by ID: {}", id);
         return repository.findCurrentVersionForReference(id)
             .map(dtoMapper::map)
             .map(this::addMetadataFields);
     }
 
     @Override
-    public Optional<CaseTypeVersionInformation> findVersionInfoByCaseTypeId(final String id) {
+    @Cacheable(value = "caseTypeVersionCache", key = "#id")
+    public Optional<CaseTypeVersionInformation> findVersionInfoByCaseTypeId(String id) {
+        log.info("Finding last version for case type ID: {}", id);
         return repository.findLastVersion(id)
             .map(CaseTypeVersionInformation::new);
     }

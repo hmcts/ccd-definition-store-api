@@ -1,14 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @ApiModel(description = "")
-public class CaseField implements HasAcls {
+public class CaseField implements HasAcls, Serializable {
+
+    private static final long serialVersionUID = 4444200136547401928L;
 
     private String id = null;
     private String caseTypeId = null;
@@ -50,6 +53,7 @@ public class CaseField implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("label")
@@ -62,6 +66,7 @@ public class CaseField implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("hint_text")
@@ -74,6 +79,7 @@ public class CaseField implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("field_type")
@@ -86,6 +92,7 @@ public class CaseField implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("hidden")
@@ -111,6 +118,7 @@ public class CaseField implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("live_from")
@@ -123,6 +131,7 @@ public class CaseField implements HasAcls {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("live_until")

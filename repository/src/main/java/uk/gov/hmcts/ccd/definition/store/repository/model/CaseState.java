@@ -1,14 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @ApiModel(description = "")
-public class CaseState {
+public class CaseState implements Serializable {
+
+    private static final long serialVersionUID = 2065842677284492892L;
 
     private String id = null;
     private String name = null;
@@ -18,6 +21,7 @@ public class CaseState {
     private List<AccessControlList> acls = new ArrayList<>();
 
     /**
+     *
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("id")
@@ -43,6 +47,7 @@ public class CaseState {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("description")

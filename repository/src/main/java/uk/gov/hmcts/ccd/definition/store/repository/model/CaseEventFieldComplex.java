@@ -1,8 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import java.io.Serializable;
+
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 
-public class CaseEventFieldComplex {
+public class CaseEventFieldComplex implements Serializable {
+
+    private static final long serialVersionUID = -8674941327315309450L;
 
     private String reference;
 

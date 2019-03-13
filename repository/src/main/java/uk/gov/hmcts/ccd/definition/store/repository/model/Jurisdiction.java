@@ -1,15 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 @ApiModel(description = "")
-public class Jurisdiction {
+public class Jurisdiction implements Serializable {
+
+    private static final long serialVersionUID = -2808726106072103927L;
 
     private String id = null;
     private String name = null;
@@ -21,6 +24,7 @@ public class Jurisdiction {
     private List<CaseTypeLite> caseTypes = new ArrayList<>();
 
     /**
+     *
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("id")
@@ -33,6 +37,7 @@ public class Jurisdiction {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("name")
@@ -45,6 +50,7 @@ public class Jurisdiction {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("description")
@@ -57,6 +63,7 @@ public class Jurisdiction {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("live_from")
@@ -69,6 +76,7 @@ public class Jurisdiction {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("live_until")
@@ -81,6 +89,7 @@ public class Jurisdiction {
     }
 
     /**
+     *
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("case_types")

@@ -1,13 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
-
 @ApiModel(description = "")
-public class Version {
+public class Version implements Serializable {
+
+    private static final long serialVersionUID = 1886051203323303930L;
 
     private Integer number = null;
     private Date liveFrom = null;
