@@ -7,6 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.accessmanagement.service.AccessManagementExportService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.event.RoleImportedEvent;
 
 @Slf4j
 @ConditionalOnExpression("'${accessmanagement.enabled}'=='true'")
@@ -23,5 +24,10 @@ public class AccessManagementDefinitionImportListener {
     @EventListener
     public void onDefinitionImported(DefinitionImportedEvent event) {
         accessManagementExportService.exportToAccessManagement(event);
+    }
+
+    @EventListener
+    public void onRoleImported(RoleImportedEvent event) {
+        accessManagementExportService.exportRoleToAccessManagement(event);
     }
 }

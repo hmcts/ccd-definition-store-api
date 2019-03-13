@@ -9,10 +9,13 @@ import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOper
 import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toEntity;
 import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toModel;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
+import uk.gov.hmcts.ccd.definition.store.event.RoleImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
@@ -22,9 +25,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper;
 public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository repository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    UserRoleServiceImpl(final UserRoleRepository repository) {
+    @Autowired
+    UserRoleServiceImpl(final UserRoleRepository repository, final ApplicationEventPublisher applicationEventPublisher) {
         this.repository = repository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -46,6 +52,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             entity = toEntity(userRole);
             roleFound = false;
         }
+        applicationEventPublisher.publishEvent(new RoleImportedEvent(entity));
         return new ServiceResponse<>(toModel(repository.save(entity)), roleFound ? UPDATE : CREATE);
     }
 

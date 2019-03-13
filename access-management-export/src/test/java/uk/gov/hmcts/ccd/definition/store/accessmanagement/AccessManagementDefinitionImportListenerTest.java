@@ -7,7 +7,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.ccd.definition.store.accessmanagement.service.AccessManagementExportService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.event.RoleImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -26,11 +29,21 @@ public class AccessManagementDefinitionImportListenerTest {
 
     @Test
     public void shouldCallAccessManagementExportService() {
-        listener.onDefinitionImported(newEvent(caseTypeEntity));
+        listener.onDefinitionImported(newDefinitionImportedEvent(caseTypeEntity));
         verify(accessManagementExportService, times(1)).exportToAccessManagement(isA(DefinitionImportedEvent.class));
+
+        listener.onRoleImported(newRoleImportedEvent());
+        verify(accessManagementExportService, times(1)).exportRoleToAccessManagement(isA(RoleImportedEvent.class));
     }
 
-    private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
+    private DefinitionImportedEvent newDefinitionImportedEvent(CaseTypeEntity... caseTypes) {
         return new DefinitionImportedEvent(newArrayList(caseTypes));
+    }
+
+    private RoleImportedEvent newRoleImportedEvent() {
+        UserRoleEntity role = new UserRoleEntity();
+        role.setName("name");
+        role.setSecurityClassification(SecurityClassification.valueOf("PUBLIC"));
+        return new RoleImportedEvent(role);
     }
 }

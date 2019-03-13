@@ -21,8 +21,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
+import uk.gov.hmcts.ccd.definition.store.event.RoleImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
@@ -32,6 +34,7 @@ class UserRoleServiceImplTest {
 
     private UserRoleRepository repository;
     private UserRoleService service;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private UserRoleEntity entity = mock(UserRoleEntity.class);
     private UserRole mockUserRole = mock(UserRole.class);
@@ -39,7 +42,8 @@ class UserRoleServiceImplTest {
     @BeforeEach
     void setUp() {
         repository = mock(UserRoleRepository.class);
-        service = new UserRoleServiceImpl(repository);
+        applicationEventPublisher = mock(ApplicationEventPublisher.class);
+        service = new UserRoleServiceImpl(repository, applicationEventPublisher);
     }
 
     @Nested
@@ -103,6 +107,7 @@ class UserRoleServiceImplTest {
 
             assertThat(saved.getRole(), is(role));
             assertThat(saved.getSecurityClassification(), is(RESTRICTED));
+            verify(applicationEventPublisher).publishEvent(any(RoleImportedEvent.class));
 
         }
 
@@ -132,6 +137,7 @@ class UserRoleServiceImplTest {
 
             assertThat(saved.getRole(), is(role));
             assertThat(saved.getSecurityClassification(), is(PUBLIC));
+            verify(applicationEventPublisher).publishEvent(any(RoleImportedEvent.class));
         }
     }
 

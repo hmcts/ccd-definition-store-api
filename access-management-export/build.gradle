@@ -8,7 +8,12 @@ bootRepackage {
 
 dependencies {
     compile project(':domain')
-    compile 'uk.gov.hmcts.reform:am-lib:0.0.8'
+    compile 'uk.gov.hmcts.reform:am-lib:0.2.0'
+
+    // need these for command line to pass in the gradle version,
+    // intellij does not need the next 2 lines though
+    testCompile project(path: ':domain', configuration: 'testOutput')
+    testCompile project(":domain").sourceSets.main.output
     testCompile project(":repository").sourceSets.test.output
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

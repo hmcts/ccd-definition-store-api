@@ -11,12 +11,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntit
 public class CaseTypeBuilder {
 
     private String jurisdictionReference;
+    private String jurisdictionDescription;
     private String caseTypeReference;
     private final List<CaseFieldEntity> fields = new ArrayList<>();
     private final List<SearchAliasFieldEntity> searchAliasFields = new ArrayList<>();
 
     public CaseTypeBuilder withJurisdiction(String reference) {
         this.jurisdictionReference = reference;
+        return this;
+    }
+
+    public CaseTypeBuilder withJurisdictionDescription(String jurisdictionDescription) {
+        this.jurisdictionDescription = jurisdictionDescription;
         return this;
     }
 
@@ -38,6 +44,7 @@ public class CaseTypeBuilder {
     public CaseTypeEntity build() {
         final JurisdictionEntity jurisdiction = new JurisdictionEntity();
         jurisdiction.setReference(this.jurisdictionReference);
+        jurisdiction.setDescription(this.jurisdictionDescription);
         CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setJurisdiction(jurisdiction);
         caseType.setReference(this.caseTypeReference);
