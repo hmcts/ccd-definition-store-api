@@ -24,7 +24,7 @@ public class AccessManagementExportService {
     }
 
     public void exportToAccessManagement(DefinitionImportedEvent event) {
-        event.getContent().iterator().forEachRemaining(caseTypeEntity -> addService(caseTypeEntity));
+        event.getContent().iterator().forEachRemaining(this::addService);
     }
 
     private void addService(CaseTypeEntity caseTypeEntity) {
@@ -37,7 +37,6 @@ public class AccessManagementExportService {
     }
 
     private void addRole(UserRoleEntity userRoleEntity) {
-        //TODO add creator role also
         defaultRoleSetupImportService.addRole(userRoleEntity.getName(), RoleType.RESOURCE,
             SecurityClassification.valueOf(userRoleEntity.getSecurityClassification().name()), AccessType.ROLE_BASED);
     }
