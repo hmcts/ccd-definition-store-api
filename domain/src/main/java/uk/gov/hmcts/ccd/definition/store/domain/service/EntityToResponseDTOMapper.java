@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
@@ -109,7 +110,14 @@ public interface EntityToResponseDTOMapper {
     CaseField map(CaseFieldEntity caseFieldEntity);
 
     @Mapping(source = "fieldTypeEntity.reference", target = "id")
-    @Mapping(source = "fieldTypeEntity.listItems", target = "fixedListItems")
+    @Mapping(
+        expression = "java("
+                     + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.ListItemsMapper.map("
+                     + "               fieldTypeEntity"
+                     + "           )"
+                     + "       )",
+        target = "fixedListItems"
+    )
     @Mapping(source = "fieldTypeEntity.minimum", target = "min")
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
     @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null"
@@ -171,4 +179,41 @@ public interface EntityToResponseDTOMapper {
                 .collect(Collectors.toList());
         }
     }
+
+    // Mapper to call fieldTypeEntity listItems only for fixedList items not for all fields.
+    // It improves performance.
+    class ListItemsMapper {
+        private static String FIXED_LIST = "FixedList";
+        private ListItemsMapper() {
+            // Default constructor
+        }
+
+        static List<FixedListItem> map(FieldTypeEntity fieldTypeEntity) {
+            List<FixedListItem> fixedListItems = new ArrayList<>();
+
+            FieldTypeEntity baseFieldTypeEntity = fieldTypeEntity.getBaseFieldType();
+            if (baseFieldTypeEntity == null && FIXED_LIST.equalsIgnoreCase(fieldTypeEntity.getReference())) {
+                extractListItems(fieldTypeEntity, fixedListItems);
+            } else if (baseFieldTypeEntity != null &&
+                       FIXED_LIST.equalsIgnoreCase(baseFieldTypeEntity.getReference())) {
+                extractListItems(fieldTypeEntity, fixedListItems);
+            }
+            return fixedListItems;
+        }
+
+        private static void extractListItems(final FieldTypeEntity fieldTypeEntity,
+                                             final List<FixedListItem> fixedListItems) {
+            fieldTypeEntity.getListItems().stream().forEach(fieldTypeListItemEntity ->
+                                                            {
+                                                                FixedListItem fixedListItem = new FixedListItem();
+                                                                fixedListItem
+                                                                    .setCode(fieldTypeListItemEntity.getValue());
+                                                                fixedListItem
+                                                                    .setLabel(fieldTypeListItemEntity.getLabel());
+                                                                fixedListItems.add(fixedListItem);
+                                                            }
+                                                           );
+        }
+    }
+
 }
