@@ -126,6 +126,14 @@ module "case-definition-store-api" {
     ELASTIC_SEARCH_FAIL_ON_IMPORT = "${var.elastic_search_fail_on_import}"
     ELASTIC_SEARCH_DYNAMIC = "${var.elastic_search_dynamc}"
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT = "${var.elastic_search_case_index_name_format}"
+
+    // Role-based authorization for CCD Admin Web
+    ADMIN_WEB_AUTHORIZATION_ENABLED = "false" // Needs enabling once the appropriate roles are created in IdAM
+    ADMIN_WEB_AUTHORIZATION_MANAGE_USER_PROFILE_0 = "ccd-import"
+    ADMIN_WEB_AUTHORIZATION_MANAGE_USER_ROLE_0 = "ccd-import"
+    ADMIN_WEB_AUTHORIZATION_MANAGE_DEFINITION_0 = "ccd-import"
+    ADMIN_WEB_AUTHORIZATION_IMPORT_DEFINITION_0 = "ccd-import"
+    // TODO More roles to be added to the appropriate actions, once they are created in IdAM
   }
   common_tags = "${var.common_tags}"
 }
