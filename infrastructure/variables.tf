@@ -72,6 +72,18 @@ variable "database_name" {
   default = "ccd_definition_store"
 }
 
+variable "database_sku_name" {
+  default = "GP_Gen5_2"
+}
+
+variable "database_sku_capacity" {
+  default = "2"
+}
+
+variable "database_max_pool_size" {
+  default = "5"
+}
+
 ////////////////////////////////
 // IDAM
 ////////////////////////////////
