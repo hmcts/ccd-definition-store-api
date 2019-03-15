@@ -81,7 +81,7 @@ variable "database_sku_capacity" {
 }
 
 variable "database_max_pool_size" {
-  default = "5"
+  default = "16"
 }
 
 ////////////////////////////////
