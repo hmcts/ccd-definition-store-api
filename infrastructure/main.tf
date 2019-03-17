@@ -100,6 +100,7 @@ module "case-definition-store-api" {
     DEFINITION_STORE_DB_USERNAME = "${module.definition-store-db.user_name}"
     DEFINITION_STORE_DB_PASSWORD = "${module.definition-store-db.postgresql_password}"
     DEFINITION_STORE_DB_OPTIONS = "?sslmode=require"
+    DEFINITION_STORE_DB_MAX_POOL_SIZE = "${var.database_max_pool_size}"
 
     ENABLE_DB_MIGRATE = "false"
 
@@ -145,8 +146,9 @@ module "definition-store-db" {
   env = "${var.env}"
   postgresql_user = "${var.postgresql_user}"
   database_name = "${var.database_name}"
-  sku_name = "GP_Gen5_2"
+  sku_name = "${var.database_sku_name}"
   sku_tier = "GeneralPurpose"
+  sku_capacity = "${var.database_sku_capacity}"
   storage_mb = "51200"
   common_tags  = "${var.common_tags}"
 }
