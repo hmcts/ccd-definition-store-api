@@ -182,7 +182,7 @@ subprojects { subproject ->
             // TODO remove when auth-checker-lib upgrades its dependency to spring boot 2.0.x
             exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
         }
-        compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
+        compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.1'
         compile('org.springframework.boot:spring-boot-starter-web')
         compile('org.springframework.boot:spring-boot-starter-data-jpa') {
             exclude group: 'org.hibernate', module: 'hibernate-core'
