@@ -11,6 +11,12 @@ java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   applicationPort: 4451
+  applicationInsightsInstrumentKey: "fake-key"
+  keyVaults:
+    s2s:
+      resourceGroup: rpe-service-auth-provider
+      secrets:
+        - microservicekey-ccd-definition
   environment:
     DEFINITION_STORE_DB_HOST: ${SERVICE_NAME}-postgres
     DEFINITION_STORE_DB_PORT: 5432
@@ -21,7 +27,6 @@ java:
     ENABLE_DB_MIGRATE: true
 
     IDAM_USER_URL: http://betaDevBccidamAppLB.reform.hmcts.net
-    DEFINITION_STORE_IDAM_KEY: ${CCD_DEFINITION_SERVICE_SECRET}
 
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp
 
@@ -40,4 +45,5 @@ java:
     ELASTIC_SEARCH_DYNAMIC: false
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT: '%s_cases'
 
-    APPINSIGHTS_INSTRUMENTATIONKEY: fake-key
+tags:
+  postgresql-pod: true

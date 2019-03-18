@@ -80,7 +80,7 @@ public class LayoutServiceImplTest {
         entity2.setCaseType(caseTypeEntity2);
         classUnderTest.createGenerics(Arrays.asList(entity1, entity2));
 
-        verify(genericRepository).save(genericLayoutCaptor.capture());
+        verify(genericRepository).saveAll(genericLayoutCaptor.capture());
         Collection<GenericLayoutEntity> savedDisplayGroupEntities = genericLayoutCaptor.getValue();
         assertEquals(2, savedDisplayGroupEntities.size());
         assertThat(savedDisplayGroupEntities, allOf(hasItem(entity1), hasItem(entity2)));
@@ -107,7 +107,7 @@ public class LayoutServiceImplTest {
         final List<DisplayGroupEntity> displayGroupEntities = Arrays.asList(dg1, dg2);
         classUnderTest.createDisplayGroups(displayGroupEntities);
 
-        verify(displayGroupRepository).save(displayGroupCaptor.capture());
+        verify(displayGroupRepository).saveAll(displayGroupCaptor.capture());
         Collection<DisplayGroupEntity> savedDisplayGroupEntities = displayGroupCaptor.getValue();
         assertEquals(2, savedDisplayGroupEntities.size());
         assertThat(savedDisplayGroupEntities, allOf(hasItem(dg1), hasItem(dg2)));

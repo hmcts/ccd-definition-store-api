@@ -4,14 +4,14 @@ import com.microsoft.applicationinsights.TelemetryClient;
 import com.microsoft.applicationinsights.telemetry.Duration;
 import com.microsoft.applicationinsights.telemetry.RequestTelemetry;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.logging.appinsights.AbstractAppInsights;
 
 @Component
-public class AppInsights extends AbstractAppInsights {
+public class AppInsights {
     private static final String MODULE = "CASE_DEFINITION";
+    private final TelemetryClient telemetry;
 
     public AppInsights(TelemetryClient telemetry) {
-        super(telemetry);
+        this.telemetry = telemetry;
     }
 
     public void trackRequest(long duration, boolean success) {
