@@ -14,16 +14,21 @@ configurations {
 }
 
 jar {
-    baseName = 'definition-store-domain'
+    enabled = true
+    manifest {
+        attributes 'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+    }
+    archiveName = 'definition-store-domain.jar'
 }
 
-bootRepackage {
+bootJar {
     enabled = false
 }
 
 ext {
     mapstructGenSourceDir = 'build/classes/java/main'
-    orgMapstructVersion='1.2.0.Final'
+    orgMapstructVersion='1.3.0.Final'
 }
 
 dependencies {
