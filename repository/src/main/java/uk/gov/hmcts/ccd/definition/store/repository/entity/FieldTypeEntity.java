@@ -172,4 +172,8 @@ public class FieldTypeEntity implements Serializable, Versionable {
         return String.format("%s-%s", id, UUID.randomUUID());
     }
 
+    public static boolean isFixedList(String reference) {
+        return "FixedList".equalsIgnoreCase(reference);
+    }
+
 }

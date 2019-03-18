@@ -151,7 +151,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "fieldTypeEntity.reference", target = "id")
     @Mapping(
         expression = "java("
-                     + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.ListItemsMapper.map("
+                     + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.FieldTypeEntityMapper.map("
                      + "               fieldTypeEntity"
                      + "           )"
                      + "       )",
@@ -254,20 +254,14 @@ public interface EntityToResponseDTOMapper {
 
     // Mapper to call fieldTypeEntity listItems only for fixedList items not for all fields.
     // It improves performance.
-    class ListItemsMapper {
-        private static String FIXED_LIST = "FixedList";
-        private ListItemsMapper() {
+    class FieldTypeEntityMapper {
+        private FieldTypeEntityMapper() {
             // Default constructor
         }
 
         static List<FixedListItem> map(FieldTypeEntity fieldTypeEntity) {
             List<FixedListItem> fixedListItems = new ArrayList<>();
-
-            FieldTypeEntity baseFieldTypeEntity = fieldTypeEntity.getBaseFieldType();
-            if (baseFieldTypeEntity == null && FIXED_LIST.equalsIgnoreCase(fieldTypeEntity.getReference())) {
-                extractListItems(fieldTypeEntity, fixedListItems);
-            } else if (baseFieldTypeEntity != null &&
-                       FIXED_LIST.equalsIgnoreCase(baseFieldTypeEntity.getReference())) {
+            if (FieldTypeEntity.isFixedList(fieldTypeEntity.getBaseFieldType().getReference())) {
                 extractListItems(fieldTypeEntity, fixedListItems);
             }
             return fixedListItems;
