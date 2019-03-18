@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import org.hibernate.annotations.FetchMode;
 
 @Table(name = "field_type")
 @Entity
-public class FieldTypeEntity implements Versionable {
+public class FieldTypeEntity extends VersionableDefEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)

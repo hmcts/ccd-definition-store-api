@@ -27,7 +27,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
     typeClass = PostgreSQLEnumType.class,
     parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
-public class EventEntity implements DefEntity {
+public class EventEntity extends DefEntity {
 
     @Id
     @Column(name = "id")

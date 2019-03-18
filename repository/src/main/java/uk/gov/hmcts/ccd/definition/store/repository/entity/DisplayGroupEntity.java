@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 @Table(name = "display_group")
 @Entity
-public class DisplayGroupEntity implements DefEntity {
+public class DisplayGroupEntity extends DefEntity {
 
     @Id
     @Column(name = "id")

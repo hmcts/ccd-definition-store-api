@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -11,7 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Table(name = "jurisdiction")
 @Entity
-public class JurisdictionEntity implements Versionable {
+public class JurisdictionEntity extends VersionableDefEntity {
 
     @Id
     @Column(name = "id")

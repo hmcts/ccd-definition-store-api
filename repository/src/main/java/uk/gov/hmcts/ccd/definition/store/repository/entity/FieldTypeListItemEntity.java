@@ -7,7 +7,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "field_type_list_item")
 @Entity
-public class FieldTypeListItemEntity implements DefEntity {
+public class FieldTypeListItemEntity extends DefEntity {
 
     @Id
     @Column(name = "id")

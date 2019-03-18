@@ -15,7 +15,7 @@ import org.hibernate.annotations.FetchMode;
 
 @Table(name = "state")
 @Entity
-public class StateEntity implements DefEntity, Referencable {
+public class StateEntity extends DefEntity implements Referencable {
 
     @Id
     @Column(name = "id")

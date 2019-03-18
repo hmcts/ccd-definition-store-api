@@ -25,7 +25,7 @@ import static javax.persistence.FetchType.LAZY;
     typeClass = PostgreSQLEnumType.class,
     parameters = @org.hibernate.annotations.Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
 )
-public class EventComplexTypeEntity implements DefEntity {
+public class EventComplexTypeEntity extends DefEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -19,7 +19,7 @@ import org.hibernate.annotations.Fetch;
  */
 @Table(name = "event")
 @Entity
-public class EventLiteEntity implements DefEntity, Referencable {
+public class EventLiteEntity extends DefEntity implements Referencable {
 
     @Id
     @Column(name = "id")

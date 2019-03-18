@@ -34,7 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
         parameters = @Parameter(name = "type",
             value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType")
     )})
-public class CaseFieldEntity implements DefEntity, FieldEntity {
+public class CaseFieldEntity extends DefEntity implements FieldEntity {
 
     @Id
     @Column(name = "id")

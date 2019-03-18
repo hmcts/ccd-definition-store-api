@@ -23,7 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("USERROLE")
-public class UserRoleEntity implements DefEntity {
+public class UserRoleEntity extends DefEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)

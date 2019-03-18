@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 @Table(name = "display_group_case_field")
 @Entity
-public class DisplayGroupCaseFieldEntity implements DefEntity {
+public class DisplayGroupCaseFieldEntity extends DefEntity {
 
     @Id
     @Column(name = "id")

@@ -5,15 +5,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.util.ReferenceUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.write.repository.FieldTypeWriteRepository;
-import uk.gov.hmcts.ccd.definition.store.write.repository.VersionedDefinitionRepositoryDecorator;
+import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
-import uk.gov.hmcts.ccd.definition.store.write.repository.VersionedWriteDefinitionRepository;
-import uk.gov.hmcts.ccd.definition.store.write.repository.WriteDefinitionRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,8 +29,8 @@ public class StateMetadataCaseFieldEntityFactory implements MetadataCaseFieldEnt
     private final VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedRepository;
 
     @Autowired
-    public StateMetadataCaseFieldEntityFactory(FieldTypeWriteRepository writeRepository) {
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(writeRepository);
+    public StateMetadataCaseFieldEntityFactory(FieldTypeRepository repository) {
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.write.repository.VersionedDefinitionRepositoryDecorator;
+import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;

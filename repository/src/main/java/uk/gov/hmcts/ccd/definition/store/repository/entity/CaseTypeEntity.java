@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
     typeClass = PostgreSQLEnumType.class,
     parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
-public class CaseTypeEntity implements Versionable {
+public class CaseTypeEntity extends VersionableDefEntity {
 
     private static final long serialVersionUID = 542723327314434924L;
     @Id

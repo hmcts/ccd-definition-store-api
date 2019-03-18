@@ -18,12 +18,10 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.write.repository.CaseTypeWriteRepository;
-import uk.gov.hmcts.ccd.definition.store.write.repository.VersionedDefinitionRepositoryDecorator;
+import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
-import uk.gov.hmcts.ccd.definition.store.write.repository.VersionedWriteDefinitionRepository;
 
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
@@ -40,14 +38,13 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                                EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
-                               MetadataFieldService metadataFieldService,
-                               CaseTypeWriteRepository writeDefinitionRepository
-                               ) {
+                               MetadataFieldService metadataFieldService
+    ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
         this.legacyCaseTypeValidator = legacyCaseTypeValidator;
         this.caseTypeEntityValidators = caseTypeEntityValidators;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(writeDefinitionRepository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
         this.metadataFieldService = metadataFieldService;
     }
 
