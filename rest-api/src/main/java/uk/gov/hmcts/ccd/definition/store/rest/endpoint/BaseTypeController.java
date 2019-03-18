@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 public class BaseTypeController {
 
     private EntityToResponseDTOMapper entityToResponseDTOMapper;
-
+    private FieldTypeRepository fieldTypeRepository;
     private List<FieldTypeEntity> baseTypes;
 
     @Autowired
     public BaseTypeController(FieldTypeRepository fieldTypeRepository,
                               EntityToResponseDTOMapper entityToResponseDTOMapper) {
-        this.baseTypes = fieldTypeRepository.findCurrentBaseTypes();
+        this.fieldTypeRepository = fieldTypeRepository;
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
     }
 
@@ -38,6 +38,9 @@ public class BaseTypeController {
         @ApiResponse(code = 200, message = "All valid base types")
     })
     public List<FieldType> getBaseTypes() {
+        if(baseTypes == null) {
+            baseTypes = fieldTypeRepository.findCurrentBaseTypes();
+        }
         return baseTypes.stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
     }
 }
