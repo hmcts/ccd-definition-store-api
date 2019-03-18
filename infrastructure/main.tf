@@ -100,6 +100,7 @@ module "case-definition-store-api" {
     DEFINITION_STORE_DB_USERNAME = "${module.definition-store-db.user_name}"
     DEFINITION_STORE_DB_PASSWORD = "${module.definition-store-db.postgresql_password}"
     DEFINITION_STORE_DB_OPTIONS = "?sslmode=require"
+    DEFINITION_STORE_DB_MAX_POOL_SIZE = "${var.database_max_pool_size}"
 
     ENABLE_DB_MIGRATE = "false"
 
@@ -126,6 +127,14 @@ module "case-definition-store-api" {
     ELASTIC_SEARCH_FAIL_ON_IMPORT = "${var.elastic_search_fail_on_import}"
     ELASTIC_SEARCH_DYNAMIC = "${var.elastic_search_dynamc}"
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT = "${var.elastic_search_case_index_name_format}"
+
+    // Role-based authorization for CCD Admin Web
+    ADMIN_WEB_AUTHORIZATION_ENABLED = "false" // Needs enabling once the appropriate roles are created in IdAM
+    ADMIN_WEB_AUTHORIZATION_MANAGE_USER_PROFILE_0 = "ccd-import"
+    ADMIN_WEB_AUTHORIZATION_MANAGE_USER_ROLE_0 = "ccd-import"
+    ADMIN_WEB_AUTHORIZATION_MANAGE_DEFINITION_0 = "ccd-import"
+    ADMIN_WEB_AUTHORIZATION_IMPORT_DEFINITION_0 = "ccd-import"
+    // TODO More roles to be added to the appropriate actions, once they are created in IdAM
   }
   common_tags = "${var.common_tags}"
 }
@@ -137,8 +146,9 @@ module "definition-store-db" {
   env = "${var.env}"
   postgresql_user = "${var.postgresql_user}"
   database_name = "${var.database_name}"
-  sku_name = "GP_Gen5_2"
+  sku_name = "${var.database_sku_name}"
   sku_tier = "GeneralPurpose"
+  sku_capacity = "${var.database_sku_capacity}"
   storage_mb = "51200"
   common_tags  = "${var.common_tags}"
 }
