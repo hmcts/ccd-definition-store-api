@@ -8,8 +8,8 @@ import java.util.Optional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.VersionableDefEntity;
 import uk.gov.hmcts.ccd.definition.store.write.repository.DefEntityWriteRepository;
 
-public class VersionedDefinitionRepositoryDecorator<T extends VersionableDefEntity, ID extends Serializable> extends AbstractDefinitionRepositoryDecorator<T, ID,
-    VersionedDefinitionRepository<T, ID>> {
+public class VersionedDefinitionRepositoryDecorator<T extends VersionableDefEntity, ID extends Serializable>
+    extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
 
     private DefEntityWriteRepository defEntityRepository;
 
