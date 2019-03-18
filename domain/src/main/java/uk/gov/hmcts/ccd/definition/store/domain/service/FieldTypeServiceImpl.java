@@ -12,6 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.CustomDefEntityRepository;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,9 +29,11 @@ public class FieldTypeServiceImpl implements FieldTypeService {
     @Autowired
     public FieldTypeServiceImpl(FieldTypeRepository repository,
                                 FieldTypeValidationContextFactory validationContextFactory,
-                                List<FieldTypeValidator> validators) {
+                                List<FieldTypeValidator> validators,
+                                CustomDefEntityRepository defEntityRepository
+                                ) {
         this.repository = repository;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, defEntityRepository);
         this.validationContextFactory = validationContextFactory;
         this.validators = validators;
     }

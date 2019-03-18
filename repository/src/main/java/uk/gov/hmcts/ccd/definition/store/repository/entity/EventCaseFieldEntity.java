@@ -72,6 +72,11 @@ public class EventCaseFieldEntity extends DefEntity {
     @Column(name = "hint_text")
     private String hintText;
 
+    @Override
+    public Integer getId() {
+        return this.id;
+    }
+
     public DisplayContext getDisplayContext() {
         return displayContext;
     }

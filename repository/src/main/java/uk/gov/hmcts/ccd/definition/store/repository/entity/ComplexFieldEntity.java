@@ -61,6 +61,11 @@ public class ComplexFieldEntity extends DefEntity implements FieldEntity {
         this.reference = reference;
     }
 
+    @Override
+    public Integer getId() {
+        return this.id;
+    }
+
     public String getLabel() {
         return label;
     }

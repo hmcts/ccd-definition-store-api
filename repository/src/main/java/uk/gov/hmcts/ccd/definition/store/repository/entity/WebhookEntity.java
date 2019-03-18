@@ -26,6 +26,11 @@ public class WebhookEntity extends DefEntity {
     @Column(name = "timeout")
     private final List<Integer> timeouts = new ArrayList<>();
 
+    @Override
+    public Integer getId() {
+        return this.id;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -41,6 +46,4 @@ public class WebhookEntity extends DefEntity {
     public List<Integer> getTimeouts() {
         return timeouts;
     }
-
-
 }

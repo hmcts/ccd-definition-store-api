@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.CustomDefEntityRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,8 +30,10 @@ public class StateMetadataCaseFieldEntityFactory implements MetadataCaseFieldEnt
     private final VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedRepository;
 
     @Autowired
-    public StateMetadataCaseFieldEntityFactory(FieldTypeRepository repository) {
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
+    public StateMetadataCaseFieldEntityFactory(FieldTypeRepository repository,
+                                               CustomDefEntityRepository defEntityRepository
+                                               ) {
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, defEntityRepository);
     }
 
     @Override

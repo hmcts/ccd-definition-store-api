@@ -68,6 +68,11 @@ public class EventComplexTypeEntity extends DefEntity {
         this.reference = reference;
     }
 
+    @Override
+    public Integer getId() {
+        return this.id;
+    }
+
     public LocalDate getLiveFrom() {
         return liveFrom;
     }

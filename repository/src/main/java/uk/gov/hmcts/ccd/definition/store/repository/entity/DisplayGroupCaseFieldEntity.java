@@ -42,6 +42,11 @@ public class DisplayGroupCaseFieldEntity extends DefEntity {
     @Column(name = "show_condition")
     private String showCondition;
 
+    @Override
+    public Integer getId() {
+        return this.id;
+    }
+
     public LocalDate getLiveFrom() {
         return liveFrom;
     }

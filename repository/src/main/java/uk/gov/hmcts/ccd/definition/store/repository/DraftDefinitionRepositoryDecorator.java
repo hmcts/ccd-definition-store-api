@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
+import uk.gov.hmcts.ccd.definition.store.write.repository.CustomDefEntityRepository;
 import uk.gov.hmcts.ccd.definition.store.write.repository.WriteDefinitionRepository;
 
 import java.util.List;
@@ -13,10 +14,12 @@ import java.util.Optional;
 public class DraftDefinitionRepositoryDecorator {
 
     private final DraftDefinitionRepository repository;
+    private CustomDefEntityRepository writeRepo;
 
     @Autowired
-    public DraftDefinitionRepositoryDecorator(DraftDefinitionRepository repository) {
+    public DraftDefinitionRepositoryDecorator(DraftDefinitionRepository repository, CustomDefEntityRepository writeRepo) {
         this.repository = repository;
+        this.writeRepo = writeRepo;
     }
 
     public DefinitionEntity save(DefinitionEntity definitionEntity) {
@@ -25,7 +28,7 @@ public class DraftDefinitionRepositoryDecorator {
         if (definitionEntity.getStatus() == null) {
             definitionEntity.setStatus(DefinitionStatus.DRAFT);
         }
-        return repository.save(definitionEntity);
+        return writeRepo.save(definitionEntity);
     }
 
     public DefinitionEntity findByJurisdictionIdAndVersion(final String jurisdiction, final Integer version) {
@@ -40,6 +43,6 @@ public class DraftDefinitionRepositoryDecorator {
     }
 
     public DefinitionEntity simpleSave(final DefinitionEntity definitionEntity) {
-        return repository.save(definitionEntity);
+        return writeRepo.save(definitionEntity);
     }
 }

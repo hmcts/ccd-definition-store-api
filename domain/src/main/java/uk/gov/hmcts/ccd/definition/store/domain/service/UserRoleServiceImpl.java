@@ -17,14 +17,17 @@ import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper;
+import uk.gov.hmcts.ccd.definition.store.write.repository.CustomDefEntityRepository;
 
 @Component
 public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository repository;
+    private CustomDefEntityRepository writeRepository;
 
-    UserRoleServiceImpl(final UserRoleRepository repository) {
+    UserRoleServiceImpl(final UserRoleRepository repository, CustomDefEntityRepository writeRepository) {
         this.repository = repository;
+        this.writeRepository = writeRepository;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             entity = toEntity(userRole);
             roleFound = false;
         }
-        return new ServiceResponse<>(toModel(repository.save(entity)), roleFound ? UPDATE : CREATE);
+        return new ServiceResponse<>(toModel(writeRepository.save(entity)), roleFound ? UPDATE : CREATE);
     }
 
     @Override
@@ -57,7 +60,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         if (!searchResult.isPresent()) {
             userRole.setRole(userRole.getRole().trim());
             entity = toEntity(userRole);
-            return new ServiceResponse<>(toModel(repository.save(entity)), CREATE);
+            return new ServiceResponse<>(toModel(writeRepository.save(entity)), CREATE);
         } else {
             throw new DuplicateUserRoleException("User role already exists");
         }

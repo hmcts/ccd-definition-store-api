@@ -38,7 +38,7 @@ import static javax.persistence.GenerationType.IDENTITY;
                                 value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus")
     )
 })
-public class DefinitionEntity implements Serializable, Versionable {
+public class DefinitionEntity extends VersionableDefEntity {
 
     @Id
     @Column(name = "id", nullable = false, insertable = false, updatable = false)

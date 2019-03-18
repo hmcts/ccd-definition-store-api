@@ -11,7 +11,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
 
-public abstract class VersionableDefEntity implements Versionable {
+public abstract class VersionableDefEntity extends DefEntity implements Versionable {
 
-    public abstract Integer getId();
 }

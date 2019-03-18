@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.CustomDefEntityRepository;
 
 import java.util.List;
 
@@ -19,16 +20,19 @@ public class LayoutServiceImpl implements LayoutService {
     private final List<GenericLayoutValidator> genericLayoutValidators;
     private final DisplayGroupRepository displayGroupRepository;
     private final List<DisplayGroupValidator> displayGroupValidators;
+    private CustomDefEntityRepository writeRepository;
 
     @Autowired
     public LayoutServiceImpl(GenericLayoutRepository genericRepository,
                              List<GenericLayoutValidator> genericLayoutValidators,
                              DisplayGroupRepository displayGroupRepository,
-                             List<DisplayGroupValidator> displayGroupValidators) {
+                             List<DisplayGroupValidator> displayGroupValidators,
+                             CustomDefEntityRepository writeRepository) {
         this.genericRepository = genericRepository;
         this.genericLayoutValidators = genericLayoutValidators;
         this.displayGroupRepository = displayGroupRepository;
         this.displayGroupValidators = displayGroupValidators;
+        this.writeRepository = writeRepository;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class LayoutServiceImpl implements LayoutService {
         if (!result.isValid()) {
             throw new ValidationException(result);
         }
-        genericRepository.save(genericLayouts);
+        writeRepository.save(genericLayouts);
     }
 
     @Override
@@ -57,6 +61,6 @@ public class LayoutServiceImpl implements LayoutService {
         if (!result.isValid()) {
             throw new ValidationException(result);
         }
-        displayGroupRepository.save(displayGroups);
+        writeRepository.save(displayGroups);
     }
 }
