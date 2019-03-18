@@ -189,7 +189,10 @@ public interface EntityToResponseDTOMapper {
 
         static List<FixedListItem> map(FieldTypeEntity fieldTypeEntity) {
             List<FixedListItem> fixedListItems = new ArrayList<>();
-            if (FieldTypeEntity.isFixedList(fieldTypeEntity.getBaseFieldType().getReference())) {
+            FieldTypeEntity baseFieldTypeEntity = fieldTypeEntity.getBaseFieldType();
+            if (baseFieldTypeEntity == null && FieldTypeEntity.isFixedList(fieldTypeEntity.getReference())) {
+                extractListItems(fieldTypeEntity, fixedListItems);
+            } else if (baseFieldTypeEntity != null && FieldTypeEntity.isFixedList(baseFieldTypeEntity.getReference())) {
                 extractListItems(fieldTypeEntity, fixedListItems);
             }
             return fixedListItems;
