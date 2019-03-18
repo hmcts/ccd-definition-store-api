@@ -24,7 +24,7 @@ class ImportAuditController {
     private final AzureImportAuditsClient azureImportAuditsClient;
 
     @Autowired
-    ImportAuditController(@Autowired(required = false) final AzureImportAuditsClient azureImportAuditsClient) {
+    public ImportAuditController(@Autowired(required = false) final AzureImportAuditsClient azureImportAuditsClient) {
         this.azureImportAuditsClient = azureImportAuditsClient;
     }
 
