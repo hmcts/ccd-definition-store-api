@@ -9,6 +9,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefEntity;
 
+/**
+ * Repository to be used for all writes operations. It's configured with a DataSource
+ * that sends all the operations to the master db only.
+ */
 @Repository
 public class DefEntityWriteRepository {
 
@@ -17,7 +21,6 @@ public class DefEntityWriteRepository {
 
     @Transactional
     public <T extends DefEntity > T save(T entity) {
-
         if (entity.getId() == null) {
             em.persist(entity);
             return entity;
@@ -30,8 +33,8 @@ public class DefEntityWriteRepository {
     public <T extends DefEntity > List<T> save(List<T> entities) {
         List<T> result = new ArrayList<>();
         entities.forEach(e -> {
-            T save = save(e);
-            result.add(save);
+            T entity = save(e);
+            result.add(entity);
         });
         return result;
     }
