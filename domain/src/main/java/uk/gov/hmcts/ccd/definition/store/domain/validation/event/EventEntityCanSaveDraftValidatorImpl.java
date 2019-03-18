@@ -14,7 +14,7 @@ public class EventEntityCanSaveDraftValidatorImpl implements EventEntityValidato
 
         final ValidationResult validationResult = new ValidationResult();
 
-        if (!event.getPreStates().isEmpty() && event.getCanSaveDraft() == Boolean.TRUE) {
+        if (!event.getPreStates().isEmpty() && event.getCanSaveDraft().equals(Boolean.TRUE)) {
             validationResult.addError(new ValidationError(String.format("Enable saving draft is only available for "
                 + "Create events. Event \'%s\' is not eligible.", event.getName()),
                 event));
