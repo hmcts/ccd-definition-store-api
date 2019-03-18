@@ -10,7 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-import uk.gov.hmcts.ccd.definition.store.write.repository.CustomDefEntityRepository;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefEntityWriteRepository;
 
 import java.util.List;
 
@@ -20,14 +20,14 @@ public class LayoutServiceImpl implements LayoutService {
     private final List<GenericLayoutValidator> genericLayoutValidators;
     private final DisplayGroupRepository displayGroupRepository;
     private final List<DisplayGroupValidator> displayGroupValidators;
-    private CustomDefEntityRepository writeRepository;
+    private DefEntityWriteRepository writeRepository;
 
     @Autowired
     public LayoutServiceImpl(GenericLayoutRepository genericRepository,
                              List<GenericLayoutValidator> genericLayoutValidators,
                              DisplayGroupRepository displayGroupRepository,
                              List<DisplayGroupValidator> displayGroupValidators,
-                             CustomDefEntityRepository writeRepository) {
+                             DefEntityWriteRepository writeRepository) {
         this.genericRepository = genericRepository;
         this.genericLayoutValidators = genericLayoutValidators;
         this.displayGroupRepository = displayGroupRepository;

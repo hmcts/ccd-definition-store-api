@@ -17,15 +17,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper;
-import uk.gov.hmcts.ccd.definition.store.write.repository.CustomDefEntityRepository;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefEntityWriteRepository;
 
 @Component
 public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository repository;
-    private CustomDefEntityRepository writeRepository;
+    private DefEntityWriteRepository writeRepository;
 
-    UserRoleServiceImpl(final UserRoleRepository repository, CustomDefEntityRepository writeRepository) {
+    UserRoleServiceImpl(final UserRoleRepository repository, DefEntityWriteRepository writeRepository) {
         this.repository = repository;
         this.writeRepository = writeRepository;
     }

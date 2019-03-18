@@ -10,7 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositor
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
-import uk.gov.hmcts.ccd.definition.store.write.repository.CustomDefEntityRepository;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefEntityWriteRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class JurisdictionServiceImpl implements JurisdictionService {
     public JurisdictionServiceImpl(JurisdictionRepository repository,
                                    CaseTypeLiteRepository caseTypeLiteRepository,
                                    EntityToResponseDTOMapper entityToResponseDTOMapper,
-                                   CustomDefEntityRepository defEntityRepository
+                                   DefEntityWriteRepository defEntityRepository
                                    ) {
         this.repository = repository;
         this.caseTypeLiteRepository = caseTypeLiteRepository;
