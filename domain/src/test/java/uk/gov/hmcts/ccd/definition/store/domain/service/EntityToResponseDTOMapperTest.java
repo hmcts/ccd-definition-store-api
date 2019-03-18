@@ -844,6 +844,7 @@ class EntityToResponseDTOMapperTest {
         void testMapFieldTypeEntityWithBaseField() {
             FieldTypeEntity fieldTypeEntity = fieldTypeEntity("fieldTypeEntityReference");
             fieldTypeEntity.setBaseFieldType(fieldTypeEntity("baseFieldTypeEntityReference"));
+            fieldTypeEntity.getBaseFieldType().setReference("FixedList");
             FieldType fieldType = mapAssertCommonFieldsAndReturn(fieldTypeEntity);
             assertEquals(fieldTypeEntity.getBaseFieldType().getReference(), fieldType.getType());
         }
@@ -851,6 +852,7 @@ class EntityToResponseDTOMapperTest {
         @Test
         void testMapFieldTypeEntityWithoutBaseField() {
             FieldTypeEntity fieldTypeEntity = fieldTypeEntity("fieldTypeEntityReference");
+            fieldTypeEntity.setReference("FixedList");
             FieldType fieldType = mapAssertCommonFieldsAndReturn(fieldTypeEntity);
             assertEquals(fieldTypeEntity.getReference(), fieldType.getType());
         }
@@ -883,11 +885,18 @@ class EntityToResponseDTOMapperTest {
             fieldTypeEntity.setRegularExpression("SomeRegex");
 
             FieldTypeListItemEntity fieldTypeListItemEntity1 = new FieldTypeListItemEntity();
+            fieldTypeListItemEntity1.setLabel("label1");
             FieldTypeListItemEntity fieldTypeListItemEntity2 = new FieldTypeListItemEntity();
+            fieldTypeListItemEntity2.setLabel("label2");
             FieldTypeListItemEntity fieldTypeListItemEntity3 = new FieldTypeListItemEntity();
+            fieldTypeListItemEntity3.setLabel("label3");
             FixedListItem fixedListItem1 = new FixedListItem();
+            fixedListItem1.setLabel("label1");
             FixedListItem fixedListItem2 = new FixedListItem();
+            fixedListItem2.setLabel("label2");
             FixedListItem fixedListItem3 = new FixedListItem();
+            fixedListItem3.setLabel("label3");
+
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity1)).thenReturn(fixedListItem1);
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity2)).thenReturn(fixedListItem2);
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity3)).thenReturn(fixedListItem3);
@@ -921,7 +930,9 @@ class EntityToResponseDTOMapperTest {
             assertThat(fieldType.getComplexFields(), hasItems(complexField1, complexField2, complexField3));
 
             assertEquals(fieldTypeEntity.getListItems().size(), fieldType.getFixedListItems().size());
-            assertThat(fieldType.getFixedListItems(), hasItems(fixedListItem1, fixedListItem2, fixedListItem3));
+            assertEquals(fieldType.getFixedListItems().get(0).getLabel(), fixedListItem1.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(1).getLabel(), fixedListItem2.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(2).getLabel(), fixedListItem3.getLabel());
 
             assertEquals(fieldTypeEntity.getCollectionFieldType(), fieldType.getCollectionFieldType());
 
