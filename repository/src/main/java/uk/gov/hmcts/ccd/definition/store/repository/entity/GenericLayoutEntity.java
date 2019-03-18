@@ -8,7 +8,7 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @MappedSuperclass
-public abstract class GenericLayoutEntity implements Serializable {
+public abstract class GenericLayoutEntity implements DefEntity {
 
     @Id
     @Column(name = "id")

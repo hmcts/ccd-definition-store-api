@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
+import uk.gov.hmcts.ccd.definition.store.write.repository.JurisdictionWriteRepository;
+import uk.gov.hmcts.ccd.definition.store.write.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.write.repository.VersionedWriteDefinitionRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,11 +30,12 @@ public class JurisdictionServiceImpl implements JurisdictionService {
 
     @Autowired
     public JurisdictionServiceImpl(JurisdictionRepository repository,
+                                   JurisdictionWriteRepository writeDefinitionRepository,
                                    CaseTypeLiteRepository caseTypeLiteRepository,
                                    EntityToResponseDTOMapper entityToResponseDTOMapper) {
         this.repository = repository;
         this.caseTypeLiteRepository = caseTypeLiteRepository;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(writeDefinitionRepository);
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
     }
 

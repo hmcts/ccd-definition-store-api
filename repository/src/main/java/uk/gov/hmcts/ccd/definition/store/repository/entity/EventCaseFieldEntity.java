@@ -31,7 +31,7 @@ import static javax.persistence.FetchType.EAGER;
     typeClass = PostgreSQLEnumType.class,
     parameters = @org.hibernate.annotations.Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
 )
-public class EventCaseFieldEntity implements Serializable {
+public class EventCaseFieldEntity implements DefEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

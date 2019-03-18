@@ -10,7 +10,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import org.hibernate.annotations.CreationTimestamp;
 
 @MappedSuperclass
-public abstract class Authorisation {
+public abstract class Authorisation implements DefEntity {
 
     @Id
     @Column(name = "id")

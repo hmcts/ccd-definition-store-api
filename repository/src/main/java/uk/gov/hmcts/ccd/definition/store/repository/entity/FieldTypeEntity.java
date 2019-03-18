@@ -16,7 +16,7 @@ import org.hibernate.annotations.FetchMode;
 
 @Table(name = "field_type")
 @Entity
-public class FieldTypeEntity implements Serializable, Versionable {
+public class FieldTypeEntity implements Versionable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)

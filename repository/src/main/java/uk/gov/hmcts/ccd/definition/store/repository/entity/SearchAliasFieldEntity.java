@@ -14,7 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "search_alias_field")
 @Entity
-public class SearchAliasFieldEntity implements Serializable {
+public class SearchAliasFieldEntity implements DefEntity {
 
     private static final long serialVersionUID = 5750963305463902612L;
 

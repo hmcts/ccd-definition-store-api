@@ -1,14 +1,15 @@
-package uk.gov.hmcts.ccd.definition.store.repository;
-
-import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
+package uk.gov.hmcts.ccd.definition.store.write.repository;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID extends Serializable> extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
 
-    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository) {
+public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID extends Serializable> extends AbstractWriteDefinitionRepositoryDecorator<T, ID,
+    VersionedWriteDefinitionRepository<T, ID>> {
+
+    public VersionedDefinitionRepositoryDecorator(VersionedWriteDefinitionRepository repository) {
         super(repository);
     }
 

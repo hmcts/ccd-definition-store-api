@@ -38,7 +38,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
     typeClass = PostgreSQLEnumType.class,
     parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
-public class CaseTypeEntity implements Serializable, Versionable {
+public class CaseTypeEntity implements Versionable {
 
     private static final long serialVersionUID = 542723327314434924L;
     @Id

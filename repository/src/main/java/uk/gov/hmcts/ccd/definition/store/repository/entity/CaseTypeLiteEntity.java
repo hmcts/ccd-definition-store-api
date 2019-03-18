@@ -22,7 +22,7 @@ import org.hibernate.annotations.Fetch;
  */
 @Table(name = "case_type")
 @Entity
-public class CaseTypeLiteEntity implements Serializable, Versionable {
+public class CaseTypeLiteEntity implements Versionable {
 
     @Id
     @Column(name = "id")

@@ -10,7 +10,7 @@ import static javax.persistence.FetchType.EAGER;
 
 @Table(name = "webhook")
 @Entity
-public class WebhookEntity implements Serializable {
+public class WebhookEntity implements DefEntity {
 
     @Id
     @Column(name = "id")

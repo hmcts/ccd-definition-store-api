@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
+import uk.gov.hmcts.ccd.definition.store.write.repository.WriteDefinitionRepository;
 
 import java.util.List;
 import java.util.Optional;

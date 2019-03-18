@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 @Table(name = "display_group")
 @Entity
-public class DisplayGroupEntity implements Serializable {
+public class DisplayGroupEntity implements DefEntity {
 
     @Id
     @Column(name = "id")

@@ -11,7 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Table(name = "jurisdiction")
 @Entity
-public class JurisdictionEntity implements Serializable, Versionable {
+public class JurisdictionEntity implements Versionable {
 
     @Id
     @Column(name = "id")

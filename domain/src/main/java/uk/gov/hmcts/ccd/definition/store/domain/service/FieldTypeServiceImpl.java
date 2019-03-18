@@ -9,9 +9,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeVa
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidationContextFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
+import uk.gov.hmcts.ccd.definition.store.write.repository.FieldTypeWriteRepository;
+import uk.gov.hmcts.ccd.definition.store.write.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.VersionedWriteDefinitionRepository;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,9 +30,10 @@ public class FieldTypeServiceImpl implements FieldTypeService {
     @Autowired
     public FieldTypeServiceImpl(FieldTypeRepository repository,
                                 FieldTypeValidationContextFactory validationContextFactory,
-                                List<FieldTypeValidator> validators) {
+                                List<FieldTypeValidator> validators,
+                                FieldTypeWriteRepository writeDefinitionRepository) {
         this.repository = repository;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(writeDefinitionRepository);
         this.validationContextFactory = validationContextFactory;
         this.validators = validators;
     }

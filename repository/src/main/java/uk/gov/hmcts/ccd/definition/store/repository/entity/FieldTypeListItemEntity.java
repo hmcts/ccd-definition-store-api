@@ -7,7 +7,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "field_type_list_item")
 @Entity
-public class FieldTypeListItemEntity implements Serializable {
+public class FieldTypeListItemEntity implements DefEntity {
 
     @Id
     @Column(name = "id")
