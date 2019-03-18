@@ -38,7 +38,7 @@ public class BaseTypeController {
         @ApiResponse(code = 200, message = "All valid base types")
     })
     public List<FieldType> getBaseTypes() {
-        if(baseTypes == null) {
+        if (baseTypes == null) {
             baseTypes = fieldTypeRepository.findCurrentBaseTypes();
         }
         return baseTypes.stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
