@@ -26,7 +26,7 @@ public class VersionedDefinitionRepositoryDecorator<T extends VersionableDefEnti
     }
 
     @Override
-    public <S extends T> List<S> save(Iterable<S> iterable) {
+    public <S extends T> List<S> saveAll(Iterable<S> iterable) {
         List<S> result = new ArrayList<>();
         for (S s : iterable) {
             final Optional<Integer> version = repository.findLastVersion(s.getReference());

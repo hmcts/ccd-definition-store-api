@@ -35,8 +35,7 @@ public class TestConfiguration extends ContextCleanupListener {
             .setPort(port)
             .start();
     }
-
-    @Bean
+    @Bean(name = {"writeDataSource", "readDataSource"})
     public DataSource dataSource() throws IOException {
         return embeddedPostgres().getPostgresDatabase();
     }

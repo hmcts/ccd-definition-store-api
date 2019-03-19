@@ -1,5 +1,19 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
+import javax.inject.Inject;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -37,25 +52,12 @@ import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
 import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
 
-import javax.inject.Inject;
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
     CaseDataAPIApplication.class,
     TestConfiguration.class
 })
+@Profile("test")
 @TestPropertySource(locations = "classpath:test.properties")
 public abstract class BaseTest {
     public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V40_RDM-4108.xlsx";
