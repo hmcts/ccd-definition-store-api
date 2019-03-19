@@ -28,8 +28,6 @@ java:
 
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp
 
-    #AZURE_STORAGE_CONNECTION_STRING = "${data.azurerm_key_vault_secret.storageaccount_primary_connection_string.value}"
-    #AZURE_STORAGE_BLOB_CONTAINER_REFERENCE = "${azurerm_storage_container.imports_container.name}"
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
 
     ELASTIC_SEARCH_HOST: ''
