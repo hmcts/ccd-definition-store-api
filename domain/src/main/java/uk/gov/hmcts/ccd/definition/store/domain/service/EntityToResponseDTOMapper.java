@@ -132,7 +132,7 @@ public interface EntityToResponseDTOMapper {
         + "               stateEntity.getStateACLEntities()"
         + "           )"
         + "       )",
-             target = "acls")
+        target = "acls")
     @Mapping(source = "stateEntity.reference", target = "id")
     CaseState map(StateEntity stateEntity);
 
@@ -145,7 +145,7 @@ public interface EntityToResponseDTOMapper {
         + "               caseFieldEntity.getCaseFieldACLEntities()"
         + "           )"
         + "       )",
-             target = "acls")
+        target = "acls")
     @Mapping(expression = "java(caseFieldEntity.isMetadataField())", target = "metadata")
     CaseField map(CaseFieldEntity caseFieldEntity);
 
@@ -162,7 +162,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
     @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null"
         + " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
-             target = "type")
+        target = "type")
     FieldType map(FieldTypeEntity fieldTypeEntity);
 
     @Mapping(source = "caseRoleEntity.reference", target = "id")
@@ -172,18 +172,7 @@ public interface EntityToResponseDTOMapper {
     FixedListItem map(FieldTypeListItemEntity fieldTypeListItemEntity);
 
     @Mapping(source = "eventCaseFieldEntity.caseField.reference", target = "caseFieldId")
-    @Mapping(expression = "java("
-        + "       uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.EventComplexTypeEntityToCaseEventFieldComplexListMapper.map("
-        + "           eventCaseFieldEntity.getEventComplexTypes()"
-        + "       )"
-        + "   )",
-             target = "caseEventFieldComplex"
-    )
     CaseEventField map(EventCaseFieldEntity eventCaseFieldEntity);
-
-    List<CaseEventFieldComplex> map(List<EventComplexTypeEntity> eventComplexTypeEntities);
-
-    CaseEventFieldComplex map(EventComplexTypeEntity eventComplexTypeEntity);
 
     @Mapping(source = "complexFieldEntity.reference", target = "id")
     @Mapping(source = "complexFieldEntity.hint", target = "hintText")
@@ -210,28 +199,6 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
-
-    class EventComplexTypeEntityToCaseEventFieldComplexListMapper {
-
-        private EventComplexTypeEntityToCaseEventFieldComplexListMapper() {
-            // Default constructor
-        }
-
-        static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
-            return eventComplexTypeEntity.stream()
-                .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
-                                                                    complexTypeEntity.getHint(),
-                                                                    complexTypeEntity.getLabel(),
-                                                                    complexTypeEntity.getOrder(),
-                                                                    complexTypeEntity.getDisplayContext(),
-                                                                    complexTypeEntity.getShowCondition()))
-                .collect(Collectors.toList());
-        }
-    }
-
-    @Mapping(source = "searchAliasFieldEntity.reference", target = "id")
-    @Mapping(source = "searchAliasFieldEntity.caseType.reference", target = "caseTypeId")
-    SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
