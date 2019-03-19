@@ -112,7 +112,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "fieldTypeEntity.reference", target = "id")
     @Mapping(
         expression = "java("
-                     + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.FieldTypeEntityMapper.map("
+                     + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.FixedListMapper.map("
                      + "               fieldTypeEntity"
                      + "           )"
                      + "       )",
@@ -182,8 +182,8 @@ public interface EntityToResponseDTOMapper {
 
     // Mapper to call fieldTypeEntity listItems only for fixedList items not for all fields.
     // It improves performance.
-    class FieldTypeEntityMapper {
-        private FieldTypeEntityMapper() {
+    class FixedListMapper {
+        private FixedListMapper() {
             // Default constructor
         }
 
