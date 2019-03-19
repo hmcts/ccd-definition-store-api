@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +25,7 @@ public class BaseTypeController {
 
     private EntityToResponseDTOMapper entityToResponseDTOMapper;
     private FieldTypeRepository fieldTypeRepository;
-    private AtomicReference<List<FieldTypeEntity>> baseTypesAtomicReference;
+    private AtomicReference<List<FieldTypeEntity>> baseTypes = new AtomicReference<>();
 
     @Autowired
     public BaseTypeController(FieldTypeRepository fieldTypeRepository,
@@ -39,9 +40,9 @@ public class BaseTypeController {
         @ApiResponse(code = 200, message = "All valid base types")
     })
     public List<FieldType> getBaseTypes() {
-        if (baseTypesAtomicReference == null) {
-            baseTypesAtomicReference = new AtomicReference(fieldTypeRepository.findCurrentBaseTypes());
+        if (CollectionUtils.isEmpty(baseTypes.get())) {
+            baseTypes.set(fieldTypeRepository.findCurrentBaseTypes());
         }
-        return baseTypesAtomicReference.get().stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
+        return baseTypes.get().stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
     }
 }
