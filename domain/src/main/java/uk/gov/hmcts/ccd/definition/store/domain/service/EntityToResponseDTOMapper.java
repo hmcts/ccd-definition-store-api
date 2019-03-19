@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTypeListItemMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
+    FieldTypeListItemMapper fieldTypeListItemMapper = new FieldTypeListItemMapper();
 
     @Mapping(source = "caseTypeEntity.reference", target = "id")
     @Mapping(source = "caseTypeEntity.version", target = "version.number")
@@ -188,28 +190,13 @@ public interface EntityToResponseDTOMapper {
         }
 
         static List<FixedListItem> map(FieldTypeEntity fieldTypeEntity) {
-            List<FixedListItem> fixedListItems = new ArrayList<>();
             FieldTypeEntity baseFieldTypeEntity = fieldTypeEntity.getBaseFieldType();
             if (baseFieldTypeEntity == null && FieldTypeEntity.isFixedList(fieldTypeEntity.getReference())) {
-                extractListItems(fieldTypeEntity, fixedListItems);
+                return fieldTypeListItemMapper.entityToModel(fieldTypeEntity.getListItems());
             } else if (baseFieldTypeEntity != null && FieldTypeEntity.isFixedList(baseFieldTypeEntity.getReference())) {
-                extractListItems(fieldTypeEntity, fixedListItems);
+                return fieldTypeListItemMapper.entityToModel(fieldTypeEntity.getListItems());
             }
-            return fixedListItems;
-        }
-
-        private static void extractListItems(final FieldTypeEntity fieldTypeEntity,
-                                             final List<FixedListItem> fixedListItems) {
-            fieldTypeEntity.getListItems().stream().forEach(fieldTypeListItemEntity ->
-                                                            {
-                                                                FixedListItem fixedListItem = new FixedListItem();
-                                                                fixedListItem
-                                                                    .setCode(fieldTypeListItemEntity.getValue());
-                                                                fixedListItem
-                                                                    .setLabel(fieldTypeListItemEntity.getLabel());
-                                                                fixedListItems.add(fixedListItem);
-                                                            }
-                                                           );
+            return new ArrayList<>();
         }
     }
 
