@@ -94,6 +94,18 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     @Override
+    public List<CaseType> findAllCaseTypes() {
+        Optional<List<CaseTypeEntity>> caseTypeEntities
+            = Optional.ofNullable(repository.findCurrentVersions());
+
+        return caseTypeEntities.orElse(Collections.emptyList())
+                               .stream()
+                               .map(dtoMapper::map)
+                               .map(this::addMetadataFields)
+                               .collect(toList());
+    }
+
+    @Override
     public Optional<CaseType> findByCaseTypeId(String id) {
         return repository.findCurrentVersionForReference(id)
             .map(dtoMapper::map)

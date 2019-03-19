@@ -40,7 +40,7 @@ public class CaseDefinitionController {
     @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n", response = CaseType.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
-        @ApiResponse(code = 200, message = "Unexpected error")
+        @ApiResponse(code = 500, message = "Unexpected error")
     })
     public CaseType dataCaseTypeIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
@@ -51,7 +51,7 @@ public class CaseDefinitionController {
     @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n", response = CaseType.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
-        @ApiResponse(code = 200, message = "Unexpected error")
+        @ApiResponse(code = 500, message = "Unexpected error")
     })
     public CaseType dataCaseworkerIdAndJurisdictionIdCaseTypeGet(
         @ApiParam(value = "ID for a Caseworker", required = true) @PathVariable("uid") String caseworkerId,
@@ -70,6 +70,16 @@ public class CaseDefinitionController {
         @ApiParam(value = "ID for a Jurisdiction", required = true) @PathVariable("jid") String jurisdictionId,
         @ApiParam(value = "ID for Case Type", required = true) @PathVariable("ctid") String caseTypeId) {
         return caseRoleService.findByCaseTypeId(caseTypeId);
+    }
+
+    @RequestMapping(value = "/data/case-types", method = RequestMethod.GET, produces = {"application/json"})
+    @ApiOperation(value = "Fetch all Case Type Schemas", notes = "Returns the schemas of all case types.\n", response = List.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "A List of all Case Type Schemas"),
+        @ApiResponse(code = 500, message = "Unexpected error")
+    })
+    public List<CaseType> dataCaseTypes() {
+        return caseTypeService.findAllCaseTypes();
     }
 
     @RequestMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type", method = RequestMethod.GET, produces = {"application/json"})
