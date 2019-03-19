@@ -14,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,7 +24,7 @@ public class BaseTypeController {
 
     private EntityToResponseDTOMapper entityToResponseDTOMapper;
     private FieldTypeRepository fieldTypeRepository;
-    private List<FieldTypeEntity> baseTypes;
+    private AtomicReference<List<FieldTypeEntity>> baseTypesAtomicReference;
 
     @Autowired
     public BaseTypeController(FieldTypeRepository fieldTypeRepository,
@@ -38,9 +39,9 @@ public class BaseTypeController {
         @ApiResponse(code = 200, message = "All valid base types")
     })
     public List<FieldType> getBaseTypes() {
-        if (baseTypes == null) {
-            baseTypes = fieldTypeRepository.findCurrentBaseTypes();
+        if (baseTypesAtomicReference == null) {
+            baseTypesAtomicReference = new AtomicReference(fieldTypeRepository.findCurrentBaseTypes());
         }
-        return baseTypes.stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
+        return baseTypesAtomicReference.get().stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
     }
 }
