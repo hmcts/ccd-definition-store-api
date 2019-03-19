@@ -38,6 +38,7 @@ public class SecurityConfiguration
             "/swagger-resources/**",
             "/v2/**",
             "/health",
+            "/health/liveness",
             "/status/health",
             "/",
             "/loggers/**");

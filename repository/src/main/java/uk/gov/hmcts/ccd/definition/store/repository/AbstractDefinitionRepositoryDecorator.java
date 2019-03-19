@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -39,8 +40,8 @@ public abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serial
     }
 
     @Override
-    public List<T> findAll(Iterable<ID> iterable) {
-        return repository.findAll(iterable);
+    public List<T> findAllById(Iterable<ID> iterable) {
+        return repository.findAllById(iterable);
     }
 
     @Override
@@ -49,8 +50,8 @@ public abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serial
     }
 
     @Override
-    public void delete(ID id) {
-        repository.delete(id);
+    public void deleteById(ID id) {
+        repository.deleteById(id);
     }
 
     @Override
@@ -59,8 +60,8 @@ public abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serial
     }
 
     @Override
-    public void delete(Iterable<? extends T> iterable) {
-        repository.delete(iterable);
+    public void deleteAll(Iterable<? extends T> iterable) {
+        repository.deleteAll(iterable);
     }
 
     @Override
@@ -69,18 +70,13 @@ public abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serial
     }
 
     @Override
-    public <S extends T> List<S> save(Iterable<S> iterable) {
-        return repository.save(iterable);
+    public <S extends T> List<S> saveAll(Iterable<S> iterable) {
+        return repository.saveAll(iterable);
     }
 
     @Override
-    public T findOne(ID id) {
-        return repository.findOne(id);
-    }
-
-    @Override
-    public boolean exists(ID id) {
-        return repository.exists(id);
+    public Optional<T> findById(ID id) {
+        return repository.findById(id);
     }
 
     @Override
@@ -109,7 +105,7 @@ public abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serial
     }
 
     @Override
-    public <S extends T> S findOne(Example<S> example) {
+    public <S extends T> Optional<S> findOne(Example<S> example) {
         return repository.findOne(example);
     }
 
@@ -136,6 +132,12 @@ public abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serial
     @Override
     public <S extends T> boolean exists(Example<S> example) {
         return repository.exists(example);
+    }
+
+
+    @Override
+    public boolean existsById(ID id) {
+        return repository.existsById(id);
     }
 
 }

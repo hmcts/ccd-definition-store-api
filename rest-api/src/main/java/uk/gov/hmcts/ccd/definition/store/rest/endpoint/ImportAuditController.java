@@ -1,5 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import java.util.Collection;
+
+import static java.util.Collections.emptyList;
+
 import com.microsoft.azure.storage.StorageException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -11,10 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
-
-import java.util.Collection;
-
-import static java.util.Collections.emptyList;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -33,7 +33,7 @@ class ImportAuditController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Import audits")
     })
-    Collection<ImportAudit> fetchAllAudits() throws StorageException {
+    public Collection<ImportAudit> fetchAllAudits() throws StorageException {
         if (null != azureImportAuditsClient) {
             return azureImportAuditsClient.fetchAllImportAudits();
         } else {

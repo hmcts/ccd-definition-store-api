@@ -4,9 +4,11 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
 
@@ -135,7 +137,9 @@ public class CaseTypeObjectGraphTest {
         entityManager.flush();
         entityManager.clear();
 
-        final CaseTypeEntity fetched = caseTypeRepository.findOne(saved.getId());
+        final Optional<CaseTypeEntity> found = caseTypeRepository.findById(saved.getId());
+        final CaseTypeEntity fetched = found.get();
+        assertThat(fetched, is(notNullValue()));
         assertThat(fetched.getCreatedAt(), is(notNullValue()));
         assertThat(fetched.getCreatedAt().isBefore(LocalDateTime.now()), is(true));
         assertThat(fetched.getPrintWebhook(), hasProperty("url", is("http://print")));
@@ -219,8 +223,10 @@ public class CaseTypeObjectGraphTest {
 
         versionedCaseTypeRepository.save(fetched);
 
-        CaseTypeEntity fetchedAltered = versionedCaseTypeRepository.findOne(fetched.getId());
+        Optional<CaseTypeEntity> optionalfetched = versionedCaseTypeRepository.findById(fetched.getId());
 
+        assertNotNull(optionalfetched.get());
+        CaseTypeEntity fetchedAltered = optionalfetched.get();
         assertThat(fetchedAltered.getSecurityClassification(), equalTo(SecurityClassification.RESTRICTED));
         assertThat(fetchedAltered.getCaseFields().get(0).getSecurityClassification(), equalTo(SecurityClassification.PRIVATE));
         assertThat(fetchedAltered.getEvents().get(0).getSecurityClassification(), equalTo(SecurityClassification.PUBLIC));
