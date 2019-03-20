@@ -70,7 +70,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         );
 
         if (validationResult.isValid()) {
-            versionedRepository.save(caseTypes);
+            versionedRepository.saveAll(caseTypes);
         } else {
             throw new ValidationException(validationResult);
         }

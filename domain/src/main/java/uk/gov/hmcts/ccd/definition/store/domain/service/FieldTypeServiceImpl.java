@@ -1,5 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,10 +16,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class FieldTypeServiceImpl implements FieldTypeService {
@@ -69,7 +69,7 @@ public class FieldTypeServiceImpl implements FieldTypeService {
             throw new ValidationException(result);
         }
 
-        versionedRepository.save(fieldTypes);
+        versionedRepository.saveAll(fieldTypes);
     }
 
     @Override

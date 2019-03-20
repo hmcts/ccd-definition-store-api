@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
 
 public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID extends Serializable> extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
 
@@ -20,11 +20,11 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
     }
 
     @Override
-    public <S extends T> List<S> save(Iterable<S> iterable) {
+    public <S extends T> List<S> saveAll(Iterable<S> iterable) {
         for (S s : iterable) {
             final Optional<Integer> version = repository.findLastVersion(s.getReference());
             s.setVersion(1 + version.orElse(0));
         }
-        return repository.save(iterable);
+        return repository.saveAll(iterable);
     }
 }

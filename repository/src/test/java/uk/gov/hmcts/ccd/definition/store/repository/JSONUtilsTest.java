@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-
 import java.time.LocalDate;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
 
 public class JSONUtilsTest {
 
@@ -67,7 +67,7 @@ public class JSONUtilsTest {
         } catch (IllegalArgumentException ex) {
             final Throwable cause = ex.getCause();
             assertThat(cause, instanceOf(JsonMappingException.class));
-            Assertions.assertThat(cause).hasMessageContaining("Can not construct instance of java.time.LocalDate");
+            Assertions.assertThat(cause).hasMessageContaining("Cannot construct instance of `java.time.LocalDate`");
             throw cause;
         }
     }
@@ -82,7 +82,7 @@ public class JSONUtilsTest {
         } catch (IllegalArgumentException ex) {
             final Throwable cause = ex.getCause();
             assertThat(cause, instanceOf(JsonMappingException.class));
-            Assertions.assertThat(cause).hasMessageContaining("Can not deserialize instance of java.lang.String out of START_OBJECT token");
+            Assertions.assertThat(cause).hasMessageContaining("Cannot deserialize instance of `java.lang.String` out of START_OBJECT token");
             throw cause;
         }
     }

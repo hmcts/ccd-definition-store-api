@@ -9,8 +9,8 @@ services:
     environment:
       - DEFINITION_STORE_DB_HOST=ccd-definition-store-database
       - DEFINITION_STORE_DB_PORT=5432
-      - DEFINITION_STORE_DB_USERNAME
-      - DEFINITION_STORE_DB_PASSWORD
+      - DEFINITION_STORE_DB_USERNAME=definition_store
+      - DEFINITION_STORE_DB_PASSWORD=definition_store
       - DEFINITION_STORE_IDAM_KEY
       - DEFINITION_STORE_S2S_AUTHORISED_SERVICES=ccd_data,ccd_gw
       - USER_PROFILE_HOST
@@ -19,6 +19,7 @@ services:
       - REFORM_SERVICE_NAME=ccd-definition-store-api
       - REFORM_TEAM=ccd
       - REFORM_ENVIRONMENT=local
+      - AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY
     ports:
       - 4451:4451
     depends_on:
@@ -35,8 +36,8 @@ services:
       timeout: 10s
       retries: 10
     environment:
-      - DEFINITION_STORE_DB_USERNAME
-      - DEFINITION_STORE_DB_PASSWORD
+      - DEFINITION_STORE_DB_USERNAME=definition_store
+      - DEFINITION_STORE_DB_PASSWORD=definition_store
     ports:
       - 5451:5432
     volumes:
