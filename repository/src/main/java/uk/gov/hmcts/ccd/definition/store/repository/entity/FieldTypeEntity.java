@@ -49,11 +49,11 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "collection_field_type_id")
     private FieldTypeEntity collectionFieldType;
 
-    @OneToMany(mappedBy = "fieldType", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     private final List<FieldTypeListItemEntity> listItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     private final List<ComplexFieldEntity> complexFields = new ArrayList<>();
@@ -172,4 +172,7 @@ public class FieldTypeEntity implements Serializable, Versionable {
         return String.format("%s-%s", id, UUID.randomUUID());
     }
 
+    public static boolean isFixedList(String reference) {
+        return "FixedList".equalsIgnoreCase(reference);
+    }
 }
