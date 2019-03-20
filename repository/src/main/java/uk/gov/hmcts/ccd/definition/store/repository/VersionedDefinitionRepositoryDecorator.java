@@ -31,8 +31,7 @@ public class VersionedDefinitionRepositoryDecorator<T extends VersionableDefEnti
         for (S s : iterable) {
             final Optional<Integer> version = repository.findLastVersion(s.getReference());
             s.setVersion(1 + version.orElse(0));
-            S e = defEntityRepository.save(s);
-            result.add(e);
+            result.add(defEntityRepository.save(s));
         }
         return result;
     }

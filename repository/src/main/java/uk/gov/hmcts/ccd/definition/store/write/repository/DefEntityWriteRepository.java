@@ -33,8 +33,7 @@ public class DefEntityWriteRepository {
     public <T extends DefEntity > List<T> save(List<T> entities) {
         List<T> result = new ArrayList<>();
         entities.forEach(e -> {
-            T entity = save(e);
-            result.add(entity);
+            result.add(save(e));
         });
         return result;
     }
