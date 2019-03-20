@@ -46,6 +46,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 class CaseTypeServiceImplTest {
 
@@ -60,6 +61,9 @@ class CaseTypeServiceImplTest {
 
     @Mock
     private EntityToResponseDTOMapper dtoMapper;
+
+    @Mock
+    private DefinitionWriteRepository definitionWriteRepository;
 
     @Mock
     private LegacyCaseTypeValidator legacyCaseTypeValidator;
@@ -102,7 +106,8 @@ class CaseTypeServiceImplTest {
             dtoMapper,
             legacyCaseTypeValidator,
             Arrays.asList(caseTypeEntityValidator1, caseTypeEntityValidator2),
-            metadataFieldService);
+            metadataFieldService,
+            definitionWriteRepository);
     }
 
     @Nested

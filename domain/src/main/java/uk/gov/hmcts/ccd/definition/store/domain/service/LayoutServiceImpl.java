@@ -16,21 +16,15 @@ import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteReposit
 
 @Component
 public class LayoutServiceImpl implements LayoutService {
-    private final GenericLayoutRepository genericRepository;
     private final List<GenericLayoutValidator> genericLayoutValidators;
-    private final DisplayGroupRepository displayGroupRepository;
     private final List<DisplayGroupValidator> displayGroupValidators;
     private DefinitionWriteRepository definitionWriteRepository;
 
     @Autowired
-    public LayoutServiceImpl(GenericLayoutRepository genericRepository,
-                             List<GenericLayoutValidator> genericLayoutValidators,
-                             DisplayGroupRepository displayGroupRepository,
+    public LayoutServiceImpl(List<GenericLayoutValidator> genericLayoutValidators,
                              List<DisplayGroupValidator> displayGroupValidators,
                              DefinitionWriteRepository definitionWriteRepository) {
-        this.genericRepository = genericRepository;
         this.genericLayoutValidators = genericLayoutValidators;
-        this.displayGroupRepository = displayGroupRepository;
         this.displayGroupValidators = displayGroupValidators;
         this.definitionWriteRepository = definitionWriteRepository;
     }

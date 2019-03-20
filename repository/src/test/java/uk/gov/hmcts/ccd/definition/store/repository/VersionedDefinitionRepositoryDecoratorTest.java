@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -32,6 +33,9 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     private CaseTypeRepository exampleRepository;
 
     @Autowired
+    private DefinitionWriteRepository definitionWriteRepository;
+
+    @Autowired
     private JurisdictionRepository jurisdictionRepository;
 
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
@@ -40,7 +44,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
 
     @Before
     public void setup() {
-        versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository);
+        versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository, definitionWriteRepository);
 
         final JurisdictionEntity j = new JurisdictionEntity();
         j.setReference("jurisdiction");
@@ -56,7 +60,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
         caseType.setJurisdiction(jurisdiction);
         caseType.setSecurityClassification(SecurityClassification.PUBLIC);
 
-        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository);
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, definitionWriteRepository);
 
         final CaseTypeEntity saved = versionedCaseTypeRepository.save(caseType);
 
@@ -89,7 +93,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
         caseType2.setJurisdiction(jurisdiction);
         caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
 
-        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository);
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, definitionWriteRepository);
 
         List<CaseTypeEntity> savedEntities = versionedCaseTypeRepository.saveAll(asList(caseType, caseType2));
 

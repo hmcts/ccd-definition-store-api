@@ -10,6 +10,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class GenericLayoutRepositoryTest {
     private CaseTypeRepository caseTypeRepository;
 
     @Autowired
+    private DefinitionWriteRepository definitionWriteRepository;
+
+    @Autowired
     private GenericLayoutRepository genericLayoutRepository;
 
     @Autowired
@@ -48,7 +52,7 @@ public class GenericLayoutRepositoryTest {
 
     @Before
     public void setup() {
-        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository, definitionWriteRepository);
         caseType_v1 = versionedCaseTypeRepository.save(caseTypeEntity());
         caseType_v2 = versionedCaseTypeRepository.save(caseTypeEntity());
         caseType_v3 = versionedCaseTypeRepository.save(caseTypeEntity());

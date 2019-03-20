@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 import java.io.IOException;
 
@@ -22,11 +23,14 @@ public class TestHelper {
     private final UserRoleRepository userRoleRepository;
 
     @Autowired
+    private DefinitionWriteRepository definitionWriteRepository;
+
+    @Autowired
     public TestHelper(JurisdictionRepository jurisdictionRepository,
                       FieldTypeRepository fieldTypeRepository,
                       UserRoleRepository userRoleRepository) {
-        versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository);
-        versionedTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository);
+        versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository, definitionWriteRepository);
+        versionedTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository, definitionWriteRepository);
         this.userRoleRepository = userRoleRepository;
     }
 

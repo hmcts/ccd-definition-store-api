@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -43,6 +44,9 @@ public class DraftDefinitionRepositoryDecoratorTest {
     DraftDefinitionRepository draftDefinitionRepository;
 
     @Autowired
+    private DefinitionWriteRepository definitionWriteRepository;
+
+    @Autowired
     private TestHelper testHelper;
 
     private JurisdictionEntity testJurisdiction;
@@ -57,7 +61,7 @@ public class DraftDefinitionRepositoryDecoratorTest {
         final JurisdictionEntity
             jurisdictionForFindTests =
             testHelper.createJurisdiction(JURISDICTION_ID, "lo0it9cg5E", "qdXfga0buG9cIum1yns8");
-        classUnderTest = new DraftDefinitionRepositoryDecorator(repository);
+        classUnderTest = new DraftDefinitionRepositoryDecorator(repository, definitionWriteRepository);
         classUnderTest.save(testHelper.buildDefinition(jurisdictionForFindTests, "T1", PUBLISHED));
         classUnderTest.save(testHelper.buildDefinition(jurisdictionForFindTests, "T2", DRAFT));
         classUnderTest.save(testHelper.buildDefinition(jurisdictionForFindTests, "T3", DRAFT));

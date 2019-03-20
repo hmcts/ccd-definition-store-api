@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeVa
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +36,7 @@ public class FieldTypeServiceImplTest {
     @Before
     public void setUp() {
         repository = mock(FieldTypeRepository.class);
+        DefinitionWriteRepository definitionWriteRepository = mock(DefinitionWriteRepository.class);
         doReturn(Optional.of(0)).when(repository).findLastVersion(Mockito.anyString());
 
         validationContextFactory = mock(FieldTypeValidationContextFactory.class);
@@ -45,7 +47,7 @@ public class FieldTypeServiceImplTest {
 
         final List<FieldTypeValidator> validators = Arrays.asList(validator1, validator2);
 
-        fieldTypeService = new FieldTypeServiceImpl(repository, validationContextFactory, validators);
+        fieldTypeService = new FieldTypeServiceImpl(repository, validationContextFactory, validators, definitionWriteRepository);
     }
 
     @Test

@@ -16,12 +16,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.PageEventMissingDisplayGroupValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 public class LayoutServiceImplTest {
 
@@ -30,6 +32,9 @@ public class LayoutServiceImplTest {
 
     @Mock
     private GenericLayoutRepository genericRepository;
+
+    @Mock
+    private DefinitionWriteRepository definitionWriteRepository;
 
     @Captor
     private ArgumentCaptor<Collection<DisplayGroupEntity>> displayGroupCaptor;
@@ -43,10 +48,9 @@ public class LayoutServiceImplTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         classUnderTest = new LayoutServiceImpl(
-            genericRepository,
             Arrays.asList(new GenericLayoutEntityValidatorImpl()),
-            displayGroupRepository,
-            Arrays.asList(new PageEventMissingDisplayGroupValidatorImpl())
+            Arrays.asList(new PageEventMissingDisplayGroupValidatorImpl()),
+            definitionWriteRepository
         );
     }
 

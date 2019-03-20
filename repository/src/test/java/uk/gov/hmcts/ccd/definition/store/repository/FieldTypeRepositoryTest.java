@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -37,12 +38,15 @@ public class FieldTypeRepositoryTest {
     @Autowired
     private FieldTypeRepository fieldTypeRepository;
 
+    @Autowired
+    private DefinitionWriteRepository definitionWriteRepository;
+
     private VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedFieldTypeRepository;
     private static FieldTypeEntity textBaseType;
 
     @Before
     public void setup() {
-        versionedFieldTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository);
+        versionedFieldTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository, definitionWriteRepository);
         textBaseType = canRetrieveBaseType();
     }
 

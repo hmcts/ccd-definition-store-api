@@ -27,6 +27,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 class UserRoleServiceImplTest {
 
@@ -39,7 +40,8 @@ class UserRoleServiceImplTest {
     @BeforeEach
     void setUp() {
         repository = mock(UserRoleRepository.class);
-        service = new UserRoleServiceImpl(repository);
+        DefinitionWriteRepository writeRepo = mock(DefinitionWriteRepository.class);
+        service = new UserRoleServiceImpl(repository, writeRepo);
     }
 
     @Nested

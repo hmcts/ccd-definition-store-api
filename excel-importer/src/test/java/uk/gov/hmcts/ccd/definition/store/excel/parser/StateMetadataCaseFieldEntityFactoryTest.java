@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -38,12 +40,15 @@ class StateMetadataCaseFieldEntityFactoryTest {
     private VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> repository;
 
     @Mock
+    private DefinitionWriteRepository definitionWriteRepository;
+
+    @Mock
     private ParseContext parseContext;
 
     @BeforeEach
     void setUp() {
         initMocks(this);
-        factory = new StateMetadataCaseFieldEntityFactory(mock(FieldTypeRepository.class));
+        factory = new StateMetadataCaseFieldEntityFactory(mock(FieldTypeRepository.class), definitionWriteRepository);
         setInternalState(factory, "versionedRepository", repository);
     }
 
