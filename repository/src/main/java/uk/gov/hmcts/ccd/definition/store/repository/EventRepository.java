@@ -5,7 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 import java.util.List;
 
-public interface EventRepository extends DefinitionRepository<EventEntity, Integer> {
+public interface EventRepository extends DefinitionReadRepository<EventEntity, Integer> {
 
     List<EventEntity> findByReferenceAndCaseTypeId(@Param("reference")String eventReference, @Param("caseTypeId")Integer caseTypeId);
 

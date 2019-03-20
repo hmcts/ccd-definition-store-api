@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @NoRepositoryBean
-public interface DefinitionRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
+public interface DefinitionReadRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 
     @Override
     default <S extends T> List<S> saveAll(Iterable<S> entities) {

@@ -14,7 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DefEntity;
  * that sends all the operations to the master db only.
  */
 @Repository
-public class DefEntityWriteRepository {
+public class DefinitionWriteRepository {
 
     @PersistenceContext
     private EntityManager em;

@@ -7,7 +7,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface DraftDefinitionRepository extends DefinitionRepository<DefinitionEntity, Integer> {
+public interface DraftDefinitionRepository extends DefinitionReadRepository<DefinitionEntity, Integer> {
 
     @Query("SELECT MAX(d.version) FROM DefinitionEntity d WHERE d.jurisdiction.reference = :jurisdictionReference")
     Optional<Integer> findLastVersion(@Param("jurisdictionReference") String jurisdiction);

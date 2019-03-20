@@ -16,7 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.write.repository.DefEntityWriteRepository;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 @Component
 public class FieldTypeServiceImpl implements FieldTypeService {
@@ -30,7 +30,7 @@ public class FieldTypeServiceImpl implements FieldTypeService {
     public FieldTypeServiceImpl(FieldTypeRepository repository,
                                 FieldTypeValidationContextFactory validationContextFactory,
                                 List<FieldTypeValidator> validators,
-                                DefEntityWriteRepository defEntityRepository
+                                DefinitionWriteRepository defEntityRepository
                                 ) {
         this.repository = repository;
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, defEntityRepository);

@@ -9,8 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-public abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable, R extends DefinitionRepository<T, ID>>
-    implements DefinitionRepository<T, ID> {
+public abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable, R extends DefinitionReadRepository<T, ID>>
+    implements DefinitionReadRepository<T, ID> {
 
     protected R repository;
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE;
 
-public interface DisplayGroupRepository extends DefinitionRepository<DisplayGroupEntity, Integer> {
+public interface DisplayGroupRepository extends DefinitionReadRepository<DisplayGroupEntity, Integer> {
 
     @Query("select dg from DisplayGroupEntity dg where dg.type = 'TAB' AND dg.purpose = 'VIEW' " +
                 "AND dg.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")

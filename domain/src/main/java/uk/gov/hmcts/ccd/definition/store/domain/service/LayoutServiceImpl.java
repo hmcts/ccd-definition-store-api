@@ -12,7 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-import uk.gov.hmcts.ccd.definition.store.write.repository.DefEntityWriteRepository;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 @Component
 public class LayoutServiceImpl implements LayoutService {
@@ -20,19 +20,19 @@ public class LayoutServiceImpl implements LayoutService {
     private final List<GenericLayoutValidator> genericLayoutValidators;
     private final DisplayGroupRepository displayGroupRepository;
     private final List<DisplayGroupValidator> displayGroupValidators;
-    private DefEntityWriteRepository defEntityRepository;
+    private DefinitionWriteRepository defEntityRepository;
 
     @Autowired
     public LayoutServiceImpl(GenericLayoutRepository genericRepository,
                              List<GenericLayoutValidator> genericLayoutValidators,
                              DisplayGroupRepository displayGroupRepository,
                              List<DisplayGroupValidator> displayGroupValidators,
-                             DefEntityWriteRepository defEntityWriteRepository) {
+                             DefinitionWriteRepository definitionWriteRepository) {
         this.genericRepository = genericRepository;
         this.genericLayoutValidators = genericLayoutValidators;
         this.displayGroupRepository = displayGroupRepository;
         this.displayGroupValidators = displayGroupValidators;
-        this.defEntityRepository = defEntityWriteRepository;
+        this.defEntityRepository = definitionWriteRepository;
     }
 
     @Override

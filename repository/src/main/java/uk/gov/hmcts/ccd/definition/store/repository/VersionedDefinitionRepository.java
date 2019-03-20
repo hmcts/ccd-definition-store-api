@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface VersionedDefinitionRepository<T, ID extends Serializable> extends DefinitionRepository<T, ID> {
+public interface VersionedDefinitionRepository<T, ID extends Serializable> extends DefinitionReadRepository<T, ID> {
 
     Optional<Integer> findLastVersion(String reference);
 

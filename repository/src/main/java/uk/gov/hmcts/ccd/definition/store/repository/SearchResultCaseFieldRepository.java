@@ -4,7 +4,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseField
 
 import java.util.List;
 
-public interface SearchResultCaseFieldRepository extends DefinitionRepository<SearchResultCaseFieldEntity, Integer> {
+public interface SearchResultCaseFieldRepository extends DefinitionReadRepository<SearchResultCaseFieldEntity, Integer> {
 
     List<SearchResultCaseFieldEntity> findByCaseTypeId(Integer caseTypeId);
 }

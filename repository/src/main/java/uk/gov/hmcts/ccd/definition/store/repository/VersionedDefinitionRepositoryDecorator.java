@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.VersionableDefEntity;
-import uk.gov.hmcts.ccd.definition.store.write.repository.DefEntityWriteRepository;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 public class VersionedDefinitionRepositoryDecorator<T extends VersionableDefEntity, ID extends Serializable>
     extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
 
-    private DefEntityWriteRepository defEntityRepository;
+    private DefinitionWriteRepository defEntityRepository;
 
-    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository, DefEntityWriteRepository defEntityRepository) {
+    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository, DefinitionWriteRepository defEntityRepository) {
         super(repository);
         this.defEntityRepository = defEntityRepository;
     }

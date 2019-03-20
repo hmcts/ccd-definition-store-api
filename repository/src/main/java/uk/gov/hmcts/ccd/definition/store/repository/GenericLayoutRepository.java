@@ -8,7 +8,7 @@ import java.util.List;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE;
 
-public interface GenericLayoutRepository extends DefinitionRepository<GenericLayoutEntity, Integer> {
+public interface GenericLayoutRepository extends DefinitionReadRepository<GenericLayoutEntity, Integer> {
 
     @Query("select wbicf from WorkBasketInputCaseFieldEntity wbicf where wbicf.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
     List<WorkBasketInputCaseFieldEntity> findWorkbasketInputByCaseTypeReference(@Param("caseTypeReference") String caseTypeReference);

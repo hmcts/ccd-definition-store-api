@@ -22,7 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositor
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
-import uk.gov.hmcts.ccd.definition.store.write.repository.DefEntityWriteRepository;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
@@ -40,7 +40,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
                                MetadataFieldService metadataFieldService,
-                               DefEntityWriteRepository defEntityRepository
+                               DefinitionWriteRepository defEntityRepository
     ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;

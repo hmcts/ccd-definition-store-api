@@ -6,7 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 
 import java.util.List;
 
-public interface CaseTypeLiteRepository extends DefinitionRepository<CaseTypeLiteEntity, Integer> {
+public interface CaseTypeLiteRepository extends DefinitionReadRepository<CaseTypeLiteEntity, Integer> {
 
     @Query("SELECT c FROM CaseTypeLiteEntity c WHERE c.version IN (SELECT MAX(cm.version) FROM CaseTypeLiteEntity cm "
         + "WHERE cm.reference = c.reference) AND c.jurisdiction.reference = :jurisdictionReference")
