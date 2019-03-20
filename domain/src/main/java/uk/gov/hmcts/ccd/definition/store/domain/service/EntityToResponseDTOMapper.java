@@ -16,11 +16,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
@@ -29,6 +31,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFi
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventFieldComplex;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
@@ -40,11 +43,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTabField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
-import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTypeListItemMapper;
 
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
@@ -130,7 +133,7 @@ public interface EntityToResponseDTOMapper {
         + "               stateEntity.getStateACLEntities()"
         + "           )"
         + "       )",
-        target = "acls")
+             target = "acls")
     @Mapping(source = "stateEntity.reference", target = "id")
     CaseState map(StateEntity stateEntity);
 
@@ -143,7 +146,7 @@ public interface EntityToResponseDTOMapper {
         + "               caseFieldEntity.getCaseFieldACLEntities()"
         + "           )"
         + "       )",
-        target = "acls")
+             target = "acls")
     @Mapping(expression = "java(caseFieldEntity.isMetadataField())", target = "metadata")
     CaseField map(CaseFieldEntity caseFieldEntity);
 
@@ -160,7 +163,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
     @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null"
         + " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
-        target = "type")
+             target = "type")
     FieldType map(FieldTypeEntity fieldTypeEntity);
 
     @Mapping(source = "caseRoleEntity.reference", target = "id")
@@ -170,7 +173,18 @@ public interface EntityToResponseDTOMapper {
     FixedListItem map(FieldTypeListItemEntity fieldTypeListItemEntity);
 
     @Mapping(source = "eventCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(expression = "java("
+        + "       uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.EventComplexTypeEntityToCaseEventFieldComplexListMapper.map("
+        + "           eventCaseFieldEntity.getEventComplexTypes()"
+        + "       )"
+        + "   )",
+             target = "caseEventFieldComplex"
+    )
     CaseEventField map(EventCaseFieldEntity eventCaseFieldEntity);
+
+    List<CaseEventFieldComplex> map(List<EventComplexTypeEntity> eventComplexTypeEntities);
+
+    CaseEventFieldComplex map(EventComplexTypeEntity eventComplexTypeEntity);
 
     @Mapping(source = "complexFieldEntity.reference", target = "id")
     @Mapping(source = "complexFieldEntity.hint", target = "hintText")
@@ -197,6 +211,28 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
+
+    class EventComplexTypeEntityToCaseEventFieldComplexListMapper {
+
+        private EventComplexTypeEntityToCaseEventFieldComplexListMapper() {
+            // Default constructor
+        }
+
+        static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
+            return eventComplexTypeEntity.stream()
+                .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
+                                                                    complexTypeEntity.getHint(),
+                                                                    complexTypeEntity.getLabel(),
+                                                                    complexTypeEntity.getOrder(),
+                                                                    complexTypeEntity.getDisplayContext(),
+                                                                    complexTypeEntity.getShowCondition()))
+                .collect(Collectors.toList());
+        }
+    }
+
+    @Mapping(source = "searchAliasFieldEntity.reference", target = "id")
+    @Mapping(source = "searchAliasFieldEntity.caseType.reference", target = "caseTypeId")
+    SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
