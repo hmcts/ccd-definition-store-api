@@ -31,11 +31,11 @@ public class JurisdictionServiceImpl implements JurisdictionService {
     public JurisdictionServiceImpl(JurisdictionRepository repository,
                                    CaseTypeLiteRepository caseTypeLiteRepository,
                                    EntityToResponseDTOMapper entityToResponseDTOMapper,
-                                   DefinitionWriteRepository defEntityRepository
+                                   DefinitionWriteRepository definitionWriteRepository
                                    ) {
         this.repository = repository;
         this.caseTypeLiteRepository = caseTypeLiteRepository;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, defEntityRepository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, definitionWriteRepository);
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
     }
 

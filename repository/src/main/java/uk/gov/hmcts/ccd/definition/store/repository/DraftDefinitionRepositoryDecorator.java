@@ -13,12 +13,12 @@ import java.util.Optional;
 public class DraftDefinitionRepositoryDecorator {
 
     private final DraftDefinitionRepository repository;
-    private DefinitionWriteRepository defEntityRepository;
+    private DefinitionWriteRepository definitionWriteRepository;
 
     @Autowired
-    public DraftDefinitionRepositoryDecorator(DraftDefinitionRepository repository, DefinitionWriteRepository defEntityRepository) {
+    public DraftDefinitionRepositoryDecorator(DraftDefinitionRepository repository, DefinitionWriteRepository definitionWriteRepository) {
         this.repository = repository;
-        this.defEntityRepository = defEntityRepository;
+        this.definitionWriteRepository = definitionWriteRepository;
     }
 
     public DefinitionEntity save(DefinitionEntity definitionEntity) {
@@ -27,7 +27,7 @@ public class DraftDefinitionRepositoryDecorator {
         if (definitionEntity.getStatus() == null) {
             definitionEntity.setStatus(DefinitionStatus.DRAFT);
         }
-        return defEntityRepository.save(definitionEntity);
+        return definitionWriteRepository.save(definitionEntity);
     }
 
     public DefinitionEntity findByJurisdictionIdAndVersion(final String jurisdiction, final Integer version) {
@@ -42,6 +42,6 @@ public class DraftDefinitionRepositoryDecorator {
     }
 
     public DefinitionEntity simpleSave(final DefinitionEntity definitionEntity) {
-        return defEntityRepository.save(definitionEntity);
+        return definitionWriteRepository.save(definitionEntity);
     }
 }

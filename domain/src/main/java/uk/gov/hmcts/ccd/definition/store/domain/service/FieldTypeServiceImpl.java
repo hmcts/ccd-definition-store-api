@@ -30,10 +30,10 @@ public class FieldTypeServiceImpl implements FieldTypeService {
     public FieldTypeServiceImpl(FieldTypeRepository repository,
                                 FieldTypeValidationContextFactory validationContextFactory,
                                 List<FieldTypeValidator> validators,
-                                DefinitionWriteRepository defEntityRepository
+                                DefinitionWriteRepository definitionWriteRepository
                                 ) {
         this.repository = repository;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, defEntityRepository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, definitionWriteRepository);
         this.validationContextFactory = validationContextFactory;
         this.validators = validators;
     }

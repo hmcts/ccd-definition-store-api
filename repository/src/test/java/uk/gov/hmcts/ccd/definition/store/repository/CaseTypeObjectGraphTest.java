@@ -22,6 +22,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -44,6 +45,9 @@ public class CaseTypeObjectGraphTest {
     private CaseTypeRepository caseTypeRepository;
 
     @Autowired
+    private DefinitionWriteRepository definitionWriteRepository;
+
+    @Autowired
     private TestHelper helper;
 
     @Autowired
@@ -59,7 +63,7 @@ public class CaseTypeObjectGraphTest {
 
     @Before
     public void setup() {
-        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository, definitionWriteRepository);
 
         jurisdiction = helper.createJurisdiction();
         fieldType = helper.createType(jurisdiction);

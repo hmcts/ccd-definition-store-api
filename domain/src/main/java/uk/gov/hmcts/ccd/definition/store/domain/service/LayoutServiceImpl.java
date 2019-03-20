@@ -20,7 +20,7 @@ public class LayoutServiceImpl implements LayoutService {
     private final List<GenericLayoutValidator> genericLayoutValidators;
     private final DisplayGroupRepository displayGroupRepository;
     private final List<DisplayGroupValidator> displayGroupValidators;
-    private DefinitionWriteRepository defEntityRepository;
+    private DefinitionWriteRepository definitionWriteRepository;
 
     @Autowired
     public LayoutServiceImpl(GenericLayoutRepository genericRepository,
@@ -32,7 +32,7 @@ public class LayoutServiceImpl implements LayoutService {
         this.genericLayoutValidators = genericLayoutValidators;
         this.displayGroupRepository = displayGroupRepository;
         this.displayGroupValidators = displayGroupValidators;
-        this.defEntityRepository = definitionWriteRepository;
+        this.definitionWriteRepository = definitionWriteRepository;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class LayoutServiceImpl implements LayoutService {
         if (!result.isValid()) {
             throw new ValidationException(result);
         }
-        defEntityRepository.save(genericLayouts);
+        definitionWriteRepository.save(genericLayouts);
     }
 
     @Override
@@ -61,6 +61,6 @@ public class LayoutServiceImpl implements LayoutService {
         if (!result.isValid()) {
             throw new ValidationException(result);
         }
-        defEntityRepository.save(displayGroups);
+        definitionWriteRepository.save(displayGroups);
     }
 }

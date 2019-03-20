@@ -11,18 +11,18 @@ import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteReposit
 public class VersionedDefinitionRepositoryDecorator<T extends VersionableDefEntity, ID extends Serializable>
     extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
 
-    private DefinitionWriteRepository defEntityRepository;
+    private DefinitionWriteRepository definitionWriteRepository;
 
-    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository, DefinitionWriteRepository defEntityRepository) {
+    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository, DefinitionWriteRepository definitionWriteRepository) {
         super(repository);
-        this.defEntityRepository = defEntityRepository;
+        this.definitionWriteRepository = definitionWriteRepository;
     }
 
     @Override
     public <S extends T> S save(S s) {
         final Optional<Integer> version = repository.findLastVersion(s.getReference());
         s.setVersion(1 + version.orElse(0));
-        return defEntityRepository.save(s);
+        return definitionWriteRepository.save(s);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class VersionedDefinitionRepositoryDecorator<T extends VersionableDefEnti
         for (S s : iterable) {
             final Optional<Integer> version = repository.findLastVersion(s.getReference());
             s.setVersion(1 + version.orElse(0));
-            result.add(defEntityRepository.save(s));
+            result.add(definitionWriteRepository.save(s));
         }
         return result;
     }

@@ -31,9 +31,9 @@ public class StateMetadataCaseFieldEntityFactory implements MetadataCaseFieldEnt
 
     @Autowired
     public StateMetadataCaseFieldEntityFactory(FieldTypeRepository repository,
-                                               DefinitionWriteRepository defEntityRepository
+                                               DefinitionWriteRepository definitionWriteRepository
                                                ) {
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, defEntityRepository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, definitionWriteRepository);
     }
 
     @Override

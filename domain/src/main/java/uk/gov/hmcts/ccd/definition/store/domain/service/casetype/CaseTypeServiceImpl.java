@@ -40,13 +40,13 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
                                MetadataFieldService metadataFieldService,
-                               DefinitionWriteRepository defEntityRepository
+                               DefinitionWriteRepository definitionWriteRepository
     ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
         this.legacyCaseTypeValidator = legacyCaseTypeValidator;
         this.caseTypeEntityValidators = caseTypeEntityValidators;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, defEntityRepository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository, definitionWriteRepository);
         this.metadataFieldService = metadataFieldService;
     }
 

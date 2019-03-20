@@ -23,11 +23,11 @@ import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteReposit
 public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository repository;
-    private DefinitionWriteRepository defEntityRepository;
+    private DefinitionWriteRepository definitionWriteRepository;
 
-    UserRoleServiceImpl(final UserRoleRepository repository, DefinitionWriteRepository defEntityRepository) {
+    UserRoleServiceImpl(final UserRoleRepository repository, DefinitionWriteRepository definitionWriteRepository) {
         this.repository = repository;
-        this.defEntityRepository = defEntityRepository;
+        this.definitionWriteRepository = definitionWriteRepository;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             entity = toEntity(userRole);
             roleFound = false;
         }
-        return new ServiceResponse<>(toModel(defEntityRepository.save(entity)), roleFound ? UPDATE : CREATE);
+        return new ServiceResponse<>(toModel(definitionWriteRepository.save(entity)), roleFound ? UPDATE : CREATE);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         if (!searchResult.isPresent()) {
             userRole.setRole(userRole.getRole().trim());
             entity = toEntity(userRole);
-            return new ServiceResponse<>(toModel(defEntityRepository.save(entity)), CREATE);
+            return new ServiceResponse<>(toModel(definitionWriteRepository.save(entity)), CREATE);
         } else {
             throw new DuplicateUserRoleException("User role already exists");
         }
