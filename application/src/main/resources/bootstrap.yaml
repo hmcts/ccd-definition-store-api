@@ -6,3 +6,5 @@ spring:
         s2s.microservicekey-ccd-definition: CCD_DEFINITION_SERVICE_SECRET
         ccd.ccd-ELASTIC-SEARCH-URL: ELASTIC_SEARCH_HOST
         ccd.ccd-ELASTIC-SEARCH-PASSWORD: ELASTIC_SEARCH_PASSWORD
+        ccd.ccd-definition-store-api-POSTGRES-PASS: spring.datasource.password
+        ccd.storage-account-primary-connection-string: AZURE_STORAGE_CONNECTION_STRING
