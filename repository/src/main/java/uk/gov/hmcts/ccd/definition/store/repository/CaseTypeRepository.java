@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 import java.util.List;
 import java.util.Optional;
 
-import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_LATEST_CASE_TYPES_ENTITIES_FOR_REFERENCE;
+import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_LATEST_CASE_TYPES_REFERENCES;
 import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE;
 import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_MAX_CASE_TYPE_VERSION_NUMBER;
 
@@ -19,8 +19,8 @@ public interface CaseTypeRepository extends VersionedDefinitionRepository<CaseTy
     @Query(SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE)
     Optional<CaseTypeEntity> findCurrentVersionForReference(@Param("caseTypeReference") String caseTypeReference);
 
-    @Query(SELECT_LATEST_CASE_TYPES_ENTITIES_FOR_REFERENCE)
-    List<CaseTypeEntity> findCurrentVersions();
+    @Query(SELECT_LATEST_CASE_TYPES_REFERENCES)
+    List<String> findCurrentVersionReferences();
 
     @Query("select c from CaseTypeEntity c where c.version in (select max(cm.version) from CaseTypeEntity cm "
         + "where cm.reference=c.reference) and c.jurisdiction.reference=:jurisdictionReference")

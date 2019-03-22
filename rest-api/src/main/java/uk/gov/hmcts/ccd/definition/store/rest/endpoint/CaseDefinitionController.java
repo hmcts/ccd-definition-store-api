@@ -72,14 +72,14 @@ public class CaseDefinitionController {
         return caseRoleService.findByCaseTypeId(caseTypeId);
     }
 
-    @RequestMapping(value = "/data/case-types", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch all Case Type Schemas", notes = "Returns the schemas of all case types.\n", response = List.class)
+    @RequestMapping(value = "/data/case-types-references", method = RequestMethod.GET, produces = {"application/json"})
+    @ApiOperation(value = "Fetch all Case Types references", notes = "Returns the references of all case types.\n", response = List.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "A List of all Case Type Schemas"),
+        @ApiResponse(code = 200, message = "A List of all Case Types references"),
         @ApiResponse(code = 500, message = "Unexpected error")
     })
-    public List<CaseType> dataCaseTypes() {
-        return caseTypeService.findAllCaseTypes();
+    public List<String> dataCaseTypesReferences() {
+        return caseTypeService.findAllCaseTypesReferences();
     }
 
     @GetMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type", produces = {"application/json"})

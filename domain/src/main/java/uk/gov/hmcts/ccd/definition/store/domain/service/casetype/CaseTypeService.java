@@ -16,7 +16,7 @@ public interface CaseTypeService {
 
     List<CaseType> findByJurisdictionId(String jurisdictionId);
 
-    List<CaseType> findAllCaseTypes();
+    List<String> findAllCaseTypesReferences();
 
     Optional<CaseType> findByCaseTypeId(String id);
 
