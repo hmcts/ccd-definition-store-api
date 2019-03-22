@@ -11,16 +11,9 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -295,16 +288,18 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     public void shouldParseCaseTypeTab() throws InvalidShowConditionException {
-
+        UserRoleEntity userRoleEntity = new UserRoleEntity();
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
         given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
+        given(parseContext.getRole(CASE_TYPE_UNDER_TEST, "Role1")).willReturn(Optional.of(userRoleEntity));
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
         item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
         item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
+        item.addAttribute(ColumnName.USER_ROLE.toString(), "Role1");
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
 
         // Excel parses an integer into a decimal number
@@ -326,5 +321,60 @@ public class DisplayGroupParserTest extends ParserTestBase {
         assertThat(fetched.getPurpose(), is(DisplayGroupPurpose.VIEW));
         assertThat(fetched.getOrder(), is(1));
         assertThat(fetched.getCaseType(), is(caseType));
+        assertThat(fetched.getUserRole(), is(userRoleEntity));
+    }
+
+    @Test(expected = MapperException.class)
+    public void shouldNotParseCaseTypeTabForMultipleEntriesInUserRoles() throws InvalidShowConditionException {
+
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
+
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
+        item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
+        item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
+        item.addAttribute(ColumnName.USER_ROLE.toString(), "Role1");
+        item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        definitionSheet.addDataItem(item);
+
+        final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item2.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
+        item2.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
+        item2.addAttribute(ColumnName.USER_ROLE.toString(), "Role1");
+        item2.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
+        item2.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
+        item2.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        definitionSheet.addDataItem(item2);
+
+        final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
+    }
+
+    @Test(expected = MapperException.class)
+    public void shouldNotParseCaseTypeTabForInvalidUserRoles() throws InvalidShowConditionException {
+
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(parseContext.getRole(CASE_TYPE_UNDER_TEST, "Role1")).willReturn(Optional.empty());
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
+
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
+        item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
+        item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
+        item.addAttribute(ColumnName.USER_ROLE.toString(), "Role1");
+        item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        definitionSheet.addDataItem(item);
+
+        final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
     }
 }
