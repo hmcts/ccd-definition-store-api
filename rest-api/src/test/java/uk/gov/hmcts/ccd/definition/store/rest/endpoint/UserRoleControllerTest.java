@@ -87,7 +87,7 @@ class UserRoleControllerTest {
         @DisplayName("Should successfully return role")
         void successWhenRoleExists() throws Exception {
 
-            uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
+            uriVariables.put("role", Base64.getEncoder().encode("Y2FzZXdvcmtlci10ZXN0LXB1YmxpYw%3D%3D".getBytes()));
             final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -6);
 
             when(userRoleService.getRole(ROLE_DEFINED)).thenReturn(mockUserRole);

@@ -29,9 +29,7 @@ public class VersionedDefinitionRepositoryDecorator<T extends VersionableDefEnti
     public <S extends T> List<S> saveAll(Iterable<S> iterable) {
         List<S> result = new ArrayList<>();
         for (S s : iterable) {
-            final Optional<Integer> version = repository.findLastVersion(s.getReference());
-            s.setVersion(1 + version.orElse(0));
-            result.add(definitionWriteRepository.save(s));
+            result.add(this.save(s));
         }
         return result;
     }

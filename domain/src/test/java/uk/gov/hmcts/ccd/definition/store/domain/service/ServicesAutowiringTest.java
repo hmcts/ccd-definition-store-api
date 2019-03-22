@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +66,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
+import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -314,5 +316,15 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         public SearchAliasFieldRepository searchAliasFieldRepository() {
             return mock(SearchAliasFieldRepository.class);
         }
+
+        @Bean
+        @Primary
+        public DefinitionWriteRepository definitionWriteRepository() {return mock(DefinitionWriteRepository.class);}
+
+        @Bean
+        @Primary
+        public EntityManagerFactory entityManagerFactory() {return mock(EntityManagerFactory.class);}
+
+
     }
 }

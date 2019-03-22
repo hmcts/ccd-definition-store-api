@@ -78,7 +78,7 @@ class CaseTypeServiceImplTest {
     private MetadataFieldService metadataFieldService;
 
     @Captor
-    private ArgumentCaptor<Collection<CaseTypeEntity>> captor;
+    private ArgumentCaptor<CaseTypeEntity> captor;
 
     private final JurisdictionEntity jurisdiction = new JurisdictionEntity();
 
@@ -285,7 +285,8 @@ class CaseTypeServiceImplTest {
             InOrder inOrder = Mockito.inOrder(
                 legacyCaseTypeValidator,
                 caseTypeEntityValidator1, caseTypeEntityValidator2,
-                caseTypeRepository
+                caseTypeRepository,
+                definitionWriteRepository
             );
 
             for (CaseTypeEntity caseTypeEntity : caseTypeEntities) {
@@ -304,20 +305,12 @@ class CaseTypeServiceImplTest {
             }
 
             if (shouldSave) {
-                inOrder.verify(caseTypeRepository).saveAll(captor.capture());
-                Collection<CaseTypeEntity> savedCaseTypeEntities = captor.getValue();
-                assertEquals(caseTypeEntities.size(), savedCaseTypeEntities.size());
+                inOrder.verify(definitionWriteRepository).save(captor.capture());
+                CaseTypeEntity savedCaseTypeEntities = captor.getValue();
 
-                for (CaseTypeEntity caseTypeEntity : caseTypeEntities) {
-                    assertThat(savedCaseTypeEntities, hasItem(
-                        matchesCaseTypeEntityWithJurisdictionAndVersionAdded(caseTypeEntity, jurisdiction,
-                                                                             DEFAULT_VERSION + 1)));
-                }
-
+                assertThat(caseTypeEntities, hasItem(
+                    matchesCaseTypeEntityWithJurisdictionAndVersionAdded(savedCaseTypeEntities, jurisdiction, DEFAULT_VERSION + 1)));
             }
-
-            inOrder.verifyNoMoreInteractions();
-
         }
 
     }

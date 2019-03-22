@@ -8,8 +8,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.write.repository.DefinitionWriteRepository;
@@ -40,7 +38,7 @@ public class LayoutServiceImpl implements LayoutService {
         if (!result.isValid()) {
             throw new ValidationException(result);
         }
-        definitionWriteRepository.save(genericLayouts);
+        definitionWriteRepository.saveAll(genericLayouts);
     }
 
     @Override
@@ -55,6 +53,6 @@ public class LayoutServiceImpl implements LayoutService {
         if (!result.isValid()) {
             throw new ValidationException(result);
         }
-        definitionWriteRepository.save(displayGroups);
+        definitionWriteRepository.saveAll(displayGroups);
     }
 }

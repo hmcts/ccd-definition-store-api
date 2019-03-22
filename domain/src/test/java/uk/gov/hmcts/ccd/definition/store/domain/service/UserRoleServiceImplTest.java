@@ -37,10 +37,12 @@ class UserRoleServiceImplTest {
     private UserRoleEntity entity = mock(UserRoleEntity.class);
     private UserRole mockUserRole = mock(UserRole.class);
 
+    private DefinitionWriteRepository writeRepo;
+
     @BeforeEach
     void setUp() {
         repository = mock(UserRoleRepository.class);
-        DefinitionWriteRepository writeRepo = mock(DefinitionWriteRepository.class);
+        writeRepo = mock(DefinitionWriteRepository.class);
         service = new UserRoleServiceImpl(repository, writeRepo);
     }
 
@@ -90,12 +92,12 @@ class UserRoleServiceImplTest {
             givenEntityWithRole(role);
 
             doReturn(Optional.empty()).when(repository).findTopByReference(role);
-            doReturn(entity).when(repository).save(argumentCaptor.capture());
+            doReturn(entity).when(writeRepo).save(argumentCaptor.capture());
 
             final UserRole saved = service.saveRole(mockUserRole).getResponseBody();
             final UserRoleEntity captured = argumentCaptor.getValue();
 
-            verify(repository).save(any(UserRoleEntity.class));
+            verify(writeRepo).save(any(UserRoleEntity.class));
             assertThat(captured.getReference(), is(role));
             assertThat(captured.getSecurityClassification(), is(RESTRICTED));
 
@@ -121,12 +123,12 @@ class UserRoleServiceImplTest {
             givenEntityWithRole(role, PUBLIC, savedEntity);
 
             doReturn(Optional.of(entity)).when(repository).findTopByReference(role);
-            doReturn(savedEntity).when(repository).save(argumentCaptor.capture());
+            doReturn(savedEntity).when(writeRepo).save(argumentCaptor.capture());
 
             final UserRole saved = service.saveRole(mockUserRole).getResponseBody();
             final UserRoleEntity captured = argumentCaptor.getValue();
 
-            verify(repository).save(any(UserRoleEntity.class));
+            verify(writeRepo).save(any(UserRoleEntity.class));
             assertThat(captured.getReference(), is(role));
 
             verify(entity).setSecurityClassification(PUBLIC);
@@ -151,12 +153,12 @@ class UserRoleServiceImplTest {
             givenEntityWithRole(role);
 
             doReturn(Optional.empty()).when(repository).findTopByReference(role);
-            doReturn(entity).when(repository).save(argumentCaptor.capture());
+            doReturn(entity).when(writeRepo).save(argumentCaptor.capture());
 
             final UserRole saved = service.createRole(mockUserRole).getResponseBody();
             final UserRoleEntity captured = argumentCaptor.getValue();
 
-            verify(repository).save(any(UserRoleEntity.class));
+            verify(writeRepo).save(any(UserRoleEntity.class));
             assertThat(captured.getReference(), is(role));
             assertThat(captured.getSecurityClassification(), is(RESTRICTED));
 

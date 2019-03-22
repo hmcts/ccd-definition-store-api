@@ -32,11 +32,12 @@ public class FieldTypeServiceImplTest {
     private FieldTypeValidator validator2;
     private FieldTypeServiceImpl fieldTypeService;
     private FieldTypeValidationContextFactory validationContextFactory;
+    private DefinitionWriteRepository definitionWriteRepository;
 
     @Before
     public void setUp() {
         repository = mock(FieldTypeRepository.class);
-        DefinitionWriteRepository definitionWriteRepository = mock(DefinitionWriteRepository.class);
+        definitionWriteRepository = mock(DefinitionWriteRepository.class);
         doReturn(Optional.of(0)).when(repository).findLastVersion(Mockito.anyString());
 
         validationContextFactory = mock(FieldTypeValidationContextFactory.class);
@@ -106,7 +107,7 @@ public class FieldTypeServiceImplTest {
         verify(validator1).validate(context, type);
         verify(validator2).validate(context, type);
 
-        verify(repository).save(type);
+        verify(definitionWriteRepository).save(type);
     }
 
     @Test

@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.write.repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -30,7 +31,7 @@ public class DefinitionWriteRepository {
     }
 
     @Transactional
-    public <T extends DefEntity > List<T> save(List<T> entities) {
+    public <T extends DefEntity > List<T> saveAll(Collection<T> entities) {
         List<T> result = new ArrayList<>();
         entities.forEach(e -> {
             result.add(save(e));
