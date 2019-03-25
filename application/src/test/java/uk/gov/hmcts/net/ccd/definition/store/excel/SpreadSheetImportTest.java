@@ -508,6 +508,7 @@ public class SpreadSheetImportTest extends BaseTest {
             "SELECT * FROM display_group WHERE type = 'TAB'");
         assertThat(allDisplayGroups, hasSize(14));
 
+        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeDisplayGroup = jdbcTemplate.queryForList(
             "SELECT * FROM display_group WHERE case_type_id = ? AND type = 'TAB'",
             caseTypesId.get("TestAddressBookCase"));
@@ -515,6 +516,7 @@ public class SpreadSheetImportTest extends BaseTest {
                    allOf(hasItem(allOf(hasColumn("reference", "NameTab"),
                                        hasColumn("label", "Name"),
                                        hasColumn("display_order", 1),
+                                       hasColumn("role_id", userRoleIds.get("CaseWorker1")),
                                        hasColumn("show_condition", "PersonLastName=\"Sparrow\""))
 
                          ),
