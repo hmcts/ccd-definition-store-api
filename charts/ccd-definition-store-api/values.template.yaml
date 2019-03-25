@@ -25,7 +25,7 @@ java:
     ENABLE_DB_MIGRATE: true
 
   #  IDAM_USER_URL: https://preprod-idamapi.reform.hmcts.net:3511
-    IDAM_USER_URL: https://idam-web-public.aat.platform.hmcts.net
+    IDAM_USER_URL: https://idam-api.aat.platform.hmcts.net
 
 
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp
