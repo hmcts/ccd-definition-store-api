@@ -12,6 +12,8 @@ java:
   ingressHost: ${SERVICE_FQDN}
   applicationPort: 4451
   applicationInsightsInstrumentKey: "fake-key"
+  memoryRequests: 1024Mi
+  memoryLimits: 2048Mi
   keyVaults:
     s2s:
       resourceGroup: rpe-service-auth-provider
