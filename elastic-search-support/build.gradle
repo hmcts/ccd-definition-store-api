@@ -1,8 +1,9 @@
 jar {
+    enabled = true
     baseName = 'definition-store-elastic-search-support'
 }
 
-bootRepackage {
+bootJar {
     enabled = false
 }
 

@@ -33,7 +33,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobSto
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IDAMProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
 import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
 
@@ -112,7 +112,7 @@ public abstract class BaseTest {
         when(securityUtils.authorizationHeaders()).thenReturn(new HttpHeaders());
         ReflectionTestUtils.setField(workBasketUserDefaultService, "securityUtils", securityUtils);
 
-        final IDAMProperties idamProperties = new IDAMProperties();
+        final IdamProperties idamProperties = new IdamProperties();
         idamProperties.setId("445");
         idamProperties.setEmail("user@hmcts.net");
 

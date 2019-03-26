@@ -7,6 +7,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import org.hamcrest.BaseMatcher;
@@ -57,8 +58,9 @@ public class FieldTypeRepositoryTest {
 
         final FieldTypeEntity saved = versionedFieldTypeRepository.save(newType);
 
-        final FieldTypeEntity persistedType = fieldTypeRepository.findOne(saved.getId());
-
+        final Optional<FieldTypeEntity> optionalFieldTypeEntity = fieldTypeRepository.findById(saved.getId());
+        FieldTypeEntity persistedType = optionalFieldTypeEntity.get();
+        assertNotNull(persistedType);
         assertThat(persistedType.getReference(), equalTo("ExtendedText"));
         assertThat(persistedType.getVersion(), equalTo(1));
         assertThat(persistedType.getBaseFieldType().getReference(), equalTo("Text"));
@@ -86,8 +88,9 @@ public class FieldTypeRepositoryTest {
 
         final FieldTypeEntity saved = versionedFieldTypeRepository.save(newType);
 
-        final FieldTypeEntity persistedType = fieldTypeRepository.findOne(saved.getId());
-
+        final Optional<FieldTypeEntity> optionalFieldTypeEntity = fieldTypeRepository.findById(saved.getId());
+        FieldTypeEntity persistedType = optionalFieldTypeEntity.get();
+        assertNotNull(persistedType);
         assertThat(persistedType.getReference(), equalTo("ExampleList"));
         assertThat(persistedType.getVersion(), equalTo(1));
         assertThat(persistedType.getBaseFieldType().getReference(), equalTo("FixedList"));
@@ -118,8 +121,9 @@ public class FieldTypeRepositoryTest {
 
         final FieldTypeEntity saved = versionedFieldTypeRepository.save(newType);
 
-        final FieldTypeEntity persistedType = fieldTypeRepository.findOne(saved.getId());
-
+        final Optional<FieldTypeEntity> optionalFieldTypeEntity = fieldTypeRepository.findById(saved.getId());
+        FieldTypeEntity persistedType = optionalFieldTypeEntity.get();
+        assertNotNull(persistedType);
         assertThat(persistedType.getReference(), equalTo("CollectionOfTexts"));
         assertThat(persistedType.getVersion(), equalTo(1));
         assertThat(persistedType.getBaseFieldType().getReference(), equalTo("Collection"));
@@ -153,8 +157,9 @@ public class FieldTypeRepositoryTest {
 
         final FieldTypeEntity saved = versionedFieldTypeRepository.save(newType);
 
-        final FieldTypeEntity persistedType = fieldTypeRepository.findOne(saved.getId());
-
+        final Optional<FieldTypeEntity> optionalFieldTypeEntity = fieldTypeRepository.findById(saved.getId());
+        FieldTypeEntity persistedType = optionalFieldTypeEntity.get();
+        assertNotNull(persistedType);
         assertThat(persistedType.getReference(), equalTo("Address"));
         assertThat(persistedType.getVersion(), equalTo(1));
         assertThat(persistedType.getBaseFieldType().getReference(), equalTo("Complex"));

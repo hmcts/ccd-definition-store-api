@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service;
 
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -19,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
@@ -52,7 +52,7 @@ public class AzureBlobStorageClientTest {
     public void testFileUpload() throws Exception {
         when(cloudBlobContainer.getBlockBlobReference(DATE_TIME_PREFIX + "_" + FILENAME)).thenReturn(cloudBlockBlob);
         when(dateTimeStringGenerator.generateCurrentDateTime()).thenReturn(DATE_TIME_PREFIX);
-        clientUnderTest.uploadFile(new MockMultipartFile("x", FILENAME, MediaType.APPLICATION_OCTET_STREAM,
+        clientUnderTest.uploadFile(new MockMultipartFile("x", FILENAME, MediaType.APPLICATION_OCTET_STREAM_VALUE,
             "x".getBytes("UTF-8")), mock(DefinitionFileUploadMetadata.class));
         verify(cloudBlockBlob).setMetadata(any());
         verify(cloudBlockBlob, times(1)).upload(any(InputStream.class), anyLong());
