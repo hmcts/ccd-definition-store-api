@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,18 +29,20 @@ public class ListFieldTypeParser {
     private static final String FIXED_LIST_TYPE = "FixedList";
     private static final String FIXED_RADIO_LIST_TYPE = "FixedRadioList";
     private static final String MULTI_LIST_TYPE = "MultiSelectList";
+    private static final String DYNAMIC_LIST_TYPE = "DynamicList";
     public static final String NO_BASE_TYPE_FOUND = "No base type found for: ";
     private final ParseContext parseContext;
     private final FieldTypeEntity fixedListBaseType;
     private final FieldTypeEntity fixedRadioListBaseType;
     private final FieldTypeEntity multiListBaseType;
+    private final FieldTypeEntity dynamicListBaseType;
 
     public ListFieldTypeParser(ParseContext parseContext) {
         this.parseContext = parseContext;
         fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_LIST_TYPE));
         fixedRadioListBaseType = parseContext.getBaseType(FIXED_RADIO_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_RADIO_LIST_TYPE));
         multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + MULTI_LIST_TYPE));
-
+        dynamicListBaseType = parseContext.getBaseType(DYNAMIC_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + DYNAMIC_LIST_TYPE));
     }
 
     /**
@@ -80,6 +83,14 @@ public class ListFieldTypeParser {
         fixedListType.addListItems(fixedListItems);
         parseContext.addToAllTypes(fixedListType);
         result.addNew(fixedListType);
+
+        // Add as DynamicList with no list items as it will be dynamically added by the services
+        final FieldTypeEntity dynamicListType = new FieldTypeEntity();
+        dynamicListType.setBaseFieldType(fixedListBaseType);
+        dynamicListType.setReference(ReferenceUtils.listReference(DYNAMIC_LIST_TYPE, listDataItems.getKey()));
+        dynamicListType.setJurisdiction(parseContext.getJurisdiction());
+        parseContext.addToAllTypes(dynamicListType);
+        result.addNew(dynamicListType);
 
         // Add as FixedRadioList
         final List<FieldTypeListItemEntity> fixedRadioListItems = elements.stream()

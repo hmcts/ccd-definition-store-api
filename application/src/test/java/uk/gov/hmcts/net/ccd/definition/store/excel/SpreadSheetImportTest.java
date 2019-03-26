@@ -282,10 +282,12 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertListFieldTypes(List<Map<String, Object>> fieldTypes) {
-
         assertThat(fieldTypes,
                    allOf(hasItem(allOf(hasColumn("jurisdiction_id", getIdForTestJurisdiction()),
                                        hasColumn("reference", "FixedList-marritalStatusEnum"),
+                                       hasColumn("base_field_type_id", fieldTypesId.get("FixedList")))),
+                       hasItem(allOf(hasColumn("jurisdiction_id", getIdForTestJurisdiction()),
+                                       hasColumn("reference", "DynamicList-marritalStatusEnum"),
                                        hasColumn("base_field_type_id", fieldTypesId.get("FixedList")))),
                          hasItem(allOf(hasColumn("jurisdiction_id", getIdForTestJurisdiction()),
                                        hasColumn("reference", "MultiSelectList-marritalStatusEnum"),

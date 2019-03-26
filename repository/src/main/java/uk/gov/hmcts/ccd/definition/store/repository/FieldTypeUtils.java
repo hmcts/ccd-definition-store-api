@@ -5,6 +5,7 @@ public class FieldTypeUtils {
     public static final String BASE_COLLECTION = "Collection";
     public static final String BASE_COMPLEX = "Complex";
     public static final String BASE_FIXED_LIST = "FixedList";
+    public static final String BASE_DYNAMIC_LIST = "DynamicList";
     public static final String BASE_RADIO_FIXED_LIST = "FixedRadioList";
     public static final String BASE_MULTI_SELECT_LIST = "MultiSelectList";
     public static final String BASE_TEXT = "Text";
@@ -23,7 +24,8 @@ public class FieldTypeUtils {
     public static final String BASE_CASE_HISTORY_VIEWER = "CaseHistoryViewer";
 
     public static Boolean isList(String baseTypeReference) {
-        return BASE_FIXED_LIST.equals(baseTypeReference) || BASE_MULTI_SELECT_LIST.equals(baseTypeReference) || BASE_RADIO_FIXED_LIST.equals(baseTypeReference);
+        return BASE_FIXED_LIST.equals(baseTypeReference) || BASE_MULTI_SELECT_LIST.equals(baseTypeReference) || BASE_RADIO_FIXED_LIST.equals(baseTypeReference)
+            ||  BASE_DYNAMIC_LIST.equals(baseTypeReference);
     }
 
 }
