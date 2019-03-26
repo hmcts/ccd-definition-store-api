@@ -12,6 +12,8 @@ java:
   ingressHost: ${SERVICE_FQDN}
   applicationPort: 4451
   applicationInsightsInstrumentKey: "fake-key"
+  memoryRequests: 1024Mi
+  memoryLimits: 2048Mi
   keyVaults:
     s2s:
       resourceGroup: rpe-service-auth-provider
@@ -25,7 +27,7 @@ java:
     ENABLE_DB_MIGRATE: true
 
   #  IDAM_USER_URL: https://preprod-idamapi.reform.hmcts.net:3511
-    IDAM_USER_URL: https://idam-web-public.aat.platform.hmcts.net
+    IDAM_USER_URL: https://idam-api.aat.platform.hmcts.net
 
 
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp
