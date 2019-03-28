@@ -24,8 +24,7 @@ public class FieldTypeUtils {
     public static final String BASE_CASE_HISTORY_VIEWER = "CaseHistoryViewer";
 
     public static Boolean isList(String baseTypeReference) {
-        return BASE_FIXED_LIST.equals(baseTypeReference) || BASE_MULTI_SELECT_LIST.equals(baseTypeReference) || BASE_RADIO_FIXED_LIST.equals(baseTypeReference)
-            ||  BASE_DYNAMIC_LIST.equals(baseTypeReference);
+        return BASE_FIXED_LIST.equals(baseTypeReference) || BASE_MULTI_SELECT_LIST.equals(baseTypeReference) || BASE_RADIO_FIXED_LIST.equals(baseTypeReference);
     }
 
 }

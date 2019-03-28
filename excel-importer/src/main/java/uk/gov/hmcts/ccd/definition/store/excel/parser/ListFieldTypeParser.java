@@ -86,7 +86,7 @@ public class ListFieldTypeParser {
 
         // Add as DynamicList with no list items as it will be dynamically added by the services
         final FieldTypeEntity dynamicListType = new FieldTypeEntity();
-        dynamicListType.setBaseFieldType(fixedListBaseType);
+        dynamicListType.setBaseFieldType(dynamicListBaseType);
         dynamicListType.setReference(ReferenceUtils.listReference(DYNAMIC_LIST_TYPE, listDataItems.getKey()));
         dynamicListType.setJurisdiction(parseContext.getJurisdiction());
         parseContext.addToAllTypes(dynamicListType);
