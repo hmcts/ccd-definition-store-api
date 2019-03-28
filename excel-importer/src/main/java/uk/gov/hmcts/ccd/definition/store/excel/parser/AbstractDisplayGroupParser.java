@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import liquibase.util.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,19 +147,26 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     private void parseUserRole(CaseTypeEntity caseType,
                                final DisplayGroupEntity group,
                                final  List<DefinitionDataItem> groupDefinition) {
-        if (groupDefinition.stream().filter(ddi -> ddi.getString(USER_ROLE) != null).count() > 1) {
+        if (hasMultipleUserRoleRowsPerTab(groupDefinition)) {
             throw new MapperException(
                 String.format("Please provide one user role row per tab in worksheet %s on column USER_ROLE for the tab %s",
                     groupDefinition.get(0).getSheetName(), group.getReference()));
         }
-        Optional<DefinitionDataItem> optionalDDI = groupDefinition.stream().filter(ddi -> ddi.getString(USER_ROLE) != null).findFirst();
+        Optional<DefinitionDataItem> optionalDDI = groupDefinition.stream().filter(ddi -> StringUtils.isNotEmpty(ddi.getString(USER_ROLE))).findFirst();
         if (optionalDDI.isPresent()) {
             final String userRole = optionalDDI.get().getString(USER_ROLE);
-            UserRoleEntity roleEntity = parseContext.getRole(caseType.getReference(), userRole).orElseThrow(() ->
-                new MapperException(String.format("- Invalid IdamRole '%s' in '%s' tab for TabId '%s'",
-                    userRole, groupDefinition.get(0).getSheetName(), group.getReference())));
-            group.setUserRole(roleEntity);
+            group.setUserRole(getRoleEntity(caseType, group, groupDefinition, userRole));
         }
+    }
+
+    private UserRoleEntity getRoleEntity(CaseTypeEntity caseType, DisplayGroupEntity group, List<DefinitionDataItem> groupDefinition, String userRole) {
+        return parseContext.getRole(caseType.getReference(), userRole)
+            .orElseThrow(() -> new MapperException(String.format("- Invalid IdamRole '%s' in '%s' tab for TabId '%s'",
+                userRole, groupDefinition.get(0).getSheetName(), group.getReference())));
+    }
+
+    private boolean hasMultipleUserRoleRowsPerTab(List<DefinitionDataItem> groupDefinition) {
+        return groupDefinition.stream().filter(ddi -> StringUtils.isNotEmpty(ddi.getString(USER_ROLE))).count() > 1;
     }
 
     private void parseGroupShowCondition(ColumnName column, DisplayGroupEntity group, List<DefinitionDataItem> groupDefinition) {
