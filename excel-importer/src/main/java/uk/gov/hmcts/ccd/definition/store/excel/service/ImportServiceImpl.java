@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.RoutingDataSource;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -99,6 +100,8 @@ public class ImportServiceImpl implements ImportService {
      */
     @Override
     public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream) throws IOException {
+        RoutingDataSource.setMasterRoute();
+
         logger.debug("Importing spreadsheet...");
 
         final Map<String, DefinitionSheet> definitionSheets = spreadsheetParser.parse(inputStream);
@@ -200,6 +203,7 @@ public class ImportServiceImpl implements ImportService {
 
         metadata.setUserId(userDetails.getEmail());
 
+        RoutingDataSource.clearMasterRoute();
         return metadata;
     }
 

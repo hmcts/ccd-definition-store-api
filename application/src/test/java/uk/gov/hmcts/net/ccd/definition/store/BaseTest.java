@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -56,6 +57,7 @@ import static org.mockito.Mockito.when;
     CaseDataAPIApplication.class,
     TestConfiguration.class
 })
+@Profile("test")
 @TestPropertySource(locations = "classpath:test.properties")
 public abstract class BaseTest {
     public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V40_RDM-4108.xlsx";
