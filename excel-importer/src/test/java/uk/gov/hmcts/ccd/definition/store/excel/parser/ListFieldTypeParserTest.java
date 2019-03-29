@@ -80,6 +80,22 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         }
     }
 
+    @Test(expected = InvalidImportException.class)
+    public void shouldFail_whenNoBaseTypeFoundForDynamicList() {
+
+        given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
+        given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));
+        given(parseContext.getBaseType(BASE_MULTI_SELECT_LIST)).willReturn(Optional.of(fieldMultiList));
+        given(parseContext.getBaseType(BASE_DYNAMIC_LIST)).willReturn(Optional.empty());
+
+        try {
+            new ListFieldTypeParser(parseContext);
+        } catch (InvalidImportException ex) {
+            Assertions.assertThat(ex).hasMessage("No base type found for: DynamicList");
+            throw ex;
+        }
+    }
+
     @Test
     public void shouldParseEmptySheet() {
 
