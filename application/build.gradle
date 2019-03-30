@@ -22,6 +22,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    compile group: 'net.ttddyy', name: 'datasource-proxy', version: '1.5.1'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
     runtime "org.liquibase:liquibase-core"
     testCompile project(":app-insights").sourceSets.main.output

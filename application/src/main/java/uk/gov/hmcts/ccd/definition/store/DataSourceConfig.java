@@ -4,7 +4,10 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.ttddyy.dsproxy.listener.logging.SLF4JLogLevel.INFO;
+
 import com.zaxxer.hikari.HikariDataSource;
+import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -22,10 +25,17 @@ public class DataSourceConfig {
         return new DataSourceProperties();
     }
 
-    @Bean(name = "masterDataSource")
+    @Bean
     @ConfigurationProperties("master.datasource.hikari")
     public DataSource masterDataSource() {
-        return masterDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+        HikariDataSource dataSource = masterDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+
+        return ProxyDataSourceBuilder
+            .create(dataSource)
+            .name("master-db-data-source")
+            .countQuery()
+            .logQueryBySlf4j(INFO)
+            .build();
     }
 
     @Bean
@@ -35,10 +45,17 @@ public class DataSourceConfig {
         return new DataSourceProperties();
     }
 
-    @Bean(name = "replicasDataSource")
+    @Bean
     @ConfigurationProperties("replicas.datasource.hikari")
     public DataSource replicasDataSource() {
-        return replicasDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+        HikariDataSource dataSource = replicasDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+
+        return ProxyDataSourceBuilder
+            .create(dataSource)
+            .name("replica-db-data-source")
+            .countQuery()
+            .logQueryBySlf4j(INFO)
+            .build();
     }
 
     @Bean
@@ -46,11 +63,11 @@ public class DataSourceConfig {
     public DataSource dataSource() {
         final RoutingDataSource routingDataSource = new RoutingDataSource();
 
-        final DataSource primaryDataSource = masterDataSource();
+        final DataSource masterDataSource = masterDataSource();
         final DataSource replicaDataSource = replicasDataSource();
 
         final Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(RoutingDataSource.Route.MASTER, primaryDataSource);
+        targetDataSources.put(RoutingDataSource.Route.MASTER, masterDataSource);
         targetDataSources.put(RoutingDataSource.Route.REPLICA, replicaDataSource);
 
         routingDataSource.setTargetDataSources(targetDataSources);

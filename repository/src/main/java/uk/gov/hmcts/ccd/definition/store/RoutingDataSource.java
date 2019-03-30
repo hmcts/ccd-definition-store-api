@@ -3,7 +3,12 @@ package uk.gov.hmcts.ccd.definition.store;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 public class RoutingDataSource extends AbstractRoutingDataSource {
-    private static final ThreadLocal<Route> ctx = new ThreadLocal<>();
+
+    private static final ThreadLocal<Route> ctx = new ThreadLocal() {
+        protected Route initialValue() {
+            return Route.REPLICA;
+        }
+    };
 
     public enum Route {
         MASTER, REPLICA
@@ -11,6 +16,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
 
     public static void clearMasterRoute() {
         ctx.remove();
+        ctx.set(Route.REPLICA);
     }
 
     public static void setMasterRoute() {
@@ -19,6 +25,8 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
 
     @Override
     protected Object determineCurrentLookupKey() {
-        return ctx.get();
+        Route route = ctx.get();
+        System.out.println("route: " + route);
+        return route;
     }
 }

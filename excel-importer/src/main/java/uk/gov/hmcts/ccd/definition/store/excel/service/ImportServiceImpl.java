@@ -100,7 +100,6 @@ public class ImportServiceImpl implements ImportService {
      */
     @Override
     public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream) throws IOException {
-        RoutingDataSource.setMasterRoute();
 
         logger.debug("Importing spreadsheet...");
 
@@ -203,7 +202,6 @@ public class ImportServiceImpl implements ImportService {
 
         metadata.setUserId(userDetails.getEmail());
 
-        RoutingDataSource.clearMasterRoute();
         return metadata;
     }
 
