@@ -4,11 +4,7 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 public class RoutingDataSource extends AbstractRoutingDataSource {
 
-    private static final ThreadLocal<Route> ctx = new ThreadLocal() {
-        protected Route initialValue() {
-            return Route.REPLICA;
-        }
-    };
+    private static final ThreadLocal<Route> ctx = ThreadLocal.withInitial(() -> Route.REPLICA);
 
     public enum Route {
         MASTER, REPLICA
