@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store;
+package uk.gov.hmcts.ccd.definition.store.database;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
@@ -22,7 +22,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
         Route route = ctx.get();
-        System.out.println("route: " + route);
+//        System.out.println("route: " + route);
         return route;
     }
 }
