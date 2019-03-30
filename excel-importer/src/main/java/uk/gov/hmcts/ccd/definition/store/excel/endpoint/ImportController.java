@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.hmcts.ccd.definition.store.MasterDBConnection;
+import uk.gov.hmcts.ccd.definition.store.database.MasterDBConnection;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
