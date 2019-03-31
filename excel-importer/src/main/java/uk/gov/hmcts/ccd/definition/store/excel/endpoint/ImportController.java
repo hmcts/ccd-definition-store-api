@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.hmcts.ccd.definition.store.database.MasterDBConnection;
+import uk.gov.hmcts.ccd.definition.store.database.RouteToMasterDB;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
@@ -50,7 +50,7 @@ public class ImportController {
         this.azureStorageConfiguration = azureStorageConfiguration;
     }
 
-    @MasterDBConnection
+    @RouteToMasterDB
     @Transactional
     @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
     public ResponseEntity processUpload(@RequestParam("file") MultipartFile file) throws IOException {
