@@ -47,6 +47,7 @@ java:
     IDAM_S2S_URL: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
     USER_PROFILE_HOST: http://ccd-user-profile-api-aat.service.core-compute-aat.internal
 
+    REPLICAS_DATASOURCE_ENABLED: false
 
 tags:
   postgresql-pod: true

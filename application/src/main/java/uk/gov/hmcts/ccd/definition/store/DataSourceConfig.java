@@ -9,6 +9,7 @@ import static net.ttddyy.dsproxy.listener.logging.SLF4JLogLevel.INFO;
 import com.zaxxer.hikari.HikariDataSource;
 import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import uk.gov.hmcts.ccd.definition.store.database.RoutingDataSource;
 
 @Configuration
 @Profile("!test")
+@ConditionalOnProperty(name="replicas.datasource.enabled")
 public class DataSourceConfig {
 
     @Bean

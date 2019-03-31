@@ -135,3 +135,7 @@ variable "elastic_search_dynamc" {
 variable "elastic_search_case_index_name_format" {
   default = "%s_cases"
 }
+
+variable "replicas_datasource_enabled" {
+  default = "false"
+}

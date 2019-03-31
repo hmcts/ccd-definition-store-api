@@ -135,6 +135,8 @@ module "case-definition-store-api" {
     ADMIN_WEB_AUTHORIZATION_MANAGE_DEFINITION_0 = "ccd-import"
     ADMIN_WEB_AUTHORIZATION_IMPORT_DEFINITION_0 = "ccd-import"
     // TODO More roles to be added to the appropriate actions, once they are created in IdAM
+
+    REPLICAS_DATASOURCE_ENABLED = "${var.replicas_datasource_enabled}"
   }
   common_tags = "${var.common_tags}"
 }
