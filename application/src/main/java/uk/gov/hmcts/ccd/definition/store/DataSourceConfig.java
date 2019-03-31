@@ -8,6 +8,7 @@ import static net.ttddyy.dsproxy.listener.logging.SLF4JLogLevel.INFO;
 
 import com.zaxxer.hikari.HikariDataSource;
 import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -29,14 +30,7 @@ public class DataSourceConfig {
     @Bean
     @ConfigurationProperties("master.datasource.hikari")
     public DataSource masterDataSource() {
-        HikariDataSource dataSource = masterDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
-
-        return ProxyDataSourceBuilder
-            .create(dataSource)
-            .name("master-db-data-source")
-            .countQuery()
-            .logQueryBySlf4j(INFO)
-            .build();
+        return masterDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 
     @Bean
@@ -49,25 +43,18 @@ public class DataSourceConfig {
     @Bean
     @ConfigurationProperties("replicas.datasource.hikari")
     public DataSource replicasDataSource() {
-        HikariDataSource dataSource = replicasDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
-
-        return ProxyDataSourceBuilder
-            .create(dataSource)
-            .name("replica-db-data-source")
-            .countQuery()
-            .logQueryBySlf4j(INFO)
-            .build();
+        return replicasDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 
     @Bean
     @Primary
-    public DataSource dataSource() {
-        final RoutingDataSource routingDataSource = new RoutingDataSource();
+    public DataSource dataSource(@Value("${datasource.query.logging.enabled}") boolean queryLoggingEnabled) {
+        RoutingDataSource routingDataSource = new RoutingDataSource();
 
-        final DataSource masterDataSource = masterDataSource();
-        final DataSource replicaDataSource = replicasDataSource();
+        DataSource masterDataSource = queryLoggingEnabled ? proxied(masterDataSource(), "master-data-source") : masterDataSource();
+        DataSource replicaDataSource = queryLoggingEnabled? proxied(replicasDataSource(), "replicas-data-source") : replicasDataSource();
 
-        final Map<Object, Object> targetDataSources = new HashMap<>();
+        Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(RoutingDataSource.Route.MASTER, masterDataSource);
         targetDataSources.put(RoutingDataSource.Route.REPLICA, replicaDataSource);
 
@@ -75,6 +62,15 @@ public class DataSourceConfig {
         routingDataSource.setDefaultTargetDataSource(replicaDataSource);
 
         return routingDataSource;
+    }
+
+    private DataSource proxied(DataSource dataSource, String name) {
+        return ProxyDataSourceBuilder
+            .create(dataSource)
+            .name(name)
+            .countQuery()
+            .logQueryBySlf4j(INFO)
+            .build();
     }
 
 }
