@@ -22,13 +22,13 @@ import uk.gov.hmcts.ccd.definition.store.database.RoutingDataSource;
 public class DataSourceConfig {
 
     @Bean
-    @ConfigurationProperties("master.datasource")
+    @ConfigurationProperties("spring.datasource")
     public DataSourceProperties masterDataSourceProperties() {
         return new DataSourceProperties();
     }
 
     @Bean
-    @ConfigurationProperties("master.datasource.hikari")
+    @ConfigurationProperties("spring.datasource.hikari")
     public DataSource masterDataSource() {
         return masterDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
