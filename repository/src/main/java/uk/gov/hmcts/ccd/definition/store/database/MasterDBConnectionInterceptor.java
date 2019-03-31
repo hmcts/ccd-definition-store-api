@@ -16,7 +16,7 @@ public class MasterDBConnectionInterceptor {
     public void anyPublicMethod() { }
 
     @Around("@annotation(masterDBConnection)")
-    public Object proceed(ProceedingJoinPoint pjp, MasterDBConnection masterDBConnection) throws Throwable {
+    public Object proceed(ProceedingJoinPoint pjp, RouteToMasterDB routeToMasterDB) throws Throwable {
         try {
             RoutingDataSource.setMasterRoute();
             Object result = pjp.proceed();
