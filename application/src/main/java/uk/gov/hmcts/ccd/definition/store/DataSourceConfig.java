@@ -50,7 +50,7 @@ public class DataSourceConfig {
 
     @Bean
     @Primary
-    public DataSource dataSource(@Value("${datasource.query.logging.enabled}") boolean queryLoggingEnabled) {
+    public DataSource dataSource(@Value("${replicas.datasource.debug.enabled}") boolean queryLoggingEnabled) {
         RoutingDataSource routingDataSource = new RoutingDataSource();
 
         DataSource masterDataSource = queryLoggingEnabled ? proxied(masterDataSource(), "master-data-source") : masterDataSource();
