@@ -50,11 +50,11 @@ public class DataSourceConfig {
 
     @Bean
     @Primary
-    public DataSource dataSource(@Value("${replicas.datasource.debug.enabled}") boolean queryLoggingEnabled) {
+    public DataSource dataSource(@Value("${replicas.datasource.debug.enabled}") boolean debugEnabled) {
         RoutingDataSource routingDataSource = new RoutingDataSource();
 
-        DataSource masterDataSource = queryLoggingEnabled ? proxied(masterDataSource(), "master-data-source") : masterDataSource();
-        DataSource replicaDataSource = queryLoggingEnabled? proxied(replicasDataSource(), "replicas-data-source") : replicasDataSource();
+        DataSource masterDataSource = debugEnabled ? proxied(masterDataSource(), "master-data-source") : masterDataSource();
+        DataSource replicaDataSource = debugEnabled? proxied(replicasDataSource(), "replicas-data-source") : replicasDataSource();
 
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(RoutingDataSource.Route.MASTER, masterDataSource);
