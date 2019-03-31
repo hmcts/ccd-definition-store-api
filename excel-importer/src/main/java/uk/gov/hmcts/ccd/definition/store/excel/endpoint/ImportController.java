@@ -64,7 +64,6 @@ public class ImportController {
             byte[] bytes = baos.toByteArray();
 
             LOG.info("Importing Definition file...");
-
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes));
 

@@ -4,11 +4,11 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 public class RoutingDataSource extends AbstractRoutingDataSource {
 
-    private static final ThreadLocal<Route> ctx = ThreadLocal.withInitial(() -> Route.REPLICA);
-
     public enum Route {
         MASTER, REPLICA
     }
+
+    private static final ThreadLocal<Route> ctx = ThreadLocal.withInitial(() -> Route.REPLICA);
 
     public static void clearMasterRoute() {
         ctx.remove();
@@ -22,7 +22,6 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
         Route route = ctx.get();
-//        System.out.println("route: " + route);
         return route;
     }
 }

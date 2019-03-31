@@ -99,7 +99,6 @@ public class ImportServiceImpl implements ImportService {
      */
     @Override
     public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream) throws IOException {
-
         logger.debug("Importing spreadsheet...");
 
         final Map<String, DefinitionSheet> definitionSheets = spreadsheetParser.parse(inputStream);
