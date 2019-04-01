@@ -53,7 +53,7 @@ public class DataSourceConfig {
 
     @Bean
     @Primary
-    public DataSource dataSource(@Qualifier("masterDataSource") DataSource master, @Qualifier("masterDataSource") DataSource replicas,
+    public DataSource dataSource(@Qualifier("masterDataSource") DataSource master, @Qualifier("replicasDataSource") DataSource replicas,
                                  @Value("${replicas.datasource.debug.enabled}") boolean debugEnabled) {
         RoutingDataSource routingDataSource = new RoutingDataSource();
 
