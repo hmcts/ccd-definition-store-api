@@ -21,7 +21,7 @@ import uk.gov.hmcts.ccd.definition.store.database.RoutingDataSource;
 
 @Configuration
 @Profile("!test")
-@ConditionalOnProperty(name="replicas.datasource.enabled")
+@ConditionalOnProperty(name = "replicas.datasource.enabled")
 public class DataSourceConfig {
 
     @Bean
@@ -58,7 +58,7 @@ public class DataSourceConfig {
         RoutingDataSource routingDataSource = new RoutingDataSource();
 
         DataSource masterDataSource = debugEnabled ? proxied(master, "master-data-source") : master;
-        DataSource replicaDataSource = debugEnabled? proxied(replicas, "replicas-data-source") : replicas;
+        DataSource replicaDataSource = debugEnabled ? proxied(replicas, "replicas-data-source") : replicas;
 
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(RoutingDataSource.Route.MASTER, masterDataSource);
