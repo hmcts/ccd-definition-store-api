@@ -8,6 +8,7 @@ import static net.ttddyy.dsproxy.listener.logging.SLF4JLogLevel.INFO;
 
 import com.zaxxer.hikari.HikariDataSource;
 import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -30,6 +31,7 @@ public class DataSourceConfig {
     }
 
     @Bean
+    @Qualifier("masterDataSource")
     @ConfigurationProperties("spring.datasource.hikari")
     public DataSource masterDataSource() {
         return masterDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
@@ -43,6 +45,7 @@ public class DataSourceConfig {
     }
 
     @Bean
+    @Qualifier("replicasDataSource")
     @ConfigurationProperties("replicas.datasource.hikari")
     public DataSource replicasDataSource() {
         return replicasDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
@@ -50,11 +53,12 @@ public class DataSourceConfig {
 
     @Bean
     @Primary
-    public DataSource dataSource(@Value("${replicas.datasource.debug.enabled}") boolean debugEnabled) {
+    public DataSource dataSource(@Qualifier("masterDataSource") DataSource master, @Qualifier("masterDataSource") DataSource replicas,
+                                 @Value("${replicas.datasource.debug.enabled}") boolean debugEnabled) {
         RoutingDataSource routingDataSource = new RoutingDataSource();
 
-        DataSource masterDataSource = debugEnabled ? proxied(masterDataSource(), "master-data-source") : masterDataSource();
-        DataSource replicaDataSource = debugEnabled? proxied(replicasDataSource(), "replicas-data-source") : replicasDataSource();
+        DataSource masterDataSource = debugEnabled ? proxied(master, "master-data-source") : master;
+        DataSource replicaDataSource = debugEnabled? proxied(replicas, "replicas-data-source") : replicas;
 
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(RoutingDataSource.Route.MASTER, masterDataSource);
