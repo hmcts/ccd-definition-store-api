@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *  Use to route DB requests to the master DB when read replicas datasource is enabled
+ *  Use to route DB requests of the method this annotation is applied to to the master DB when read replicas datasource is enabled
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

@@ -139,3 +139,7 @@ variable "elastic_search_case_index_name_format" {
 variable "replicas_datasource_enabled" {
   default = "false"
 }
+
+variable "replicas_hosts" {
+  default = ""
+}

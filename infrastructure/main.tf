@@ -137,6 +137,7 @@ module "case-definition-store-api" {
     // TODO More roles to be added to the appropriate actions, once they are created in IdAM
 
     REPLICAS_DATASOURCE_ENABLED = "${var.replicas_datasource_enabled}"
+    DEFINITION_STORE_REPLICA_HOSTS = "${var.replicas_hosts}"
   }
   common_tags = "${var.common_tags}"
 }
