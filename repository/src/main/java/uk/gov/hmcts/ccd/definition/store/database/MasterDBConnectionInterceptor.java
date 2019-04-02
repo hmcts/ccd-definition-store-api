@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Order(0)
 public class MasterDBConnectionInterceptor {
 
-    @Pointcut(value="execution(public * *(..))")
+    @Pointcut(value = "execution(public * *(..))")
     public void anyPublicMethod() { }
 
     @Around("@annotation(routeToMasterDB)")
