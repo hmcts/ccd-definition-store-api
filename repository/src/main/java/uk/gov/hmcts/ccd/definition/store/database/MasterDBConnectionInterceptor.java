@@ -13,14 +13,15 @@ import org.springframework.stereotype.Component;
 public class MasterDBConnectionInterceptor {
 
     @Pointcut(value = "execution(public * *(..))")
-    public void anyPublicMethod() { }
+    public void anyPublicMethod() {
+        //empty comment to please Sonar
+    }
 
     @Around("@annotation(routeToMasterDB)")
     public Object proceed(ProceedingJoinPoint pjp, RouteToMasterDB routeToMasterDB) throws Throwable {
         try {
             RoutingDataSource.setMasterRoute();
-            Object result = pjp.proceed();
-            return result;
+            return pjp.proceed();
         } finally {
             RoutingDataSource.clearMasterRoute();
         }
