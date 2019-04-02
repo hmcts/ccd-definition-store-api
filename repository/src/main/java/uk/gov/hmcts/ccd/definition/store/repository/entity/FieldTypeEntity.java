@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -61,6 +64,10 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jurisdiction_id")
     private JurisdictionEntity jurisdiction;
+
+    private static final Set<String> FIXED_List_ITEMS = new HashSet<>(Arrays.asList(new String[] {"FixedList",
+                                                                                                  "MultiSelectList",
+                                                                                                  "FixedRadioList"}));
 
     public Integer getId() {
         return id;
@@ -173,6 +180,6 @@ public class FieldTypeEntity implements Serializable, Versionable {
     }
 
     public static boolean isFixedList(String reference) {
-        return "FixedList".equalsIgnoreCase(reference);
+        return FIXED_List_ITEMS.contains(reference);
     }
 }
