@@ -8,3 +8,4 @@ elastic_search_index_shards = 2
 elastic_search_index_shards_replicas = 1
 
 idam_api_url = "https://idam-api-idam-sprod.service.core-compute-idam-sprod.internal"
+
