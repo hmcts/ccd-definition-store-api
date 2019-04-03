@@ -8,4 +8,4 @@ elastic_search_index_shards = 2
 elastic_search_index_shards_replicas = 1
 
 replicas_datasource_enabled = "true"
-replicas_hosts = "ccd-definition-store-api-postgres-db-sprod-read1.postgres.database.azure.com, ccd-definition-store-api-postgres-db-sprod-read2.postgres.database.azure.com"
+replicas_hosts = "ccd-definition-store-api-postgres-db-sprod.postgres.database.azure.com, ccd-definition-store-api-postgres-db-sprod-read1.postgres.database.azure.com, ccd-definition-store-api-postgres-db-sprod-read2.postgres.database.azure.com"
