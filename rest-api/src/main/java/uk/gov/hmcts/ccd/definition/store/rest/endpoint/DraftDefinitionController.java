@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.ccd.definition.store.database.RouteToMasterDB;
 import uk.gov.hmcts.ccd.definition.store.domain.service.DefinitionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
@@ -44,6 +45,7 @@ public class DraftDefinitionController {
         notes = "Creates a draft Definition for the specified Jurisdiction, incrementing the version number each time"
     )
     @ApiResponse(code = 201, message = "Draft Definition created")
+    @RouteToMasterDB
     public ResponseEntity<Definition> draftDefinitionCreate(
         @ApiParam(value = "Draft Definition", required = true)
         @RequestBody @NotNull final Definition definition) {
@@ -58,6 +60,7 @@ public class DraftDefinitionController {
         value = "Saves a draft Definition",
         notes = "Saves a draft Definition for the specified Jurisdiction, incrementing the version number each time"
     )
+    @RouteToMasterDB
     @ApiResponse(code = 200, message = "Draft Definition created")
     public ResponseEntity<Definition> saveDraftDefinition(
         @ApiParam(value = "Draft Definition", required = true)
@@ -73,6 +76,7 @@ public class DraftDefinitionController {
         value = "Deletes a draft Definition",
         notes = "The draft definition for the specified Jurisdiction is marked as deleted"
     )
+    @RouteToMasterDB
     @ApiResponse(code = 204, message = "Draft Definition deleted")
     public void draftDefinitionDelete(
         @ApiParam(value = "jurisdiction", required = true) @PathVariable("jurisdiction") String jurisdiction,

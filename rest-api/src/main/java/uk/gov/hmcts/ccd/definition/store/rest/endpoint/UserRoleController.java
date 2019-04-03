@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uk.gov.hmcts.ccd.definition.store.database.RouteToMasterDB;
 import uk.gov.hmcts.ccd.definition.store.domain.service.UserRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
@@ -39,6 +40,7 @@ public class UserRoleController {
         @ApiResponse(code = 205, message = "User role is updated successfully and the user agent SHOULD reset the document view"),
         @ApiResponse(code = 409, message = "Bad request, for example, incorrect data")
     })
+    @RouteToMasterDB
     public ResponseEntity<UserRole> userRolePut(
         @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
         final ServiceResponse<UserRole> serviceResponse = userRoleService.saveRole(userRole);
@@ -56,6 +58,7 @@ public class UserRoleController {
         @ApiResponse(code = 205, message = "User role is updated successfully and the user agent SHOULD reset the document view"),
         @ApiResponse(code = 409, message = "Bad request, for example, incorrect data")
     })
+    @RouteToMasterDB
     public ResponseEntity<UserRole> userRoleCreate(
         @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
         final ServiceResponse<UserRole> serviceResponse = userRoleService.createRole(userRole);
