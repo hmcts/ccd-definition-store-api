@@ -74,7 +74,7 @@
             <column name="id"/>
             <column name="case_type_id"/>
         </createIndex>
-        <createIndex indexName="idx_state__id__case_type_id"
+        <createIndex indexName="idx_state__case_type_id"
                      schemaName="public"
                      tableName="state">
             <column name="case_type_id"/>
