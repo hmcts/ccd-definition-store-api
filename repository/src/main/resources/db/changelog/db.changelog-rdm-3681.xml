@@ -15,9 +15,10 @@
             <column name="id"/>
             <column name="field_type_id"/>
         </createIndex>
-        <createIndex indexName="idx_event__id__case_type_id__post_state_id__webhook_pre_submit_id__webhook_post_submit_id__webhook_start_id"
-                     schemaName="public"
-                     tableName="event">
+        <createIndex
+                indexName="idx_event__id__case_type_id__post_state_id__webhook_pre_submit_id__webhook_post_submit_id__webhook_start_id"
+                schemaName="public"
+                tableName="event">
             <column name="id"/>
             <column name="case_type_id"/>
             <column name="post_state_id"/>
@@ -49,13 +50,6 @@
                      tableName="event">
             <column name="case_type_id"/>
         </createIndex>
-        <createIndex indexName="idx_case_type__jurisdiction_id__version__reference"
-                     schemaName="public"
-                     tableName="case_type">
-            <column name="jurisdiction_id"/>
-            <column name="version"/>
-            <column name="reference"/>
-        </createIndex>
         <createIndex indexName="idx_jurisdiction__id__reference"
                      schemaName="public"
                      tableName="jurisdiction">
@@ -72,11 +66,6 @@
                      schemaName="public"
                      tableName="state">
             <column name="id"/>
-            <column name="case_type_id"/>
-        </createIndex>
-        <createIndex indexName="idx_state__case_type_id"
-                     schemaName="public"
-                     tableName="state">
             <column name="case_type_id"/>
         </createIndex>
         <createIndex indexName="idx_case_type__id__jurisdiction_id__version__reference"
