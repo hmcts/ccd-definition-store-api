@@ -20,7 +20,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     }
 
     @Override
-    protected Object determineCurrentLookupKey() {
+    protected Route determineCurrentLookupKey() {
         return ctx.get();
     }
 }

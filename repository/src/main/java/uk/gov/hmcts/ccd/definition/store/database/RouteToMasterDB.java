@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  *  Use to route DB requests of the method this annotation is applied to to the master DB when read replicas datasource is enabled.
+ *  This annotation should be placed on the outmost method. Ideally on a controller method. Rather than at the Repository or Service level.
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
