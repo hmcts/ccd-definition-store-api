@@ -161,7 +161,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
 
     private UserRoleEntity getRoleEntity(CaseTypeEntity caseType, DisplayGroupEntity group, List<DefinitionDataItem> groupDefinition, String userRole) {
         return parseContext.getRole(caseType.getReference(), userRole)
-            .orElseThrow(() -> new MapperException(String.format("- Invalid IdamRole '%s' in '%s' tab for TabId '%s'",
+            .orElseThrow(() -> new MapperException(String.format("- Invalid idam or case role '%s' in '%s' tab for TabId '%s'",
                 userRole, groupDefinition.get(0).getSheetName(), group.getReference())));
     }
 
