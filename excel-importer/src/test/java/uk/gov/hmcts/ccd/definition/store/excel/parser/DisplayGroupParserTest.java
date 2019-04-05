@@ -57,6 +57,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("CaseTypeTabParser - should fail when worksheet missing")
     public void shouldFail_whenSheetDoesNotExist() {
         MapperException thrown = assertThrows(MapperException.class, () -> caseTypeTabParser.parseAll(new HashMap<>()));
         assertThat(thrown.getMessage(), is(String.format("A definition must contain a CaseTypeTab sheet with at least one entry",
@@ -64,6 +65,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("CaseTypeTabParser - should fail when at least one CaseField doesn't exist")
     public void shouldFail_whenEmptyDisplayGroupDefinitionsIfDGItemIsMandatory() {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
@@ -75,6 +77,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("CaseTypeTabParser - should fail when page title missing")
     public void shouldFail_whenMandatoryPageTitleNotGiven() {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
@@ -95,6 +98,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("WizardPageParser - should parse when everything is fine")
     public void shouldParseCaseEventToFields() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
@@ -128,6 +132,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("WizardPageParser - should parse more than one item")
     public void shouldParseCaseEventToFieldsEvenWithSamePageId() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
@@ -164,6 +169,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("WizardPageParser - should fail when more than one page show condition defined")
     public void shouldFailIfTwoPageShowConditionsForSameEventPageID() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
@@ -192,6 +198,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("CaseTypeTabParser - should fail when  when more than one tab show condition defined")
     public void shouldFailIfTwoTabShowConditionsForSameTab() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Collections.singleton(caseType)));
@@ -221,6 +228,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("WizardPageParser - should parse with data on any row")
     public void shouldParsePageWithDataComingFromTheFirstRowAndIgnoreItsOtherRows() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
@@ -272,6 +280,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("CaseTypeTabParser - should parse CaseTypeTab")
     public void shouldParseCaseTypeTab() throws InvalidShowConditionException {
         UserRoleEntity userRoleEntity = new UserRoleEntity();
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
@@ -310,6 +319,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("CaseTypeTabParser - should fail when multiple user roles for same CaseTypeTab")
     public void shouldNotParseCaseTypeTabForMultipleEntriesInUserRoles() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
@@ -343,6 +353,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("CaseTypeTabParser - should fail when invalid user roles")
     public void shouldNotParseCaseTypeTabForInvalidUserRoles() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
