@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.mapstruct.Mapping;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTypeListItemMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
@@ -12,6 +13,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
+    EntityToResponseDTOMapper INSTANCE = Mappers.getMapper(EntityToResponseDTOMapper.class);
+
     FieldTypeListItemMapper fieldTypeListItemMapper = new FieldTypeListItemMapper();
 
     @Mapping(source = "caseTypeEntity.reference", target = "id")
@@ -126,6 +129,13 @@ public interface EntityToResponseDTOMapper {
                          + "       )",
             target = "fixedListItems"
     )
+    @Mapping(
+            expression = "java("
+                         + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.ComplexFieldsMapper.map("
+                         + "               fieldTypeEntity))",
+            target = "complexFields"
+    )
+
     @Mapping(source = "fieldTypeEntity.minimum", target = "min")
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
     @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null"
@@ -254,6 +264,31 @@ public interface EntityToResponseDTOMapper {
                 return fieldTypeListItemMapper.entityToModel(fieldTypeEntity.getListItems());
             }
             return new ArrayList<>();
+        }
+    }
+
+    class ComplexFieldsMapper {
+        private ComplexFieldsMapper() {
+            // Default constructor
+        }
+
+        static List<CaseField> map(FieldTypeEntity fieldTypeEntity) {
+            FieldTypeEntity baseFieldTypeEntity = fieldTypeEntity.getBaseFieldType();
+            if (baseFieldTypeEntity == null && FieldTypeEntity.isComplexField(fieldTypeEntity.getReference())) {
+                return getCaseFields(fieldTypeEntity.getComplexFields());
+            } else if (baseFieldTypeEntity != null &&
+                       FieldTypeEntity.isComplexField(baseFieldTypeEntity.getReference())) {
+                return getCaseFields(fieldTypeEntity.getComplexFields());
+            }
+            return new ArrayList<>();
+        }
+
+        private static List<CaseField> getCaseFields(List<ComplexFieldEntity> complexFieldEntityList) {
+            List<CaseField> caseFields = new ArrayList<>();
+            for (ComplexFieldEntity complexFieldEntity : complexFieldEntityList) {
+                caseFields.add(EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity));
+            }
+            return caseFields;
         }
     }
 }
