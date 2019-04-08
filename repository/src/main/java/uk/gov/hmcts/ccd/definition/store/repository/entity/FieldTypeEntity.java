@@ -182,5 +182,4 @@ public class FieldTypeEntity implements Serializable, Versionable {
     public static boolean isFixedList(String reference) {
         return FIXED_List_ITEMS.contains(reference);
     }
-
 }
