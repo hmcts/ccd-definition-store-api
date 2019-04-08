@@ -183,8 +183,4 @@ public class FieldTypeEntity implements Serializable, Versionable {
         return FIXED_List_ITEMS.contains(reference);
     }
 
-    public static boolean isComplexField(String reference) {
-        return "Complex".equalsIgnoreCase(reference);
-    }
-
 }
