@@ -274,10 +274,9 @@ public interface EntityToResponseDTOMapper {
 
         static List<CaseField> map(FieldTypeEntity fieldTypeEntity) {
             FieldTypeEntity baseFieldTypeEntity = fieldTypeEntity.getBaseFieldType();
-            if (baseFieldTypeEntity == null && FieldTypeEntity.isComplexField(fieldTypeEntity.getReference())) {
+            if (baseFieldTypeEntity == null && isComplexField(fieldTypeEntity.getReference())) {
                 return getCaseFields(fieldTypeEntity.getComplexFields());
-            } else if (baseFieldTypeEntity != null &&
-                       FieldTypeEntity.isComplexField(baseFieldTypeEntity.getReference())) {
+            } else if (baseFieldTypeEntity != null && isComplexField(baseFieldTypeEntity.getReference())) {
                 return getCaseFields(fieldTypeEntity.getComplexFields());
             }
             return new ArrayList<>();
@@ -289,6 +288,10 @@ public interface EntityToResponseDTOMapper {
                 caseFields.add(EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity));
             }
             return caseFields;
+        }
+
+        private static boolean isComplexField(String reference) {
+            return "Complex".equalsIgnoreCase(reference);
         }
     }
 }
