@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
@@ -34,6 +35,10 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     @Column(name = "display_order")
     private Integer order;
+
+    @ManyToOne(cascade = ALL)
+    @JoinColumn(name = "role_id", nullable = false)
+    private UserRoleEntity userRole;
 
     public Integer getId() {
         return id;
@@ -85,5 +90,13 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     public void setOrder(final Integer order) {
         this.order = order;
+    }
+
+    public UserRoleEntity getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRoleEntity userRole) {
+        this.userRole = userRole;
     }
 }
