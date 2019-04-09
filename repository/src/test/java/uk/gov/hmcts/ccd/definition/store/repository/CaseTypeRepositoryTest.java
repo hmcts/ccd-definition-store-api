@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.*;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
@@ -161,6 +164,13 @@ public class CaseTypeRepositoryTest {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc("Dummy");
         assertFalse(definitiveCaseTypeOptional.isPresent());
+    }
+
+    @Test
+    public void shouldReturnAllCurrentCaseReferences() {
+        List<String> currentCaseReferences = classUnderTest.findCurrentVersionReferences();
+        assertThat(currentCaseReferences.size(), is(7));
+        assertThat(currentCaseReferences, hasItems(CASE_TYPE_REFERENCE, "testcase", TEST_CASE_TYPE_REFERENCE, DEFINITIVE_CASE_TYPE_REFERENCE, "anothercase", ANOTHER_CASE_TYPE_REFERENCE, DEFINITIVE_CASE_TYPE_REFERENCE_2));
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -207,6 +208,46 @@ public class CaseDefinitionControllerTest {
             when(caseTypeService.findVersionInfoByCaseTypeId(CASE_TYPE_REFERENCE)).thenReturn(Optional.empty());
             mockMvc.perform(get("/api/data/case-type/" + CASE_TYPE_REFERENCE + "/version"))
                 .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
+    @DisplayName("All Case type references")
+    class AllCaseTypeReferences {
+
+        private static final String CASE_TYPE_REFERENCE_1 = "ThreeSevenEightNine";
+        private static final String CASE_TYPE_REFERENCE_2 = "ThreeSevenEightNine";
+
+        @Test
+        @DisplayName("Green path")
+        void greenPath() throws Exception {
+            when(caseTypeService
+                .findAllCaseTypesReferences())
+                .thenReturn(Lists.newArrayList(CASE_TYPE_REFERENCE_1, CASE_TYPE_REFERENCE_2));
+
+            final MvcResult
+                mvcResult =
+                mockMvc.perform(get("/api/data/case-types-references"))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            assertThat(mvcResult.getResponse().getContentAsString(), is("[\"" + CASE_TYPE_REFERENCE_1 +"\",\"" + CASE_TYPE_REFERENCE_2 + "\"]"));
+        }
+
+        @Test
+        @DisplayName("Not found")
+        void notFound() throws Exception {
+            when(caseTypeService
+                     .findAllCaseTypesReferences())
+                .thenReturn(Lists.newArrayList());
+
+            final MvcResult
+                mvcResult =
+                mockMvc.perform(get("/api/data/case-types-references"))
+                       .andExpect(status().isOk())
+                       .andReturn();
+
+            assertThat(mvcResult.getResponse().getContentAsString(), is("[]"));
         }
     }
 

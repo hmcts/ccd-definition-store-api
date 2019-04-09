@@ -2,12 +2,14 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
 import java.util.*;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -20,9 +22,11 @@ import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 
+import com.google.common.collect.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.core.IsCollectionContaining;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -571,6 +575,38 @@ class CaseTypeServiceImplTest {
                 .thenReturn(Optional.empty());
             String caseTypeId = classUnderTest.findDefinitiveCaseTypeId(CASE_TYPE_REFERENCE);
             assertNull(caseTypeId);
+        }
+    }
+
+    @Nested
+    @DisplayName("Find all Case Types references")
+    class FindAllCaseTypesReferences {
+
+        private static final String CASE_TYPE_REFERENCE = "testaddressbookcase1";
+        private final CaseType caseType = new CaseType();
+
+        @Test
+        @DisplayName("All Case Types found")
+        void caseTypesExist() {
+            when(caseTypeRepository.findCurrentVersionReferences())
+                .thenReturn(Lists.newArrayList(CASE_TYPE_REFERENCE_1, CASE_TYPE_REFERENCE_2, CASE_TYPE_REFERENCE_3));
+
+            List<String> caseTypeIds = classUnderTest.findAllCaseTypesReferences();
+
+            verify(caseTypeRepository).findCurrentVersionReferences();
+            assertThat(caseTypeIds, hasItems(CASE_TYPE_REFERENCE_1, CASE_TYPE_REFERENCE_2, CASE_TYPE_REFERENCE_3));
+        }
+
+        @Test
+        @DisplayName("No Case Types found")
+        void caseTypesDoNotExist() {
+            when(caseTypeRepository.findCurrentVersionReferences())
+                .thenReturn(Lists.newArrayList());
+
+            List<String> caseTypeIds = classUnderTest.findAllCaseTypesReferences();
+
+            verify(caseTypeRepository).findCurrentVersionReferences();
+            assertThat(caseTypeIds, is(emptyList()));
         }
     }
 }
