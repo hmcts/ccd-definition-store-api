@@ -231,7 +231,7 @@ public class CaseDefinitionControllerTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            assertThat(mvcResult.getResponse().getContentAsString(), is("[\"" + CASE_TYPE_REFERENCE_1 +"\",\"" + CASE_TYPE_REFERENCE_2 + "\"]"));
+            assertThat(mvcResult.getResponse().getContentAsString(), is("[\"" + CASE_TYPE_REFERENCE_1 + "\",\"" + CASE_TYPE_REFERENCE_2 + "\"]"));
         }
 
         @Test
