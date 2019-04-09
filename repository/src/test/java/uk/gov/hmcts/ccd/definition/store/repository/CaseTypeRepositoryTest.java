@@ -1,6 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.hamcrest.core.IsCollectionContaining;
+import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,15 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
-import javax.persistence.EntityManager;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
 @RunWith(SpringRunner.class)
