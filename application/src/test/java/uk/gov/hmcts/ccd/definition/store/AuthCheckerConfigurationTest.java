@@ -99,4 +99,11 @@ public class AuthCheckerConfigurationTest {
         assertThat(result, hasSize(1));
         assertThat(result, hasItem("cat"));
     }
+
+    @Test
+    public void shouldReturnEmptyCollectionWhenAdminWebIsEnabledAndRequestUriIsNotDraftApi() {
+        when(request.getRequestURI()).thenReturn("/api/user-role");
+        when(adminWebAuthorizationProperties.isEnabled()).thenReturn(true);
+        assertThat(configuration.authorizedRolesExtractor().apply(request), empty());
+    }
 }
