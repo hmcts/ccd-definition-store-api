@@ -7,5 +7,7 @@ elastic_search_fail_on_import = "true"
 elastic_search_index_shards = 2
 elastic_search_index_shards_replicas = 1
 
+idam_api_url = "http://idam-api-idam-sprod.service.core-compute-idam-sprod.internal"
+
 replicas_datasource_enabled = "true"
 replicas_hosts = "ccd-definition-store-api-postgres-db-sprod.postgres.database.azure.com, ccd-definition-store-api-postgres-db-sprod-read1.postgres.database.azure.com, ccd-definition-store-api-postgres-db-sprod-read2.postgres.database.azure.com"
