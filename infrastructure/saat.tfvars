@@ -1,4 +1,4 @@
-idam_api_url = "https://idam-api-idam-saat.service.core-compute-idam-saat.internal"
+idam_api_url = "http://idam-api-idam-saat.service.core-compute-idam-saat.internal"
 
 asp_name = "ccd-definition-store-api-saat"
 asp_rg = "ccd-definition-store-api-saat"
