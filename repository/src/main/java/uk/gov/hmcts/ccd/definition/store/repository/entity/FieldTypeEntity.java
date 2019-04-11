@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -49,11 +52,11 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "collection_field_type_id")
     private FieldTypeEntity collectionFieldType;
 
-    @OneToMany(mappedBy = "fieldType", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     private final List<FieldTypeListItemEntity> listItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     private final List<ComplexFieldEntity> complexFields = new ArrayList<>();
@@ -61,6 +64,10 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jurisdiction_id")
     private JurisdictionEntity jurisdiction;
+
+    private static final Set<String> FIXED_List_ITEMS = new HashSet<>(Arrays.asList(new String[] {"FixedList",
+                                                                                                  "MultiSelectList",
+                                                                                                  "FixedRadioList"}));
 
     public Integer getId() {
         return id;
@@ -172,4 +179,7 @@ public class FieldTypeEntity implements Serializable, Versionable {
         return String.format("%s-%s", id, UUID.randomUUID());
     }
 
+    public static boolean isFixedList(String reference) {
+        return FIXED_List_ITEMS.contains(reference);
+    }
 }
