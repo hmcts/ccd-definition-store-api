@@ -1162,34 +1162,41 @@ class EntityToResponseDTOMapperTest {
 
         @Test
         void testMapSearchInputCaseFieldEntity() {
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setReference("role1");
             SearchInputCaseFieldEntity searchInputCaseFieldEntity = new SearchInputCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
             searchInputCaseFieldEntity.setCaseField(caseFieldEntity);
             searchInputCaseFieldEntity.setLabel("Label");
             searchInputCaseFieldEntity.setOrder(69);
+            searchInputCaseFieldEntity.setUserRole(userRoleEntity);
 
             SearchInputField searchInputField = spyOnClassUnderTest.map(searchInputCaseFieldEntity);
 
             assertEquals(searchInputCaseFieldEntity.getOrder(), searchInputField.getOrder());
             assertEquals(searchInputCaseFieldEntity.getLabel(), searchInputField.getLabel());
             assertEquals(searchInputCaseFieldEntity.getCaseField().getReference(), searchInputField.getCaseFieldId());
+            assertEquals(userRoleEntity.getReference(), searchInputField.getRole());
         }
 
     }
 
     @Nested
-    @DisplayName("Should create a SearchInputField matching SearchInputCaseFieldEntity fields")
+    @DisplayName("Should create a SearchResultField matching SearchResultCaseFieldEntity fields")
     class SearchResultCaseFieldEntityTests {
 
         @Test
         void testMapSearchResultCaseFieldEntity() {
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setReference("role1");
             SearchResultCaseFieldEntity searchResultCaseFieldEntity = new SearchResultCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
             searchResultCaseFieldEntity.setCaseField(caseFieldEntity);
             searchResultCaseFieldEntity.setLabel("Label");
             searchResultCaseFieldEntity.setOrder(69);
+            searchResultCaseFieldEntity.setUserRole(userRoleEntity);
 
             SearchResultsField searchResultsField = spyOnClassUnderTest.map(searchResultCaseFieldEntity);
 
@@ -1198,6 +1205,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(searchResultCaseFieldEntity.getCaseField().getReference(),
                          searchResultsField.getCaseFieldId());
             assertThat(searchResultsField.isMetadata(), is(false));
+            assertEquals(userRoleEntity.getReference(), searchResultsField.getRole());
         }
 
         @Test
@@ -1223,12 +1231,15 @@ class EntityToResponseDTOMapperTest {
 
         @Test
         void testMapWorkBasketInputCaseFieldEntity() {
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setReference("role1");
             WorkBasketInputCaseFieldEntity workBasketInputCaseFieldEntity = new WorkBasketInputCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
             workBasketInputCaseFieldEntity.setCaseField(caseFieldEntity);
             workBasketInputCaseFieldEntity.setLabel("Label");
             workBasketInputCaseFieldEntity.setOrder(69);
+            workBasketInputCaseFieldEntity.setUserRole(userRoleEntity);
 
             WorkbasketInputField workbasketInputField = spyOnClassUnderTest.map(workBasketInputCaseFieldEntity);
 
@@ -1236,6 +1247,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(workBasketInputCaseFieldEntity.getLabel(), workbasketInputField.getLabel());
             assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(),
                          workbasketInputField.getCaseFieldId());
+            assertEquals(userRoleEntity.getReference(), workbasketInputField.getRole());
         }
 
     }
@@ -1246,18 +1258,22 @@ class EntityToResponseDTOMapperTest {
 
         @Test
         void testMapWorkBasketCaseFieldEntity() {
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setReference("role1");
             WorkBasketCaseFieldEntity workBasketCaseFieldEntity = new WorkBasketCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
             workBasketCaseFieldEntity.setCaseField(caseFieldEntity);
             workBasketCaseFieldEntity.setLabel("Label");
             workBasketCaseFieldEntity.setOrder(69);
+            workBasketCaseFieldEntity.setUserRole(userRoleEntity);
 
             WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
 
             assertEquals(workBasketCaseFieldEntity.getOrder(), workBasketResult.getOrder());
             assertEquals(workBasketCaseFieldEntity.getLabel(), workBasketResult.getLabel());
             assertEquals(workBasketCaseFieldEntity.getCaseField().getReference(), workBasketResult.getCaseFieldId());
+            assertEquals(userRoleEntity.getReference(), workBasketResult.getRole());
         }
 
         @Test

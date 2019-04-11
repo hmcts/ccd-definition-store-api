@@ -199,16 +199,20 @@ public interface EntityToResponseDTOMapper {
     CaseTypeTabField map(DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity);
 
     @Mapping(source = "searchInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(source = "searchInputCaseFieldEntity.userRole.reference", target = "role")
     SearchInputField map(SearchInputCaseFieldEntity searchInputCaseFieldEntity);
 
     @Mapping(source = "searchResultCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(source = "searchResultCaseFieldEntity.userRole.reference", target = "role")
     @Mapping(expression = "java(searchResultCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchResultsField map(SearchResultCaseFieldEntity searchResultCaseFieldEntity);
 
     @Mapping(source = "workBasketInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(source = "workBasketInputCaseFieldEntity.userRole.reference", target = "role")
     WorkbasketInputField map(WorkBasketInputCaseFieldEntity workBasketInputCaseFieldEntity);
 
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(source = "workBasketCaseFieldEntity.userRole.reference", target = "role")
     @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 

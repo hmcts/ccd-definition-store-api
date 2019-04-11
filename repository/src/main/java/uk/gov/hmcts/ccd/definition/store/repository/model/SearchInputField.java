@@ -9,6 +9,7 @@ public class SearchInputField {
     private String caseFieldId = null;
     private String label = null;
     private Integer order = null;
+    private String role;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -35,5 +36,14 @@ public class SearchInputField {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    @JsonProperty("role")
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
