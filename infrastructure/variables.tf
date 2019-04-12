@@ -143,3 +143,7 @@ variable "replicas_datasource_enabled" {
 variable "replicas_hosts" {
   default = ""
 }
+
+variable "replicas_username" {
+  default = "ccd"
+}

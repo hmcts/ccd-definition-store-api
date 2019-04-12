@@ -98,6 +98,7 @@ module "case-definition-store-api" {
     DEFINITION_STORE_DB_PORT = "${module.definition-store-db.postgresql_listen_port}"
     DEFINITION_STORE_DB_NAME = "${module.definition-store-db.postgresql_database}"
     DEFINITION_STORE_DB_USERNAME = "${module.definition-store-db.user_name}"
+    DEFINITION_STORE_DB_REPLICA_USERNAME = "${var.replicas_username}"
     DEFINITION_STORE_DB_PASSWORD = "${module.definition-store-db.postgresql_password}"
     DEFINITION_STORE_DB_OPTIONS = "?sslmode=require"
     DEFINITION_STORE_DB_MAX_POOL_SIZE = "${var.database_max_pool_size}"
