@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
@@ -75,12 +77,29 @@ public abstract class GenericLayoutParser {
         if (null != layoutItems) {
             getLogger().debug("Layout parsing: Case type {}: {} fields detected", caseTypeId, layoutItems.size());
 
+            if (hasDuplicateUserRoleDefinition(layoutItems)) {
+                throw new MapperException(
+                    String.format("Please provide one user role row in worksheet %s on column USER_ROLE for case type %s",
+                        layoutItems.get(0).getSheetName(), caseType.getReference()));
+            }
+
             for (DefinitionDataItem layoutCaseFieldDefinition : layoutItems) {
                 result.add(parseLayoutCaseField(caseType, layoutCaseFieldDefinition));
             }
 
             getLogger().info("Layout parsing: Case type {}: OK", caseTypeId, layoutItems.size());
         }
+    }
+
+    private boolean hasDuplicateUserRoleDefinition(List<DefinitionDataItem> layoutItems) {
+        return layoutItems
+            .stream()
+            .filter(ddi ->
+                layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE)) ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : false)
+                    && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
+                    && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID)))
+                    .count() > 1)
+            .count() > 0;
     }
 
     private List<DefinitionDataItem> getUnknownDataDefinitionItems(Map<String, DefinitionSheet> definitionSheets) {

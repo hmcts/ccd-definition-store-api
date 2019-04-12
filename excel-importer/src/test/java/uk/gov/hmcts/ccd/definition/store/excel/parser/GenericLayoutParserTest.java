@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,10 +17,12 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 @DisplayName("Generic Layout Parser Test")
 public class GenericLayoutParserTest {
     private static final String INVALID_CASE_TYPE_ID = "Invalid Case Type";
+    private static final String ROLE1 = "Role1";
     private static final String INVALID_USER_ROLE = "Invalid User Role";
     private static final String CASE_TYPE_ID = "Valid Case Type";
     private static final String CASE_TYPE_ID2 = "Valid Case Type II";
@@ -28,6 +31,7 @@ public class GenericLayoutParserTest {
     private GenericLayoutParser classUnderTest;
     private Map<String, DefinitionSheet> definitionSheets;
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
+    private final ParseContext context = new ParseContext();
 
     @BeforeEach
     public void setup() {
@@ -40,7 +44,7 @@ public class GenericLayoutParserTest {
         CaseFieldEntity caseFieldEntity2 = new CaseFieldEntity();
         caseFieldEntity2.setReference(CASE_FIELD_ID_2);
 
-        final ParseContext context = new ParseContext();
+
         context.registerCaseType(caseTypeEntity);
         context.registerCaseType(caseTypeEntity2);
         context.registerCaseFieldForCaseType(CASE_TYPE_ID, caseFieldEntity1);
@@ -106,5 +110,39 @@ public class GenericLayoutParserTest {
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("- Invalid idam role '%s' in worksheet '%s' for caseField '%s'",
             INVALID_USER_ROLE, item2.getSheetName(), item2.getString(ColumnName.CASE_FIELD_ID)), thrown.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("Duplicate user roles should generate error")
+    public void shouldFailForDuplicateUserRole() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        sheet.addDataItem(item2);
+        final DefinitionDataItem item3 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item3.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item3.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item3.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item3.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        sheet.addDataItem(item3);
+
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+        UserRoleEntity userRoleEntity = new UserRoleEntity();
+        userRoleEntity.setReference(ROLE1);
+        context.registerUserRoles(Arrays.asList(userRoleEntity));
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        assertEquals(String.format("Please provide one user role row in worksheet %s on column USER_ROLE for case type %s",
+            item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
+
+        context.registerUserRoles(Arrays.asList(new UserRoleEntity()));
     }
 }
