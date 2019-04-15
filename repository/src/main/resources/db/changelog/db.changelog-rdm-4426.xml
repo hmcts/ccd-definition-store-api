@@ -15,5 +15,33 @@
         <addColumn tableName="workbasket_input_case_field">
             <column name="case_field_element_path" type="varchar(300)"/>
         </addColumn>
+
+        <dropUniqueConstraint constraintName="unique_search_input_case_field_case_type_id_case_field_id"
+                              tableName="search_input_case_field"/>
+
+        <addUniqueConstraint columnNames="case_type_id, case_field_id, case_field_element_path"
+                             constraintName="unique_search_input_case_field_case_type_id_case_field_id"
+                             tableName="search_input_case_field"/>
+
+        <dropUniqueConstraint constraintName="unique_search_result_case_field_case_type_id_case_field_id"
+                              tableName="search_result_case_field"/>
+
+        <addUniqueConstraint columnNames="case_type_id, case_field_id, case_field_element_path"
+                             constraintName="unique_search_result_case_field_case_type_id_case_field_id"
+                             tableName="search_result_case_field"/>
+
+        <dropUniqueConstraint constraintName="unique_workbasket_input_case_field_case_type_id_case_field_id"
+                              tableName="workbasket_input_case_field"/>
+
+        <addUniqueConstraint columnNames="case_type_id, case_field_id, case_field_element_path"
+                             constraintName="unique_workbasket_input_case_field_case_type_id_case_field_id"
+                             tableName="workbasket_input_case_field"/>
+
+        <dropUniqueConstraint constraintName="unique_workbasket_case_field_case_type_id_case_field_id"
+                              tableName="workbasket_case_field"/>
+
+        <addUniqueConstraint columnNames="case_type_id, case_field_id, case_field_element_path"
+                             constraintName="unique_workbasket_case_field_case_type_id_case_field_id"
+                             tableName="workbasket_case_field"/>
     </changeSet>
 </databaseChangeLog>

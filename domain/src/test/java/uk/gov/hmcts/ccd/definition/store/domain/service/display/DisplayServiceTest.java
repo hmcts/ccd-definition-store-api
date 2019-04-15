@@ -203,9 +203,9 @@ public class DisplayServiceTest {
                 Collections.emptyList()
             );
 
-            SearchResultDefinition searchInputDefinition = classUnderTest.findSearchResultDefinitionForCaseType(caseTypeId);
+            SearchResultDefinition searchResultDefinition = classUnderTest.findSearchResultDefinitionForCaseType(caseTypeId);
 
-            assertTrue(searchInputDefinition.getFields().isEmpty());
+            assertTrue(searchResultDefinition.getFields().isEmpty());
 
         }
 
@@ -303,9 +303,9 @@ public class DisplayServiceTest {
                 Collections.emptyList()
             );
 
-            WorkBasketResult searchInputDefinition = classUnderTest.findWorkBasketDefinitionForCaseType(caseTypeId);
+            WorkBasketResult workBasketResult = classUnderTest.findWorkBasketDefinitionForCaseType(caseTypeId);
 
-            assertTrue(searchInputDefinition.getFields().isEmpty());
+            assertTrue(workBasketResult.getFields().isEmpty());
 
         }
 
