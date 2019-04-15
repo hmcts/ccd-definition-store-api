@@ -23,7 +23,7 @@ dependencies {
     }
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
     compile "commons-beanutils:commons-beanutils:1.9.3"
-    compile "org.apache.commons:commons-lang3:3.7"
+    compile "org.apache.commons:commons-lang3:3.9"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
     compile "javax.validation:validation-api:2.0.1.Final"
