@@ -1,27 +1,50 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.verify;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT_TO_FIELDS;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE_TAB;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_INPUT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_RESULT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_RESULT_FIELDS;
+
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.*;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 @DisplayName("Layout Parser Test")
 class LayoutParserTest {
+
+    @Mock
+    private WorkbasketInputLayoutParser workbasketInputLayoutParser;
+    @Mock
+    private WorkbasketLayoutParser workbasketLayoutParser;
+    @Mock
+    private SearchInputLayoutParser searchInputLayoutParser;
+    @Mock
+    private SearchResultLayoutParser searchResultLayoutParser;
 
     private LayoutParser underTest;
     private Map<String, DefinitionSheet> definitionSheets;
@@ -33,6 +56,7 @@ class LayoutParserTest {
 
     @BeforeEach
     void init() {
+        MockitoAnnotations.initMocks(this);
 
         caseTypeEntity = buildCaseTypeEntity();
         caseFieldEntity = buildCaseFieldEntity();
@@ -44,10 +68,10 @@ class LayoutParserTest {
         final ShowConditionParser showConditionParser = new ShowConditionParser();
         final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry = new
             EntityToDefinitionDataItemRegistry();
-        underTest = new LayoutParser(new WorkbasketInputLayoutParser(context, entityToDefinitionDataItemRegistry),
-            new WorkbasketLayoutParser(context, entityToDefinitionDataItemRegistry),
-            new SearchInputLayoutParser(context, entityToDefinitionDataItemRegistry),
-            new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry),
+        underTest = new LayoutParser(workbasketInputLayoutParser,
+            workbasketLayoutParser,
+            searchInputLayoutParser,
+            searchResultLayoutParser,
             new CaseTypeTabParser(context,
                 showConditionParser,
                 entityToDefinitionDataItemRegistry),
@@ -65,15 +89,35 @@ class LayoutParserTest {
     }
 
     @Test
-    @DisplayName("tests that parse results are adding up in parseAllGenerics")
-    void parseAllGenerics() {
-        final ParseResult<GenericLayoutEntity> parseResult = underTest.parseAllGenerics(definitionSheets);
-        final List<GenericLayoutEntity> results = parseResult.getAllResults();
-        assertAll(() -> assertThat(results.size(), is(4)),
-            () -> assertGenericLayoutEntityIsPresent(results, WorkBasketInputCaseFieldEntity.class),
-            () -> assertGenericLayoutEntityIsPresent(results, WorkBasketCaseFieldEntity.class),
-            () -> assertGenericLayoutEntityIsPresent(results, SearchInputCaseFieldEntity.class),
-            () -> assertGenericLayoutEntityIsPresent(results, SearchResultCaseFieldEntity.class));
+    @DisplayName("parseWorkbasketInputLayout() - delegates to workbasketInputLayoutParser")
+    void parseWorkbasketInputLayout() {
+        underTest.parseWorkbasketInputLayout(definitionSheets);
+
+        verify(workbasketInputLayoutParser).parseAll(definitionSheets);
+    }
+
+    @Test
+    @DisplayName("parseWorkbasketLayout() - delegates to workbasketLayoutParser")
+    void parseWorkbasketLayout() {
+        underTest.parseWorkbasketLayout(definitionSheets);
+
+        verify(workbasketLayoutParser).parseAll(definitionSheets);
+    }
+
+    @Test
+    @DisplayName("parseSearchInputLayout() - delegates to searchInputLayoutParser")
+    void parseSearchInputLayout() {
+        underTest.parseSearchInputLayout(definitionSheets);
+
+        verify(searchInputLayoutParser).parseAll(definitionSheets);
+    }
+
+    @Test
+    @DisplayName("parseSearchResultLayout() - delegates to searchResultLayoutParser")
+    void parseSearchResultLayout() {
+        underTest.parseSearchResultLayout(definitionSheets);
+
+        verify(searchResultLayoutParser).parseAll(definitionSheets);
     }
 
     @Test
