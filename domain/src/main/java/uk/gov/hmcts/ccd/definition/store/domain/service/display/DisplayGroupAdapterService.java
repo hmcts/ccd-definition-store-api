@@ -30,12 +30,17 @@ public class DisplayGroupAdapterService {
     private DisplayGroupRepository displayGroupRepository;
     private CaseTypeRepository caseTypeRepository;
     private EventRepository eventRepository;
+    private CaseFieldEntityUtil caseFieldEntityUtil;
 
     @Autowired
-    public DisplayGroupAdapterService(DisplayGroupRepository displayGroupRepository, CaseTypeRepository caseTypeRepository, EventRepository eventRepository) {
+    public DisplayGroupAdapterService(DisplayGroupRepository displayGroupRepository,
+                                      CaseTypeRepository caseTypeRepository,
+                                      EventRepository eventRepository,
+                                      CaseFieldEntityUtil caseFieldEntityUtil) {
         this.displayGroupRepository = displayGroupRepository;
         this.caseTypeRepository = caseTypeRepository;
         this.eventRepository = eventRepository;
+        this.caseFieldEntityUtil = caseFieldEntityUtil;
     }
 
     public WizardPageCollection findWizardPagesByCaseTypeId(String caseTypeReference, String eventReference) {
@@ -59,7 +64,7 @@ public class DisplayGroupAdapterService {
 
                     List<String> allSubTypePossibilities =
                         displayGroupEntity.getEvent().getEventCaseFields() != null && !displayGroupEntity.getEvent().getEventCaseFields().isEmpty()
-                            ? CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(displayGroupEntity.getEvent().getEventCaseFields()
+                            ? caseFieldEntityUtil.buildDottedComplexFieldPossibilities(displayGroupEntity.getEvent().getEventCaseFields()
                             .stream().map(EventCaseFieldEntity::getCaseField)
                             .collect(Collectors.toList())) : Collections.emptyList();
 

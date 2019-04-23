@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.PageEventMissingDisplayGroupValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -59,7 +60,7 @@ public class LayoutServiceImplTest {
         MockitoAnnotations.initMocks(this);
         classUnderTest = new LayoutServiceImpl(
             genericRepository,
-            asList(new GenericLayoutEntityValidatorImpl()),
+            asList(new GenericLayoutEntityValidatorImpl(new CaseFieldEntityUtil())),
             displayGroupRepository,
             asList(new PageEventMissingDisplayGroupValidatorImpl())
         );

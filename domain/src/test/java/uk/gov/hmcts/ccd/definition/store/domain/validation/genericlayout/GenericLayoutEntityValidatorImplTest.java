@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
@@ -33,13 +34,15 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 @DisplayName("Generic Layout Entity Validator Implementation Tests")
 class GenericLayoutEntityValidatorImplTest {
     private static final String CASE_FIELD = "Case Field I";
+
     private GenericLayoutEntityValidatorImpl validator;
+
     private CaseTypeEntity caseType;
     private CaseFieldEntity caseField;
 
     @BeforeEach
     void setUp() {
-        validator = new GenericLayoutEntityValidatorImpl();
+        validator = new GenericLayoutEntityValidatorImpl(new CaseFieldEntityUtil());
 
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setBaseFieldType(fieldTypeEntity("Text", emptyList()));

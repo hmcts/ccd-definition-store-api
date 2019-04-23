@@ -9,15 +9,23 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GenericLayoutEntityValidatorImpl implements GenericLayoutValidator {
 
-    public static final String ERROR_MESSAGE_INVALID_NUMBER_WITH_CASE_FIELD =
+    private static final String ERROR_MESSAGE_INVALID_NUMBER_WITH_CASE_FIELD =
         "DisplayOrder '%d' needs to be a valid integer for row with label '%s', case field '%s'";
-    public static final String ERROR_MESSAGE_INVALID_NUMBER_WITHOUT_CASE_FIELD =
+    private static final String ERROR_MESSAGE_INVALID_NUMBER_WITHOUT_CASE_FIELD =
         "DisplayOrder '%d' needs to be a valid integer for row with label '%s'";
+
+    private final CaseFieldEntityUtil caseFieldEntityUtil;
+
+    @Autowired
+    public GenericLayoutEntityValidatorImpl(CaseFieldEntityUtil caseFieldEntityUtil) {
+        this.caseFieldEntityUtil = caseFieldEntityUtil;
+    }
 
     @Override
     public ValidationResult validate(GenericLayoutEntity entity) {
@@ -40,34 +48,9 @@ public class GenericLayoutEntityValidatorImpl implements GenericLayoutValidator 
                     ), entity)
             );
         } else {
-            if (entity.getCaseFieldElementPath() != null) {
-                if (entity.getCaseField().isComplexFieldType() || entity.getCaseField().isCollectionFieldType()) {
-                    List<CaseFieldEntity> caseFields = entity.getCaseType().getCaseFields();
-
-                    List<String> allPaths = CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(caseFields);
-                    if (!allPaths.contains(entity.getCaseField().getReference() + '.' + entity.getCaseFieldElementPath())) {
-                        validationResult.addError(
-                            new ValidationError(
-                                String.format("Invalid ListElementCode '%s' for case type '%s', case field '%s' with label '%s'",
-                                    entity.getCaseFieldElementPath(),
-                                    entity.getCaseType().getReference(),
-                                    entity.getCaseField().getReference(),
-                                    entity.getLabel()
-                                ), entity)
-                        );
-                    }
-                } else {
-                    validationResult.addError(
-                        new ValidationError(
-                            String.format("ListElementCode '%s' can be only defined for complex fields. Case Field '%s', case type '%s'",
-                                entity.getCaseFieldElementPath(),
-                                entity.getCaseField().getReference(),
-                                entity.getCaseType().getReference()
-                            ), entity)
-                    );
-                }
-            }
+            validatePaths(entity, validationResult);
         }
+
         if (entity.getOrder() != null && entity.getOrder() < 1) {
             final String errorMessage;
             if (null == entity.getCaseField()) {
@@ -85,6 +68,36 @@ public class GenericLayoutEntityValidatorImpl implements GenericLayoutValidator 
             validationResult.addError(new ValidationError(errorMessage, entity));
         }
         return validationResult;
+    }
+
+    private void validatePaths(final GenericLayoutEntity entity, final ValidationResult validationResult) {
+        if (entity.getCaseFieldElementPath() != null) {
+            if (entity.getCaseField().isComplexFieldType() || entity.getCaseField().isCollectionFieldType()) {
+                List<CaseFieldEntity> caseFields = entity.getCaseType().getCaseFields();
+
+                List<String> allPaths = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(caseFields);
+                if (!allPaths.contains(entity.getCaseField().getReference() + '.' + entity.getCaseFieldElementPath())) {
+                    validationResult.addError(
+                        new ValidationError(
+                            String.format("Invalid ListElementCode '%s' for case type '%s', case field '%s' with label '%s'",
+                                entity.getCaseFieldElementPath(),
+                                entity.getCaseType().getReference(),
+                                entity.getCaseField().getReference(),
+                                entity.getLabel()
+                            ), entity)
+                    );
+                }
+            } else {
+                validationResult.addError(
+                    new ValidationError(
+                        String.format("ListElementCode '%s' can be only defined for complex fields. Case Field '%s', case type '%s'",
+                            entity.getCaseFieldElementPath(),
+                            entity.getCaseField().getReference(),
+                            entity.getCaseType().getReference()
+                        ), entity)
+                );
+            }
+        }
     }
 
     public static class ValidationError extends SimpleValidationError<GenericLayoutEntity> {
