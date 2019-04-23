@@ -92,6 +92,7 @@ module "case-definition-store-api" {
   asp_rg = "${(var.asp_rg == "use_shared") ? local.sharedASPResourceGroup : var.asp_rg}"
   website_local_cache_sizeinmb = 1200
   capacity = "${var.capacity}"
+  java_container_version = "9.0"
 
   app_settings = {
     DEFINITION_STORE_DB_HOST = "${module.definition-store-db.host_name}"
