@@ -7,7 +7,7 @@ LABEL maintainer="https://github.com/hmcts/ccd-definition-store-api"
 COPY build/libs/case-definition-store-api.jar /opt/app/
 COPY lib/AI-Agent.xml /opt/app/
 
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" curl --silent --fail http://localhost:4451/status/health
+HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q --spider http://localhost:4451/status/health || exit 1
 
 EXPOSE 4451
 
