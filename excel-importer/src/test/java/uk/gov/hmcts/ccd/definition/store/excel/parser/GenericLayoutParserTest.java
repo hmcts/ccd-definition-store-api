@@ -108,10 +108,9 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item2);
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
-        assertEquals(String.format("- Invalid idam role '%s' in worksheet '%s' for caseField '%s'",
+        assertEquals(String.format("- Unknown idam role '%s' in worksheet '%s' for caseField '%s'",
             INVALID_USER_ROLE, item2.getSheetName(), item2.getString(ColumnName.CASE_FIELD_ID)), thrown.getMessage());
     }
-
 
     @Test
     @DisplayName("Duplicate user roles should generate error")

@@ -94,12 +94,11 @@ public abstract class GenericLayoutParser {
     private boolean hasDuplicateUserRoleDefinition(List<DefinitionDataItem> layoutItems) {
         return layoutItems
             .stream()
-            .filter(ddi ->
+            .anyMatch(ddi ->
                 layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE)) ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : false)
                     && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
                     && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID)))
-                    .count() > 1)
-            .count() > 0;
+                    .count() > 1);
     }
 
     private List<DefinitionDataItem> getUnknownDataDefinitionItems(Map<String, DefinitionSheet> definitionSheets) {
@@ -132,7 +131,7 @@ public abstract class GenericLayoutParser {
 
     private UserRoleEntity getRoleEntity(GenericLayoutEntity layoutEntity, String sheetName, String userRole) {
         return parseContext.getIdamRole(userRole)
-            .orElseThrow(() -> new MapperException(String.format("- Invalid idam role '%s' in worksheet '%s' for caseField '%s'",
+            .orElseThrow(() -> new MapperException(String.format("- Unknown idam role '%s' in worksheet '%s' for caseField '%s'",
                 userRole, sheetName, layoutEntity.getCaseField().getReference())));
     }
 
