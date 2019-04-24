@@ -1,15 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -38,8 +35,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class LayoutServiceImplTest {
-
-    private static final String UNIQUE_CONSTRAINT_VALIDATION_ERROR = "Following have to be unique: [CaseTypeID '%s', CaseFieldID '%s', ListElementCode '%s'] with label '%s'";
 
     @Mock
     private DisplayGroupRepository displayGroupRepository;
@@ -96,98 +91,6 @@ public class LayoutServiceImplTest {
         Collection<GenericLayoutEntity> savedDisplayGroupEntities = genericLayoutCaptor.getValue();
         assertEquals(2, savedDisplayGroupEntities.size());
         assertThat(savedDisplayGroupEntities, allOf(hasItem(entity1), hasItem(entity2)));
-    }
-
-    @Test
-    public void shouldFailIfCaseTypeCaseFieldAndListElementCodeNotUniqueForWorkbasketInput() {
-        String caseTypeRef = "ComplexCollectionComplex";
-        String caseFieldRef = "FamilyDetails";
-        String elementPath = "MotherName";
-
-        GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
-        entity1.setCaseField(createCaseFieldEntity(caseFieldRef));
-        entity1.setCaseType(createCaseTypeEntity(caseTypeRef));
-        entity1.setCaseFieldElementPath(elementPath);
-        entity1.setLabel("label1");
-
-        GenericLayoutEntity entity2 = new WorkBasketInputCaseFieldEntity();
-        entity2.setCaseField(createCaseFieldEntity(caseFieldRef));
-        entity2.setCaseType(createCaseTypeEntity(caseTypeRef));
-        entity2.setCaseFieldElementPath(elementPath);
-        entity2.setLabel("label2");
-
-        GenericLayoutEntity otherEntity = new WorkBasketInputCaseFieldEntity();
-        otherEntity.setCaseField(createCaseFieldEntity(caseFieldRef));
-        otherEntity.setCaseType(createCaseTypeEntity("School"));
-        otherEntity.setCaseFieldElementPath("SchoolName");
-
-        classUnderTest = new LayoutServiceImpl(
-            genericRepository,
-            emptyList(),
-            displayGroupRepository,
-            emptyList()
-        );
-
-        try {
-            classUnderTest.createGenerics(asList(entity1, entity2, otherEntity));
-            fail();
-        } catch (ValidationException ex) {
-            assertThat(ex.getValidationResult().getValidationErrors().size(), is(2));
-            assertEquals(1, ex.getValidationResult().getValidationErrors()
-                .stream().filter(e -> e.getDefaultMessage().equals(format(UNIQUE_CONSTRAINT_VALIDATION_ERROR,
-                caseTypeRef, caseFieldRef, elementPath, "label1")))
-                .count());
-            assertEquals(1, ex.getValidationResult().getValidationErrors()
-                .stream().filter(e -> e.getDefaultMessage().equals(format(UNIQUE_CONSTRAINT_VALIDATION_ERROR,
-                    caseTypeRef, caseFieldRef, elementPath, "label2")))
-                .count());
-        }
-    }
-
-    @Test
-    public void shouldFailIfCaseTypeCaseFieldNotUniqueAndListElementCodeNullForWorkbasketInput1() {
-        String caseTypeRef = "ComplexCollectionComplex";
-        String caseFieldRef = "FamilyDetails";
-        String elementPath = null;
-
-        GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
-        entity1.setCaseField(createCaseFieldEntity(caseFieldRef));
-        entity1.setCaseType(createCaseTypeEntity(caseTypeRef));
-        entity1.setCaseFieldElementPath(elementPath);
-        entity1.setLabel("label1");
-
-        GenericLayoutEntity entity2 = new WorkBasketInputCaseFieldEntity();
-        entity2.setCaseField(createCaseFieldEntity(caseFieldRef));
-        entity2.setCaseType(createCaseTypeEntity(caseTypeRef));
-        entity2.setCaseFieldElementPath(elementPath);
-        entity2.setLabel("label2");
-
-        GenericLayoutEntity otherEntity = new WorkBasketInputCaseFieldEntity();
-        otherEntity.setCaseField(createCaseFieldEntity(caseFieldRef));
-        otherEntity.setCaseType(createCaseTypeEntity("School"));
-        otherEntity.setCaseFieldElementPath("SchoolName");
-
-        classUnderTest = new LayoutServiceImpl(
-            genericRepository,
-            emptyList(),
-            displayGroupRepository,
-            emptyList()
-        );
-
-        try {
-            classUnderTest.createGenerics(asList(entity1, entity2, otherEntity));
-            fail();
-        } catch (ValidationException ex) {
-            assertThat(ex.getValidationResult().getValidationErrors().size(), is(2));
-            assertEquals(1, ex.getValidationResult().getValidationErrors()
-                .stream().filter(e -> e.getDefaultMessage().equals(format(UNIQUE_CONSTRAINT_VALIDATION_ERROR,
-                    caseTypeRef, caseFieldRef, elementPath, "label1")))
-                .count());
-            assertEquals(1, ex.getValidationResult().getValidationErrors()
-                .stream().filter(e -> e.getDefaultMessage().equals(format(UNIQUE_CONSTRAINT_VALIDATION_ERROR,
-                    caseTypeRef, caseFieldRef, elementPath, "label2")))
-                .count());
-        }
     }
 
     @Test(expected = ValidationException.class)

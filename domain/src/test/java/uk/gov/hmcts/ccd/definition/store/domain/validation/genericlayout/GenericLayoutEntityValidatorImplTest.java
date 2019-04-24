@@ -1,10 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl.ERROR_MESSAGE_DUPLICATES_FOUND_FOR_TYPE_REF_FIELD_REF_AND_PATH;
 
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
@@ -25,6 +29,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -134,7 +139,7 @@ class GenericLayoutEntityValidatorImplTest {
 //            System.out.println("testing... " + entity.getClass().getSimpleName());
             entity.setCaseField(caseField);
             entity.setCaseType(caseType);
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -151,7 +156,7 @@ class GenericLayoutEntityValidatorImplTest {
             caseType.addCaseField(complexCaseField);
             entity.setCaseFieldElementPath(path);
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -168,7 +173,7 @@ class GenericLayoutEntityValidatorImplTest {
             caseType.addCaseField(collectionCaseField);
             entity.setCaseFieldElementPath(path);
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -182,7 +187,7 @@ class GenericLayoutEntityValidatorImplTest {
             entity.setCaseType(caseType);
             entity.setCaseFieldElementPath("SomeNonExistingPath");
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -202,7 +207,7 @@ class GenericLayoutEntityValidatorImplTest {
             caseType.addCaseField(collectionComplexCaseField);
             entity.setCaseFieldElementPath("SomeNonExistingPath");
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -219,7 +224,7 @@ class GenericLayoutEntityValidatorImplTest {
             entity.setCaseField(caseField);
             entity.setCaseType(caseType);
             entity.setOrder(-1);
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -235,7 +240,7 @@ class GenericLayoutEntityValidatorImplTest {
         void shouldFailWhenCaseTypeIsEmpty(GenericLayoutEntity entity) {
             entity.setLabel("Label");
             entity.setCaseField(caseField);
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -250,7 +255,7 @@ class GenericLayoutEntityValidatorImplTest {
         void shouldFailWhenCaseFieldIsEmpty(GenericLayoutEntity entity) {
             entity.setLabel("Label");
             entity.setCaseType(caseType);
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -264,7 +269,7 @@ class GenericLayoutEntityValidatorImplTest {
         @ArgumentsSource(EntityArgumentsProvider.class)
         void shouldFailWhenBothCaseTypeAndCaseFieldAreEmpty(GenericLayoutEntity entity) {
             entity.setLabel("Label");
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -274,6 +279,86 @@ class GenericLayoutEntityValidatorImplTest {
                 () ->
                     assertThat(result.getValidationErrors().get(1).getDefaultMessage(),
                         is("Case Field cannot be empty for row with label 'Label', case type ''"))
+            );
+        }
+
+        @Test
+        public void shouldFailIfCaseTypeCaseFieldAndListElementCodeNotUniqueForWorkbasketInput() {
+            String caseTypeRef = "ComplexCollectionComplex";
+            String caseFieldRef = "FamilyDetails";
+            String elementPath = "MotherName";
+
+            GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
+            entity1.setCaseField(caseFieldEntity(caseFieldRef, complexFieldTypeEntity("Family",
+                singletonList(complexFieldEntity(elementPath, fieldTypeEntity("Text", emptyList()))))));
+            entity1.setCaseType(createCaseTypeEntity(caseTypeRef));
+            entity1.setCaseFieldElementPath(elementPath);
+            entity1.setLabel("label1");
+
+            GenericLayoutEntity entity2 = new WorkBasketInputCaseFieldEntity();
+            entity2.setCaseField(caseFieldEntity(caseFieldRef, complexFieldTypeEntity("Family",
+                singletonList(complexFieldEntity(elementPath, fieldTypeEntity("Text", emptyList()))))));
+            entity2.setCaseType(createCaseTypeEntity(caseTypeRef));
+            entity2.setCaseFieldElementPath(elementPath);
+            entity2.setLabel("label2");
+
+            GenericLayoutEntity otherEntity = new WorkBasketInputCaseFieldEntity();
+            otherEntity.setCaseField(caseFieldEntity(caseFieldRef, textFieldTypeEntity()));
+            otherEntity.setCaseType(createCaseTypeEntity("School"));
+            otherEntity.setCaseFieldElementPath("");
+
+            final ValidationResult result = validator.validate(asList(entity1, entity2, otherEntity));
+
+            assertAll(
+                () -> assertThat(result.isValid(), is(false)),
+                () -> assertThat(result.getValidationErrors().size(), is(4)),
+                () -> assertEquals(result.getValidationErrors().stream().filter(e -> e.getDefaultMessage()
+                    .equals(format(ERROR_MESSAGE_DUPLICATES_FOUND_FOR_TYPE_REF_FIELD_REF_AND_PATH,
+                        caseTypeRef, caseFieldRef, elementPath, "label1")))
+                    .count(),1),
+                () -> assertEquals(result.getValidationErrors().stream().filter(e -> e.getDefaultMessage()
+                    .equals(format(ERROR_MESSAGE_DUPLICATES_FOUND_FOR_TYPE_REF_FIELD_REF_AND_PATH,
+                        caseTypeRef, caseFieldRef, elementPath, "label2")))
+                    .count(),1)
+            );
+        }
+
+        @Test
+        void shouldFailIfCaseTypeCaseFieldNotUniqueAndListElementCodeNullForWorkbasketInput() {
+            String caseTypeRef = "ComplexCollectionComplex";
+            String caseFieldRef = "FamilyDetails";
+            String elementPath = null;
+
+            GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
+            entity1.setCaseField(caseFieldEntity(caseFieldRef, textFieldTypeEntity()));
+            entity1.setCaseType(createCaseTypeEntity(caseTypeRef));
+            entity1.setCaseFieldElementPath(elementPath);
+            entity1.setLabel("label1");
+
+            GenericLayoutEntity entity2 = new WorkBasketInputCaseFieldEntity();
+            entity2.setCaseField(caseFieldEntity(caseFieldRef, textFieldTypeEntity()));
+            entity2.setCaseType(createCaseTypeEntity(caseTypeRef));
+            entity2.setCaseFieldElementPath(elementPath);
+            entity2.setLabel("label2");
+
+            GenericLayoutEntity otherEntity = new WorkBasketInputCaseFieldEntity();
+            otherEntity.setCaseField(caseFieldEntity(caseFieldRef, textFieldTypeEntity()));
+            otherEntity.setCaseType(createCaseTypeEntity("School"));
+            otherEntity.setCaseFieldElementPath("");
+
+            final ValidationResult result = validator.validate(asList(entity1, entity2, otherEntity));
+
+            assertAll(
+                () -> assertThat(result.isValid(), is(false)),
+                () -> assertThat(result.getValidationErrors().size(), is(2)),
+                () -> assertEquals(result.getValidationErrors().stream().filter(e -> e.getDefaultMessage()
+                        .equals(format(ERROR_MESSAGE_DUPLICATES_FOUND_FOR_TYPE_REF_FIELD_REF_AND_PATH,
+                        caseTypeRef, caseFieldRef, elementPath, "label1")))
+                    .count(),1),
+                () -> assertEquals(result.getValidationErrors().stream().filter(e -> e.getDefaultMessage()
+                    .equals(format(ERROR_MESSAGE_DUPLICATES_FOUND_FOR_TYPE_REF_FIELD_REF_AND_PATH,
+                        caseTypeRef, caseFieldRef, elementPath, "label2")))
+                    .count(),1)
             );
         }
     }
@@ -355,6 +440,19 @@ class GenericLayoutEntityValidatorImplTest {
         fieldTypeEntity.setReference(reference);
         fieldTypeEntity.addComplexFields(complexFieldEntityList);
         return fieldTypeEntity;
+    }
+
+    private static FieldTypeEntity textFieldTypeEntity() {
+        FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
+        fieldTypeEntity.setReference("Text");
+        fieldTypeEntity.addComplexFields(emptyList());
+        return fieldTypeEntity;
+    }
+
+    private CaseTypeEntity createCaseTypeEntity(String reference) {
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference(reference);
+        return caseTypeEntity;
     }
 
     private static FieldTypeEntity complexFieldTypeEntity(String reference,
