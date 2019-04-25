@@ -29,8 +29,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
-@DisplayName("Generic Layout Entity Validator Implementation Tests")
-class GenericLayoutEntityValidatorImplTest {
+@DisplayName("Generic Layout Entity Order Validator Implementation Tests")
+class GenericLayoutEntityOrderValidatorImplTest {
     private static final String CASE_FIELD = "Case Field I";
 
     private GenericLayoutValidator validator;
@@ -40,7 +40,7 @@ class GenericLayoutEntityValidatorImplTest {
 
     @BeforeEach
     void setUp() {
-        validator = new GenericLayoutEntityValidatorImpl();
+        validator = new GenericLayoutEntityOrderValidatorImpl();
 
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setBaseFieldType(fieldTypeEntity("Text", emptyList()));
@@ -67,15 +67,15 @@ class GenericLayoutEntityValidatorImplTest {
     }
 
     @Nested
-    @DisplayName("SearchInputCaseFieldEntity validation tests")
-    class SearchInputCaseFieldEntityTests {
-
+    @DisplayName("GenericLayoutEntity order validation tests")
+    class GenericLayoutEntityOrderTests {
         @ParameterizedTest
         @ArgumentsSource(EntityArgumentsProvider.class)
-        void shouldValidateGoodEntity(GenericLayoutEntity entity) {
-//            System.out.println("testing... " + entity.getClass().getSimpleName());
+        void shouldValidateValidOrderEntity(GenericLayoutEntity entity) {
             entity.setCaseField(caseField);
             entity.setCaseType(caseType);
+            entity.setOrder(9);
+
             final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
@@ -85,48 +85,20 @@ class GenericLayoutEntityValidatorImplTest {
 
         @ParameterizedTest
         @ArgumentsSource(EntityArgumentsProvider.class)
-        void shouldFailWhenCaseTypeIsEmpty(GenericLayoutEntity entity) {
+        void shouldFailWhenDisplayOrderIsNotPositive(GenericLayoutEntity entity) {
             entity.setLabel("Label");
             entity.setCaseField(caseField);
-            final ValidationResult result = validator.validate(singletonList(entity));
-
-            assertAll(
-                () -> assertThat(result.isValid(), is(false)),
-                () -> assertThat(result.getValidationErrors().size(), is(1)),
-                () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                    is("Case Type cannot be empty for row with label 'Label', case field 'Case Field I'"))
-            );
-        }
-
-        @ParameterizedTest
-        @ArgumentsSource(EntityArgumentsProvider.class)
-        void shouldFailWhenCaseFieldIsEmpty(GenericLayoutEntity entity) {
-            entity.setLabel("Label");
             entity.setCaseType(caseType);
+            entity.setOrder(-1);
+
             final ValidationResult result = validator.validate(singletonList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
                 () -> assertThat(result.getValidationErrors().size(), is(1)),
                 () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                    is("Case Field cannot be empty for row with label 'Label', case type 'Case Type I'"))
-            );
-        }
-
-        @ParameterizedTest
-        @ArgumentsSource(EntityArgumentsProvider.class)
-        void shouldFailWhenBothCaseTypeAndCaseFieldAreEmpty(GenericLayoutEntity entity) {
-            entity.setLabel("Label");
-            final ValidationResult result = validator.validate(singletonList(entity));
-
-            assertAll(
-                () -> assertThat(result.isValid(), is(false)),
-                () -> assertThat(result.getValidationErrors().size(), is(2)),
-                () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                    is("Case Type cannot be empty for row with label 'Label', case field ''")),
-                () ->
-                    assertThat(result.getValidationErrors().get(1).getDefaultMessage(),
-                        is("Case Field cannot be empty for row with label 'Label', case type ''"))
+                    is("DisplayOrder '-1' needs to be a valid integer for row with label 'Label', case field '" +
+                        CASE_FIELD + "'"))
             );
         }
     }
