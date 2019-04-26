@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -139,7 +138,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             caseType.addCaseField(complexCaseField);
             entity.setCaseFieldElementPath(path);
 
-            final ValidationResult result = validator.validate(singletonList(entity));
+            final ValidationResult result = validator.validate(entity);
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -156,7 +155,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             caseType.addCaseField(collectionCaseField);
             entity.setCaseFieldElementPath(path);
 
-            final ValidationResult result = validator.validate(singletonList(entity));
+            final ValidationResult result = validator.validate(entity);
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -170,7 +169,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             entity.setCaseType(caseType);
             entity.setCaseFieldElementPath("SomeNonExistingPath");
 
-            final ValidationResult result = validator.validate(singletonList(entity));
+            final ValidationResult result = validator.validate(entity);
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -190,7 +189,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             caseType.addCaseField(collectionComplexCaseField);
             entity.setCaseFieldElementPath("SomeNonExistingPath");
 
-            final ValidationResult result = validator.validate(singletonList(entity));
+            final ValidationResult result = validator.validate(entity);
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),

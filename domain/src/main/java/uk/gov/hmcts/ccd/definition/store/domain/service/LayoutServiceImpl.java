@@ -56,8 +56,10 @@ public class LayoutServiceImpl implements LayoutService {
     private void validate(List<GenericLayoutEntity> genericLayouts) {
         ValidationResult result = new ValidationResult();
 
-        for (GenericLayoutValidator validator : genericLayoutValidators) {
-            result.merge(validator.validate(genericLayouts));
+        for (GenericLayoutEntity entity : genericLayouts) {
+            for (GenericLayoutValidator validator : genericLayoutValidators) {
+                result.merge(validator.validate(entity));
+            }
         }
 
         if (!result.isValid()) {

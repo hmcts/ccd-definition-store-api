@@ -3,8 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,12 +12,10 @@ public class GenericLayoutEntityOrderValidatorImpl implements GenericLayoutValid
         "DisplayOrder '%d' needs to be a valid integer for row with label '%s', case field '%s'";
 
     @Override
-    public ValidationResult validate(List<GenericLayoutEntity> genericLayoutEntities) {
+    public ValidationResult validate(GenericLayoutEntity entity) {
         final ValidationResult validationResult = new ValidationResult();
 
-        for (GenericLayoutEntity entity : genericLayoutEntities) {
-            validateOrder(entity, validationResult);
-        }
+        validateOrder(entity, validationResult);
 
         return validationResult;
     }

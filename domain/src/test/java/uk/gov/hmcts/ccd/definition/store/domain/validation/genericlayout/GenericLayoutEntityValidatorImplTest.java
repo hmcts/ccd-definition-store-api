@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -9,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
@@ -17,7 +15,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseField
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +40,7 @@ class GenericLayoutEntityValidatorImplTest {
         validator = new GenericLayoutEntityValidatorImpl();
 
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
-        fieldTypeEntity.setBaseFieldType(fieldTypeEntity("Text", emptyList()));
+        fieldTypeEntity.setBaseFieldType(textFieldTypeEntity());
 
         caseField = new CaseFieldEntity();
         caseField.setReference(CASE_FIELD);
@@ -76,7 +73,7 @@ class GenericLayoutEntityValidatorImplTest {
 //            System.out.println("testing... " + entity.getClass().getSimpleName());
             entity.setCaseField(caseField);
             entity.setCaseType(caseType);
-            final ValidationResult result = validator.validate(singletonList(entity));
+            final ValidationResult result = validator.validate(entity);
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -88,7 +85,7 @@ class GenericLayoutEntityValidatorImplTest {
         void shouldFailWhenCaseTypeIsEmpty(GenericLayoutEntity entity) {
             entity.setLabel("Label");
             entity.setCaseField(caseField);
-            final ValidationResult result = validator.validate(singletonList(entity));
+            final ValidationResult result = validator.validate(entity);
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -103,7 +100,7 @@ class GenericLayoutEntityValidatorImplTest {
         void shouldFailWhenCaseFieldIsEmpty(GenericLayoutEntity entity) {
             entity.setLabel("Label");
             entity.setCaseType(caseType);
-            final ValidationResult result = validator.validate(singletonList(entity));
+            final ValidationResult result = validator.validate(entity);
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -117,7 +114,7 @@ class GenericLayoutEntityValidatorImplTest {
         @ArgumentsSource(EntityArgumentsProvider.class)
         void shouldFailWhenBothCaseTypeAndCaseFieldAreEmpty(GenericLayoutEntity entity) {
             entity.setLabel("Label");
-            final ValidationResult result = validator.validate(singletonList(entity));
+            final ValidationResult result = validator.validate(entity);
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -131,11 +128,10 @@ class GenericLayoutEntityValidatorImplTest {
         }
     }
 
-    private static FieldTypeEntity fieldTypeEntity(String reference,
-                                                   List<ComplexFieldEntity> complexFieldEntityList) {
+    private static FieldTypeEntity textFieldTypeEntity() {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
-        fieldTypeEntity.setReference(reference);
-        fieldTypeEntity.addComplexFields(complexFieldEntityList);
+        fieldTypeEntity.setReference("Text");
+        fieldTypeEntity.addComplexFields(emptyList());
         return fieldTypeEntity;
     }
 }

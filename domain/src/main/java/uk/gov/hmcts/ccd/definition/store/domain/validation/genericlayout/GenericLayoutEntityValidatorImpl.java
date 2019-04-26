@@ -3,8 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,13 +14,11 @@ public class GenericLayoutEntityValidatorImpl implements GenericLayoutValidator 
         "Case Field cannot be empty for row with label '%s', case type '%s'";
 
     @Override
-    public ValidationResult validate(List<GenericLayoutEntity> genericLayoutEntities) {
+    public ValidationResult validate(GenericLayoutEntity entity) {
         final ValidationResult validationResult = new ValidationResult();
 
-        for (GenericLayoutEntity entity : genericLayoutEntities) {
-            validateCaseTypeIsPresent(entity, validationResult);
-            validateCaseFieldIsPresent(entity, validationResult);
-        }
+        validateCaseTypeIsPresent(entity, validationResult);
+        validateCaseFieldIsPresent(entity, validationResult);
 
         return validationResult;
     }
