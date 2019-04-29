@@ -147,6 +147,7 @@ module "definition-store-db" {
   product = "${local.app_full_name}-postgres-db"
   location = "${var.location}"
   env = "${var.env}"
+  subscription = "${var.subscription}"
   postgresql_user = "${var.postgresql_user}"
   database_name = "${var.database_name}"
   sku_name = "${var.database_sku_name}"
