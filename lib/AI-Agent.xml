@@ -7,5 +7,9 @@
             <JDBC enabled="true"/>
             <MaxStatementQueryLimitInMS>1000</MaxStatementQueryLimitInMS>
         </BuiltIn>
+        <Class name="uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService">
+            <Method name="saveWorkBasketUserDefaults"/>
+            <Method name="putUserProfiles"/>
+        </Class>
     </Instrumentation>
 </ApplicationInsightsAgent>
