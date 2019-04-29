@@ -73,7 +73,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="AddressLine2" />
-            <column name="label" value="" />
+            <column name="label" value="Address Line 2" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type where reference = 'TextMax50' and version = 1 and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
@@ -84,7 +84,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="AddressLine3" />
-            <column name="label" value="" />
+            <column name="label" value="Address Line 3" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type where reference = 'TextMax50' and version = 1 and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
@@ -162,7 +162,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="AddressLine2" />
-            <column name="label" value="" />
+            <column name="label" value="Address Line 2" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type where reference = 'TextMax50' and version = 1 and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
@@ -173,7 +173,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="AddressLine3" />
-            <column name="label" value="" />
+            <column name="label" value="Address Line 3" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type where reference = 'TextMax50' and version = 1 and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
@@ -250,7 +250,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="AddressLine2" />
-            <column name="label" value="" />
+            <column name="label" value="Address Line 2" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type where reference = 'TextMax50' and version = 1 and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
@@ -261,7 +261,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="AddressLine3" />
-            <column name="label" value="" />
+            <column name="label" value="Address Line 3" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type where reference = 'TextMax50' and version = 1 and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
