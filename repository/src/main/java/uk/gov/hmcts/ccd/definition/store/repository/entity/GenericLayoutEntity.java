@@ -30,6 +30,9 @@ public abstract class GenericLayoutEntity implements Serializable {
     @JoinColumn(name = "case_field_id", nullable = false)
     private CaseFieldEntity caseField;
 
+    @Column(name = "case_field_element_path")
+    private String caseFieldElementPath;
+
     @Column(name = "label")
     private String label;
 
@@ -74,6 +77,14 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     public void setCaseField(final CaseFieldEntity caseField) {
         this.caseField = caseField;
+    }
+
+    public String getCaseFieldElementPath() {
+        return caseFieldElementPath;
+    }
+
+    public void setCaseFieldElementPath(final String caseFieldElementPath) {
+        this.caseFieldElementPath = caseFieldElementPath;
     }
 
     public String getLabel() {

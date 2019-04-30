@@ -1,11 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
@@ -29,17 +36,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageField;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 class DisplayGroupAdapterServiceTest {
 
@@ -52,12 +53,15 @@ class DisplayGroupAdapterServiceTest {
     @Mock
     private CaseTypeEntity caseTypeEntity;
 
-    @InjectMocks
     private DisplayGroupAdapterService classUnderTest;
 
     @BeforeEach
     public void setUpMocks() {
         MockitoAnnotations.initMocks(this);
+        classUnderTest = new DisplayGroupAdapterService(displayGroupRepository,
+            caseTypeRepository,
+            eventRepository,
+            new CaseFieldEntityUtil());
     }
 
     @Nested
