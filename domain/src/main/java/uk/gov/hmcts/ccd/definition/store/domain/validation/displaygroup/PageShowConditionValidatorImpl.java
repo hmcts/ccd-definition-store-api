@@ -19,10 +19,13 @@ import java.util.function.Predicate;
 public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
 
     private final ShowConditionParser showConditionParser;
+    private final CaseFieldEntityUtil caseFieldEntityUtil;
 
     @Autowired
-    public PageShowConditionValidatorImpl(ShowConditionParser showConditionParser) {
+    public PageShowConditionValidatorImpl(ShowConditionParser showConditionParser,
+                                          CaseFieldEntityUtil caseFieldEntityUtil) {
         this.showConditionParser = showConditionParser;
+        this.caseFieldEntityUtil = caseFieldEntityUtil;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
                 return validationResult;
             }
 
-            List<String> allSubTypePossibilities = CaseFieldEntityUtil
+            List<String> allSubTypePossibilities = caseFieldEntityUtil
                 .buildDottedComplexFieldPossibilities(displayGroup.getCaseType().getCaseFields());
 
             showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
