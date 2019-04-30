@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 public class WorkbasketInputField {
 
     private String caseFieldId = null;
+    private String caseFieldElementPath = null;
     private String label = null;
     private Integer order = null;
     private String role;
@@ -36,6 +37,15 @@ public class WorkbasketInputField {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    @JsonProperty("case_field_element_path")
+    public String getCaseFieldElementPath() {
+        return caseFieldElementPath;
+    }
+
+    public void setCaseFieldElementPath(final String caseFieldElementPath) {
+        this.caseFieldElementPath = caseFieldElementPath;
     }
 
     @JsonProperty("role")

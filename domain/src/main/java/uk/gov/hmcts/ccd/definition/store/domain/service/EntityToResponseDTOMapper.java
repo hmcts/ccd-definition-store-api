@@ -200,6 +200,7 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(source = "searchInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "searchInputCaseFieldEntity.userRole.reference", target = "role")
+    @Mapping(source = "searchInputCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     SearchInputField map(SearchInputCaseFieldEntity searchInputCaseFieldEntity);
 
     @Mapping(source = "searchResultCaseFieldEntity.caseField.reference", target = "caseFieldId")
@@ -208,6 +209,7 @@ public interface EntityToResponseDTOMapper {
     SearchResultsField map(SearchResultCaseFieldEntity searchResultCaseFieldEntity);
 
     @Mapping(source = "workBasketInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(source = "workBasketInputCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     @Mapping(source = "workBasketInputCaseFieldEntity.userRole.reference", target = "role")
     WorkbasketInputField map(WorkBasketInputCaseFieldEntity workBasketInputCaseFieldEntity);
 

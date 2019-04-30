@@ -1171,11 +1171,13 @@ class EntityToResponseDTOMapperTest {
             searchInputCaseFieldEntity.setLabel("Label");
             searchInputCaseFieldEntity.setOrder(69);
             searchInputCaseFieldEntity.setUserRole(userRoleEntity);
+            searchInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
 
             SearchInputField searchInputField = spyOnClassUnderTest.map(searchInputCaseFieldEntity);
 
             assertEquals(searchInputCaseFieldEntity.getOrder(), searchInputField.getOrder());
             assertEquals(searchInputCaseFieldEntity.getLabel(), searchInputField.getLabel());
+            assertEquals(searchInputCaseFieldEntity.getCaseFieldElementPath(), searchInputField.getCaseFieldElementPath());
             assertEquals(searchInputCaseFieldEntity.getCaseField().getReference(), searchInputField.getCaseFieldId());
             assertEquals(userRoleEntity.getReference(), searchInputField.getRole());
         }
@@ -1240,13 +1242,14 @@ class EntityToResponseDTOMapperTest {
             workBasketInputCaseFieldEntity.setLabel("Label");
             workBasketInputCaseFieldEntity.setOrder(69);
             workBasketInputCaseFieldEntity.setUserRole(userRoleEntity);
+            workBasketInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
 
             WorkbasketInputField workbasketInputField = spyOnClassUnderTest.map(workBasketInputCaseFieldEntity);
 
             assertEquals(workBasketInputCaseFieldEntity.getOrder(), workbasketInputField.getOrder());
             assertEquals(workBasketInputCaseFieldEntity.getLabel(), workbasketInputField.getLabel());
-            assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(),
-                         workbasketInputField.getCaseFieldId());
+            assertEquals(workBasketInputCaseFieldEntity.getCaseFieldElementPath(), workbasketInputField.getCaseFieldElementPath());
+            assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(), workbasketInputField.getCaseFieldId());
             assertEquals(userRoleEntity.getReference(), workbasketInputField.getRole());
         }
 

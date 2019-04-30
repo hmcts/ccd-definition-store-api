@@ -119,6 +119,7 @@ public abstract class GenericLayoutParser {
         layoutEntity.setCaseField(parseContext.getCaseFieldForCaseType(caseType.getReference(), caseFieldId));
         layoutEntity.setLiveFrom(definition.getLocalDate(ColumnName.LIVE_FROM));
         layoutEntity.setLiveTo(definition.getLocalDate(ColumnName.LIVE_TO));
+        layoutEntity.setCaseFieldElementPath(definition.getString(ColumnName.LIST_ELEMENT_CODE));
         layoutEntity.setLabel(definition.getString(ColumnName.LABEL));
         layoutEntity.setOrder(definition.getInteger(ColumnName.DISPLAY_ORDER));
         final String userRole = definition.getString(USER_ROLE);

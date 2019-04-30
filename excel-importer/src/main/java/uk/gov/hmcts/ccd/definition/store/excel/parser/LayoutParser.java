@@ -29,12 +29,20 @@ public class LayoutParser {
         this.wizardPageParser = wizardPageParser;
     }
 
-    public ParseResult<GenericLayoutEntity> parseAllGenerics(Map<String, DefinitionSheet> definitionSheets) {
-        return new ParseResult<GenericLayoutEntity>()
-            .add(workbasketInputLayoutParser.parseAll(definitionSheets))
-            .add(workbasketLayoutParser.parseAll(definitionSheets))
-            .add(searchInputLayoutParser.parseAll(definitionSheets))
-            .add(searchResultLayoutParser.parseAll(definitionSheets));
+    public ParseResult<GenericLayoutEntity> parseWorkbasketInputLayout(Map<String, DefinitionSheet> definitionSheets) {
+        return workbasketInputLayoutParser.parseAll(definitionSheets);
+    }
+
+    public ParseResult<GenericLayoutEntity> parseWorkbasketLayout(Map<String, DefinitionSheet> definitionSheets) {
+        return workbasketLayoutParser.parseAll(definitionSheets);
+    }
+
+    public ParseResult<GenericLayoutEntity> parseSearchInputLayout(Map<String, DefinitionSheet> definitionSheets) {
+        return searchInputLayoutParser.parseAll(definitionSheets);
+    }
+
+    public ParseResult<GenericLayoutEntity> parseSearchResultLayout(Map<String, DefinitionSheet> definitionSheets) {
+        return searchResultLayoutParser.parseAll(definitionSheets);
     }
 
     public ParseResult<DisplayGroupEntity> parseAllDisplayGroups(Map<String, DefinitionSheet> definitionSheets) {
