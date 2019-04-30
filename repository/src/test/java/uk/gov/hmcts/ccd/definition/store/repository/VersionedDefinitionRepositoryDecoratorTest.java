@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -70,5 +72,33 @@ public class VersionedDefinitionRepositoryDecoratorTest {
 
         CaseTypeEntity savedCaseType2 = versionedCaseTypeRepository.save(caseType2);
         assertThat(savedCaseType2.getVersion(), is(2));
+    }
+
+
+    @Test
+    public void saveNewCaseTypes() {
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("id1");
+        caseType.setName("name");
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        final CaseTypeEntity caseType2 = new CaseTypeEntity();
+        caseType2.setReference("id2");
+        caseType2.setName("name");
+        caseType2.setJurisdiction(jurisdiction);
+        caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository);
+
+        List<CaseTypeEntity> savedEntities = versionedCaseTypeRepository.saveAll(asList(caseType, caseType2));
+
+        Optional<CaseTypeEntity> retrievedCaseType = versionedCaseTypeRepository.findById(savedEntities.get(0).getId());
+        assertNotNull(retrievedCaseType.get());
+        assertThat(retrievedCaseType.get().getVersion(), is(1));
+        Optional<CaseTypeEntity> retrievedCaseType2 = versionedCaseTypeRepository.findById(savedEntities.get(1).getId());
+        assertNotNull(retrievedCaseType2.get());
+        assertThat(retrievedCaseType2.get().getVersion(), is(1));
+
     }
 }

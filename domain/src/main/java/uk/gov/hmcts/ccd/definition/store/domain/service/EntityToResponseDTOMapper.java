@@ -1,10 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTypeListItemMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
@@ -49,6 +51,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
 
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
+    FieldTypeListItemMapper fieldTypeListItemMapper = new FieldTypeListItemMapper();
 
     @Mapping(source = "caseTypeEntity.reference", target = "id")
     @Mapping(source = "caseTypeEntity.version", target = "version.number")
@@ -148,7 +151,14 @@ public interface EntityToResponseDTOMapper {
     CaseField map(CaseFieldEntity caseFieldEntity);
 
     @Mapping(source = "fieldTypeEntity.reference", target = "id")
-    @Mapping(source = "fieldTypeEntity.listItems", target = "fixedListItems")
+    @Mapping(
+            expression = "java("
+                         + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.FixedListMapper.map("
+                         + "               fieldTypeEntity"
+                         + "           )"
+                         + "       )",
+            target = "fixedListItems"
+    )
     @Mapping(source = "fieldTypeEntity.minimum", target = "min")
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
     @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null"
@@ -241,6 +251,22 @@ public interface EntityToResponseDTOMapper {
                                                    auth.getUpdate(),
                                                    auth.getDelete()))
                 .collect(Collectors.toList());
+        }
+    }
+
+    class FixedListMapper {
+        private FixedListMapper() {
+            // Default constructor
+        }
+
+        static List<FixedListItem> map(FieldTypeEntity fieldTypeEntity) {
+            FieldTypeEntity baseFieldTypeEntity = fieldTypeEntity.getBaseFieldType();
+            if (baseFieldTypeEntity == null && FieldTypeEntity.isFixedList(fieldTypeEntity.getReference())) {
+                return fieldTypeListItemMapper.entityToModel(fieldTypeEntity.getListItems());
+            } else if (baseFieldTypeEntity != null && FieldTypeEntity.isFixedList(baseFieldTypeEntity.getReference())) {
+                return fieldTypeListItemMapper.entityToModel(fieldTypeEntity.getListItems());
+            }
+            return new ArrayList<>();
         }
     }
 }

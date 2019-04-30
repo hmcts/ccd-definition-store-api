@@ -12,6 +12,8 @@ java:
   ingressHost: ${SERVICE_FQDN}
   applicationPort: 4451
   applicationInsightsInstrumentKey: "fake-key"
+  memoryRequests: 1024Mi
+  memoryLimits: 2048Mi
   keyVaults:
     s2s:
       resourceGroup: rpe-service-auth-provider
@@ -22,20 +24,17 @@ java:
     DEFINITION_STORE_DB_PORT: 5432
     DEFINITION_STORE_DB_NAME: ccd_definition_store
     DEFINITION_STORE_DB_USERNAME: ccd
-    DEFINITION_STORE_DB_PASSWORD: ccd
-    DEFINITION_STORE_DB_USE_SSL: false
     ENABLE_DB_MIGRATE: true
 
-    IDAM_USER_URL: http://betaDevBccidamAppLB.reform.hmcts.net
+  #  IDAM_USER_URL: https://preprod-idamapi.reform.hmcts.net:3511
+    IDAM_USER_URL: https://idam-api.aat.platform.hmcts.net
+
 
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp
 
-    #AZURE_STORAGE_CONNECTION_STRING = "${data.azurerm_key_vault_secret.storageaccount_primary_connection_string.value}"
-    #AZURE_STORAGE_BLOB_CONTAINER_REFERENCE = "${azurerm_storage_container.imports_container.name}"
-    AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: true
+    AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
 
     ELASTIC_SEARCH_HOST: ''
-    ELASTIC_SEARCH_PASSWORD: ''
     ELASTIC_SEARCH_PORT: 9200
     ELASTIC_SEARCH_SCHEME: http
     ELASTIC_SEARCH_ENABLED: false
@@ -44,6 +43,10 @@ java:
     ELASTIC_SEARCH_FAIL_ON_IMPORT: false
     ELASTIC_SEARCH_DYNAMIC: false
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT: '%s_cases'
+
+    IDAM_S2S_URL: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
+    USER_PROFILE_HOST: http://ccd-user-profile-api-aat.service.core-compute-aat.internal
+
 
 tags:
   postgresql-pod: true
