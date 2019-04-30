@@ -25,16 +25,12 @@ import static org.mockito.Mockito.mock;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MULTI_SELECT_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DYNAMIC_LIST;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListFieldTypeParserTest extends ParserTestBase {
 
     @Mock
     private FieldTypeEntity fieldFixedList;
-
-    @Mock
-    private FieldTypeEntity fieldDynamicList;
 
     @Mock
     private FieldTypeEntity fieldFixedRadioList;
@@ -80,29 +76,12 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         }
     }
 
-    @Test(expected = InvalidImportException.class)
-    public void shouldFail_whenNoBaseTypeFoundForDynamicList() {
-
-        given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
-        given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));
-        given(parseContext.getBaseType(BASE_MULTI_SELECT_LIST)).willReturn(Optional.of(fieldMultiList));
-        given(parseContext.getBaseType(BASE_DYNAMIC_LIST)).willReturn(Optional.empty());
-
-        try {
-            new ListFieldTypeParser(parseContext);
-        } catch (InvalidImportException ex) {
-            Assertions.assertThat(ex).hasMessage("No base type found for: DynamicList");
-            throw ex;
-        }
-    }
-
     @Test
     public void shouldParseEmptySheet() {
 
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
         given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));
         given(parseContext.getBaseType(BASE_MULTI_SELECT_LIST)).willReturn(Optional.of(fieldMultiList));
-        given(parseContext.getBaseType(BASE_DYNAMIC_LIST)).willReturn(Optional.of(fieldDynamicList));
 
         definitionSheets.put(SheetName.FIXED_LISTS.getName(), definitionSheet);
 
@@ -116,7 +95,6 @@ public class ListFieldTypeParserTest extends ParserTestBase {
     public void shouldParseListType() {
 
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
-        given(parseContext.getBaseType(BASE_DYNAMIC_LIST)).willReturn(Optional.of(fieldDynamicList));
         given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));
         given(parseContext.getBaseType(BASE_MULTI_SELECT_LIST)).willReturn(Optional.of(fieldMultiList));
 
