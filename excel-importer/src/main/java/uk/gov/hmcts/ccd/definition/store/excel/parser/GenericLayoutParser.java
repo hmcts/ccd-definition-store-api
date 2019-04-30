@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIST_ELEMENT_CODE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
@@ -77,9 +78,9 @@ public abstract class GenericLayoutParser {
         if (null != layoutItems) {
             getLogger().debug("Layout parsing: Case type {}: {} fields detected", caseTypeId, layoutItems.size());
 
-            if (hasDuplicateUserRoleDefinition(layoutItems)) {
+            if (hasDuplicateRows(layoutItems)) {
                 throw new MapperException(
-                    String.format("Please provide one user role row in worksheet %s on column USER_ROLE for case type %s",
+                    String.format("Please make sure each row in worksheet %s is unique for case type %s",
                         layoutItems.get(0).getSheetName(), caseType.getReference()));
             }
 
@@ -91,13 +92,14 @@ public abstract class GenericLayoutParser {
         }
     }
 
-    private boolean hasDuplicateUserRoleDefinition(List<DefinitionDataItem> layoutItems) {
+    private boolean hasDuplicateRows(List<DefinitionDataItem> layoutItems) {
         return layoutItems
             .stream()
             .anyMatch(ddi ->
-                layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE)) ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : false)
+                layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE)) ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
                     && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
-                    && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID)))
+                    && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
+                    && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE)) ? ddi.getString(LIST_ELEMENT_CODE).equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE)) : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
                     .count() > 1);
     }
 
@@ -119,7 +121,7 @@ public abstract class GenericLayoutParser {
         layoutEntity.setCaseField(parseContext.getCaseFieldForCaseType(caseType.getReference(), caseFieldId));
         layoutEntity.setLiveFrom(definition.getLocalDate(ColumnName.LIVE_FROM));
         layoutEntity.setLiveTo(definition.getLocalDate(ColumnName.LIVE_TO));
-        layoutEntity.setCaseFieldElementPath(definition.getString(ColumnName.LIST_ELEMENT_CODE));
+        layoutEntity.setCaseFieldElementPath(definition.getString(LIST_ELEMENT_CODE));
         layoutEntity.setLabel(definition.getString(ColumnName.LABEL));
         layoutEntity.setOrder(definition.getInteger(ColumnName.DISPLAY_ORDER));
         final String userRole = definition.getString(USER_ROLE);
