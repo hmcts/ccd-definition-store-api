@@ -1072,9 +1072,13 @@ class EntityToResponseDTOMapperTest {
         @Test
         void testMapDisplayGroupEntity() {
 
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setReference("Role1");
+            userRoleEntity.setName("Role 1");
             DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
             displayGroupEntity.setReference("Reference");
             displayGroupEntity.setLabel("Label");
+            displayGroupEntity.setUserRole(userRoleEntity);
             displayGroupEntity.setOrder(69);
 
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity1 = new DisplayGroupCaseFieldEntity();
@@ -1105,6 +1109,7 @@ class EntityToResponseDTOMapperTest {
 
             assertEquals(displayGroupEntity.getDisplayGroupCaseFields().size(), caseTypeTab.getTabFields().size());
             assertThat(caseTypeTab.getTabFields(), hasItems(caseTypeTabField1, caseTypeTabField2, caseTypeTabField3));
+            assertEquals(caseTypeTab.getRole(), displayGroupEntity.getUserRole().getReference());
 
         }
 
