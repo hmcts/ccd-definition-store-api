@@ -15,13 +15,26 @@ public class ShowConditionParser {
 
     private static final String AND_CONDITION_REGEX = "\\sAND\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String AND_OPERATOR = " AND ";
+    private static final String OR_CONDITION_REGEX = "\\sOR\\s(?=(([^\"]*\"){2})*[^\"]*$)";
+    private Pattern orConditionPattern = Pattern.compile(OR_CONDITION_REGEX);
+    private static final String OR_OPERATOR = " OR ";
     private static final Pattern EQUALITY_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\")\\s*?");
+    private static final Pattern NOT_EQUAL_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(!=|CONTAINS)\\s*?(\"" +
+                                                                               ".*\")\\s*?");
 
     public ShowCondition parseShowCondition(String rawShowConditionString) throws InvalidShowConditionException {
         try {
             if (rawShowConditionString != null) {
-                String[] andConditions = rawShowConditionString.split(AND_CONDITION_REGEX);
-                Optional<ShowCondition> optShowCondition = buildShowCondition(andConditions);
+                String andOrOperator = AND_OPERATOR;
+                String[] conditions;
+                Matcher matcher = orConditionPattern.matcher(rawShowConditionString);
+                if (matcher.find()) {
+                    conditions = rawShowConditionString.split(OR_CONDITION_REGEX);
+                    andOrOperator = OR_OPERATOR;
+                } else {
+                    conditions = rawShowConditionString.split(AND_CONDITION_REGEX);
+                }
+                Optional<ShowCondition> optShowCondition = buildShowCondition(conditions, andOrOperator);
                 if (optShowCondition.isPresent()) {
                     ShowCondition showCondition = optShowCondition.get();
                     if (showCondition.getFieldsWithSubtypes().stream().noneMatch(this::fieldContainsEmpties)
@@ -41,17 +54,26 @@ public class ShowConditionParser {
         return field.contains(" ") || field.contains("..");
     }
 
-    private Optional<ShowCondition> buildShowCondition(String[] andConditions) {
+    private Optional<ShowCondition> buildShowCondition(String[] andConditions, String andOrOperator) {
         ShowCondition.Builder showConditionBuilder = new ShowCondition.Builder();
-        String andOperator = "";
+        String operator = "";
+        Matcher matcher = null;
 
         for (String andCondition : andConditions) {
-            Matcher matcher = EQUALITY_CONDITION_PATTERN.matcher(andCondition);
-            if (matcher.find()) {
+            Matcher notEqualityMatcher = NOT_EQUAL_CONDITION_PATTERN.matcher(andCondition);
+            if(notEqualityMatcher.find()) {
+                matcher = notEqualityMatcher;
+            } else {
+                Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN.matcher(andCondition);
+                if(equalityMatcher.find()) {
+                    matcher = equalityMatcher;
+                }
+            }
+            if (matcher != null) {
                 showConditionBuilder
-                    .showConditionExpression(andOperator + parseEqualityCondition(matcher))
+                    .showConditionExpression(operator + parseEqualityCondition(matcher))
                     .field(getLeftHandSideOfEquals(matcher));
-                andOperator = AND_OPERATOR;
+                operator = andOrOperator;
             } else {
                 return Optional.empty();
             }
