@@ -7,12 +7,12 @@
         <!-- Update the label for Address line 2 and 3 in the complex_field table -->
         <update tableName="complex_field">
             <column name="label" value="Address Line 2" />
-            <where>reference = 'AddressLine2'</where>
+            <where>reference = 'AddressLine2' and label = ''</where>
         </update>
 
         <update tableName="complex_field">
             <column name="label" value="Address Line 3" />
-            <where>reference = 'AddressLine3'</where>
+            <where>reference = 'AddressLine3' and label = ''</where>
         </update>
     </changeSet>
 
