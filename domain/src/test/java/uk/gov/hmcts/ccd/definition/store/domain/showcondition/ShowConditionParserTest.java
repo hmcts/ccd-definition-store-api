@@ -115,6 +115,56 @@ class ShowConditionParserTest {
         assertThat(sc.getFields(), hasItems("field1", "field2"));
     }
 
+    @Test
+    void shouldParseComplexFieldCorrectlyWithORCondition() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(
+                "field1.subType1.subType2= \"ABC OR XYZ\"  OR field2=\"some value\" ");
+
+        assertThat(sc.getShowConditionExpression(),
+                   is("field1.subType1.subType2=\"ABC OR XYZ\" OR field2=\"some value\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2"));
+        assertThat(sc.getFieldsWithSubtypes(), hasItems("field1.subType1.subType2"));
+    }
+
+    @Test
+    void shouldParseMultipleContainsCorrectlyWithOR() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition("field1 CONTAINS \"ABC,CDE,EFG,JKL\" OR  field2 CONTAINS" +
+                                                             " \"1,3,5,7,88\"");
+
+        assertThat(sc.getShowConditionExpression(), is("field1CONTAINS\"ABC,CDE,EFG,JKL\" OR field2CONTAINS\"1,3,5,7," +
+                                                       "88\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenAndConditionIsInvalidWithOR() {
+        assertThrows(InvalidShowConditionException.class, () -> classUnderTest.parseShowCondition(" OR field1=\"ABC\""));
+    }
+
+    @Test
+    void shouldParseORConditionsCorrectly() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition("field1= \"ABC OR XYZ\"  OR field2=\"some value\" ");
+
+        assertThat(sc.getShowConditionExpression(), is("field1=\"ABC OR XYZ\" OR field2=\"some value\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2"));
+    }
+
+    @Test
+    void shouldParseORConditionsWithNotEqualCorrectly() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition("field1!= \"ABC OR XYZ\"  OR field2!=\"some value\" ");
+
+        assertThat(sc.getShowConditionExpression(), is("field1!=\"ABC OR XYZ\" OR field2!=\"some value\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2"));
+    }
+
+    @Test
+    void shouldParseMixedEqualsORContainsCorrectly() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition("field1 = \"ABCDEFG\" OR  field2 CONTAINS \"1,3,5,7,88\"");
+
+        assertThat(sc.getShowConditionExpression(), is("field1=\"ABCDEFG\" OR field2CONTAINS\"1,3,5,7,88\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2"));
+    }
+
     private void assertShowCondition(ShowCondition showCondition) {
         assertEquals("SomeField=\"Some String\"", showCondition.getShowConditionExpression());
         assertTrue("SomeField", showCondition.getFields().contains("SomeField"));

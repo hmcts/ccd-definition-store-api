@@ -57,23 +57,14 @@ public class ShowConditionParser {
     private Optional<ShowCondition> buildShowCondition(String[] andConditions, String andOrOperator) {
         ShowCondition.Builder showConditionBuilder = new ShowCondition.Builder();
         String operator = "";
-        Matcher matcher = null;
 
         for (String andCondition : andConditions) {
+            Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN.matcher(andCondition);
             Matcher notEqualityMatcher = NOT_EQUAL_CONDITION_PATTERN.matcher(andCondition);
-            if(notEqualityMatcher.find()) {
-                matcher = notEqualityMatcher;
-            } else {
-                Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN.matcher(andCondition);
-                if(equalityMatcher.find()) {
-                    matcher = equalityMatcher;
-                }
-            }
-            if (matcher != null) {
-                showConditionBuilder
-                    .showConditionExpression(operator + parseEqualityCondition(matcher))
-                    .field(getLeftHandSideOfEquals(matcher));
-                operator = andOrOperator;
+            if (notEqualityMatcher.find()) {
+                operator = buildShowCondition(andOrOperator, showConditionBuilder, operator, notEqualityMatcher);
+            } else if (equalityMatcher.find()){
+                operator = buildShowCondition(andOrOperator, showConditionBuilder, operator, equalityMatcher);
             } else {
                 return Optional.empty();
             }
@@ -82,6 +73,15 @@ public class ShowConditionParser {
             return Optional.of(showConditionBuilder.build());
         }
         return Optional.empty();
+    }
+
+    private String buildShowCondition(final String andOrOperator, final ShowCondition.Builder showConditionBuilder,
+                                      String operator, final Matcher equalityMatcher) {
+        showConditionBuilder
+                .showConditionExpression(operator + parseEqualityCondition(equalityMatcher))
+                .field(getLeftHandSideOfEquals(equalityMatcher));
+        operator = andOrOperator;
+        return operator;
     }
 
     private String parseEqualityCondition(Matcher matcher) {
