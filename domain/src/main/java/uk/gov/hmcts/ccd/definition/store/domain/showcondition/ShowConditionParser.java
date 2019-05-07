@@ -16,25 +16,25 @@ public class ShowConditionParser {
     private static final String AND_CONDITION_REGEX = "\\sAND\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String AND_OPERATOR = " AND ";
     private static final String OR_CONDITION_REGEX = "\\sOR\\s(?=(([^\"]*\"){2})*[^\"]*$)";
-    private Pattern orConditionPattern = Pattern.compile(OR_CONDITION_REGEX);
     private static final String OR_OPERATOR = " OR ";
     private static final Pattern EQUALITY_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\")\\s*?");
     private static final Pattern NOT_EQUAL_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(!=|CONTAINS)\\s*?(\"" +
                                                                                ".*\")\\s*?");
+    private Pattern orConditionPattern = Pattern.compile(OR_CONDITION_REGEX);
 
     public ShowCondition parseShowCondition(String rawShowConditionString) throws InvalidShowConditionException {
         try {
             if (rawShowConditionString != null) {
-                String andOrOperator = AND_OPERATOR;
+                String conditionalOperator = AND_OPERATOR;
                 String[] conditions;
                 Matcher matcher = orConditionPattern.matcher(rawShowConditionString);
                 if (matcher.find()) {
                     conditions = rawShowConditionString.split(OR_CONDITION_REGEX);
-                    andOrOperator = OR_OPERATOR;
+                    conditionalOperator = OR_OPERATOR;
                 } else {
                     conditions = rawShowConditionString.split(AND_CONDITION_REGEX);
                 }
-                Optional<ShowCondition> optShowCondition = buildShowCondition(conditions, andOrOperator);
+                Optional<ShowCondition> optShowCondition = buildShowCondition(conditions, conditionalOperator);
                 if (optShowCondition.isPresent()) {
                     ShowCondition showCondition = optShowCondition.get();
                     if (showCondition.getFieldsWithSubtypes().stream().noneMatch(this::fieldContainsEmpties)
@@ -54,17 +54,17 @@ public class ShowConditionParser {
         return field.contains(" ") || field.contains("..");
     }
 
-    private Optional<ShowCondition> buildShowCondition(String[] andConditions, String andOrOperator) {
+    private Optional<ShowCondition> buildShowCondition(String[] conditions, String conditionalOperator) {
         ShowCondition.Builder showConditionBuilder = new ShowCondition.Builder();
         String operator = "";
 
-        for (String andCondition : andConditions) {
-            Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN.matcher(andCondition);
-            Matcher notEqualityMatcher = NOT_EQUAL_CONDITION_PATTERN.matcher(andCondition);
+        for (String condition : conditions) {
+            Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN.matcher(condition);
+            Matcher notEqualityMatcher = NOT_EQUAL_CONDITION_PATTERN.matcher(condition);
             if (notEqualityMatcher.find()) {
-                operator = buildShowCondition(andOrOperator, showConditionBuilder, operator, notEqualityMatcher);
+                operator = buildShowCondition(conditionalOperator, showConditionBuilder, operator, notEqualityMatcher);
             } else if (equalityMatcher.find()){
-                operator = buildShowCondition(andOrOperator, showConditionBuilder, operator, equalityMatcher);
+                operator = buildShowCondition(conditionalOperator, showConditionBuilder, operator, equalityMatcher);
             } else {
                 return Optional.empty();
             }
@@ -75,12 +75,12 @@ public class ShowConditionParser {
         return Optional.empty();
     }
 
-    private String buildShowCondition(final String andOrOperator, final ShowCondition.Builder showConditionBuilder,
+    private String buildShowCondition(final String conditionalOperator, final ShowCondition.Builder showConditionBuilder,
                                       String operator, final Matcher equalityMatcher) {
         showConditionBuilder
                 .showConditionExpression(operator + parseEqualityCondition(equalityMatcher))
                 .field(getLeftHandSideOfEquals(equalityMatcher));
-        operator = andOrOperator;
+        operator = conditionalOperator;
         return operator;
     }
 
