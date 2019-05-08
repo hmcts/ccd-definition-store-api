@@ -250,6 +250,7 @@ public class ImportServiceImplTest {
             .willReturn(Collections.singletonList(caseRef));
         CaseFieldEntity state = new CaseFieldEntity();
         state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
         given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
             .willReturn(state);
 

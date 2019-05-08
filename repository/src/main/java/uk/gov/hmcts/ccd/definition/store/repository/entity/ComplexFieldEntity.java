@@ -1,13 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
@@ -51,6 +58,11 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     @Column(name = "show_condition")
     private String showCondition;
+
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "complex_field_id")
+    private final List<ComplexFieldACLEntity> complexFieldACLEntities = new ArrayList<>();
 
     @Override
     public String getReference() {
@@ -98,6 +110,12 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
         return fieldType;
     }
 
+    @Transient
+    @Override
+    public boolean isMetadataField() {
+        return false;
+    }
+
     public void setFieldType(FieldTypeEntity fieldType) {
         this.fieldType = fieldType;
     }
@@ -116,5 +134,20 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     public String getShowCondition() {
         return showCondition;
+    }
+
+    public List<ComplexFieldACLEntity> getComplexFieldACLEntities() {
+        return complexFieldACLEntities;
+    }
+
+    public ComplexFieldEntity addComplexFieldACL(final ComplexFieldACLEntity complexFieldACLEntity) {
+        complexFieldACLEntity.setComplexField(this);
+        complexFieldACLEntities.add(complexFieldACLEntity);
+        return this;
+    }
+
+    public ComplexFieldEntity addComplexFieldACLEntities(final Collection<ComplexFieldACLEntity> entities) {
+        entities.forEach(e -> addComplexFieldACL(e));
+        return this;
     }
 }

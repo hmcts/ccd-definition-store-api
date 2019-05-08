@@ -3,7 +3,10 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +58,27 @@ interface AuthorisationParser {
             );
         }
         return definitionSheet;
+    }
+
+    default void validateCaseFields(Map<String, DefinitionSheet> definitionSheets, DefinitionSheet definitionSheet, String caseTypeReference) {
+        final Map<String, List<DefinitionDataItem>> casefieldsWithAuthorisationInfoThisCaseType = definitionSheet.getDataItems()
+            .stream()
+            .filter(definitionDataItem -> definitionDataItem.getString(ColumnName.CASE_TYPE_ID).equalsIgnoreCase(caseTypeReference))
+            .collect(groupingBy(dataItem -> dataItem.getString(ColumnName.CASE_FIELD_ID)));
+
+        final List<String> caseFieldItemsForThisCaseType = definitionSheets.get(CASE_FIELD.getName())
+            .groupDataItemsByCaseType()
+            .get(caseTypeReference)
+            .stream()
+            .map(definitionDataItem -> definitionDataItem.getString(ColumnName.ID)).collect(Collectors.toList());
+
+        final Optional<String> unknownCaseFieldId = casefieldsWithAuthorisationInfoThisCaseType.keySet()
+            .stream()
+            .filter(typeName -> !caseFieldItemsForThisCaseType.contains(typeName))
+            .findFirst();
+        if (unknownCaseFieldId.isPresent()) {
+            throw new MapperException(String.format("Unknown CaseField '%s' for CaseType '%s' in worksheet '%s'", unknownCaseFieldId.get(), caseTypeReference, getSheetName()));
+        }
     }
 
     String getSheetName();

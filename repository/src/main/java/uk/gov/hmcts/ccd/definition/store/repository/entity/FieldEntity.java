@@ -32,6 +32,8 @@ public interface FieldEntity {
     }
 
     default boolean isComplexFieldType() {
-        return this.getBaseTypeString().equalsIgnoreCase(BASE_COMPLEX);
+        return !isMetadataField() && this.getBaseTypeString().equalsIgnoreCase(BASE_COMPLEX);
     }
+
+    boolean isMetadataField();
 }
