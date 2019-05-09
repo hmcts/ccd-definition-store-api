@@ -16,6 +16,8 @@ import static org.junit.Assert.assertTrue;
 
 public class CaseFieldEntityUtilTest {
 
+    private CaseFieldEntityUtil caseFieldEntityUtil = new CaseFieldEntityUtil();
+
     @Test
     public void createsValidPossibilities() {
 
@@ -23,7 +25,7 @@ public class CaseFieldEntityUtilTest {
             caseFieldEntity("field2", exampleFieldTypeEntityWithComplexFields()),
             caseFieldEntity("field3"));
 
-        List<String> result = CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(fieldTypeEntity);
+        List<String> result = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(fieldTypeEntity);
 
         assertThat(result.size(), is(6));
         assertTrue(result.contains("field1"));
@@ -41,7 +43,7 @@ public class CaseFieldEntityUtilTest {
             caseFieldEntity("field2", exampleCollectionFieldTypeEntityWithComplexFields()),
             caseFieldEntity("field3"));
 
-        List<String> result = CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(fieldTypeEntity);
+        List<String> result = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(fieldTypeEntity);
 
         assertThat(result.size(), is(6));
         assertTrue(result.contains("field1"));

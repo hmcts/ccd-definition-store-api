@@ -164,8 +164,15 @@ public class ImportServiceImpl implements ImportService {
 
         final LayoutParser layoutParser = parserFactory.createLayoutParser(parseContext);
 
-        final ParseResult<GenericLayoutEntity> genericsResult = layoutParser.parseAllGenerics(definitionSheets);
-        layoutService.createGenerics(genericsResult.getNewResults());
+        final ParseResult<GenericLayoutEntity> searchInputResult = layoutParser.parseSearchInputLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> searchResultResult = layoutParser.parseSearchResultLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> workbasketInputResult = layoutParser.parseWorkbasketInputLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> workbasketLayoutResult = layoutParser.parseWorkbasketLayout(definitionSheets);
+
+        layoutService.createGenerics(searchInputResult.getNewResults());
+        layoutService.createGenerics(searchResultResult.getNewResults());
+        layoutService.createGenerics(workbasketInputResult.getNewResults());
+        layoutService.createGenerics(workbasketLayoutResult.getNewResults());
 
         final ParseResult<DisplayGroupEntity> displayGroupsResult = layoutParser.parseAllDisplayGroups(definitionSheets);
         layoutService.createDisplayGroups(displayGroupsResult.getNewResults());

@@ -18,10 +18,13 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class EventCaseFieldShowConditionValidatorImpl implements EventCaseFieldEntityValidator {
 
     private final ShowConditionParser showConditionExtractor;
+    private final CaseFieldEntityUtil caseFieldEntityUtil;
 
     @Autowired
-    public EventCaseFieldShowConditionValidatorImpl(ShowConditionParser showConditionExtractor) {
+    public EventCaseFieldShowConditionValidatorImpl(ShowConditionParser showConditionExtractor,
+                                                    CaseFieldEntityUtil caseFieldEntityUtil) {
         this.showConditionExtractor = showConditionExtractor;
+        this.caseFieldEntityUtil = caseFieldEntityUtil;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class EventCaseFieldShowConditionValidatorImpl implements EventCaseFieldE
             eventCaseFieldEntityValidationContext.getAllEventCaseFieldEntitiesForEventCase();
 
 
-        List<String> allSubTypePossibilities = CaseFieldEntityUtil.buildDottedComplexFieldPossibilities(
+        List<String> allSubTypePossibilities = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(
             allEventCaseFieldEntitiesForEventCase.stream()
                 .map(EventCaseFieldEntity::getCaseField)
                 .collect(Collectors.toList()));

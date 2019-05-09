@@ -11,11 +11,14 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CaseFieldEntityUtil {
 
-    private CaseFieldEntityUtil() { }
+    public CaseFieldEntityUtil() { }
 
-    public static List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
+    public List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
         List<String> allSubTypePossibilities = new ArrayList<>();
         List<? extends FieldEntity> fieldEntities = caseFieldEntities.stream()
             .filter(Objects::nonNull)
@@ -24,13 +27,13 @@ public class CaseFieldEntityUtil {
         return removeElementsThatAreNotTreeLeafs(allSubTypePossibilities);
     }
 
-    private static List<String> removeElementsThatAreNotTreeLeafs(List<String> allSubTypePossibilities) {
+    private List<String> removeElementsThatAreNotTreeLeafs(List<String> allSubTypePossibilities) {
         return allSubTypePossibilities.stream()
             .filter(e -> allSubTypePossibilities.stream().noneMatch(el -> el.startsWith(e + ".")))
             .collect(Collectors.toList());
     }
 
-    private static void prepare(List<String> allSubTypePossibilities,
+    private void prepare(List<String> allSubTypePossibilities,
                                 String startingString,
                                 List<? extends FieldEntity> caseFieldEntities) {
 
@@ -53,7 +56,7 @@ public class CaseFieldEntityUtil {
         });
     }
 
-    private static boolean isCollection(FieldEntity caseFieldEntity) {
+    private boolean isCollection(FieldEntity caseFieldEntity) {
         return caseFieldEntity.getFieldType().getCollectionFieldType() != null
             && caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields() != null
             && !caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields().isEmpty();
