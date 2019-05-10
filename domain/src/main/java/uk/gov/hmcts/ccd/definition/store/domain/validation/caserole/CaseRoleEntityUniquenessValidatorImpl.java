@@ -32,7 +32,8 @@ public class CaseRoleEntityUniquenessValidatorImpl implements CaseRoleEntityVali
                     .findFirst();
             duplicateEntity.ifPresent(caseRoleEntity1 ->
                 validationResult.addError(new CaseRoleEntityUniquenessValidatorImpl.ValidationError(String.format(
-                    "CaseRole with Id '%s' is duplicate. Please check case type'%s'", caseRoleEntity.getReference(),
+                    "CaseRole with Id '%s' is duplicate. Please check case type '%s' to ensure the CaseRole is "
+                        + "alphabetically unique, as is it is case insensitive.", caseRoleEntity.getReference(),
                     caseRoleEntityValidationContext.getCaseName()),
                     caseRoleEntity))
             );

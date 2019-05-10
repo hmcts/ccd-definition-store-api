@@ -102,6 +102,7 @@ public abstract class GenericLayoutParser {
         layoutCaseField.setCaseField(parseContext.getCaseFieldForCaseType(caseType.getReference(), caseFieldId));
         layoutCaseField.setLiveFrom(definition.getLocalDate(ColumnName.LIVE_FROM));
         layoutCaseField.setLiveTo(definition.getLocalDate(ColumnName.LIVE_TO));
+        layoutCaseField.setCaseFieldElementPath(definition.getString(ColumnName.LIST_ELEMENT_CODE));
         layoutCaseField.setLabel(definition.getString(ColumnName.LABEL));
         layoutCaseField.setOrder(definition.getInteger(ColumnName.DISPLAY_ORDER));
 
