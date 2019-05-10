@@ -25,9 +25,11 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportService;
 import uk.gov.hmcts.reform.amlib.enums.AccessType;
 import uk.gov.hmcts.reform.amlib.enums.RoleType;
+import uk.gov.hmcts.reform.amlib.models.ResourceDefinition;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
@@ -59,7 +61,7 @@ public class AccessManagementIT {
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
         verify(defaultRoleSetupImportService).addService(anyString(), anyString());
-        verify(defaultRoleSetupImportService).addResourceDefinition(anyString(), anyString(), anyString());
+        verify(defaultRoleSetupImportService).addResourceDefinition(any(ResourceDefinition.class));
 
     }
 

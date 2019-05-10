@@ -9,6 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportService;
+import uk.gov.hmcts.reform.amlib.models.ResourceDefinition;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Mockito.verify;
@@ -32,8 +33,8 @@ public class AccessManagementExportServiceTest {
         verify(defaultRoleSetupImportService).addService(caseTypeEntityA.getJurisdiction().getReference(), null);
         verify(defaultRoleSetupImportService).addService(caseTypeEntityB.getJurisdiction().getReference(), null);
 
-        verify(defaultRoleSetupImportService).addResourceDefinition(caseTypeEntityA.getJurisdiction().getReference(), "CASE", caseTypeEntityA.getReference());
-        verify(defaultRoleSetupImportService).addResourceDefinition(caseTypeEntityB.getJurisdiction().getReference(), "CASE", caseTypeEntityB.getReference());
+        verify(defaultRoleSetupImportService).addResourceDefinition(new ResourceDefinition(caseTypeEntityA.getJurisdiction().getReference(), "CASE", caseTypeEntityA.getReference()));
+        verify(defaultRoleSetupImportService).addResourceDefinition(new ResourceDefinition(caseTypeEntityB.getJurisdiction().getReference(), "CASE", caseTypeEntityB.getReference()));
     }
 
     private DefinitionImportedEvent newEvent() {
