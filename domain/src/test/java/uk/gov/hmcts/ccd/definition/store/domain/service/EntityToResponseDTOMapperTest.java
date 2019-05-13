@@ -1072,9 +1072,13 @@ class EntityToResponseDTOMapperTest {
         @Test
         void testMapDisplayGroupEntity() {
 
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setReference("Role1");
+            userRoleEntity.setName("Role 1");
             DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
             displayGroupEntity.setReference("Reference");
             displayGroupEntity.setLabel("Label");
+            displayGroupEntity.setUserRole(userRoleEntity);
             displayGroupEntity.setOrder(69);
 
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity1 = new DisplayGroupCaseFieldEntity();
@@ -1105,6 +1109,7 @@ class EntityToResponseDTOMapperTest {
 
             assertEquals(displayGroupEntity.getDisplayGroupCaseFields().size(), caseTypeTab.getTabFields().size());
             assertThat(caseTypeTab.getTabFields(), hasItems(caseTypeTabField1, caseTypeTabField2, caseTypeTabField3));
+            assertEquals(caseTypeTab.getRole(), displayGroupEntity.getUserRole().getReference());
 
         }
 
@@ -1168,18 +1173,20 @@ class EntityToResponseDTOMapperTest {
             searchInputCaseFieldEntity.setCaseField(caseFieldEntity);
             searchInputCaseFieldEntity.setLabel("Label");
             searchInputCaseFieldEntity.setOrder(69);
+            searchInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
 
             SearchInputField searchInputField = spyOnClassUnderTest.map(searchInputCaseFieldEntity);
 
             assertEquals(searchInputCaseFieldEntity.getOrder(), searchInputField.getOrder());
             assertEquals(searchInputCaseFieldEntity.getLabel(), searchInputField.getLabel());
+            assertEquals(searchInputCaseFieldEntity.getCaseFieldElementPath(), searchInputField.getCaseFieldElementPath());
             assertEquals(searchInputCaseFieldEntity.getCaseField().getReference(), searchInputField.getCaseFieldId());
         }
 
     }
 
     @Nested
-    @DisplayName("Should create a SearchInputField matching SearchInputCaseFieldEntity fields")
+    @DisplayName("Should create a SearchInputField matching SearchResultCaseFieldEntity fields")
     class SearchResultCaseFieldEntityTests {
 
         @Test
@@ -1229,13 +1236,14 @@ class EntityToResponseDTOMapperTest {
             workBasketInputCaseFieldEntity.setCaseField(caseFieldEntity);
             workBasketInputCaseFieldEntity.setLabel("Label");
             workBasketInputCaseFieldEntity.setOrder(69);
+            workBasketInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
 
             WorkbasketInputField workbasketInputField = spyOnClassUnderTest.map(workBasketInputCaseFieldEntity);
 
             assertEquals(workBasketInputCaseFieldEntity.getOrder(), workbasketInputField.getOrder());
             assertEquals(workBasketInputCaseFieldEntity.getLabel(), workbasketInputField.getLabel());
-            assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(),
-                         workbasketInputField.getCaseFieldId());
+            assertEquals(workBasketInputCaseFieldEntity.getCaseFieldElementPath(), workbasketInputField.getCaseFieldElementPath());
+            assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(), workbasketInputField.getCaseFieldId());
         }
 
     }

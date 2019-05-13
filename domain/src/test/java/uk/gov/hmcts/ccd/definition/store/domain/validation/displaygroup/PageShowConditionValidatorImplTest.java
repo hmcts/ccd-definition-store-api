@@ -9,6 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditi
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
@@ -37,13 +38,14 @@ public class PageShowConditionValidatorImplTest {
 
     @Mock
     private ShowConditionParser mockShowConditionParser;
+
     private PageShowConditionValidatorImpl testObj;
     private DisplayGroupEntity displayGroup;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        testObj = new PageShowConditionValidatorImpl(mockShowConditionParser);
+        testObj = new PageShowConditionValidatorImpl(mockShowConditionParser, new CaseFieldEntityUtil());
         displayGroup = new DisplayGroupEntity();
     }
 
