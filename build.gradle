@@ -225,7 +225,7 @@ subprojects { subproject ->
         testCompile 'org.mockito:mockito-junit-jupiter:2.24.0'
         testCompile 'com.github.npathai:hamcrest-optional:2.0.0'
         testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-        testCompile 'io.github.openfeign:feign-jackson:9.7.0'
+        testCompile 'io.github.openfeign:feign-jackson:10.2.3'
         testCompile 'io.github.openfeign.form:feign-form:3.3.0'
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "io.rest-assured:rest-assured:3.1.0"
