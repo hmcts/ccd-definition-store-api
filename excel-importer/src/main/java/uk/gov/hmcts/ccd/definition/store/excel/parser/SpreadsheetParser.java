@@ -7,7 +7,6 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +61,8 @@ public class SpreadsheetParser {
                     boolean validRow = false;
                     while (!validRow && cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
-                        if (cell != null && cell.getCellTypeEnum() != CellType.BLANK && !((XSSFCell) cell).getRawValue().isEmpty()) {
+
+                        if (cell != null && cell.getCellTypeEnum() != CellType.BLANK && !cell.toString().isEmpty()) {
                             validRow = true;
                         }
                     }
