@@ -9,8 +9,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -41,15 +39,18 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_HISTORY_VIEWER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_PAYMENT_HISTORY_VIEWER;
@@ -70,7 +71,6 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_R
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -115,18 +115,6 @@ public class ImportServiceImplTest {
 
     @Mock
     private IdamProfileClient idamProfileClient;
-
-    @Captor
-    private ArgumentCaptor<String> idamUserProfileURLCaptor;
-
-    @Captor
-    private ArgumentCaptor<HttpMethod> httpMethodCaptor;
-
-    @Captor
-    private ArgumentCaptor<HttpEntity> requestEntityCaptor;
-
-    @Captor
-    private ArgumentCaptor<Class<IdamProperties>> idamPropertiesClassCaptor;
 
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
@@ -269,6 +257,39 @@ public class ImportServiceImplTest {
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
     }
+
+    @Test
+    public void shouldReturnImportWarnings() {
+        Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
+        registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
+
+        final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
+            new EntityToDefinitionDataItemRegistry(), registry);
+
+        final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
+
+        service = new ImportServiceImpl(spreadsheetValidator,
+            spreadsheetParser,
+            parserFactory,
+            fieldTypeService,
+            jurisdictionService,
+            caseTypeService,
+            layoutService,
+            userRoleRepository,
+            workBasketUserDefaultService,
+            caseFieldRepository,
+            applicationEventPublisher,
+            idamProfileClient);
+
+        final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
+
+        given(spreadsheetParser.getImportWarnings()).willReturn(importWarnings);
+
+        final List<String> warnings = service.getImportWarnings();
+        assertThat(warnings.size(), equalTo(2));
+        assertThat(importWarnings, containsInAnyOrder("Warning1", "Warning2"));
+        verify(spreadsheetParser).getImportWarnings();
+   }
 
     private FieldTypeEntity buildBaseType(final String reference) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

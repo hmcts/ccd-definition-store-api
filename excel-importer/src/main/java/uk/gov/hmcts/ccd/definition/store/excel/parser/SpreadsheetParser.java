@@ -1,7 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.apache.commons.collections4.IteratorUtils;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -14,7 +19,13 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.DEFAULT_HIDDEN;
 
 @Component
 public class SpreadsheetParser {
@@ -23,6 +34,7 @@ public class SpreadsheetParser {
 
     private final SpreadsheetValidator spreadsheetValidator;
     private DataFormatter cellFormatter;
+    private List<String> importWarnings;
 
     @Autowired
     public SpreadsheetParser(final SpreadsheetValidator spreadsheetValidator) {
@@ -33,6 +45,7 @@ public class SpreadsheetParser {
 
     public Map<String, DefinitionSheet> parse(InputStream inputStream) throws IOException {
         final Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
+        importWarnings = new ArrayList<>();
 
         try (InputStream is = inputStream) { // Java's try-with-resource requires a named local variable, even though unused.
             Workbook workbook = new XSSFWorkbook(inputStream);
@@ -66,7 +79,16 @@ public class SpreadsheetParser {
                         if (row.getRowNum() == 2) {
                             // This is the header row. Use a non-filtered iterator because this row defines the boundary,
                             // i.e. all cells in this row are regarded valid.
-                            row.iterator().forEachRemaining(cell -> headings.add(cell.getStringCellValue()));
+                            row.iterator().forEachRemaining(cell -> {
+                                final String cellValue = cell.getStringCellValue();
+                                if (cellValue.equals(DEFAULT_HIDDEN.toString())) {
+                                    final String importWarning = definitionSheet.getName()
+                                        + " sheet contains DefaultHidden column that will be deprecated. "
+                                        + "Please remove from future Definition imports.";
+                                    importWarnings.add(importWarning);
+                                }
+                                headings.add(cell.getStringCellValue());
+                            });
                             logger.debug("Number of attribute headers: " + headings.size());
                         } else {
                             // These are data rows. Use a filtered iterator to ignore any cells that fall outside the
@@ -107,6 +129,10 @@ public class SpreadsheetParser {
         }
 
         return definitionSheets;
+    }
+
+    public List<String> getImportWarnings() {
+        return importWarnings;
     }
 
     private String formatNumberAsString(Cell cell) {

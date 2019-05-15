@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImplTest;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -42,6 +43,16 @@ public class SpreadsheetParserTest {
             "SearchResultFields", "AuthorisationCaseField", "CaseType", "State",
             "AuthorisationCaseType", "AuthorisationComplexType",
             "AuthorisationCaseEvent", "CaseEventFieldRestriction"
+        ));
+
+        final List<String> importWarnings = spreadsheetParser.getImportWarnings();
+        assertThat(importWarnings.size(), is(2));
+
+        assertThat(importWarnings, containsInAnyOrder(
+            "CaseField sheet contains DefaultHidden column that will be deprecated. "
+            + "Please remove from future Definition imports.",
+            "ComplexTypes sheet contains DefaultHidden column that will be deprecated. "
+            + "Please remove from future Definition imports."
         ));
     }
 
