@@ -9,7 +9,13 @@
             <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
-            <column name="complex_field_id" type="integer">
+            <column name="case_field_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="list_element_code" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="integer">
                 <constraints nullable="false"/>
             </column>
             <column name="create" type="boolean">
@@ -33,21 +39,18 @@
             <column name="created_at" type="datetime" defaultValue="now()">
                 <constraints nullable="false"/>
             </column>
-            <column name="role_id" type="integer">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
 
         <addPrimaryKey columnNames="id"
                        constraintName="pk_complex_field_acl"
                        tableName="complex_field_acl"/>
 
-        <!-- Add foreign key for complex_field_id column linking to complex_field table -->
-        <addForeignKeyConstraint baseColumnNames="complex_field_id"
+        <!-- Add foreign key for case_field_id column linking to case_field table -->
+        <addForeignKeyConstraint baseColumnNames="case_field_id"
                                  baseTableName="complex_field_acl"
-                                 constraintName="fk_complex_field_acl_complex_field_id_complex_field_id"
+                                 constraintName="fk_complex_field_acl_case_field_id_case_field_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="complex_field"/>
+                                 referencedTableName="case_field"/>
 
         <!-- Add foreign key for role_id column linking to role table -->
         <addForeignKeyConstraint baseColumnNames="role_id"
@@ -56,9 +59,9 @@
                                  referencedColumnNames="id"
                                  referencedTableName="role"/>
 
-        <!-- Add unique constraint on complex_field_id and role_id columns for the complex_field_acl table -->
-        <addUniqueConstraint columnNames="complex_field_id, role_id"
-                             constraintName="unique_complex_field_acl_complex_field_id_role_id"
+        <!-- Add unique constraint on case_field_id and role_id columns for the complex_field_acl table -->
+        <addUniqueConstraint columnNames="case_field_id, list_element_code, role_id"
+                             constraintName="unique_complex_field_acl_case_field_id_list_elemnt_code_role_id"
                              tableName="complex_field_acl"/>
 
     </changeSet>

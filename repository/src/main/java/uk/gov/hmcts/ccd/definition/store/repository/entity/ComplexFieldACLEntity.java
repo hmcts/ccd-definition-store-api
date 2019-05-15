@@ -8,15 +8,24 @@ import java.io.Serializable;
 public class ComplexFieldACLEntity extends Authorisation implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "complex_field_id", nullable = false)
-    private ComplexFieldEntity complexField;
+    @JoinColumn(name = "case_field_id", nullable = false)
+    private CaseFieldEntity caseField;
 
-    public ComplexFieldEntity getComplexField() {
-        return complexField;
+    private String listElementCode;
+
+    public CaseFieldEntity getCaseField() {
+        return caseField;
     }
 
-    public void setComplexField(final ComplexFieldEntity complexField) {
-        this.complexField = complexField;
+    public void setCaseField(final CaseFieldEntity caseField) {
+        this.caseField = caseField;
     }
 
+    public String getListElementCode() {
+        return listElementCode;
+    }
+
+    public void setListElementCode(String listElementCode) {
+        this.listElementCode = listElementCode;
+    }
 }

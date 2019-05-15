@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImplTest;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
@@ -34,13 +34,13 @@ public class SpreadsheetParserTest {
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(ImportServiceImplTest.BAD_FILE);
 
         final Map<String, DefinitionSheet> map = spreadsheetParser.parse(inputStream);
-        assertThat(map.size(), is(16));
+        assertThat(map.size(), is(17));
 
         assertThat(map.keySet(), containsInAnyOrder("SearchInputFields", "UserProfile", "CaseField",
             "ComplexTypes", "WorkBasketResultFields", "CaseTypeTab",
             "FixedLists", "CaseEvent", "Jurisdiction",
             "SearchResultFields", "AuthorisationCaseField", "CaseType", "State",
-            "AuthorisationCaseType",
+            "AuthorisationCaseType", "AuthorisationComplexType",
             "AuthorisationCaseEvent", "CaseEventFieldRestriction"
         ));
     }

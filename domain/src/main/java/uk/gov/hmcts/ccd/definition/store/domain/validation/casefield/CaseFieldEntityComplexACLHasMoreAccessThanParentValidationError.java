@@ -3,25 +3,27 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
 
-public class CaseFieldEntityInvalidUserRoleValidationError extends ValidationError {
+public class CaseFieldEntityComplexACLHasMoreAccessThanParentValidationError extends ValidationError {
 
-    private final Authorisation caseFieldACLEntity;
+    private final ComplexFieldACLEntity complexFieldACLEntity;
     private final AuthorisationCaseFieldValidationContext authorisationCaseFieldValidationContext;
 
-    public CaseFieldEntityInvalidUserRoleValidationError(final Authorisation entity,
-                                                         final AuthorisationCaseFieldValidationContext context) {
-        super(String.format("Invalid UserRole for case type '%s', case field '%s'",
+    public CaseFieldEntityComplexACLHasMoreAccessThanParentValidationError(final ComplexFieldACLEntity entity,
+                                                                           final AuthorisationCaseFieldValidationContext context) {
+        super(String.format("The access for case type '%s', case field '%s', list element code '%s' is more than its parent",
             context.getCaseReference(),
-            context.getCaseFieldReference()));
-        this.caseFieldACLEntity = entity;
+            context.getCaseFieldReference(),
+            entity.getListElementCode()));
+        this.complexFieldACLEntity = entity;
         this.authorisationCaseFieldValidationContext = context;
     }
 
-    public Authorisation getCaseFieldACLEntity() {
-        return caseFieldACLEntity;
+    public ComplexFieldACLEntity getComplexFieldACLEntity() {
+        return complexFieldACLEntity;
     }
+
 
     public AuthorisationCaseFieldValidationContext getAuthorisationCaseFieldValidationContext() {
         return authorisationCaseFieldValidationContext;

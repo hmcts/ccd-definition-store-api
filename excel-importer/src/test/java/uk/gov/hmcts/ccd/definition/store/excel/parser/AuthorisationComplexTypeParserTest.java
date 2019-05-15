@@ -1,14 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseFieldParserTest.buildSheetForCaseField;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
@@ -21,10 +19,13 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.COMPLEX_TYPES;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
@@ -110,6 +111,15 @@ public class AuthorisationComplexTypeParserTest {
     }
 
     @Test
+    @DisplayName("should fail when no tab found")
+    public void shouldNotParseWhenAuthorisationComplexTypeTabNotFound() {
+        definitionSheets.remove(AUTHORISATION_COMPLEX_TYPE.getName());
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets, caseType));
+        Assert.assertThat(thrown.getMessage(), is("No AuthorisationComplexType tab found in configuration"));
+    }
+
+    @Test
+    @DisplayName("should parse when user role found")
     public void shouldParseEntityWithUserRoleFound() {
         final DefinitionDataItem item = new DefinitionDataItem(CASE_FIELD.getName());
         item.addAttribute(CASE_TYPE_ID, CASE_TYPE_UNDER_TEST);
@@ -145,42 +155,44 @@ public class AuthorisationComplexTypeParserTest {
         classUnderTest.parseAll(definitionSheets, caseType);
 
         final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
-        final ComplexFieldACLEntity complexFieldACLEntity = ((ComplexFieldEntity) caseFieldEntity.findNestedElementByPath(ELEMENT_CODE_1)).getComplexFieldACLEntities().get(0);
-        final ComplexFieldACLEntity complexFieldACLEntity2 = ((ComplexFieldEntity) caseFieldEntity.findNestedElementByPath(ELEMENT_CODE_2)).getComplexFieldACLEntities().get(0);
+        final List<ComplexFieldACLEntity> entities = caseFieldEntity.getComplexFieldACLEntities();
         assertAll(
-            () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("CCCd")),
-            () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),
-            () -> assertThat(complexFieldACLEntity.getUserRole(), is(mockUserRoleEntity)),
-            () -> assertThat(complexFieldACLEntity.getCreate(), is(true)),
-            () -> assertThat(complexFieldACLEntity.getUpdate(), is(false)),
-            () -> assertThat(complexFieldACLEntity.getRead(), is(false)),
-            () -> assertThat(complexFieldACLEntity.getDelete(), is(true)),
-            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1))),
-            () -> assertThat(complexFieldACLEntity2.getCrudAsString(), is("RRRRd")),
-            () -> assertThat(complexFieldACLEntity2.getId(), is(nullValue())),
-            () -> assertThat(complexFieldACLEntity2.getUserRole(), is(mockUserRoleEntity)),
-            () -> assertThat(complexFieldACLEntity2.getCreate(), is(false)),
-            () -> assertThat(complexFieldACLEntity2.getUpdate(), is(false)),
-            () -> assertThat(complexFieldACLEntity2.getRead(), is(true)),
-            () -> assertThat(complexFieldACLEntity2.getDelete(), is(true)),
-            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity2), is(Optional.of(item2)))
+            () -> assertThat(entities.size(), is(2)),
+            () -> assertThat(entities.get(0).getCrudAsString(), is("CCCd")),
+            () -> assertThat(entities.get(0).getId(), is(nullValue())),
+            () -> assertThat(entities.get(0).getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(entities.get(0).getCreate(), is(true)),
+            () -> assertThat(entities.get(0).getUpdate(), is(false)),
+            () -> assertThat(entities.get(0).getRead(), is(false)),
+            () -> assertThat(entities.get(0).getDelete(), is(true)),
+            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(entities.get(0)), is(Optional.of(item1))),
+            () -> assertThat(entities.get(1).getCrudAsString(), is("RRRRd")),
+            () -> assertThat(entities.get(1).getId(), is(nullValue())),
+            () -> assertThat(entities.get(1).getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(entities.get(1).getCreate(), is(false)),
+            () -> assertThat(entities.get(1).getUpdate(), is(false)),
+            () -> assertThat(entities.get(1).getRead(), is(true)),
+            () -> assertThat(entities.get(1).getDelete(), is(true)),
+            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(entities.get(1)), is(Optional.of(item2)))
         );
 
         final CaseFieldEntity caseFieldEntity2 = caseType.findCaseField(CASE_FIELD_2).orElseThrow(() -> new RuntimeException());
-        final ComplexFieldACLEntity complexFieldACLEntity3 = ((ComplexFieldEntity) caseFieldEntity2.findNestedElementByPath(ELEMENT_CODE_3)).getComplexFieldACLEntities().get(0);
+        final List<ComplexFieldACLEntity> entities2 = caseFieldEntity2.getComplexFieldACLEntities();
         assertAll(
-            () -> assertThat(complexFieldACLEntity3.getCrudAsString(), is("CUud")),
-            () -> assertThat(complexFieldACLEntity3.getId(), is(nullValue())),
-            () -> assertThat(complexFieldACLEntity3.getUserRole(), is(mockUserRoleEntity)),
-            () -> assertThat(complexFieldACLEntity3.getCreate(), is(true)),
-            () -> assertThat(complexFieldACLEntity3.getUpdate(), is(true)),
-            () -> assertThat(complexFieldACLEntity3.getRead(), is(false)),
-            () -> assertThat(complexFieldACLEntity3.getDelete(), is(true)),
-            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity3), is(Optional.of(item3)))
+            () -> assertThat(entities2.size(), is(1)),
+            () -> assertThat(entities2.get(0).getCrudAsString(), is("CUud")),
+            () -> assertThat(entities2.get(0).getId(), is(nullValue())),
+            () -> assertThat(entities2.get(0).getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(entities2.get(0).getCreate(), is(true)),
+            () -> assertThat(entities2.get(0).getUpdate(), is(true)),
+            () -> assertThat(entities2.get(0).getRead(), is(false)),
+            () -> assertThat(entities2.get(0).getDelete(), is(true)),
+            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(entities2.get(0)), is(Optional.of(item3)))
         );
     }
 
     @Test
+    @DisplayName("should parse when case role found")
     public void shouldParseEntityWithCaseRoleFound() {
         final String caseRole = "[CLAIMANT]";
 
@@ -195,7 +207,7 @@ public class AuthorisationComplexTypeParserTest {
         classUnderTest.parseAll(definitionSheets, caseType);
 
         final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
-        final ComplexFieldACLEntity complexFieldACLEntity = ((ComplexFieldEntity) caseFieldEntity.findNestedElementByPath(ELEMENT_CODE_1)).getComplexFieldACLEntities().get(0);
+        final ComplexFieldACLEntity complexFieldACLEntity = caseFieldEntity.getComplexFieldACLEntities().get(0);
 
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("CCCd")),
@@ -210,6 +222,7 @@ public class AuthorisationComplexTypeParserTest {
     }
 
     @Test
+    @DisplayName("should parse when user role not found")
     public void shouldParseEntityWithUserRoleNotFound() {
         final String role = "CaseWorker 2";
 
@@ -224,7 +237,7 @@ public class AuthorisationComplexTypeParserTest {
         classUnderTest.parseAll(definitionSheets, caseType);
 
         final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
-        final ComplexFieldACLEntity complexFieldACLEntity = ((ComplexFieldEntity) caseFieldEntity.findNestedElementByPath(ELEMENT_CODE_1)).getComplexFieldACLEntities().get(0);
+        final ComplexFieldACLEntity complexFieldACLEntity = caseFieldEntity.getComplexFieldACLEntities().get(0);;
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("CCCd")),
             () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),
@@ -233,6 +246,7 @@ public class AuthorisationComplexTypeParserTest {
     }
 
     @Test
+    @DisplayName("should parse when CRUD is invalid")
     public void shouldParseEntityWithInvalidCrud() {
         final String role = "CaseWorker 1";
 
@@ -247,7 +261,7 @@ public class AuthorisationComplexTypeParserTest {
         classUnderTest.parseAll(definitionSheets, caseType);
 
         final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
-        final ComplexFieldACLEntity complexFieldACLEntity = ((ComplexFieldEntity) caseFieldEntity.findNestedElementByPath(ELEMENT_CODE_1)).getComplexFieldACLEntities().get(0);
+        final ComplexFieldACLEntity complexFieldACLEntity = caseFieldEntity.getComplexFieldACLEntities().get(0);;
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("X y")),
             () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),
@@ -257,6 +271,7 @@ public class AuthorisationComplexTypeParserTest {
     }
 
     @Test
+    @DisplayName("should parse when user role not found and CRUD is invalid")
     public void shouldParseEntityWithInvalidCrudAndUserNotFound() {
         final String role = "CaseWorker 2";
 
@@ -271,7 +286,7 @@ public class AuthorisationComplexTypeParserTest {
         classUnderTest.parseAll(definitionSheets, caseType);
 
         final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
-        final ComplexFieldACLEntity complexFieldACLEntity = ((ComplexFieldEntity) caseFieldEntity.findNestedElementByPath(ELEMENT_CODE_1)).getComplexFieldACLEntities().get(0);
+        final ComplexFieldACLEntity complexFieldACLEntity = caseFieldEntity.getComplexFieldACLEntities().get(0);;
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("X y")),
             () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),

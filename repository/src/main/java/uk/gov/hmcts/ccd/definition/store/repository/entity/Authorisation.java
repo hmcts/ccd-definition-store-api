@@ -2,15 +2,18 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 @MappedSuperclass
-public abstract class Authorisation {
+public abstract class Authorisation implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -120,5 +123,26 @@ public abstract class Authorisation {
 
     public void setCrudAsString(final String crudAsString) {
         this.crudAsString = crudAsString;
+    }
+
+    @Transient
+    public boolean hasLessAccessThan(Authorisation other) {
+        boolean hasMoreAccessOnCreate = secondHasMoreAccess(this.getCreate(), other.getCreate());
+        boolean hasMoreAccessOnRead = secondHasMoreAccess(this.getRead(), other.getRead());
+        boolean hasMoreAccessOnUpdate = secondHasMoreAccess(this.getUpdate(), other.getUpdate());
+        boolean hasMoreAccessOnDelete = secondHasMoreAccess(this.getDelete(), other.getDelete());
+
+        return hasMoreAccessOnCreate || hasMoreAccessOnRead || hasMoreAccessOnUpdate || hasMoreAccessOnDelete;
+    }
+
+    private boolean secondHasMoreAccess(Boolean ac1, Boolean ac2) {
+        if (isNull(ac2)) {
+            return false;
+        } else if (isNull(ac1) && nonNull(ac2)) {
+            return true;
+        } else if (ac2.booleanValue() == false || ac1.booleanValue() == true) {
+            return false;
+        }
+        return true;
     }
 }
