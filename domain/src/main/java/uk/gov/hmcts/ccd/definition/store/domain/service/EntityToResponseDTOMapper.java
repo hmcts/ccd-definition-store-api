@@ -193,6 +193,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "displayGroupEntity.reference", target = "id")
     @Mapping(source = "displayGroupEntity.showCondition", target = "showCondition")
     @Mapping(source = "displayGroupEntity.displayGroupCaseFields", target = "tabFields")
+    @Mapping(source = "displayGroupEntity.userRole.reference", target = "role")
     CaseTypeTab map(DisplayGroupEntity displayGroupEntity);
 
     @Mapping(source = "displayGroupCaseFieldEntity.showCondition", target = "showCondition")

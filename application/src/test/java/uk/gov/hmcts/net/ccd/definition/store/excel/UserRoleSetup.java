@@ -19,6 +19,7 @@ public class UserRoleSetup {
         jdbcTemplate.update("delete from case_type_acl");
         jdbcTemplate.update("delete from case_field_acl");
         jdbcTemplate.update("delete from state_acl");
+        jdbcTemplate.update("update display_group set role_id = null where role_id is not null");
         jdbcTemplate.update("update search_input_case_field set role_id = null where role_id is not null");
         jdbcTemplate.update("update search_result_case_field set role_id = null where role_id is not null");
         jdbcTemplate.update("update workbasket_input_case_field set role_id = null where role_id is not null");

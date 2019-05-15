@@ -60,6 +60,11 @@ variable "frontend_url" {
   description = "Optional front end URL to use for building redirect URI"
 }
 
+variable "appinsights_instrumentation_key" {
+  description = "Instrumentation key of the App Insights instance this webapp should use. Module will create own App Insights resource if this is not provided"
+  default = ""
+}
+
 ////////////////////////////////
 // Database
 ////////////////////////////////
