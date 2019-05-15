@@ -119,6 +119,33 @@ public class AuthorisationComplexTypeParserTest {
     }
 
     @Test
+    @DisplayName("should fail when caseField is not found")
+    public void shouldNotParseWhenCaseFieldNotFound() {
+        definitionSheets.remove(CASE_FIELD.getName());
+
+        final DefinitionSheet sheet = new DefinitionSheet();
+        sheet.setName(CASE_FIELD.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(CASE_FIELD.getName());
+        item.addAttribute(CASE_TYPE_ID, CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ID, CASE_FIELD_UNDER_TEST + "_NOT");
+        item.addAttribute(NAME, CASE_FIELD_UNDER_TEST + "_NOT");
+        sheet.addDataItem(item);
+        definitionSheets.put(CASE_FIELD.getName(), sheet);
+
+        final String role = "CaseWorker 1";
+        final DefinitionDataItem item1 = new DefinitionDataItem(AUTHORISATION_COMPLEX_TYPE.getName());
+        item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
+        item1.addAttribute(LIST_ELEMENT_CODE.toString(), ELEMENT_CODE_1);
+        item1.addAttribute(USER_ROLE.toString(), role);
+        item1.addAttribute(CRUD.toString(), " CCCd  ");
+        definitionSheet.addDataItem(item1);
+
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets, caseType));
+        Assert.assertThat(thrown.getMessage(), is("Unknown CaseField 'Some Case Field' for CaseType 'Some Case Type' in worksheet 'AuthorisationComplexType'"));
+    }
+
+    @Test
     @DisplayName("should parse when user role found")
     public void shouldParseEntityWithUserRoleFound() {
         final DefinitionDataItem item = new DefinitionDataItem(CASE_FIELD.getName());
