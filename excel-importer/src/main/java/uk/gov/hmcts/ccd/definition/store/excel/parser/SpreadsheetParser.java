@@ -46,8 +46,7 @@ public class SpreadsheetParser {
         final Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
         importWarnings = new ArrayList<>();
 
-        try (InputStream is = inputStream) { // Java's try-with-resource requires a named local variable, even though unused.
-            Workbook workbook = new XSSFWorkbook(inputStream);
+        try (Workbook workbook = new XSSFWorkbook(inputStream)) {
             workbook.sheetIterator().forEachRemaining(sheet -> {
                 DefinitionSheet definitionSheet = new DefinitionSheet();
 
