@@ -203,12 +203,14 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "displayGroupEntity.reference", target = "id")
     @Mapping(source = "displayGroupEntity.showCondition", target = "showCondition")
     @Mapping(source = "displayGroupEntity.displayGroupCaseFields", target = "tabFields")
+    @Mapping(source = "displayGroupEntity.userRole.reference", target = "role")
     CaseTypeTab map(DisplayGroupEntity displayGroupEntity);
 
     @Mapping(source = "displayGroupCaseFieldEntity.showCondition", target = "showCondition")
     CaseTypeTabField map(DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity);
 
     @Mapping(source = "searchInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(source = "searchInputCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     SearchInputField map(SearchInputCaseFieldEntity searchInputCaseFieldEntity);
 
     @Mapping(source = "searchResultCaseFieldEntity.caseField.reference", target = "caseFieldId")
@@ -216,6 +218,7 @@ public interface EntityToResponseDTOMapper {
     SearchResultsField map(SearchResultCaseFieldEntity searchResultCaseFieldEntity);
 
     @Mapping(source = "workBasketInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(source = "workBasketInputCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     WorkbasketInputField map(WorkBasketInputCaseFieldEntity workBasketInputCaseFieldEntity);
 
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")

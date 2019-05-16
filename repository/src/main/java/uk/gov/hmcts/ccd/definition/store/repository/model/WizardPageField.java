@@ -57,7 +57,7 @@ public class WizardPageField {
         return complexFieldOverrides;
     }
 
-    public void addComplexFieldOverride(WizardPageComplexFieldOverride complexFieldOverride) {
-        this.complexFieldOverrides.add(complexFieldOverride);
+    public void addAllComplexFieldOverrides(List<WizardPageComplexFieldOverride> complexFieldOverrides) {
+        this.complexFieldOverrides.addAll(complexFieldOverrides);
     }
 }

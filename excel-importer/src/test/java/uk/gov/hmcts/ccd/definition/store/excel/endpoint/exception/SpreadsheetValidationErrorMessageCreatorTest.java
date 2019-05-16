@@ -404,7 +404,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid IdamRole 'X' in AuthorisationCaseField tab, case type 'case type', case field 'case field', crud 'Y'",
+            "Invalid idam or case role 'X' in AuthorisationCaseField tab, case type 'case type', case field 'case field', crud 'Y'",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -499,7 +499,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid IdamRole 'u' in AuthorisationCaseEvent tab, case type 'case type', event 'event', crud 'x'",
+            "Invalid idam or case role 'u' in AuthorisationCaseEvent tab, case type 'case type', event 'event', crud 'x'",
             classUnderTest.createErrorMessage(error));
     }
 

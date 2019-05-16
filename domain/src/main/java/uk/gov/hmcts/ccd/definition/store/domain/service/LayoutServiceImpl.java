@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupValidator;
@@ -12,6 +8,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class LayoutServiceImpl implements LayoutService {
@@ -33,15 +34,7 @@ public class LayoutServiceImpl implements LayoutService {
 
     @Override
     public void createGenerics(List<GenericLayoutEntity> genericLayouts) {
-        ValidationResult result = new ValidationResult();
-        for (GenericLayoutEntity genericLayoutEntity : genericLayouts) {
-            for (GenericLayoutValidator validator : genericLayoutValidators) {
-                result.merge(validator.validate(genericLayoutEntity));
-            }
-        }
-        if (!result.isValid()) {
-            throw new ValidationException(result);
-        }
+        validate(genericLayouts);
         genericRepository.saveAll(genericLayouts);
     }
 
@@ -59,4 +52,19 @@ public class LayoutServiceImpl implements LayoutService {
         }
         displayGroupRepository.saveAll(displayGroups);
     }
+
+    private void validate(List<GenericLayoutEntity> genericLayouts) {
+        ValidationResult result = new ValidationResult();
+
+        for (GenericLayoutEntity entity : genericLayouts) {
+            for (GenericLayoutValidator validator : genericLayoutValidators) {
+                result.merge(validator.validate(entity));
+            }
+        }
+
+        if (!result.isValid()) {
+            throw new ValidationException(result);
+        }
+    }
+
 }
