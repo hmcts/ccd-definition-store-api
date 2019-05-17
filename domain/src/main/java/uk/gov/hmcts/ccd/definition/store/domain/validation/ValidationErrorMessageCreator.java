@@ -76,7 +76,7 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(CaseFieldEntityInvalidComplexCrudValidationError caseFieldEntityInvalidComplexCrudValidationError);
 
-    String createErrorMessage(CaseFieldEntityComplexACLHasMoreAccessThanParentValidationError caseFieldEntityComplexACLHasMoreAccessThanParentValidationError);
+    String createErrorMessage(CaseFieldEntityComplexACLValidationError caseFieldEntityComplexACLValidationError);
 
     String createErrorMessage(CaseFieldEntityInvalidUserRoleValidationError
                                   caseFieldEntityInvalidUserRoleValidationError);

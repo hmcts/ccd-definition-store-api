@@ -469,7 +469,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void caseFieldUserRoleEntityInvalidComplexCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
-        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud");
+        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud", "code1");
 
         final CaseFieldEntityInvalidComplexCrudValidationError error = new CaseFieldEntityInvalidComplexCrudValidationError(
             entity,
@@ -495,8 +495,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void caseFieldUserRoleEntityInvalidComplexCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
-        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud");
-        entity.setListElementCode("code1");
+        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud", "code1");
 
         final CaseFieldEntityInvalidComplexCrudValidationError error = new CaseFieldEntityInvalidComplexCrudValidationError(entity,
             new AuthorisationCaseFieldValidationContext(
@@ -512,9 +511,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void complexACLHasMoreAccessThanParentValidationError_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
-        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud");
+        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud", "code1");
 
-        final CaseFieldEntityComplexACLHasMoreAccessThanParentValidationError error = new CaseFieldEntityComplexACLHasMoreAccessThanParentValidationError(
+        final CaseFieldEntityComplexACLValidationError error = new CaseFieldEntityComplexACLValidationError(
             entity,
             new AuthorisationCaseFieldValidationContext(caseFieldEntity,
                 new CaseFieldEntityValidationContext(caseTypeEntity)));
@@ -530,7 +529,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', case field 'case field', list element code 'list element code', user role 'user role'. Cannot expose more than parent",
+            "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', case field "
+                + "'case field', list element code 'list element code', user role 'user role'. Detail: The access for "
+                + "case type 'case type', case field 'case field', list element code 'code1' is more than its parent",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -538,10 +539,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     public void complexACLHasMoreAccessThanParentValidationError_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
-        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud");
-        entity.setListElementCode("code1");
+        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud", "code1");
 
-        final CaseFieldEntityComplexACLHasMoreAccessThanParentValidationError error = new CaseFieldEntityComplexACLHasMoreAccessThanParentValidationError(entity,
+        final CaseFieldEntityComplexACLValidationError error = new CaseFieldEntityComplexACLValidationError(entity,
             new AuthorisationCaseFieldValidationContext(
                 caseFieldEntity,
                 new CaseFieldEntityValidationContext(
@@ -1427,9 +1427,10 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         return entity;
     }
 
-    private ComplexFieldACLEntity complexFieldACLEntity(final String crud) {
+    private ComplexFieldACLEntity complexFieldACLEntity(final String crud, final String code) {
         final ComplexFieldACLEntity entity = new ComplexFieldACLEntity();
         setAuthorisation(entity, crud);
+        entity.setListElementCode(code);
         return entity;
     }
 

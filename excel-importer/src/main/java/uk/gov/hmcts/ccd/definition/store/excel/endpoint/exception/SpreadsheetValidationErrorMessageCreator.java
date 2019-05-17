@@ -227,18 +227,19 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(final CaseFieldEntityComplexACLHasMoreAccessThanParentValidationError error) {
+    public String createErrorMessage(final CaseFieldEntityComplexACLValidationError error) {
         return newMessageIfDefinitionExists(error,
-                                            error.getComplexFieldACLEntity(),
-                                            def -> String.format(
-                                                INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
-                                                    + "list element code '%s', user role '%s'. Cannot expose more than parent",
-                                                defaultString(def.getString(ColumnName.CRUD)),
-                                                def.getSheetName(),
-                                                def.getString(ColumnName.CASE_TYPE_ID),
-                                                def.getString(ColumnName.CASE_FIELD_ID),
-                                                def.getString(ColumnName.LIST_ELEMENT_CODE),
-                                                defaultString(def.getString(ColumnName.USER_ROLE))));
+            error.getComplexFieldACLEntity(),
+            def -> String.format(
+                INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
+                    + "list element code '%s', user role '%s'. Detail: %s",
+                defaultString(def.getString(ColumnName.CRUD)),
+                def.getSheetName(),
+                def.getString(ColumnName.CASE_TYPE_ID),
+                def.getString(ColumnName.CASE_FIELD_ID),
+                def.getString(ColumnName.LIST_ELEMENT_CODE),
+                defaultString(def.getString(ColumnName.USER_ROLE)),
+                error.getDefaultMessage()));
     }
 
     @Override
