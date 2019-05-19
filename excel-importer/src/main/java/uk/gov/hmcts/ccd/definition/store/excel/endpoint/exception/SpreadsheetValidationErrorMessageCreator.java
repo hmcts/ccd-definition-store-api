@@ -177,7 +177,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     public String createErrorMessage(final CaseTypeEntityInvalidUserRoleValidationError error) {
         return newMessageIfDefinitionExists(error,
                                             error.getCaseTypeUserRoleEntity(),
-                                            def -> String.format("Invalid IdamRole '%s' in %s tab for case type '%s'",
+                                            def -> String.format("Invalid idam or case role '%s' in %s tab for case type '%s'",
                                                                  def.getString(ColumnName.USER_ROLE),
                                                                  def.getSheetName(),
                                                                  error.getAuthorisationValidationContext()
@@ -215,7 +215,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
                                             error.getCaseFieldACLEntity(),
                                             def -> String.format(
-                                                "Invalid IdamRole '%s' in %s tab, case type '%s', case field '%s', "
+                                                "Invalid idam or case role '%s' in %s tab, case type '%s', case field '%s', "
                                                     + "crud '%s'",
                                                 defaultString(def.getString(ColumnName.USER_ROLE)),
                                                 def.getSheetName(),
@@ -243,7 +243,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
                                             error.getEventACLEntity(),
                                             def -> String.format(
-                                                "Invalid IdamRole '%s' in %s tab, case type '%s', event '%s', crud "
+                                                "Invalid idam or case role '%s' in %s tab, case type '%s', event '%s', crud "
                                                     + "'%s'",
                                                 defaultString(def.getString(ColumnName.USER_ROLE)),
                                                 def.getSheetName(),
