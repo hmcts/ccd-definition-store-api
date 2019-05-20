@@ -11,6 +11,7 @@ public class SearchResultsField {
     private String label = null;
     private Integer order = null;
     private boolean metadata;
+    private String role;
 
     /**
      **/
@@ -51,5 +52,14 @@ public class SearchResultsField {
 
     public void setMetadata(boolean metadata) {
         this.metadata = metadata;
+    }
+
+    @JsonProperty("role")
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
