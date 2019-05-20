@@ -22,10 +22,13 @@ import java.util.stream.Collectors;
 public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
 
     private final ShowConditionParser showConditionParser;
+    private final CaseFieldEntityUtil caseFieldEntityUtil;
 
     @Autowired
-    public TabShowConditionValidatorImpl(ShowConditionParser showConditionParser) {
+    public TabShowConditionValidatorImpl(ShowConditionParser showConditionParser,
+                                         CaseFieldEntityUtil caseFieldEntityUtil) {
         this.showConditionParser = showConditionParser;
+        this.caseFieldEntityUtil = caseFieldEntityUtil;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                 return validationResult;
             }
 
-            List<String> allSubTypePossibilities = CaseFieldEntityUtil
+            List<String> allSubTypePossibilities = caseFieldEntityUtil
                 .buildDottedComplexFieldPossibilities(thisDisplayGroup.getCaseType().getCaseFields().stream()
                     .map(FieldEntity.class::cast).collect(Collectors.toList()));
 
@@ -73,7 +76,7 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                         return validationResult;
                     }
 
-                    List<String> allSubTypePossibilities = CaseFieldEntityUtil
+                    List<String> allSubTypePossibilities = caseFieldEntityUtil
                         .buildDottedComplexFieldPossibilities(thisDisplayGroup.getCaseType().getCaseFields());
 
                     showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {

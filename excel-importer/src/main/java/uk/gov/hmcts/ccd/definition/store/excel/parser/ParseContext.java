@@ -224,6 +224,10 @@ public class ParseContext {
         return Optional.ofNullable(baseTypes.get(reference));
     }
 
+    public Optional<UserRoleEntity> getIdamRole(final String role) {
+        return Optional.ofNullable(userRoles.get(role));
+    }
+
     public Optional<UserRoleEntity> getRole(String caseType, final String role) {
         Optional<UserRoleEntity> userRoleEntity = Optional.ofNullable(userRoles.get(role));
         if (userRoleEntity.isPresent()) {
@@ -231,7 +235,6 @@ public class ParseContext {
         } else {
             return Optional.ofNullable(caseRoles.get(caseType, role));
         }
-
     }
 
     public void registerCaseRoles(List<CaseRoleEntity> caseRoleEntityList) {

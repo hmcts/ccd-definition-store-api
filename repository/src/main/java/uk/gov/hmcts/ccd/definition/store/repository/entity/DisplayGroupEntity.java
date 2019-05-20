@@ -56,6 +56,11 @@ public class DisplayGroupEntity implements Serializable {
     private final List<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new ArrayList<>();
 
     @ManyToOne(cascade = ALL)
+    @JoinColumn(name = "role_id", nullable = false)
+    private UserRoleEntity userRole;
+
+
+    @ManyToOne(cascade = ALL)
     @JoinColumn(name = "webhook_mid_event_id")
     private WebhookEntity webhookMidEvent;
 
@@ -166,4 +171,11 @@ public class DisplayGroupEntity implements Serializable {
         return displayGroupCaseFields.stream().anyMatch(dgcf -> dgcf.getCaseField().getReference().equals(fieldReference));
     }
 
+    public UserRoleEntity getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRoleEntity userRole) {
+        this.userRole = userRole;
+    }
 }

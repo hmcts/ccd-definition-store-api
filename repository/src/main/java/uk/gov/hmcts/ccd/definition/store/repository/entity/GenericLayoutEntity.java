@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
@@ -29,11 +30,18 @@ public abstract class GenericLayoutEntity implements Serializable {
     @JoinColumn(name = "case_field_id", nullable = false)
     private CaseFieldEntity caseField;
 
+    @Column(name = "case_field_element_path")
+    private String caseFieldElementPath;
+
     @Column(name = "label")
     private String label;
 
     @Column(name = "display_order")
     private Integer order;
+
+    @ManyToOne(cascade = ALL)
+    @JoinColumn(name = "role_id", nullable = false)
+    private UserRoleEntity userRole;
 
     public Integer getId() {
         return id;
@@ -71,6 +79,14 @@ public abstract class GenericLayoutEntity implements Serializable {
         this.caseField = caseField;
     }
 
+    public String getCaseFieldElementPath() {
+        return caseFieldElementPath;
+    }
+
+    public void setCaseFieldElementPath(final String caseFieldElementPath) {
+        this.caseFieldElementPath = caseFieldElementPath;
+    }
+
     public String getLabel() {
         return label;
     }
@@ -85,5 +101,13 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     public void setOrder(final Integer order) {
         this.order = order;
+    }
+
+    public UserRoleEntity getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRoleEntity userRole) {
+        this.userRole = userRole;
     }
 }

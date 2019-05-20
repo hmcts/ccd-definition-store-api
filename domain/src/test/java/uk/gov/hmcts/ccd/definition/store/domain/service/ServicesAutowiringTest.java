@@ -50,6 +50,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeVa
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldNameValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
@@ -301,6 +302,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public DraftDefinitionRepositoryDecorator draftDefinitionRepositoryDecorator() {
             return mock(DraftDefinitionRepositoryDecorator.class);
+        }
+
+        @Bean
+        @Primary
+        public CaseFieldEntityUtil caseFieldEntityUtil() {
+            return mock(CaseFieldEntityUtil.class);
         }
 
         @Bean
