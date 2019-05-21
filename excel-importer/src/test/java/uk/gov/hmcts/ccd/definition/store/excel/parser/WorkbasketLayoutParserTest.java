@@ -5,10 +5,12 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
@@ -23,7 +25,7 @@ public class WorkbasketLayoutParserTest {
     private WorkbasketLayoutParser classUnderTest;
     private Map<String, DefinitionSheet> definitionSheets;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
@@ -31,10 +33,11 @@ public class WorkbasketLayoutParserTest {
         classUnderTest = new WorkbasketLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry());
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     @DisplayName("Should Fail when no worksheet provided")
     public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
-        classUnderTest.getDefinitionSheet(definitionSheets);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
+        assertEquals("A definition must contain a WorkBasketResultFields sheet", thrown.getMessage());
     }
 
     @Test
