@@ -32,7 +32,7 @@ class AuthorisationTest {
     void shouldReturnFalseCREATEWhenBothAreFalse() {
         classUnderTest.setCreate(false);
         other.setCreate(false);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -40,7 +40,7 @@ class AuthorisationTest {
     void shouldReturnFalseCREATEWhenOtherIsFalseAndClassUnderTestIsTrue() {
         classUnderTest.setCreate(true);
         other.setCreate(false);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -48,7 +48,7 @@ class AuthorisationTest {
     void shouldReturnFalseCREATEWhenOtherIsTrueAndClassUnderTestIsTrue() {
         classUnderTest.setCreate(true);
         other.setCreate(true);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -56,7 +56,7 @@ class AuthorisationTest {
     void shouldReturnTrueCREATEWhenOtherIsTrueAndClassUnderTestIsFalse() {
         classUnderTest.setCreate(false);
         other.setCreate(true);
-        assertTrue(classUnderTest.hasLessAccessThan(other));
+        assertTrue(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -64,7 +64,7 @@ class AuthorisationTest {
     void shouldReturnFalseREADWhenBothAreFalse() {
         classUnderTest.setRead(false);
         other.setRead(false);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -72,7 +72,7 @@ class AuthorisationTest {
     void shouldReturnFalseREADWhenOtherIsFalseAndClassUnderTestIsTrue() {
         classUnderTest.setRead(true);
         other.setRead(false);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -80,7 +80,7 @@ class AuthorisationTest {
     void shouldReturnFalseREADWhenOtherIsTrueAndClassUnderTestIsTrue() {
         classUnderTest.setRead(true);
         other.setRead(true);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -88,7 +88,7 @@ class AuthorisationTest {
     void shouldReturnTrueREADWhenOtherIsTrueAndClassUnderTestIsFalse() {
         classUnderTest.setRead(false);
         other.setRead(true);
-        assertTrue(classUnderTest.hasLessAccessThan(other));
+        assertTrue(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -96,7 +96,7 @@ class AuthorisationTest {
     void shouldReturnFalseUPDATEWhenBothAreFalse() {
         classUnderTest.setUpdate(false);
         other.setUpdate(false);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -104,7 +104,7 @@ class AuthorisationTest {
     void shouldReturnFalseUPDATEWhenOtherIsFalseAndClassUnderTestIsTrue() {
         classUnderTest.setUpdate(true);
         other.setUpdate(false);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -112,7 +112,7 @@ class AuthorisationTest {
     void shouldReturnFalseUPDATEWhenOtherIsTrueAndClassUnderTestIsTrue() {
         classUnderTest.setUpdate(true);
         other.setUpdate(true);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -120,7 +120,7 @@ class AuthorisationTest {
     void shouldReturnTrueUPDATEWhenOtherIsTrueAndClassUnderTestIsFalse() {
         classUnderTest.setUpdate(false);
         other.setUpdate(true);
-        assertTrue(classUnderTest.hasLessAccessThan(other));
+        assertTrue(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -128,7 +128,7 @@ class AuthorisationTest {
     void shouldReturnFalseDELETEWhenBothAreFalse() {
         classUnderTest.setDelete(false);
         other.setDelete(false);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -136,7 +136,7 @@ class AuthorisationTest {
     void shouldReturnFalseDELETEWhenOtherIsFalseAndClassUnderTestIsTrue() {
         classUnderTest.setDelete(true);
         other.setDelete(false);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -144,7 +144,7 @@ class AuthorisationTest {
     void shouldReturnFalseDELETEWhenOtherIsTrueAndClassUnderTestIsTrue() {
         classUnderTest.setDelete(true);
         other.setDelete(true);
-        assertFalse(classUnderTest.hasLessAccessThan(other));
+        assertFalse(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -152,7 +152,7 @@ class AuthorisationTest {
     void shouldReturnTrueDELETEWhenOtherIsTrueAndClassUnderTestIsFalse() {
         classUnderTest.setDelete(false);
         other.setDelete(true);
-        assertTrue(classUnderTest.hasLessAccessThan(other));
+        assertTrue(classUnderTest.hasLowerAccessThan(other));
     }
 
     @Test
@@ -168,6 +168,6 @@ class AuthorisationTest {
         other.setUpdate(false);
         other.setDelete(true);
 
-        assertTrue(classUnderTest.hasLessAccessThan(other));
+        assertTrue(classUnderTest.hasLowerAccessThan(other));
     }
 }

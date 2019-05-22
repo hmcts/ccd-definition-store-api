@@ -15,8 +15,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 @Component
 public class CaseFieldEntityUtil {
 
+    public static List<String> parseParentCodes(String listElementCode) {
+        List<String> result = new ArrayList<>();
+        String codes = listElementCode;
+        while (codes.lastIndexOf('.') > 0) {
+            codes = codes.substring(0, codes.lastIndexOf('.'));
+            result.add(codes);
+        }
+        return result;
+    }
+
     public List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
-        return removeElementsThatAreNotTreeLeafs(buildAllDottedComplexFieldPossibilities(caseFieldEntities));
+        return removeElementsThoseAreNotTreeLeafs(buildAllDottedComplexFieldPossibilities(caseFieldEntities));
     }
 
     public List<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(List<? extends FieldEntity> caseFieldEntities) {
@@ -32,7 +42,7 @@ public class CaseFieldEntityUtil {
         return allSubTypePossibilities;
     }
 
-    private List<String> removeElementsThatAreNotTreeLeafs(List<String> allSubTypePossibilities) {
+    private List<String> removeElementsThoseAreNotTreeLeafs(List<String> allSubTypePossibilities) {
         return allSubTypePossibilities.stream()
             .filter(e -> allSubTypePossibilities.stream().noneMatch(el -> el.startsWith(e + ".")))
             .collect(Collectors.toList());

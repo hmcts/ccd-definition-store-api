@@ -126,21 +126,21 @@ public abstract class Authorisation implements Serializable {
     }
 
     @Transient
-    public boolean hasLessAccessThan(Authorisation other) {
-        boolean hasMoreAccessOnCreate = secondHasMoreAccess(this.getCreate(), other.getCreate());
-        boolean hasMoreAccessOnRead = secondHasMoreAccess(this.getRead(), other.getRead());
-        boolean hasMoreAccessOnUpdate = secondHasMoreAccess(this.getUpdate(), other.getUpdate());
-        boolean hasMoreAccessOnDelete = secondHasMoreAccess(this.getDelete(), other.getDelete());
+    public boolean hasLowerAccessThan(Authorisation other) {
+        boolean hasMoreAccessOnCreate = childHasHigherAccess(this.getCreate(), other.getCreate());
+        boolean hasMoreAccessOnRead = childHasHigherAccess(this.getRead(), other.getRead());
+        boolean hasMoreAccessOnUpdate = childHasHigherAccess(this.getUpdate(), other.getUpdate());
+        boolean hasMoreAccessOnDelete = childHasHigherAccess(this.getDelete(), other.getDelete());
 
         return hasMoreAccessOnCreate || hasMoreAccessOnRead || hasMoreAccessOnUpdate || hasMoreAccessOnDelete;
     }
 
-    private boolean secondHasMoreAccess(Boolean ac1, Boolean ac2) {
-        if (isNull(ac2)) {
+    private boolean childHasHigherAccess(Boolean parent, Boolean child) {
+        if (isNull(child)) {
             return false;
-        } else if (isNull(ac1) && nonNull(ac2)) {
+        } else if (isNull(parent) && nonNull(child)) {
             return true;
-        } else if (ac2.booleanValue() == false || ac1.booleanValue() == true) {
+        } else if (child.booleanValue() == false || parent.booleanValue() == true) {
             return false;
         }
         return true;

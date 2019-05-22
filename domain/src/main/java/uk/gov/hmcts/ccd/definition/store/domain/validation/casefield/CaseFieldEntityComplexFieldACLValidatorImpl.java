@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
@@ -33,51 +33,44 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
     }
 
     private void validateCRUDComplexParent(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
-                                           ValidationResult validationResult, ComplexFieldACLEntity complexFieldACLEntity) {
-        String userRole = complexFieldACLEntity.getUserRole() != null ? complexFieldACLEntity.getUserRole().getReference() : "";
+                                           ValidationResult validationResult, ComplexFieldACLEntity parentComplexFieldACLEntity) {
+        String parentUserRole = parentComplexFieldACLEntity.getUserRole() != null ? parentComplexFieldACLEntity.getUserRole().getReference() : "";
         caseField.getComplexFieldACLEntities()
             .stream()
-            .anyMatch(entity -> {
-                boolean match = (entity.getUserRole() != null && entity.getUserRole().getReference().equalsIgnoreCase(userRole))
-                    && entity.getListElementCode().contains(complexFieldACLEntity.getListElementCode())
-                    && !entity.getListElementCode().equalsIgnoreCase(complexFieldACLEntity.getListElementCode())
-                    && complexFieldACLEntity.hasLessAccessThan(entity);
+            .anyMatch(child -> {
+                boolean match = (child.getUserRole() != null && child.getUserRole().getReference().equalsIgnoreCase(parentUserRole))
+                    && isAChild(parentComplexFieldACLEntity.getListElementCode(), child.getListElementCode())
+                    && parentComplexFieldACLEntity.hasLowerAccessThan(child);
                 if (match) {
                     validationResult.addError(new CaseFieldEntityComplexACLValidationError(
-                        String.format("List element code '%s' has more access than its parent '%s'", entity.getListElementCode(), complexFieldACLEntity.getListElementCode()),
-                        entity, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
-                    LOG.info("List element code '{}' has more access than its parent '{}'", entity.getListElementCode(), complexFieldACLEntity.getListElementCode());
+                        String.format("List element code '%s' has higher access than its parent '%s'", child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode()),
+                        child, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
+                    LOG.info("List element code '{}' has higher access than its parent '{}'", child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode());
                 }
                 return match;
             });
-        List<String> parentCodes = parseParentCodes(complexFieldACLEntity.getListElementCode());
+        List<String> parentCodes = CaseFieldEntityUtil.parseParentCodes(parentComplexFieldACLEntity.getListElementCode());
         final List<String> missingCodes = parentCodes
             .stream()
-            .filter(parentCode -> missingInComplexACLs(caseField.getComplexFieldACLEntities(), userRole, parentCode))
+            .filter(parentCode -> isMissingInComplexACLs(caseField.getComplexFieldACLEntities(), parentUserRole, parentCode))
             .collect(Collectors.toList());
         for (String code : missingCodes) {
             validationResult.addError(new CaseFieldEntityComplexACLValidationError(
-                String.format("Parent list element code '%s' is missing for list element code '%s'", code, complexFieldACLEntity.getListElementCode()),
-                complexFieldACLEntity, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
-            LOG.info("Parent list element code '{}' is missing for list element code '{}'", code, complexFieldACLEntity.getListElementCode());
+                String.format("Parent list element code '%s' is missing for list element code '%s'", code, parentComplexFieldACLEntity.getListElementCode()),
+                parentComplexFieldACLEntity, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
+            LOG.info("Parent list element code '{}' is missing for list element code '{}'", code, parentComplexFieldACLEntity.getListElementCode());
         }
     }
 
-    private boolean missingInComplexACLs(List<ComplexFieldACLEntity> complexFieldACLEntities, String userRole, String parentCode) {
+    private boolean isAChild(String parentCode, String childCode) {
+        return childCode.contains(parentCode) && !childCode.equalsIgnoreCase(parentCode);
+    }
+
+    private boolean isMissingInComplexACLs(List<ComplexFieldACLEntity> complexFieldACLEntities, String userRole, String parentCode) {
         return complexFieldACLEntities.stream()
             .noneMatch(entity -> (entity.getUserRole() != null && entity.getUserRole().getReference().equalsIgnoreCase(userRole))
                 && parentCode.equals(entity.getListElementCode())
             );
-    }
-
-    List<String> parseParentCodes(String listElementCode) {
-        List<String> result = new ArrayList<>();
-        String codes = listElementCode;
-        while (codes.lastIndexOf('.') > 0) {
-            codes = codes.substring(0, codes.lastIndexOf('.'));
-            result.add(codes);
-        }
-        return result;
     }
 
     private void validateCRUDAgainstCaseFieldParent(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
@@ -85,11 +78,11 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
         String userRole = entity.getUserRole() != null ? entity.getUserRole().getReference() : "";
         final Optional<CaseFieldACLEntity> caseFieldACLByRole = caseField.getCaseFieldACLByRole(userRole);
         if (caseFieldACLByRole.isPresent()) {
-            if (caseFieldACLByRole.get().hasLessAccessThan(entity)) {
+            if (caseFieldACLByRole.get().hasLowerAccessThan(entity)) {
                 validationResult.addError(new CaseFieldEntityComplexACLValidationError(
-                    String.format("List element code '%s' has more access than case field '%s'", entity.getListElementCode(), caseField.getReference()),
+                    String.format("List element code '%s' has higher access than case field '%s'", entity.getListElementCode(), caseField.getReference()),
                     entity, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
-                LOG.info("List element code '{}' has more access than case field '{}'", entity.getListElementCode(), caseField.getReference());
+                LOG.info("List element code '{}' has higher access than case field '{}'", entity.getListElementCode(), caseField.getReference());
             }
         } else {
             validationResult.addError(new CaseFieldEntityComplexACLValidationError(
