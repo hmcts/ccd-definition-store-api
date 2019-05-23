@@ -27,9 +27,7 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.exception.InvalidChildEntityException;
 
-import static java.lang.String.format;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;

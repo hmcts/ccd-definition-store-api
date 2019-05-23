@@ -1144,7 +1144,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     @Test
     public void shouldHaveValidationMessageForPlaceholderLeafNotASimpleTypeValidationError() {
         assertEquals("Label of caseField 'FieldId' has placeholder 'OtherFieldId.CollectionId.ComplexId' "
-                         + "that points to case field 'ComplexId' of non simple type.",
+                         + "that points to case field 'ComplexId' of non simple type",
             classUnderTest.createErrorMessage(
                 new CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError("FieldId",
                                                                                                   "OtherFieldId.CollectionId.ComplexId",

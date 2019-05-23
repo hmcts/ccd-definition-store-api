@@ -12,6 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import static java.lang.String.format;
 import static java.lang.String.join;
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.ArrayUtils.subarray;
 
 @Component
@@ -28,7 +29,7 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
         ValidationResult validationResult = new ValidationResult();
         // go over each field label and check for placeholders
         caseType.getCaseFields().stream().forEach(caseFieldEntity -> {
-            String label = caseFieldEntity.getLabel();
+            String label = ofNullable(caseFieldEntity.getLabel()).orElse("");
             boolean isCollecting = false;
             String placeholderToSubstitute = "";
             for (int scanIndex = 0; scanIndex < label.length(); scanIndex++) {
