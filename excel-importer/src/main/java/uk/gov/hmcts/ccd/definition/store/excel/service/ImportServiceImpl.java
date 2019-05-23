@@ -215,6 +215,16 @@ public class ImportServiceImpl implements ImportService {
         return idamProfileClient.getLoggedInUserDetails();
     }
 
+    /**
+     * Gets any warnings that occur during the parse stage of the Definition import process.
+     *
+     * @return A list of warning messages
+     */
+    @Override
+    public List<String> getImportWarnings() {
+        return spreadsheetParser.getImportWarnings();
+    }
+
     private JurisdictionEntity importJurisdiction(JurisdictionEntity jurisdiction) {
         return jurisdictionService.get(jurisdiction.getReference()).orElseGet(() -> {
             jurisdictionService.create(jurisdiction);

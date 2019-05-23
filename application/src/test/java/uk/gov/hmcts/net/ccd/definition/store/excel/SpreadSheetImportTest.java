@@ -434,14 +434,15 @@ public class SpreadSheetImportTest extends BaseTest {
                                                                                 "workbasket_input_case_field");
         assertThat(allWorkbasket, hasSize(13));
 
+        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM workbasket_input_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
         assertThat(caseTypeWorkbasket,
                    allOf(hasItem(allOf(hasColumn("label", "First Name"),
                                        hasColumn("display_order", 1),
+                                       hasColumn("role_id", userRoleIds.get("CaseWorker1")),
                                        hasColumn("case_field_id", caseFieldIds.get("PersonFirstName")))
-
                          ),
                          hasItem(allOf(hasColumn("label", "Last Name"),
                                        hasColumn("display_order", 2),
@@ -453,14 +454,15 @@ public class SpreadSheetImportTest extends BaseTest {
         List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM workbasket_case_field");
         assertThat(allWorkbasket, hasSize(6));
 
+        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM workbasket_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
         assertThat(caseTypeWorkbasket,
                    allOf(hasItem(allOf(hasColumn("label", "Contect Number"),
                                        hasColumn("display_order", 2),
+                                       hasColumn("role_id", userRoleIds.get("CaseWorker1")),
                                        hasColumn("case_field_id", caseFieldIds.get("ContectNumber")))
-
                          ),
                          hasItem(allOf(hasColumn("label", "Age"),
                                        hasColumn("display_order", 3),
@@ -471,14 +473,15 @@ public class SpreadSheetImportTest extends BaseTest {
         List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM search_input_case_field");
         assertThat(allWorkbasket, hasSize(13));
 
+        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM search_input_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
         assertThat(caseTypeWorkbasket,
                    allOf(hasItem(allOf(hasColumn("label", "First Name"),
                                        hasColumn("display_order", 1),
+                                       hasColumn("role_id", userRoleIds.get("CaseWorker1")),
                                        hasColumn("case_field_id", caseFieldIds.get("PersonFirstName")))
-
                          ),
                          hasItem(allOf(hasColumn("label", "Last Name"),
                                        hasColumn("display_order", 2),
@@ -489,14 +492,15 @@ public class SpreadSheetImportTest extends BaseTest {
         List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM search_result_case_field");
         assertThat(allWorkbasket, hasSize(6));
 
+        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM search_result_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
         assertThat(caseTypeWorkbasket,
                    allOf(hasItem(allOf(hasColumn("label", "Date of Birth"),
                                        hasColumn("display_order", 2),
+                                       hasColumn("role_id", userRoleIds.get("CaseWorker1")),
                                        hasColumn("case_field_id", caseFieldIds.get("DateOfBirth")))
-
                          ),
                          hasItem(allOf(hasColumn("label", "Contact Email"),
                                        hasColumn("display_order", 3),

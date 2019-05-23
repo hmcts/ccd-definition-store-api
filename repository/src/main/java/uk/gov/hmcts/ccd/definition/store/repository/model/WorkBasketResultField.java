@@ -11,6 +11,7 @@ public class WorkBasketResultField {
     private String label = null;
     private Integer order = null;
     private boolean metadata;
+    private String role;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -54,5 +55,14 @@ public class WorkBasketResultField {
 
     public void setMetadata(boolean metadata) {
         this.metadata = metadata;
+    }
+
+    @JsonProperty("role")
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

@@ -5,11 +5,12 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_INPUT_FIELD;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -24,7 +25,7 @@ public class SearchInputLayoutParserTest {
     private SearchInputLayoutParser classUnderTest;
     private Map<String, DefinitionSheet> definitionSheets;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
@@ -41,18 +42,18 @@ public class SearchInputLayoutParserTest {
         classUnderTest = new SearchInputLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry());
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     @DisplayName("Should Fail when no worksheet provided")
     public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
-        classUnderTest.getDefinitionSheet(definitionSheets);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
+        assertEquals("A definition must contain a SearchInputFields sheet", thrown.getMessage());
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     @DisplayName("Should fail when no values provided in SearchInputFields worksheet")
     public void shouldFailWhenNoDataInWorksheet() {
-        final DefinitionSheet sheet = new DefinitionSheet();
-        definitionSheets.put(SEARCH_INPUT_FIELD.getName(), sheet);
-        classUnderTest.parseAll(definitionSheets);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
+        assertEquals("A definition must contain a SearchInputFields sheet", thrown.getMessage());
     }
 
     @Test
