@@ -28,7 +28,7 @@ public class CaseFieldParserTest extends ParserTestBase {
         init();
 
         parseContext = mock(ParseContext.class);
-        caseFieldParser = new CaseFieldParser(parseContext);
+        caseFieldParser = new CaseFieldParser(parseContext, entityToDefinitionDataItemRegistry);
         caseType = new CaseTypeEntity();
         caseType.setReference(CASE_TYPE_UNDER_TEST);
 

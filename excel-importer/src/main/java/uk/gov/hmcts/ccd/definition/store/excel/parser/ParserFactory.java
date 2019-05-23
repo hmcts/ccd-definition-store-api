@@ -40,7 +40,7 @@ public class ParserFactory {
     public CaseTypeParser createCaseTypeParser(ParseContext context) {
         return new CaseTypeParser(
             context,
-            new CaseFieldParser(context),
+            new CaseFieldParser(context, entityToDefinitionDataItemRegistry),
             new StateParser(context),
             new EventParser(
                 context,
