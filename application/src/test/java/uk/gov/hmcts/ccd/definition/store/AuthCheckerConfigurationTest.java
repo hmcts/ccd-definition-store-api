@@ -81,16 +81,6 @@ public class AuthCheckerConfigurationTest {
     }
 
     @Test
-    public void shouldReturnUserRoleConfigurationPropertiesWhenAdminWebIsEnabled() {
-        when(request.getRequestURI()).thenReturn("/api/user-role");
-        when(adminWebAuthorizationProperties.isEnabled()).thenReturn(true);
-        when(adminWebAuthorizationProperties.getManageUserRole()).thenReturn(asList("parrot"));
-        final Collection<String> result = configuration.authorizedRolesExtractor().apply(request);
-        assertThat(result, hasSize(1));
-        assertThat(result, hasItem("parrot"));
-    }
-
-    @Test
     public void shouldReturnManageDraftDefinitionConfigurationPropertiesWhenAdminWebIsEnabled() {
         when(request.getRequestURI()).thenReturn("/api/draft");
         when(adminWebAuthorizationProperties.isEnabled()).thenReturn(true);
@@ -108,5 +98,12 @@ public class AuthCheckerConfigurationTest {
         final Collection<String> result = configuration.authorizedRolesExtractor().apply(request);
         assertThat(result, hasSize(1));
         assertThat(result, hasItem("cat"));
+    }
+
+    @Test
+    public void shouldReturnEmptyCollectionWhenAdminWebIsEnabledAndRequestUriIsNotDraftApi() {
+        when(request.getRequestURI()).thenReturn("/api/user-role");
+        when(adminWebAuthorizationProperties.isEnabled()).thenReturn(true);
+        assertThat(configuration.authorizedRolesExtractor().apply(request), empty());
     }
 }

@@ -7,8 +7,10 @@ import io.swagger.annotations.ApiModel;
 public class SearchInputField {
 
     private String caseFieldId = null;
+    private String caseFieldElementPath = null;
     private String label = null;
     private Integer order = null;
+    private String role;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -17,6 +19,15 @@ public class SearchInputField {
 
     public void setCaseFieldId(String caseFieldId) {
         this.caseFieldId = caseFieldId;
+    }
+
+    @JsonProperty("case_field_element_path")
+    public String getCaseFieldElementPath() {
+        return caseFieldElementPath;
+    }
+
+    public void setCaseFieldElementPath(final String caseFieldElementPath) {
+        this.caseFieldElementPath = caseFieldElementPath;
     }
 
     @JsonProperty("label")
@@ -35,5 +46,14 @@ public class SearchInputField {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    @JsonProperty("role")
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
