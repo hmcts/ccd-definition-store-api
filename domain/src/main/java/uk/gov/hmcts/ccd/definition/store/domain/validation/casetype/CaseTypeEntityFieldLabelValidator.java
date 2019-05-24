@@ -33,39 +33,11 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
             boolean isCollecting = false;
             String placeholderToSubstitute = "";
             for (int scanIndex = 0; scanIndex < label.length(); scanIndex++) {
-                char c = label.charAt(scanIndex);
                 if (isStartPlaceholderAndNotCollecting(label, scanIndex, isCollecting)) {
                     isCollecting = true;
                 } else if (isCollecting) {
                     if (isClosingPlaceholder(label, scanIndex)) {
-                        if (isMatchingPlaceholderPattern(placeholderToSubstitute)) {
-                            boolean hasFoundPlaceholderField = false;
-                            for (CaseFieldEntity lookupEntity : caseType.getCaseFields()) {
-                                String[] fieldIds = placeholderToSubstitute.split("\\.");
-                                if (lookupEntity.getReference().equals(fieldIds[0])) {
-                                    Optional<FieldEntity> nestedElementByPath = lookupEntity.findNestedElementByPath(join(".", subarray(fieldIds,
-                                                                                                                                        1,
-                                                                                                                                        fieldIds.length)));
-                                    if (nestedElementByPath.isPresent()) {
-                                        hasFoundPlaceholderField = true;
-                                        FieldEntity nestedElement = nestedElementByPath.get();
-                                        if (nestedElement.isComplexFieldType() || nestedElement.isCollectionFieldType()) {
-                                            validationResult.addError(new PlaceholderLeafNotSimpleTypeValidationError(caseFieldEntity.getReference(),
-                                                                                                                      placeholderToSubstitute,
-                                                                                                                      nestedElement.getReference(),
-                                                                                                                      caseFieldEntity));
-                                        } else {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            if (!hasFoundPlaceholderField) {
-                                validationResult.addError(new PlaceholderCannotBeResolvedValidationError(caseFieldEntity.getReference(),
-                                                                                                         placeholderToSubstitute,
-                                                                                                         caseFieldEntity));
-                            }
-                        }
+                        processPlaceholderIfMatched(caseType, validationResult, caseFieldEntity, placeholderToSubstitute);
                         isCollecting = false;
                         placeholderToSubstitute = "";
                     } else if (!isOpeningPlaceholder(label, scanIndex)) {
@@ -75,6 +47,55 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
             }
         });
         return validationResult;
+    }
+
+    private void processPlaceholderIfMatched(CaseTypeEntity caseType, ValidationResult validationResult, CaseFieldEntity caseFieldEntity, String placeholderToSubstitute) {
+        if (isMatchingPlaceholderPattern(placeholderToSubstitute)) {
+            processFieldsToResolvePlaceholder(caseType,
+                                              validationResult,
+                                              caseFieldEntity,
+                                              placeholderToSubstitute);
+        }
+    }
+
+    private void processFieldsToResolvePlaceholder(CaseTypeEntity caseType, ValidationResult validationResult, CaseFieldEntity caseFieldEntity, String placeholderToSubstitute) {
+        boolean hasFoundPlaceholderField = false;
+        for (CaseFieldEntity lookupEntity : caseType.getCaseFields()) {
+            String[] fieldIds = placeholderToSubstitute.split("\\.");
+            if (lookupEntity.getReference().equals(fieldIds[0])) {
+                Optional<FieldEntity> nestedElementByPath = lookupEntity.findNestedElementByPath(join(".", subarray(fieldIds,
+                                                                                                                    1,
+                                                                                                                    fieldIds.length)));
+                if (nestedElementByPath.isPresent()) {
+                    hasFoundPlaceholderField = true;
+                    FieldEntity nestedElement = nestedElementByPath.get();
+                    if (isPlaceholderLeafOfNonSimpleType(nestedElement)) {
+                        validationResult.addError(new PlaceholderLeafNotSimpleTypeValidationError(caseFieldEntity.getReference(),
+                                                                                                  placeholderToSubstitute,
+                                                                                                  nestedElement.getReference(),
+                                                                                                  caseFieldEntity));
+                        break;
+                    }
+                }
+            }
+        }
+        addErrorIfPlaceholderUnresolved(validationResult, caseFieldEntity, placeholderToSubstitute, hasFoundPlaceholderField);
+    }
+
+    private void addErrorIfPlaceholderUnresolved(ValidationResult validationResult, CaseFieldEntity caseFieldEntity, String placeholderToSubstitute, boolean hasFoundPlaceholderField) {
+        if (!hasFoundPlaceholderField) {
+            validationResult.addError(new PlaceholderCannotBeResolvedValidationError(caseFieldEntity.getReference(),
+                                                                                     placeholderToSubstitute,
+                                                                                     caseFieldEntity));
+        }
+    }
+
+    private boolean isPlaceholderLeafOfNonSimpleType(FieldEntity nestedElement) {
+        if (nestedElement.isComplexFieldType() || nestedElement.isCollectionFieldType()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean isMatchingPlaceholderPattern(String fieldIdToSubstitute) {

@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
@@ -74,7 +75,7 @@ public class CaseTypeEntityFieldLabelValidatorTest {
         ValidationResult validate = caseTypeEntityFieldLabelValidator.validate(caseType);
 
         Assertions.assertAll(
-            () -> assertTrue(!validate.isValid()),
+            () -> assertFalse(validate.isValid()),
             () -> assertTrue(validate.getValidationErrors().get(0) instanceof CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError),
             () -> assertThat(validate.getValidationErrors(), hasItems(hasProperty("defaultMessage",
                                                                                   is("Label of caseField 'case field' has placeholder "
