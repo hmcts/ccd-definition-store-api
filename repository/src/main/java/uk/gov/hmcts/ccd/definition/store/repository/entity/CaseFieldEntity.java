@@ -238,8 +238,4 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         return dataFieldType == DataFieldType.METADATA;
     }
 
-    @Transient
-    public boolean isSimpleType() {
-        return fieldType.getChildren().isEmpty();
-    }
 }
