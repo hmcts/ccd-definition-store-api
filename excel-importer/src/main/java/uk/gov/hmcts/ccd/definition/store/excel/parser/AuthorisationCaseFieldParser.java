@@ -67,12 +67,12 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
             } else {
                 for (DefinitionDataItem definition : collect.get(caseFieldReference)) {
 
-                    final CaseFieldACLEntity caseFieldACL = new CaseFieldACLEntity();
+                    final CaseFieldACLEntity entity = new CaseFieldACLEntity();
 
-                    parseUserRole(caseFieldACL, definition, parseContext);
-                    parseCrud(caseFieldACL, definition);
-                    parseResults.add(caseFieldACL);
-                    entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(caseFieldACL, definition);
+                    parseUserRole(entity, definition, parseContext);
+                    parseCrud(entity, definition);
+                    parseResults.add(entity);
+                    entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
 
                     LOG.info("Parsing user role for case type '{}', case field '{}', user role '{}', crud '{}': OK",
                         caseTypeReference,
