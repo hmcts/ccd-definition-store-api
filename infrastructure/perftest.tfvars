@@ -1,4 +1,5 @@
 idam_api_url = "https://idam-api.perftest.platform.hmcts.net"
+frontend_url = "https://www-ccd.perftest.platform.hmcts.net"
 
 asp_name = "ccd-definition-store-api-perftest"
 asp_rg = "ccd-definition-store-api-perftest"
