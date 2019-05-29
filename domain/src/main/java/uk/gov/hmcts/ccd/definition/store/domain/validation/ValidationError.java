@@ -20,8 +20,6 @@ public abstract class ValidationError implements Serializable {
 
     @Override
     public String toString() {
-        return "ValidationError{" +
-            "defaultMessage='" + defaultMessage + '\'' +
-            '}';
+        return "validationError: " + defaultMessage;
     }
 }
