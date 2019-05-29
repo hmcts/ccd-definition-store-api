@@ -7,8 +7,11 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.service.DefinitionServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
@@ -25,6 +28,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CaseTypeServiceImpl.class);
 
     private final CaseTypeRepository repository;
     private final EntityToResponseDTOMapper dtoMapper;
@@ -72,6 +77,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         if (validationResult.isValid()) {
             versionedRepository.saveAll(caseTypes);
         } else {
+            validationResult.getValidationErrors().forEach(vr -> LOG.info(vr.toString()));
             throw new ValidationException(validationResult);
         }
     }
