@@ -18,4 +18,10 @@ public abstract class ValidationError implements Serializable {
         return getDefaultMessage();
     }
 
+    @Override
+    public String toString() {
+        return "ValidationError{" +
+            "defaultMessage='" + defaultMessage + '\'' +
+            '}';
+    }
 }
