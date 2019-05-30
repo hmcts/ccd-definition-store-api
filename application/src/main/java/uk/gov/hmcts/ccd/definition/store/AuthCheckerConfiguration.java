@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
 import uk.gov.hmcts.ccd.definition.store.rest.configuration.AdminWebAuthorizationProperties;
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.UserRoleController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -22,7 +21,6 @@ public class AuthCheckerConfiguration {
     @VisibleForTesting
     protected static final String ROLE_CCD_IMPORT = "ccd-import";
     private static final String REGEX_URI_IMPORT = "^" + ImportController.URI_IMPORT  + "/?$";
-    private static final String REGEX_URI_USER_ROLE = "^/api" + UserRoleController.URI_USER_ROLE + "/?$";
 
     @Value("#{'${casedefinitionstore.authorised.services}'.split(',')}")
     private List<String> authorisedServices;
@@ -37,7 +35,7 @@ public class AuthCheckerConfiguration {
 
     @Bean
     public Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor() {
-        return request -> extractRoleFromRequest(request);
+        return this::extractRoleFromRequest;
     }
 
     @Bean
@@ -49,13 +47,10 @@ public class AuthCheckerConfiguration {
         if (request.getRequestURI().matches(REGEX_URI_IMPORT)) {
             return Collections.singletonList(ROLE_CCD_IMPORT);
         }
-        if (adminWebAuthorizationProperties.isEnabled()) {
-            if (request.getRequestURI().matches(REGEX_URI_USER_ROLE)) {
-                return adminWebAuthorizationProperties.getManageUserRole();
-            } else if ("/api/draft".equals(request.getRequestURI()) || "/api/draft/save".equals(request.getRequestURI())) {
-                // temporarily here for now as we are about to use definition-designer-api
-                return adminWebAuthorizationProperties.getManageDefinition();
-            }
+        if (adminWebAuthorizationProperties.isEnabled()
+            && ("/api/draft".equals(request.getRequestURI()) || "/api/draft/save".equals(request.getRequestURI()))) {
+            // temporarily here for now as we are about to use definition-designer-api
+            return adminWebAuthorizationProperties.getManageDefinition();
         }
         return Collections.emptyList();
     }
