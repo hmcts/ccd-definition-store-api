@@ -70,8 +70,8 @@ public class ListFieldTypeParser {
 
         // Add as FixedList
         final List<FieldTypeListItemEntity> fixedListItems = elements.stream()
-                                                                .map(this::parseListItem)
-                                                                .collect(toList());
+            .map(this::parseListItem)
+            .collect(toList());
 
         final FieldTypeEntity fixedListType = new FieldTypeEntity();
         fixedListType.setBaseFieldType(fixedListBaseType);
@@ -96,8 +96,8 @@ public class ListFieldTypeParser {
 
         // Add as MultiSelectList
         final List<FieldTypeListItemEntity> multiListItems = elements.stream()
-                                                                     .map(this::parseListItem)
-                                                                     .collect(toList());
+            .map(this::parseListItem)
+            .collect(toList());
 
         final FieldTypeEntity multiListType = new FieldTypeEntity();
         multiListType.setBaseFieldType(multiListBaseType);
