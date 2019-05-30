@@ -63,7 +63,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
     }
 
     private boolean isAChild(String parentCode, String childCode) {
-        return childCode.contains(parentCode) && !childCode.equalsIgnoreCase(parentCode);
+        return childCode.startsWith(parentCode + ".") && !childCode.equalsIgnoreCase(parentCode);
     }
 
     private boolean isMissingInComplexACLs(List<ComplexFieldACLEntity> complexFieldACLEntities, String userRole, String parentCode) {

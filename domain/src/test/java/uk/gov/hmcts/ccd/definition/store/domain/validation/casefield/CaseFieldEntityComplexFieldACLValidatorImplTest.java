@@ -32,6 +32,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     private ComplexFieldACLEntity complexACL1;
     private ComplexFieldACLEntity complexACL2;
     private ComplexFieldACLEntity complexACL3;
+    private ComplexFieldACLEntity complexACL4;
 
     private CaseFieldACLEntity fieldACL;
 
@@ -58,6 +59,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         complexACL2.setListElementCode("Class.ClassMembers.Children");
         complexACL3 = new ComplexFieldACLEntity();
         complexACL3.setListElementCode("Class.ClassMembers.Children.ChildFullName");
+        complexACL4 = new ComplexFieldACLEntity();
+        complexACL4.setListElementCode("ClassMembers");
 
         given(caseFieldEntityValidationContext.getCaseReference()).willReturn("case_type");
 
@@ -180,6 +183,29 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("List element code "
                 + "'Class.ClassMembers.Children' has higher access than its parent 'Class'"))
         );
+    }
+
+    @Test
+    @DisplayName("should not fail for partial list element code matching on parent level")
+    public void shouldNotFailForPartialListElementCodeMatchingOnParentLevel() {
+        complexACL0.setUserRole(userRole);
+        complexACL0.setCreate(true);
+        complexACL1.setUserRole(userRole);
+        complexACL1.setCreate(true);
+        complexACL2.setUserRole(userRole);
+        complexACL2.setCreate(true);
+        complexACL3.setUserRole(userRole);
+        complexACL3.setCreate(true);
+        complexACL4.setUserRole(userRole);
+        complexACL4.setCreate(false);
+        caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2, complexACL3, complexACL4));
+        fieldACL.setUserRole(userRole);
+        fieldACL.setCreate(true);
+        caseField.addCaseFieldACL(fieldACL);
+
+        final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
+
+        assertThat(result.getValidationErrors(), empty());
     }
 
     @Test
