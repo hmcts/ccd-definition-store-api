@@ -1,7 +1,7 @@
-idam_api_url = "http://idam-api-idam-sprod.service.core-compute-idam-sprod.internal"
+idam_api_url = "https://idam-api.perftest.platform.hmcts.net"
 
-asp_name = "ccd-definition-store-api-sprod"
-asp_rg = "ccd-definition-store-api-sprod"
+asp_name = "ccd-definition-store-api-perftest"
+asp_rg = "ccd-definition-store-api-perftest"
 capacity = "2"
 
 elastic_search_enabled = "true"
