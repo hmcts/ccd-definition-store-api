@@ -29,7 +29,8 @@ class CaseTypeTest extends BaseTest {
     @BeforeAll
     void setUp() {
         // import
-        asUser.get()
+        Supplier<RequestSpecification> asTestImporter = asAutoTestImporter();
+        asTestImporter.get()
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27.xlsx"))
             .expect()
