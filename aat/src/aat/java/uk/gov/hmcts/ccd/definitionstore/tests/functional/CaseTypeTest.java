@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
+
+import static org.hamcrest.Matchers.greaterThan;
 
 @TestInstance(Lifecycle.PER_CLASS)
 class CaseTypeTest extends BaseTest {
@@ -68,7 +71,9 @@ class CaseTypeTest extends BaseTest {
             .get(
                 "/api/data/jurisdictions/{jid}/case-type")
             .then()
-            .statusCode(200);
+            .statusCode(200)
+            .and()
+            .body("$", Matchers.hasSize(greaterThan(0)));
     }
 
 }
