@@ -1,9 +1,11 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import java.io.File;
 import java.util.function.Supplier;
 
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
@@ -20,6 +22,18 @@ class CaseTypeTest extends BaseTest {
 
     Supplier<RequestSpecification> asUserWithUser = asAutoTestCaseworkerWithUser();
     Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
+
+    @BeforeAll
+    void setUp() {
+        // import
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27.xlsx"))
+            .expect()
+            .statusCode(201)
+            .when()
+            .post("/import");
+    }
 
 
     @Test
