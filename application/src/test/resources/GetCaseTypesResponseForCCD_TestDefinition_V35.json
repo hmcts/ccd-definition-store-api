@@ -1857,8 +1857,51 @@
       "live_until" : null,
       "acls" : [ ],
       "show_condition": null
-    },
-    {
+    },{
+      "metadata" : false,
+      "id" : "dynamicListWithoutFTP",
+      "case_type_id" : "TestAddressBookCase",
+      "label" : "Dynamic List without FieldTypeParameter",
+      "hint_text" : null,
+      "field_type" : {
+        "id" : "DynamicList",
+        "type" : "DynamicList",
+        "min" : null,
+        "max" : null,
+        "regular_expression" : null,
+        "fixed_list_items" : [ ],
+        "complex_fields" : [ ],
+        "collection_field_type" : null
+      },
+      "hidden" : null,
+      "security_classification" : "PRIVATE",
+      "live_from" : "2017-01-01",
+      "live_until" : null,
+      "acls" : [ ],
+      "show_condition" : null
+    }, {
+      "metadata" : false,
+      "id" : "dynamicList",
+      "case_type_id" : "TestAddressBookCase",
+      "label" : "Dynamic List",
+      "hint_text" : null,
+      "field_type" : {
+        "id" : "DynamicList",
+        "type" : "DynamicList",
+        "min" : null,
+        "max" : null,
+        "regular_expression" : null,
+        "fixed_list_items" : [ ],
+        "complex_fields" : [ ],
+        "collection_field_type" : null
+      },
+      "hidden" : null,
+      "security_classification" : "PRIVATE",
+      "live_from" : "2017-01-01",
+      "live_until" : null,
+      "acls" : [ ],
+      "show_condition" : null
+    }, {
       "metadata": true,
       "id": "[STATE]",
       "case_type_id": "TestAddressBookCase",

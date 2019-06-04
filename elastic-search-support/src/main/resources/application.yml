@@ -54,6 +54,7 @@ elasticsearch:
     FixedListEdit: ${elasticsearch.elasticMappings.defaultText}
     MultiSelectList: ${elasticsearch.elasticMappings.defaultText}
     FixedRadioList: ${elasticsearch.elasticMappings.defaultText}
+    DynamicList: ${elasticsearch.elasticMappings.defaultText}
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_cases}
   casesIndexType: _doc
   casePredefinedMappings:
