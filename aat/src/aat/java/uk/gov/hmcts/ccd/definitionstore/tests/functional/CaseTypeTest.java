@@ -8,9 +8,12 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
+@TestInstance(Lifecycle.PER_CLASS)
 class CaseTypeTest extends BaseTest {
 
     private static final String JURISDICTION = "AUTOTEST1";
