@@ -63,7 +63,7 @@ public class ShowConditionParser {
             Matcher notEqualityMatcher = NOT_EQUAL_CONDITION_PATTERN.matcher(condition);
             if (notEqualityMatcher.find()) {
                 operator = buildShowCondition(conditionalOperator, showConditionBuilder, operator, notEqualityMatcher);
-            } else if (equalityMatcher.find()){
+            } else if (equalityMatcher.find()) {
                 operator = buildShowCondition(conditionalOperator, showConditionBuilder, operator, equalityMatcher);
             } else {
                 return Optional.empty();
