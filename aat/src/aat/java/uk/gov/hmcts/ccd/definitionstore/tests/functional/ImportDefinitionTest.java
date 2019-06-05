@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
@@ -8,6 +10,8 @@ import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
 import java.io.File;
 import java.util.function.Supplier;
+
+import static org.hamcrest.core.Is.is;
 
 class ImportDefinitionTest extends BaseTest {
 
@@ -20,13 +24,15 @@ class ImportDefinitionTest extends BaseTest {
     void shouldImportValidDefinition() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        asUser.get()
+        Response post = asUser.get()
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27.xlsx"))
-            .expect()
-            .statusCode(201)
             .when()
             .post("/import");
+
+        System.out.println("import call response" + post.getBody().asString());
+
+        Assert.assertThat(post.getStatusCode(), is(201));
     }
 
     @Test
