@@ -165,6 +165,11 @@ class ShowConditionParserTest {
         assertThat(sc.getFields(), hasItems("field1", "field2"));
     }
 
+    @Test
+    void shouldThrowExceptionWhenWeMixBothAndOrOperators() {
+        assertThrows(InvalidShowConditionException.class, () -> classUnderTest.parseShowCondition("field1='AB' AND field2='BC' OR field3='CD'"));
+    }
+
     private void assertShowCondition(ShowCondition showCondition) {
         assertEquals("SomeField=\"Some String\"", showCondition.getShowConditionExpression());
         assertTrue("SomeField", showCondition.getFields().contains("SomeField"));
