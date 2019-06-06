@@ -17,6 +17,8 @@ class UserRoleTest extends BaseTest {
 
     Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
 
+    // Create a user role case is covered as part of setup in DataSetUpExtension
+
     @Test
     @DisplayName("Should update a user profile")
     void shouldUpdateUserProfile() {
@@ -24,17 +26,6 @@ class UserRoleTest extends BaseTest {
             "\"role\": \"caseworker-autotest1\",\n" +
             " \"security_classification\": \"PUBLIC\"\n" +
             "}";
-
-        // create the role first
-        asUser.get()
-            .given()
-            .contentType(ContentType.JSON)
-            .body(userProfile)
-            .when()
-            .put(
-                "/api/user-role");
-
-        // then update it
         asUser.get()
             .given()
             .contentType(ContentType.JSON)
@@ -44,7 +35,7 @@ class UserRoleTest extends BaseTest {
                 "/api/user-role")
             .then()
             .statusCode(205);
-     }
+    }
 
     @Test
     @DisplayName("Should not update / create a user profile")
