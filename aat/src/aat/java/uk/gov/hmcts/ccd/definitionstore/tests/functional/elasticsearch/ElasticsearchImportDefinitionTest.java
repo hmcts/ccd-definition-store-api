@@ -1,9 +1,11 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional.elasticsearch;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
+import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.hasKey;
@@ -14,10 +16,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 
 class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
 
+    private static final Logger log = LoggerFactory.getLogger(ElasticsearchImportDefinitionTest.class);
     private static final String DEFINITION_FILE = "src/resource/CCD_CNP_27.xlsx";
     private static final String DEFINITION_FILE_WITH_NEW_FIELD = "src/resource/CCD_CNP_27_WithNewField.xlsx";
 
@@ -53,7 +58,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             .when()
             .post("/import");
 
-        verifyIndexAndFieldMappings(false);
+        verifyIndexAndFieldMappingsWithRetries(false);
 
         // invoke definition import second time
         asAutoTestImporter().get()
@@ -64,13 +69,29 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             .when()
             .post("/import");
 
-        verifyIndexAndFieldMappings(true);
+        verifyIndexAndFieldMappingsWithRetries(true);
     }
 
-    private void verifyIndexAndFieldMappings(boolean verifyNewFields) {
-        ValidatableResponse response = getIndexInformation(CASE_INDEX_ALIAS);
-        verifyIndexAndAlias(response);
-        verifyCaseDataFields(response, verifyNewFields);
+    private void verifyIndexAndFieldMappingsWithRetries(boolean verifyNewFields) {
+        with()
+            .pollDelay(500, TimeUnit.MILLISECONDS)
+            .and()
+            .pollInterval(500, TimeUnit.MILLISECONDS)
+            .await("ES index verification")
+            .atMost(60, TimeUnit.SECONDS)
+            .until(() -> verifyIndexAndFieldMappings(verifyNewFields));
+    }
+
+    private boolean verifyIndexAndFieldMappings(boolean verifyNewFields) {
+        try {
+            ValidatableResponse response = getIndexInformation(CASE_INDEX_ALIAS);
+            verifyIndexAndAlias(response);
+            verifyCaseDataFields(response, verifyNewFields);
+        } catch (AssertionError e) {
+            log.info("Retrying Elasticsearch index api");
+            return false;
+        }
+        return true;
     }
 
     private void verifyIndexAndAlias(ValidatableResponse response) {
