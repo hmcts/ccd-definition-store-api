@@ -52,25 +52,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_HISTORY_VIEWER;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_PAYMENT_HISTORY_VIEWER;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE_TIME;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_EMAIL;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_LABEL;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MONEY_GBP;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MULTI_SELECT_LIST;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_NUMBER;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_PHONE_UK;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_POST_CODE;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -141,6 +123,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity casePaymentHistoryViewerBaseType;
     private FieldTypeEntity caseHistoryViewerBaseType;
     private FieldTypeEntity fixedListRadioTypeBaseType;
+    private FieldTypeEntity dynamicListBaseType;
 
     @Before
     public void setup() {
@@ -166,6 +149,7 @@ public class ImportServiceImplTest {
                                         idamProfileClient);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
+        dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
         complexType = buildBaseType(BASE_COMPLEX);
         textBaseType = buildBaseType(BASE_TEXT);
@@ -230,7 +214,8 @@ public class ImportServiceImplTest {
             labelBaseType,
             casePaymentHistoryViewerBaseType,
             caseHistoryViewerBaseType,
-            fixedListRadioTypeBaseType));
+            fixedListRadioTypeBaseType,
+            dynamicListBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
