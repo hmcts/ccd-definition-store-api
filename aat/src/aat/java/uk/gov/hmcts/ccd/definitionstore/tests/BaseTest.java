@@ -7,7 +7,7 @@ import uk.gov.hmcts.ccd.definitionstore.tests.helper.idam.AuthenticatedUser;
 
 import java.util.function.Supplier;
 
-@ExtendWith({AATExtension.class, DataImportExtension.class})
+@ExtendWith({AATExtension.class, DataSetUpExtension.class})
 public abstract class BaseTest {
     protected final AATHelper aat;
 
