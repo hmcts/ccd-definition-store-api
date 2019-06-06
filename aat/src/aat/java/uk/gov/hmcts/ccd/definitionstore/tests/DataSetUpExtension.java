@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definitionstore.tests;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.apache.commons.lang.BooleanUtils;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -62,6 +63,7 @@ public class DataSetUpExtension implements BeforeAllCallback {
                 "\"role\": \"caseworker-autotest1\",\n" +
                 " \"security_classification\": \"PUBLIC\"\n" +
                 "}")
+            .contentType(ContentType.JSON)
             .when()
             .put("/api/user-role")
             .then()
