@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests;
 
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.apache.commons.lang.BooleanUtils;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -20,11 +19,8 @@ public class DataSetUpExtension implements BeforeAllCallback {
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
         if (!BooleanUtils.isTrue(context.getRoot().getStore(GLOBAL).get(IMPORTED, Boolean.class))) {
-            System.out.println("calling import again");
             createUserRoleAndImportDefinitions();
             context.getRoot().getStore(GLOBAL).put(IMPORTED, true);
-        } else {
-            System.out.println("imported already");
         }
     }
 
@@ -62,7 +58,6 @@ public class DataSetUpExtension implements BeforeAllCallback {
         RestAssured.given()
             .header("Authorization", "Bearer " + caseworker.getAccessToken())
             .header("ServiceAuthorization", s2sToken)
-            .contentType(ContentType.JSON)
             .body("{\n" +
                 "\"role\": \"caseworker-autotest1\",\n" +
                 " \"security_classification\": \"PUBLIC\"\n" +
