@@ -13,7 +13,11 @@ import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 
-public class DataSetUpExtension implements BeforeAllCallback {
+/**
+ * Custom Extension which executes setup code only once before all tests are started.
+ * This is temporary solution until https://github.com/junit-team/junit5/issues/456 released
+ */
+public class DataSetupExtension implements BeforeAllCallback {
 
     static final String IMPORTED = "imported";
 

@@ -15,7 +15,7 @@ class ImportDefinitionTest extends BaseTest {
         super(aat);
     }
 
-    // Success case - valid import file is verified as part of setup in DataSetUpExtension.
+    // Success case - valid import file is verified as part of setup in DataSetupExtension.
 
     @Test
     @DisplayName("Should Not import an invalid definition")

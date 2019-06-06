@@ -17,7 +17,7 @@ class UserRoleTest extends BaseTest {
 
     Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
 
-    // Create a user role case is covered as part of setup in DataSetUpExtension
+    // Create a user role case is covered as part of setup in DataSetupExtension
 
     @Test
     @DisplayName("Should update a user profile")
