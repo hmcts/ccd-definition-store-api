@@ -22,7 +22,6 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.AuthCheckerConfiguration.ROLE_CCD_IMPORT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthCheckerConfigurationTest {
@@ -41,22 +40,6 @@ public class AuthCheckerConfigurationTest {
         when(request.getRequestURI()).thenReturn("/import/x");
         when(adminWebAuthorizationProperties.isEnabled()).thenReturn(false);
         assertThat(configuration.authorizedRolesExtractor().apply(request), empty());
-    }
-
-    @Test
-    public void shouldReturnCCDRoleWhenURIIsImport() {
-        when(request.getRequestURI()).thenReturn("/import");
-        final Collection<String> result = configuration.authorizedRolesExtractor().apply(request);
-        assertThat(result, hasSize(1));
-        assertThat(result, hasItem(ROLE_CCD_IMPORT));
-    }
-
-    @Test
-    public void shouldReturnCCDRoleWhenURIIsImportEndingWithSlash() {
-        when(request.getRequestURI()).thenReturn("/import/");
-        final Collection<String> result = configuration.authorizedRolesExtractor().apply(request);
-        assertThat(result, hasSize(1));
-        assertThat(result, hasItem(ROLE_CCD_IMPORT));
     }
 
     @Test
