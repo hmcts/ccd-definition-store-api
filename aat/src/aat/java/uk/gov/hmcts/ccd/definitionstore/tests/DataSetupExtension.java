@@ -19,13 +19,13 @@ import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
  */
 public class DataSetupExtension implements BeforeAllCallback {
 
-    static final String IMPORTED = "imported";
+    static final String INITIALISED = "initialised";
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        if (!BooleanUtils.isTrue(context.getRoot().getStore(GLOBAL).get(IMPORTED, Boolean.class))) {
+        if (BooleanUtils.isNotTrue(context.getRoot().getStore(GLOBAL).get(INITIALISED, Boolean.class))) {
             createUserRoleAndImportDefinitions();
-            context.getRoot().getStore(GLOBAL).put(IMPORTED, true);
+            context.getRoot().getStore(GLOBAL).put(INITIALISED, true);
         }
     }
 
@@ -37,10 +37,10 @@ public class DataSetupExtension implements BeforeAllCallback {
 
         createTestRole(aat, s2sToken);
 
-        ImportDefinitions(aat, s2sToken);
+        importDefinitions(aat, s2sToken);
     }
 
-    private void ImportDefinitions(AATHelper aat, String s2sToken) {
+    private void importDefinitions(AATHelper aat, String s2sToken) {
         AuthenticatedUser importer = aat.getIdamHelper()
             .authenticate(aat.getImporterAutoTestEmail(),
                 aat.getImporterAutoTestPassword());
