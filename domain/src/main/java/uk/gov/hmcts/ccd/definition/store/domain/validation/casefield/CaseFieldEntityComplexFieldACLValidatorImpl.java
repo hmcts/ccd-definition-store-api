@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
 public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEntityValidator {
@@ -28,8 +29,25 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
             validateUserRole(caseField, caseFieldEntityValidationContext, validationResult, entity);
             validateCRUDAgainstCaseFieldParent(caseField, caseFieldEntityValidationContext, validationResult, entity);
             validateCRUDComplexParent(caseField, caseFieldEntityValidationContext, validationResult, entity);
+            validatePredefinedComplexTypes(caseField, caseFieldEntityValidationContext, validationResult, entity);
         }
         return validationResult;
+    }
+
+    private void validatePredefinedComplexTypes(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
+                                                ValidationResult validationResult, ComplexFieldACLEntity entity) {
+        final String code = entity.getListElementCode();
+        if (code.contains(".")) {
+            final FieldEntity parent = caseField.findNestedElementByPath(code.substring(0, code.lastIndexOf('.')));
+            if (parent.isPredefinedComplexType()) {
+                validationResult.addError(new CaseFieldEntityComplexACLValidationError(
+                    String.format("List element code '%s' refers to a predefined complex type parent '%s' and is not allowed",
+                        code, parent.getFieldType().getReference()),
+                    entity, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
+                LOG.info("List element code '{}' refers to a predefined complex type parent {} and is not allowed",
+                    code, parent.getFieldType().getReference());
+            }
+        }
     }
 
     private void validateCRUDComplexParent(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,

@@ -10,6 +10,8 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +27,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 public class CaseFieldEntityComplexFieldACLValidatorImplTest {
 
-    private static String ROLE1 = "Role1";
+    private static final String ROLE1 = "Role1";
+    private static final String CLASS = "Class";
+    private static final String CLASS_MEMBERS = "ClassMembers";
+    private static final String CHILDREN = "Children";
+    private static final String CHILD_FULL_NAME = "ChildFullName";
     private CaseFieldEntityComplexFieldACLValidatorImpl validator;
 
     private ComplexFieldACLEntity complexACL0;
@@ -33,6 +39,10 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     private ComplexFieldACLEntity complexACL2;
     private ComplexFieldACLEntity complexACL3;
     private ComplexFieldACLEntity complexACL4;
+    private ComplexFieldACLEntity complexACL5;
+    private ComplexFieldACLEntity complexACL6;
+    private ComplexFieldACLEntity complexACL7;
+    private ComplexFieldACLEntity complexACL8;
 
     private CaseFieldACLEntity fieldACL;
 
@@ -52,20 +62,43 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         userRole.setReference(ROLE1);
 
         complexACL0 = new ComplexFieldACLEntity();
-        complexACL0.setListElementCode("Class");
+        complexACL0.setListElementCode(CLASS);
         complexACL1 = new ComplexFieldACLEntity();
-        complexACL1.setListElementCode("Class.ClassMembers");
+        complexACL1.setListElementCode(CLASS + "." + CLASS_MEMBERS);
         complexACL2 = new ComplexFieldACLEntity();
-        complexACL2.setListElementCode("Class.ClassMembers.Children");
+        complexACL2.setListElementCode(CLASS + "." + CLASS_MEMBERS + "." + CHILDREN);
         complexACL3 = new ComplexFieldACLEntity();
-        complexACL3.setListElementCode("Class.ClassMembers.Children.ChildFullName");
+        complexACL3.setListElementCode(CLASS + "." + CLASS_MEMBERS + "." + CHILDREN + "." + CHILD_FULL_NAME);
         complexACL4 = new ComplexFieldACLEntity();
-        complexACL4.setListElementCode("ClassMembers");
+        complexACL4.setListElementCode(CLASS_MEMBERS);
+        complexACL5 = new ComplexFieldACLEntity();
+        complexACL5.setListElementCode(PREDEFINED_COMPLEX_ADDRESS_GLOBAL);
+        complexACL6 = new ComplexFieldACLEntity();
+        complexACL6.setListElementCode(PREDEFINED_COMPLEX_ADDRESS_GLOBAL + ".AddressLine1");
+        complexACL7 = new ComplexFieldACLEntity();
+        complexACL7.setListElementCode(CLASS + "." + CLASS_MEMBERS + "." + CHILDREN + "." + PREDEFINED_COMPLEX_ADDRESS_GLOBAL);
+        complexACL8 = new ComplexFieldACLEntity();
+        complexACL8.setListElementCode(CLASS + "." + CLASS_MEMBERS + "." + CHILDREN + "." + PREDEFINED_COMPLEX_ADDRESS_GLOBAL + ".AddressLine1");
 
         given(caseFieldEntityValidationContext.getCaseReference()).willReturn("case_type");
 
         caseField = new CaseFieldEntity();
         caseField.setReference("case_field");
+
+        caseField.setFieldType(
+            newType("New")
+                .addFieldToComplex(CLASS, newType(CLASS)
+                    .addFieldToComplex(CLASS_MEMBERS, newType(CLASS_MEMBERS)
+                        .addFieldToComplex(CHILDREN, newType(CHILDREN)
+                            .addFieldToComplex(CHILD_FULL_NAME, newType(CHILD_FULL_NAME).buildComplex())
+                            .addFieldToComplex(PREDEFINED_COMPLEX_ADDRESS_GLOBAL, newType(PREDEFINED_COMPLEX_ADDRESS_GLOBAL).buildComplex())
+                            .buildComplex())
+                        .buildComplex())
+                    .buildComplex())
+                .addFieldToComplex(CLASS_MEMBERS, newType("Text").build())
+                .addFieldToComplex(PREDEFINED_COMPLEX_ADDRESS_GLOBAL, newType(PREDEFINED_COMPLEX_ADDRESS_GLOBAL).buildComplex())
+                .buildComplex()
+        );
 
         fieldACL = new CaseFieldACLEntity();
 
@@ -86,7 +119,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
             () -> assertThat(result.getValidationErrors().size(), is(2)),
             () -> assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidUserRoleValidationError.class)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
-            "Invalid UserRole for case type 'case_type', case field 'case_field'"))
+                "Invalid UserRole for case type 'case_type', case field 'case_field'"))
         );
     }
 
@@ -253,6 +286,40 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 
         assertThat(result.getValidationErrors(), empty());
+    }
+
+    @Test
+    @DisplayName("should fail when a predefined complex children has been defined")
+    public void shouldFailWhenPrededinedComplexChildrenHasBeenDefined() {
+        complexACL0.setUserRole(userRole);
+        complexACL0.setCreate(true);
+        complexACL1.setUserRole(userRole);
+        complexACL1.setCreate(true);
+        complexACL2.setUserRole(userRole);
+        complexACL2.setCreate(false);
+        complexACL5.setUserRole(userRole);
+        complexACL5.setCreate(false);
+        complexACL6.setUserRole(userRole);
+        complexACL6.setCreate(false);
+        complexACL7.setUserRole(userRole);
+        complexACL7.setCreate(false);
+        complexACL8.setUserRole(userRole);
+        complexACL8.setCreate(false);
+        caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2, complexACL5, complexACL6, complexACL7, complexACL8));
+        fieldACL.setUserRole(userRole);
+        fieldACL.setCreate(true);
+        caseField.addCaseFieldACL(fieldACL);
+
+        final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
+
+        assertAll(
+            () -> assertThat(result.getValidationErrors(), not(empty())),
+            () -> assertThat(result.getValidationErrors().size(), is(2)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("List element code "
+                + "'AddressGlobal.AddressLine1' refers to a predefined complex type parent 'AddressGlobal' and is not allowed")),
+            () -> assertThat(result.getValidationErrors().get(1).getDefaultMessage(), is("List element code "
+                + "'Class.ClassMembers.Children.AddressGlobal.AddressLine1' refers to a predefined complex type parent 'AddressGlobal' and is not allowed"))
+        );
     }
 
 }

@@ -11,6 +11,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
@@ -150,7 +151,7 @@ class DisplayGroupAdapterServiceTest {
                                 asList(complexFieldEntity("bailiffName", "Bailiff", fieldType("FixedList-BailiffList")),
                                     complexFieldEntity("dateOfVisit", "Date of visit", fieldType("Date")),
                                     complexFieldEntity("addressAttended", "Address Attended",
-                                        fieldTypeEntity("AddressUK", baseFieldType("Complex"),
+                                        fieldTypeEntity(PREDEFINED_COMPLEX_ADDRESS_UK, baseFieldType("Complex"),
                                             asList(complexFieldEntity("AddressLine1", "Building and Street", fieldType("TextMax150")),
                                                 complexFieldEntity("AddressLine2", "Building and Street", fieldType("TextMax50")),
                                                 complexFieldEntity("AddressLine3", "Building and Street", fieldType("TextMax50")),
