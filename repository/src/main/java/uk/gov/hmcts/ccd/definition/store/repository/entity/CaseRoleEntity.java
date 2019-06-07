@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 import static javax.persistence.FetchType.LAZY;
 
-@Table(name = "role")
 @Entity
 @DiscriminatorValue("CASEROLE")
 public class CaseRoleEntity extends UserRoleEntity implements Serializable {
