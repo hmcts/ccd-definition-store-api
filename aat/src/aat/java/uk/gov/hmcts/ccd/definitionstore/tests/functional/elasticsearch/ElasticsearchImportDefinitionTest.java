@@ -1,15 +1,14 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional.elasticsearch;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
-import static org.awaitility.Awaitility.with;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.hasKey;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static uk.gov.hmcts.ccd.definitionstore.tests.util.TestUtils.withRetries;
 
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,6 +28,8 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     private static final String CASE_INDEX_NAME = "mapper_cases-000001";
     private static final String CASE_INDEX_ALIAS = "mapper_cases";
     private static final String TEXT_FIELD_TYPE = "text";
+    private static final long RETRY_POLL_DELAY_MILLIS = 1000;
+    private static final long RETRY_POLL_INTERVAL_MILLIS = 1000;
 
     protected ElasticsearchImportDefinitionTest(AATHelper aat) {
         super(aat);
@@ -58,7 +59,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             .when()
             .post("/import");
 
-        verifyIndexAndFieldMappingsWithRetries(false);
+        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS, "ES index verification", () -> verifyIndexAndFieldMappings(false));
 
         // invoke definition import second time
         asAutoTestImporter().get()
@@ -69,17 +70,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             .when()
             .post("/import");
 
-        verifyIndexAndFieldMappingsWithRetries(true);
-    }
-
-    private void verifyIndexAndFieldMappingsWithRetries(boolean verifyNewFields) {
-        with()
-            .pollDelay(500, TimeUnit.MILLISECONDS)
-            .and()
-            .pollInterval(500, TimeUnit.MILLISECONDS)
-            .await("ES index verification")
-            .atMost(60, TimeUnit.SECONDS)
-            .until(() -> verifyIndexAndFieldMappings(verifyNewFields));
+        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS, "ES index verification", () -> verifyIndexAndFieldMappings(true));
     }
 
     private boolean verifyIndexAndFieldMappings(boolean verifyNewFields) {
@@ -88,7 +79,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             verifyIndexAndAlias(response);
             verifyCaseDataFields(response, verifyNewFields);
         } catch (AssertionError e) {
-            log.info("Retrying Elasticsearch index api");
+            log.info("Retrying Elasticsearch index api due to error: {}", e.getMessage());
             return false;
         }
         return true;
