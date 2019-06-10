@@ -37,15 +37,29 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
     private void validatePredefinedComplexTypes(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                                 ValidationResult validationResult, ComplexFieldACLEntity entity) {
         final String code = entity.getListElementCode();
+        if (caseField.isPredefinedComplexType()) {
+            validationResult.addError(new CaseFieldEntityComplexACLValidationError(
+                String.format("CaseField '%s' is a predefined complex type and list element code '%s' is not allowed", caseField.getReference(), code),
+                entity, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
+            LOG.info("CaseField '{}' is a predefined complex type parent and list element code {} is not allowed", caseField.getReference(), code);
+        }
         if (code.contains(".")) {
-            final FieldEntity parent = caseField.findNestedElementByPath(code.substring(0, code.lastIndexOf('.')));
-            if (parent.isPredefinedComplexType()) {
+            final Optional<FieldEntity> optionalParent = caseField.findNestedElementByPath(code.substring(0, code.lastIndexOf('.')));
+            if (optionalParent.isPresent()) {
+                FieldEntity parent = optionalParent.get();
+                if (parent.isPredefinedComplexType()) {
+                    validationResult.addError(new CaseFieldEntityComplexACLValidationError(
+                        String.format("List element code '%s' refers to a predefined complex type parent '%s' and is not allowed",
+                            code, parent.getFieldType().getReference()),
+                        entity, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
+                    LOG.info("List element code '{}' refers to a predefined complex type parent {} and is not allowed",
+                        code, parent.getFieldType().getReference());
+                }
+            } else {
                 validationResult.addError(new CaseFieldEntityComplexACLValidationError(
-                    String.format("List element code '%s' refers to a predefined complex type parent '%s' and is not allowed",
-                        code, parent.getFieldType().getReference()),
+                    String.format("List element code '%s' is not a valid reference...", code),
                     entity, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
-                LOG.info("List element code '{}' refers to a predefined complex type parent {} and is not allowed",
-                    code, parent.getFieldType().getReference());
+                LOG.info("List element code '{}' is not a valid reference...", code);
             }
         }
     }

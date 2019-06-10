@@ -11,6 +11,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -289,8 +290,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     }
 
     @Test
-    @DisplayName("should fail when a predefined complex children has been defined")
-    public void shouldFailWhenPrededinedComplexChildrenHasBeenDefined() {
+    @DisplayName("should fail when a predefined complex child has been defined")
+    public void shouldFailWhenPredefinedComplexChildHasBeenDefined() {
         complexACL0.setUserRole(userRole);
         complexACL0.setCreate(true);
         complexACL1.setUserRole(userRole);
@@ -322,4 +323,62 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         );
     }
 
+    @Test
+    @DisplayName("should fail when a predefined complex child has been defined for root level complex field")
+    public void shouldFailWhenPredefinedComplexChildHasBeenDefinedForRootLevelComplexField() {
+
+        ComplexFieldACLEntity complexACL10 = new ComplexFieldACLEntity();
+        complexACL10.setListElementCode("parent.non-existent");
+        complexACL10.setUserRole(userRole);
+        complexACL10.setCreate(true);
+        ComplexFieldACLEntity complexACL9 = new ComplexFieldACLEntity();
+        complexACL9.setListElementCode("parent");
+        complexACL9.setUserRole(userRole);
+        complexACL9.setCreate(true);
+        caseField.addComplexFieldACLEntities(asList(complexACL10, complexACL9));
+        fieldACL.setUserRole(userRole);
+        fieldACL.setCreate(true);
+        caseField.addCaseFieldACL(fieldACL);
+
+        final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
+
+        assertAll(
+            () -> assertThat(result.getValidationErrors(), not(empty())),
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("List element code "
+                + "'parent.non-existent' is not a valid reference..."))
+        );
+    }
+
+    @Test
+    @DisplayName("should fail when a non existent child has been defined")
+    public void shouldFailWhenANonExistentChildHasBeenDefined() {
+
+        CaseFieldEntity preDefined = new CaseFieldEntity();
+        preDefined.setReference("personAddress");
+        preDefined.setFieldType(
+            newType(PREDEFINED_COMPLEX_ADDRESS_UK)
+                .addFieldToComplex("AddressLine1", newType("Text").build())
+                .addFieldToComplex("AddressLine2", newType("Text").build())
+                .addFieldToComplex("Postcode", newType("Text").build())
+                .buildComplex()
+        );
+        ComplexFieldACLEntity complexACL11 = new ComplexFieldACLEntity();
+        complexACL11.setListElementCode("AddressLine1");
+        complexACL11.setUserRole(userRole);
+        complexACL11.setCreate(true);
+        preDefined.addComplexFieldACLEntities(asList(complexACL11));
+        fieldACL.setUserRole(userRole);
+        fieldACL.setCreate(true);
+        preDefined.addCaseFieldACL(fieldACL);
+
+        final ValidationResult result = validator.validate(preDefined, caseFieldEntityValidationContext);
+
+        assertAll(
+            () -> assertThat(result.getValidationErrors(), not(empty())),
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("CaseField "
+                + "'personAddress' is a predefined complex type and list element code 'AddressLine1' is not allowed"))
+        );
+    }
 }

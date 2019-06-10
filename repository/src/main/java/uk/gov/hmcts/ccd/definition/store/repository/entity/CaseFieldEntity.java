@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -19,7 +18,6 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.*;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.exception.InvalidChildEntityException;
 
 @Table(name = "case_field")
 @Entity
@@ -215,28 +213,34 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     }
 
     @Transient
-    public FieldEntity findNestedElementByPath(String path) {
+    public Optional<FieldEntity> findNestedElementByPath(String path) {
         if (StringUtils.isBlank(path)) {
-            return this;
+            return Optional.of(this);
         }
         if (this.getFieldType().getChildren().isEmpty()) {
-            throw new InvalidChildEntityException(format("CaseField %s has no nested elements.", this.reference));
+            Optional.empty();
         }
         List<String> pathElements = Arrays.stream(path.trim().split("\\.")).collect(Collectors.toList());
 
         return reduce(this.getFieldType().getChildren(), pathElements);
     }
 
-    private FieldEntity reduce(List<ComplexFieldEntity> caseFields, List<String> pathElements) {
+    private Optional<FieldEntity> reduce(List<ComplexFieldEntity> caseFields, List<String> pathElements) {
         String firstPathElement = pathElements.get(0);
 
-        ComplexFieldEntity caseField = caseFields.stream().filter(e -> e.getReference().equals(firstPathElement)).findFirst()
-            .orElseThrow(() -> new InvalidChildEntityException(format("Nested element not found for %s", firstPathElement)));
+        Optional<FieldEntity> caseField = caseFields.stream()
+            .filter(e -> e.getReference().equals(firstPathElement))
+            .map(e -> (FieldEntity)e)
+            .findFirst();
+
+        if (!caseField.isPresent()) {
+            return Optional.empty();
+        }
 
         if (pathElements.size() == 1) {
             return caseField;
         } else {
-            List<ComplexFieldEntity> complexFieldEntities = caseField.getFieldType().getChildren();
+            List<ComplexFieldEntity> complexFieldEntities = caseField.get().getFieldType().getChildren();
             List<String> tail = pathElements.subList(1, pathElements.size());
 
             return reduce(complexFieldEntities, tail);
