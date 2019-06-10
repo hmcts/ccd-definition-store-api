@@ -199,6 +199,7 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         return this;
     }
 
+    @Transient
     public Optional<FieldEntity> findNestedElementByPath(String path) {
         if (StringUtils.isBlank(path)) {
             return Optional.of(this);
