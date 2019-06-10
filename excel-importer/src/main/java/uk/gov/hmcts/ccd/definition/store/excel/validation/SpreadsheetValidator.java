@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 @Component
@@ -22,6 +23,17 @@ public class SpreadsheetValidator {
             throw new InvalidImportException("Error processing sheet \"" + sheetName +
                     "\": Invalid Case Definition sheet - no Definition data attribute headers found");
         }
+    }
+
+    public void validate(String sheetName, String columnName, String cellValue, int rowNumber) {
+            ColumnName columnNameEnum = ColumnName.fromSheetColumnName(columnName);
+            if (columnNameEnum != null) {
+                Integer columnMaxLength = columnNameEnum.getMaxLength();
+                if (columnMaxLength != null && cellValue.length() > columnMaxLength) {
+                    throw new InvalidImportException("Error processing sheet \"" + sheetName +
+                                                     "\": Invalid columnName " + columnName + " at rowNumber " + rowNumber);
+                }
+            }
     }
 
     public void validate(Map<String, DefinitionSheet> definitionSheets) {

@@ -27,6 +27,45 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test(expected = InvalidImportException.class)
+    public void shouldFail_whenCaseTypeIDValueExceedsMaxLength() {
+        String columnName = "CaseTypeID";
+        int rowNumber = 6;
+        try {
+            validator.validate("sheet", columnName, "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
+        } catch (InvalidImportException ex) {
+            assertThat(ex.getMessage(), is(
+                    "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
+            throw ex;
+        }
+    }
+
+    @Test()
+    public void shouldPass_withNonExistingColumnName() {
+        String columnName = "CRUD";
+        int rowNumber = 6;
+        try {
+            validator.validate("sheet", columnName, "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
+        } catch (InvalidImportException ex) {
+            assertThat(ex.getMessage(), is(
+                    "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
+            throw ex;
+        }
+    }
+
+    @Test()
+    public void shouldPass_whenMaxLengthNotConfigured() {
+        String columnName = "nonExistingColumnName";
+        int rowNumber = 6;
+        try {
+            validator.validate("sheet", columnName, "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
+        } catch (InvalidImportException ex) {
+            assertThat(ex.getMessage(), is(
+                    "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
+            throw ex;
+        }
+    }
+
+    @Test(expected = InvalidImportException.class)
     public void shouldFail_whenBlankSheetName() {
         try {
             validator.validate("sheet", new DefinitionSheet(), Collections.emptyList());

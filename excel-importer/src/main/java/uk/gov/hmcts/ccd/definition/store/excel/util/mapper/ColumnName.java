@@ -13,7 +13,7 @@ public enum ColumnName {
     CASE_EVENT_FIELD_LABEL("CaseEventFieldLabel"),
     CASE_EVENT_FIELD_HINT("CaseEventFieldHint"),
     CASE_FIELD_ID("CaseFieldID"),
-    CASE_TYPE_ID("CaseTypeID"),
+    CASE_TYPE_ID("CaseTypeID", 50),
     CHANNEL("Channel"),
     CRUD("CRUD"),
     DEFAULT_HIDDEN("DefaultHidden"),
@@ -73,9 +73,15 @@ public enum ColumnName {
     WORK_BASKET_DEFAULT_STATE("WorkBasketDefaultState");
 
     private final String name;
+    private Integer maxLength;
 
     ColumnName(String columnName) {
         this.name = columnName;
+    }
+
+    ColumnName(String columnName, Integer maxLength) {
+        this.name = columnName;
+        this.maxLength = maxLength;
     }
 
     /**
@@ -161,8 +167,21 @@ public enum ColumnName {
         }
     }
 
+    public static ColumnName fromSheetColumnName(String sheetColumnName) {
+        for (ColumnName columnName : ColumnName.values()) {
+            if (columnName.name.equals(sheetColumnName)) {
+                return columnName;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public Integer getMaxLength() {
+        return maxLength;
     }
 }
