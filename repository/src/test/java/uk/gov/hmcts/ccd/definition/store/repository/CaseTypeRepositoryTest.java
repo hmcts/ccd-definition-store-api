@@ -16,6 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import javax.persistence.EntityManager;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Collection;
@@ -97,6 +98,11 @@ public class CaseTypeRepositoryTest {
         return(Arrays.asList(caseTypeACLWithCreateOnly, caseTypeACLWithReadOnly, caseTypeACLWithUpdateOnly, caseTypeACLWithDeleteOnly));
     }
 
+    private Collection <CaseTypeACLEntity> createCaseTypeACLWithFullAccess() {
+        CaseTypeACLEntity caseTypeACLWithFullAccess = caseTypeACLWithUserRoleEntity("role-with-full-access", true, true,
+            true, true, "User Role Full Access" , "User Role Full Access" , SecurityClassification.PUBLIC);
+        return(Collections.singletonList(caseTypeACLWithFullAccess));
+    }
     private CaseTypeACLEntity caseTypeACLWithUserRoleEntity(String reference,
                                                      Boolean create,
                                                      Boolean read,
@@ -220,10 +226,29 @@ public class CaseTypeRepositoryTest {
         createCaseTypeEntityWithCaseTypeACL("CaseTypeWithACL","CaseTypeWithACL", 1,testJurisdictionWithCaseTypeACL,createCaseTypeACL());
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId(testJurisdictionWithCaseTypeACL.getReference());
+        CaseTypeEntity caseType = caseTypeEntities.get(0).getCaseTypeACLEntities().get(0).getCaseType();
+        Optional <Integer> caseTypeVersion = classUnderTest.findLastVersion(caseTypeEntities.get(0).getReference());
+        assertTrue(caseTypeVersion.isPresent());
+        assertEquals (1, caseTypeVersion.get().intValue());
         assertEquals(1, caseTypeEntities.size());
         assertEquals(4, caseTypeEntities.get(0).getCaseTypeACLEntities().size());
-
-        CaseTypeEntity caseType = caseTypeEntities.get(0).getCaseTypeACLEntities().get(0).getCaseType();
+        assertEquals(1, caseTypeEntities.get(0).getCaseTypeACLEntities().get(0).getCaseType().getVersion().intValue());
         assertEquals("CaseTypeWithACL", caseType.getReference());
+
+        createCaseTypeEntityWithCaseTypeACL("CaseTypeWithACL","CaseTypeWithACL", 2,testJurisdictionWithCaseTypeACL,createCaseTypeACLWithFullAccess());
+        caseTypeVersion = classUnderTest.findLastVersion(caseTypeEntities.get(0).getReference());
+        assertTrue(caseTypeVersion.isPresent());
+        assertEquals (2, caseTypeVersion.get().intValue());
+
+        Optional<CaseTypeEntity> caseTypeEntity = classUnderTest.findCurrentVersionForReference(caseTypeEntities.get(0).getReference());
+        assertTrue(caseTypeEntity.isPresent());
+        List<CaseTypeACLEntity> caseTypeACLEntities = caseTypeEntity.get().getCaseTypeACLEntities();
+        assertEquals(1, caseTypeACLEntities.size());
+        assertEquals(2, caseTypeACLEntities.get(0).getCaseType().getVersion().intValue());
+        assertEquals(true, caseTypeACLEntities.get(0).getCreate());
+        assertEquals(true, caseTypeACLEntities.get(0).getUpdate());
+        assertEquals(true, caseTypeACLEntities.get(0).getDelete());
+        assertEquals(true, caseTypeACLEntities.get(0).getRead());
+
     }
 }
