@@ -75,7 +75,8 @@ public class CaseTypeRepositoryTest {
         saveCaseTypeClearAndFlushSession(caseType);
     }
 
-    private void createCaseTypeEntityWithCaseTypeACL(String reference, String name, Integer version, JurisdictionEntity jurisdiction, Collection <CaseTypeACLEntity> caseTypeACLList) {
+    private CaseTypeEntity createCaseTypeEntityWithCaseTypeACL(String reference, String name, Integer version, JurisdictionEntity jurisdiction,
+                                                               Collection<CaseTypeACLEntity> caseTypeACLList) {
         final CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference(reference);
         caseType.setName(name);
@@ -84,30 +85,32 @@ public class CaseTypeRepositoryTest {
         caseType.setSecurityClassification(PUBLIC);
         caseType.addCaseTypeACLEntities(caseTypeACLList);
         saveCaseTypeClearAndFlushSession(caseType);
+        return caseType;
     }
 
-    private Collection <CaseTypeACLEntity> createCaseTypeACL() {
+    private Collection<CaseTypeACLEntity> createCaseTypeACL() {
         CaseTypeACLEntity caseTypeACLWithCreateOnly = caseTypeACLWithUserRoleEntity("role-with-create-only", true, false,
-            false, false, "User Role 1" , "User Role 1" , SecurityClassification.PUBLIC);
+            false, false, "User Role 1", "User Role 1", SecurityClassification.RESTRICTED);
         CaseTypeACLEntity caseTypeACLWithReadOnly = caseTypeACLWithUserRoleEntity("role-with-read-only", false, true, false,
-            false, "User Role 2" , "User Role 2" , SecurityClassification.PRIVATE);
+            false, "User Role 2", "User Role 2", SecurityClassification.PRIVATE);
         CaseTypeACLEntity caseTypeACLWithUpdateOnly = caseTypeACLWithUserRoleEntity("role-with-update-only", false, false,
-            true, false, "User Role 3" , "User Role 3" , SecurityClassification.RESTRICTED);
+            true, false, "User Role 3", "User Role 3", SecurityClassification.RESTRICTED);
         CaseTypeACLEntity caseTypeACLWithDeleteOnly = caseTypeACLWithUserRoleEntity("role-with-delete-only", false, false,
-            false, true, "User Role 4" , "User Role 4" , SecurityClassification.PUBLIC);
-        return(Arrays.asList(caseTypeACLWithCreateOnly, caseTypeACLWithReadOnly, caseTypeACLWithUpdateOnly, caseTypeACLWithDeleteOnly));
+            false, true, "User Role 4", "User Role 4", SecurityClassification.PUBLIC);
+        return (Arrays.asList(caseTypeACLWithCreateOnly, caseTypeACLWithReadOnly, caseTypeACLWithUpdateOnly, caseTypeACLWithDeleteOnly));
     }
 
-    private Collection <CaseTypeACLEntity> createCaseTypeACLWithFullAccess() {
+    private Collection<CaseTypeACLEntity> createCaseTypeACLWithFullAccess() {
         CaseTypeACLEntity caseTypeACLWithFullAccess = caseTypeACLWithUserRoleEntity("role-with-full-access", true, true,
-            true, true, "User Role Full Access" , "User Role Full Access" , SecurityClassification.PUBLIC);
-        return(Collections.singletonList(caseTypeACLWithFullAccess));
+            true, true, "User Role Full Access", "User Role Full Access", SecurityClassification.PUBLIC);
+        return (Collections.singletonList(caseTypeACLWithFullAccess));
     }
+
     private CaseTypeACLEntity caseTypeACLWithUserRoleEntity(String reference,
-                                                     Boolean create,
-                                                     Boolean read,
-                                                     Boolean update,
-                                                     Boolean delete, String userRoleReference, String userRoleName , SecurityClassification sc) {
+                                                            Boolean create,
+                                                            Boolean read,
+                                                            Boolean update,
+                                                            Boolean delete, String userRoleReference, String userRoleName, SecurityClassification sc) {
         CaseTypeACLEntity caseTypeACLEntity = new CaseTypeACLEntity();
         caseTypeACLEntity.setUserRole(createUserRoleEntity(userRoleReference, userRoleName, sc));
         caseTypeACLEntity.setCreate(create);
@@ -117,7 +120,7 @@ public class CaseTypeRepositoryTest {
         return caseTypeACLEntity;
     }
 
-    private UserRoleEntity createUserRoleEntity(String reference, String userRoleName , SecurityClassification sc) {
+    private UserRoleEntity createUserRoleEntity(String reference, String userRoleName, SecurityClassification sc) {
         return testHelper.createUserRole(reference, userRoleName, sc);
     }
 
@@ -223,32 +226,52 @@ public class CaseTypeRepositoryTest {
 
     @Test
     public void saveAndGetCaseTypeWithCaseTypeACLData() {
-        createCaseTypeEntityWithCaseTypeACL("CaseTypeWithACL","CaseTypeWithACL", 1,testJurisdictionWithCaseTypeACL,createCaseTypeACL());
+        CaseTypeEntity caseTypeEntityVersionOneWithMultiACL = createCaseTypeEntityWithCaseTypeACL("CaseTypeWithACL", "CaseTypeWithACL",
+            1, testJurisdictionWithCaseTypeACL, createCaseTypeACL());
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId(testJurisdictionWithCaseTypeACL.getReference());
-        CaseTypeEntity caseType = caseTypeEntities.get(0).getCaseTypeACLEntities().get(0).getCaseType();
-        Optional <Integer> caseTypeVersion = classUnderTest.findLastVersion(caseTypeEntities.get(0).getReference());
+        CaseTypeEntity caseTypeEntityVersionOneWithMultiACLFromDB = caseTypeEntities.get(0);
+        Optional<Integer> caseTypeVersion = classUnderTest.findLastVersion(caseTypeEntities.get(0).getReference());
+        assertEquals(caseTypeEntityVersionOneWithMultiACL.getReference(), caseTypeEntityVersionOneWithMultiACLFromDB.getReference());
         assertTrue(caseTypeVersion.isPresent());
-        assertEquals (1, caseTypeVersion.get().intValue());
+        assertEquals(caseTypeEntityVersionOneWithMultiACL.getVersion().intValue(), caseTypeVersion.get().intValue());
+        List<CaseTypeACLEntity> caseTypeACLEntitiesWithRestrictedAccess = caseTypeEntityVersionOneWithMultiACL.getCaseTypeACLEntities();
         assertEquals(1, caseTypeEntities.size());
-        assertEquals(4, caseTypeEntities.get(0).getCaseTypeACLEntities().size());
-        assertEquals(1, caseTypeEntities.get(0).getCaseTypeACLEntities().get(0).getCaseType().getVersion().intValue());
-        assertEquals("CaseTypeWithACL", caseType.getReference());
+        List<CaseTypeACLEntity> caseTypeACLEntitiesWithRestrictedAccessFromDB = caseTypeEntityVersionOneWithMultiACLFromDB.getCaseTypeACLEntities();
+        assertEquals(caseTypeACLEntitiesWithRestrictedAccess.size(), caseTypeACLEntitiesWithRestrictedAccessFromDB.size());
+        CaseTypeACLEntity caseTypeACLEntityWithRestrictedAccess = caseTypeACLEntitiesWithRestrictedAccess.get(0);
+        CaseTypeACLEntity caseTypeACLEntityWithRestrictedAccessFromDB = caseTypeACLEntitiesWithRestrictedAccessFromDB.get(0);
+        assertEquals(caseTypeACLEntityWithRestrictedAccess.getCaseType().getVersion().intValue(),
+            caseTypeACLEntityWithRestrictedAccessFromDB.getCaseType().getVersion().intValue());
+        assertEquals(caseTypeACLEntityWithRestrictedAccess.getUserRole().getName(),
+            caseTypeACLEntityWithRestrictedAccessFromDB.getUserRole().getName());
+        assertEquals(caseTypeACLEntityWithRestrictedAccess.getUserRole().getSecurityClassification(),
+            caseTypeACLEntityWithRestrictedAccessFromDB.getUserRole().getSecurityClassification());
+        assertEquals(caseTypeACLEntityWithRestrictedAccess.getCreate(), caseTypeACLEntityWithRestrictedAccessFromDB.getCreate());
+        assertEquals(caseTypeACLEntityWithRestrictedAccess.getRead(), caseTypeACLEntityWithRestrictedAccessFromDB.getRead());
+        assertEquals(caseTypeACLEntityWithRestrictedAccess.getDelete(), caseTypeACLEntityWithRestrictedAccessFromDB.getDelete());
+        assertEquals(caseTypeACLEntityWithRestrictedAccess.getUpdate(), caseTypeACLEntityWithRestrictedAccessFromDB.getUpdate());
 
-        createCaseTypeEntityWithCaseTypeACL("CaseTypeWithACL","CaseTypeWithACL", 2,testJurisdictionWithCaseTypeACL,createCaseTypeACLWithFullAccess());
+        CaseTypeEntity caseTypeEntityVersionTwoWithSingleACL = createCaseTypeEntityWithCaseTypeACL("CaseTypeWithACL", "CaseTypeWithACL",
+            2, testJurisdictionWithCaseTypeACL, createCaseTypeACLWithFullAccess());
         caseTypeVersion = classUnderTest.findLastVersion(caseTypeEntities.get(0).getReference());
         assertTrue(caseTypeVersion.isPresent());
-        assertEquals (2, caseTypeVersion.get().intValue());
-
+        assertEquals(caseTypeEntityVersionTwoWithSingleACL.getVersion().intValue(), caseTypeVersion.get().intValue());
         Optional<CaseTypeEntity> caseTypeEntity = classUnderTest.findCurrentVersionForReference(caseTypeEntities.get(0).getReference());
         assertTrue(caseTypeEntity.isPresent());
-        List<CaseTypeACLEntity> caseTypeACLEntities = caseTypeEntity.get().getCaseTypeACLEntities();
-        assertEquals(1, caseTypeACLEntities.size());
-        assertEquals(2, caseTypeACLEntities.get(0).getCaseType().getVersion().intValue());
-        assertEquals(true, caseTypeACLEntities.get(0).getCreate());
-        assertEquals(true, caseTypeACLEntities.get(0).getUpdate());
-        assertEquals(true, caseTypeACLEntities.get(0).getDelete());
-        assertEquals(true, caseTypeACLEntities.get(0).getRead());
-
+        List<CaseTypeACLEntity> caseTypeACLEntitiesWithFullAccessFromDB = caseTypeEntity.get().getCaseTypeACLEntities();
+        List<CaseTypeACLEntity> caseTypeACLEntitiesWithFullAccess = caseTypeEntityVersionTwoWithSingleACL.getCaseTypeACLEntities();
+        CaseTypeACLEntity caseTypeACLEntityWithFullAccess = caseTypeACLEntitiesWithFullAccess.get(0);
+        CaseTypeACLEntity caseTypeACLEntityWithFullAccessFromDB = caseTypeACLEntitiesWithFullAccessFromDB.get(0);
+        assertEquals(caseTypeACLEntitiesWithFullAccess.size(), caseTypeACLEntitiesWithFullAccessFromDB.size());
+        assertEquals(caseTypeACLEntityWithFullAccess.getCaseType().getVersion().intValue(),
+            caseTypeACLEntityWithFullAccessFromDB.getCaseType().getVersion().intValue());
+        assertEquals(caseTypeACLEntityWithFullAccess.getUserRole().getName(), caseTypeACLEntityWithFullAccessFromDB.getUserRole().getName());
+        assertEquals(caseTypeACLEntityWithFullAccess.getUserRole().getSecurityClassification(),
+            caseTypeACLEntityWithFullAccessFromDB.getUserRole().getSecurityClassification());
+        assertEquals(caseTypeACLEntityWithFullAccess.getCreate(), caseTypeACLEntityWithFullAccessFromDB.getCreate());
+        assertEquals(caseTypeACLEntityWithFullAccess.getUpdate(), caseTypeACLEntityWithFullAccessFromDB.getUpdate());
+        assertEquals(caseTypeACLEntityWithFullAccess.getDelete(), caseTypeACLEntityWithFullAccessFromDB.getDelete());
+        assertEquals(caseTypeACLEntityWithFullAccess.getRead(), caseTypeACLEntityWithFullAccessFromDB.getRead());
     }
 }
