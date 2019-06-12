@@ -11,5 +11,17 @@
             <Method name="saveWorkBasketUserDefaults"/>
             <Method name="putUserProfiles"/>
         </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService">
+            <Method name="uploadFile"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl">
+            <Method name="importFormDefinitions"/>
+            <Method name="getUserDetails"/>
+            <Method name="getImportWarnings"/>
+            <Method name="importJurisdiction"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient">
+            <Method name="getLoggedInUserDetails"/>
+        </Class>
     </Instrumentation>
 </ApplicationInsightsAgent>
