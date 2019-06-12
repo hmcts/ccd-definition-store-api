@@ -17,12 +17,17 @@ public class FieldTypeListItemBuilder {
         return this;
     }
 
+    public FieldTypeListItemBuilder withOrder(Integer order) {
+        fieldTypeListItemEntity.setOrder(order);
+        return this;
+    }
+
     public FieldTypeListItemBuilder withFieldType(FieldTypeEntity fieldType) {
         fieldTypeListItemEntity.setFieldType(fieldType);
         return this;
     }
 
-    public static FieldTypeListItemBuilder newType() {
+    public static FieldTypeListItemBuilder newFieldTypeListItem() {
         return new FieldTypeListItemBuilder();
     }
 
