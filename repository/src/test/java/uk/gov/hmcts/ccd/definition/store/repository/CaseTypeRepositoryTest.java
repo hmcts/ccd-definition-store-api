@@ -225,7 +225,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void saveAndGetCaseTypeWithCaseTypeACLData() {
+    public void saveAndValidateCaseTypeWithACLAndUserRoleDataTest() {
         CaseTypeEntity caseTypeEntityVersionOneWithMultiACL = createCaseTypeEntityWithCaseTypeACL("CaseTypeWithACL", "CaseTypeWithACL",
             1, testJurisdictionWithCaseTypeACL, createCaseTypeACL());
         List<CaseTypeEntity> caseTypeEntities
