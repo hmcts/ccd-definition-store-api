@@ -8,22 +8,28 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.hasKey;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static uk.gov.hmcts.ccd.definitionstore.tests.util.TestUtils.withRetries;
 
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 
 class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
 
+    private static final Logger log = LoggerFactory.getLogger(ElasticsearchImportDefinitionTest.class);
     private static final String DEFINITION_FILE = "src/resource/CCD_CNP_27.xlsx";
     private static final String DEFINITION_FILE_WITH_NEW_FIELD = "src/resource/CCD_CNP_27_WithNewField.xlsx";
 
     private static final String CASE_INDEX_NAME = "mapper_cases-000001";
     private static final String CASE_INDEX_ALIAS = "mapper_cases";
     private static final String TEXT_FIELD_TYPE = "text";
+    private static final long RETRY_POLL_DELAY_MILLIS = 1000;
+    private static final long RETRY_POLL_INTERVAL_MILLIS = 1000;
 
     protected ElasticsearchImportDefinitionTest(AATHelper aat) {
         super(aat);
@@ -53,7 +59,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             .when()
             .post("/import");
 
-        verifyIndexAndFieldMappings(false);
+        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS, "ES index verification", () -> verifyIndexAndFieldMappings(false));
 
         // invoke definition import second time
         asAutoTestImporter().get()
@@ -64,13 +70,19 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             .when()
             .post("/import");
 
-        verifyIndexAndFieldMappings(true);
+        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS, "ES index verification", () -> verifyIndexAndFieldMappings(true));
     }
 
-    private void verifyIndexAndFieldMappings(boolean verifyNewFields) {
-        ValidatableResponse response = getIndexInformation(CASE_INDEX_ALIAS);
-        verifyIndexAndAlias(response);
-        verifyCaseDataFields(response, verifyNewFields);
+    private boolean verifyIndexAndFieldMappings(boolean verifyNewFields) {
+        try {
+            ValidatableResponse response = getIndexInformation(CASE_INDEX_ALIAS);
+            verifyIndexAndAlias(response);
+            verifyCaseDataFields(response, verifyNewFields);
+        } catch (AssertionError e) {
+            log.info("Retrying Elasticsearch index api due to error: {}", e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     private void verifyIndexAndAlias(ValidatableResponse response) {
