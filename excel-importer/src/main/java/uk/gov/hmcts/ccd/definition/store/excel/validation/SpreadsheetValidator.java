@@ -89,7 +89,7 @@ public class SpreadsheetValidator {
 
     public String getImportValidationFailureMessage(String sheetName, String columnName, Integer columnMaxLength,
                                      String rowNumberInfo) {
-        StringBuilder sb=new StringBuilder("Invalid Case Definition sheet - ");
+        StringBuilder sb = new StringBuilder("Invalid Case Definition sheet - ");
         sb.append("In sheet '");
         sb.append(sheetName);
         sb.append("' ");
