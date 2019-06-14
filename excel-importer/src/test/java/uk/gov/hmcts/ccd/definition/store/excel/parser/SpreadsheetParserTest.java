@@ -4,9 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImplTest;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
@@ -15,7 +13,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -33,25 +30,22 @@ public class SpreadsheetParserTest {
         spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void shouldParse() throws Exception {
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(ImportServiceImplTest.BAD_FILE);
 
-        Mockito.doThrow(new InvalidImportException()).when(spreadsheetValidator).validate(Mockito.anyString(), Mockito.anyString()
-                , Mockito.anyString(), Mockito.anyInt());
-
         final Map<String, DefinitionSheet> map = spreadsheetParser.parse(inputStream);
-        assertThat(map.size(), is(1));
+        assertThat(map.size(), is(16));
 
-        /*assertThat(map.keySet(), containsInAnyOrder("SearchInputFields", "UserProfile", "CaseField",
+        assertThat(map.keySet(), containsInAnyOrder("SearchInputFields", "UserProfile", "CaseField",
             "ComplexTypes", "WorkBasketResultFields", "CaseTypeTab",
             "FixedLists", "CaseEvent", "Jurisdiction",
             "SearchResultFields", "AuthorisationCaseField", "CaseType", "State",
             "AuthorisationCaseType",
             "AuthorisationCaseEvent", "CaseEventFieldRestriction"
-        ));*/
+        ));
 
-        /*final List<String> importWarnings = spreadsheetParser.getImportWarnings();
+        final List<String> importWarnings = spreadsheetParser.getImportWarnings();
         assertThat(importWarnings.size(), is(2));
 
         assertThat(importWarnings, containsInAnyOrder(
@@ -59,7 +53,7 @@ public class SpreadsheetParserTest {
             + "Please remove from future Definition imports.",
             "ComplexTypes sheet contains DefaultHidden column that will be deprecated. "
             + "Please remove from future Definition imports."
-        ));*/
+        ));
     }
 
     /**
