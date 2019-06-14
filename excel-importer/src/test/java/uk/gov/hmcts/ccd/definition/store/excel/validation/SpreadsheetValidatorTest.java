@@ -28,13 +28,15 @@ public class SpreadsheetValidatorTest {
 
     @Test(expected = InvalidImportException.class)
     public void shouldFail_whenCaseTypeIDValueExceedsMaxLength() {
-        String columnName = "CaseTypeID";
+        String columnName = "ID";
+        String sheetName = "CaseType";
         int rowNumber = 6;
         try {
-            validator.validate("sheet", columnName, "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
+            validator.validate(sheetName, columnName,
+                               "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
         } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is(
-                    "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
+            String rowNumberInfo = " at row number '" + rowNumber + "'";
+            assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(sheetName, columnName, 70, rowNumberInfo)));
             throw ex;
         }
     }

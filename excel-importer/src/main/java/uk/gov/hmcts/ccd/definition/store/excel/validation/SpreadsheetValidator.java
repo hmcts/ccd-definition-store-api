@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 @Component
@@ -25,15 +24,16 @@ public class SpreadsheetValidator {
         }
     }
 
-    public void validate(String sheetName, String columnName, String cellValue, int rowNumber) {
-            ColumnName columnNameEnum = ColumnName.fromSheetColumnName(columnName);
-            if (columnNameEnum != null) {
-                Integer columnMaxLength = columnNameEnum.getMaxLength();
-                if (columnMaxLength != null && cellValue.length() > columnMaxLength) {
-                    throw new InvalidImportException("Error processing sheet \"" + sheetName +
-                                                     "\": Invalid columnName " + columnName + " at rowNumber " + rowNumber);
-                }
-            }
+    public void validate(String sheetName, String columnName, String cellValue, String additionalColumnName) {
+        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum.fromSheetColumnName(sheetName, columnName);
+        String displayColumnName = additionalColumnName + " - " + columnName;
+        validate(sheetName, displayColumnName, columnNameEnum, cellValue, "");
+    }
+
+    public void validate(String sheetName, String columnName, String cellValue, Integer rowNumber) {
+        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum.fromSheetColumnName(sheetName, columnName);
+        String rowNumberInfo = " at row number '" + rowNumber + "'";
+        validate(sheetName, columnName, columnNameEnum, cellValue, rowNumberInfo);
     }
 
     public void validate(Map<String, DefinitionSheet> definitionSheets) {
@@ -72,5 +72,35 @@ public class SpreadsheetValidator {
         DefinitionSheet fixedListSheet = definitionSheets.get(SheetName.FIXED_LISTS.getName());
         if (fixedListSheet == null)
             throw new MapperException("A definition must contain a Fixed List worksheet");
+    }
+
+
+    private void validate(String sheetName, String columnName, SpreadSheetValidationMappingEnum columnNameEnum,
+                          String cellValue, String rowNumberInfo) {
+        if (columnNameEnum != null) {
+            Integer columnMaxLength = columnNameEnum.getMaxLength();
+            if (columnMaxLength != null && cellValue.length() > columnMaxLength) {
+                String invalidImportMessage = getImportValidationFailureMessage(sheetName, columnName,
+                                                                                columnMaxLength, rowNumberInfo);
+                throw new InvalidImportException(invalidImportMessage);
+            }
+        }
+    }
+
+    public String getImportValidationFailureMessage(String sheetName, String columnName, Integer columnMaxLength,
+                                     String rowNumberInfo) {
+        StringBuilder sb=new StringBuilder("Invalid Case Definition sheet - ");
+        sb.append("In sheet '");
+        sb.append(sheetName);
+        sb.append("' ");
+        sb.append("the column '");
+        sb.append(columnName);
+        sb.append("' ");
+        sb.append("value should not be more than '");
+        sb.append(columnMaxLength);
+        sb.append("' characters length ");
+        sb.append(rowNumberInfo);
+
+        return sb.toString();
     }
 }
