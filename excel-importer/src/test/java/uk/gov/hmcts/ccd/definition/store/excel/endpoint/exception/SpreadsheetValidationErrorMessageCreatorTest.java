@@ -466,6 +466,92 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
+    public void caseFieldUserRoleEntityInvalidComplexCrud_createErrorMessageCalled_customMessageReturned() {
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
+        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud", "code1");
+
+        final CaseFieldEntityInvalidComplexCrudValidationError error = new CaseFieldEntityInvalidComplexCrudValidationError(
+            entity,
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                new CaseFieldEntityValidationContext(caseTypeEntity)));
+
+        when(entityToDefinitionDataItemRegistry.getForEntity(entity))
+            .thenReturn(
+                definitionDataItem(SheetName.AUTHORISATION_CASE_FIELD,
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
+                    new ImmutablePair<>(ColumnName.LIST_ELEMENT_CODE, "list element code"),
+                    new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
+            );
+
+        assertEquals(
+            "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', case field 'case field', list element code 'list element code', user role 'user role'",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void caseFieldUserRoleEntityInvalidComplexCrud_createErrorMessageCalled_defaultMessageReturned() {
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
+        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud", "code1");
+
+        final CaseFieldEntityInvalidComplexCrudValidationError error = new CaseFieldEntityInvalidComplexCrudValidationError(entity,
+            new AuthorisationCaseFieldValidationContext(
+                caseFieldEntity,
+                new CaseFieldEntityValidationContext(
+                    caseTypeEntity)));
+
+        assertEquals("Invalid CRUD value 'Xcrud' for case type 'case type', case field 'case field', list element code 'code1'",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void complexACLHasMoreAccessThanParentValidationError_createErrorMessageCalled_customMessageReturned() {
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
+        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud", "code1");
+
+        final CaseFieldEntityComplexACLValidationError error = new CaseFieldEntityComplexACLValidationError(
+            entity,
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                new CaseFieldEntityValidationContext(caseTypeEntity)));
+
+        when(entityToDefinitionDataItemRegistry.getForEntity(entity))
+            .thenReturn(
+                definitionDataItem(SheetName.AUTHORISATION_CASE_FIELD,
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
+                    new ImmutablePair<>(ColumnName.LIST_ELEMENT_CODE, "list element code"),
+                    new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
+            );
+
+        assertEquals(
+            "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', case field "
+                + "'case field', list element code 'list element code', user role 'user role'. Detail: The access for "
+                + "case type 'case type', case field 'case field', list element code 'code1' is more than its parent",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void complexACLHasMoreAccessThanParentValidationError_createErrorMessageCalled_defaultMessageReturned() {
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
+        final ComplexFieldACLEntity entity = complexFieldACLEntity("Xcrud", "code1");
+
+        final CaseFieldEntityComplexACLValidationError error = new CaseFieldEntityComplexACLValidationError(entity,
+            new AuthorisationCaseFieldValidationContext(
+                caseFieldEntity,
+                new CaseFieldEntityValidationContext(
+                    caseTypeEntity)));
+
+        assertEquals("The access for case type 'case type', case field 'case field', list element code 'code1' is more than its parent",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
     public void shouldHaveValidationMessageForCaseFieldEntityInvalidMetadataFieldValidationError() {
         CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
@@ -1338,6 +1424,13 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     private CaseFieldACLEntity caseFieldUserRoleEntity(final String crud) {
         final CaseFieldACLEntity entity = new CaseFieldACLEntity();
         setAuthorisation(entity, crud);
+        return entity;
+    }
+
+    private ComplexFieldACLEntity complexFieldACLEntity(final String crud, final String code) {
+        final ComplexFieldACLEntity entity = new ComplexFieldACLEntity();
+        setAuthorisation(entity, crud);
+        entity.setListElementCode(code);
         return entity;
     }
 

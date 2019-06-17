@@ -1,13 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
@@ -35,6 +37,20 @@ public class FieldEntityTest {
         assertThat(complexField.isCollectionOfComplex(), equalTo(false));
         assertThat(collection.isCollectionOfComplex(), equalTo(false));
         assertThat(collectionOfComplex.isCollectionOfComplex(), equalTo(true));
+    }
+
+    @Test
+    public void shouldReturnTrueForPredefinedComplexType() {
+        CaseFieldEntity caseField = new CaseFieldEntity();
+        caseField.setFieldType(newType(PREDEFINED_COMPLEX_ADDRESS_GLOBAL).buildComplex());
+        assertThat(caseField.isPredefinedComplexType(), is(true));
+    }
+
+    @Test
+    public void shouldReturnFalseForCustomComplexTypes() {
+        CaseFieldEntity caseField = new CaseFieldEntity();
+        caseField.setFieldType(newType("MyAddressType").buildComplex());
+        assertThat(caseField.isPredefinedComplexType(), is(false));
     }
 
     private CaseFieldEntity newComplexField() {

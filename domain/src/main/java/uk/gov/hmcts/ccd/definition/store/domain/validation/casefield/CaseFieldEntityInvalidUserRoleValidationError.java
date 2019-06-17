@@ -3,14 +3,14 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
 
 public class CaseFieldEntityInvalidUserRoleValidationError extends ValidationError {
 
-    private final CaseFieldACLEntity caseFieldACLEntity;
+    private final Authorisation caseFieldACLEntity;
     private final AuthorisationCaseFieldValidationContext authorisationCaseFieldValidationContext;
 
-    public CaseFieldEntityInvalidUserRoleValidationError(final CaseFieldACLEntity entity,
+    public CaseFieldEntityInvalidUserRoleValidationError(final Authorisation entity,
                                                          final AuthorisationCaseFieldValidationContext context) {
         super(String.format("Invalid UserRole for case type '%s', case field '%s'",
             context.getCaseReference(),
@@ -19,7 +19,7 @@ public class CaseFieldEntityInvalidUserRoleValidationError extends ValidationErr
         this.authorisationCaseFieldValidationContext = context;
     }
 
-    public CaseFieldACLEntity getCaseFieldACLEntity() {
+    public Authorisation getCaseFieldACLEntity() {
         return caseFieldACLEntity;
     }
 

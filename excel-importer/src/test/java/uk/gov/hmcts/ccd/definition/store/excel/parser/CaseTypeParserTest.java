@@ -46,6 +46,9 @@ public class CaseTypeParserTest extends ParserTestBase {
     private AuthorisationCaseFieldParser authorisationCaseFieldParser;
 
     @Mock
+    private AuthorisationComplexTypeParser authorisationComplexTypeParser;
+
+    @Mock
     private AuthorisationCaseEventParser authorisationCaseEventParser;
 
     @Mock
@@ -73,6 +76,7 @@ public class CaseTypeParserTest extends ParserTestBase {
             eventParser,
             authorisationCaseTypeParser,
             authorisationCaseFieldParser,
+            authorisationComplexTypeParser,
             authorisationCaseEventParser,
             authorisationCaseStateParser,
             metadataCaseFieldParser,
