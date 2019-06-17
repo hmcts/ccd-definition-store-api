@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 public class WorkBasketResultField {
 
     private String caseFieldId = null;
+    private String caseFieldElementPath = null;
     private String label = null;
     private Integer order = null;
     private boolean metadata;
@@ -19,6 +20,15 @@ public class WorkBasketResultField {
 
     public void setCaseFieldId(String caseFieldId) {
         this.caseFieldId = caseFieldId;
+    }
+
+    @JsonProperty("case_field_element_path")
+    public String getCaseFieldElementPath() {
+        return caseFieldElementPath;
+    }
+
+    public void setCaseFieldElementPath(final String caseFieldElementPath) {
+        this.caseFieldElementPath = caseFieldElementPath;
     }
 
     @JsonProperty("label")
