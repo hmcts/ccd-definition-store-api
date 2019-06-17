@@ -15,19 +15,7 @@ class ImportDefinitionTest extends BaseTest {
         super(aat);
     }
 
-    @Test
-    @DisplayName("Should import a valid definition")
-    void shouldImportValidDefinition() {
-
-        Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        asUser.get()
-            .given()
-            .multiPart(new File("src/resource/CCD_CNP_27.xlsx"))
-            .expect()
-            .statusCode(201)
-            .when()
-            .post("/import");
-    }
+    // Success case - valid import file is verified as part of setup in DataSetupExtension.
 
     @Test
     @DisplayName("Should Not import an invalid definition")
