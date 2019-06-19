@@ -17,11 +17,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Fetch;
@@ -37,12 +32,6 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.*;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 @Table(name = "case_field")
 @Entity
