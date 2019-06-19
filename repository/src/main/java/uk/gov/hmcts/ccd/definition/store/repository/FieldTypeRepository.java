@@ -3,6 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 import java.util.List;
 import java.util.Optional;
 
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.*;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -23,6 +25,11 @@ public interface FieldTypeRepository extends VersionedDefinitionRepository<Field
     Optional<FieldTypeEntity> findBaseType(@Param("reference") String reference);
 
     @Query("select entity from FieldTypeEntity entity where entity.reference in ("
-           + "'AddressGlobal', 'AddressUK', 'AddressGlobalUK', 'OrderSummary', 'CaseLink')")
+        + "'" + PREDEFINED_COMPLEX_ADDRESS_GLOBAL
+        + "', '" + PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK
+        + "', '" + PREDEFINED_COMPLEX_ADDRESS_UK
+        + "', '" + PREDEFINED_COMPLEX_ORDER_SUMMARY
+        + "', '" + PREDEFINED_COMPLEX_CASELINK
+        + "')")
     List<FieldTypeEntity> findPredefinedComplexTypes();
 }

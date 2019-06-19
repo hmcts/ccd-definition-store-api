@@ -61,16 +61,13 @@ public class ImportController {
                 IOUtils.copy(inputStream, baos);
             }
             byte[] bytes = baos.toByteArray();
-
             LOG.info("Importing Definition file...");
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes));
 
-            if (azureStorageConfiguration != null && azureStorageConfiguration.isAzureUploadEnabled()) {
-                if (fileStorageService != null) {
+            if (azureStorageConfiguration != null && azureStorageConfiguration.isAzureUploadEnabled() && fileStorageService != null) {
                     LOG.info("Uploading Definition file to Azure Storage...");
                     fileStorageService.uploadFile(file, metadata);
-                }
             }
 
             final String responseBody = "Case Definition data successfully imported";

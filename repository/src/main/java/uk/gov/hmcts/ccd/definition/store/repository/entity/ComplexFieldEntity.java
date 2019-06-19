@@ -98,6 +98,12 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
         return fieldType;
     }
 
+    @Transient
+    @Override
+    public boolean isMetadataField() {
+        return false;
+    }
+
     public void setFieldType(FieldTypeEntity fieldType) {
         this.fieldType = fieldType;
     }

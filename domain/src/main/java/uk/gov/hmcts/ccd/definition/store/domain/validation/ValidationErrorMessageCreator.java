@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation;
 
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
@@ -78,6 +74,10 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(CaseTypeEntityInvalidCrudValidationError caseTypeEntityInvalidCrudValidationError);
 
     String createErrorMessage(CaseFieldEntityInvalidCrudValidationError caseFieldEntityInvalidCrudValidationError);
+
+    String createErrorMessage(CaseFieldEntityInvalidComplexCrudValidationError caseFieldEntityInvalidComplexCrudValidationError);
+
+    String createErrorMessage(CaseFieldEntityComplexACLValidationError caseFieldEntityComplexACLValidationError);
 
     String createErrorMessage(CaseFieldEntityInvalidUserRoleValidationError
                                   caseFieldEntityInvalidUserRoleValidationError);

@@ -5,6 +5,7 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
@@ -252,7 +253,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
     }
 
     private static FieldTypeEntity addressUKFieldTypeEntity() {
-        return fieldTypeEntity("AddressUK",
+        return fieldTypeEntity(PREDEFINED_COMPLEX_ADDRESS_UK,
             asList(
                 complexFieldEntity("AddressLine1", fieldTypeEntity("TextMax150", emptyList())),
                 complexFieldEntity("AddressLine2", fieldTypeEntity("TextMax50", emptyList())),

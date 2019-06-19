@@ -2,12 +2,12 @@ package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
@@ -29,56 +29,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventFieldComplex;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventLite;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseState;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTab;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTabField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
-import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
-import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
-import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
 class EntityToResponseDTOMapperTest {
 
@@ -149,7 +101,7 @@ class EntityToResponseDTOMapperTest {
             eventCaseFieldEntity.setShowSummaryChangeOption(true);
             eventCaseFieldEntity.setShowSummaryContentOption(2);
             eventCaseFieldEntity.setDisplayContext(DisplayContext.COMPLEX);
-            eventCaseFieldEntity.addComplexFields(Arrays.asList(eventComplexTypeEntity1, eventComplexTypeEntity2));
+            eventCaseFieldEntity.addComplexFields(asList(eventComplexTypeEntity1, eventComplexTypeEntity2));
 
             CaseEventField caseEventField = spyOnClassUnderTest.map(eventCaseFieldEntity);
 
@@ -267,11 +219,11 @@ class EntityToResponseDTOMapperTest {
 
             CaseTypeEntity caseTypeEntity = caseTypeEntity(
                 jurisdictionEntity,
-                Arrays.asList(eventEntity1, eventEntity2, eventEntity3),
-                Arrays.asList(stateEntity1, stateEntity2, stateEntity3),
-                Arrays.asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly),
-                Arrays.asList(caseFieldEntity1, caseFieldEntity2, caseFieldEntity3),
-                Arrays.asList(searchAliasFieldEntity1, searchAliasFieldEntity2)
+                asList(eventEntity1, eventEntity2, eventEntity3),
+                asList(stateEntity1, stateEntity2, stateEntity3),
+                asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly),
+                asList(caseFieldEntity1, caseFieldEntity2, caseFieldEntity3),
+                asList(searchAliasFieldEntity1, searchAliasFieldEntity2)
             );
 
             // Call the 'spied on' implementation
@@ -507,9 +459,9 @@ class EntityToResponseDTOMapperTest {
             StateACLEntity stateUserRoleEntity2 = new StateACLEntity();
             stateUserRoleEntity1.setUserRole(userRoleEntity);
             stateUserRoleEntity2.setUserRole(userRoleEntity);
-            stateEntity1.addStateACLEntities(Arrays.asList(stateUserRoleEntity1, stateUserRoleEntity2));
+            stateEntity1.addStateACLEntities(asList(stateUserRoleEntity1, stateUserRoleEntity2));
             stateEntity2.addStateACL(stateUserRoleEntity1);
-            stateEntity3.addStateACLEntities(Arrays.asList(stateUserRoleEntity1, stateUserRoleEntity2));
+            stateEntity3.addStateACLEntities(asList(stateUserRoleEntity1, stateUserRoleEntity2));
 
 
             CaseTypeLiteEntity caseTypeLiteEntity = new CaseTypeLiteEntity();
@@ -606,7 +558,7 @@ class EntityToResponseDTOMapperTest {
         }
 
         private List<Parameters> createParameters() {
-            return Arrays.asList(
+            return asList(
                 new Parameters(
                     false, Collections.emptyList(), null,
                     Collections.singletonList("*"), "*"
@@ -616,14 +568,14 @@ class EntityToResponseDTOMapperTest {
                     Collections.singletonList("*"), "PostState"
                 ),
                 new Parameters(
-                    false, Arrays.asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
+                    false, asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
                     null,
-                    Arrays.asList("preState1", "preState2", "preState3"), "*"
+                    asList("preState1", "preState2", "preState3"), "*"
                 ),
                 new Parameters(
-                    false, Arrays.asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
+                    false, asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
                     stateEntity("PostState"),
-                    Arrays.asList("preState1", "preState2", "preState3"), "PostState"
+                    asList("preState1", "preState2", "preState3"), "PostState"
                 ),
                 new Parameters(
                     true, Collections.emptyList(), null,
@@ -634,12 +586,12 @@ class EntityToResponseDTOMapperTest {
                     Collections.emptyList(), "PostState"
                 ),
                 new Parameters(
-                    true, Arrays.asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
+                    true, asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
                     null,
                     Collections.emptyList(), "*"
                 ),
                 new Parameters(
-                    true, Arrays.asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
+                    true, asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
                     stateEntity("PostState"),
                     Collections.emptyList(), "PostState"
                 )
@@ -730,7 +682,7 @@ class EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(eventCaseFieldEntity2)).thenReturn(caseEventField2);
             when(spyOnClassUnderTest.map(eventCaseFieldEntity3)).thenReturn(caseEventField3);
             eventEntity.addEventCaseFields(
-                Arrays.asList(eventCaseFieldEntity1, eventCaseFieldEntity2, eventCaseFieldEntity3));
+                asList(eventCaseFieldEntity1, eventCaseFieldEntity2, eventCaseFieldEntity3));
 
             EventACLEntity roleWithCreateOnly = eventUserRoleEntity("role-with-create-only", true, false, false,
                                                                     false);
@@ -741,7 +693,7 @@ class EntityToResponseDTOMapperTest {
             EventACLEntity roleWithDeleteOnly = eventUserRoleEntity("role-with-delete-only", false, false, false,
                                                                     true);
             eventEntity.addEventACLEntities(
-                Arrays.asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
+                asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
 
             eventEntity.setCanCreate(parameters.getCanCreate());
             parameters.getPreStates().forEach(eventEntity::addPreState);
@@ -831,7 +783,7 @@ class EntityToResponseDTOMapperTest {
             StateACLEntity roleWithDeleteOnly = stateUserRoleEntity("role-with-delete-only", false, false, false,
                                                                     true);
             stateEntity.addStateACLEntities(
-                Arrays.asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
+                asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
 
             CaseState caseState = classUnderTest.map(stateEntity);
 
@@ -904,7 +856,20 @@ class EntityToResponseDTOMapperTest {
             CaseFieldACLEntity roleWithDeleteOnly = caseFieldUserRoleEntity("role-with-delete-only", false, false,
                                                                             false, true);
             caseFieldEntity.addCaseACLEntities(
-                Arrays.asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
+                asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
+
+            ComplexFieldACLEntity complexACLWithCreateOnly = complexFieldUserRoleEntity("list.element.code",
+                "role-with-create-only", true, false,false, false);
+            ComplexFieldACLEntity complexACLWithReadOnly = complexFieldUserRoleEntity("list.element.code.item1",
+                "role-with-create-only", true, false,false, false);
+            ComplexFieldACLEntity complexACLWithUpdateOnly = complexFieldUserRoleEntity("list.element.code.item2",
+                "role-with-create-only", true, false,false, false);
+            ComplexFieldACLEntity complexACLWithDeleteOnly = complexFieldUserRoleEntity("list.element.code.item3",
+                "role-with-create-only", true, false,false, false);
+            ComplexFieldACLEntity complexACLWithAllCRUD = complexFieldUserRoleEntity("list.another.element.code",
+                "role-with-create-only", true, true,true, true);
+            caseFieldEntity.addComplexFieldACLEntities(asList(complexACLWithCreateOnly, complexACLWithReadOnly,
+                complexACLWithUpdateOnly, complexACLWithDeleteOnly, complexACLWithAllCRUD));
 
             CaseField caseField = spyOnClassUnderTest.map(caseFieldEntity);
 
@@ -918,6 +883,8 @@ class EntityToResponseDTOMapperTest {
             assertEquals(LIVE_FROM, caseField.getLiveFrom());
             assertEquals(LIVE_TO, caseField.getLiveUntil());
             assertThat(caseField.isMetadata(), is(true));
+            assertAcls(caseFieldEntity.getCaseFieldACLEntities(), caseField.getAcls());
+            assertComplexACLs(caseFieldEntity.getComplexFieldACLEntities(), caseField.getComplexACLs());
         }
 
         @Test
@@ -950,6 +917,23 @@ class EntityToResponseDTOMapperTest {
             caseFieldACLEntity.setUpdate(update);
             caseFieldACLEntity.setDelete(delete);
             return caseFieldACLEntity;
+        }
+
+        private ComplexFieldACLEntity complexFieldUserRoleEntity(String code, String reference,
+                                                                 Boolean create,
+                                                                 Boolean read,
+                                                                 Boolean update,
+                                                                 Boolean delete) {
+            ComplexFieldACLEntity complexFieldACLEntity = new ComplexFieldACLEntity();
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setReference(reference);
+            complexFieldACLEntity.setUserRole(userRoleEntity);
+            complexFieldACLEntity.setCreate(create);
+            complexFieldACLEntity.setRead(read);
+            complexFieldACLEntity.setUpdate(update);
+            complexFieldACLEntity.setDelete(delete);
+            complexFieldACLEntity.setListElementCode(code);
+            return complexFieldACLEntity;
         }
 
         private CaseTypeEntity caseTypeEntity(String reference) {
@@ -1024,7 +1008,7 @@ class EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity2)).thenReturn(fixedListItem2);
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity3)).thenReturn(fixedListItem3);
             fieldTypeEntity.addListItems(
-                Arrays.asList(fieldTypeListItemEntity1, fieldTypeListItemEntity2, fieldTypeListItemEntity3));
+                asList(fieldTypeListItemEntity1, fieldTypeListItemEntity2, fieldTypeListItemEntity3));
 
             ComplexFieldEntity complexFieldEntity1 = new ComplexFieldEntity();
             ComplexFieldEntity complexFieldEntity2 = new ComplexFieldEntity();
@@ -1036,7 +1020,7 @@ class EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(complexFieldEntity2)).thenReturn(complexField2);
             when(spyOnClassUnderTest.map(complexFieldEntity3)).thenReturn(complexField3);
             fieldTypeEntity.addComplexFields(
-                Arrays.asList(complexFieldEntity1, complexFieldEntity2, complexFieldEntity3));
+                asList(complexFieldEntity1, complexFieldEntity2, complexFieldEntity3));
 
             FieldTypeEntity collectionFieldTypeEntity = fieldTypeEntity("CollectionFieldType");
             FieldType collectionFieldType = new FieldType();
@@ -1094,7 +1078,7 @@ class EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(displayGroupCaseFieldEntity3)).thenReturn(caseTypeTabField3);
 
             displayGroupEntity.addDisplayGroupCaseFields(
-                Arrays.asList(
+                asList(
                     displayGroupCaseFieldEntity1,
                     displayGroupCaseFieldEntity2,
                     displayGroupCaseFieldEntity3
@@ -1345,6 +1329,12 @@ class EntityToResponseDTOMapperTest {
         }
     }
 
+    private void assertComplexACLs(List<ComplexFieldACLEntity> authorisation, List<ComplexACL> accessControlList) {
+        for (ComplexFieldACLEntity authItem : authorisation) {
+            assertThat(accessControlList, hasItem(aclWhichMatchesComplexFieldACL(authItem)));
+        }
+    }
+
     private void assertAcls(List<? extends Authorisation> authorisation, List<AccessControlList> accessControlList) {
         assertEquals(authorisation.size(), accessControlList.size());
         for (Authorisation authItem : authorisation) {
@@ -1381,6 +1371,39 @@ class EntityToResponseDTOMapperTest {
                         authorisation.getRead(),
                         authorisation.getUpdate(),
                         authorisation.getDelete()
+                    )
+                );
+            }
+        };
+    }
+
+    private <T> Matcher<T> aclWhichMatchesComplexFieldACL(ComplexFieldACLEntity aclEntity) {
+
+        String role = aclEntity.getUserRole().getReference();
+
+        return new BaseMatcher<T>() {
+            @Override
+            public boolean matches(Object o) {
+                return o instanceof ComplexACL
+                    && ((ComplexACL) o).getRole().equals(role)
+                    && ((ComplexACL) o).getCreate().equals(aclEntity.getCreate())
+                    && ((ComplexACL) o).getRead().equals(aclEntity.getRead())
+                    && ((ComplexACL) o).getUpdate().equals(aclEntity.getUpdate())
+                    && ((ComplexACL) o).getDelete().equals(aclEntity.getDelete())
+                    && ((ComplexACL) o).getListElementCode().equals(aclEntity.getListElementCode());
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText(
+                    String.format(
+                        "an AccessControlList with role %s, create %s, read %s, update %s, delete %s, listElementCode %s",
+                        role,
+                        aclEntity.getCreate(),
+                        aclEntity.getRead(),
+                        aclEntity.getUpdate(),
+                        aclEntity.getDelete(),
+                        aclEntity.getListElementCode()
                     )
                 );
             }

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Test;
+import org.hamcrest.core.Is;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -11,8 +12,11 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil.parseParentCodes;
 
 public class CaseFieldEntityUtilTest {
 
@@ -53,6 +57,40 @@ public class CaseFieldEntityUtilTest {
         assertTrue(result.contains("field2.LastNameWithSomeCplxFields.LastName"));
         assertTrue(result.contains("field3"));
     }
+
+    @Test
+    public void testparseParentCodes() {
+        String listElementCodes0 = ".awesome";
+        final List<String> parentCodes0 = parseParentCodes(listElementCodes0);
+        assertThat(parentCodes0, empty());
+
+        String listElementCodes1 = "some";
+        final List<String> parentCodes1 = parseParentCodes(listElementCodes1);
+        assertThat(parentCodes1, empty());
+
+        String listElementCodes2 = "some.thing";
+        final List<String> parentCodes2 = parseParentCodes(listElementCodes2);
+        assertThat(parentCodes2, not(empty()));
+        assertThat(parentCodes2.size(), Is.is(1));
+        assertThat(parentCodes2.get(0), Is.is("some"));
+
+        String listElementCodes3 = "some.thing.coming";
+        final List<String> parentCodes3 = parseParentCodes(listElementCodes3);
+        assertThat(parentCodes3, not(empty()));
+        assertThat(parentCodes3.size(), Is.is(2));
+        assertThat(parentCodes3.get(0), Is.is("some.thing"));
+        assertThat(parentCodes3.get(1), Is.is("some"));
+
+        String listElementCodes4 = "some.thing.coming.this.way";
+        final List<String> parentCodes4 = parseParentCodes(listElementCodes4);
+        assertThat(parentCodes4, not(empty()));
+        assertThat(parentCodes4.size(), Is.is(4));
+        assertThat(parentCodes4.get(0), Is.is("some.thing.coming.this"));
+        assertThat(parentCodes4.get(1), Is.is("some.thing.coming"));
+        assertThat(parentCodes4.get(2), Is.is("some.thing"));
+        assertThat(parentCodes4.get(3), Is.is("some"));
+    }
+
 
     private static FieldTypeEntity exampleCollectionFieldTypeEntityWithComplexFields() {
         return collectionFieldTypeEntity("field2-9602da3a-137a-43c2-9c0c-676ca00a5443",

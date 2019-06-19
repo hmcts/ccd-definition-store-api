@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,24 +9,48 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
 public class CaseFieldEntityUtil {
 
-    public CaseFieldEntityUtil() { }
+    public static List<String> parseParentCodes(String listElementCode) {
+        List<String> result = new ArrayList<>();
+        String codes = listElementCode;
+        while (codes.lastIndexOf('.') > 0) {
+            codes = codes.substring(0, codes.lastIndexOf('.'));
+            result.add(codes);
+        }
+        return result;
+    }
 
     public List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
+        return removeElementsThoseAreNotTreeLeafs(buildAllDottedComplexFieldPossibilities(caseFieldEntities));
+    }
+
+    public List<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(List<? extends FieldEntity> caseFieldEntities) {
+        return removeElementsThatAreCaseFields(buildAllDottedComplexFieldPossibilities(caseFieldEntities), caseFieldEntities);
+    }
+
+    private List<String> buildAllDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
         List<String> allSubTypePossibilities = new ArrayList<>();
         List<? extends FieldEntity> fieldEntities = caseFieldEntities.stream()
             .filter(Objects::nonNull)
             .collect(Collectors.<FieldEntity>toList());
         prepare(allSubTypePossibilities, "", fieldEntities);
-        return removeElementsThatAreNotTreeLeafs(allSubTypePossibilities);
+        return allSubTypePossibilities;
     }
 
-    private List<String> removeElementsThatAreNotTreeLeafs(List<String> allSubTypePossibilities) {
+    private List<String> removeElementsThoseAreNotTreeLeafs(List<String> allSubTypePossibilities) {
         return allSubTypePossibilities.stream()
             .filter(e -> allSubTypePossibilities.stream().noneMatch(el -> el.startsWith(e + ".")))
+            .collect(Collectors.toList());
+    }
+
+    private List<String> removeElementsThatAreCaseFields(List<String> allSubTypePossibilities, List<? extends FieldEntity> caseFieldEntities) {
+        return allSubTypePossibilities.stream()
+            .filter(e -> caseFieldEntities.stream().noneMatch(element -> element.getReference().equalsIgnoreCase(e)))
             .collect(Collectors.toList());
     }
 

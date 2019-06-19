@@ -55,10 +55,10 @@ public class UserProfileValidatorImpl implements UserProfileValidator {
                 LOG.warn("Invalid case type found for {}", workBasketUserDefault);
                 result.addError(new UserProfileInvalidCaseTypeValidationError(workBasketUserDefault));
             } else {
-                if (!caseTypeFound.get()
+                if (caseTypeFound.get()
                     .getStates()
                     .stream()
-                    .anyMatch(referencePredicate(workBasketUserDefault.getWorkBasketDefaultState()))) {
+                    .noneMatch(referencePredicate(workBasketUserDefault.getWorkBasketDefaultState()))) {
                     LOG.warn("Invalid state found for {}", workBasketUserDefault);
                     result.addError(new UserProfileInvalidStateValidationError(workBasketUserDefault));
                 }

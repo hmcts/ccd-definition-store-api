@@ -22,6 +22,7 @@ public enum SheetName {
     COMPLEX_TYPES("ComplexTypes"),
     AUTHORISATION_CASE_TYPE("AuthorisationCaseType"),
     AUTHORISATION_CASE_FIELD("AuthorisationCaseField"),
+    AUTHORISATION_COMPLEX_TYPE("AuthorisationComplexType"),
     AUTHORISATION_CASE_EVENT("AuthorisationCaseEvent"),
     AUTHORISATION_CASE_STATE("AuthorisationCaseState"),
     SEARCH_ALIAS("SearchAlias");
