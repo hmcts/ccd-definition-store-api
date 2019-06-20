@@ -135,7 +135,6 @@ public interface EntityToResponseDTOMapper {
                          + "               fieldTypeEntity))",
             target = "complexFields"
     )
-
     @Mapping(source = "fieldTypeEntity.minimum", target = "min")
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
     @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null"
@@ -283,11 +282,7 @@ public interface EntityToResponseDTOMapper {
         }
 
         private static List<CaseField> getCaseFields(List<ComplexFieldEntity> complexFieldEntityList) {
-            List<CaseField> caseFields = new ArrayList<>();
-            for (ComplexFieldEntity complexFieldEntity : complexFieldEntityList) {
-                caseFields.add(EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity));
-            }
-            return caseFields;
+            return complexFieldEntityList.stream().map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity)).collect(Collectors.toList());
         }
 
         private static boolean isComplexField(String reference) {
