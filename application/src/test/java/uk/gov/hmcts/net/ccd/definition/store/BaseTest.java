@@ -58,7 +58,7 @@ import static org.mockito.Mockito.when;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 public abstract class BaseTest {
-    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V41_RDM-4362.xlsx";
+    public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V44_RDM-4084.xlsx";
     public static final String IMPORT_URL = "/import";
     @Inject
     protected DataSource db;

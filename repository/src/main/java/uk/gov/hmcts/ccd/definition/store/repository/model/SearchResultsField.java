@@ -8,12 +8,12 @@ import io.swagger.annotations.ApiModelProperty;
 public class SearchResultsField {
 
     private String caseFieldId = null;
+    private String caseFieldElementPath = null;
     private String label = null;
     private Integer order = null;
     private boolean metadata;
+    private String role;
 
-    /**
-     **/
     @ApiModelProperty(value = "")
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -24,8 +24,16 @@ public class SearchResultsField {
         this.caseFieldId = caseFieldId;
     }
 
-    /**
-     **/
+    @ApiModelProperty(value = "")
+    @JsonProperty("case_field_element_path")
+    public String getCaseFieldElementPath() {
+        return caseFieldElementPath;
+    }
+
+    public void setCaseFieldElementPath(final String caseFieldElementPath) {
+        this.caseFieldElementPath = caseFieldElementPath;
+    }
+
     @ApiModelProperty(value = "")
     @JsonProperty("label")
     public String getLabel() {
@@ -51,5 +59,14 @@ public class SearchResultsField {
 
     public void setMetadata(boolean metadata) {
         this.metadata = metadata;
+    }
+
+    @JsonProperty("role")
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

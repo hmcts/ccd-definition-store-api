@@ -54,6 +54,7 @@ public class ParserFactory {
             ),
             new AuthorisationCaseTypeParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseFieldParser(context, entityToDefinitionDataItemRegistry),
+            new AuthorisationComplexTypeParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseEventParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseStateParser(context, entityToDefinitionDataItemRegistry),
             new MetadataCaseFieldParser(context, metadataCaseFieldEntityFactoryRegistry),

@@ -9,8 +9,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
@@ -41,36 +39,20 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_HISTORY_VIEWER;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_PAYMENT_HISTORY_VIEWER;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE_TIME;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_EMAIL;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_LABEL;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MONEY_GBP;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MULTI_SELECT_LIST;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_NUMBER;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_PHONE_UK;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_POST_CODE;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
-
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -116,18 +98,6 @@ public class ImportServiceImplTest {
     @Mock
     private IdamProfileClient idamProfileClient;
 
-    @Captor
-    private ArgumentCaptor<String> idamUserProfileURLCaptor;
-
-    @Captor
-    private ArgumentCaptor<HttpMethod> httpMethodCaptor;
-
-    @Captor
-    private ArgumentCaptor<HttpEntity> requestEntityCaptor;
-
-    @Captor
-    private ArgumentCaptor<Class<IdamProperties>> idamPropertiesClassCaptor;
-
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -153,6 +123,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity casePaymentHistoryViewerBaseType;
     private FieldTypeEntity caseHistoryViewerBaseType;
     private FieldTypeEntity fixedListRadioTypeBaseType;
+    private FieldTypeEntity dynamicListBaseType;
 
     @Before
     public void setup() {
@@ -178,6 +149,7 @@ public class ImportServiceImplTest {
                                         idamProfileClient);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
+        dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
         multiSelectBaseType = buildBaseType(BASE_MULTI_SELECT_LIST);
         complexType = buildBaseType(BASE_COMPLEX);
         textBaseType = buildBaseType(BASE_TEXT);
@@ -242,7 +214,8 @@ public class ImportServiceImplTest {
             labelBaseType,
             casePaymentHistoryViewerBaseType,
             caseHistoryViewerBaseType,
-            fixedListRadioTypeBaseType));
+            fixedListRadioTypeBaseType,
+            dynamicListBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -250,6 +223,7 @@ public class ImportServiceImplTest {
             .willReturn(Collections.singletonList(caseRef));
         CaseFieldEntity state = new CaseFieldEntity();
         state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
         given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
             .willReturn(state);
 
@@ -268,6 +242,39 @@ public class ImportServiceImplTest {
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
     }
+
+    @Test
+    public void shouldReturnImportWarnings() {
+        Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
+        registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
+
+        final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
+            new EntityToDefinitionDataItemRegistry(), registry);
+
+        final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
+
+        service = new ImportServiceImpl(spreadsheetValidator,
+            spreadsheetParser,
+            parserFactory,
+            fieldTypeService,
+            jurisdictionService,
+            caseTypeService,
+            layoutService,
+            userRoleRepository,
+            workBasketUserDefaultService,
+            caseFieldRepository,
+            applicationEventPublisher,
+            idamProfileClient);
+
+        final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
+
+        given(spreadsheetParser.getImportWarnings()).willReturn(importWarnings);
+
+        final List<String> warnings = service.getImportWarnings();
+        assertThat(warnings.size(), equalTo(2));
+        assertThat(importWarnings, containsInAnyOrder("Warning1", "Warning2"));
+        verify(spreadsheetParser).getImportWarnings();
+   }
 
     private FieldTypeEntity buildBaseType(final String reference) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

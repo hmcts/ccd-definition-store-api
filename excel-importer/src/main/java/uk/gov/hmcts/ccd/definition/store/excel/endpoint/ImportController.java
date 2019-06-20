@@ -34,6 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 public class ImportController {
 
     public static final String URI_IMPORT = "/import";
+    protected static final String IMPORT_WARNINGS_HEADER = "Definition-Import-Warnings";
     private static final Logger LOG = LoggerFactory.getLogger(ImportController.class);
 
     private ImportServiceImpl importService;
@@ -60,19 +61,27 @@ public class ImportController {
                 IOUtils.copy(inputStream, baos);
             }
             byte[] bytes = baos.toByteArray();
-
             LOG.info("Importing Definition file...");
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes));
 
-            if (azureStorageConfiguration != null && azureStorageConfiguration.isAzureUploadEnabled()) {
-                if (fileStorageService != null) {
+            if (azureStorageConfiguration != null && azureStorageConfiguration.isAzureUploadEnabled() && fileStorageService != null) {
                     LOG.info("Uploading Definition file to Azure Storage...");
                     fileStorageService.uploadFile(file, metadata);
-                }
             }
 
-            return new ResponseEntity<>("Case Definition data successfully imported", HttpStatus.CREATED);
+            final String responseBody = "Case Definition data successfully imported";
+
+            if (!importService.getImportWarnings().isEmpty()) {
+                for (String warning : importService.getImportWarnings()) {
+                    LOG.warn(warning);
+                }
+                return ResponseEntity.status(HttpStatus.CREATED)
+                    .header(IMPORT_WARNINGS_HEADER, importService.getImportWarnings().toArray(new String[0]))
+                    .body(responseBody);
+            }
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
         }
     }
 }

@@ -10,6 +10,7 @@ public class WorkbasketInputField {
     private String caseFieldElementPath = null;
     private String label = null;
     private Integer order = null;
+    private String role;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -45,5 +46,14 @@ public class WorkbasketInputField {
 
     public void setCaseFieldElementPath(final String caseFieldElementPath) {
         this.caseFieldElementPath = caseFieldElementPath;
+    }
+
+    @JsonProperty("role")
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

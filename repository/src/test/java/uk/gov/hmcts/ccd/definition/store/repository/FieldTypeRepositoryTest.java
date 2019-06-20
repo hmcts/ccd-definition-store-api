@@ -9,6 +9,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -210,10 +214,10 @@ public class FieldTypeRepositoryTest {
         assertEquals(5, predefinedComplexTypes.size());
 
         assertThat(predefinedComplexTypes, hasItems(
-                fieldTypeWithReference("AddressGlobal"),
-                fieldTypeWithReference("AddressUK"),
-                fieldTypeWithReference("AddressGlobalUK"),
-                fieldTypeWithReference("OrderSummary")
+                fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL),
+                fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_UK),
+                fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK),
+                fieldTypeWithReference(PREDEFINED_COMPLEX_ORDER_SUMMARY)
             )
         );
     }

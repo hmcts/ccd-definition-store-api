@@ -6,14 +6,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.BDDMockito.given;
+import static uk.gov.hmcts.ccd.definition.store.excel.parser.ParserTestBase.CASE_TYPE_UNDER_TEST;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ID;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.NAME;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_TYPE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -23,10 +25,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
-@RunWith(MockitoJUnitRunner.class)
 public class AuthorisationCaseTypeParserTest {
 
-    private static final String CASE_TYPE_UNDER_TEST = "Some Case Type";
     private AuthorisationCaseTypeParser subject;
     private CaseTypeEntity caseType;
     private Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
@@ -39,8 +39,9 @@ public class AuthorisationCaseTypeParserTest {
 
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
-    @Before
+    @BeforeEach
     public void setup() {
+        MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
         final String role = "CaseWorker 1";
         given(mockUserRoleEntity.getReference()).willReturn(role);
@@ -175,10 +176,10 @@ public class AuthorisationCaseTypeParserTest {
 
     static DefinitionSheet buildSheetForCaseType() {
         final DefinitionSheet sheet = new DefinitionSheet();
-        sheet.setName(SheetName.CASE_TYPE.getName());
+        sheet.setName(CASE_TYPE.getName());
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
-        item.addAttribute(ColumnName.ID, CASE_TYPE_UNDER_TEST);
-        item.addAttribute(ColumnName.NAME, CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ID, CASE_TYPE_UNDER_TEST);
+        item.addAttribute(NAME, CASE_TYPE_UNDER_TEST);
         sheet.addDataItem(item);
         return sheet;
     }

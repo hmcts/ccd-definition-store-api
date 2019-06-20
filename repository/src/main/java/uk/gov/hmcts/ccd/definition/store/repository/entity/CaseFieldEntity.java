@@ -1,21 +1,21 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-import org.hibernate.annotations.*;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.*;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
@@ -75,6 +75,11 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_field_id")
     private final List<CaseFieldACLEntity> caseFieldACLEntities = new ArrayList<>();
+
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_field_id")
+    private final List<ComplexFieldACLEntity> complexFieldACLEntities = new ArrayList<>();
 
     @Column(name = "data_field_type")
     @Type(type = "pgsql_datafieldtype_enum")
@@ -185,8 +190,69 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         return this;
     }
 
+
+    public List<ComplexFieldACLEntity> getComplexFieldACLEntities() {
+        return complexFieldACLEntities;
+    }
+
+    public CaseFieldEntity addComplexFieldACL(final ComplexFieldACLEntity complexFieldACLEntity) {
+        complexFieldACLEntity.setCaseField(this);
+        complexFieldACLEntities.add(complexFieldACLEntity);
+        return this;
+    }
+
+    public CaseFieldEntity addComplexFieldACLEntities(final Collection<ComplexFieldACLEntity> entities) {
+        entities.forEach(e -> addComplexFieldACL(e));
+        return this;
+    }
+
     @Transient
+    @Override
     public boolean isMetadataField() {
         return dataFieldType == DataFieldType.METADATA;
+    }
+
+    @Transient
+    public Optional<FieldEntity> findNestedElementByPath(String path) {
+        if (StringUtils.isBlank(path)) {
+            return Optional.of(this);
+        }
+        if (this.getFieldType().getChildren().isEmpty()) {
+            Optional.empty();
+        }
+        List<String> pathElements = Arrays.stream(path.trim().split("\\.")).collect(Collectors.toList());
+
+        return reduce(this.getFieldType().getChildren(), pathElements);
+    }
+
+    private Optional<FieldEntity> reduce(List<ComplexFieldEntity> caseFields, List<String> pathElements) {
+        String firstPathElement = pathElements.get(0);
+
+        Optional<FieldEntity> caseField = caseFields.stream()
+            .filter(e -> e.getReference().equals(firstPathElement))
+            .map(e -> (FieldEntity)e)
+            .findFirst();
+
+        if (!caseField.isPresent()) {
+            return Optional.empty();
+        }
+
+        if (pathElements.size() == 1) {
+            return caseField;
+        } else {
+            List<ComplexFieldEntity> complexFieldEntities = caseField.get().getFieldType().getChildren();
+            List<String> tail = pathElements.subList(1, pathElements.size());
+
+            return reduce(complexFieldEntities, tail);
+        }
+    }
+
+    @Transient
+    public Optional<CaseFieldACLEntity> getCaseFieldACLByRole(String role) {
+        return this.caseFieldACLEntities.stream().filter(e -> roleEquals(role, e)).findFirst();
+    }
+
+    private boolean roleEquals(String role, CaseFieldACLEntity e) {
+        return e.getUserRole() == null ? false : (e.getUserRole().getReference() == null ? false : e.getUserRole().getReference().equalsIgnoreCase(role));
     }
 }
