@@ -89,18 +89,8 @@ public class SpreadsheetValidator {
 
     public String getImportValidationFailureMessage(String sheetName, String columnName, Integer columnMaxLength,
                                      String rowNumberInfo) {
-        StringBuilder sb = new StringBuilder("Invalid Case Definition sheet - ");
-        sb.append("In sheet '");
-        sb.append(sheetName);
-        sb.append("' ");
-        sb.append("the column '");
-        sb.append(columnName);
-        sb.append("' ");
-        sb.append("value should not be more than '");
-        sb.append(columnMaxLength);
-        sb.append("' characters length ");
-        sb.append(rowNumberInfo);
-
-        return sb.toString();
+        return String.format("Invalid Case Definition sheet - In sheet '%s' the column '%s' value should not" +
+                                      " be more than '%s' characters length %s", sheetName,
+                                      columnName, columnMaxLength, rowNumberInfo);
     }
 }
