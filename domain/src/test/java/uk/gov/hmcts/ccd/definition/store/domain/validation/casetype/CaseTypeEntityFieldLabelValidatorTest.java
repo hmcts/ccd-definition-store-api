@@ -67,6 +67,17 @@ public class CaseTypeEntityFieldLabelValidatorTest {
     }
 
     @Test
+    @DisplayName("should successfully validate placeholder if leaf element is referring metadata field")
+    void shouldSuccessfullyValidatePlaceholderIfLeafElementIsReferringMetadataField() {
+        caseField.setLabel("This is a value: ${[CASE_REFERENCE]}");
+        caseType.getCaseFields().add(newComplexFieldWithCollectionOfNestedComplexFields());
+
+        ValidationResult validate = caseTypeEntityFieldLabelValidator.validate(caseType);
+
+        assertTrue(validate.isValid());
+    }
+
+    @Test
     @DisplayName("should fail to validate placeholder if leaf element is complex type")
     void shouldFailToValidatePlaceholderIfLeafElementIsComplexType() {
         caseField.setLabel("This is a value: ${complex.collection.nested.nested2}");
@@ -104,7 +115,7 @@ public class CaseTypeEntityFieldLabelValidatorTest {
     @Test
     @DisplayName("should fail to validate placeholder if field id not found")
     void shouldFailToValidatePlaceholderIfFieldIdNotFound() {
-        caseField.setLabel("This is a value: ${complex.collection}");
+        caseField.setLabel("This is a value: ${complex.fieldNotFound}");
 
         ValidationResult validate = caseTypeEntityFieldLabelValidator.validate(caseType);
 
@@ -112,7 +123,7 @@ public class CaseTypeEntityFieldLabelValidatorTest {
             () -> assertTrue(!validate.isValid()),
             () -> assertTrue(validate.getValidationErrors().get(0) instanceof CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError),
             () -> assertThat(validate.getValidationErrors(), hasItems(hasProperty("defaultMessage",
-                                                                                  is("Label of caseField 'case field' has placeholder 'complex.collection' "
+                                                                                  is("Label of caseField 'case field' has placeholder 'complex.fieldNotFound' "
                                                                                          + "that points to unknown case field"))))
         );
     }
