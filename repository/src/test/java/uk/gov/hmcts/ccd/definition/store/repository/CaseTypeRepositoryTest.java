@@ -1,6 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
 import javax.persistence.EntityManager;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
