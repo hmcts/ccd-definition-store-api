@@ -355,7 +355,6 @@ public class MapperUtil {
             FixedListItem fixedListField = new FixedListItem();
             fixedListField.setCode(getString(fixedListItem, SheetName.FIXED_LISTS, ColumnName.LIST_ELEMENT_CODE));
             fixedListField.setLabel(getString(fixedListItem, SheetName.FIXED_LISTS, ColumnName.LIST_ELEMENT));
-            fixedListField.setOrder(getInteger(fixedListItem, SheetName.FIXED_LISTS, ColumnName.DISPLAY_ORDER));
 
             // Add fixed list field to map
             String fixedListCode = getString(fixedListItem, SheetName.FIXED_LISTS, ColumnName.ID);
