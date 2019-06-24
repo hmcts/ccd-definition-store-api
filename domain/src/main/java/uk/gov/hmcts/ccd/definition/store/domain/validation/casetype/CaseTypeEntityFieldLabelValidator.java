@@ -21,7 +21,7 @@ import static org.apache.commons.lang3.ArrayUtils.subarray;
 @Component
 public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidator {
 
-    private static final String PLACEHOLDER_PATTERN = "^[a-zA-Z0-9_.\\]\\[]+$";
+    private static final String PLACEHOLDER_PATTERN = "^[a-zA-Z0-9_.]+$";
     private static final char STARTING_PLACEHOLDER = '$';
     private static final char OPENING_PLACEHOLDER = '{';
     private static final char CLOSING_PLACEHOLDER = '}';
