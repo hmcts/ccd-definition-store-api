@@ -67,6 +67,17 @@ public class CaseTypeEntityFieldLabelValidatorTest {
     }
 
     @Test
+    @DisplayName("should successfully validate placeholder if leaf element contains reference to document filename")
+    void shouldSuccessfullyValidatePlaceholderIfLeafContainsReferenceToExceptionalValue() {
+        caseField.setLabel("This is a value: ${complex.collection.nested.nested2.document_filename}");
+        caseType.getCaseFields().add(newComplexFieldWithCollectionOfNestedComplexFields());
+
+        ValidationResult validate = caseTypeEntityFieldLabelValidator.validate(caseType);
+
+        assertTrue(validate.isValid());
+    }
+
+    @Test
     @DisplayName("should fail to validate placeholder if leaf element is complex type")
     void shouldFailToValidatePlaceholderIfLeafElementIsComplexType() {
         caseField.setLabel("This is a value: ${complex.collection.nested.nested2}");

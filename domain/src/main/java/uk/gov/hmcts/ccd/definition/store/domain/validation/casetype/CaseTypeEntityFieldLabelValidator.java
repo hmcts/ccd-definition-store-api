@@ -1,7 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
@@ -22,6 +25,13 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
     private static final char STARTING_PLACEHOLDER = '$';
     private static final char OPENING_PLACEHOLDER = '{';
     private static final char CLOSING_PLACEHOLDER = '}';
+    private static final List<String> VALIDATION_EXCEPTIONAL_VALUES = Lists.newArrayList("document_filename");
+    private static final Predicate<String> exceptionalValuesPredicate = new Predicate<String>() {
+        @Override
+        public boolean test(String label) {
+            return VALIDATION_EXCEPTIONAL_VALUES.stream().anyMatch(exception -> label.contains(exception));
+        }
+    };
 
     @Override
     public ValidationResult validate(CaseTypeEntity caseType) {
@@ -36,7 +46,7 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
                 if (isStartPlaceholderAndNotCollecting(label, scanIndex, isCollecting)) {
                     isCollecting = true;
                 } else if (isCollecting) {
-                    if (isClosingPlaceholder(label, scanIndex)) {
+                    if (isClosingPlaceholder(label, scanIndex) && !exceptionalValuesPredicate.test(placeholderToSubstitute)) {
                         processPlaceholderIfMatched(caseType, validationResult, caseFieldEntity, placeholderToSubstitute);
                         isCollecting = false;
                         placeholderToSubstitute = "";
