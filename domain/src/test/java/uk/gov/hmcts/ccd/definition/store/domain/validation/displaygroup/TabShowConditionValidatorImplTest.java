@@ -33,6 +33,10 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
 public class TabShowConditionValidatorImplTest {
     private static final List<DisplayGroupEntity> UNUSED_DISPLAY_GROUPS = com.google.common.collect.Lists.newArrayList();
@@ -549,7 +553,7 @@ public class TabShowConditionValidatorImplTest {
     }
 
     private static FieldTypeEntity orderSummaryFieldTypeEntity() {
-        return fieldTypeEntity("OrderSummary",
+        return fieldTypeEntity(PREDEFINED_COMPLEX_ORDER_SUMMARY,
             asList(
                 complexFieldEntity("PaymentReference", fieldTypeEntity("Text", emptyList())),
                 complexFieldEntity("PaymentTotal", fieldTypeEntity("MoneyGBP", emptyList())),
@@ -558,15 +562,15 @@ public class TabShowConditionValidatorImplTest {
     }
 
     private static FieldTypeEntity addressUKFieldTypeEntity() {
-        return address("AddressUK");
+        return address(PREDEFINED_COMPLEX_ADDRESS_UK);
     }
 
     private static FieldTypeEntity addressGlobalFieldTypeEntity() {
-        return address("AddressGlobal");
+        return address(PREDEFINED_COMPLEX_ADDRESS_GLOBAL);
     }
 
     private static FieldTypeEntity addressGlobalUKFieldTypeEntity() {
-        return address("AddressGlobalUK");
+        return address(PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK);
     }
 
     private static FieldTypeEntity address(String reference) {

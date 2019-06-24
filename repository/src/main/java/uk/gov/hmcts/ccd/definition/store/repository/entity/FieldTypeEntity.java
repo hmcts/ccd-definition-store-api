@@ -10,7 +10,10 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Arrays;
 
+import static java.util.Collections.emptyList;
 import static javax.persistence.GenerationType.IDENTITY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
 
 import com.google.common.base.MoreObjects;
 import org.hibernate.annotations.CreationTimestamp;
@@ -181,5 +184,22 @@ public class FieldTypeEntity implements Serializable, Versionable {
 
     public static boolean isFixedList(String reference) {
         return FIXED_List_ITEMS.contains(reference);
+    }
+
+    @Transient
+    public List<ComplexFieldEntity> getChildren() {
+        if (this.baseFieldType ==  null) {
+            return emptyList();
+        }
+        if (this.baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX)) {
+            return this.complexFields;
+        } else if (this.baseFieldType.getReference().equalsIgnoreCase(BASE_COLLECTION)) {
+            if (this.collectionFieldType == null) {
+                return emptyList();
+            }
+            return collectionFieldType.complexFields;
+        } else {
+            return emptyList();
+        }
     }
 }

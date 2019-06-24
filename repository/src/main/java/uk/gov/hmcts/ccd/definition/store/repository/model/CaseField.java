@@ -20,6 +20,7 @@ public class CaseField implements HasAcls {
     private String liveFrom = null;
     private String liveUntil = null;
     private List<AccessControlList> acls = new ArrayList<>();
+    private List<ComplexACL> complexACLs = new ArrayList<>();
     private String showCondition;
     private boolean metadata;
 
@@ -153,6 +154,16 @@ public class CaseField implements HasAcls {
     @Override
     public void setAcls(List<AccessControlList> acls) {
         this.acls = acls;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("complexACLs")
+    public List<ComplexACL> getComplexACLs() {
+        return complexACLs;
+    }
+
+    public void setComplexACLs(List<ComplexACL> complexACLs) {
+        this.complexACLs = complexACLs;
     }
 
     public boolean isMetadata() {

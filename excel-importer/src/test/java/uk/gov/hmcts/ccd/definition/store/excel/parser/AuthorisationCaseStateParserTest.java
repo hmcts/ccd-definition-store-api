@@ -11,18 +11,16 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTH
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
-@RunWith(MockitoJUnitRunner.class)
 public class AuthorisationCaseStateParserTest {
     private static final String CASE_TYPE_UNDER_TEST = "Some Case Type";
     private static final String CASE_STATE_UNDER_TEST = "Some Case State";
@@ -39,8 +37,9 @@ public class AuthorisationCaseStateParserTest {
 
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
-    @Before
+    @BeforeEach
     public void setup() {
+        MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
         final String role = "CaseWorker 1";
         given(mockUserRoleEntity.getReference()).willReturn(role);
