@@ -66,10 +66,19 @@ public class CaseTypeEntityFieldLabelValidatorTest {
         assertTrue(validate.isValid());
     }
 
-    @Test
     @DisplayName("should successfully validate placeholder if leaf element is referring metadata field")
     void shouldSuccessfullyValidatePlaceholderIfLeafElementIsReferringMetadataField() {
         caseField.setLabel("This is a value: ${[CASE_REFERENCE]}");
+        caseType.getCaseFields().add(newComplexFieldWithCollectionOfNestedComplexFields());
+
+        ValidationResult validate = caseTypeEntityFieldLabelValidator.validate(caseType);
+
+        assertTrue(validate.isValid());
+    }
+
+    @DisplayName("should successfully validate placeholder if leaf element contains reference to document filename")
+    void shouldSuccessfullyValidatePlaceholderIfLeafContainsReferenceToExceptionalValue() {
+        caseField.setLabel("This is a value: ${complex.collection.nested.nested2.document_filename}");
         caseType.getCaseFields().add(newComplexFieldWithCollectionOfNestedComplexFields());
 
         ValidationResult validate = caseTypeEntityFieldLabelValidator.validate(caseType);
