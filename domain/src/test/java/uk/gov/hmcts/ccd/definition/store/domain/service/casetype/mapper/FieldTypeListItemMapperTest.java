@@ -29,10 +29,10 @@ class FieldTypeListItemMapperTest {
 
 
         assertAll(
-            () -> assertThat(fixedListItems, hasItem(allOf(hasProperty("order", is("5")),
+            () -> assertThat(fixedListItems, hasItem(allOf(hasProperty("order", is(5)),
                                                            hasProperty("label", is("Label 1")),
                                                            hasProperty("code", is("LABEL1"))))),
-            () -> assertThat(fixedListItems, hasItem(allOf(hasProperty("order", is("6")),
+            () -> assertThat(fixedListItems, hasItem(allOf(hasProperty("order", is(6)),
                                                            hasProperty("label", is("Label 2")),
                                                            hasProperty("code", is("LABEL2")))))
         );
