@@ -17,6 +17,8 @@ public class FieldTypeListItemMapper {
                                                            .setCode(fieldTypeListItemEntity.getValue());
                                                        fixedListItem
                                                            .setLabel(fieldTypeListItemEntity.getLabel());
+                                                       fixedListItem
+                                                           .setOrder(fieldTypeListItemEntity.getOrder());
                                                        fixedListItems.add(fixedListItem);
                                                    }
                                                   );

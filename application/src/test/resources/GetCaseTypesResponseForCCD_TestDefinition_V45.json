@@ -1873,13 +1873,16 @@
       "regular_expression" : null,
       "fixed_list_items" : [ {
         "code" : "CaseCreated",
-        "label" : "Case created"
+        "label" : "Case created",
+        "order" : null
       }, {
         "code" : "CaseEnteredIntoLegacy",
-        "label" : "Case has been Entered into Legacy"
+        "label" : "Case has been Entered into Legacy",
+        "order" : null
       }, {
         "code" : "CaseStopped",
-        "label" : "Put case on hold"
+        "label" : "Put case on hold",
+        "order" : null
       } ],
       "complex_fields" : [ ],
       "collection_field_type" : null

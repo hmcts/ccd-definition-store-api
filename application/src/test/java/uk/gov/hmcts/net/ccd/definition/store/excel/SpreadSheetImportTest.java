@@ -54,7 +54,7 @@ public class SpreadSheetImportTest extends BaseTest {
         TEST_CASE_TYPE;
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
-    private static final String RESPONSE_JSON = "GetCaseTypesResponseForCCD_TestDefinition_V43.json";
+    private static final String RESPONSE_JSON = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
 
     private Map<Object, Object> caseTypesId;
     private Map<Object, Object> fieldTypesId;
