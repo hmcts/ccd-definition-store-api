@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.assertj.core.api.Assertions;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -12,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -22,13 +25,16 @@ public class CaseFieldParserTest extends ParserTestBase {
 
     private CaseFieldParser caseFieldParser;
 
+    private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
+
     @Before
     public void setup() {
 
         init();
 
         parseContext = mock(ParseContext.class);
-        caseFieldParser = new CaseFieldParser(parseContext);
+        entityToDefinitionDataItemRegistry =  new EntityToDefinitionDataItemRegistry();
+        caseFieldParser = new CaseFieldParser(parseContext, entityToDefinitionDataItemRegistry);
         caseType = new CaseTypeEntity();
         caseType.setReference(CASE_TYPE_UNDER_TEST);
 
@@ -51,7 +57,8 @@ public class CaseFieldParserTest extends ParserTestBase {
         final FieldTypeEntity field = mock(FieldTypeEntity.class);
         given(parseContext.getCaseFieldType(CASE_TYPE_UNDER_TEST, "Case_Field")).willReturn(field);
 
-        definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_UNDER_TEST));
+        DefinitionDataItem dataItem = buildDefinitionDataItem(CASE_TYPE_UNDER_TEST);
+        definitionSheet.addDataItem(dataItem);
 
         final Collection<CaseFieldEntity> caseFieldEntities = caseFieldParser.parseAll(definitionSheets, caseType);
         assertThat(caseFieldEntities.size(), is(1));
@@ -59,6 +66,7 @@ public class CaseFieldParserTest extends ParserTestBase {
         assertThat(entity.getReference(), is("Case_Field"));
         assertThat(entity.getLabel(), is("Case Field"));
         assertThat(entity.getFieldType(), is(field));
+        MatcherAssert.assertThat(entityToDefinitionDataItemRegistry.getForEntity(entity), Matchers.is(Optional.of(dataItem)));
     }
 
     private DefinitionDataItem buildDefinitionDataItem(final String caseTypeId) {

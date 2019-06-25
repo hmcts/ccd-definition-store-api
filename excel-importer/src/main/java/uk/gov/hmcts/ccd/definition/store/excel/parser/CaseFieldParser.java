@@ -20,9 +20,11 @@ public class CaseFieldParser {
 
 
     private final ParseContext parseContext;
+    private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
-    public CaseFieldParser(ParseContext parseContext) {
+    public CaseFieldParser(ParseContext parseContext, EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
         this.parseContext = parseContext;
+        this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
     }
 
     public Collection<CaseFieldEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseType) {
@@ -50,6 +52,7 @@ public class CaseFieldParser {
             final CaseFieldEntity caseField = parseCaseField(caseTypeId, caseFieldId, caseFieldDefinition);
             parseContext.registerCaseFieldForCaseType(caseTypeId, caseField);
             caseFields.add(caseField);
+            entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(caseField, caseFieldDefinition);
 
             logger.info("Parsing case fields for case type {}: Parsing case field {}: OK", caseTypeId, caseFieldId);
         }

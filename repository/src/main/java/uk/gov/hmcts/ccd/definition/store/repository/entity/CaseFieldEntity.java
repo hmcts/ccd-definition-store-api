@@ -1,23 +1,37 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.*;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.*;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 @Table(name = "case_field")
 @Entity
@@ -207,12 +221,6 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     }
 
     @Transient
-    @Override
-    public boolean isMetadataField() {
-        return dataFieldType == DataFieldType.METADATA;
-    }
-
-    @Transient
     public Optional<FieldEntity> findNestedElementByPath(String path) {
         if (StringUtils.isBlank(path)) {
             return Optional.of(this);
@@ -229,9 +237,9 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         String firstPathElement = pathElements.get(0);
 
         Optional<FieldEntity> caseField = caseFields.stream()
-            .filter(e -> e.getReference().equals(firstPathElement))
-            .map(e -> (FieldEntity)e)
-            .findFirst();
+                                                    .filter(e -> e.getReference().equals(firstPathElement))
+                                                    .map(e -> (FieldEntity)e)
+                                                    .findFirst();
 
         if (!caseField.isPresent()) {
             return Optional.empty();
@@ -247,6 +255,11 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         }
     }
 
+    @Override
+    public boolean isMetadataField() {
+        return dataFieldType == DataFieldType.METADATA;
+    }
+
     @Transient
     public Optional<CaseFieldACLEntity> getCaseFieldACLByRole(String role) {
         return this.caseFieldACLEntities.stream().filter(e -> roleEquals(role, e)).findFirst();
@@ -255,4 +268,5 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     private boolean roleEquals(String role, CaseFieldACLEntity e) {
         return e.getUserRole() == null ? false : (e.getUserRole().getReference() == null ? false : e.getUserRole().getReference().equalsIgnoreCase(role));
     }
+
 }

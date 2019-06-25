@@ -23,6 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityFieldLabelValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
@@ -1223,6 +1224,28 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             + "case type: 'null', state: 'null'",
             classUnderTest.createErrorMessage(
                 new UserProfileValidatorImpl.ValidationError("CaseType", new WorkBasketUserDefault()))
+        );
+    }
+
+    @Test
+    public void shouldHaveValidationMessageForPlaceholderLeafNotASimpleTypeValidationError() {
+        assertEquals("Label of caseField 'FieldId' has placeholder 'OtherFieldId.CollectionId.ComplexId' "
+                         + "that points to case field 'ComplexId' of non simple type",
+            classUnderTest.createErrorMessage(
+                new CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError("FieldId",
+                                                                                                  "OtherFieldId.CollectionId.ComplexId",
+                                                                                                  "ComplexId",
+                                                                                                  new CaseFieldEntity()))
+        );
+    }
+
+    @Test
+    public void shouldHaveValidationMessageForPlaceholderCannotBeResolvedValidationError() {
+        assertEquals("Label of caseField 'FieldId' has placeholder 'OtherFieldId.CollectionId.ComplexId' that points to unknown case field",
+            classUnderTest.createErrorMessage(
+                new CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError("FieldId",
+                                                                                                  "OtherFieldId.CollectionId.ComplexId",
+                                                                                                  new CaseFieldEntity()))
         );
     }
 

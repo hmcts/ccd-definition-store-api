@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,6 +10,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 
 public class CaseFieldEntityACLValidatorImplTest {
 
