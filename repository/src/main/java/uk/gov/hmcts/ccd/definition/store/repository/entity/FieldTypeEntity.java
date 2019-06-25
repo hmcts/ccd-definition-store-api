@@ -188,10 +188,9 @@ public class FieldTypeEntity implements Serializable, Versionable {
 
     @Transient
     public List<ComplexFieldEntity> getChildren() {
-        if (this.baseFieldType ==  null) {
+        if (this.baseFieldType == null) {
             return emptyList();
-        }
-        if (this.baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX)) {
+        } else if (this.baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX)) {
             return this.complexFields;
         } else if (this.baseFieldType.getReference().equalsIgnoreCase(BASE_COLLECTION)) {
             if (this.collectionFieldType == null) {
