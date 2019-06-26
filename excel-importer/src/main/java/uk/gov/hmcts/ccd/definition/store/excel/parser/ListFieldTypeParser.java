@@ -114,6 +114,7 @@ public class ListFieldTypeParser {
         final FieldTypeListItemEntity listItem = new FieldTypeListItemEntity();
         listItem.setValue(element.getString(ColumnName.LIST_ELEMENT_CODE));
         listItem.setLabel(element.getString(ColumnName.LIST_ELEMENT));
+        listItem.setOrder(element.getInteger(ColumnName.DISPLAY_ORDER));
         return listItem;
     }
 
