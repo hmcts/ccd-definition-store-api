@@ -9,13 +9,15 @@ public class FixedListItem {
 
     private String code = null;
     private String label = null;
+    private Integer order = null;
 
     public FixedListItem() {
     }
 
-    public FixedListItem(String code, String label) {
+    public FixedListItem(String code, String label, Integer order) {
         this.code = code;
         this.label = label;
+        this.order = order;
     }
 
     /**
@@ -37,5 +39,14 @@ public class FixedListItem {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    @JsonProperty("order")
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 }

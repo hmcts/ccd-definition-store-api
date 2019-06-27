@@ -10,6 +10,7 @@ import static com.google.common.collect.Lists.newArrayList;
 public class FieldTypeBuilder {
 
     private String reference;
+    private FieldTypeEntity baseFieldType;
     private List<ComplexFieldEntity> fieldsForComplex = newArrayList();
     private FieldTypeEntity fieldForCollection;
 
@@ -33,9 +34,15 @@ public class FieldTypeBuilder {
         return this;
     }
 
+    public FieldTypeBuilder withBaseFieldType(FieldTypeEntity baseFieldType) {
+        this.baseFieldType = baseFieldType;
+        return this;
+    }
+
     public FieldTypeEntity build() {
         FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference(this.reference);
+        fieldType.setBaseFieldType(this.baseFieldType);
         return fieldType;
     }
 
