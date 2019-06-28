@@ -966,6 +966,23 @@ class EntityToResponseDTOMapperTest {
         }
 
         @Test
+        void testMapFieldTypeEntityWithComplexBaseField() {
+            FieldTypeEntity fieldTypeEntity = fieldTypeEntity("fieldTypeEntityReference");
+            fieldTypeEntity.setBaseFieldType(fieldTypeEntity("baseFieldTypeEntityReference"));
+            fieldTypeEntity.getBaseFieldType().setReference("Complex");
+            FieldType complexFieldType = mapAssertComplexCommonFieldsAndReturn(fieldTypeEntity);
+            assertEquals(fieldTypeEntity.getBaseFieldType().getReference(), complexFieldType.getType());
+        }
+
+        @Test
+        void testMapFieldTypeEntityWithoutComplexBaseField() {
+            FieldTypeEntity fieldTypeEntity = fieldTypeEntity("fieldTypeEntityReference");
+            fieldTypeEntity.setReference("Complex");
+            FieldType complexFieldType = mapAssertComplexCommonFieldsAndReturn(fieldTypeEntity);
+            assertEquals(fieldTypeEntity.getReference(), complexFieldType.getType());
+        }
+
+        @Test
         void testEmptyMapFieldTypeEntity() {
             FieldType fieldType = classUnderTest.map(new FieldTypeEntity());
 
@@ -1010,18 +1027,49 @@ class EntityToResponseDTOMapperTest {
             fieldTypeEntity.addListItems(
                 asList(fieldTypeListItemEntity1, fieldTypeListItemEntity2, fieldTypeListItemEntity3));
 
+            FieldTypeEntity collectionFieldTypeEntity = fieldTypeEntity("CollectionFieldType");
+            FieldType collectionFieldType = new FieldType();
+            when(spyOnClassUnderTest.map(collectionFieldTypeEntity)).thenReturn(collectionFieldType);
+
+            FieldType fieldType = spyOnClassUnderTest.map(fieldTypeEntity);
+
+            assertEquals(fieldTypeEntity.getReference(), fieldType.getId());
+            assertEquals(fieldTypeEntity.getMinimum(), fieldType.getMin());
+            assertEquals(fieldTypeEntity.getMaximum(), fieldType.getMax());
+            assertEquals(fieldTypeEntity.getRegularExpression(), fieldType.getRegularExpression());
+
+            assertEquals(fieldTypeEntity.getListItems().size(), fieldType.getFixedListItems().size());
+            assertEquals(fieldType.getFixedListItems().get(0).getLabel(), fixedListItem1.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(1).getLabel(), fixedListItem2.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(2).getLabel(), fixedListItem3.getLabel());
+
+            assertEquals(fieldTypeEntity.getCollectionFieldType(), fieldType.getCollectionFieldType());
+
+            return fieldType;
+
+        }
+
+        private FieldType mapAssertComplexCommonFieldsAndReturn(FieldTypeEntity fieldTypeEntity) {
+            fieldTypeEntity.setMinimum("Min");
+            fieldTypeEntity.setMaximum("Max");
+            fieldTypeEntity.setRegularExpression("SomeRegex");
+
             ComplexFieldEntity complexFieldEntity1 = new ComplexFieldEntity();
+            complexFieldEntity1.setLabel("label1");
             ComplexFieldEntity complexFieldEntity2 = new ComplexFieldEntity();
+            complexFieldEntity2.setLabel("label2");
             ComplexFieldEntity complexFieldEntity3 = new ComplexFieldEntity();
+            complexFieldEntity3.setLabel("label3");
             CaseField complexField1 = new CaseField();
+            complexField1.setLabel("label1");
             CaseField complexField2 = new CaseField();
+            complexField2.setLabel("label2");
             CaseField complexField3 = new CaseField();
+            complexField3.setLabel("label3");
             when(spyOnClassUnderTest.map(complexFieldEntity1)).thenReturn(complexField1);
             when(spyOnClassUnderTest.map(complexFieldEntity2)).thenReturn(complexField2);
             when(spyOnClassUnderTest.map(complexFieldEntity3)).thenReturn(complexField3);
-            fieldTypeEntity.addComplexFields(
-                asList(complexFieldEntity1, complexFieldEntity2, complexFieldEntity3));
-
+            fieldTypeEntity.addComplexFields(asList(complexFieldEntity1, complexFieldEntity2, complexFieldEntity3));
             FieldTypeEntity collectionFieldTypeEntity = fieldTypeEntity("CollectionFieldType");
             FieldType collectionFieldType = new FieldType();
             when(spyOnClassUnderTest.map(collectionFieldTypeEntity)).thenReturn(collectionFieldType);
@@ -1034,12 +1082,9 @@ class EntityToResponseDTOMapperTest {
             assertEquals(fieldTypeEntity.getRegularExpression(), fieldType.getRegularExpression());
 
             assertEquals(fieldTypeEntity.getComplexFields().size(), fieldType.getComplexFields().size());
-            assertThat(fieldType.getComplexFields(), hasItems(complexField1, complexField2, complexField3));
-
-            assertEquals(fieldTypeEntity.getListItems().size(), fieldType.getFixedListItems().size());
-            assertEquals(fieldType.getFixedListItems().get(0).getLabel(), fixedListItem1.getLabel());
-            assertEquals(fieldType.getFixedListItems().get(1).getLabel(), fixedListItem2.getLabel());
-            assertEquals(fieldType.getFixedListItems().get(2).getLabel(), fixedListItem3.getLabel());
+            assertEquals(fieldType.getComplexFields().get(0).getLabel(), complexField1.getLabel());
+            assertEquals(fieldType.getComplexFields().get(1).getLabel(), complexField2.getLabel());
+            assertEquals(fieldType.getComplexFields().get(2).getLabel(), complexField3.getLabel());
 
             assertEquals(fieldTypeEntity.getCollectionFieldType(), fieldType.getCollectionFieldType());
 
