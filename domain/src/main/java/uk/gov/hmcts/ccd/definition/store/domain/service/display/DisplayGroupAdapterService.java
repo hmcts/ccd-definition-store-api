@@ -123,7 +123,7 @@ public class DisplayGroupAdapterService {
             .collect(Collectors.toList());
 
         return allSubTypePossibilities.stream()
-            .filter(e -> e.startsWith(displayGroupCaseFieldEntity.getCaseField().getReference()))
+            .filter(e -> e.startsWith(displayGroupCaseFieldEntity.getCaseField().getReference() + '.'))
             .filter(e -> !e.equals(displayGroupCaseFieldEntity.getCaseField().getReference()))
             .filter(e -> !complexFieldOverrideIds.contains(e))
             .collect(Collectors.toList());
