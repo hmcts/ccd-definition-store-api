@@ -23,5 +23,19 @@
         <Class name="uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient">
             <Method name="getLoggedInUserDetails"/>
         </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeServiceImpl">
+            <Method name="createAll"/>
+            <Method name="caseTypeExistsInAnyJurisdiction"/>
+            <Method name="findByJurisdictionId"/>
+            <Method name="findByCaseTypeId"/>
+            <Method name="findVersionInfoByCaseTypeId"/>
+            <Method name="findDefinitiveCaseTypeId"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityACLValidatorImpl">
+            <Method name="validate"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionServiceImpl">
+            <Method name="getAll"/>
+        </Class>
     </Instrumentation>
 </ApplicationInsightsAgent>
