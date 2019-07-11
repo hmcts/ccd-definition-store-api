@@ -13,12 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificationColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 public class CaseTypeParser {
     private static final Logger logger = LoggerFactory.getLogger(CaseTypeParser.class);
@@ -30,6 +25,7 @@ public class CaseTypeParser {
     private final EventParser eventParser;
     private final AuthorisationCaseTypeParser authorisationCaseTypeParser;
     private final AuthorisationCaseFieldParser authorisationCaseFieldParser;
+    private final AuthorisationComplexTypeParser authorisationComplexTypeParser;
     private final AuthorisationCaseEventParser authorisationCaseEventParser;
     private final AuthorisationCaseStateParser authorisationCaseStateParser;
     private final MetadataCaseFieldParser metadataCaseFieldParser;
@@ -41,6 +37,7 @@ public class CaseTypeParser {
                           EventParser eventParser,
                           AuthorisationCaseTypeParser authorisationParser,
                           AuthorisationCaseFieldParser authorisationCaseFieldParser,
+                          AuthorisationComplexTypeParser authorisationComplexTypeParser,
                           AuthorisationCaseEventParser authorisationCaseEventParser,
                           AuthorisationCaseStateParser authorisationCaseStateParser,
                           MetadataCaseFieldParser metadataCaseFieldParser,
@@ -52,6 +49,7 @@ public class CaseTypeParser {
         this.eventParser = eventParser;
         this.authorisationCaseTypeParser = authorisationParser;
         this.authorisationCaseFieldParser = authorisationCaseFieldParser;
+        this.authorisationComplexTypeParser = authorisationComplexTypeParser;
         this.authorisationCaseEventParser = authorisationCaseEventParser;
         this.authorisationCaseStateParser = authorisationCaseStateParser;
         this.metadataCaseFieldParser = metadataCaseFieldParser;
@@ -95,6 +93,8 @@ public class CaseTypeParser {
                 caseField.addCaseACLEntities(authorisationCaseFieldParser
                                                     .parseAll(definitionSheets, caseType, caseField));
             }
+
+            authorisationComplexTypeParser.parseAll(definitionSheets, caseType);
 
             for (EventEntity event : caseType.getEvents()) {
                 event.addEventACLEntities(authorisationCaseEventParser

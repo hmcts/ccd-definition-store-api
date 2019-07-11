@@ -116,6 +116,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         final FieldTypeListItemEntity listItem = parsed.getListItems().get(0);
         assertThat(listItem.getValue(), is("NGITBEnum"));
         assertThat(listItem.getLabel(), is("NGITB"));
+        assertThat(listItem.getOrder(), is(3));
     }
 
     private DefinitionDataItem buildDefinitionDataItem() {
@@ -123,6 +124,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.ID.toString(), "ngitb");
         item.addAttribute(ColumnName.LIST_ELEMENT_CODE.toString(), "NGITBEnum");
         item.addAttribute(ColumnName.LIST_ELEMENT.toString(), "NGITB");
+        item.addAttribute(ColumnName.DISPLAY_ORDER.toString(), 3);
         return item;
     }
 }

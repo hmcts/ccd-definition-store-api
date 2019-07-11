@@ -11,6 +11,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
@@ -141,8 +142,12 @@ class DisplayGroupAdapterServiceTest {
             postcode.setOrder(2);
 
             EventEntity eventEntityMock = mock(EventEntity.class);
+
+            CaseFieldEntity finalReturnOther = caseFieldEntity("finalReturnOther", "Final return other", null, fieldTypeEntity("Text", textFieldTypeEntity(), emptyList()));
+            EventCaseFieldEntity eventFinalReturnOther = eventCaseFieldEntity(DisplayContext.OPTIONAL, finalReturnOther, emptyList());
+
             given(eventEntityMock.getEventCaseFields()).willReturn(
-                singletonList(
+                asList(
                     eventCaseFieldEntity(
                         DisplayContext.COMPLEX,
                         caseFieldEntity("finalReturn", "Final Return", null,
@@ -150,7 +155,7 @@ class DisplayGroupAdapterServiceTest {
                                 asList(complexFieldEntity("bailiffName", "Bailiff", fieldType("FixedList-BailiffList")),
                                     complexFieldEntity("dateOfVisit", "Date of visit", fieldType("Date")),
                                     complexFieldEntity("addressAttended", "Address Attended",
-                                        fieldTypeEntity("AddressUK", baseFieldType("Complex"),
+                                        fieldTypeEntity(PREDEFINED_COMPLEX_ADDRESS_UK, baseFieldType("Complex"),
                                             asList(complexFieldEntity("AddressLine1", "Building and Street", fieldType("TextMax150")),
                                                 complexFieldEntity("AddressLine2", "Building and Street", fieldType("TextMax50")),
                                                 complexFieldEntity("AddressLine3", "Building and Street", fieldType("TextMax50")),
@@ -160,10 +165,13 @@ class DisplayGroupAdapterServiceTest {
                                                 complexFieldEntity("Country", "Country", fieldType("TextMax50")))))))
 
                         ),
-                        asList(bailiffName, addressLine1, postcode))));
+                        asList(bailiffName, addressLine1, postcode)),
+                    eventFinalReturnOther
+                ));
 
             DisplayGroupEntity displayGroupEntity = displayGroupEntity(eventEntityMock,
-                asList(displayGroupCaseField(caseFieldEntity("finalReturn"))));
+                asList(displayGroupCaseField(caseFieldEntity("finalReturn")),
+                    displayGroupCaseField(caseFieldEntity("finalReturnOther"))));
 
             given(caseTypeEntity.getId()).willReturn(caseTypeEntityId);
             given(caseTypeRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
@@ -187,6 +195,7 @@ class DisplayGroupAdapterServiceTest {
             assertThat(findWizardPageField(wizardPage, "finalReturn").getOrder(), is(77));
             assertThat(findWizardPageField(wizardPage, "finalReturn").getPageColumnNumber(), is(66));
 
+            assertThat(findWizardPageComplexFieldOverrides(wizardPage, "finalReturn").size(), is(10));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getDisplayContext(), is("READONLY"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getOrder(), is(3));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(), is("Bailiff Name"));
@@ -243,10 +252,16 @@ class DisplayGroupAdapterServiceTest {
 
     private static WizardPageComplexFieldOverride findWizardPageComplexFieldOverride(WizardPage wizardPage, String fieldId,
                                                                                      String complexFieldId) {
-        WizardPageField wizardPageField =
-            wizardPage.getWizardPageFields().stream().filter(e -> e.getCaseFieldId().equals(fieldId)).findFirst().get();
+        return findWizardPageComplexFieldOverrides(wizardPage, fieldId)
+            .stream().filter(w -> w.getComplexFieldElementId().equals(complexFieldId)).findFirst().get();
+    }
 
-        return wizardPageField.getComplexFieldOverrides().stream().filter(w -> w.getComplexFieldElementId().equals(complexFieldId)).findFirst().get();
+    private static List<WizardPageComplexFieldOverride> findWizardPageComplexFieldOverrides(WizardPage wizardPage, String fieldId) {
+        WizardPageField wizardPageField = wizardPage.getWizardPageFields().stream()
+            .filter(e -> e.getCaseFieldId().equals(fieldId))
+            .findFirst().get();
+
+        return wizardPageField.getComplexFieldOverrides();
     }
 
     private static WebhookEntity webhookEntity() {
@@ -282,6 +297,13 @@ class DisplayGroupAdapterServiceTest {
         fieldTypeEntity.setReference(reference);
         fieldTypeEntity.setBaseFieldType(baseFieldType);
         fieldTypeEntity.addComplexFields(complexFieldEntities);
+        return fieldTypeEntity;
+    }
+
+    private static FieldTypeEntity textFieldTypeEntity() {
+        FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
+        fieldTypeEntity.setReference("Text");
+        fieldTypeEntity.addComplexFields(emptyList());
         return fieldTypeEntity;
     }
 

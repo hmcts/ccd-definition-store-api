@@ -17,6 +17,9 @@ public class FieldTypeListItemEntity implements Serializable {
     @Column(name = "value", nullable = false)
     private String value;
 
+    @Column(name = "display_order")
+    private Integer order;
+
     @Column(name = "label", nullable = false)
     private String label;
 
@@ -50,5 +53,13 @@ public class FieldTypeListItemEntity implements Serializable {
 
     public void setFieldType(final FieldTypeEntity fieldType) {
         this.fieldType = fieldType;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 }

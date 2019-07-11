@@ -17,6 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityFieldLabelValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
@@ -43,6 +44,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 @Component
 public class SpreadsheetValidationErrorMessageCreator implements ValidationErrorMessageCreator {
 
+    public static final String INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F = "Invalid CRUD value '%s' in %s tab, case type '%s', case field '%s', ";
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     public SpreadsheetValidationErrorMessageCreator(EntityToDefinitionDataItemRegistry
@@ -201,13 +203,44 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
                                             error.getCaseFieldACLEntity(),
                                             def -> String.format(
-                                                "Invalid CRUD value '%s' in %s tab, case type '%s', case field '%s', " +
-                                                    "" + "" + "user role '%s'",
+                                                INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
+                                                    + "user role '%s'",
                                                 defaultString(def.getString(ColumnName.CRUD)),
                                                 def.getSheetName(),
                                                 def.getString(ColumnName.CASE_TYPE_ID),
                                                 def.getString(ColumnName.CASE_FIELD_ID),
                                                 defaultString(def.getString(ColumnName.USER_ROLE))));
+    }
+
+    @Override
+    public String createErrorMessage(final CaseFieldEntityInvalidComplexCrudValidationError error) {
+        return newMessageIfDefinitionExists(error,
+                                            error.getComplexFieldACLEntity(),
+                                            def -> String.format(
+                                                INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
+                                                    + "list element code '%s', user role '%s'",
+                                                defaultString(def.getString(ColumnName.CRUD)),
+                                                def.getSheetName(),
+                                                def.getString(ColumnName.CASE_TYPE_ID),
+                                                def.getString(ColumnName.CASE_FIELD_ID),
+                                                def.getString(ColumnName.LIST_ELEMENT_CODE),
+                                                defaultString(def.getString(ColumnName.USER_ROLE))));
+    }
+
+    @Override
+    public String createErrorMessage(final CaseFieldEntityComplexACLValidationError error) {
+        return newMessageIfDefinitionExists(error,
+            error.getComplexFieldACLEntity(),
+            def -> String.format(
+                INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
+                    + "list element code '%s', user role '%s'. Detail: %s",
+                defaultString(def.getString(ColumnName.CRUD)),
+                def.getSheetName(),
+                def.getString(ColumnName.CASE_TYPE_ID),
+                def.getString(ColumnName.CASE_FIELD_ID),
+                def.getString(ColumnName.LIST_ELEMENT_CODE),
+                defaultString(def.getString(ColumnName.USER_ROLE)),
+                error.getDefaultMessage()));
     }
 
     @Override
@@ -499,6 +532,17 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                 "This spelling must be used for the Case Type ID.")
         );
     }
+
+    @Override
+    public String createErrorMessage(CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError error) {
+        return withWorkSheetName(error);
+    }
+
+    @Override
+    public String createErrorMessage(CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError error) {
+        return withWorkSheetName(error);
+    }
+
 
     private String withWorkSheetName(SimpleValidationError<?> error) {
         return newMessageIfDefinitionExists(error,
