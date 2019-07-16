@@ -874,7 +874,7 @@
         "metadata" : false,
         "id" : "AddressLine2",
         "case_type_id" : null,
-        "label" : "",
+        "label" : "Address Line 2",
         "hint_text" : null,
         "field_type" : {
           "id" : "TextMax50",
@@ -897,7 +897,7 @@
         "metadata" : false,
         "id" : "AddressLine3",
         "case_type_id" : null,
-        "label" : "",
+        "label" : "Address Line 3",
         "hint_text" : null,
         "field_type" : {
           "id" : "TextMax50",
@@ -1058,7 +1058,7 @@
         "metadata" : false,
         "id" : "AddressLine2",
         "case_type_id" : null,
-        "label" : "",
+        "label" : "Address Line 2",
         "hint_text" : null,
         "field_type" : {
           "id" : "TextMax50",
@@ -1081,7 +1081,7 @@
         "metadata" : false,
         "id" : "AddressLine3",
         "case_type_id" : null,
-        "label" : "",
+        "label" : "Address Line 3",
         "hint_text" : null,
         "field_type" : {
           "id" : "TextMax50",
@@ -1242,7 +1242,7 @@
         "metadata" : false,
         "id" : "AddressLine2",
         "case_type_id" : null,
-        "label" : "",
+        "label" : "Address Line 2",
         "hint_text" : null,
         "field_type" : {
           "id" : "TextMax50",
@@ -1265,7 +1265,7 @@
         "metadata" : false,
         "id" : "AddressLine3",
         "case_type_id" : null,
-        "label" : "",
+        "label" : "Address Line 3",
         "hint_text" : null,
         "field_type" : {
           "id" : "TextMax50",
