@@ -31,4 +31,64 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 
+    @Test
+    @DisplayName("Should Not import a definition with missing Permissions")
+    void shouldNotImportInvalidDefinitionMissingComplexAuthorization() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Missing_Complex_Authorization.xlsx"))
+            .expect()
+            .statusCode(500)
+            .when()
+            .post("/import");
+    }
+
+    @Test
+    @DisplayName("Should Not import a definition with missing CRUD permissions")
+    void shouldNotImportInvalidDefinitionMissingCRUDPermissions() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Missing_CRUD_Permissions.xlsx"))
+            .expect()
+            .statusCode(400)
+            .when()
+            .post("/import");
+    }
+
+    //what should be the status code.
+    @Test
+    @DisplayName("Should Not import a definition with invalid CRUD permissions")
+    void shouldNotImportInvalidDefinitionWithInvalidPermissions() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Invalid_CRUD_Permissions.xlsx"))
+            .expect()
+            .statusCode(400)
+            .when()
+            .post("/import");
+    }
+
+
+    //what should be the status code.
+    @Test
+    @DisplayName("Should Not import a definition with invalid CRUD permissions")
+    void shouldNotImportInvalidDefinitionInvalidUserRole() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Invalid_User_Role.xlsx"))
+            .expect()
+            .statusCode(400)
+            .when()
+            .post("/import");
+    }
+
+
 }
