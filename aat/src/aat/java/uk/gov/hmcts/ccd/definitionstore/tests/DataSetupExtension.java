@@ -53,6 +53,15 @@ public class DataSetupExtension implements BeforeAllCallback {
             .statusCode(201)
             .when()
             .post("/import");
+
+        RestAssured.given()
+            .header("Authorization", "Bearer " + importer.getAccessToken())
+            .header("ServiceAuthorization", s2sToken)
+            .multiPart(new File("src/resource/CCD_CNP_RDM5118.xlsx"))
+            .expect()
+            .statusCode(201)
+            .when()
+            .post("/import");
     }
 
     private void createTestRole(AATHelper aat, String s2sToken) {
