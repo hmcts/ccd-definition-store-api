@@ -47,7 +47,7 @@ class ImportDefinitionTest extends BaseTest {
 
     @Test
     @DisplayName("Should Not import a definition with missing CRUD permissions")
-    void shouldNotImportInvalidDefinitionMissingCRUDPermissions() {
+    void shouldNotImportDefinitionWithMissingCRUDPermissions() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
         asUser.get()
@@ -59,33 +59,30 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 
-    //what should be the status code.
     @Test
     @DisplayName("Should Not import a definition with invalid CRUD permissions")
-    void shouldNotImportInvalidDefinitionWithInvalidPermissions() {
+    void shouldNotImportDefinitionWithInvalidPermissions() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
         asUser.get()
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_Invalid_CRUD_Permissions.xlsx"))
             .expect()
-            .statusCode(400)
+            .statusCode(422)
             .when()
             .post("/import");
     }
 
-
-    //what should be the status code.
     @Test
-    @DisplayName("Should Not import a definition with invalid CRUD permissions")
-    void shouldNotImportInvalidDefinitionInvalidUserRole() {
+    @DisplayName("Should Not import a definition with invalid User Roles")
+    void shouldNotImportDefinitionHavingInvalidUserRole() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
         asUser.get()
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_Invalid_User_Role.xlsx"))
             .expect()
-            .statusCode(400)
+            .statusCode(422)
             .when()
             .post("/import");
     }
