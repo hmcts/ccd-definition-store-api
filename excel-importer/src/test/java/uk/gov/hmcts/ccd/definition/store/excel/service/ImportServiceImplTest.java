@@ -131,7 +131,7 @@ public class ImportServiceImplTest {
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
-            new EntityToDefinitionDataItemRegistry(), registry);
+            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -249,7 +249,7 @@ public class ImportServiceImplTest {
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
-            new EntityToDefinitionDataItemRegistry(), registry);
+            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
