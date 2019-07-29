@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 
@@ -38,6 +39,9 @@ public class ListFieldTypeParserTest extends ParserTestBase {
     @Mock
     private FieldTypeEntity fieldMultiList;
 
+    @Mock
+    private SpreadsheetValidator spreadsheetValidator;
+
     private DefinitionSheet definitionSheet;
 
     @Before
@@ -54,7 +58,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.empty());
 
         try {
-            new ListFieldTypeParser(parseContext);
+            new ListFieldTypeParser(parseContext, spreadsheetValidator);
         } catch (InvalidImportException ex) {
             Assertions.assertThat(ex).hasMessage("No base type found for: FixedList");
             throw ex;
@@ -69,7 +73,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         given(parseContext.getBaseType(BASE_MULTI_SELECT_LIST)).willReturn(Optional.empty());
 
         try {
-            new ListFieldTypeParser(parseContext);
+            new ListFieldTypeParser(parseContext, spreadsheetValidator);
         } catch (InvalidImportException ex) {
             Assertions.assertThat(ex).hasMessage("No base type found for: MultiSelectList");
             throw ex;
@@ -85,7 +89,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
 
         definitionSheets.put(SheetName.FIXED_LISTS.getName(), definitionSheet);
 
-        final ListFieldTypeParser listFieldTypeParser = new ListFieldTypeParser(parseContext);
+        final ListFieldTypeParser listFieldTypeParser = new ListFieldTypeParser(parseContext, spreadsheetValidator);
         final ParseResult<FieldTypeEntity> result = listFieldTypeParser.parse(definitionSheets);
 
         assertThat(result.getAllResults(), empty());
@@ -102,7 +106,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         final DefinitionDataItem dataItem = buildDefinitionDataItem();
         definitionSheet.addDataItem(dataItem);
 
-        final ListFieldTypeParser listFieldTypeParser = new ListFieldTypeParser(parseContext);
+        final ListFieldTypeParser listFieldTypeParser = new ListFieldTypeParser(parseContext, spreadsheetValidator);
         final ParseResult<FieldTypeEntity> result = listFieldTypeParser.parse(definitionSheets);
 
         final FieldTypeEntity parsed = result.getAllResults().get(0);
