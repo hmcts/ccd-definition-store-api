@@ -38,6 +38,7 @@ public class DataSetupExtension implements BeforeAllCallback {
         createTestRole(aat, s2sToken);
 
         importDefinitions(aat, s2sToken);
+        importNewDefinitionsForAMIntegration(aat, s2sToken);
     }
 
     private void importDefinitions(AATHelper aat, String s2sToken) {
@@ -53,6 +54,12 @@ public class DataSetupExtension implements BeforeAllCallback {
             .statusCode(201)
             .when()
             .post("/import");
+    }
+
+    private void importNewDefinitionsForAMIntegration(AATHelper aat, String s2sToken) {
+        AuthenticatedUser importer = aat.getIdamHelper()
+            .authenticate(aat.getImporterAutoTestEmail(),
+                aat.getImporterAutoTestPassword());
 
         RestAssured.given()
             .header("Authorization", "Bearer " + importer.getAccessToken())
