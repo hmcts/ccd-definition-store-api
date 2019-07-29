@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.ReferenceUtils;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 
@@ -33,12 +34,14 @@ public class ListFieldTypeParser {
     private final FieldTypeEntity fixedListBaseType;
     private final FieldTypeEntity fixedRadioListBaseType;
     private final FieldTypeEntity multiListBaseType;
+    private final SpreadsheetValidator spreadsheetValidator;
 
-    public ListFieldTypeParser(ParseContext parseContext) {
+    public ListFieldTypeParser(ParseContext parseContext, final SpreadsheetValidator spreadsheetValidator) {
         this.parseContext = parseContext;
         fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_LIST_TYPE));
         fixedRadioListBaseType = parseContext.getBaseType(FIXED_RADIO_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_RADIO_LIST_TYPE));
         multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + MULTI_LIST_TYPE));
+        this.spreadsheetValidator = spreadsheetValidator;
 
     }
 
@@ -75,7 +78,9 @@ public class ListFieldTypeParser {
 
         final FieldTypeEntity fixedListType = new FieldTypeEntity();
         fixedListType.setBaseFieldType(fixedListBaseType);
-        fixedListType.setReference(ReferenceUtils.listReference(FIXED_LIST_TYPE, listDataItems.getKey()));
+        String fixedListReference = ReferenceUtils.listReference(FIXED_LIST_TYPE, listDataItems.getKey());
+        spreadsheetValidator.validate(SheetName.FIXED_LISTS.getName(), "ID", fixedListReference, FIXED_RADIO_LIST_TYPE);
+        fixedListType.setReference(fixedListReference);
         fixedListType.setJurisdiction(parseContext.getJurisdiction());
         fixedListType.addListItems(fixedListItems);
         parseContext.addToAllTypes(fixedListType);
@@ -88,7 +93,10 @@ public class ListFieldTypeParser {
 
         final FieldTypeEntity fixedRadioListType = new FieldTypeEntity();
         fixedRadioListType.setBaseFieldType(fixedRadioListBaseType);
-        fixedRadioListType.setReference(ReferenceUtils.listReference(FIXED_RADIO_LIST_TYPE, listDataItems.getKey()));
+        String fixedRadioListReference = ReferenceUtils.listReference(FIXED_RADIO_LIST_TYPE, listDataItems.getKey());
+        spreadsheetValidator.validate(SheetName.FIXED_LISTS.getName(), "ID",
+                                      fixedRadioListReference, FIXED_RADIO_LIST_TYPE);
+        fixedRadioListType.setReference(fixedRadioListReference);
         fixedRadioListType.setJurisdiction(parseContext.getJurisdiction());
         fixedRadioListType.addListItems(fixedRadioListItems);
         parseContext.addToAllTypes(fixedRadioListType);
@@ -101,7 +109,10 @@ public class ListFieldTypeParser {
 
         final FieldTypeEntity multiListType = new FieldTypeEntity();
         multiListType.setBaseFieldType(multiListBaseType);
-        multiListType.setReference(ReferenceUtils.listReference(MULTI_LIST_TYPE, listDataItems.getKey()));
+        String multiListTypeReference = ReferenceUtils.listReference(MULTI_LIST_TYPE, listDataItems.getKey());
+        spreadsheetValidator.validate(SheetName.FIXED_LISTS.getName(), "ID",
+                                      multiListTypeReference, MULTI_LIST_TYPE);
+        multiListType.setReference(multiListTypeReference);
         multiListType.setJurisdiction(parseContext.getJurisdiction());
         multiListType.addListItems(multiListItems);
         parseContext.addToAllTypes(multiListType);

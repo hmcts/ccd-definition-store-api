@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
 @Component
 public class ParserFactory {
@@ -13,14 +14,17 @@ public class ParserFactory {
     private final ShowConditionParser showConditionParser;
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     private final Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry;
+    private final SpreadsheetValidator spreadsheetValidator;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
                          EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
-                         Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry) {
+                         Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
+                         SpreadsheetValidator spreadsheetValidator) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
+        this.spreadsheetValidator = spreadsheetValidator;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -31,7 +35,7 @@ public class ParserFactory {
         final FieldTypeParser fieldTypeParser = new FieldTypeParser(context);
 
         return new FieldsTypeParser(
-            new ListFieldTypeParser(context),
+            new ListFieldTypeParser(context, spreadsheetValidator),
             new ComplexFieldTypeParser(context, fieldTypeParser, showConditionParser, entityToDefinitionDataItemRegistry),
             new CaseFieldTypeParser(context, fieldTypeParser)
         );

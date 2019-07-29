@@ -108,6 +108,9 @@ public class SpreadsheetParser {
                                         break;
                                     case STRING:
                                         cellValue = cell.getStringCellValue();
+                                        String columnHeaderName = headings.get(cell.getColumnIndex());
+                                        spreadsheetValidator.validate(sheet.getSheetName(), columnHeaderName,
+                                                                      (String) cellValue, cell.getRowIndex() + 1);
                                         break;
                                     default:
                                         cellValue = null;
