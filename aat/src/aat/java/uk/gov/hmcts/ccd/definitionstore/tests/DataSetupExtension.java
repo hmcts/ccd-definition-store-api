@@ -69,6 +69,7 @@ public class DataSetupExtension implements BeforeAllCallback {
             .statusCode(201)
             .when()
             .post("/import");
+
     }
 
     private void createTestRole(AATHelper aat, String s2sToken) {
