@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
 import io.restassured.specification.RequestSpecification;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
@@ -32,7 +32,7 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 
-    @Ignore("The response code should be 400 instead of 500. Code needs to be fixed.")
+    @Disabled("The response code should be 400 instead of 500. Code needs to be fixed.")
     @Test
     @DisplayName("Should Not import a definition with missing Permissions")
     void shouldNotImportInvalidDefinitionMissingComplexAuthorization() {
