@@ -31,4 +31,45 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 
+    @Test
+    @DisplayName("Missing SecurityType from CaseType tab")
+    void shouldNotImportMissingSecurityTypeFromCaseTypeACL() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Missing_SecurityType_from_CaseType.xlsx"))
+            .expect()
+            .statusCode(422)
+            .when()
+            .post("/import");
+    }
+
+    @Test
+    @DisplayName("Invalid SecurityType ACL in CaseType tab")
+    void shouldNotImportInvalidCaseTypeACLInfo() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Invalid_CaseType_ACL.xlsx"))
+            .expect()
+            .statusCode(422)
+            .when()
+            .post("/import");
+    }
+
+    @Test
+    @DisplayName("Missing SecurityType ACL row in CaseType tab")
+    void shouldNotImportMissingCaseTypeACLInfo() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Missing_CaseType_ACL_Info.xlsx"))
+            .expect()
+            .statusCode(400)
+            .when()
+            .post("/import");
+    }
 }
