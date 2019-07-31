@@ -72,4 +72,18 @@ class ImportDefinitionTest extends BaseTest {
             .when()
             .post("/import");
     }
+
+    @Test
+    @DisplayName("Should import valid Case Type info file.")
+    void shouldImportValidCaseTypeACLInfoFile() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Security_Classification_Test.xlsx"))
+            .expect()
+            .statusCode(201)
+            .when()
+            .post("/import");
+    }
 }
