@@ -20,7 +20,7 @@ class ImportDefinitionTest extends BaseTest {
     }
 
     Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
-    static HashMap<String, String> caseTypeACLFromDefinition =
+    static HashMap<String, String> caseTypeACLFromDefinitionFile =
         new HashMap<String, String>() {{
             put("AATPUBLIC", "PUBLIC");
             put("AATPRIVATE", "PRIVATE");
@@ -118,6 +118,6 @@ class ImportDefinitionTest extends BaseTest {
         for (Map<String, String> map : list) {
             caseTypeACL.put(map.get("name"), map.get("security_classification"));
         }
-        assert (caseTypeACLFromDefinition.equals(caseTypeACL));
+        assert (caseTypeACLFromDefinitionFile.equals(caseTypeACL));
     }
 }
