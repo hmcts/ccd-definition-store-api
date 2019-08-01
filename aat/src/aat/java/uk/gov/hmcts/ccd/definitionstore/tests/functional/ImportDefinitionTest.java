@@ -1,10 +1,7 @@
-/*
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
@@ -46,7 +43,7 @@ class ImportDefinitionTest extends BaseTest {
         assert (response.getBody().jsonPath().get("message").toString()
             .contains("At least one case field must be defined for case type"));
     }
-
+/*
     @Test
     @DisplayName("Missing SecurityType from CaseType tab")
     void shouldNotImportMissingSecurityTypeFromCaseTypeACL() {
@@ -192,6 +189,5 @@ class ImportDefinitionTest extends BaseTest {
             .statusCode(422)
             .when()
             .post("/import");
-    }
+    }*/
 }
-*/
