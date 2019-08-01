@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,13 +33,16 @@ class ImportDefinitionTest extends BaseTest {
     void shouldNotImportInvalidDefinition() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        asUser.get()
+        Response response = asUser.get()
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_Unsuccessful.xlsx"))
             .expect()
             .statusCode(400)
+            .response()
             .when()
             .post("/import");
+        assert (response.getBody().jsonPath().get("message").toString()
+            .contains("At least one case field must be defined for case type"));
     }
 
     @Test
@@ -46,13 +50,16 @@ class ImportDefinitionTest extends BaseTest {
     void shouldNotImportMissingSecurityTypeFromCaseTypeACL() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        asUser.get()
+        Response response = asUser.get()
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_Missing_SecurityType_from_CaseType.xlsx"))
             .expect()
             .statusCode(422)
             .when()
             .post("/import");
+
+        assert (response.getBody().prettyPrint()
+            .contains("Case Type with name 'Demo case' must have a Security Classification defined"));
     }
 
     @Test
@@ -60,13 +67,16 @@ class ImportDefinitionTest extends BaseTest {
     void shouldNotImportInvalidCaseTypeACLInfo() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        asUser.get()
+        Response response = asUser.get()
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_Invalid_CaseType_ACL.xlsx"))
             .expect()
             .statusCode(422)
             .when()
             .post("/import");
+
+        assert (response.getBody().prettyPrint()
+            .contains("Case Type with name 'Demo case' must have a Security Classification defined"));
     }
 
     @Test
@@ -74,13 +84,16 @@ class ImportDefinitionTest extends BaseTest {
     void shouldNotImportMissingCaseTypeACLInfo() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        asUser.get()
+        Response response = asUser.get()
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_Missing_CaseType_ACL_Info.xlsx"))
             .expect()
             .statusCode(400)
             .when()
             .post("/import");
+
+        assert (response.getBody().prettyPrint()
+            .contains("A definition must contain at least one Case Type"));
     }
 
     @Test
@@ -88,13 +101,16 @@ class ImportDefinitionTest extends BaseTest {
     void shouldImportValidCaseTypeACLInfoFile() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        asUser.get()
+        Response response = asUser.get()
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Security_Classification_Test.xlsx"))
             .expect()
             .statusCode(201)
             .when()
             .post("/import");
+
+        assert (response.getBody().prettyPrint()
+            .equals("Case Definition data successfully imported"));
     }
 
     @Test
