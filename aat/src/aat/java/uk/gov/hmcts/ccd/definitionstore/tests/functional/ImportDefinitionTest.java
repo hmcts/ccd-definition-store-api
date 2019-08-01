@@ -8,9 +8,7 @@ import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 class ImportDefinitionTest extends BaseTest {
