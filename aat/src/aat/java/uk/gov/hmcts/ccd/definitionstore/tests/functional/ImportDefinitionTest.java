@@ -164,7 +164,7 @@ class ImportDefinitionTest extends BaseTest {
             .when()
             .post("/import");
     }
-/*
+
     @Test
     @DisplayName("Should Not import a definition with invalid CRUD permissions")
     void shouldNotImportDefinitionWithInvalidPermissions() {
@@ -178,7 +178,7 @@ class ImportDefinitionTest extends BaseTest {
             .when()
             .post("/import");
     }
-
+/*
     @Test
     @DisplayName("Should Not import a definition with invalid User Roles")
     void shouldNotImportDefinitionHavingInvalidUserRole() {
