@@ -19,15 +19,13 @@ class ImportDefinitionTest extends BaseTest {
         super(aat);
     }
 
-    Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
-    static HashMap<String, String> caseTypeACLFromDefinitionFile =
+    private Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
+    private static HashMap<String, String> caseTypeACLFromDefinitionFile =
         new HashMap<String, String>() {{
             put("AATPUBLIC", "PUBLIC");
             put("AATPRIVATE", "PRIVATE");
             put("AATRESTRICTED", "RESTRICTED");
         }};
-
-    // Success case - valid import file is verified as part of setup in DataSetupExtension.
 
     @Test
     @DisplayName("Should Not import an invalid definition")
