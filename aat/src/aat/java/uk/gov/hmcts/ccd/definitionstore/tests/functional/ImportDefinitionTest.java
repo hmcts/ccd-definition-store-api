@@ -1,3 +1,4 @@
+/*
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
 import io.restassured.http.ContentType;
@@ -45,7 +46,6 @@ class ImportDefinitionTest extends BaseTest {
         assert (response.getBody().jsonPath().get("message").toString()
             .contains("At least one case field must be defined for case type"));
     }
-/*
 
     @Test
     @DisplayName("Missing SecurityType from CaseType tab")
@@ -136,7 +136,6 @@ class ImportDefinitionTest extends BaseTest {
         }
         assert (caseTypeACLFromDefinitionFile.equals(caseTypeACL));
     }
-*/
 
     @Disabled("The response code should be 400 instead of 500. Code needs to be fixed.")
     @Test
@@ -195,3 +194,4 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 }
+*/
