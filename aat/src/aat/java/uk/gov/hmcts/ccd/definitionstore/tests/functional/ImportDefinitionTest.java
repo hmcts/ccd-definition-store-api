@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +27,7 @@ class ImportDefinitionTest extends BaseTest {
             put("AATPRIVATE", "PRIVATE");
             put("AATRESTRICTED", "RESTRICTED");
         }};
+/*
 
     @Test
     @DisplayName("Should Not import an invalid definition")
@@ -113,8 +113,9 @@ class ImportDefinitionTest extends BaseTest {
         assert (response.getBody().prettyPrint()
             .equals("Case Definition data successfully imported"));
     }
+*/
 
-    /*@Test
+    @Test
     @DisplayName("Should return the correct security classification for each case type.")
     void shouldReturnCorrectSecurityClassificationForCaseType() {
 
@@ -191,5 +192,5 @@ class ImportDefinitionTest extends BaseTest {
             .statusCode(422)
             .when()
             .post("/import");
-    }*/
+    }
 }
