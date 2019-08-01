@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,9 @@ import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 class ImportDefinitionTest extends BaseTest {
@@ -14,6 +18,14 @@ class ImportDefinitionTest extends BaseTest {
     protected ImportDefinitionTest(AATHelper aat) {
         super(aat);
     }
+
+    Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
+    static HashMap<String, String> caseTypeACLFromDefinition =
+        new HashMap<String, String>() {{
+            put("AATPUBLIC", "PUBLIC");
+            put("AATPRIVATE", "PRIVATE");
+            put("AATRESTRICTED", "RESTRICTED");
+        }};
 
     // Success case - valid import file is verified as part of setup in DataSetupExtension.
 
@@ -85,5 +97,27 @@ class ImportDefinitionTest extends BaseTest {
             .statusCode(201)
             .when()
             .post("/import");
+    }
+
+    @Test
+    @DisplayName("Should return the correct security classification for each case type.")
+    void shouldReturnCorrectSecurityClassificationForCaseType() {
+
+        HashMap<String, String> caseTypeACL = new HashMap<>();
+        ArrayList<Map<String, String>> list = asUser.get()
+            .given()
+            .pathParam("jid", "AUTOTEST2")
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/data/jurisdictions/{jid}/case-type")
+            .then()
+            .statusCode(200)
+            .extract()
+            .path("");
+
+        for (Map<String, String> map : list) {
+            caseTypeACL.put(map.get("name"), map.get("security_classification"));
+        }
+        assert (caseTypeACLFromDefinition.equals(caseTypeACL));
     }
 }
