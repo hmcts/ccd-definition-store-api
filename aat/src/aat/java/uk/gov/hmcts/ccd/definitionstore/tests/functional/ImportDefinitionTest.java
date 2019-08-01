@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
@@ -134,7 +135,7 @@ class ImportDefinitionTest extends BaseTest {
         }
         assert (caseTypeACLFromDefinitionFile.equals(caseTypeACL));
     }
-/*
+
     @Disabled("The response code should be 400 instead of 500. Code needs to be fixed.")
     @Test
     @DisplayName("Should Not import a definition with missing Permissions")
@@ -163,7 +164,7 @@ class ImportDefinitionTest extends BaseTest {
             .when()
             .post("/import");
     }
-
+/*
     @Test
     @DisplayName("Should Not import a definition with invalid CRUD permissions")
     void shouldNotImportDefinitionWithInvalidPermissions() {
