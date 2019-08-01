@@ -43,7 +43,7 @@ class ImportDefinitionTest extends BaseTest {
         assert (response.getBody().jsonPath().get("message").toString()
             .contains("At least one case field must be defined for case type"));
     }
-/*
+
     @Test
     @DisplayName("Missing SecurityType from CaseType tab")
     void shouldNotImportMissingSecurityTypeFromCaseTypeACL() {
@@ -60,7 +60,7 @@ class ImportDefinitionTest extends BaseTest {
         assert (response.getBody().prettyPrint()
             .contains("Case Type with name 'Demo case' must have a Security Classification defined"));
     }
-
+/*
     @Test
     @DisplayName("Invalid SecurityType ACL in CaseType tab")
     void shouldNotImportInvalidCaseTypeACLInfo() {
