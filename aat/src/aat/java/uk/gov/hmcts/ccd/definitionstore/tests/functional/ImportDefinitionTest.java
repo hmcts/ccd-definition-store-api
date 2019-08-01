@@ -97,7 +97,7 @@ class ImportDefinitionTest extends BaseTest {
             .contains("A definition must contain at least one Case Type"));
     }
 
-   /* @Test
+    @Test
     @DisplayName("Should import valid Case Type info file.")
     void shouldImportValidCaseTypeACLInfoFile() {
 
@@ -112,7 +112,7 @@ class ImportDefinitionTest extends BaseTest {
 
         assert (response.getBody().prettyPrint()
             .equals("Case Definition data successfully imported"));
-    }*/
+    }
 
     @Test
     @DisplayName("Should return the correct security classification for each case type.")
