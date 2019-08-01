@@ -30,7 +30,7 @@ java:
     IDAM_USER_URL: https://idam-api.aat.platform.hmcts.net
 
 
-    DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp
+    DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp,xui_webapp
 
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
 
