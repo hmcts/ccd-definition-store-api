@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
@@ -8,7 +9,9 @@ import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 class ImportDefinitionTest extends BaseTest {
@@ -109,7 +112,7 @@ class ImportDefinitionTest extends BaseTest {
         assert (response.getBody().prettyPrint()
             .equals("Case Definition data successfully imported"));
     }
-/*
+
     @Test
     @DisplayName("Should return the correct security classification for each case type.")
     void shouldReturnCorrectSecurityClassificationForCaseType() {
@@ -131,7 +134,7 @@ class ImportDefinitionTest extends BaseTest {
         }
         assert (caseTypeACLFromDefinitionFile.equals(caseTypeACL));
     }
-
+/*
     @Disabled("The response code should be 400 instead of 500. Code needs to be fixed.")
     @Test
     @DisplayName("Should Not import a definition with missing Permissions")
