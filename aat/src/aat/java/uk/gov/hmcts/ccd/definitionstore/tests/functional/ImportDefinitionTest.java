@@ -1,14 +1,18 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 class ImportDefinitionTest extends BaseTest {
@@ -20,12 +24,14 @@ class ImportDefinitionTest extends BaseTest {
     private Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
     private static HashMap<String, String> caseTypeACLFromDefinitionFile =
         new HashMap<String, String>() {{
+            put("AAT", "PUBLIC");
+            put("MAPPER", "PUBLIC");
             put("AATPUBLIC", "PUBLIC");
             put("AATPRIVATE", "PRIVATE");
             put("AATRESTRICTED", "RESTRICTED");
         }};
 
-  /*  @Test
+  @Test
     @DisplayName("Should Not import an invalid definition")
     void shouldNotImportInvalidDefinition() {
 
@@ -92,7 +98,7 @@ class ImportDefinitionTest extends BaseTest {
         assert (response.getBody().prettyPrint()
             .contains("A definition must contain at least one Case Type"));
     }
-*/
+
     @Test
     @DisplayName("Should import valid Case Type info file.")
     void shouldImportValidCaseTypeACLInfoFile() {
@@ -110,7 +116,7 @@ class ImportDefinitionTest extends BaseTest {
             .equals("Case Definition data successfully imported"));
     }
 
-/*
+
     @Test
     @DisplayName("Should return the correct security classification for each case type.")
     void shouldReturnCorrectSecurityClassificationForCaseType() {
@@ -118,7 +124,7 @@ class ImportDefinitionTest extends BaseTest {
         HashMap<String, String> caseTypeACL = new HashMap<>();
         ArrayList<Map<String, String>> list = asUser.get()
             .given()
-            .pathParam("jid", "AUTOTEST2")
+            .pathParam("jid", "AUTOTEST1")
             .contentType(ContentType.JSON)
             .when()
             .get("/api/data/jurisdictions/{jid}/case-type")
@@ -128,7 +134,7 @@ class ImportDefinitionTest extends BaseTest {
             .path("");
 
         for (Map<String, String> map : list) {
-            caseTypeACL.put(map.get("name"), map.get("security_classification"));
+            caseTypeACL.put(map.get("id"), map.get("security_classification"));
         }
         assert (caseTypeACLFromDefinitionFile.equals(caseTypeACL));
     }
@@ -188,5 +194,5 @@ class ImportDefinitionTest extends BaseTest {
             .statusCode(422)
             .when()
             .post("/import");
-    }*/
+    }
 }
