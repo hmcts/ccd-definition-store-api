@@ -8,12 +8,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
+import uk.gov.hmcts.ccd.definitionstore.tests.helper.ImportDefinitonDataSetup;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 class ImportDefinitionTest extends BaseTest {
 
@@ -22,14 +28,6 @@ class ImportDefinitionTest extends BaseTest {
     }
 
     private Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
-    private static HashMap<String, String> caseTypeACLFromDefinitionFile =
-        new HashMap<String, String>() {{
-            put("AAT", "PUBLIC");
-            put("MAPPER", "PUBLIC");
-            put("AATPUBLIC", "PUBLIC");
-            put("AATPRIVATE", "PRIVATE");
-            put("AATRESTRICTED", "RESTRICTED");
-        }};
 
     @Test
     @DisplayName("Should Not import an invalid definition")
@@ -116,28 +114,6 @@ class ImportDefinitionTest extends BaseTest {
             .equals("Case Definition data successfully imported"));
     }
 
-    @Test
-    @DisplayName("Should return the correct security classification for each case type.")
-    void shouldReturnCorrectSecurityClassificationForCaseType() {
-
-        HashMap<String, String> caseTypeACL = new HashMap<>();
-        ArrayList<Map<String, String>> list = asUser.get()
-            .given()
-            .pathParam("jid", "AUTOTEST1")
-            .contentType(ContentType.JSON)
-            .when()
-            .get("/api/data/jurisdictions/{jid}/case-type")
-            .then()
-            .statusCode(200)
-            .extract()
-            .path("");
-
-        for (Map<String, String> map : list) {
-            caseTypeACL.put(map.get("id"), map.get("security_classification"));
-        }
-        assert (caseTypeACLFromDefinitionFile.equals(caseTypeACL));
-    }
-
     @Disabled("The response code should be 400 instead of 500. Code needs to be fixed.")
     @Test
     @DisplayName("Should Not import a definition with missing Permissions")
@@ -193,5 +169,39 @@ class ImportDefinitionTest extends BaseTest {
             .statusCode(422)
             .when()
             .post("/import");
+    }
+
+
+    @Test
+    @DisplayName("Should return the correct security classification for each case type.")
+    void shouldReturnCorrectSecurityClassificationForCaseType() {
+        long matchingACLRecords = 0;
+        Set<String> caseTypeACLKeySet = new HashSet<String>() {{
+            add("id");
+            add("name");
+            add("description");
+            add("security_classification");
+        }};
+
+        ArrayList<Map<String, String>> caseTypeACL = asUser.get()
+            .given()
+            .pathParam("jid", "AUTOTEST1")
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/data/jurisdictions/{jid}/case-type")
+            .then()
+            .statusCode(200)
+            .extract()
+            .path("");
+
+        caseTypeACL.forEach(map -> map.keySet().retainAll(caseTypeACLKeySet));
+
+        for (Map<String, String> map : caseTypeACL) {
+            matchingACLRecords = ImportDefinitonDataSetup.populateDefinitionCaseTypeData()
+                .stream()
+                .filter(definitionData -> definitionData.equals(map))
+                .count();
+        }
+        assert (matchingACLRecords == 5);
     }
 }
