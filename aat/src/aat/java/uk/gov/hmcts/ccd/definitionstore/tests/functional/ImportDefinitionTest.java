@@ -12,14 +12,10 @@ import uk.gov.hmcts.ccd.definitionstore.tests.helper.ImportDefinitonDataSetup;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 class ImportDefinitionTest extends BaseTest {
 
@@ -131,7 +127,7 @@ class ImportDefinitionTest extends BaseTest {
 
     @Test
     @DisplayName("Should Not import a definition with missing CRUD permissions")
-    void shouldNotImportDefinitionWithMissingCRUDPermissions() {
+    void shouldNotImportDefinitionWithMissingCrudPermissions() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
         asUser.get()
@@ -183,7 +179,8 @@ class ImportDefinitionTest extends BaseTest {
             add("security_classification");
         }};
 
-        ArrayList<Map<String, String>> caseTypeACL = asUser.get()
+        ArrayList<Map<String, String>> caseTypeACL = asUser
+            .get()
             .given()
             .pathParam("jid", "AUTOTEST1")
             .contentType(ContentType.JSON)

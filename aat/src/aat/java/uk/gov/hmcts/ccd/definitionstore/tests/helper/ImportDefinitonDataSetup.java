@@ -18,7 +18,8 @@ public class ImportDefinitonDataSetup {
     }
 
     private static Map<String, String> addAATCaseTypeData() {
-        return new HashMap<String, String>() {{
+        return new HashMap<String, String>()
+        {{
             put("id", "AAT");
             put("name", "Demo case");
             put("description", "Demonstrate everything CCD can do!");
