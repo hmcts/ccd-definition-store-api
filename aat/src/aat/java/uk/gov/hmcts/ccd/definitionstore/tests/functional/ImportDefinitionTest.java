@@ -150,7 +150,6 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 
-
     @Test
     @DisplayName("Should return the correct security classification for each case type.")
     void shouldReturnCorrectSecurityClassificationForCaseType() {
