@@ -77,7 +77,7 @@ class ImportDefinitionTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Missing SecurityType ACL row in CaseType tab")
+    @DisplayName("Missing SecurityType ACL column in CaseType tab")
     void shouldNotImportMissingCaseTypeACLInfo() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
@@ -90,7 +90,7 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
 
         assert (response.getBody().prettyPrint()
-            .contains("A definition must contain at least one Case Type"));
+            .contains("At least one case field must be defined for case type"));
     }
 
     @Disabled("The response code should be 400 instead of 500. Code needs to be fixed.")
