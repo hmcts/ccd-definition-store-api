@@ -1,39 +1,20 @@
-postgresql:
-  initdbScripts:
-    init.sql: |-
-      CREATE USER ccd WITH PASSWORD 'ccd';
-      CREATE DATABASE ccd_definition_store WITH OWNER = ccd ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
-  nameOverride: postgres
-  persistence:
-    enabled: false
-
 java:
-  image: ${IMAGE_NAME}
-  ingressHost: ${SERVICE_FQDN}
-  applicationPort: 4451
-  applicationInsightsInstrumentKey: "fake-key"
-  memoryRequests: 1024Mi
-  memoryLimits: 2048Mi
+  applicationPort: 4451  
   keyVaults:
     s2s:
       resourceGroup: rpe-service-auth-provider
       secrets:
         - microservicekey-ccd-definition
   environment:
-    DEFINITION_STORE_DB_HOST: ${SERVICE_NAME}-postgres
+    DEFINITION_STORE_DB_HOST:  "{{ .Release.Name }}-postgresql"
     DEFINITION_STORE_DB_PORT: 5432
-    DEFINITION_STORE_DB_NAME: ccd_definition_store
-    DEFINITION_STORE_DB_USERNAME: ccd
+    DEFINITION_STORE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
+    DEFINITION_STORE_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
+    DEFINITION_STORE_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
     ENABLE_DB_MIGRATE: true
-
-  #  IDAM_USER_URL: https://preprod-idamapi.reform.hmcts.net:3511
     IDAM_USER_URL: https://idam-api.aat.platform.hmcts.net
-
-
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp
-
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
-
     ELASTIC_SEARCH_HOST: ''
     ELASTIC_SEARCH_PORT: 9200
     ELASTIC_SEARCH_SCHEME: http
@@ -43,10 +24,7 @@ java:
     ELASTIC_SEARCH_FAIL_ON_IMPORT: false
     ELASTIC_SEARCH_DYNAMIC: false
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT: '%s_cases'
-
     IDAM_S2S_URL: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
     USER_PROFILE_HOST: http://ccd-user-profile-api-aat.service.core-compute-aat.internal
+  image: ' hmctspublic.azurecr.io/ccd/definition-store-api:latest'    
 
-
-tags:
-  postgresql-pod: true
