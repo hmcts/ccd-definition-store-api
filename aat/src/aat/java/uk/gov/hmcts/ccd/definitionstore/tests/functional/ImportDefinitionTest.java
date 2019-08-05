@@ -93,23 +93,6 @@ class ImportDefinitionTest extends BaseTest {
             .contains("A definition must contain at least one Case Type"));
     }
 
-    @Test
-    @DisplayName("Should import valid Case Type info file.")
-    void shouldImportValidCaseTypeACLInfoFile() {
-
-        Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        Response response = asUser.get()
-            .given()
-            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Security_Classification_Test.xlsx"))
-            .expect()
-            .statusCode(201)
-            .when()
-            .post("/import");
-
-        assert (response.getBody().prettyPrint()
-            .equals("Case Definition data successfully imported"));
-    }
-
     @Disabled("The response code should be 400 instead of 500. Code needs to be fixed.")
     @Test
     @DisplayName("Should Not import a definition with missing Permissions")
@@ -178,6 +161,18 @@ class ImportDefinitionTest extends BaseTest {
             add("description");
             add("security_classification");
         }};
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        Response response = asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Security_Classification_Test.xlsx"))
+            .expect()
+            .statusCode(201)
+            .when()
+            .post("/import");
+
+        assert (response.getBody().prettyPrint()
+            .equals("Case Definition data successfully imported"));
 
         ArrayList<Map<String, String>> caseTypeACL = asUser
             .get()

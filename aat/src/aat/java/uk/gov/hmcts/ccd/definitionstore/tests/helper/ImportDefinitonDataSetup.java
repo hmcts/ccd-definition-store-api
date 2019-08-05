@@ -7,7 +7,8 @@ import java.util.Map;
 
 public class ImportDefinitonDataSetup {
 
-    public static List<Map<String, String>> caseTypeFromDefinition = new ArrayList<>();
+    private static List<Map<String, String>> caseTypeFromDefinition = new ArrayList<>();
+
     public static List<Map<String, String>> populateDefinitionCaseTypeData() {
         caseTypeFromDefinition.add(addAATCaseTypeData());
         caseTypeFromDefinition.add(addMapperCaseTypeData());
