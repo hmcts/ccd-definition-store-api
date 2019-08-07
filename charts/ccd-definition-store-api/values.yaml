@@ -11,11 +11,10 @@ java:
     DEFINITION_STORE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
     DEFINITION_STORE_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
     DEFINITION_STORE_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
-    AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
     ENABLE_DB_MIGRATE: true
     IDAM_USER_URL: https://idam-api.aat.platform.hmcts.net
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp
-    : false
+    AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
     ELASTIC_SEARCH_HOST: ''
     ELASTIC_SEARCH_PORT: 9200
     ELASTIC_SEARCH_SCHEME: http
