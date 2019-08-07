@@ -2,12 +2,14 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIST_ELEMENT_CODE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.RESULTS_ORDERING;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
 import liquibase.util.StringUtils;
@@ -20,10 +22,14 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 public abstract class GenericLayoutParser {
     private static final Logger logger = LoggerFactory.getLogger(GenericLayoutParser.class);
+
+    public static final Pattern SORT_ORDER_PATTERN = Pattern.compile("^\\d:(ASC|DESC)$");
+    public static final String SORT_STRING_DELIMITER = ":";
 
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     protected final ParseContext parseContext;
@@ -128,6 +134,11 @@ public abstract class GenericLayoutParser {
         if (StringUtils.isNotEmpty(userRole)) {
             layoutEntity.setUserRole(getRoleEntity(layoutEntity, definition.getSheetName(), userRole));
         }
+        final String sortOrder = definition.getString(RESULTS_ORDERING);
+        if (StringUtils.isNotEmpty(sortOrder)) {
+            validateSortOrder(layoutEntity, sortOrder, definition.getSheetName());
+            populateSortOrder(layoutEntity, sortOrder);
+        }
         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(layoutEntity, definition);
         return ParseResult.Entry.createNew(layoutEntity);
     }
@@ -138,9 +149,23 @@ public abstract class GenericLayoutParser {
                 userRole, sheetName, layoutEntity.getCaseField().getReference())));
     }
 
+    private void validateSortOrder(GenericLayoutEntity layoutEntity, String sortOrder, String sheetName) {
+        if (!SORT_ORDER_PATTERN.matcher(sortOrder).matches()) {
+            throw new MapperException(String.format("- Invalid results ordering pattern '%s' in worksheet '%s' for caseField '%s'",
+                sortOrder, sheetName, layoutEntity.getCaseField().getReference()));
+        }
+    }
+
+    protected static SortOrder getSortOrder(String sortOrderString) {
+        String[] tokens = sortOrderString.split(SORT_STRING_DELIMITER);
+        return new SortOrder(Integer.valueOf(tokens[0]), tokens[1]);
+    }
+
     protected Logger getLogger() {
         return logger;
     }
+
+    protected abstract void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrde);
 
     protected abstract DefinitionSheet getDefinitionSheet(Map<String, DefinitionSheet> definitionSheets);
 
