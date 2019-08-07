@@ -21,6 +21,10 @@
         <notes>Postgres jdbc ddriver</notes>
         <cve>CVE-2018-1115</cve>
     </suppress>
+       <suppress>
+        <notes>Elasticsearch version race condition header issue</notes>
+        <cve>CVE-2019-7614</cve>
+    </suppress>
     <suppress>
         <notes>h2 not used in production</notes>
         <!--<cve>CVE-2018-10054</cve>-->
