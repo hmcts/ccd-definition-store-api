@@ -124,7 +124,7 @@ allprojects {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 
         // CVE-2019-12086 - force update of jackson-databind - remove when dependencies move off <2.9.9
-        compile "com.fasterxml.jackson.core:jackson-databind:2.9.9.2"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.9.9"
     }
 
     checkstyle {
@@ -363,16 +363,6 @@ idea {
                 // Find compiler configuration component.
                 def compilerConfiguration = projectXml.component.find { component ->
                     component.'@name' == 'CompilerConfiguration'
-                }
-                // Replace current annotationProcessing
-                // that is part of the compiler configuration.
-                def currentAnnotationProcessing = compilerConfiguration.annotationProcessing
-                currentAnnotationProcessing.replaceNode {
-                    annotationProcessing {
-                        profile(name: 'Default', default: true, enabled: true) {
-                            processorPath(useClasspath: true)
-                        }
-                    }
                 }
             }
         }
