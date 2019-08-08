@@ -195,18 +195,4 @@ class ImportDefinitionTest extends BaseTest {
         }
         assert (matchingACLRecords == 5);
     }
-
-    @Test
-    @DisplayName("Should import a definition with valid sort ordering")
-    void shouldImportDefinitionHavingValidSortOrder() {
-
-        Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        asUser.get()
-            .given()
-            .multiPart(new File("src/resource/CCD_CNP_27_WithResultsOrdering.xlsx"))
-            .expect()
-            .statusCode(201)
-            .when()
-            .post("/import");
-    }
 }
