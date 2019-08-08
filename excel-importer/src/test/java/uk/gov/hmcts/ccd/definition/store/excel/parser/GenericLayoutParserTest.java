@@ -274,25 +274,7 @@ public class GenericLayoutParserTest {
     }
 
     @Test
-    @DisplayName("Should fail for sort order in input field sheet")
-    public void shouldFailForResultsOrderingInInputFieldsSheet() {
-        String sortOrder = "1:ASC";
-        final DefinitionSheet sheet = new DefinitionSheet();
-        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_INPUT_FIELD.getName());
-        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
-        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
-        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
-        item.addAttribute(ColumnName.RESULTS_ORDERING, sortOrder);
-        sheet.addDataItem(item);
-        definitionSheets.put(WORK_BASKET_INPUT_FIELD.getName(), sheet);
-        classUnderTest = new WorkbasketInputLayoutParser(context, entityToDefinitionDataItemRegistry);
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
-        assertEquals(String.format("Results ordering is not supported in worksheet '%s' for caseType '%s'",
-            item.getSheetName(), item.getCaseTypeId()), thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("Should set sort order values workbasket results")
+    @DisplayName("Should set sort order values for workbasket results")
     public void shouldSetResultsOrderingForWorkbasketResults() {
         String sortOrder = "1:ASC";
         final DefinitionSheet sheet = new DefinitionSheet();
@@ -319,7 +301,7 @@ public class GenericLayoutParserTest {
     }
 
     @Test
-    @DisplayName("Should set sort order values search results")
+    @DisplayName("Should set sort order values for search results")
     public void shouldSetResultsOrderingForSearchResults() {
         String sortOrder = "1:DESC";
         final DefinitionSheet sheet = new DefinitionSheet();
