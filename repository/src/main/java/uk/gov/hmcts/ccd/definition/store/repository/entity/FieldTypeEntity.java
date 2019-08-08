@@ -1,19 +1,31 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static java.util.Collections.emptyList;
 import static javax.persistence.GenerationType.IDENTITY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
 
 import com.google.common.base.MoreObjects;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,6 +35,9 @@ import org.hibernate.annotations.FetchMode;
 @Table(name = "field_type")
 @Entity
 public class FieldTypeEntity implements Serializable, Versionable {
+
+    private static final long serialVersionUID = -997923411806171504L;
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)
@@ -200,5 +215,10 @@ public class FieldTypeEntity implements Serializable, Versionable {
         } else {
             return emptyList();
         }
+    }
+
+    @Transient
+    public boolean isDocumentType() {
+        return (BASE_DOCUMENT.equals(reference) || (baseFieldType != null && BASE_DOCUMENT.equals(baseFieldType.getReference())));
     }
 }
