@@ -83,6 +83,10 @@
         <cve>CVE-2018-10237</cve>
     </suppress>
     <suppress>
+        <notes>Temporary suppression to ignore CVE-2019-7614</notes>
+        <cve>CVE-2019-7614</cve>
+    </suppress>
+    <suppress>
         <notes>jackson-databind 2.8.x will not get a fix for this CVE.  We need
             to upgrade to 2.9.x. See
             https://github.com/FasterXML/jackson-modules-java8/issues/90#issuecomment-450544881
