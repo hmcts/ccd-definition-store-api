@@ -229,14 +229,5 @@
         <cve>CVE-2015-5377</cve>
         <cve>CVE-2015-5531</cve>
         <cve>CVE-2019-7611</cve>
-        <cve>CVE-2019-7614</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: jackson-databind-2.9.9.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
-        <cve>CVE-2019-14379</cve>
-        <cve>CVE-2019-14439</cve>
     </suppress>
 </suppressions>
