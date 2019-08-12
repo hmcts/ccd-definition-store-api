@@ -30,29 +30,27 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
 
     public AppConfigBasedAmPersistenceSwitch(final ApplicationParams appParams) {
 
-        List<String> allForWriteDestinations = new ArrayList<>();
         List<String> duplicateForWriteDestinations = new ArrayList<>();
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmWrittenOnlyToCcd(),
                 caseTypesToWriteModes, TO_CCD,
-                allForWriteDestinations, duplicateForWriteDestinations);
+                duplicateForWriteDestinations);
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmWrittenOnlyToAm(),
                 caseTypesToWriteModes, TO_AM,
-                allForWriteDestinations, duplicateForWriteDestinations);
+                duplicateForWriteDestinations);
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmWrittenToBoth(),
                 caseTypesToWriteModes, TO_BOTH,
-                allForWriteDestinations, duplicateForWriteDestinations);
+                duplicateForWriteDestinations);
 
-        List<String> allForReadSources = new ArrayList<>();
         List<String> duplicateForReadSources = new ArrayList<>();
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmReadFromCcd(), caseTypesToReadModes, FROM_CCD,
-                allForReadSources, duplicateForReadSources);
+                duplicateForReadSources);
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmReadFromAm(), caseTypesToReadModes, FROM_AM,
-                allForReadSources, duplicateForReadSources);
+                duplicateForReadSources);
         
         if(!(duplicateForReadSources.isEmpty() && duplicateForWriteDestinations.isEmpty())) {
             LOGGER.error("Duplicate configuration(s) detected for case type(s)!");
@@ -74,15 +72,13 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
         return caseTypesToReadModes.getOrDefault(caseType, AmPersistenceReadSource.FROM_CCD);
     }
 
-
     private <T> void mapCaseTypeVsSwitchValueWith(List<String> caseTypesConfigured, Map<String, T> map, T value,
-            List<String> allCaseTypesConfigured, List<String> duplicateCaseTypesConfigured) {
+            List<String> duplicateCaseTypesConfigured) {
         caseTypesConfigured.forEach(caseType -> {
-            if (allCaseTypesConfigured.contains(caseType)) {
+            if (map.containsKey(caseType)) {
                 duplicateCaseTypesConfigured.add(caseType);
             }
             else {
-                allCaseTypesConfigured.add(caseType);
                 map.put(caseType, value);
             }
         });
