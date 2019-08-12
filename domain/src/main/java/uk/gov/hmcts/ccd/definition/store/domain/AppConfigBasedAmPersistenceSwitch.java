@@ -55,8 +55,8 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
         
         if(!(duplicateForReadSources.isEmpty() && duplicateForWriteDestinations.isEmpty())) {
             LOGGER.error("Duplicate configuration(s) detected for case type(s)!");
-            LOGGER.error("Case Types With Duplicate Read Source Configurations: {}", duplicateForReadSources);
-            LOGGER.error("Case Types With Duplicate Write Destination Configurations: {}",
+            LOGGER.error("{} Case Types With Duplicate Read Source Configurations: {}", duplicateForReadSources.size(), duplicateForReadSources);
+            LOGGER.error("{} Case Types With Duplicate Write Destination Configurations: {}",duplicateForWriteDestinations.size(),
                     duplicateForWriteDestinations);
             throw new InvalidPropertyException(AppConfigBasedAmPersistenceSwitch.class, "",
                     "Duplicate case type configurations detected for Access Management persistence switches.");
