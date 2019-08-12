@@ -9,6 +9,8 @@ import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestina
 import org.springframework.beans.InvalidPropertyException;
 
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
