@@ -54,7 +54,7 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmReadFromAm(), caseTypesToReadModes, FROM_AM,
                 duplicateForReadSources);
         
-        if(!(duplicateForReadSources.isEmpty() && duplicateForWriteDestinations.isEmpty())) {
+        if (!(duplicateForReadSources.isEmpty() && duplicateForWriteDestinations.isEmpty())) {
             LOGGER.error("Duplicate configuration(s) detected for case type(s)!");
             LOGGER.error("{} Case Types With Duplicate Read Source Configurations: {}", duplicateForReadSources.size(), duplicateForReadSources);
             LOGGER.error("{} Case Types With Duplicate Write Destination Configurations: {}",duplicateForWriteDestinations.size(),
