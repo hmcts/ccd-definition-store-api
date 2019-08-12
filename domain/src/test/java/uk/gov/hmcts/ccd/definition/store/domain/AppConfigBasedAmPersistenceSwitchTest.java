@@ -13,8 +13,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.InvalidPropertyException;
 
-import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -129,19 +129,19 @@ public class AppConfigBasedAmPersistenceSwitchTest {
         assertEquals(TO_BOTH, goodAmPersistenceSwitch.getWriteDataSourceFor(FR_CT));
     }
 
-    @Test(expected = IgnoredPropertyException.class)
+    @Test(expected = InvalidPropertyException.class)
     public void shouldFailForDuplicateReadConfigurations() {
         new AppConfigBasedAmPersistenceSwitch(
                 duplicateConfigForReadApplicationParams);
     }
 
-    @Test(expected = IgnoredPropertyException.class)
+    @Test(expected = InvalidPropertyException.class)
     public void shouldFailForDuplicateWriteConfigurations() {
         new AppConfigBasedAmPersistenceSwitch(
                 duplicateConfigForWriteApplicationParams);
     }
 
-    @Test(expected = IgnoredPropertyException.class)
+    @Test(expected = InvalidPropertyException.class)
     public void shouldFailForDuplicateReadAndWriteConfigurations() {
         new AppConfigBasedAmPersistenceSwitch(
                 duplicateConfigForReadAndWriteApplicationParams);
