@@ -9,6 +9,7 @@ import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestina
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.InvalidPropertyException;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -54,10 +55,10 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
                 allForReadSources, duplicateForReadSources);
         
         if(!(duplicateForReadSources.isEmpty() && duplicateForWriteDestinations.isEmpty())) {
-            LOGGER.error("Duplicate configuration(s) detected for case type(s):");
+            LOGGER.error("Duplicate configuration(s) detected for case type(s)!");
             LOGGER.error("Case Types With Duplicate Read Source Configurations:", duplicateForReadSources);
             LOGGER.error("Case Types With Duplicate Write Destination Configurations:", duplicateForWriteDestinations);
-            throw new RuntimeException(
+            throw new InvalidPropertyException(AppConfigBasedAmPersistenceSwitch.class, "",
                     "Duplicate case type configurations detected for Access Management persistence switches.");
         }
 
