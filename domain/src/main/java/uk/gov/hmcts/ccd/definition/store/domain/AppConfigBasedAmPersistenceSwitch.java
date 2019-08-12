@@ -6,11 +6,12 @@ import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestina
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_BOTH;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_CCD;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.InvalidPropertyException;
 
 import com.google.common.collect.Maps;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -77,11 +78,12 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
     private <T> void mapCaseTypeVsSwitchValueWith(List<String> caseTypesConfigured, Map<String, T> map, T value,
             List<String> duplicateCaseTypesConfigured) {
         caseTypesConfigured.forEach(caseType -> {
-            if (map.containsKey(caseType)) {
-                duplicateCaseTypesConfigured.add(caseType);
-            }
-            else {
-                map.put(caseType, value);
+            if (!StringUtils.isEmpty(caseType)) {
+                if (map.containsKey(caseType)) {
+                    duplicateCaseTypesConfigured.add(caseType);
+                } else {
+                    map.put(caseType, value);
+                }
             }
         });
     }
