@@ -67,7 +67,7 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
 
     @Override
     public AmPersistenceWriteDestination getWriteDataSourceFor(String caseType) {
-        return caseTypesToWriteModes.getOrDefault(caseType, AmPersistenceWriteDestination.TO_BOTH);
+        return caseTypesToWriteModes.getOrDefault(caseType, AmPersistenceWriteDestination.TO_CCD);
     }
 
     @Override
