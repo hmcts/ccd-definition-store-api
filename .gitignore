@@ -33,3 +33,4 @@ application/src/test/resources/test-local-override.properties
 build/
 **/out/
 **/build/
+/bin/
