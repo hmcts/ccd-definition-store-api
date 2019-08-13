@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-public abstract class AbstractRegularExpressionValidator {
+public abstract class AbstractDocumentTypeRegularExpressionValidator {
 
     private static final Pattern DOCUMENT_REGULAR_EXPRESSION_PATTERN = Pattern.compile("\\.\\w+(,\\s*\\.\\w+)*");
 

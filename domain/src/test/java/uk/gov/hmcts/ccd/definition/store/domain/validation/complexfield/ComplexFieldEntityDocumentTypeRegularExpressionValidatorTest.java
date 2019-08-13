@@ -16,12 +16,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.regex.RegularExpressi
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-class ComplexFieldEntityRegularExpressionValidatorTest {
+class ComplexFieldEntityDocumentTypeRegularExpressionValidatorTest {
 
     @Mock
     private ComplexFieldValidator.ValidationContext context;
 
-    private final ComplexFieldEntityRegularExpressionValidator validator = new ComplexFieldEntityRegularExpressionValidator();
+    private final ComplexFieldEntityDocumentTypeRegularExpressionValidator validator = new ComplexFieldEntityDocumentTypeRegularExpressionValidator();
 
     private final FieldTypeEntity fieldType = new FieldTypeEntity();
     private final ComplexFieldEntity complexField = new ComplexFieldEntity();

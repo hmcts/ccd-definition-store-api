@@ -15,12 +15,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.regex.RegularExpressionValidationError;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-class FieldTypeRegularExpressionValidatorTest {
+class DocumentTypeRegularExpressionValidatorTest {
 
     @Mock
     private FieldTypeValidationContext context;
 
-    private final FieldTypeRegularExpressionValidator validator = new FieldTypeRegularExpressionValidator();
+    private final DocumentTypeRegularExpressionValidator validator = new DocumentTypeRegularExpressionValidator();
 
     private final FieldTypeEntity fieldType = new FieldTypeEntity();
 
