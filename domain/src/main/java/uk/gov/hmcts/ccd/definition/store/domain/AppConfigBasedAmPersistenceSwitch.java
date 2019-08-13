@@ -67,22 +67,22 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
 
     @Override
     public AmPersistenceWriteDestination getWriteDataSourceFor(String caseType) {
-        return caseTypesToWriteModes.getOrDefault(caseType, AmPersistenceWriteDestination.TO_CCD);
+        return caseTypesToWriteModes.getOrDefault(caseType.toUpperCase(), AmPersistenceWriteDestination.TO_CCD);
     }
 
     @Override
     public AmPersistenceReadSource getReadDataSourceFor(String caseType) {
-        return caseTypesToReadModes.getOrDefault(caseType, AmPersistenceReadSource.FROM_CCD);
+        return caseTypesToReadModes.getOrDefault(caseType.toUpperCase(), AmPersistenceReadSource.FROM_CCD);
     }
 
     private <T> void mapCaseTypeVsSwitchValueWith(List<String> caseTypesConfigured, Map<String, T> map, T value,
             List<String> duplicateCaseTypesConfigured) {
         caseTypesConfigured.forEach(caseType -> {
             if (!StringUtils.isEmpty(caseType)) {
-                if (map.containsKey(caseType)) {
-                    duplicateCaseTypesConfigured.add(caseType);
+                if (map.containsKey(caseType.toUpperCase())) {
+                    duplicateCaseTypesConfigured.add(caseType.toUpperCase());
                 } else {
-                    map.put(caseType, value);
+                    map.put(caseType.toUpperCase(), value);
                 }
             }
         });
