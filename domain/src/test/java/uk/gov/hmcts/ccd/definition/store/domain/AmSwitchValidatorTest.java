@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -91,24 +91,25 @@ public class AmSwitchValidatorTest {
     public void shouldFailForDuplicateReadConfigurations() {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
                 () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadApplicationParams));
-        assertEquals("Duplicate case type configurations detected for Access Management persistence switches.",
-                invalidPropertyException.getMessage());
+        assertTrue(invalidPropertyException.getMessage()
+                .endsWith("Duplicate case type configurations detected for Access Management persistence switches."));
     }
 
     @Test
     public void shouldFailForDuplicateWriteConfigurations() {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
                 () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForWriteApplicationParams));
-        assertEquals("Duplicate case type configurations detected for Access Management persistence switches.",
-                invalidPropertyException.getMessage());
+        assertTrue(invalidPropertyException.getMessage()
+                .endsWith("Duplicate case type configurations detected for Access Management persistence switches."
+                ));
     }
 
     @Test
     public void shouldFailForDuplicateReadAndWriteConfigurations() {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
                 () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadAndWriteApplicationParams));
-        assertEquals("Duplicate case type configurations detected for Access Management persistence switches.",
-                invalidPropertyException.getMessage());
+        assertTrue(invalidPropertyException.getMessage()
+                .endsWith("Duplicate case type configurations detected for Access Management persistence switches."));
     }
 
 }
