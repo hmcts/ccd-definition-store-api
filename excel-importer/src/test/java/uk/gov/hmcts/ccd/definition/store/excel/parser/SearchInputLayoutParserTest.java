@@ -62,12 +62,13 @@ public class SearchInputLayoutParserTest {
         assertThat(classUnderTest.getLayoutName(), is("Search Inputs"));
     }
 
+    @Test
     @DisplayName("Should fail when populateSortOrder is invoked")
     public void shouldThrowExceptionWhenPopulateSortOrderIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateSortOrder(layoutEntity, "1:ASC"));
         assertEquals(String.format("Results ordering is not supported in worksheet '%s' for caseType '%s'",
-            SheetName.SEARCH_RESULT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
+            SheetName.SEARCH_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }
 }
