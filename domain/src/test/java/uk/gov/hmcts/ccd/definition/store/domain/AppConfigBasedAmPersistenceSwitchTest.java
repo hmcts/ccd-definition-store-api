@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceReadSource.FROM_AM;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceReadSource.FROM_CCD;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.InvalidPropertyException;
 
 import com.google.common.collect.Lists;
 
@@ -50,8 +48,6 @@ public class AppConfigBasedAmPersistenceSwitchTest {
     private List<String> ccdOnlyReadCaseTypes = Lists.newArrayList(CMC_CT, PROBATE_CT);
     private List<String> amOnlyReadCaseTypes = Lists.newArrayList(DIVORCE_CT, FR_CT, TEST_CT);
 
-    private List<String> repeatedCaseTypeList = Lists.newArrayList(DIVORCE_CT, FR_CT, TEST_CT);
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -61,33 +57,6 @@ public class AppConfigBasedAmPersistenceSwitchTest {
         doReturn(ccdOnlyReadCaseTypes).when(goodApplicationParams).getCaseTypesWithAmReadFromCcd();
         doReturn(amOnlyReadCaseTypes).when(goodApplicationParams).getCaseTypesWithAmReadFromAm();
         goodAmPersistenceSwitch = new AppConfigBasedAmPersistenceSwitch(goodApplicationParams);
-
-        doReturn(ccdOnlyWriteCaseTypes).when(duplicateConfigForReadApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToCcd();
-        doReturn(amOnlyWriteCaseTypes).when(duplicateConfigForReadApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToAm();
-        doReturn(bothWriteCaseTypes).when(duplicateConfigForReadApplicationParams).getCaseTypesWithAmWrittenToBoth();
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForReadApplicationParams).getCaseTypesWithAmReadFromCcd();
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForReadApplicationParams).getCaseTypesWithAmReadFromAm();
-
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForWriteApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToCcd();
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForWriteApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToAm();
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForWriteApplicationParams).getCaseTypesWithAmWrittenToBoth();
-        doReturn(ccdOnlyReadCaseTypes).when(duplicateConfigForWriteApplicationParams).getCaseTypesWithAmReadFromCcd();
-        doReturn(amOnlyReadCaseTypes).when(duplicateConfigForWriteApplicationParams).getCaseTypesWithAmReadFromAm();
-
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToCcd();
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToAm();
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmWrittenToBoth();
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmReadFromCcd();
-        doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmReadFromAm();
     }
 
     @Test
@@ -128,30 +97,6 @@ public class AppConfigBasedAmPersistenceSwitchTest {
     @Test
     public void shouldSelectBothAsWriteDataSourceForAppropriateCaseTypes() {
         assertEquals(TO_BOTH, goodAmPersistenceSwitch.getWriteDataSourceFor(FR_CT));
-    }
-
-    @Test
-    public void shouldFailForDuplicateReadConfigurations() {
-        final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
-                () -> new AppConfigBasedAmPersistenceSwitch(duplicateConfigForReadApplicationParams));
-        assertEquals("Duplicate case type configurations detected for Access Management persistence switches.",
-                invalidPropertyException.getMessage());
-    }
-
-    @Test
-    public void shouldFailForDuplicateWriteConfigurations() {
-        final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
-                () -> new AppConfigBasedAmPersistenceSwitch(duplicateConfigForWriteApplicationParams));
-        assertEquals("Duplicate case type configurations detected for Access Management persistence switches.",
-                invalidPropertyException.getMessage());
-    }
-
-    @Test
-    public void shouldFailForDuplicateReadAndWriteConfigurations() {
-        final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
-                () -> new AppConfigBasedAmPersistenceSwitch(duplicateConfigForReadAndWriteApplicationParams));
-        assertEquals("Duplicate case type configurations detected for Access Management persistence switches.",
-                invalidPropertyException.getMessage());
     }
 
 }

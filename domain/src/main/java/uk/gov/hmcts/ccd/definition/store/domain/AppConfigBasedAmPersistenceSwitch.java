@@ -7,16 +7,12 @@ import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestina
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_CCD;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.InvalidPropertyException;
 
 import com.google.common.collect.Maps;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,44 +20,24 @@ import java.util.Map;
 @Singleton
 public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppConfigBasedAmPersistenceSwitch.class);
-
     private final Map<String, AmPersistenceWriteDestination> caseTypesToWriteModes = Maps.newHashMap();
 
     private final Map<String, AmPersistenceReadSource> caseTypesToReadModes = Maps.newHashMap();
 
     public AppConfigBasedAmPersistenceSwitch(final ApplicationParams appParams) {
 
-        List<String> duplicateForWriteDestinations = new ArrayList<>();
-
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmWrittenOnlyToCcd(),
-                caseTypesToWriteModes, TO_CCD,
-                duplicateForWriteDestinations);
+                caseTypesToWriteModes, TO_CCD);
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmWrittenOnlyToAm(),
-                caseTypesToWriteModes, TO_AM,
-                duplicateForWriteDestinations);
+                caseTypesToWriteModes, TO_AM);
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmWrittenToBoth(),
-                caseTypesToWriteModes, TO_BOTH,
-                duplicateForWriteDestinations);
+                caseTypesToWriteModes, TO_BOTH);
 
-        List<String> duplicateForReadSources = new ArrayList<>();
+        mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmReadFromCcd(), caseTypesToReadModes, FROM_CCD);
 
-        mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmReadFromCcd(), caseTypesToReadModes, FROM_CCD,
-                duplicateForReadSources);
-
-        mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmReadFromAm(), caseTypesToReadModes, FROM_AM,
-                duplicateForReadSources);
-        
-        if (!(duplicateForReadSources.isEmpty() && duplicateForWriteDestinations.isEmpty())) {
-            LOGGER.error("Duplicate configuration(s) detected for case type(s)!");
-            LOGGER.error("{} Case Types With Duplicate Read Source Configurations: {}", duplicateForReadSources.size(), duplicateForReadSources);
-            LOGGER.error("{} Case Types With Duplicate Write Destination Configurations: {}",duplicateForWriteDestinations.size(),
-                    duplicateForWriteDestinations);
-            throw new InvalidPropertyException(AppConfigBasedAmPersistenceSwitch.class, "",
-                    "Duplicate case type configurations detected for Access Management persistence switches.");
-        }
+        mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmReadFromAm(), caseTypesToReadModes, FROM_AM);
 
     }
 
@@ -75,15 +51,10 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
         return caseTypesToReadModes.getOrDefault(caseType.toUpperCase(), AmPersistenceReadSource.FROM_CCD);
     }
 
-    private <T> void mapCaseTypeVsSwitchValueWith(List<String> caseTypesConfigured, Map<String, T> map, T value,
-            List<String> duplicateCaseTypesConfigured) {
+    private <T> void mapCaseTypeVsSwitchValueWith(List<String> caseTypesConfigured, Map<String, T> map, T value) {
         caseTypesConfigured.forEach(caseType -> {
             if (!StringUtils.isEmpty(caseType)) {
-                if (map.containsKey(caseType.toUpperCase())) {
-                    duplicateCaseTypesConfigured.add(caseType.toUpperCase());
-                } else {
                     map.put(caseType.toUpperCase(), value);
-                }
             }
         });
     }
