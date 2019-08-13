@@ -8,8 +8,8 @@ import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestina
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_BOTH;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_CCD;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -51,7 +51,7 @@ public class AppConfigBasedAmPersistenceSwitchTest {
 
     private List<String> repeatedCaseTypeList = Lists.newArrayList(DIVORCE_CT, FR_CT, TEST_CT);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         doReturn(ccdOnlyWriteCaseTypes).when(goodApplicationParams).getCaseTypesWithAmWrittenOnlyToCcd();
