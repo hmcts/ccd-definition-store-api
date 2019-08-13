@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceReadSource.FROM_AM;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceReadSource.FROM_CCD;
@@ -8,8 +9,8 @@ import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestina
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_BOTH;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_CCD;
 
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -129,22 +130,28 @@ public class AppConfigBasedAmPersistenceSwitchTest {
         assertEquals(TO_BOTH, goodAmPersistenceSwitch.getWriteDataSourceFor(FR_CT));
     }
 
-    @Test(expected = InvalidPropertyException.class)
+    @Test
     public void shouldFailForDuplicateReadConfigurations() {
-        new AppConfigBasedAmPersistenceSwitch(
-                duplicateConfigForReadApplicationParams);
+        final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
+                () -> new AppConfigBasedAmPersistenceSwitch(duplicateConfigForReadApplicationParams));
+        assertEquals("Duplicate case type configurations detected for Access Management persistence switches.",
+                invalidPropertyException.getMessage());
     }
 
-    @Test(expected = InvalidPropertyException.class)
+    @Test
     public void shouldFailForDuplicateWriteConfigurations() {
-        new AppConfigBasedAmPersistenceSwitch(
-                duplicateConfigForWriteApplicationParams);
+        final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
+                () -> new AppConfigBasedAmPersistenceSwitch(duplicateConfigForWriteApplicationParams));
+        assertEquals("Duplicate case type configurations detected for Access Management persistence switches.",
+                invalidPropertyException.getMessage());
     }
 
-    @Test(expected = InvalidPropertyException.class)
+    @Test
     public void shouldFailForDuplicateReadAndWriteConfigurations() {
-        new AppConfigBasedAmPersistenceSwitch(
-                duplicateConfigForReadAndWriteApplicationParams);
+        final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
+                () -> new AppConfigBasedAmPersistenceSwitch(duplicateConfigForReadAndWriteApplicationParams));
+        assertEquals("Duplicate case type configurations detected for Access Management persistence switches.",
+                invalidPropertyException.getMessage());
     }
 
 }
