@@ -9,6 +9,7 @@ import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestina
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_CCD;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -60,22 +61,26 @@ public class AppConfigBasedAmPersistenceSwitchTest {
     }
 
     @Test
+    @DisplayName("Should select CCD as read data source if case type is not specified")
     public void shouldSelectCcdAsReadDataSourceIfCaseTypeNotSpecified() {
         assertEquals(FROM_CCD, goodAmPersistenceSwitch.getReadDataSourceFor(UNSPECIFIED));
     }
 
     @Test
+    @DisplayName("Should select CCD as write data source if case type not specified")
     public void shouldSelectCcdAsWriteDataSourceIfCaseTypeNotSpecified() {
         assertEquals(TO_CCD, goodAmPersistenceSwitch.getWriteDataSourceFor(UNSPECIFIED));
     }
 
     @Test
+    @DisplayName("Should select CCD as read data source for appropriate case types")
     public void shouldSelectCcdAsReadDataSourceForAppropriateCaseTypes() {
         assertEquals(FROM_CCD, goodAmPersistenceSwitch.getReadDataSourceFor(CMC_CT));
         assertEquals(FROM_CCD, goodAmPersistenceSwitch.getReadDataSourceFor(PROBATE_CT));
     }
 
     @Test
+    @DisplayName("Should selec AM as read data source for appropriate case types")
     public void shouldSelectAmAsReadDataSourceForAppropriateCaseTypes() {
         assertEquals(FROM_AM, goodAmPersistenceSwitch.getReadDataSourceFor(DIVORCE_CT));
         assertEquals(FROM_AM, goodAmPersistenceSwitch.getReadDataSourceFor(FR_CT));
@@ -83,6 +88,7 @@ public class AppConfigBasedAmPersistenceSwitchTest {
     }
 
     @Test
+    @DisplayName("Should select CCD as write data source for appropriate case types")
     public void shouldSelectCcdAsWriteDataSourceForAppropriateCaseTypes() {
         assertEquals(TO_CCD, goodAmPersistenceSwitch.getWriteDataSourceFor(DIVORCE_CT));
         assertEquals(TO_CCD, goodAmPersistenceSwitch.getWriteDataSourceFor(CMC_CT));
@@ -90,11 +96,13 @@ public class AppConfigBasedAmPersistenceSwitchTest {
     }
 
     @Test
+    @DisplayName("Should select AM as write data source for appropriate case types")
     public void shouldSelectAmAsWriteDataSourceForAppropriateCaseTypes() {
         assertEquals(TO_AM, goodAmPersistenceSwitch.getWriteDataSourceFor(PROBATE_CT));
     }
 
     @Test
+    @DisplayName("Should select both as write data source for appropriate case types")
     public void shouldSelectBothAsWriteDataSourceForAppropriateCaseTypes() {
         assertEquals(TO_BOTH, goodAmPersistenceSwitch.getWriteDataSourceFor(FR_CT));
     }

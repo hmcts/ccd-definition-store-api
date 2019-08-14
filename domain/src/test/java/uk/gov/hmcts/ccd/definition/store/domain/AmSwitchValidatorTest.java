@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -83,11 +84,13 @@ public class AmSwitchValidatorTest {
     }
 
     @Test
+    @DisplayName("Should successfully validate good configurations")
     public void shouldSuccessfullyValidateGoodConfigurations() {
         validator.validateAmPersistenceSwitchesIn(goodApplicationParams);
     }
 
     @Test
+    @DisplayName("Should fail for duplicate read configurations")
     public void shouldFailForDuplicateReadConfigurations() {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
                 () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadApplicationParams));
@@ -96,6 +99,7 @@ public class AmSwitchValidatorTest {
     }
 
     @Test
+    @DisplayName("Should fail for duplicate write configurations")
     public void shouldFailForDuplicateWriteConfigurations() {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
                 () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForWriteApplicationParams));
@@ -105,6 +109,7 @@ public class AmSwitchValidatorTest {
     }
 
     @Test
+    @DisplayName("Should fail for duplicate read and write configurations")
     public void shouldFailForDuplicateReadAndWriteConfigurations() {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
                 () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadAndWriteApplicationParams));
