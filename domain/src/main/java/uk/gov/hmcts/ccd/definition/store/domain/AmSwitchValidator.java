@@ -38,7 +38,8 @@ public class AmSwitchValidator {
                     duplicateForReadSources);
             LOGGER.error("{} Case Types With Duplicate Write Destination Configurations: {}",
                     duplicateForWriteDestinations.size(), duplicateForWriteDestinations);
-            throw new InvalidPropertyException(ApplicationParams.class, "",
+            throw new InvalidPropertyException(ApplicationParams.class,
+                    "properties mapped from ccd.am.read.* and ccd.am.write.*",
                     "Duplicate case type configurations detected for Access Management persistence switches.");
         }
     }
