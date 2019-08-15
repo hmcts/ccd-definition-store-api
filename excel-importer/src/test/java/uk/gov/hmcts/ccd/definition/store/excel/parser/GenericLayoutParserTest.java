@@ -228,11 +228,7 @@ public class GenericLayoutParserTest {
         item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
         item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
         sheet.addDataItem(item);
-        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
-        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
-        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
-        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
-        sheet.addDataItem(item2);
+        addCaseType2Field(sheet);
         final DefinitionDataItem item3 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item3.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
         item3.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
@@ -261,15 +257,129 @@ public class GenericLayoutParserTest {
         item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
         item.addAttribute(ColumnName.RESULTS_ORDERING, invalidSortOrder);
         sheet.addDataItem(item);
-        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
-        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
-        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
-        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
-        sheet.addDataItem(item2);
+        addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
-        assertEquals(String.format("- Invalid results ordering pattern '%s' in worksheet '%s' for caseField '%s'",
-            invalidSortOrder, item.getSheetName(), item.getString(ColumnName.CASE_FIELD_ID)), thrown.getMessage());
+        assertEquals(String.format("Invalid results ordering pattern '%s' in worksheet '%s' for caseType '%s' for caseField '%s'",
+            invalidSortOrder, item.getSheetName(), CASE_TYPE_ID, item.getString(ColumnName.CASE_FIELD_ID)), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("duplicate sort order priority should generate error")
+    public void shouldFailForDuplicateSortOrderPriority() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        item.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item2.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
+        sheet.addDataItem(item2);
+        addCaseType2Field(sheet); // CASE_TYPE_ID2
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
+            item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("duplicate sort order priority with in the same user role should generate error")
+    public void shouldFailForDuplicateSortOrderPriorityWithInUserRole() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        item.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
+        item.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item2.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        sheet.addDataItem(item2);
+        addCaseType2Field(sheet); // CASE_TYPE_ID2
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
+            item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("duplicate sort order priority per user role should generate error")
+    public void shouldFailForDuplicateSortOrderPriorityPerUserRole() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        item.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item2.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        sheet.addDataItem(item2);
+        addCaseType2Field(sheet); // CASE_TYPE_ID2
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
+            item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Missing gaps in the sort order priority should generate error")
+    public void shouldFailForGapsInSortOrderPriority() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item2.addAttribute(ColumnName.RESULTS_ORDERING, "2:ASC");
+        sheet.addDataItem(item2);
+        addCaseType2Field(sheet); // CASE_TYPE_ID2
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        assertEquals(String.format("Missing gaps in the sort order priority in worksheet '%s' for caseType '%s'",
+            item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Missing gaps in the sort order priority for the same user role should generate error")
+    public void shouldFailForGapsInSortOrderPriorityWithInUserRole() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        item.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item2.addAttribute(ColumnName.RESULTS_ORDERING, "2:ASC");
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        sheet.addDataItem(item2);
+        addCaseType2Field(sheet); // CASE_TYPE_ID2
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        assertEquals(String.format("Missing gaps in the sort order priority in worksheet '%s' for caseType '%s'",
+            item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
     }
 
     @Test
@@ -325,6 +435,14 @@ public class GenericLayoutParserTest {
             hasProperty("direction", equalTo("DESC")))));
         assertThat(parseResult.getAllResults(), hasItem(hasProperty("sortOrder",
             hasProperty("priority", equalTo(1)))));
+    }
+
+    private void addCaseType2Field(DefinitionSheet sheet) {
+        final DefinitionDataItem item3 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item3.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item3.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item3.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        sheet.addDataItem(item3);
     }
 
 }
