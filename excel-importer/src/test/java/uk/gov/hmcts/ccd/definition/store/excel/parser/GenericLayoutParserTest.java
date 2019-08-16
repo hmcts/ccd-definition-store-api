@@ -337,7 +337,7 @@ public class GenericLayoutParserTest {
     }
 
     @Test
-    @DisplayName("Missing gaps in the sort order priority should generate error")
+    @DisplayName("Missing sort order priority should generate error")
     public void shouldFailForGapsInSortOrderPriority() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
@@ -354,12 +354,12 @@ public class GenericLayoutParserTest {
         addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
-        assertEquals(String.format("Missing gaps in the sort order priority in worksheet '%s' for caseType '%s'",
+        assertEquals(String.format("Missing sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Missing gaps in the sort order priority for the same user role should generate error")
+    @DisplayName("Missing sort order priority for the same user role should generate error")
     public void shouldFailForGapsInSortOrderPriorityWithInUserRole() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
@@ -378,7 +378,7 @@ public class GenericLayoutParserTest {
         addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
-        assertEquals(String.format("Missing gaps in the sort order priority in worksheet '%s' for caseType '%s'",
+        assertEquals(String.format("Missing sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
     }
 

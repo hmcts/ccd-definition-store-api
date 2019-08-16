@@ -182,7 +182,7 @@ public abstract class GenericLayoutParser {
     private void checkGapsInSortPriority(List<Integer> items, String sheetName, String caseType) {
         boolean noGaps = items.stream().allMatch(e -> items.containsAll(IntStream.range(1, e).boxed().collect(Collectors.toList())));
         if (!noGaps) {
-            throw new MapperException(String.format("Missing gaps in the sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
+            throw new MapperException(String.format("Missing sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
         }
     }
 
