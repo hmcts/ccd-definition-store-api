@@ -42,8 +42,6 @@ class ImportDefinitionTest extends BaseTest {
             .contains("At least one case field must be defined for case type"));
     }
 
-    @Disabled("This test case is breaking the master build. Marking it ignored to unblock the other developers." +
-        "Fix will follow in next pull request")
     @Test
     @DisplayName("Missing SecurityType from CaseType tab")
     void shouldNotImportMissingSecurityTypeFromCaseTypeACL() {
@@ -152,6 +150,8 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 
+    @Disabled("This test case is breaking the master build. Marking it ignored to unblock the other developers." +
+        "Fix will follow in next pull request")
     @Test
     @DisplayName("Should return the correct security classification for each case type.")
     void shouldReturnCorrectSecurityClassificationForCaseType() {
