@@ -140,3 +140,23 @@ variable "elastic_search_dynamc" {
 variable "elastic_search_case_index_name_format" {
   default = "%s_cases"
 }
+
+variable "ccd_am_write_to_ccd_only" {
+  default = ""
+}
+
+variable "ccd_am_write_to_am_only" {
+  default = ""
+}
+
+variable "ccd_am_write_to_both" {
+  default = ""
+}
+
+variable "ccd_am_read_from_ccd" {
+  default = ""
+}
+
+variable "ccd_am_read_from_am" {
+  default = ""
+}
