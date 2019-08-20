@@ -19,9 +19,11 @@ java:
       secrets:
         - microservicekey-ccd-definition
   environment:
+    DEFINITION_STORE_DB_HOST:  "{{ .Release.Name }}-postgresql"
     DEFINITION_STORE_DB_PORT: 5432
-    DEFINITION_STORE_DB_NAME: ccd_definition_store
-    DEFINITION_STORE_DB_USERNAME: ccd
+    DEFINITION_STORE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
+    DEFINITION_STORE_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
+    DEFINITION_STORE_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
     ENABLE_DB_MIGRATE: true
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
@@ -34,6 +36,3 @@ java:
     ELASTIC_SEARCH_FAIL_ON_IMPORT: false
     ELASTIC_SEARCH_DYNAMIC: false
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT: '%s_cases'
-
-tags:
-  postgresql-pod: true
