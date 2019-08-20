@@ -142,6 +142,13 @@ module "case-definition-store-api" {
     ADMIN_WEB_AUTHORIZATION_MANAGE_DEFINITION_0 = "ccd-import"
     ADMIN_WEB_AUTHORIZATION_IMPORT_DEFINITION_0 = "ccd-import"
     // TODO More roles to be added to the appropriate actions, once they are created in IdAM
+
+    CCD_AM_WRITE_TO_CCD_ONLY = "${var.ccd_am_write_to_ccd_only}"
+    CCD_AM_WRITE_TO_AM_ONLY = "${var.ccd_am_write_to_am_only}"
+    CCD_AM_WRITE_TO_BOTH = "${var.ccd_am_write_to_both}"
+    CCD_AM_READ_FROM_CCD = "${var.ccd_am_read_from_ccd}"
+    CCD_AM_READ_FROM_AM = "${var.ccd_am_read_from_am}"
+
   }
   common_tags = "${var.common_tags}"
 }
