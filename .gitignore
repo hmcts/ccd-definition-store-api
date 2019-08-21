@@ -8,7 +8,6 @@
 *.war
 *.ear
 .classpath
-.project
 .settings/
 target/
 
@@ -33,3 +32,4 @@ application/src/test/resources/test-local-override.properties
 build/
 **/out/
 **/build/
+/bin/
