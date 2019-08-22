@@ -87,7 +87,7 @@ class ImportDefinitionTest extends BaseTest {
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_Missing_CaseType_ACL_Info.xlsx"))
             .expect()
-            .statusCode(400)
+            .statusCode(500)
             .when()
             .post("/import");
 
