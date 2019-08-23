@@ -9,8 +9,6 @@ COPY build/libs/case-definition-store-api.jar /opt/app/
 COPY lib/AI-Agent.xml /opt/app/
 COPY lib/applicationinsights-agent-2.3.1-SNAPSHOT.jar lib/AI-Agent.xml /opt/app/
 
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q --spider http://localhost:4451/status/health || exit 1
-
 EXPOSE 4451
 
 CMD ["case-definition-store-api.jar"]
