@@ -1,4 +1,8 @@
 java:
+  image: ${IMAGE_NAME}
+  ingressHost: ${SERVICE_FQDN}
   environment:
-    DEFINITION_STORE_DB_PASSWORD: ccd
-    ELASTIC_SEARCH_PASSWORD: ''
+    IDAM_USER_URL: https://idam-api.aat.platform.hmcts.net
+    IDAM_S2S_URL: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
+    USER_PROFILE_HOST: http://ccd-user-profile-api-aat.service.core-compute-aat.internal
+
