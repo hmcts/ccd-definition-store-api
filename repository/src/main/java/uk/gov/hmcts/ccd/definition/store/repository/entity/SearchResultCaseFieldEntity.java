@@ -6,4 +6,15 @@ import javax.persistence.*;
 @Entity
 public class SearchResultCaseFieldEntity extends GenericLayoutEntity {
 
+    @Embedded
+    private SortOrder sortOrder;
+
+    public SortOrder getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(SortOrder sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
 }

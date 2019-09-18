@@ -13,6 +13,7 @@ public class SearchResultsField {
     private Integer order = null;
     private boolean metadata;
     private String role;
+    private SortOrder sortOrder;
 
     @ApiModelProperty(value = "")
     @JsonProperty("case_field_id")
@@ -68,5 +69,14 @@ public class SearchResultsField {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @JsonProperty("sort_order")
+    public SortOrder getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(SortOrder sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

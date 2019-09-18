@@ -43,4 +43,11 @@ public class SearchResultLayoutParser extends GenericLayoutParser {
     protected GenericLayoutEntity createLayoutCaseFieldEntity() {
         return new SearchResultCaseFieldEntity();
     }
+
+    @Override
+    protected void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrderString) {
+        SearchResultCaseFieldEntity resultCaseFieldEntity = ((SearchResultCaseFieldEntity)layoutEntity);
+        resultCaseFieldEntity.setSortOrder(getSortOrder(sortOrderString));
+    }
+
 }
