@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.ccd.definition.store.repository.CaseTypeAmInfo.builder;
+
 public class SwitchableCaseTypeRepository implements VersionedDefinitionRepository<CaseTypeEntity, Integer> {
 
     public static final String NOT_SUPPORTED = "This operation is not supported";
@@ -116,7 +118,7 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
     @Override
     public <S extends CaseTypeEntity> S save(S entity) {
         S ccdSaved = ccdCaseTypeRepository.save(entity);
-        CaseTypeAmInfo caseTypeAmInfo = amCaseTypeACLRepository.saveAmInfoFor(CaseTypeAmInfo.builder().caseTypeACLs(entity.getCaseTypeACLEntities()).build());
+        CaseTypeAmInfo caseTypeAmInfo = amCaseTypeACLRepository.saveAmInfoFor(builder().caseTypeACLs(entity.getCaseTypeACLEntities()).build());
         ccdSaved.setCaseTypeACLEntities(caseTypeAmInfo.getCaseTypeACLs());
         return ccdSaved;
     }
