@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.domain;
+package uk.gov.hmcts.ccd.definition.store.repository;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

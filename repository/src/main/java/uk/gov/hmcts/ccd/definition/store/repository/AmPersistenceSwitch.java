@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.domain;
+package uk.gov.hmcts.ccd.definition.store.repository;
 
 public interface AmPersistenceSwitch {
 
