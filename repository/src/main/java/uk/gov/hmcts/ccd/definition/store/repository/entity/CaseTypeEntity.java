@@ -22,6 +22,7 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import com.google.common.collect.Lists;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -98,7 +99,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
-    private final List<CaseTypeACLEntity> caseTypeACLEntities = new ArrayList<>();
+    private List<CaseTypeACLEntity> caseTypeACLEntities = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -246,6 +247,10 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public List<CaseTypeACLEntity> getCaseTypeACLEntities() {
         return caseTypeACLEntities;
+    }
+
+    public void setCaseTypeACLEntities(final List<CaseTypeACLEntity> caseTypeACLEntities) {
+        this.caseTypeACLEntities = caseTypeACLEntities;
     }
 
     public CaseTypeEntity addCaseTypeACL(final CaseTypeACLEntity caseTypeACLEntity) {

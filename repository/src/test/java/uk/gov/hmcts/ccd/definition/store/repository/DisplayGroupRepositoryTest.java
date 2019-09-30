@@ -36,7 +36,7 @@ public class DisplayGroupRepositoryTest {
     private static final String SHOW_CONDITION = "showCondition";
 
     @Autowired
-    private CaseTypeRepository caseTypeRepository;
+    private CCDCaseTypeRepository caseTypeRepository;
 
     @Autowired
     private DisplayGroupRepository displayGroupRepository;

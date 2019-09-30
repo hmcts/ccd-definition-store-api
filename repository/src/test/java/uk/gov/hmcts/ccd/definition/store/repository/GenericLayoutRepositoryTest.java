@@ -32,7 +32,7 @@ public class GenericLayoutRepositoryTest {
     private static final String CASE_ID = "CaseId";
 
     @Autowired
-    private CaseTypeRepository caseTypeRepository;
+    private CCDCaseTypeRepository caseTypeRepository;
 
     @Autowired
     private GenericLayoutRepository genericLayoutRepository;

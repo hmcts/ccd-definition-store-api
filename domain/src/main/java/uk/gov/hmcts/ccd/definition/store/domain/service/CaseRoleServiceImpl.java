@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 
@@ -19,12 +19,12 @@ public class CaseRoleServiceImpl implements CaseRoleService {
     private static final Logger LOG = LoggerFactory.getLogger(CaseRoleServiceImpl.class);
 
     private final CaseRoleRepository caseRoleRepository;
-    private final CaseTypeRepository caseTypeRepository;
+    private final CCDCaseTypeRepository caseTypeRepository;
     private final EntityToResponseDTOMapper dtoMapper;
 
     @Autowired
     public CaseRoleServiceImpl(CaseRoleRepository caseRoleRepository,
-                               CaseTypeRepository caseTypeRepository, EntityToResponseDTOMapper dtoMapper) {
+                               CCDCaseTypeRepository caseTypeRepository, EntityToResponseDTOMapper dtoMapper) {
         this.caseRoleRepository = caseRoleRepository;
         this.caseTypeRepository = caseTypeRepository;
         this.dtoMapper = dtoMapper;

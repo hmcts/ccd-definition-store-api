@@ -30,7 +30,7 @@ import static org.junit.Assert.assertThat;
 public class SearchResultObjectGraphTest {
 
     @Autowired
-    private CaseTypeRepository caseTypeRepository;
+    private CCDCaseTypeRepository caseTypeRepository;
 
     @Autowired
     private SearchResultCaseFieldRepository searchResultCaseFieldRepository;

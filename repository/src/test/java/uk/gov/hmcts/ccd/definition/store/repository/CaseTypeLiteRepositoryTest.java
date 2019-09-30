@@ -31,7 +31,7 @@ public class CaseTypeLiteRepositoryTest {
     private CaseTypeLiteRepository classUnderTest;
 
     @Autowired
-    private CaseTypeRepository caseTypeRepository;
+    private CCDCaseTypeRepository caseTypeRepository;
 
     @Autowired
     private EntityManager entityManager;

@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
@@ -48,7 +48,7 @@ class DisplayGroupAdapterServiceTest {
     @Mock
     private DisplayGroupRepository displayGroupRepository;
     @Mock
-    private CaseTypeRepository caseTypeRepository;
+    private CCDCaseTypeRepository caseTypeRepository;
     @Mock
     private EventRepository eventRepository;
     @Mock

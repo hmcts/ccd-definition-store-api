@@ -29,7 +29,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 public class VersionedDefinitionRepositoryDecoratorTest {
 
     @Autowired
-    private CaseTypeRepository exampleRepository;
+    private CCDCaseTypeRepository exampleRepository;
 
     @Autowired
     private JurisdictionRepository jurisdictionRepository;

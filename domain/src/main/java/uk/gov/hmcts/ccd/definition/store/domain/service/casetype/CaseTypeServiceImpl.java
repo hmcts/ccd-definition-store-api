@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +12,25 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SwitchableCaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CaseTypeServiceImpl.class);
 
-    private final CaseTypeRepository repository;
+    private final SwitchableCaseTypeRepository repository;
     private final EntityToResponseDTOMapper dtoMapper;
     private final LegacyCaseTypeValidator legacyCaseTypeValidator;
     private final List<CaseTypeEntityValidator> caseTypeEntityValidators;
@@ -38,7 +38,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     private final MetadataFieldService metadataFieldService;
 
     @Autowired
-    public CaseTypeServiceImpl(CaseTypeRepository repository,
+    public CaseTypeServiceImpl(SwitchableCaseTypeRepository repository,
                                EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,

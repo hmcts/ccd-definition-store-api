@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 
@@ -29,7 +29,7 @@ class CaseRoleServiceImplTest {
     @Mock
     private CaseRoleRepository caseRoleRepository;
     @Mock
-    private CaseTypeRepository caseTypeRepository;
+    private CCDCaseTypeRepository caseTypeRepository;
 
     private CaseRoleServiceImpl classUnderTest;
     private CaseRoleEntity caseRoleEntity1 = new CaseRoleEntity();

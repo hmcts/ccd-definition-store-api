@@ -32,10 +32,10 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class CaseTypeRepositoryTest {
+public class CCDCaseTypeRepositoryTest {
 
     @Autowired
-    private CaseTypeRepository classUnderTest;
+    private CCDCaseTypeRepository classUnderTest;
 
     @Autowired
     private EntityManager entityManager;

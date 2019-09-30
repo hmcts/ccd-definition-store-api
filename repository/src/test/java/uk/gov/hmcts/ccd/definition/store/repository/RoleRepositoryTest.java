@@ -42,7 +42,7 @@ public class RoleRepositoryTest {
     private UserRoleRepository userRoleRepository;
 
     @Autowired
-    private CaseTypeRepository caseTypeRepository;
+    private CCDCaseTypeRepository caseTypeRepository;
 
     @Autowired
     private EntityManager entityManager;

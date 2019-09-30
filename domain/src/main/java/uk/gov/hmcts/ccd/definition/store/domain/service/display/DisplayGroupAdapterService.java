@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 import static java.lang.String.format;
 
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
@@ -31,13 +31,13 @@ import org.springframework.stereotype.Service;
 public class DisplayGroupAdapterService {
 
     private DisplayGroupRepository displayGroupRepository;
-    private CaseTypeRepository caseTypeRepository;
+    private CCDCaseTypeRepository caseTypeRepository;
     private EventRepository eventRepository;
     private CaseFieldEntityUtil caseFieldEntityUtil;
 
     @Autowired
     public DisplayGroupAdapterService(DisplayGroupRepository displayGroupRepository,
-                                      CaseTypeRepository caseTypeRepository,
+                                      CCDCaseTypeRepository caseTypeRepository,
                                       EventRepository eventRepository,
                                       CaseFieldEntityUtil caseFieldEntityUtil) {
         this.displayGroupRepository = displayGroupRepository;

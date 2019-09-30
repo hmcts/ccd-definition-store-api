@@ -41,7 +41,7 @@ public class CaseTypeObjectGraphTest {
     public static final LocalDate TOMORROW = LocalDate.of(2017, 8, 19);
 
     @Autowired
-    private CaseTypeRepository caseTypeRepository;
+    private CCDCaseTypeRepository caseTypeRepository;
 
     @Autowired
     private TestHelper helper;

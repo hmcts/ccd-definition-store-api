@@ -54,7 +54,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DraftDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
@@ -228,8 +228,8 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
 
         @Bean
         @Primary
-        public CaseTypeRepository caseTypeRepository() {
-            return mock(CaseTypeRepository.class);
+        public CCDCaseTypeRepository caseTypeRepository() {
+            return mock(CCDCaseTypeRepository.class);
         }
 
         @Bean
