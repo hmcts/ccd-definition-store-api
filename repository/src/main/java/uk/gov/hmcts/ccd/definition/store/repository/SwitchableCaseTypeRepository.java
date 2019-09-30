@@ -6,6 +6,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceReadSource;
+import uk.gov.hmcts.ccd.definition.store.domain.AppConfigBasedAmPersistenceSwitch;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.util.List;
@@ -20,11 +22,14 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
 
     private CCDCaseTypeRepository ccdCaseTypeRepository;
     private AMCaseTypeACLRepository amCaseTypeACLRepository;
+    private AppConfigBasedAmPersistenceSwitch amPersistenceSwitch;
 
     public SwitchableCaseTypeRepository(final CCDCaseTypeRepository ccdCaseTypeRepository,
-                                        final AMCaseTypeACLRepository amCaseTypeACLRepository) {
+                                        final AMCaseTypeACLRepository amCaseTypeACLRepository,
+                                        final AppConfigBasedAmPersistenceSwitch amPersistenceSwitch) {
         this.ccdCaseTypeRepository = ccdCaseTypeRepository;
         this.amCaseTypeACLRepository = amCaseTypeACLRepository;
+        this.amPersistenceSwitch = amPersistenceSwitch;
     }
 
     @Override
@@ -36,8 +41,7 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
     public Optional<CaseTypeEntity> findFirstByReferenceOrderByVersionDesc(String reference) {
         Optional<CaseTypeEntity> ccdCaseType = ccdCaseTypeRepository.findFirstByReferenceOrderByVersionDesc(reference);
         ccdCaseType
-            .ifPresent(ccdCaseTypeEntity ->
-                           ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(reference).getCaseTypeACLs()));
+            .ifPresent(ccdCaseTypeEntity -> setAMInfoIfRequired(ccdCaseTypeEntity));
         return ccdCaseType;
     }
 
@@ -47,25 +51,18 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
 
     public List<CaseTypeEntity> findByJurisdictionId(String jurisdiction) {
         List<CaseTypeEntity> ccdByJurisdictionId = ccdCaseTypeRepository.findByJurisdictionId(jurisdiction);
-        return ccdByJurisdictionId.stream().map(ccdCaseTypeEntity -> {
-            ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference()).getCaseTypeACLs());
-            return ccdCaseTypeEntity;
-        }).collect(Collectors.toList());
+        return ccdByJurisdictionId.stream().map(ccdCaseTypeEntity -> setAMInfoIfRequired(ccdCaseTypeEntity)).collect(Collectors.toList());
     }
 
     public Optional<CaseTypeEntity> findCurrentVersionForReference(String caseTypeReference) {
         Optional<CaseTypeEntity> ccdCurrentVersionForReference = ccdCaseTypeRepository.findCurrentVersionForReference(caseTypeReference);
-        ccdCurrentVersionForReference
-            .ifPresent(ccdCaseTypeEntity ->
-                           ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference()).getCaseTypeACLs()));
+        ccdCurrentVersionForReference.ifPresent(ccdCaseTypeEntity -> setAMInfoIfRequired(ccdCaseTypeEntity));
         return ccdCurrentVersionForReference;
     }
 
     public Optional<CaseTypeEntity> findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(String caseTypeReference) {
         Optional<CaseTypeEntity> ccdCurrentVersionForReference = ccdCaseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(caseTypeReference);
-        ccdCurrentVersionForReference
-            .ifPresent(ccdCaseTypeEntity ->
-                           ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(caseTypeReference).getCaseTypeACLs()));
+        ccdCurrentVersionForReference.ifPresent(ccdCaseTypeEntity -> setAMInfoIfRequired(ccdCaseTypeEntity));
         return ccdCurrentVersionForReference;
     }
 
@@ -193,6 +190,13 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
     @Override
     public <S extends CaseTypeEntity> boolean exists(Example<S> example) {
         throw new UnsupportedOperationException(NOT_SUPPORTED);
+    }
+
+    private CaseTypeEntity setAMInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
+        if (amPersistenceSwitch.getReadDataSourceFor(ccdCaseTypeEntity.getReference()).equals(AmPersistenceReadSource.FROM_AM)) {
+            ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference()).getCaseTypeACLs());
+        }
+        return ccdCaseTypeEntity;
     }
 
 }
