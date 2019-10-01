@@ -1,16 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.repository.amint;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import uk.gov.hmcts.ccd.definition.store.repository.AMCaseTypeACLRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeAmInfo;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AMCaseTypeACLRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.am.CaseTypeAmInfo;
 import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportService;
-import uk.gov.hmcts.reform.amlib.models.DefaultPermissionGrant;
 import uk.gov.hmcts.reform.amlib.models.ResourceDefinition;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 public class AMCaseTypeAclDAO implements AMCaseTypeACLRepository {
+
+    private static final String CASE_CONSTANT = "case";
     private DefaultRoleSetupImportService defaultRoleSetupImportService;
 
     public AMCaseTypeAclDAO(@Qualifier("amDataSource") DataSource dataSource) {
@@ -19,7 +20,6 @@ public class AMCaseTypeAclDAO implements AMCaseTypeACLRepository {
 
     @Override
     public CaseTypeAmInfo getAmInfoFor(String reference) {
-      //  defaultRoleSetupImportService.
         return null;
     }
 
@@ -31,36 +31,25 @@ public class AMCaseTypeAclDAO implements AMCaseTypeACLRepository {
     @Override
     public CaseTypeAmInfo saveAmInfoFor(CaseTypeAmInfo caseTypeAmInfo) {
         ResourceDefinition resourceDefinition =
-            new ResourceDefinition
-                ("Will need service Name/Jurisdiction ID", "Hardcoded case", caseTypeAmInfo.getCaseReference());
+            new ResourceDefinition(caseTypeAmInfo.getJurisdictionId(), CASE_CONSTANT, caseTypeAmInfo.getCaseReference());
 
-        roleName/CaseRole??;
+        /*
 
-        /*    @NotNull
-
-    private final ResourceDefinition resourceDefinition;   Checked
+    private final ResourceDefinition resourceDefinition;
 
     private final String roleName;
 
-    private final Map<@NotNull JsonPointer,  Entry< Set< Permission>, SecurityClassification>> attributePermissions;
-
-    @JsonIgnore
+    private final Map< JsonPointer,  Entry<@NotEmpty Set< Permission>,  SecurityClassification>> attributePermissions;
+    *
     private Instant lastUpdate;
 
-    @JsonIgnore
     private String callingServiceName;
 
-    @JsonIgnore
     private String changedBy;
 
-    @JsonIgnore
     private AuditAction action;*/
 
-        defaultRoleSetupImportService.grantDefaultPermission();
-        DefaultPermissionGrant.builder()
-            .resourceDefinition(resourceDefinition)
-            .attributePermissions(null)
-            .build();
+        return null;
     }
 
     @Override
