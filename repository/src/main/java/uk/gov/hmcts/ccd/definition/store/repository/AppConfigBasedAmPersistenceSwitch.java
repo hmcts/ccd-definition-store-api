@@ -1,20 +1,21 @@
-package uk.gov.hmcts.ccd.definition.store.domain;
-
-import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceReadSource.FROM_AM;
-import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceReadSource.FROM_CCD;
-import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_AM;
-import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_BOTH;
-import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_CCD;
-
-import org.apache.commons.lang3.StringUtils;
+package uk.gov.hmcts.ccd.definition.store.repository;
 
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceReadSource;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceSwitch;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-
 import java.util.List;
 import java.util.Map;
+
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceReadSource.FROM_AM;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceReadSource.FROM_CCD;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination.TO_AM;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination.TO_BOTH;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination.TO_CCD;
 
 @Named
 @Singleton
@@ -43,12 +44,12 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
 
     @Override
     public AmPersistenceWriteDestination getWriteDataSourceFor(String caseType) {
-        return caseTypesToWriteModes.getOrDefault(caseType.toUpperCase(), AmPersistenceWriteDestination.TO_CCD);
+        return caseTypesToWriteModes.getOrDefault(caseType.toUpperCase(), TO_CCD);
     }
 
     @Override
     public AmPersistenceReadSource getReadDataSourceFor(String caseType) {
-        return caseTypesToReadModes.getOrDefault(caseType.toUpperCase(), AmPersistenceReadSource.FROM_CCD);
+        return caseTypesToReadModes.getOrDefault(caseType.toUpperCase(), FROM_CCD);
     }
 
     private <T> void mapCaseTypeVsSwitchValueWith(List<String> caseTypesConfigured, Map<String, T> map, T value) {

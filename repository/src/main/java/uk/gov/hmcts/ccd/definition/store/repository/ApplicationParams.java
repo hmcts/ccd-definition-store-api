@@ -1,6 +1,7 @@
-package uk.gov.hmcts.ccd.definition.store.domain;
+package uk.gov.hmcts.ccd.definition.store.repository;
 
 import org.springframework.beans.factory.annotation.Value;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AmSwitchValidator;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;

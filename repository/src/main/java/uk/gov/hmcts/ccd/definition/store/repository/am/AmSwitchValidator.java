@@ -1,9 +1,10 @@
-package uk.gov.hmcts.ccd.definition.store.domain;
+package uk.gov.hmcts.ccd.definition.store.repository.am;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.InvalidPropertyException;
+import uk.gov.hmcts.ccd.definition.store.repository.ApplicationParams;
 
 import java.util.ArrayList;
 import java.util.List;

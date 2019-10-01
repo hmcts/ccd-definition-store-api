@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.repository.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.userprofile.UserProfileValidator;
