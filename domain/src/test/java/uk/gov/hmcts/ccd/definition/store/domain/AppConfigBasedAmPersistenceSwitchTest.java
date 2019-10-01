@@ -2,11 +2,11 @@ package uk.gov.hmcts.ccd.definition.store.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceReadSource.FROM_AM;
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceReadSource.FROM_CCD;
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceWriteDestination.TO_AM;
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceWriteDestination.TO_BOTH;
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceWriteDestination.TO_CCD;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceReadSource.FROM_AM;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceReadSource.FROM_CCD;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination.TO_AM;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination.TO_BOTH;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination.TO_CCD;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

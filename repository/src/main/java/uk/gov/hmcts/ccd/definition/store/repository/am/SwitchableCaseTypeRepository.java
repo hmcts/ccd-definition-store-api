@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.repository;
+package uk.gov.hmcts.ccd.definition.store.repository.am;
 
 import com.google.common.collect.Lists;
 import feign.Param;
@@ -6,6 +6,9 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import uk.gov.hmcts.ccd.definition.store.repository.AppConfigBasedAmPersistenceSwitch;
+import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.util.List;
@@ -60,7 +63,6 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
         ccdCurrentVersionForReference.ifPresent(ccdCaseTypeEntity -> setAMInfoIfRequired(ccdCaseTypeEntity));
         return ccdCurrentVersionForReference;
     }
-
 
     @Override
     public List<CaseTypeEntity> findAll() {

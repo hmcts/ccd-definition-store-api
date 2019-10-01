@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AMCaseTypeACLRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.am.SwitchableCaseTypeRepository;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

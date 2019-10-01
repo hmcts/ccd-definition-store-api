@@ -1,4 +1,6 @@
-package uk.gov.hmcts.ccd.definition.store.repository;
+package uk.gov.hmcts.ccd.definition.store.repository.am;
+
+import uk.gov.hmcts.ccd.definition.store.repository.am.CaseTypeAmInfo;
 
 import java.util.List;
 

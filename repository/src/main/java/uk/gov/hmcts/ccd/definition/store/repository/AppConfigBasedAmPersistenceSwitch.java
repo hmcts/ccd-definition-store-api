@@ -2,17 +2,20 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceReadSource;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceSwitch;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceReadSource.FROM_AM;
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceReadSource.FROM_CCD;
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceWriteDestination.TO_AM;
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceWriteDestination.TO_BOTH;
-import static uk.gov.hmcts.ccd.definition.store.repository.AmPersistenceWriteDestination.TO_CCD;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceReadSource.FROM_AM;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceReadSource.FROM_CCD;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination.TO_AM;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination.TO_BOTH;
+import static uk.gov.hmcts.ccd.definition.store.repository.am.AmPersistenceWriteDestination.TO_CCD;
 
 @Named
 @Singleton

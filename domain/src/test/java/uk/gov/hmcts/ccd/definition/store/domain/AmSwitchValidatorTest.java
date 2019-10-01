@@ -12,7 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.InvalidPropertyException;
 
 import com.google.common.collect.Lists;
-import uk.gov.hmcts.ccd.definition.store.repository.AmSwitchValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.am.AmSwitchValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.ApplicationParams;
 
 import java.util.List;

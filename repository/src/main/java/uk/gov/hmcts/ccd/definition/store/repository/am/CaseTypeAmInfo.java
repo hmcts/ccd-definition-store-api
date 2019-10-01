@@ -1,8 +1,8 @@
-package uk.gov.hmcts.ccd.definition.store.repository;
+package uk.gov.hmcts.ccd.definition.store.repository.am;
 
 import lombok.Builder;
 import lombok.Data;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
@@ -14,8 +14,10 @@ import java.util.List;
 public class CaseTypeAmInfo {
 
     private String caseReference;
+    private String jurisdictionId;
+    private SecurityClassification securityClassification;
     private List<CaseTypeACLEntity> caseTypeACLs;
-    private List<EventACLEntity> eventACLs;
+    private List<EventAMInfo> eventAMInfos;
     private List<StateACLEntity> stateACLs;
-    private List<CaseFieldACLEntity> caseFieldACLs;
+    private List<CaseFieldAMInfo> caseFieldAMInfos;
 }
