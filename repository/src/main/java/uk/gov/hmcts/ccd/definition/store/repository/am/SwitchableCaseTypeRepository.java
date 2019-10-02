@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.am;
 
-import com.google.common.collect.Lists;
 import feign.Param;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -14,7 +13,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SwitchableCaseTypeRepository implements VersionedDefinitionRepository<CaseTypeEntity, Integer> {
 
@@ -40,7 +38,7 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
     @Override
     public Optional<CaseTypeEntity> findFirstByReferenceOrderByVersionDesc(String reference) {
         Optional<CaseTypeEntity> ccdCaseType = ccdCaseTypeRepository.findFirstByReferenceOrderByVersionDesc(reference);
-        ccdCaseType.ifPresent(this::setAMInfoIfRequired);
+        ccdCaseType.ifPresent(this::getAMInfoIfRequired);
         return ccdCaseType;
     }
 
@@ -50,18 +48,18 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
 
     public List<CaseTypeEntity> findByJurisdictionId(String jurisdiction) {
         List<CaseTypeEntity> ccdByJurisdictionId = ccdCaseTypeRepository.findByJurisdictionId(jurisdiction);
-        return ccdByJurisdictionId.stream().map(this::setAMInfoIfRequired).collect(Collectors.toList());
+        return ccdByJurisdictionId.stream().map(this::getAMInfoIfRequired).collect(Collectors.toList());
     }
 
     public Optional<CaseTypeEntity> findCurrentVersionForReference(String caseTypeReference) {
         Optional<CaseTypeEntity> ccdCurrentVersionForReference = ccdCaseTypeRepository.findCurrentVersionForReference(caseTypeReference);
-        ccdCurrentVersionForReference.ifPresent(this::setAMInfoIfRequired);
+        ccdCurrentVersionForReference.ifPresent(this::getAMInfoIfRequired);
         return ccdCurrentVersionForReference;
     }
 
     public Optional<CaseTypeEntity> findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(String caseTypeReference) {
         Optional<CaseTypeEntity> ccdCurrentVersionForReference = ccdCaseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(caseTypeReference);
-        ccdCurrentVersionForReference.ifPresent(this::setAMInfoIfRequired);
+        ccdCurrentVersionForReference.ifPresent(this::getAMInfoIfRequired);
         return ccdCurrentVersionForReference;
     }
 
@@ -113,14 +111,18 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
     @Override
     public <S extends CaseTypeEntity> S save(S entity) {
         S ccdSaved = ccdCaseTypeRepository.save(entity);
-        amCaseTypeACLRepository.saveAmInfoFor(CaseTypeAmInfo.builder().caseTypeACLs(entity.getCaseTypeACLEntities()).build());
+        if (setAMInfoIfRequired(entity)) {
+            amCaseTypeACLRepository.saveAmInfoFor(CaseTypeAmInfo.builder().caseTypeACLs(entity.getCaseTypeACLEntities()).build());
+        }
         return ccdSaved;
     }
 
     @Override
     public <S extends CaseTypeEntity> List<S> saveAll(Iterable<S> entities) {
         List<S> ccdSaved = ccdCaseTypeRepository.saveAll(entities);
-        List<CaseTypeAmInfo> caseTypeAmInfos = ccdSaved.stream().map(s -> CaseTypeAmInfo.builder().caseTypeACLs(s.getCaseTypeACLEntities()).build()).collect(Collectors.toList());
+        List<CaseTypeAmInfo> caseTypeAmInfos = ccdSaved.stream()
+            .filter(s -> setAMInfoIfRequired(s))
+            .map(s -> CaseTypeAmInfo.builder().caseTypeACLs(s.getCaseTypeACLEntities()).build()).collect(Collectors.toList());
         amCaseTypeACLRepository.saveAmInfoFor(caseTypeAmInfos);
         return ccdSaved;
     }
@@ -190,11 +192,15 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
         throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
-    private CaseTypeEntity setAMInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
+    private CaseTypeEntity getAMInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
         if (amPersistenceSwitch.getReadDataSourceFor(ccdCaseTypeEntity.getReference()).equals(AmPersistenceReadSource.FROM_AM)) {
             ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference()).getCaseTypeACLs());
         }
         return ccdCaseTypeEntity;
+    }
+
+    private boolean setAMInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
+        return amPersistenceSwitch.getWriteDataSourceFor(ccdCaseTypeEntity.getReference()).equals(AmPersistenceWriteDestination.TO_AM);
     }
 
 }
