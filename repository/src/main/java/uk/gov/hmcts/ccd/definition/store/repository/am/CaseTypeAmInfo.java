@@ -16,7 +16,7 @@ public class CaseTypeAmInfo {
     private String jurisdictionId;
     private SecurityClassification securityClassification;
     private List<CaseTypeACLEntity> caseTypeACLs;
-    private List<EventAMInfo> eventAMInfos;
+    private List<EventAmInfo> eventAmInfos;
     private List<StateACLEntity> stateACLs;
-    private List<CaseFieldAMInfo> caseFieldAMInfos;
+    private List<CaseFieldAmInfo> caseFieldAmInfos;
 }
