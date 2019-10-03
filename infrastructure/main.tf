@@ -50,6 +50,12 @@ data "azurerm_key_vault" "s2s_vault" {
   resource_group_name = "rpe-service-auth-provider-${local.local_env}"
 }
 
+resource "azurerm_key_vault_secret" "ccd_definition_s2s_secret" {
+  name = "ccd-definition-s2s-secret"
+  value = "${data.azurerm_key_vault_secret.definition_store_s2s_secret.value}"
+  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
+}
+
 resource "azurerm_storage_container" "imports_container" {
   name = "${local.app_full_name}-imports-${var.env}"
   resource_group_name = "${local.sharedResourceGroup}"
