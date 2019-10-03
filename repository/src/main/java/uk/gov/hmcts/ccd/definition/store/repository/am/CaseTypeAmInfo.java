@@ -13,15 +13,32 @@ import java.util.List;
 @Builder
 public class CaseTypeAmInfo {
 
-    @NonNull
     private String caseReference;
-    @NonNull
     private String jurisdictionId;
-    @NonNull
     private SecurityClassification securityClassification;
-    @NonNull
     private List<CaseTypeACLEntity> caseTypeACLs;
     private List<EventAMInfo> eventAMInfos;
     private List<StateACLEntity> stateACLs;
     private List<CaseFieldAMInfo> caseFieldAMInfos;
+
+    /*  
+    @Valid
+    private final ResourceDefinition resourceDefinition;
+    @NotBlank
+    private final String roleName;
+    
+    private final Map< JsonPointer,  Entry< Set< Permission>,  SecurityClassification>> attributePermissions;
+
+    @JsonIgnore
+    private Instant lastUpdate;
+    @Setter
+    @JsonIgnore
+    private String callingServiceName;
+
+    @JsonIgnore
+    @Setter
+    private String changedBy;
+
+    @JsonIgnore
+    private AuditAction action;*/
 }

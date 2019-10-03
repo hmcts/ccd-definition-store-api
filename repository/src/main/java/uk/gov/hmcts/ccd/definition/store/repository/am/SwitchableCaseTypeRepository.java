@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.am;
 
 import feign.Param;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -112,7 +113,7 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
     public <S extends CaseTypeEntity> S save(S entity) {
         S ccdSaved = ccdCaseTypeRepository.save(entity);
         if (setAMInfoIfRequired(entity)) {
-            amCaseTypeACLRepository.saveAmInfoFor(CaseTypeAmInfo.builder().caseTypeACLs(entity.getCaseTypeACLEntities()).build());
+            amCaseTypeACLRepository.saveAmInfoFor(buildCaseTypeAMInfo(entity));
         }
         return ccdSaved;
     }
@@ -122,9 +123,23 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
         List<S> ccdSaved = ccdCaseTypeRepository.saveAll(entities);
         List<CaseTypeAmInfo> caseTypeAmInfos = ccdSaved.stream()
             .filter(s -> setAMInfoIfRequired(s))
-            .map(s -> CaseTypeAmInfo.builder().caseTypeACLs(s.getCaseTypeACLEntities()).build()).collect(Collectors.toList());
-        amCaseTypeACLRepository.saveAmInfoFor(caseTypeAmInfos);
+            .map(s -> buildCaseTypeAMInfo(s))
+            .collect(Collectors.toList());
+
+        if (CollectionUtils.isNotEmpty(caseTypeAmInfos)) {
+            amCaseTypeACLRepository.saveAmInfoFor(caseTypeAmInfos);
+        }
         return ccdSaved;
+    }
+
+    private <S extends CaseTypeEntity> CaseTypeAmInfo buildCaseTypeAMInfo(S entity) {
+        return CaseTypeAmInfo.builder()
+            .caseTypeACLs(entity.getCaseTypeACLEntities())
+            .securityClassification(entity.getSecurityClassification())
+            .caseReference(entity.getReference())
+            .jurisdictionId(entity.getJurisdiction().getName())
+            //.userRole(entity.getCaseTypeACLEntities().get(0).getUserRole().getName())
+            .build();
     }
 
     @Override
