@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
+import uk.gov.hmcts.ccd.definition.store.repository.AppConfigBasedAmPersistenceSwitch;
 import uk.gov.hmcts.ccd.definition.store.repository.ApplicationParams;
 
 import java.util.List;

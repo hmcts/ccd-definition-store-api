@@ -40,6 +40,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.am.SwitchableCaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -56,7 +57,7 @@ class CaseTypeServiceImplTest {
     private static final int DEFAULT_VERSION = 69;
 
     @Mock
-    private CCDCaseTypeRepository caseTypeRepository;
+    private SwitchableCaseTypeRepository caseTypeRepository;
 
     @Mock
     private EntityToResponseDTOMapper dtoMapper;

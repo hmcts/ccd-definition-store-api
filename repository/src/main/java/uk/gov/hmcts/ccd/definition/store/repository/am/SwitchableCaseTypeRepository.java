@@ -1,30 +1,30 @@
 package uk.gov.hmcts.ccd.definition.store.repository.am;
 
-import feign.Param;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import uk.gov.hmcts.ccd.definition.store.repository.AppConfigBasedAmPersistenceSwitch;
-import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+    import feign.Param;
+    import org.apache.commons.collections.CollectionUtils;
+    import org.springframework.data.domain.Example;
+    import org.springframework.data.domain.Page;
+    import org.springframework.data.domain.Pageable;
+    import org.springframework.data.domain.Sort;
+    import uk.gov.hmcts.ccd.definition.store.repository.AppConfigBasedAmPersistenceSwitch;
+    import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
+    import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepository;
+    import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+    import java.util.List;
+    import java.util.Optional;
+    import java.util.stream.Collectors;
 
 public class SwitchableCaseTypeRepository implements VersionedDefinitionRepository<CaseTypeEntity, Integer> {
 
     private static final String NOT_SUPPORTED = "This operation is not supported";
 
     private CCDCaseTypeRepository ccdCaseTypeRepository;
-    private AMCaseTypeACLRepository amCaseTypeACLRepository;
+    private AmCaseTypeACLRepository amCaseTypeACLRepository;
     private AppConfigBasedAmPersistenceSwitch amPersistenceSwitch;
 
     public SwitchableCaseTypeRepository(final CCDCaseTypeRepository ccdCaseTypeRepository,
-                                        final AMCaseTypeACLRepository amCaseTypeACLRepository,
+                                        final AmCaseTypeACLRepository amCaseTypeACLRepository,
                                         final AppConfigBasedAmPersistenceSwitch amPersistenceSwitch) {
         this.ccdCaseTypeRepository = ccdCaseTypeRepository;
         this.amCaseTypeACLRepository = amCaseTypeACLRepository;
@@ -207,9 +207,29 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
         throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
-    private CaseTypeEntity getAMInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
+   /* private CaseTypeEntity getAMInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
         if (amPersistenceSwitch.getReadDataSourceFor(ccdCaseTypeEntity.getReference()).equals(AmPersistenceReadSource.FROM_AM)) {
             ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference()).getCaseTypeACLs());
+        }
+        return ccdCaseTypeEntity;
+    }*/
+
+    private CaseTypeEntity getAMInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
+        if (amPersistenceSwitch.getReadDataSourceFor(ccdCaseTypeEntity.getReference()).equals(AmPersistenceReadSource.FROM_AM)) {
+            //ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference()).getCaseTypeACLs());
+
+            CaseTypeAmInfo caseTypeAmInfo = amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference());
+            caseTypeAmInfo.getCaseTypeACLs().forEach(amCaseTypeACLEntity -> {
+                ccdCaseTypeEntity.getCaseTypeACLEntities().forEach(ccdCaseTypeACLEntity -> {
+                    if (amCaseTypeACLEntity.getCaseType().getName().equals(ccdCaseTypeACLEntity.getCaseType().getName())
+                        && amCaseTypeACLEntity.getUserRole().getName().equals(ccdCaseTypeACLEntity.getUserRole().getName())) {
+                        ccdCaseTypeACLEntity.setCreate(amCaseTypeACLEntity.getCreate());
+                        ccdCaseTypeACLEntity.setRead(amCaseTypeACLEntity.getRead());
+                        ccdCaseTypeACLEntity.setUpdate(amCaseTypeACLEntity.getUpdate());
+                        ccdCaseTypeACLEntity.setDelete(amCaseTypeACLEntity.getDelete());
+                    }
+                });
+            });
         }
         return ccdCaseTypeEntity;
     }
@@ -217,5 +237,4 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
     private boolean setAMInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
         return amPersistenceSwitch.getWriteDataSourceFor(ccdCaseTypeEntity.getReference()).equals(AmPersistenceWriteDestination.TO_AM);
     }
-
 }
