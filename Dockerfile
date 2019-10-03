@@ -7,7 +7,7 @@ LABEL maintainer="https://github.com/hmcts/ccd-definition-store-api"
 
 COPY build/libs/case-definition-store-api.jar /opt/app/
 COPY lib/AI-Agent.xml /opt/app/
-COPY lib/applicationinsights-agent-2.3.1-SNAPSHOT.jar lib/AI-Agent.xml /opt/app/
+COPY lib/applicationinsights-agent-2.5.1-BETA.jar lib/AI-Agent.xml /opt/app/
 
 EXPOSE 4451
 
