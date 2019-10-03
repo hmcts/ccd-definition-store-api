@@ -1,20 +1,32 @@
 package uk.gov.hmcts.ccd.definition.store.repository.am;
 
+import com.fasterxml.jackson.core.JsonPointer;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.reform.amlib.AccessManagementService;
 import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportService;
+import uk.gov.hmcts.reform.amlib.enums.Permission;
+import uk.gov.hmcts.reform.amlib.enums.SecurityClassification;
+import uk.gov.hmcts.reform.amlib.models.DefaultPermissionGrant;
 import uk.gov.hmcts.reform.amlib.models.ResourceDefinition;
 import uk.gov.hmcts.reform.amlib.models.RolePermissionsForCaseTypeEnvelope;
 
 import javax.sql.DataSource;
+import java.time.Instant;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static uk.gov.hmcts.reform.amlib.enums.Permission.CREATE;
 import static uk.gov.hmcts.reform.amlib.enums.Permission.DELETE;
 import static uk.gov.hmcts.reform.amlib.enums.Permission.READ;
 import static uk.gov.hmcts.reform.amlib.enums.Permission.UPDATE;
+import static uk.gov.hmcts.reform.amlib.enums.SecurityClassification.PUBLIC;
 
 public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
@@ -60,30 +72,58 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
     @Override
     public CaseTypeAmInfo saveAmInfoFor(CaseTypeAmInfo caseTypeAmInfo) {
-        ResourceDefinition resourceDefinition =
-            new ResourceDefinition(caseTypeAmInfo.getJurisdictionId(), CASE_CONSTANT, caseTypeAmInfo.getCaseReference());
 
-        /*
+        Map<String, List<DefaultPermissionGrant>> caseTypeRolePermissionsToSaveToAm = ImmutableMap.of(
+            caseTypeAmInfo.getCaseReference(), createDefaultPermissionGrantsForCaseType(caseTypeAmInfo));
 
-    private final ResourceDefinition resourceDefinition;
+        defaultRoleSetupImportService.grantResourceDefaultPermissions(caseTypeRolePermissionsToSaveToAm);
 
-    private final String roleName;
-
-    private final Map< JsonPointer,  Entry<@NotEmpty Set< Permission>,  SecurityClassification>> attributePermissions;
-    *
-    private Instant lastUpdate;
-
-    private String callingServiceName;
-
-    private String changedBy;
-
-    private AuditAction action;*/
-
-        return null;
+        return caseTypeAmInfo;
     }
 
     @Override
     public List<CaseTypeAmInfo> saveAmInfoFor(List<CaseTypeAmInfo> caseTypeAmInfos) {
-        return null;
+
+        Map<String, List<DefaultPermissionGrant>> caseTypeRolePermissionsToSaveToAm = new HashMap<>();
+        caseTypeAmInfos.forEach(caseTypeAmInfo -> caseTypeRolePermissionsToSaveToAm.put(
+            caseTypeAmInfo.getCaseReference(), createDefaultPermissionGrantsForCaseType(caseTypeAmInfo)));
+
+        defaultRoleSetupImportService.grantResourceDefaultPermissions(caseTypeRolePermissionsToSaveToAm);
+
+        return caseTypeAmInfos;
+    }
+
+    private List<DefaultPermissionGrant> createDefaultPermissionGrantsForCaseType(CaseTypeAmInfo caseTypeAmInfo) {
+        List<DefaultPermissionGrant> rolePermissionsForCaseType = new ArrayList<>();
+
+        ResourceDefinition resourceDefinition = ResourceDefinition.builder()
+            .serviceName(caseTypeAmInfo.getJurisdictionId())
+            .resourceName(caseTypeAmInfo.getCaseReference())
+            .resourceType(CASE_CONSTANT)
+            .build();
+
+        caseTypeAmInfo.getCaseTypeACLs().forEach(caseTypeACLEntity -> {
+
+            Set<Permission> permissions = new HashSet<>();
+            if (caseTypeACLEntity.getCreate()) permissions.add(CREATE);
+            if (caseTypeACLEntity.getRead()) permissions.add(READ);
+            if (caseTypeACLEntity.getUpdate()) permissions.add(UPDATE);
+            if (caseTypeACLEntity.getDelete()) permissions.add(DELETE);
+
+            SecurityClassification amSecurityClassification = SecurityClassification.valueOf(
+                caseTypeACLEntity.getCaseType().getSecurityClassification().toString());
+
+            DefaultPermissionGrant defaultPermissionGrant = DefaultPermissionGrant.builder()
+                .resourceDefinition(resourceDefinition)
+                .roleName(caseTypeACLEntity.getUserRole().getName())
+                .attributePermissions(ImmutableMap.of(JsonPointer.valueOf(""),
+                    new AbstractMap.SimpleEntry<>(permissions, amSecurityClassification)))
+                .lastUpdate(Instant.now())
+                .changedBy("CCD Definition Store")
+                .build();
+            rolePermissionsForCaseType.add(defaultPermissionGrant);
+        });
+
+        return rolePermissionsForCaseType;
     }
 }

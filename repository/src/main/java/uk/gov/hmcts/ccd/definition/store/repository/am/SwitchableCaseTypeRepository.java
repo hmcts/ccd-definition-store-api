@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.ccd.definition.store.repository.am.util.CaseTypeEntityMapper.addAmCaseTypeACLDataToCcdCaseTypeEntity;
-
 public class SwitchableCaseTypeRepository implements VersionedDefinitionRepository<CaseTypeEntity, Integer> {
 
     private static final String NOT_SUPPORTED = "This operation is not supported";
@@ -193,9 +191,20 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
     private CaseTypeEntity setAmInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
         if (amPersistenceSwitch.getReadDataSourceFor(ccdCaseTypeEntity.getReference()).equals(AmPersistenceReadSource.FROM_AM)) {
             //ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference()).getCaseTypeACLs());
-            addAmCaseTypeACLDataToCcdCaseTypeEntity(ccdCaseTypeEntity, amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference()));
+
+            CaseTypeAmInfo caseTypeAmInfo = amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference());
+            caseTypeAmInfo.getCaseTypeACLs().forEach(amCaseTypeACLEntity -> {
+                ccdCaseTypeEntity.getCaseTypeACLEntities().forEach(ccdCaseTypeACLEntity -> {
+                    if (amCaseTypeACLEntity.getCaseType().getName().equals(ccdCaseTypeACLEntity.getCaseType().getName())
+                        && amCaseTypeACLEntity.getUserRole().getName().equals(ccdCaseTypeACLEntity.getUserRole().getName())) {
+                        ccdCaseTypeACLEntity.setCreate(amCaseTypeACLEntity.getCreate());
+                        ccdCaseTypeACLEntity.setRead(amCaseTypeACLEntity.getRead());
+                        ccdCaseTypeACLEntity.setUpdate(amCaseTypeACLEntity.getUpdate());
+                        ccdCaseTypeACLEntity.setDelete(amCaseTypeACLEntity.getDelete());
+                    }
+                });
+            });
         }
         return ccdCaseTypeEntity;
     }
-
 }
