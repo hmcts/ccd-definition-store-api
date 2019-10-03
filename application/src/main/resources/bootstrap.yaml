@@ -9,4 +9,4 @@ spring:
         ccd-ELASTIC-SEARCH-PASSWORD: ELASTIC_SEARCH_PASSWORD
         definition-store-api-POSTGRES-PASS: DEFINITION_STORE_DB_PASSWORD
         storage-account-primary-connection-string: AZURE_STORAGE_CONNECTION_STRING
-        AppInsightsInstrumentationKey: AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY
+        AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
