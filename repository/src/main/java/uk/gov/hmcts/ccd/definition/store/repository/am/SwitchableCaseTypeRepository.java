@@ -2,6 +2,8 @@ package uk.gov.hmcts.ccd.definition.store.repository.am;
 
     import feign.Param;
     import org.apache.commons.collections.CollectionUtils;
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.context.annotation.Configuration;
     import org.springframework.data.domain.Example;
     import org.springframework.data.domain.Page;
     import org.springframework.data.domain.Pageable;
@@ -15,14 +17,17 @@ package uk.gov.hmcts.ccd.definition.store.repository.am;
     import java.util.Optional;
     import java.util.stream.Collectors;
 
+@Configuration
 public class SwitchableCaseTypeRepository implements VersionedDefinitionRepository<CaseTypeEntity, Integer> {
 
     private static final String NOT_SUPPORTED = "This operation is not supported";
 
     private CCDCaseTypeRepository ccdCaseTypeRepository;
+//    @Autowired
     private AmCaseTypeACLRepository amCaseTypeACLRepository;
     private AppConfigBasedAmPersistenceSwitch amPersistenceSwitch;
 
+    @Autowired
     public SwitchableCaseTypeRepository(final CCDCaseTypeRepository ccdCaseTypeRepository,
                                         final AmCaseTypeACLRepository amCaseTypeACLRepository,
                                         final AppConfigBasedAmPersistenceSwitch amPersistenceSwitch) {

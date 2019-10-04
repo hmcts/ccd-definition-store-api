@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import uk.gov.hmcts.reform.amlib.AccessManagementService;
 import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportService;
@@ -15,15 +16,12 @@ import javax.sql.DataSource;
 @PropertySource({"classpath:application.properties"})
 public class AmDataSourceConfiguration {
 
-    /*@Bean
-    public AccessManagementService getAmAccessManagementService(@Qualifier("amDataSource") DataSource dataSource) {
-        return new AccessManagementService(dataSource);
+    @Primary
+    @Bean(name = "definitionDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource dataSource() {
+        return DataSourceBuilder.create().build();
     }
-
-    @Bean
-    public DefaultRoleSetupImportService getAmDefaultRoleSetupImportService(@Qualifier("amDataSource") DataSource dataSource) {
-        return new DefaultRoleSetupImportService(dataSource);
-    }*/
 
     @Bean("amDataSource")
     @ConfigurationProperties(prefix = "am.datasource")
