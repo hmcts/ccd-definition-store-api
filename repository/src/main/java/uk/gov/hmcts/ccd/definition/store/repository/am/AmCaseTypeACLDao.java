@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.am;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.reform.amlib.AccessManagementService;
 import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportService;
@@ -28,6 +29,7 @@ import static uk.gov.hmcts.reform.amlib.enums.Permission.READ;
 import static uk.gov.hmcts.reform.amlib.enums.Permission.UPDATE;
 import static uk.gov.hmcts.reform.amlib.enums.SecurityClassification.PUBLIC;
 
+@Component
 public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
     private static final String CASE_CONSTANT = "case";
