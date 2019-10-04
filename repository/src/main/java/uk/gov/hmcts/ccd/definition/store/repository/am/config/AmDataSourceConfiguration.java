@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
-import uk.gov.hmcts.reform.amlib.AccessManagementService;
-import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportService;
 
 import javax.sql.DataSource;
 
