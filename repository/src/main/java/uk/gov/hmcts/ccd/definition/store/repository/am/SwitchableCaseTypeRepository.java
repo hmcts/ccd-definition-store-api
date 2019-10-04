@@ -9,10 +9,13 @@ package uk.gov.hmcts.ccd.definition.store.repository.am;
     import uk.gov.hmcts.ccd.definition.store.repository.AppConfigBasedAmPersistenceSwitch;
     import uk.gov.hmcts.ccd.definition.store.repository.CCDCaseTypeRepository;
     import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepository;
+    import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+    import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
     import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
     import java.util.List;
     import java.util.Optional;
+    import java.util.concurrent.atomic.AtomicReference;
     import java.util.stream.Collectors;
 
 public class SwitchableCaseTypeRepository implements VersionedDefinitionRepository<CaseTypeEntity, Integer> {
@@ -219,17 +222,27 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
             //ccdCaseTypeEntity.setCaseTypeACLEntities(amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference()).getCaseTypeACLs());
 
             CaseTypeAmInfo caseTypeAmInfo = amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference());
-            caseTypeAmInfo.getCaseTypeACLs().forEach(amCaseTypeACLEntity -> {
-                ccdCaseTypeEntity.getCaseTypeACLEntities().forEach(ccdCaseTypeACLEntity -> {
+
+            for (CaseTypeACLEntity amCaseTypeACLEntity : caseTypeAmInfo.getCaseTypeACLs()) {
+                boolean isCaseTypeEntityFound = false;
+                for (CaseTypeACLEntity ccdCaseTypeACLEntity : ccdCaseTypeEntity.getCaseTypeACLEntities()) {
                     if (amCaseTypeACLEntity.getCaseType().getName().equals(ccdCaseTypeACLEntity.getCaseType().getName())
                         && amCaseTypeACLEntity.getUserRole().getName().equals(ccdCaseTypeACLEntity.getUserRole().getName())) {
                         ccdCaseTypeACLEntity.setCreate(amCaseTypeACLEntity.getCreate());
                         ccdCaseTypeACLEntity.setRead(amCaseTypeACLEntity.getRead());
                         ccdCaseTypeACLEntity.setUpdate(amCaseTypeACLEntity.getUpdate());
                         ccdCaseTypeACLEntity.setDelete(amCaseTypeACLEntity.getDelete());
+                        isCaseTypeEntityFound = true;
+                        break;
                     }
-                });
-            });
+                }
+                if (!isCaseTypeEntityFound) {
+                    throw new IllegalStateException("CCD and AM repositories out of sync. AM library returned " +
+                        "permissions for [case type: \"" + amCaseTypeACLEntity.getCaseType().getName() + "\", " +
+                        "role: \"" + amCaseTypeACLEntity.getUserRole().getName() + "\"] combination that does " +
+                        "not exist in the CCD database");
+                }
+            }
         }
         return ccdCaseTypeEntity;
     }

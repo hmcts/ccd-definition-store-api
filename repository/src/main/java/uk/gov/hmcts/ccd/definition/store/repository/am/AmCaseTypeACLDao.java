@@ -110,14 +110,14 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
             if (caseTypeACLEntity.getUpdate()) permissions.add(UPDATE);
             if (caseTypeACLEntity.getDelete()) permissions.add(DELETE);
 
-            SecurityClassification amSecurityClassification = SecurityClassification.valueOf(
+            SecurityClassification securityClassification = SecurityClassification.valueOf(
                 caseTypeACLEntity.getCaseType().getSecurityClassification().toString());
 
             DefaultPermissionGrant defaultPermissionGrant = DefaultPermissionGrant.builder()
                 .resourceDefinition(resourceDefinition)
                 .roleName(caseTypeACLEntity.getUserRole().getName())
                 .attributePermissions(ImmutableMap.of(JsonPointer.valueOf(""),
-                    new AbstractMap.SimpleEntry<>(permissions, amSecurityClassification)))
+                    new AbstractMap.SimpleEntry<>(permissions, securityClassification)))
                 .lastUpdate(Instant.now())
                 .changedBy("CCD Definition Store")
                 .build();
