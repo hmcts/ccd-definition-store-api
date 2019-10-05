@@ -50,7 +50,7 @@ public class ImportController {
         this.azureStorageConfiguration = azureStorageConfiguration;
     }
 
-    @Transactional
+    @Transactional(value="transactionManager")
     @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
     public ResponseEntity processUpload(@RequestParam("file") MultipartFile file) throws IOException {
         if (file == null || file.getSize() == 0) {

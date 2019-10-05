@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.reform.amlib.AccessManagementService;
-import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportService;
+import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportServiceImpl;
+import uk.gov.hmcts.reform.amlib.enums.AccessType;
 import uk.gov.hmcts.reform.amlib.enums.Permission;
+import uk.gov.hmcts.reform.amlib.enums.RoleType;
 import uk.gov.hmcts.reform.amlib.enums.SecurityClassification;
 import uk.gov.hmcts.reform.amlib.models.DefaultPermissionGrant;
 import uk.gov.hmcts.reform.amlib.models.ResourceDefinition;
@@ -34,11 +36,11 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
     private static final String CASE_CONSTANT = "case";
     private final AccessManagementService accessManagementService;
-    private final DefaultRoleSetupImportService defaultRoleSetupImportService;
+    private final DefaultRoleSetupImportServiceImpl defaultRoleSetupImportService;
 
     public AmCaseTypeACLDao(@Qualifier("amDataSource") DataSource dataSource) {
         accessManagementService = new AccessManagementService(dataSource);
-        defaultRoleSetupImportService = new DefaultRoleSetupImportService(dataSource);
+        defaultRoleSetupImportService = new DefaultRoleSetupImportServiceImpl(dataSource);
     }
 
     @Override
@@ -78,19 +80,19 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
         Map<String, List<DefaultPermissionGrant>> caseTypeRolePermissionsToSaveToAm = ImmutableMap.of(
             caseTypeAmInfo.getCaseReference(), createDefaultPermissionGrantsForCaseType(caseTypeAmInfo));
 
-       // defaultRoleSetupImportService.grantResourceDefaultPermissions(caseTypeRolePermissionsToSaveToAm);
+        defaultRoleSetupImportService.grantResourceDefaultPermissions(caseTypeRolePermissionsToSaveToAm);
 
         return caseTypeAmInfo;
     }
 
     @Override
     public List<CaseTypeAmInfo> saveAmInfoFor(List<CaseTypeAmInfo> caseTypeAmInfos) {
-
+        setupAMServices(caseTypeAmInfos);
         Map<String, List<DefaultPermissionGrant>> caseTypeRolePermissionsToSaveToAm = new HashMap<>();
         caseTypeAmInfos.forEach(caseTypeAmInfo -> caseTypeRolePermissionsToSaveToAm.put(
             caseTypeAmInfo.getCaseReference(), createDefaultPermissionGrantsForCaseType(caseTypeAmInfo)));
 
-       // defaultRoleSetupImportService.grantResourceDefaultPermissions(caseTypeRolePermissionsToSaveToAm);
+        defaultRoleSetupImportService.grantResourceDefaultPermissions(caseTypeRolePermissionsToSaveToAm);
 
         return caseTypeAmInfos;
     }
@@ -98,11 +100,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
     private List<DefaultPermissionGrant> createDefaultPermissionGrantsForCaseType(CaseTypeAmInfo caseTypeAmInfo) {
         List<DefaultPermissionGrant> rolePermissionsForCaseType = new ArrayList<>();
 
-        ResourceDefinition resourceDefinition = ResourceDefinition.builder()
-            .serviceName(caseTypeAmInfo.getJurisdictionId())
-            .resourceName(caseTypeAmInfo.getCaseReference())
-            .resourceType(CASE_CONSTANT)
-            .build();
+        ResourceDefinition resourceDefinition = createResourceDefinition(caseTypeAmInfo);
 
         caseTypeAmInfo.getCaseTypeACLs().forEach(caseTypeACLEntity -> {
 
@@ -127,5 +125,24 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
         });
 
         return rolePermissionsForCaseType;
+    }
+
+    private ResourceDefinition createResourceDefinition(CaseTypeAmInfo caseTypeAmInfo) {
+        return ResourceDefinition.builder()
+            .serviceName(caseTypeAmInfo.getJurisdictionId())
+            .resourceName(caseTypeAmInfo.getCaseReference())
+            .resourceType(CASE_CONSTANT)
+            .build();
+    }
+
+    private void setupAMServices(List<CaseTypeAmInfo> caseTypeAmInfos) {
+        for (CaseTypeAmInfo caseTypeAmInfo : caseTypeAmInfos) {
+            defaultRoleSetupImportService.addService(caseTypeAmInfo.getJurisdictionId());
+            defaultRoleSetupImportService.addResourceDefinition(createResourceDefinition(caseTypeAmInfo));
+            caseTypeAmInfo.getCaseTypeACLs().forEach(
+                s -> defaultRoleSetupImportService.addRole(s.getUserRole().getName(), RoleType.IDAM, SecurityClassification.valueOf(
+                    s.getCaseType().getSecurityClassification().toString()), AccessType.ROLE_BASED)
+            );
+        }
     }
 }
