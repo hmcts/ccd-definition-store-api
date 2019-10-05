@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.reform.amlib.AccessManagementService;
 import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportServiceImpl;
 import uk.gov.hmcts.reform.amlib.enums.AccessType;
@@ -51,6 +53,8 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
         List<CaseTypeACLEntity> caseTypeACLEntities = new ArrayList<>();
         rolePermissionsForCaseTypeEnvelope.getDefaultRolePermissions().forEach(permissionsForRole -> {
             CaseTypeACLEntity caseTypeACLEntity = new CaseTypeACLEntity();
+            caseTypeACLEntity.setCaseType(new CaseTypeEntity());
+            caseTypeACLEntity.setUserRole(new UserRoleEntity());
             caseTypeACLEntity.getCaseType().setName(rolePermissionsForCaseTypeEnvelope.getCaseTypeId());
             caseTypeACLEntity.getUserRole().setName(permissionsForRole.getRole());
             caseTypeACLEntity.setCreate(permissionsForRole.getPermissions().contains(CREATE));
@@ -75,7 +79,9 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
     @Override
     public CaseTypeAmInfo saveAmInfoFor(CaseTypeAmInfo caseTypeAmInfo) {
-
+        setupAMServices(new ArrayList<CaseTypeAmInfo>() {{
+            add(caseTypeAmInfo);
+        }});
         Map<String, List<DefaultPermissionGrant>> caseTypeRolePermissionsToSaveToAm = ImmutableMap.of(
             caseTypeAmInfo.getCaseReference(), createDefaultPermissionGrantsForCaseType(caseTypeAmInfo));
 

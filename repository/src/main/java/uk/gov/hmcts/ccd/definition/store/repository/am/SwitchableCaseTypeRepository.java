@@ -246,7 +246,7 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
         for (CaseTypeACLEntity amCaseTypeACLEntity : caseTypeAmInfo.getCaseTypeACLs()) {
             boolean isCaseTypeEntityFound = false;
             for (CaseTypeACLEntity ccdCaseTypeACLEntity : ccdCaseTypeEntity.getCaseTypeACLEntities()) {
-                if (amCaseTypeACLEntity.getCaseType().getName().equals(ccdCaseTypeACLEntity.getCaseType().getName())
+                if (amCaseTypeACLEntity.getCaseType().getName().equals(ccdCaseTypeACLEntity.getCaseType().getReference())
                     && amCaseTypeACLEntity.getUserRole().getName().equals(ccdCaseTypeACLEntity.getUserRole().getName())) {
                     ccdCaseTypeACLEntity.setCreate(amCaseTypeACLEntity.getCreate());
                     ccdCaseTypeACLEntity.setRead(amCaseTypeACLEntity.getRead());
