@@ -226,6 +226,7 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
             .filter(ccdCaseTypeEntity -> amPersistenceSwitch.getReadDataSourceFor(ccdCaseTypeEntity.getReference())
                 .equals(AmPersistenceReadSource.FROM_AM))
             .collect(toList());
+
         List<String> caseTypeReferences = ccdCaseTypeEntitiesForAmInfos.stream()
             .map(CaseTypeEntity::getReference)
             .collect(toList());
@@ -233,7 +234,7 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
 
         ccdCaseTypeEntitiesForAmInfos.forEach(ccdCaseTypeEntity -> {
             caseTypeAmInfos.forEach(caseTypeAmInfo -> {
-                if (ccdCaseTypeEntity.getReference().equals(caseTypeAmInfo.getJurisdictionId())) {
+                if (ccdCaseTypeEntity.getReference().equals(caseTypeAmInfo.getCaseReference())) {
                     replaceCcdCaseTypeACLWithAmCaseTypeACL(ccdCaseTypeEntity, caseTypeAmInfo);
                 }
             });
