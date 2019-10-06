@@ -36,11 +36,9 @@ import static uk.gov.hmcts.reform.amlib.enums.Permission.UPDATE;
 public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
     private static final String CASE_CONSTANT = "case";
-    private final AccessManagementService accessManagementService;
     private final DefaultRoleSetupImportServiceImpl defaultRoleSetupImportService;
 
     public AmCaseTypeACLDao(@Qualifier("amDataSource") DataSource dataSource) {
-        accessManagementService = new AccessManagementService(dataSource);
         defaultRoleSetupImportService = new DefaultRoleSetupImportServiceImpl(dataSource);
     }
 
@@ -48,7 +46,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
     public CaseTypeAmInfo getAmInfoFor(String caseTypeReference) {
 
         RolePermissionsForCaseTypeEnvelope rolePermissionsForCaseTypeEnvelope =
-            accessManagementService.returnRolePermissionsForCaseType(caseTypeReference);
+            defaultRoleSetupImportService.getRolePermissionsForCaseType(caseTypeReference);
 
         List<CaseTypeACLEntity> caseTypeACLEntities = new ArrayList<>();
         rolePermissionsForCaseTypeEnvelope.getDefaultRolePermissions().forEach(permissionsForRole -> {
