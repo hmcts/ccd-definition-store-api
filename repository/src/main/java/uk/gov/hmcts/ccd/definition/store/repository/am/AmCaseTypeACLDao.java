@@ -76,7 +76,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
     @Override
     public CaseTypeAmInfo saveAmInfoFor(CaseTypeAmInfo caseTypeAmInfo) {
-        setupAMServices(new ArrayList<CaseTypeAmInfo>() {{
+        setupAmServices(new ArrayList<CaseTypeAmInfo>() {{
             add(caseTypeAmInfo);
         }});
 
@@ -90,7 +90,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
     @Override
     public List<CaseTypeAmInfo> saveAmInfoFor(List<CaseTypeAmInfo> caseTypeAmInfos) {
-        setupAMServices(caseTypeAmInfos);
+        setupAmServices(caseTypeAmInfos);
         Map<String, List<DefaultPermissionGrant>> caseTypeRolePermissionsToSaveToAm = new HashMap<>();
         caseTypeAmInfos.forEach(caseTypeAmInfo -> caseTypeRolePermissionsToSaveToAm.put(
             caseTypeAmInfo.getCaseReference(), createDefaultPermissionGrantsForCaseType(caseTypeAmInfo)));
@@ -137,7 +137,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
             .build();
     }
 
-    private void setupAMServices(List<CaseTypeAmInfo> caseTypeAmInfos) {
+    private void setupAmServices(List<CaseTypeAmInfo> caseTypeAmInfos) {
         for (CaseTypeAmInfo caseTypeAmInfo : caseTypeAmInfos) {
             defaultRoleSetupImportService.addService(caseTypeAmInfo.getJurisdictionId());
             defaultRoleSetupImportService.addResourceDefinition(createResourceDefinition(caseTypeAmInfo));
