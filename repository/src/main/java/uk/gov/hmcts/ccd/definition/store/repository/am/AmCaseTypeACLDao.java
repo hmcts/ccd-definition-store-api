@@ -79,6 +79,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
         setupAMServices(new ArrayList<CaseTypeAmInfo>() {{
             add(caseTypeAmInfo);
         }});
+
         Map<String, List<DefaultPermissionGrant>> caseTypeRolePermissionsToSaveToAm = ImmutableMap.of(
             caseTypeAmInfo.getCaseReference(), createDefaultPermissionGrantsForCaseType(caseTypeAmInfo));
 
@@ -103,7 +104,6 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
         List<DefaultPermissionGrant> rolePermissionsForCaseType = new ArrayList<>();
 
         ResourceDefinition resourceDefinition = createResourceDefinition(caseTypeAmInfo);
-
         caseTypeAmInfo.getCaseTypeACLs().forEach(caseTypeACLEntity -> {
 
             Set<Permission> permissions = new HashSet<>();
