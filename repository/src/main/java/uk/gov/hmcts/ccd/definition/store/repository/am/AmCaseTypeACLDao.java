@@ -2,12 +2,12 @@ package uk.gov.hmcts.ccd.definition.store.repository.am;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.google.common.collect.ImmutableMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-import uk.gov.hmcts.reform.amlib.AccessManagementService;
 import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportServiceImpl;
 import uk.gov.hmcts.reform.amlib.enums.AccessType;
 import uk.gov.hmcts.reform.amlib.enums.Permission;
@@ -80,6 +80,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
         setupAMServices(new ArrayList<CaseTypeAmInfo>() {{
             add(caseTypeAmInfo);
         }});
+
         Map<String, List<DefaultPermissionGrant>> caseTypeRolePermissionsToSaveToAm = ImmutableMap.of(
             caseTypeAmInfo.getCaseReference(), createDefaultPermissionGrantsForCaseType(caseTypeAmInfo));
 
@@ -104,7 +105,6 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
         List<DefaultPermissionGrant> rolePermissionsForCaseType = new ArrayList<>();
 
         ResourceDefinition resourceDefinition = createResourceDefinition(caseTypeAmInfo);
-
         caseTypeAmInfo.getCaseTypeACLs().forEach(caseTypeACLEntity -> {
 
             Set<Permission> permissions = new HashSet<>();
@@ -143,8 +143,8 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
             defaultRoleSetupImportService.addService(caseTypeAmInfo.getJurisdictionId());
             defaultRoleSetupImportService.addResourceDefinition(createResourceDefinition(caseTypeAmInfo));
             caseTypeAmInfo.getCaseTypeACLs().forEach(
-                s -> defaultRoleSetupImportService.addRole(s.getUserRole().getName(), RoleType.IDAM, SecurityClassification.valueOf(
-                    s.getCaseType().getSecurityClassification().toString()), AccessType.ROLE_BASED)
+                caseTypeACL -> defaultRoleSetupImportService.addRole(caseTypeACL.getUserRole().getName(), RoleType.IDAM, SecurityClassification.valueOf(
+                    caseTypeACL.getCaseType().getSecurityClassification().toString()), AccessType.ROLE_BASED)
             );
         }
     }

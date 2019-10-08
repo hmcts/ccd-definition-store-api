@@ -21,15 +21,13 @@ public class AmDataSourceConfiguration {
     @Bean(name = "definitionStoreTransactionManager")
     @Autowired
     public PlatformTransactionManager tm1(@Qualifier("definitionDataSource") DataSource datasource) {
-        PlatformTransactionManager txm = new DataSourceTransactionManager(datasource);
-        return txm;
+        return new DataSourceTransactionManager(datasource);
     }
 
     @Bean(name = "amDatasourceTransactionManager")
     @Autowired
     public PlatformTransactionManager tm2(@Qualifier("amDataSource") DataSource datasource) {
-        PlatformTransactionManager txm = new DataSourceTransactionManager(datasource);
-        return txm;
+        return new DataSourceTransactionManager(datasource);
     }
 
     @Bean(name = "transactionManager")
