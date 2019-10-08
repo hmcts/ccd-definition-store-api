@@ -144,7 +144,6 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
             .securityClassification(entity.getSecurityClassification())
             .caseReference(entity.getReference())
             .jurisdictionId(entity.getJurisdiction().getReference())
-            //.userRole(entity.getCaseTypeACLEntities().get(0).getUserRole().getName())
             .build();
     }
 
@@ -247,8 +246,8 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
         for (CaseTypeACLEntity amCaseTypeACLEntity : caseTypeAmInfo.getCaseTypeACLs()) {
             boolean isCaseTypeEntityFound = false;
             for (CaseTypeACLEntity ccdCaseTypeACLEntity : ccdCaseTypeEntity.getCaseTypeACLEntities()) {
-                if (amCaseTypeACLEntity.getCaseType().getName().equals(ccdCaseTypeACLEntity.getCaseType().getReference())
-                    && amCaseTypeACLEntity.getUserRole().getName().equals(ccdCaseTypeACLEntity.getUserRole().getName())) {
+                if (amCaseTypeACLEntity.getCaseType().getReference().equals(ccdCaseTypeACLEntity.getCaseType().getReference())
+                    && amCaseTypeACLEntity.getUserRole().getReference().equals(ccdCaseTypeACLEntity.getUserRole().getReference())) {
                     ccdCaseTypeACLEntity.setCreate(amCaseTypeACLEntity.getCreate());
                     ccdCaseTypeACLEntity.setRead(amCaseTypeACLEntity.getRead());
                     ccdCaseTypeACLEntity.setUpdate(amCaseTypeACLEntity.getUpdate());
@@ -259,8 +258,8 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
             }
             if (!isCaseTypeEntityFound) {
                 throw new IllegalStateException("CCD and AM repositories out of sync. AM library returned " +
-                    "permissions for [case type: \"" + amCaseTypeACLEntity.getCaseType().getName() + "\", " +
-                    "role: \"" + amCaseTypeACLEntity.getUserRole().getName() + "\"] combination that does " +
+                    "permissions for [case type: \"" + amCaseTypeACLEntity.getCaseType().getReference() + "\", " +
+                    "role: \"" + amCaseTypeACLEntity.getUserRole().getReference() + "\"] combination that does " +
                     "not exist in the CCD database");
             }
         }

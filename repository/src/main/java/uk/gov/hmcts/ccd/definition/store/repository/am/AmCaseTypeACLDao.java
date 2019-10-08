@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-import uk.gov.hmcts.reform.amlib.AccessManagementService;
 import uk.gov.hmcts.reform.amlib.DefaultRoleSetupImportServiceImpl;
 import uk.gov.hmcts.reform.amlib.enums.AccessType;
 import uk.gov.hmcts.reform.amlib.enums.Permission;
@@ -53,8 +52,8 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
             CaseTypeACLEntity caseTypeACLEntity = new CaseTypeACLEntity();
             caseTypeACLEntity.setCaseType(new CaseTypeEntity());
             caseTypeACLEntity.setUserRole(new UserRoleEntity());
-            caseTypeACLEntity.getCaseType().setName(rolePermissionsForCaseTypeEnvelope.getCaseTypeId());
-            caseTypeACLEntity.getUserRole().setName(permissionsForRole.getRole());
+            caseTypeACLEntity.getCaseType().setReference(rolePermissionsForCaseTypeEnvelope.getCaseTypeId());
+            caseTypeACLEntity.getUserRole().setReference(permissionsForRole.getRole());
             caseTypeACLEntity.setCreate(permissionsForRole.getPermissions().contains(CREATE));
             caseTypeACLEntity.setRead(permissionsForRole.getPermissions().contains(READ));
             caseTypeACLEntity.setUpdate(permissionsForRole.getPermissions().contains(UPDATE));
@@ -118,7 +117,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
             DefaultPermissionGrant defaultPermissionGrant = DefaultPermissionGrant.builder()
                 .resourceDefinition(resourceDefinition)
-                .roleName(caseTypeACLEntity.getUserRole().getName())
+                .roleName(caseTypeACLEntity.getUserRole().getReference())
                 .attributePermissions(ImmutableMap.of(JsonPointer.valueOf(""),
                     new AbstractMap.SimpleEntry<>(permissions, securityClassification)))
                 .lastUpdate(Instant.now())
@@ -143,7 +142,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
             defaultRoleSetupImportService.addService(caseTypeAmInfo.getJurisdictionId());
             defaultRoleSetupImportService.addResourceDefinition(createResourceDefinition(caseTypeAmInfo));
             caseTypeAmInfo.getCaseTypeACLs().forEach(
-                s -> defaultRoleSetupImportService.addRole(s.getUserRole().getName(), RoleType.IDAM, SecurityClassification.valueOf(
+                s -> defaultRoleSetupImportService.addRole(s.getUserRole().getReference(), RoleType.IDAM, SecurityClassification.valueOf(
                     s.getCaseType().getSecurityClassification().toString()), AccessType.ROLE_BASED)
             );
         }
