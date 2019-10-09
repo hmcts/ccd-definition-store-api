@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.am.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.transaction.ChainedTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -19,13 +21,11 @@ import javax.sql.DataSource;
 public class AmDataSourceConfiguration {
 
     @Bean(name = "definitionStoreTransactionManager")
-    @Autowired
     public PlatformTransactionManager tm1(@Qualifier("definitionDataSource") DataSource datasource) {
         return new DataSourceTransactionManager(datasource);
     }
 
     @Bean(name = "amDatasourceTransactionManager")
-    @Autowired
     public PlatformTransactionManager tm2(@Qualifier("amDataSource") DataSource datasource) {
         return new DataSourceTransactionManager(datasource);
     }
@@ -47,5 +47,10 @@ public class AmDataSourceConfiguration {
     @ConfigurationProperties(prefix = "am.datasource")
     public DataSource getAmDataSource() {
         return DataSourceBuilder.create().build();
+    }
+
+    @Bean
+    public TransactionAwareDataSourceProxy transactionAwareDataSourceProxy(@Qualifier("amDataSource") DataSource dataSource) {
+        return new TransactionAwareDataSourceProxy(dataSource);
     }
 }
