@@ -232,11 +232,10 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
         List<CaseTypeAmInfo> caseTypeAmInfos = amCaseTypeACLRepository.getAmInfoFor(caseTypeReferences);
 
         ccdCaseTypeEntitiesForAmInfos.forEach(ccdCaseTypeEntity -> {
-            caseTypeAmInfos.forEach(caseTypeAmInfo -> {
-                if (ccdCaseTypeEntity.getReference().equals(caseTypeAmInfo.getCaseReference())) {
-                    ccdCaseTypeEntity.setCaseTypeACLEntities(caseTypeAmInfo.getCaseTypeACLs());
-                }
-            });
+            caseTypeAmInfos.stream()
+                .filter(caseTypeAmInfo -> caseTypeAmInfo.getCaseReference().equals(ccdCaseTypeEntity.getReference()))
+                .map(CaseTypeAmInfo::getCaseTypeACLs)
+                .forEach(ccdCaseTypeEntity::setCaseTypeACLEntities);
         });
 
         return ccdCaseTypeEntities;
