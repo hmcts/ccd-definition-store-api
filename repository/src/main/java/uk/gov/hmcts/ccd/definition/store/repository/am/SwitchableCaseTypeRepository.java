@@ -215,7 +215,7 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
     private CaseTypeEntity getAmInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {
         if (amPersistenceSwitch.getReadDataSourceFor(ccdCaseTypeEntity.getReference()).equals(AmPersistenceReadSource.FROM_AM)) {
             CaseTypeAmInfo caseTypeAmInfo = amCaseTypeACLRepository.getAmInfoFor(ccdCaseTypeEntity.getReference());
-            replaceCcdCaseTypeACLWithAmCaseTypeACL(ccdCaseTypeEntity, caseTypeAmInfo);
+            ccdCaseTypeEntity.setCaseTypeACLEntities(caseTypeAmInfo.getCaseTypeACLs());
         }
         return ccdCaseTypeEntity;
     }
@@ -234,35 +234,12 @@ public class SwitchableCaseTypeRepository implements VersionedDefinitionReposito
         ccdCaseTypeEntitiesForAmInfos.forEach(ccdCaseTypeEntity -> {
             caseTypeAmInfos.forEach(caseTypeAmInfo -> {
                 if (ccdCaseTypeEntity.getReference().equals(caseTypeAmInfo.getCaseReference())) {
-                    replaceCcdCaseTypeACLWithAmCaseTypeACL(ccdCaseTypeEntity, caseTypeAmInfo);
+                    ccdCaseTypeEntity.setCaseTypeACLEntities(caseTypeAmInfo.getCaseTypeACLs());
                 }
             });
         });
 
         return ccdCaseTypeEntities;
-    }
-
-    private void replaceCcdCaseTypeACLWithAmCaseTypeACL(CaseTypeEntity ccdCaseTypeEntity, CaseTypeAmInfo caseTypeAmInfo) {
-        for (CaseTypeACLEntity amCaseTypeACLEntity : caseTypeAmInfo.getCaseTypeACLs()) {
-            boolean isCaseTypeEntityFound = false;
-            for (CaseTypeACLEntity ccdCaseTypeACLEntity : ccdCaseTypeEntity.getCaseTypeACLEntities()) {
-                if (amCaseTypeACLEntity.getCaseType().getReference().equals(ccdCaseTypeACLEntity.getCaseType().getReference())
-                    && amCaseTypeACLEntity.getUserRole().getReference().equals(ccdCaseTypeACLEntity.getUserRole().getReference())) {
-                    ccdCaseTypeACLEntity.setCreate(amCaseTypeACLEntity.getCreate());
-                    ccdCaseTypeACLEntity.setRead(amCaseTypeACLEntity.getRead());
-                    ccdCaseTypeACLEntity.setUpdate(amCaseTypeACLEntity.getUpdate());
-                    ccdCaseTypeACLEntity.setDelete(amCaseTypeACLEntity.getDelete());
-                    isCaseTypeEntityFound = true;
-                    break;
-                }
-            }
-            if (!isCaseTypeEntityFound) {
-                throw new IllegalStateException("CCD and AM repositories out of sync. AM library returned " +
-                    "permissions for [case type: \"" + amCaseTypeACLEntity.getCaseType().getReference() + "\", " +
-                    "role: \"" + amCaseTypeACLEntity.getUserRole().getReference() + "\"] combination that does " +
-                    "not exist in the CCD database");
-            }
-        }
     }
 
     private boolean setAmInfoIfRequired(final CaseTypeEntity ccdCaseTypeEntity) {

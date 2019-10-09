@@ -357,6 +357,77 @@ public class AmTest {
         assertThat(result.get(1).getCaseTypeACLEntities().get(1).getDelete()).isEqualTo(false);
     }
 
+    // mismatching acls
+    @Test
+    void readFlagOnAndMismatchingACLs_useAmCaseTypeACLAndAddMismatchedEntries() {
+        List<ACLEntry> ccdACLEntries = ImmutableList.of(
+            new ACLEntry(USER_ROLE_1, true, true, true, true)
+        );
+
+        List<ACLEntry> amACLEntries = ImmutableList.of(
+            new ACLEntry(USER_ROLE_1, false, false, false, false),
+            new ACLEntry(USER_ROLE_2, true, true, true, true)
+        );
+
+        CaseTypeEntity ccdCaseTypeEntity = createCaseTypeEntity(CASE_TYPE_REFERENCE_1, ccdACLEntries);
+        CaseTypeAmInfo caseTypeAmInfo = createCaseTypeAmInfo(CASE_TYPE_REFERENCE_1, amACLEntries);
+
+        Mockito.when(amPersistenceSwitch.getReadDataSourceFor(anyString()))
+            .thenReturn(AmPersistenceReadSource.FROM_AM);
+        Mockito.when(ccdCaseTypeRepository.findCurrentVersionForReference(anyString()))
+            .thenReturn(Optional.of(ccdCaseTypeEntity));
+        Mockito.when(amCaseTypeACLRepository.getAmInfoFor(anyString()))
+            .thenReturn(caseTypeAmInfo);
+
+        Optional<CaseTypeEntity> result = switchableCaseTypeRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE_1);
+
+        assertThat(result.isPresent()).isEqualTo(true);
+        result.ifPresent(caseTypeEntity -> {
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().size()).isEqualTo(2);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(0).getCreate()).isEqualTo(false);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(0).getRead()).isEqualTo(false);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(0).getUpdate()).isEqualTo(false);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(0).getDelete()).isEqualTo(false);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(1).getCreate()).isEqualTo(true);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(1).getRead()).isEqualTo(true);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(1).getUpdate()).isEqualTo(true);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(1).getDelete()).isEqualTo(true);
+        });
+    }
+
+    @Test
+    void readFlagOnAndMismatchingACLs_useAmCaseTypeACLAndDeleteMismatchedEntries() {
+        List<ACLEntry> ccdACLEntries = ImmutableList.of(
+            new ACLEntry(USER_ROLE_1, true, true, true, true),
+            new ACLEntry(USER_ROLE_2, true, true, true, true)
+        );
+
+        List<ACLEntry> amACLEntries = ImmutableList.of(
+            new ACLEntry(USER_ROLE_1, false, false, false, false)
+        );
+
+        CaseTypeEntity ccdCaseTypeEntity = createCaseTypeEntity(CASE_TYPE_REFERENCE_1, ccdACLEntries);
+        CaseTypeAmInfo caseTypeAmInfo = createCaseTypeAmInfo(CASE_TYPE_REFERENCE_1, amACLEntries);
+
+        Mockito.when(amPersistenceSwitch.getReadDataSourceFor(anyString()))
+            .thenReturn(AmPersistenceReadSource.FROM_AM);
+        Mockito.when(ccdCaseTypeRepository.findCurrentVersionForReference(anyString()))
+            .thenReturn(Optional.of(ccdCaseTypeEntity));
+        Mockito.when(amCaseTypeACLRepository.getAmInfoFor(anyString()))
+            .thenReturn(caseTypeAmInfo);
+
+        Optional<CaseTypeEntity> result = switchableCaseTypeRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE_1);
+
+        assertThat(result.isPresent()).isEqualTo(true);
+        result.ifPresent(caseTypeEntity -> {
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().size()).isEqualTo(1);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(0).getCreate()).isEqualTo(false);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(0).getRead()).isEqualTo(false);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(0).getUpdate()).isEqualTo(false);
+            assertThat(caseTypeEntity.getCaseTypeACLEntities().get(0).getDelete()).isEqualTo(false);
+        });
+    }
+
     @Getter
     @AllArgsConstructor
     private static class ACLEntry {
