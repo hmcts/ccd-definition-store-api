@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.am;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -53,8 +53,8 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
             CaseTypeACLEntity caseTypeACLEntity = new CaseTypeACLEntity();
             caseTypeACLEntity.setCaseType(new CaseTypeEntity());
             caseTypeACLEntity.setUserRole(new UserRoleEntity());
-            caseTypeACLEntity.getCaseType().setName(rolePermissionsForCaseTypeEnvelope.getCaseTypeId());
-            caseTypeACLEntity.getUserRole().setName(permissionsForRole.getRole());
+            caseTypeACLEntity.getCaseType().setReference(rolePermissionsForCaseTypeEnvelope.getCaseTypeId());
+            caseTypeACLEntity.getUserRole().setReference(permissionsForRole.getRole());
             caseTypeACLEntity.setCreate(permissionsForRole.getPermissions().contains(CREATE));
             caseTypeACLEntity.setRead(permissionsForRole.getPermissions().contains(READ));
             caseTypeACLEntity.setUpdate(permissionsForRole.getPermissions().contains(UPDATE));
@@ -77,7 +77,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
     @Override
     public CaseTypeAmInfo saveAmInfoFor(CaseTypeAmInfo caseTypeAmInfo) {
-        setupAMServices(new ArrayList<CaseTypeAmInfo>() {{
+        setupAmServices(new ArrayList<CaseTypeAmInfo>() {{
             add(caseTypeAmInfo);
         }});
 
@@ -91,7 +91,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
     @Override
     public List<CaseTypeAmInfo> saveAmInfoFor(List<CaseTypeAmInfo> caseTypeAmInfos) {
-        setupAMServices(caseTypeAmInfos);
+        setupAmServices(caseTypeAmInfos);
         Map<String, List<DefaultPermissionGrant>> caseTypeRolePermissionsToSaveToAm = new HashMap<>();
         caseTypeAmInfos.forEach(caseTypeAmInfo -> caseTypeRolePermissionsToSaveToAm.put(
             caseTypeAmInfo.getCaseReference(), createDefaultPermissionGrantsForCaseType(caseTypeAmInfo)));
@@ -118,7 +118,7 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
 
             DefaultPermissionGrant defaultPermissionGrant = DefaultPermissionGrant.builder()
                 .resourceDefinition(resourceDefinition)
-                .roleName(caseTypeACLEntity.getUserRole().getName())
+                .roleName(caseTypeACLEntity.getUserRole().getReference())
                 .attributePermissions(ImmutableMap.of(JsonPointer.valueOf(""),
                     new AbstractMap.SimpleEntry<>(permissions, securityClassification)))
                 .lastUpdate(Instant.now())
@@ -138,13 +138,13 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
             .build();
     }
 
-    private void setupAMServices(List<CaseTypeAmInfo> caseTypeAmInfos) {
+    private void setupAmServices(List<CaseTypeAmInfo> caseTypeAmInfos) {
         for (CaseTypeAmInfo caseTypeAmInfo : caseTypeAmInfos) {
             defaultRoleSetupImportService.addService(caseTypeAmInfo.getJurisdictionId());
             defaultRoleSetupImportService.addResourceDefinition(createResourceDefinition(caseTypeAmInfo));
             caseTypeAmInfo.getCaseTypeACLs().forEach(
-                caseTypeACL -> defaultRoleSetupImportService.addRole(caseTypeACL.getUserRole().getName(), RoleType.IDAM, SecurityClassification.valueOf(
-                    caseTypeACL.getCaseType().getSecurityClassification().toString()), AccessType.ROLE_BASED)
+                s -> defaultRoleSetupImportService.addRole(s.getUserRole().getReference(), RoleType.IDAM, SecurityClassification.valueOf(
+                    s.getCaseType().getSecurityClassification().toString()), AccessType.ROLE_BASED)
             );
         }
     }
