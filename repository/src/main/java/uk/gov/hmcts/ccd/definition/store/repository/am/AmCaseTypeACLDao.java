@@ -2,7 +2,9 @@ package uk.gov.hmcts.ccd.definition.store.repository.am;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.google.common.collect.ImmutableMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -37,8 +39,8 @@ public class AmCaseTypeACLDao implements AmCaseTypeACLRepository {
     private static final String CASE_CONSTANT = "case";
     private final DefaultRoleSetupImportServiceImpl defaultRoleSetupImportService;
 
-    public AmCaseTypeACLDao(@Qualifier("amDataSource") DataSource dataSource) {
-        defaultRoleSetupImportService = new DefaultRoleSetupImportServiceImpl(dataSource);
+    public AmCaseTypeACLDao(@Autowired TransactionAwareDataSourceProxy transactionAwareDataSourceProxy) {
+        defaultRoleSetupImportService = new DefaultRoleSetupImportServiceImpl(transactionAwareDataSourceProxy);
     }
 
     @Override
