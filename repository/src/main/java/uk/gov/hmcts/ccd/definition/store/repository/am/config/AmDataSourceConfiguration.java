@@ -31,9 +31,9 @@ public class AmDataSourceConfiguration {
     }
 
     @Bean(name = "transactionManager")
-    public ChainedTransactionManager transactionManager(@Qualifier("definitionStoreTransactionManager") PlatformTransactionManager ds1,
-                                                        @Qualifier("amDatasourceTransactionManager") PlatformTransactionManager ds2) {
-        return new ChainedTransactionManager(ds1, ds2);
+    public ChainedTransactionManager transactionManager(@Qualifier("definitionStoreTransactionManager") PlatformTransactionManager ptm1,
+                                                        @Qualifier("amDatasourceTransactionManager") PlatformTransactionManager ptm2) {
+        return new ChainedTransactionManager(ptm1, ptm2);
     }
 
     @Primary
