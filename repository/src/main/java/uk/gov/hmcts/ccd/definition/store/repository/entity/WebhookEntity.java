@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -24,6 +27,7 @@ public class WebhookEntity implements Serializable {
     @CollectionTable(name = "webhook_timeout", joinColumns = @JoinColumn(name = "webhook_id"))
     @OrderColumn(name = "index")
     @Column(name = "timeout")
+    @Fetch(value = FetchMode.SUBSELECT)
     private final List<Integer> timeouts = new ArrayList<>();
 
     public String getUrl() {
