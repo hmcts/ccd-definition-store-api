@@ -67,6 +67,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
+import javax.persistence.EntityManager;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class ServicesAutowiringTest implements ApplicationContextAware {
@@ -230,6 +232,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public CaseTypeRepository caseTypeRepository() {
             return mock(CaseTypeRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public EntityManager entityManager() {
+            return mock(EntityManager.class);
         }
 
         @Bean
