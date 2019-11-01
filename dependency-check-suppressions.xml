@@ -244,4 +244,20 @@
         <cve>CVE-2019-16943</cve>
         <cve>CVE-2019-17531</cve>
     </suppress>
+    <!--Liquibase bundles bootstrap and jquery in order to provide an admin UI
+        Suppressing on the basis that we do not expose this UI.-->
+    <suppress>
+        <notes><![CDATA[ file name: liquibase-core-3.6.3.jar: bootstrap.js ]]></notes>
+        <packageUrl regex="true">^pkg:javascript/bootstrap@.*$</packageUrl>
+        <cve>CVE-2018-14040</cve>
+        <cve>CVE-2018-14041</cve>
+        <cve>CVE-2018-14042</cve>
+        <cve>CVE-2019-8331</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ file name: liquibase-core-3.6.3.jar: jquery-1.11.0.min.js ]]></notes>
+        <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+        <cve>CVE-2015-9251</cve>
+        <cve>CVE-2019-11358</cve>
+    </suppress>
 </suppressions>

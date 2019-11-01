@@ -54,6 +54,9 @@ dependencyCheck {
         // Disable scanning of .NET related binaries
         assemblyEnabled = false
     }
+    // Codacy introduces a vulnerable dependency.
+    // Ignore the codacy configuration since it is non runtime.
+    skipConfigurations = ['codacy']
 }
 
 //spring boot dependency override
@@ -127,7 +130,7 @@ allprojects {
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 
-        compile "com.fasterxml.jackson.core:jackson-databind:2.9.10"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.9.10.1"
     }
 
     checkstyle {
@@ -143,14 +146,6 @@ allprojects {
         resolutionStrategy {
             dependencySubstitution {
                 substitute module('org.elasticsearch:elasticsearch') with module("org.elasticsearch:elasticsearch:${elasticSearchVersion}")
-            }
-            eachDependency { DependencyResolveDetails details ->
-                if (details.requested.group in ['com.fasterxml.jackson.core', 'com.fasterxml.jackson.module', 'com.fasterxml.jackson.datatype']) {
-                    details.useVersion '2.9.10'
-                }
-                if (details.requested.name == 'jackson-databind') {
-                    details.useVersion '2.9.10'
-                }
             }
         }
     }
