@@ -1,13 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIST_ELEMENT_CODE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.RESULTS_ORDERING;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
 import liquibase.util.StringUtils;
@@ -20,10 +22,15 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 public abstract class GenericLayoutParser {
     private static final Logger logger = LoggerFactory.getLogger(GenericLayoutParser.class);
+
+    public static final Pattern SORT_ORDER_PATTERN = Pattern.compile("^(1|2):(ASC|DESC)$");
+    public static final String SORT_STRING_DELIMITER = ":";
+    public static final String ALL_ROLES = "ALL_ROLES";
 
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     protected final ParseContext parseContext;
@@ -84,6 +91,8 @@ public abstract class GenericLayoutParser {
                         layoutItems.get(0).getSheetName(), caseType.getReference()));
             }
 
+            validateSortOrders(layoutItems, caseType);
+
             for (DefinitionDataItem layoutCaseFieldDefinition : layoutItems) {
                 result.add(parseLayoutCaseField(caseType, layoutCaseFieldDefinition));
             }
@@ -128,6 +137,10 @@ public abstract class GenericLayoutParser {
         if (StringUtils.isNotEmpty(userRole)) {
             layoutEntity.setUserRole(getRoleEntity(layoutEntity, definition.getSheetName(), userRole));
         }
+        final String sortOrder = definition.getString(RESULTS_ORDERING);
+        if (StringUtils.isNotEmpty(sortOrder)) {
+            populateSortOrder(layoutEntity, sortOrder);
+        }
         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(layoutEntity, definition);
         return ParseResult.Entry.createNew(layoutEntity);
     }
@@ -138,9 +151,75 @@ public abstract class GenericLayoutParser {
                 userRole, sheetName, layoutEntity.getCaseField().getReference())));
     }
 
+    private void validateSortOrders(List<DefinitionDataItem> layoutItems, CaseTypeEntity caseType) {
+        List<DefinitionDataItem> sortDataItems = layoutItems.stream()
+            .filter(ddi -> StringUtils.isNotEmpty(ddi.getString(RESULTS_ORDERING)))
+            .collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(sortDataItems)) {
+            String sheetName = layoutItems.get(0).getSheetName();
+            // validate string pattern
+            sortDataItems.forEach(item -> validateSortOrderPatternString(item, caseType.getReference()));
+            // validate duplicate and missing gaps in the sort priorities
+            validateDuplicateAndGaps(caseType, sheetName, sortDataItems);
+        }
+    }
+
+    private void validateSortOrderPatternString(DefinitionDataItem dataItem, String caseTyeReference) {
+        if (!SORT_ORDER_PATTERN.matcher(dataItem.getString(RESULTS_ORDERING)).matches()) {
+            throw new MapperException(String.format("Invalid results ordering pattern '%s' in worksheet '%s' for caseType '%s' for caseField '%s'",
+                dataItem.getString(RESULTS_ORDERING), dataItem.getSheetName(), caseTyeReference, dataItem.getString(CASE_FIELD_ID)));
+        }
+    }
+
+    private void validateDuplicateAndGaps(CaseTypeEntity caseType, String sheetName, List<DefinitionDataItem> sortDataItems) {
+        Map<String, List<Integer>> sortPrioritiesByUserRole = getSortPrioritiesByRole(sortDataItems);
+        sortPrioritiesByUserRole.values().forEach(items -> {
+            checkDuplicateSortOrders(items, sheetName, caseType.getReference());
+            checkGapsInSortPriority(items, sheetName, caseType.getReference());
+        });
+    }
+
+    private void checkGapsInSortPriority(List<Integer> items, String sheetName, String caseType) {
+        boolean noGaps = items.stream().allMatch(e -> items.containsAll(IntStream.range(1, e).boxed().collect(Collectors.toList())));
+        if (!noGaps) {
+            throw new MapperException(String.format("Missing sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
+        }
+    }
+
+    private void checkDuplicateSortOrders(List<Integer> items, String sheetName, String caseType) {
+        boolean isUnique = items.stream().allMatch(new HashSet<>()::add);
+        if (!isUnique) {
+            throw new MapperException(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
+        }
+    }
+
+    private Map<String, List<Integer>> getSortPrioritiesByRole(List<DefinitionDataItem> sortDataItems) {
+        Map<String, List<Integer>> sortPrioritiesByUserRole = new HashMap<>();
+
+        sortDataItems.stream().forEach(ddi -> {
+            String key = StringUtils.isNotEmpty(ddi.getString(USER_ROLE)) ? ddi.getString(USER_ROLE) : ALL_ROLES;
+            List<Integer> priorities = sortPrioritiesByUserRole.getOrDefault(key, new ArrayList<>());
+            priorities.add(Integer.valueOf(ddi.getString(RESULTS_ORDERING).split(SORT_STRING_DELIMITER)[0]));
+            sortPrioritiesByUserRole.put(key, priorities);
+        });
+        sortPrioritiesByUserRole.keySet().forEach(key -> {
+            if (!key.equalsIgnoreCase(ALL_ROLES) && sortPrioritiesByUserRole.get(ALL_ROLES) != null) {
+                sortPrioritiesByUserRole.get(key).addAll(sortPrioritiesByUserRole.get(ALL_ROLES));
+            }
+        });
+        return sortPrioritiesByUserRole;
+    }
+
+    protected static SortOrder getSortOrder(String sortOrderString) {
+        String[] tokens = sortOrderString.split(SORT_STRING_DELIMITER);
+        return new SortOrder(Integer.valueOf(tokens[0]), tokens[1]);
+    }
+
     protected Logger getLogger() {
         return logger;
     }
+
+    protected abstract void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrde);
 
     protected abstract DefinitionSheet getDefinitionSheet(Map<String, DefinitionSheet> definitionSheets);
 

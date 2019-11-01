@@ -16,6 +16,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
 
 @DisplayName("WorkbasketInputLayoutParser Tests")
 public class WorkbasketInputLayoutParserTest {
@@ -53,5 +57,15 @@ public class WorkbasketInputLayoutParserTest {
     @DisplayName("Should return name")
     public void shouldReturnNameWhenAsked() {
         assertThat(classUnderTest.getLayoutName(), is(WORK_BASKET_INPUT_FIELD.getName()));
+    }
+
+    @Test
+    @DisplayName("Should fail when populateSortOrder is invoked")
+    public void shouldThrowExceptionWhenPopulateSortOrderIsInvoked() {
+        GenericLayoutEntity layoutEntity = new WorkBasketInputCaseFieldEntity();
+        layoutEntity.setCaseType(new CaseTypeEntity());
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateSortOrder(layoutEntity, "1:ASC"));
+        assertEquals(String.format("Results ordering is not supported in worksheet '%s' for caseType '%s'",
+            SheetName.WORK_BASKET_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }
 }

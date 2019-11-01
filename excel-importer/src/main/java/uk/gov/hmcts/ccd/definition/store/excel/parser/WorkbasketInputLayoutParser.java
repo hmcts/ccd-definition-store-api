@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
 
@@ -43,5 +44,11 @@ public class WorkbasketInputLayoutParser extends GenericLayoutParser {
     @Override
     protected GenericLayoutEntity createLayoutCaseFieldEntity() {
         return new WorkBasketInputCaseFieldEntity();
+    }
+
+    @Override
+    protected void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrder) {
+        throw new MapperException(String.format("Results ordering is not supported in worksheet '%s' for "
+            + "caseType '%s'", SheetName.WORK_BASKET_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()));
     }
 }

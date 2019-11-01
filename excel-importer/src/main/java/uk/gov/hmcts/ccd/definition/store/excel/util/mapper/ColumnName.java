@@ -68,6 +68,7 @@ public enum ColumnName {
     TITLE_DISPLAY("TitleDisplay"),
     USER_IDAM_ID("UserIDAMId"),
     USER_ROLE("UserRole"),
+    RESULTS_ORDERING("ResultsOrdering"),
     WORK_BASKET_DEFAULT_JURISDICTION("WorkBasketDefaultJurisdiction"),
     WORK_BASKET_DEFAULT_CASETYPE("WorkBasketDefaultCaseType"),
     WORK_BASKET_DEFAULT_STATE("WorkBasketDefaultState");
