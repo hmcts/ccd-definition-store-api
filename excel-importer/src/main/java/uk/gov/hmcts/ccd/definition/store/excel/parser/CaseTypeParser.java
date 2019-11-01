@@ -1,19 +1,32 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificationColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CaseTypeParser {
     private static final Logger logger = LoggerFactory.getLogger(CaseTypeParser.class);
@@ -58,6 +71,10 @@ public class CaseTypeParser {
     }
 
     public ParseResult<CaseTypeEntity> parseAll(Map<String, DefinitionSheet> definitionSheets) {
+        return parseAll(definitionSheets, Sets.newHashSet());
+    }
+
+        public ParseResult<CaseTypeEntity> parseAll(Map<String, DefinitionSheet> definitionSheets,Set<String> missingUserRoles) {
         logger.debug("Case types parsing...");
 
         final ParseResult<CaseTypeEntity> result = new ParseResult<>();
@@ -87,31 +104,37 @@ public class CaseTypeParser {
                 .addSearchAliasFields(searchAliasFieldParser.parseAll(definitionSheets, caseType));
 
             parseContext.registerCaseRoles(new ArrayList<>(caseRoleEntities));
-            caseType.addCaseTypeACLEntities(authorisationCaseTypeParser.parseAll(definitionSheets, caseType));
+            Collection<CaseTypeACLEntity> caseTypeACLEntities = authorisationCaseTypeParser.parseAll(definitionSheets, caseType);
+            caseType.addCaseTypeACLEntities(caseTypeACLEntities);
+            caseTypeACLEntities.stream().filter(entity -> entity.getUserRole() == null).forEach(entity -> missingUserRoles.add(entity.getUserRoleId()));
 
             for (CaseFieldEntity caseField : caseType.getCaseFields()) {
-                caseField.addCaseACLEntities(authorisationCaseFieldParser
-                                                    .parseAll(definitionSheets, caseType, caseField));
+                Collection<CaseFieldACLEntity> caseFieldACLEntities = authorisationCaseFieldParser.parseAll(definitionSheets, caseType, caseField);
+                caseField.addCaseACLEntities(caseFieldACLEntities);
+                caseFieldACLEntities.stream().filter(entity -> entity.getUserRole() == null).forEach(entity -> missingUserRoles.add(entity.getUserRoleId()));
             }
 
-            authorisationComplexTypeParser.parseAll(definitionSheets, caseType);
+            Collection<ComplexFieldACLEntity> complexFieldACLEntities = authorisationComplexTypeParser.parseAll(definitionSheets, caseType);
+            complexFieldACLEntities.stream().filter(entity -> entity.getUserRole() == null).forEach(entity -> missingUserRoles.add(entity.getUserRoleId()));
+
 
             for (EventEntity event : caseType.getEvents()) {
-                event.addEventACLEntities(authorisationCaseEventParser
-                                            .parseAll(definitionSheets, caseType, event));
+                Collection<EventACLEntity> eventACLEntities = authorisationCaseEventParser.parseAll(definitionSheets, caseType, event);
+                event.addEventACLEntities(eventACLEntities);
+                eventACLEntities.stream().filter(entity -> entity.getUserRole() == null).forEach(entity -> missingUserRoles.add(entity.getUserRoleId()));
+
             }
 
             for (StateEntity stateEntity : caseType.getStates()) {
-                stateEntity.addStateACLEntities(authorisationCaseStateParser.parseAll(definitionSheets, caseType, stateEntity));
+                Collection<StateACLEntity> stateACLEntities = authorisationCaseStateParser.parseAll(definitionSheets, caseType, stateEntity);
+                stateEntity.addStateACLEntities(stateACLEntities);
+                stateACLEntities.stream().filter(stateACLEntity -> stateACLEntity.getUserRole() == null).forEach(entity -> missingUserRoles.add(entity.getUserRoleId()));
             }
-
             result.addNew(caseType);
             parseContext.registerCaseType(caseType);
 
             logger.info("Case types parsing: Parsing case type {}: OK", caseTypeId);
         }
-
-        logger.info("Case types parsing: OK: {} case types parsed", result.getAllResults().size());
 
         return result;
     }

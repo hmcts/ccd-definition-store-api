@@ -1,16 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.BDDMockito.given;
-import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_STATE;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,7 +8,26 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.BDDMockito.given;
+import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_STATE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
 
 public class AuthorisationCaseStateParserTest {
     private static final String CASE_TYPE_UNDER_TEST = "Some Case Type";
@@ -133,6 +141,7 @@ public class AuthorisationCaseStateParserTest {
         assertThat(stateACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(stateACLEntity.getId(), is(nullValue()));
         assertThat(stateACLEntity.getUserRole(), is(nullValue()));
+        assertThat(stateACLEntity.getUserRoleId(), is(role));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
     }
@@ -177,6 +186,7 @@ public class AuthorisationCaseStateParserTest {
         assertThat(stateACLEntity.getCrudAsString(), is("X y"));
         assertThat(stateACLEntity.getId(), is(nullValue()));
         assertThat(stateACLEntity.getUserRole(), is(nullValue()));
+        assertThat(stateACLEntity.getUserRoleId(), is(role));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
     }

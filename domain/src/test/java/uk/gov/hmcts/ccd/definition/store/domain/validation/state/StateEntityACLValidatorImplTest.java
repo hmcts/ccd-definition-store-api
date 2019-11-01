@@ -44,7 +44,7 @@ public class StateEntityACLValidatorImplTest {
         assertThat(result.getValidationErrors().size(), is(1));
         assertThat(result.getValidationErrors().get(0), instanceOf(StateEntityACLValidatorImpl.ValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
-            "Invalid UserRole for case type 'case type', case state 'case state'"));
+            "Invalid UserRole null for case type 'case type', case state 'case state'"));
     }
 
     @Test

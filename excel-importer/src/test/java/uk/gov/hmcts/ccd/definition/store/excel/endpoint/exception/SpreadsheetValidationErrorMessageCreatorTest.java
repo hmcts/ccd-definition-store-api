@@ -421,7 +421,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                 new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
-            "Invalid UserRole for case type 'case type', case field 'case field'",
+            "Invalid UserRole null for case type 'case type', case field 'case field'",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -601,7 +601,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
-            "Invalid UserRole for case type 'case type', event 'event'",
+            "Invalid UserRole null for case type 'case type', event 'event'",
             classUnderTest.createErrorMessage(error));
     }
 

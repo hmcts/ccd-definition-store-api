@@ -76,7 +76,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         if (validationResult.isValid()) {
             versionedRepository.saveAll(caseTypes);
         } else {
-            validationResult.getValidationErrors().forEach(vr -> LOG.info(vr.toString()));
+            validationResult.getValidationErrors().forEach(vr -> LOG.error(vr.toString()));
             throw new ValidationException(validationResult);
         }
     }
