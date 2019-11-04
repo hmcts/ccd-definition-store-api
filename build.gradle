@@ -124,7 +124,7 @@ allprojects {
 
     ext {
         hibernateVersion = '5.2.16.Final'
-        elasticSearchVersion = '6.4.2'
+        elasticSearchVersion = '6.8.4'
     }
 
     dependencies {
