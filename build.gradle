@@ -54,9 +54,8 @@ dependencyCheck {
         // Disable scanning of .NET related binaries
         assemblyEnabled = false
     }
-    // Codacy introduces a vulnerable dependency.
-    // Ignore the codacy configuration since it is non runtime.
-    skipConfigurations = ['codacy']
+    // Ignore these non-runtime configurations
+    skipConfigurations = ['codacy', 'spotbugs']
 }
 
 //spring boot dependency override
