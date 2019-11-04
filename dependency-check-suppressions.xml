@@ -224,11 +224,9 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-        Not sure why owasp dependency check throwing these errors even though our version is ES 6.4.2.
-        https://tools.hmcts.net/jira/browse/RDM-5387
-   file name: definition-store-elastic-search-support-1.2.0-SNAPSHOT.jar
+        The checker is misidentifying our support jar as the elastic search client jar
+   file name: definition-store-elastic-search-support.jar (project :elastic-search-support)
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/uk\.gov\.hmcts\.ccd\.definition/elastic-search-support@.*$</packageUrl>
         <cve>CVE-2014-6439</cve>
         <cve>CVE-2015-1427</cve>
         <cve>CVE-2015-3337</cve>
