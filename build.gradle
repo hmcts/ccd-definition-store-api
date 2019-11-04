@@ -124,7 +124,7 @@ allprojects {
     apply plugin: 'java'
 
     ext {
-        hibernateVersion = '5.2.16.Final'
+        hibernateVersion = '5.2.18.Final'
         elasticSearchVersion = '6.8.4'
     }
 

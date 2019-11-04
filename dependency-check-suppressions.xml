@@ -11,10 +11,6 @@
         <cve>CVE-2018-1258</cve>
     </suppress>
     <suppress>
-        <notes>Temporary suppression while we investigate. See RDM-3324</notes>
-        <cve>CVE-2018-1000632</cve>
-    </suppress>
-    <suppress>
         <notes>Temporary suppression to ignore CVE-2019-7614</notes>
         <cve>CVE-2019-7614</cve>
     </suppress>
