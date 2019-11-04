@@ -2,55 +2,8 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
     <suppress>
-        <notes>Dependencies brough in by codacy report; not used in production</notes>
-        <gav regex="true">^com\.jcraft:jsch:.*$</gav>
-        <cpe>cpe:/a:jcraft:jsch</cpe>
-    </suppress>
-    <suppress>
         <notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security (any version), see https://pivotal.io/security/cve-2018-1258</notes>
         <cve>CVE-2018-1258</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporary suppression to ignore CVE-2019-7614</notes>
-        <cve>CVE-2019-7614</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporary suppression of an issue related to the current stable slf4j which is brought in by other dependencies.
-            CCD don't explicitly declare dependencies on slf4j.
-            org.slf4j.ext.EventData in the slf4j-ext module in QOS.CH SLF4J before 1.8.0-beta2 allows remote attackers to bypass intended access restrictions via crafted data.
-            Investigation notes can be found in RDM-3549.  slf4j may need to be updated when a future stable version is released</notes>
-        <gav regex="true">^.*slf4j.*$</gav>
-        <cpe>cpe:/a:slf4j:slf4j:1.7.25</cpe>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress spring framework CVE see RDM-3809.  Will be
-            removed with RDM-3796 fixes land.</notes>
-        <gav regex="true">^org\.springframework:spring-.+:.*$</gav>
-        <cve>CVE-2018-15756</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-            Suppressing as it seems a false positive as per https://github.com/jeremylong/DependencyCheck/issues/1573
-    ]]></notes>
-        <gav regex="true">^io\.netty:netty-tcnative-boringssl-static:.*</gav>
-        <cve>CVE-2014-3488</cve>
-        <cve>CVE-2015-2156</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-            file name: jackson-databind-2.9.8.jar
-            We've upgraded to jackson-databind 2.9.9 but the dependecy check keeps flagging it, thus mark as false positive.
-        ]]></notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:2\.9\.8$</gav>
-        <cve>CVE-2019-12086</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-           no fix available, not affected anyway
-           ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
-        <cve>CVE-2019-12814</cve>
-        <cve>CVE-2019-12384</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -63,14 +16,7 @@
         <cve>CVE-2015-5377</cve>
         <cve>CVE-2015-5531</cve>
         <cve>CVE-2019-7611</cve>
-    </suppress>
-    <!-- RDM-6147 - should remove these suppressions -->
-    <suppress until="2019-10-31">
-        <notes><![CDATA[ file name: jackson-databind-2.9.10.jar ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
-        <cve>CVE-2019-16942</cve>
-        <cve>CVE-2019-16943</cve>
-        <cve>CVE-2019-17531</cve>
+        <cve>CVE-2019-7614</cve>
     </suppress>
     <!--Liquibase bundles bootstrap and jquery in order to provide an admin UI
         Suppressing on the basis that we do not expose this UI.-->
