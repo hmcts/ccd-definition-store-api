@@ -91,6 +91,9 @@ dependencyManagement {
     }
 
     dependencies {
+
+        // Versions prior to 2.9.10 vulnerable to a CVE
+        dependency "com.fasterxml.jackson.core:jackson-databind:2.9.10.1"
         // Versions prior to 24.1.1 vulnerable to CVE-2018-10237
         dependency 'com.google.guava:guava:24.1.1-jre'
         // CVE-2019-0232, CVE-2019-0199  - Java and Command Line injections in Windows
@@ -131,7 +134,6 @@ allprojects {
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 
-        compile "com.fasterxml.jackson.core:jackson-databind:2.9.10.1"
     }
 
     checkstyle {
