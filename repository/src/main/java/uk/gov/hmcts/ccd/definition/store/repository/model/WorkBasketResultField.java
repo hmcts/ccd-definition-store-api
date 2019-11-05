@@ -12,7 +12,6 @@ public class WorkBasketResultField {
     private Integer order = null;
     private boolean metadata;
     private String role;
-    private SortOrder sortOrder;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -65,14 +64,5 @@ public class WorkBasketResultField {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    @JsonProperty("sort_order")
-    public SortOrder getSortOrder() {
-        return sortOrder;
-    }
-
-    public void setSortOrder(SortOrder sortOrder) {
-        this.sortOrder = sortOrder;
     }
 }

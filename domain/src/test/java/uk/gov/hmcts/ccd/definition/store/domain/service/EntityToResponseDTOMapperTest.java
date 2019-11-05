@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
 class EntityToResponseDTOMapperTest {
@@ -1227,7 +1226,6 @@ class EntityToResponseDTOMapperTest {
         void testMapSearchResultCaseFieldEntity() {
             UserRoleEntity userRoleEntity = new UserRoleEntity();
             userRoleEntity.setReference("role1");
-            SortOrder sortOrder = new SortOrder(2, "ASC");
             SearchResultCaseFieldEntity searchResultCaseFieldEntity = new SearchResultCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
@@ -1236,7 +1234,6 @@ class EntityToResponseDTOMapperTest {
             searchResultCaseFieldEntity.setLabel("Label");
             searchResultCaseFieldEntity.setOrder(69);
             searchResultCaseFieldEntity.setUserRole(userRoleEntity);
-            searchResultCaseFieldEntity.setSortOrder(sortOrder);
 
             SearchResultsField searchResultsField = spyOnClassUnderTest.map(searchResultCaseFieldEntity);
 
@@ -1247,9 +1244,6 @@ class EntityToResponseDTOMapperTest {
                          searchResultsField.getCaseFieldId());
             assertThat(searchResultsField.isMetadata(), is(false));
             assertEquals(userRoleEntity.getReference(), searchResultsField.getRole());
-
-            assertEquals(sortOrder.getDirection(), searchResultsField.getSortOrder().getDirection());
-            assertEquals(sortOrder.getPriority(), searchResultsField.getSortOrder().getPriority());
         }
 
         @Test
@@ -1305,7 +1299,6 @@ class EntityToResponseDTOMapperTest {
         void testMapWorkBasketCaseFieldEntity() {
             UserRoleEntity userRoleEntity = new UserRoleEntity();
             userRoleEntity.setReference("role1");
-            SortOrder sortOrder = new SortOrder(2, "ASC");
             WorkBasketCaseFieldEntity workBasketCaseFieldEntity = new WorkBasketCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
@@ -1314,7 +1307,6 @@ class EntityToResponseDTOMapperTest {
             workBasketCaseFieldEntity.setLabel("Label");
             workBasketCaseFieldEntity.setOrder(69);
             workBasketCaseFieldEntity.setUserRole(userRoleEntity);
-            workBasketCaseFieldEntity.setSortOrder(sortOrder);
 
             WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
 
@@ -1323,9 +1315,6 @@ class EntityToResponseDTOMapperTest {
             assertEquals(workBasketCaseFieldEntity.getLabel(), workBasketResult.getLabel());
             assertEquals(workBasketCaseFieldEntity.getCaseField().getReference(), workBasketResult.getCaseFieldId());
             assertEquals(userRoleEntity.getReference(), workBasketResult.getRole());
-
-            assertEquals(sortOrder.getDirection(), workBasketResult.getSortOrder().getDirection());
-            assertEquals(sortOrder.getPriority(), workBasketResult.getSortOrder().getPriority());
         }
 
         @Test
