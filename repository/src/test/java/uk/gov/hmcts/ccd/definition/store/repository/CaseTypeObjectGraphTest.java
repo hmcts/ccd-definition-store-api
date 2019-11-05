@@ -13,6 +13,7 @@ import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
 
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -342,9 +343,7 @@ public class CaseTypeObjectGraphTest {
     private WebhookEntity createWebHook(final String url, final Integer... timeouts) {
         final WebhookEntity webhook = new WebhookEntity();
         webhook.setUrl(url);
-        for (Integer t: timeouts) {
-            webhook.addTimeout(t);
-        }
+        webhook.setTimeouts(Lists.newArrayList(timeouts));
         return webhook;
     }
 
