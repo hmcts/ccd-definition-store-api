@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +11,9 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
@@ -44,7 +41,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Component
 public class ImportServiceImpl implements ImportService {
@@ -154,17 +150,9 @@ public class ImportServiceImpl implements ImportService {
         logger.debug("Importing spreadsheet: Case types...");
 
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
-        Set<String> missingUserRoles = Sets.newHashSet();
-        final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets, missingUserRoles);
+        final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
         List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
-        try {
-            caseTypeService.createAll(jurisdiction, caseTypes); // runs validation
-        } catch (ValidationException ve) {
-            checkMissingUserRoles(missingUserRoles);
-            throw ve;
-        }
-
-        checkMissingUserRoles(missingUserRoles);
+        caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingUserRoles()); // runs validation
 
         logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 
@@ -222,12 +210,6 @@ public class ImportServiceImpl implements ImportService {
         metadata.setUserId(userDetails.getEmail());
 
         return metadata;
-    }
-
-    private void checkMissingUserRoles(Set<String> missingUserRoles) {
-        if (missingUserRoles.size() > 0) {
-            throw new MissingUserRolesException(missingUserRoles);
-        }
     }
 
     @VisibleForTesting  // used by BaseTest

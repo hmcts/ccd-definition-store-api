@@ -1,25 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
-import java.util.*;
-
-import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.assertFalse;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.*;
-import static org.mockito.hamcrest.MockitoHamcrest.argThat;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
-
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -27,7 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
@@ -46,6 +31,34 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import static java.util.Collections.singletonList;
+import static junit.framework.TestCase.assertFalse;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 
 class CaseTypeServiceImplTest {
 
@@ -128,7 +141,7 @@ class CaseTypeServiceImplTest {
         @DisplayName(
             "Should add the jurisdiction to all items in list, validate and save them all if they are all valid")
         void shouldAddJurisdictionToAllCaseTypeEntitiesValidateThenSave_whenCaseTypeEntitiesAreAllValid() {
-            classUnderTest.createAll(jurisdiction, caseTypeEntities);
+            classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>());
             assertComponentsCalled(true, null);
         }
 
@@ -147,7 +160,7 @@ class CaseTypeServiceImplTest {
 
             ValidationException validationException
                 = assertThrows(ValidationException.class,
-                               () -> classUnderTest.createAll(jurisdiction, caseTypeEntities));
+                               () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
 
             ValidationResult validationResult = validationException.getValidationResult();
             assertFalse(validationResult.isValid());
@@ -175,7 +188,7 @@ class CaseTypeServiceImplTest {
                 argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity2, jurisdiction)));
 
             CaseTypeValidationException actualCaseTypeValidationException = assertThrows(
-                CaseTypeValidationException.class, () -> classUnderTest.createAll(jurisdiction, caseTypeEntities));
+                CaseTypeValidationException.class, () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
 
             assertTrue(actualCaseTypeValidationException == caseTypeValidationException);
 
@@ -198,7 +211,7 @@ class CaseTypeServiceImplTest {
 
             ValidationException validationException
                 = assertThrows(ValidationException.class,
-                () -> classUnderTest.createAll(jurisdiction, caseTypeEntities));
+                () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
             verify(caseTypeRepository).findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_2);
 
             ValidationResult validationResult = validationException.getValidationResult();

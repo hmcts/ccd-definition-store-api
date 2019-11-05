@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +7,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
@@ -24,6 +18,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositor
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
@@ -52,9 +53,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         this.metadataFieldService = metadataFieldService;
     }
 
-    @Override
-    public void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes) {
-
+    private void validate(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes, Set<String> missingUserRoles) {
         ValidationResult validationResult = new ValidationResult();
         caseTypes.forEach(
             caseTypeEntity -> {
@@ -73,12 +72,19 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             }
         );
 
-        if (validationResult.isValid()) {
-            versionedRepository.saveAll(caseTypes);
-        } else {
-            validationResult.getValidationErrors().forEach(vr -> LOG.error(vr.toString()));
+        validationResult.getValidationErrors().forEach(vr -> LOG.warn(vr.toString()));
+        if (missingUserRoles.size() > 0) {
+            throw new MissingUserRolesException(missingUserRoles);
+        }
+        if (!validationResult.isValid()) {
             throw new ValidationException(validationResult);
         }
+    }
+
+    @Override
+    public void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes, Set<String> missingUserRoles) {
+        validate(jurisdiction, caseTypes, missingUserRoles);
+        versionedRepository.saveAll(caseTypes);
     }
 
     @Override

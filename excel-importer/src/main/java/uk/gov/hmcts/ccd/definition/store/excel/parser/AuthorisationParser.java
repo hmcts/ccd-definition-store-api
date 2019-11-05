@@ -25,6 +25,9 @@ interface AuthorisationParser {
 
         entity.setUserRoleId(userRole);
         parseContext.getRole(caseType, userRole).ifPresent(roleEntity -> entity.setUserRole(roleEntity));
+        if (entity.getUserRole() == null) {
+            parseContext.addMissingUserRole(userRole);
+        }
     }
 
     default void parseCrud(final Authorisation entity, final DefinitionDataItem definition) {

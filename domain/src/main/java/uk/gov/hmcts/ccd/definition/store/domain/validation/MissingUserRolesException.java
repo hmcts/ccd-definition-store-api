@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
+package uk.gov.hmcts.ccd.definition.store.domain.validation;
 
 import java.util.Set;
 import java.util.stream.Collectors;
