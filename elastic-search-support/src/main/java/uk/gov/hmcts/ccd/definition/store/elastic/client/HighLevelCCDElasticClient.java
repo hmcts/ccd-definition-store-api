@@ -11,7 +11,7 @@ import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -54,7 +54,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         PutMappingRequest request = new PutMappingRequest(currentIndex);
         request.type(config.getCasesIndexType());
         request.source(caseTypeMapping, XContentType.JSON);
-        AcknowledgedResponse putMappingResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
+        PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
         log.info("mapping upserted: {}", putMappingResponse.isAcknowledged());
         return putMappingResponse.isAcknowledged();
     }
