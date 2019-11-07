@@ -10,6 +10,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
 
 import org.apache.commons.lang3.StringUtils;
@@ -152,9 +153,9 @@ public class CaseTypeObjectGraphTest {
         )));
 
         final List<EventEntity> fetchedEvents = fetched.getEvents();
-        assertThat(fetchedEvents, hasItemWithProperty("webhookStart", hasProperty("timeouts", contains(3, 5, 6, 7, 8))));
-        assertThat(fetchedEvents, hasItemWithProperty("webhookPreSubmit", hasProperty("timeouts", contains(3, 50, 6, 20))));
-        assertThat(fetchedEvents, hasItemWithProperty("webhookPostSubmit", hasProperty("timeouts", contains(23, 5, 6))));
+        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookStart().getTimeouts().equals(Lists.newArrayList(3, 5, 6, 7, 8))));
+        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPreSubmit().getTimeouts().equals(Lists.newArrayList(3, 50, 6, 20))));
+        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPostSubmit().getTimeouts().equals(Lists.newArrayList(23, 5, 6))));
         assertThat(fetchedEvents, hasItem(hasProperty("securityClassification", equalTo(SecurityClassification.PRIVATE))));
         assertThat(fetchedEvents.get(0).getEventCaseFields(), hasSize(1));
         EventCaseFieldEntity eventCaseFieldEntity = fetchedEvents.get(0).getEventCaseFields().get(0);
