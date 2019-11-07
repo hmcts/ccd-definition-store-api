@@ -53,34 +53,6 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         this.metadataFieldService = metadataFieldService;
     }
 
-    private void validate(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes, Set<String> missingUserRoles) {
-        ValidationResult validationResult = new ValidationResult();
-        caseTypes.forEach(
-            caseTypeEntity -> {
-                caseTypeEntity.setJurisdiction(jurisdiction);
-                legacyCaseTypeValidator.validateCaseType(caseTypeEntity);
-                validationResult.merge(validate(caseTypeEntity));
-                String definitiveCaseTypeId = findDefinitiveCaseTypeId(caseTypeEntity.getReference());
-                if (definitiveCaseTypeId != null && !caseTypeEntity.getReference().equals(definitiveCaseTypeId)) {
-                    validationResult.addError(
-                        new CaseTypeEntityReferenceSpellingValidationError(definitiveCaseTypeId, caseTypeEntity));
-                }
-                if (caseTypeExistsInAnyJurisdiction(caseTypeEntity.getReference(), jurisdiction.getReference())) {
-                    validationResult.addError(
-                        new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity));
-                }
-            }
-        );
-
-        validationResult.getValidationErrors().forEach(vr -> LOG.warn(vr.toString()));
-        if (missingUserRoles.size() > 0) {
-            throw new MissingUserRolesException(missingUserRoles);
-        }
-        if (!validationResult.isValid()) {
-            throw new ValidationException(validationResult);
-        }
-    }
-
     @Override
     public void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes, Set<String> missingUserRoles) {
         validate(jurisdiction, caseTypes, missingUserRoles);
@@ -136,6 +108,34 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     private CaseType addMetadataFields(CaseType caseType) {
         caseType.addCaseFields(metadataFieldService.getCaseMetadataFields());
         return caseType;
+    }
+
+    private void validate(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes, Set<String> missingUserRoles) {
+        ValidationResult validationResult = new ValidationResult();
+        caseTypes.forEach(
+            caseTypeEntity -> {
+                caseTypeEntity.setJurisdiction(jurisdiction);
+                legacyCaseTypeValidator.validateCaseType(caseTypeEntity);
+                validationResult.merge(validate(caseTypeEntity));
+                String definitiveCaseTypeId = findDefinitiveCaseTypeId(caseTypeEntity.getReference());
+                if (definitiveCaseTypeId != null && !caseTypeEntity.getReference().equals(definitiveCaseTypeId)) {
+                    validationResult.addError(
+                        new CaseTypeEntityReferenceSpellingValidationError(definitiveCaseTypeId, caseTypeEntity));
+                }
+                if (caseTypeExistsInAnyJurisdiction(caseTypeEntity.getReference(), jurisdiction.getReference())) {
+                    validationResult.addError(
+                        new CaseTypeEntityNonUniqueReferenceValidationError(caseTypeEntity));
+                }
+            }
+        );
+
+        validationResult.getValidationErrors().forEach(vr -> LOG.warn(vr.toString()));
+        if (missingUserRoles.size() > 0) {
+            throw new MissingUserRolesException(missingUserRoles);
+        }
+        if (!validationResult.isValid()) {
+            throw new ValidationException(validationResult);
+        }
     }
 
 }

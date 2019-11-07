@@ -6,6 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,10 @@ interface AuthorisationParser {
         final String caseType = definition.getString(ColumnName.CASE_TYPE_ID);
 
         entity.setUserRoleId(userRole);
-        parseContext.getRole(caseType, userRole).ifPresent(roleEntity -> entity.setUserRole(roleEntity));
-        if (entity.getUserRole() == null) {
+        Optional<UserRoleEntity> userRoleEntity = parseContext.getRole(caseType, userRole);
+        if (userRoleEntity.isPresent()) {
+            entity.setUserRole(userRoleEntity.get());
+        } else {
             parseContext.addMissingUserRole(userRole);
         }
     }
