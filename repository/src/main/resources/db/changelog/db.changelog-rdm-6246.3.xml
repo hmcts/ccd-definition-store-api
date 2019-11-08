@@ -1,14 +1,17 @@
 <!--
+Migrate webhooks from event into a new event_webhook table.
+There were previously three columns on event containing that event's webhooks.
+This takes a relational approach to enable better fetching strategies.
 -->
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    <changeSet id="rdm-6246.4.create_event_state_enum" author="alex.mcausland@hmcts.net">
-        <!--This Enum models the different points at which an event can fire a webhook-->
+    <changeSet id="rdm-6246.create_event_stage_enum" author="alex.mcausland@hmcts.net">
+        <!--This Enum models the different stages at which an event can fire a webhook-->
         <sql>
-            create type event_state as enum('START', 'PRE_SUBMIT', 'POST_SUBMIT');
+            create type event_stage as enum('START', 'PRE_SUBMIT', 'POST_SUBMIT');
         </sql>
-        <rollback>drop type event_state;</rollback>
+        <rollback>drop type event_stage;</rollback>
     </changeSet>
     <changeSet id="rdm-6246.create_event_webhook_table" author="alex.mcausland@hmcts.net">
         <!--This is a joining table between event and webhook-->
@@ -17,9 +20,9 @@
                 id serial unique not null,
                 webhook_id integer references webhook(id) not null,
                 event_id integer references event(id) not null,
-                state event_state not null,
-                /* An event can have one webhook per state */
-                primary key(event_id, state)
+                event_stage event_stage not null,
+                /* An event can have one webhook per stage */
+                primary key(event_id, event_stage)
             );
         </sql>
         <rollback>drop table event_webhook;</rollback>
@@ -29,9 +32,9 @@
         <!--For every event we need to insert a row for every start,-->
         <!--presubmit and postsubmit webhook to link the event to its webhook-->
         <sql>
-            insert into event_webhook(event_id, webhook_id, state)
+            insert into event_webhook(event_id, webhook_id, event_stage)
             (
-                select id as event_id, webhook_start_id as webhook_id, 'START'::event_state
+                select id as event_id, webhook_start_id as webhook_id, 'START'::event_stage
                 from event
                 where webhook_start_id is not null
                 union select id, webhook_pre_submit_id, 'PRE_SUBMIT'

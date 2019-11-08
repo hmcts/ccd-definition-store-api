@@ -3,25 +3,25 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.model.EventState;
+import uk.gov.hmcts.ccd.definition.store.repository.model.EventStage;
 
 import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 
 /**
  * This is a joining type for modelling Event Webhooks.
- * An event can have multiple webhooks which fire at different states during the
+ * An event can have multiple webhooks which fire at different stages during the
  * event (Start, PreSubmit and PostSubmit at time of writing).
  * See {@link EventEntity#webhooks}
  */
 @TypeDef(
-    name = "event_state_enum",
+    name = "event_stage_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.model.EventState")
+    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.model.EventStage")
 )
-@Entity(name = "EventWebhook")
+@Entity(name = "EventWebhookEntity")
 @Table(name = "event_webhook")
-public class EventWebhook {
+public class EventWebhookEntity {
 
     @Id
     @Column(name = "id")
@@ -36,25 +36,21 @@ public class EventWebhook {
     @JoinColumn(name = "event_id")
     private EventEntity event;
 
-    @Column(name = "state")
-    @Type(type = "event_state_enum")
-    private EventState state;
+    @Column(name = "event_stage")
+    @Type(type = "event_stage_enum")
+    private EventStage stage;
 
-    private EventWebhook() {
+    private EventWebhookEntity() {
     }
 
-    public EventWebhook(EventEntity event, WebhookEntity webhook,  EventState state) {
+    public EventWebhookEntity(EventEntity event, WebhookEntity webhook, EventStage stage) {
         this.event = event;
         this.webhook = webhook;
-        this.state = state;
+        this.stage = stage;
     }
 
     public WebhookEntity getWebhook() {
         return webhook;
-    }
-
-    public EventState getState() {
-        return state;
     }
 }
 
