@@ -289,14 +289,14 @@ public class EventEntity implements Serializable {
         this.canSaveDraft = canSaveDraft;
     }
 
-    private void setWebhook(WebhookType state, WebhookEntity webhook) {
+    private void setWebhook(WebhookType type, WebhookEntity webhook) {
         if (null != webhook) {
-            webhooks.put(state, new EventWebhookEntity(this, webhook, state));
+            webhooks.put(type, new EventWebhookEntity(this, webhook, type));
         }
     }
 
-    private WebhookEntity getWebhook(WebhookType state) {
-        EventWebhookEntity ewh = webhooks.get(state);
+    private WebhookEntity getWebhook(WebhookType type) {
+        EventWebhookEntity ewh = webhooks.get(type);
         return ewh == null ? null : ewh.getWebhook();
     }
 }
