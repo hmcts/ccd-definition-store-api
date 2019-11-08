@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
 
@@ -40,15 +36,13 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     private final List<CaseTypeEntityValidator> caseTypeEntityValidators;
     private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedRepository;
     private final MetadataFieldService metadataFieldService;
-    private final EntityManager entityManager;
 
     @Autowired
     public CaseTypeServiceImpl(CaseTypeRepository repository,
                                EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
-                               MetadataFieldService metadataFieldService,
-                               EntityManager entityManager
+                               MetadataFieldService metadataFieldService
     ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
@@ -56,7 +50,6 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         this.caseTypeEntityValidators = caseTypeEntityValidators;
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
         this.metadataFieldService = metadataFieldService;
-        this.entityManager = entityManager;
     }
 
     @Override
@@ -107,19 +100,9 @@ public class CaseTypeServiceImpl implements CaseTypeService {
 
     @Override
     public Optional<CaseType> findByCaseTypeId(String id) {
-        Session session = entityManager.unwrap(Session.class);
-        Integer caseTypeId = repository.findLastCaseTypeId(id).get();
-        /**
-         * caseTypeID is required to fix a performance issue loading EventEntity.
-         * {@link uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity#eventCaseFields}
-         */
-        session.enableFilter("caseTypeId").setParameter("caseTypeId", caseTypeId);
-        TypedQuery<CaseTypeEntity> query =
-            session.createQuery("from CaseTypeEntity where id = :caseTypeId", CaseTypeEntity.class)
-                   .setParameter("caseTypeId", caseTypeId);
-        return query.getResultList().stream().findFirst()
-                    .map(dtoMapper::map)
-                    .map(this::addMetadataFields);
+        return repository.findCurrentVersionForReference(id)
+            .map(dtoMapper::map)
+            .map(this::addMetadataFields);
     }
 
     @Override

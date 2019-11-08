@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE;
-import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_LATEST_CASE_TYPE_ID_FOR_REFERENCE;
 import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_MAX_CASE_TYPE_VERSION_NUMBER;
 
 import org.springframework.data.jpa.repository.Query;
@@ -15,9 +14,6 @@ public interface CaseTypeRepository extends VersionedDefinitionRepository<CaseTy
 
     @Query(SELECT_MAX_CASE_TYPE_VERSION_NUMBER)
     Optional<Integer> findLastVersion(@Param("caseTypeReference") String caseTypeReference);
-
-    @Query(SELECT_LATEST_CASE_TYPE_ID_FOR_REFERENCE)
-    Optional<Integer> findLastCaseTypeId(@Param("caseTypeReference") String caseTypeReference);
 
     @Query(SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE)
     Optional<CaseTypeEntity> findCurrentVersionForReference(@Param("caseTypeReference") String caseTypeReference);

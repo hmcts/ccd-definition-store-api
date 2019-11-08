@@ -9,8 +9,5 @@ final class QueryConstants {
         "select c from CaseTypeEntity c where c.reference=:caseTypeReference " +
             "and c.version in (" + SELECT_MAX_CASE_TYPE_VERSION_NUMBER + ")";
 
-    public static final String SELECT_LATEST_CASE_TYPE_ID_FOR_REFERENCE =
-        "select c.id from CaseTypeEntity c where c.reference=:caseTypeReference " +
-            "and c.version in (" + SELECT_MAX_CASE_TYPE_VERSION_NUMBER + ")";
 
 }

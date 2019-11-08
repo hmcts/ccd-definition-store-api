@@ -6,6 +6,7 @@ import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -17,6 +18,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -30,6 +32,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMappe
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules.CaseTypeValidationResult;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.TestValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
@@ -43,8 +46,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
-
-import javax.persistence.EntityManager;
 
 class CaseTypeServiceImplTest {
 
@@ -71,9 +72,6 @@ class CaseTypeServiceImplTest {
 
     @Mock
     private MetadataFieldService metadataFieldService;
-
-    @Mock
-    private EntityManager entityManager;
 
     @Captor
     private ArgumentCaptor<Collection<CaseTypeEntity>> captor;
@@ -104,7 +102,7 @@ class CaseTypeServiceImplTest {
             dtoMapper,
             legacyCaseTypeValidator,
             Arrays.asList(caseTypeEntityValidator1, caseTypeEntityValidator2),
-            metadataFieldService, entityManager);
+            metadataFieldService);
     }
 
     @Nested
@@ -453,6 +451,71 @@ class CaseTypeServiceImplTest {
 
             assertFalse(caseTypeExists);
             verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+        }
+    }
+
+    @Nested
+    class FindByCaseTypeIdTests {
+
+        private static final String caseTypeId = "caseTypeID";
+        private final CaseType caseType = new CaseType();
+        private final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        private final CaseField metadataField = new CaseField();
+
+        @BeforeEach
+        void setup() {
+            metadataField.setId(MetadataField.STATE.getReference());
+            FieldType fieldType = new FieldType();
+            fieldType.setType(BASE_FIXED_LIST);
+            metadataField.setFieldType(fieldType);
+
+            when(caseTypeRepository.findCurrentVersionForReference(caseTypeId)).thenReturn(Optional.of(caseTypeEntity));
+            when(dtoMapper.map(caseTypeEntity)).thenReturn(caseType);
+            when(metadataFieldService.getCaseMetadataFields()).thenReturn(singletonList(metadataField));
+        }
+
+        @Test
+        @DisplayName("Should call the mapper with the value returned from the repository and return the mapped value")
+        void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
+            Optional<CaseType> caseType = classUnderTest.findByCaseTypeId(caseTypeId);
+
+            verify(caseTypeRepository).findCurrentVersionForReference(same(caseTypeId));
+            verify(dtoMapper).map(same(caseTypeEntity));
+            assertTrue(caseType.isPresent());
+            assertThat(caseType.get(), is(this.caseType));
+        }
+
+        @Test
+        @DisplayName("Should return an empty Optional when the repository returns an empty Optional")
+        void shouldThrowNotFoundException_whenRepositoryReturnsEmptyOptional() {
+            String caseTypeId = "caseTypeID";
+
+            when(caseTypeRepository.findCurrentVersionForReference(any())).thenReturn(
+                Optional.empty()
+            );
+
+            Optional<CaseType> caseType = classUnderTest.findByCaseTypeId(caseTypeId);
+
+            assertFalse(caseType.isPresent());
+        }
+
+        @Test
+        @DisplayName("Should return case type with metadata fields")
+        void shouldReturnCaseTypeWithMetadataFieldsAndFixedListItems_whenMetadataFieldIsOfTypeFixedList() {
+            Optional<CaseType> response = classUnderTest.findByCaseTypeId(caseTypeId);
+
+            assertTrue(response.isPresent());
+            CaseType result = response.get();
+            verifyResult(result);
+            assertThat(result.getCaseFields().get(0), is(metadataField));
+        }
+
+        private void verifyResult(CaseType result) {
+            assertThat(result.getCaseFields(), hasSize(1));
+            assertThat(result.getCaseFields().get(0).getId(), is(MetadataField.STATE.getReference()));
+            verify(caseTypeRepository).findCurrentVersionForReference(same(caseTypeId));
+            verify(dtoMapper).map(same(caseTypeEntity));
+            verify(metadataFieldService).getCaseMetadataFields();
         }
     }
 
