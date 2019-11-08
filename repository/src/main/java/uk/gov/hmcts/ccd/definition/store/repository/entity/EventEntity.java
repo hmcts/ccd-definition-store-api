@@ -18,7 +18,7 @@ import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.model.EventStage;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
 
 @Table(name = "event")
 @Entity
@@ -83,10 +83,10 @@ public class EventEntity implements Serializable {
     private final List<StateEntity> preStates = new ArrayList<>();
 
     @OneToMany(mappedBy = "event", cascade = ALL)
-    @MapKey(name = "stage")
+    @MapKey(name = "type")
     @MapKeyEnumerated(value = EnumType.STRING)
     @Fetch(value = FetchMode.SUBSELECT)
-    private Map<EventStage, EventWebhookEntity> webhooks = Maps.newHashMap();
+    private Map<WebhookType, EventWebhookEntity> webhooks = Maps.newHashMap();
 
     @OneToMany(mappedBy = "event", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = SUBSELECT)
@@ -216,27 +216,27 @@ public class EventEntity implements Serializable {
     }
 
     public WebhookEntity getWebhookStart() {
-        return getWebhook(EventStage.START);
+        return getWebhook(WebhookType.START);
     }
 
     public void setWebhookStart(final WebhookEntity webhookStart) {
-        setWebhook(EventStage.START, webhookStart);
+        setWebhook(WebhookType.START, webhookStart);
     }
 
     public WebhookEntity getWebhookPreSubmit() {
-        return getWebhook(EventStage.PRE_SUBMIT);
+        return getWebhook(WebhookType.PRE_SUBMIT);
     }
 
     public void setWebhookPreSubmit(final WebhookEntity webhookPreSubmit) {
-        setWebhook(EventStage.PRE_SUBMIT, webhookPreSubmit);
+        setWebhook(WebhookType.PRE_SUBMIT, webhookPreSubmit);
     }
 
     public WebhookEntity getWebhookPostSubmit() {
-        return getWebhook(EventStage.POST_SUBMIT);
+        return getWebhook(WebhookType.POST_SUBMIT);
     }
 
     public void setWebhookPostSubmit(final WebhookEntity webhookPostSubmit) {
-        setWebhook(EventStage.POST_SUBMIT, webhookPostSubmit);
+        setWebhook(WebhookType.POST_SUBMIT, webhookPostSubmit);
     }
 
     public void addEventCaseField(@NotNull final EventCaseFieldEntity eventCaseField) {
@@ -289,13 +289,13 @@ public class EventEntity implements Serializable {
         this.canSaveDraft = canSaveDraft;
     }
 
-    private void setWebhook(EventStage state, WebhookEntity webhook) {
+    private void setWebhook(WebhookType state, WebhookEntity webhook) {
         if (null != webhook) {
             webhooks.put(state, new EventWebhookEntity(this, webhook, state));
         }
     }
 
-    private WebhookEntity getWebhook(EventStage state) {
+    private WebhookEntity getWebhook(WebhookType state) {
         EventWebhookEntity ewh = webhooks.get(state);
         return ewh == null ? null : ewh.getWebhook();
     }

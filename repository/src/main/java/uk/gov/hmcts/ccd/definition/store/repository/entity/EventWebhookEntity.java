@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.model.EventStage;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
 
 import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
@@ -15,9 +15,9 @@ import javax.persistence.*;
  * See {@link EventEntity#webhooks}
  */
 @TypeDef(
-    name = "event_stage_enum",
+    name = "webhook_type_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.model.EventStage")
+    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType")
 )
 @Entity(name = "EventWebhookEntity")
 @Table(name = "event_webhook")
@@ -36,17 +36,17 @@ public class EventWebhookEntity {
     @JoinColumn(name = "event_id")
     private EventEntity event;
 
-    @Column(name = "event_stage")
-    @Type(type = "event_stage_enum")
-    private EventStage stage;
+    @Column(name = "webhook_type")
+    @Type(type = "webhook_type_enum")
+    private WebhookType type;
 
     private EventWebhookEntity() {
     }
 
-    public EventWebhookEntity(EventEntity event, WebhookEntity webhook, EventStage stage) {
+    public EventWebhookEntity(EventEntity event, WebhookEntity webhook, WebhookType type) {
         this.event = event;
         this.webhook = webhook;
-        this.stage = stage;
+        this.type = type;
     }
 
     public WebhookEntity getWebhook() {
