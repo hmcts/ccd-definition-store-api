@@ -2,3 +2,7 @@ dependencies:
   - name: java
     version: ~2.9.1
     repository: '@hmctspublic'
+  - name: blobstorage
+    version: ~0.2.1
+    repository: '@hmctspublic'
+    condition: ccd.blobstorage.enabled
