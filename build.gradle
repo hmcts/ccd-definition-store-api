@@ -54,6 +54,8 @@ dependencyCheck {
         // Disable scanning of .NET related binaries
         assemblyEnabled = false
     }
+    // Ignore these non-runtime configurations
+    skipConfigurations = ['codacy', 'spotbugs']
 }
 
 //spring boot dependency override
@@ -89,6 +91,9 @@ dependencyManagement {
     }
 
     dependencies {
+
+        // Versions prior to 24.1.1 vulnerable to CVE-2018-10237
+        dependency 'com.google.guava:guava:24.1.1-jre'
         // CVE-2019-0232, CVE-2019-0199  - Java and Command Line injections in Windows
         dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.21') {
             entry 'tomcat-embed-core'
@@ -120,14 +125,14 @@ allprojects {
     apply plugin: 'java'
 
     ext {
-        hibernateVersion = '5.2.16.Final'
+        hibernateVersion = '5.2.18.Final'
         elasticSearchVersion = '6.4.2'
     }
 
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 
-        compile "com.fasterxml.jackson.core:jackson-databind:2.9.10"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.9.10.1"
     }
 
     checkstyle {
@@ -143,14 +148,6 @@ allprojects {
         resolutionStrategy {
             dependencySubstitution {
                 substitute module('org.elasticsearch:elasticsearch') with module("org.elasticsearch:elasticsearch:${elasticSearchVersion}")
-            }
-            eachDependency { DependencyResolveDetails details ->
-                if (details.requested.group in ['com.fasterxml.jackson.core', 'com.fasterxml.jackson.module', 'com.fasterxml.jackson.datatype']) {
-                    details.useVersion '2.9.10'
-                }
-                if (details.requested.name == 'jackson-databind') {
-                    details.useVersion '2.9.10'
-                }
             }
         }
     }
