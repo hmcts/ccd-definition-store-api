@@ -1,7 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import static java.util.Optional.ofNullable;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.*;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASELINK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
 public interface FieldEntity {
 
@@ -45,4 +50,8 @@ public interface FieldEntity {
     }
 
     boolean isMetadataField();
+
+    default boolean isCompound() {
+        return isCollectionFieldType() || isComplexFieldType();
+    }
 }

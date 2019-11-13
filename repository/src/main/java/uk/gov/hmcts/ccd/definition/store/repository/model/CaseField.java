@@ -21,6 +21,7 @@ public class CaseField implements HasAcls {
     private String liveUntil = null;
     private List<AccessControlList> acls = new ArrayList<>();
     private List<ComplexACL> complexACLs = new ArrayList<>();
+    private Integer order;
     private String showCondition;
     private boolean metadata;
 
@@ -143,6 +144,16 @@ public class CaseField implements HasAcls {
 
     public void setShowCondition(String showCondition) {
         this.showCondition = showCondition;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("order")
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 
     @ApiModelProperty(value = "")

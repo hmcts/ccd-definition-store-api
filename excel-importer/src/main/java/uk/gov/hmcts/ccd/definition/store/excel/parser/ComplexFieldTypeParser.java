@@ -106,6 +106,7 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         complexField.setLabel(definitionDataItem.getString(ColumnName.ELEMENT_LABEL));
         complexField.setHidden(definitionDataItem.getBoolean(ColumnName.DEFAULT_HIDDEN));
         complexField.setHint(definitionDataItem.getString(ColumnName.HINT_TEXT));
+        complexField.setOrder(definitionDataItem.getInteger(ColumnName.DISPLAY_ORDER));
         complexField.setShowCondition(parseShowCondition(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
 
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(complexField, definitionDataItem);

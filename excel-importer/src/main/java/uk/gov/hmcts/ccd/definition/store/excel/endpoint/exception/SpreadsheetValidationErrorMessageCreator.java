@@ -24,6 +24,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityIncorrectOrderValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingOrderValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldInvalidShowConditionError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldShowConditionReferencesInvalidFieldError;
@@ -111,6 +113,34 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             complexFieldEntityMissingSecurityClassificationValidationError.getComplexFieldEntity(),
             complexFieldEntityMissingSecurityClassificationValidationError.getComplexFieldEntity().getReference(),
             complexFieldEntityMissingSecurityClassificationValidationError.getDefaultMessage());
+
+    }
+
+    @Override
+    public String createErrorMessage(ComplexFieldEntityMissingOrderValidationError error) {
+
+        return newMessageIfDefinitionExists(error,
+                                            error.getFieldEntity(),
+                                            def -> String.format(
+                                                "ComplexField with reference '%s' is optional but if defined must have ordering "
+                                                    + "for all children defined",
+                                                error.getFieldEntity().getReference(),
+                                                def.getSheetName()));
+
+    }
+
+    @Override
+    public String createErrorMessage(ComplexFieldEntityIncorrectOrderValidationError
+                                         error) {
+
+        return newMessageIfDefinitionExists(error,
+                                            error.getFieldEntity(),
+                                            def -> String.format(
+                                                "ComplexField with reference=%s has incorrect order at index=%s for nested fieldReference=%s'",
+                                                error.getFieldEntity().getReference(),
+                                                error.getIndex(),
+                                                error.getNestedFieldEntity().getReference(),
+                                                def.getSheetName()));
 
     }
 
