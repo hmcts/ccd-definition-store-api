@@ -34,12 +34,6 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldEntityVali
             return validationResult;
         }
 
-//        validationContext.getPreDefinedComplexTypes();
-
-//        validationResult.addError(
-//            new ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(caseFieldEntity, validationContext)
-//        );
-
         return validationResult;
 
     }
