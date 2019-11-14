@@ -29,7 +29,7 @@ dependencies {
     compile "javax.validation:validation-api:2.0.1.Final"
     compile "org.hibernate.validator:hibernate-validator:6.0.10.Final"
     compile "org.glassfish:javax.el:3.0.0"
-    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.3'
+    compile group: 'uk.gov.hmcts.reform', name: 'liquibase-core', version: '3.8.1'
     testCompile "org.assertj:assertj-core"
     compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.3.2'
 }

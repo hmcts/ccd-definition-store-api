@@ -23,6 +23,6 @@ dependencies {
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
-    runtime "org.liquibase:liquibase-core"
+    runtime "uk.gov.hmcts.reform:liquibase-core"
     testCompile project(":app-insights").sourceSets.main.output
 }
