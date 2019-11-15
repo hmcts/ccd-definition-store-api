@@ -1,0 +1,48 @@
+<!--
+Migrate Webhook timeouts table to an integer array column on Webhooks.
+
+This reduces database query time ~30% when loading a divorce CaseTypeEntity;
+timeouts are typically few in number so modelling them as a relation carries
+a lot of overhead when we don't need the flexibility of the relational approach.
+
+This change can be done without downtime; the migration is backwards compatible with
+the previous code (webhook_timeouts should be dropped on a follow up change).
+-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="rdm-6246.add-timeouts-column" author="alex.mcausland@hmcts.net">
+        <sql>
+            alter table webhook
+            add column timeouts integer[]
+            /* Disallow null values in the array*/
+            check (array_position(timeouts, NULL) IS NULL);
+        </sql>
+        <rollback>alter table webhook drop column timeouts;</rollback>
+    </changeSet>
+    <!--Make timeouts not null in a separate changeset (transaction) to avoid holding an exclusive lock during the rewrite;
+    reads can be served during this operation.-->
+    <changeSet id="rdm-6246.timeouts-not-null" author="alex.mcausland@hmcts.net">
+    <addNotNullConstraint
+                columnName="timeouts"
+                defaultNullValue="{}"
+                schemaName="public"
+                tableName="webhook"/>
+    </changeSet>
+    <!--Populate the webhook timeouts column with values from the webhook_timeouts table.
+    We calculate one group for each webhook, with the timeouts ordered correctly by index. -->
+    <changeSet id="rdm-6246.populate-timeouts" author="alex.mcausland@hmcts.net">
+        <sql>
+        update webhook
+        set timeouts = times.timeouts
+        from (
+          select
+            webhook_id,
+            array_agg(timeout order by index) as timeouts
+          from webhook_timeout
+          group by webhook_id
+        ) times
+        where webhook.id = times.webhook_id;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
