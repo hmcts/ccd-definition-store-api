@@ -131,7 +131,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
 
         validationResult.getValidationErrors().forEach(vr -> LOG.warn(vr.toString()));
         if (missingUserRoles.size() > 0) {
-            throw new MissingUserRolesException(missingUserRoles);
+            throw new MissingUserRolesException(missingUserRoles, validationResult.getValidationErrors());
         }
         if (!validationResult.isValid()) {
             throw new ValidationException(validationResult);
