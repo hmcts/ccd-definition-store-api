@@ -122,8 +122,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
                                             error.getFieldEntity(),
                                             def -> String.format(
-                                                "ComplexField with reference '%s' is optional but if defined must have ordering "
-                                                    + "for all children defined",
+                                                "Order of elements for ComplexField with reference '%s' is optional but if defined all must have ordering ",
                                                 error.getFieldEntity().getReference(),
                                                 def.getSheetName()));
 

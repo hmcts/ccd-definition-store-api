@@ -133,7 +133,6 @@ public class DisplayGroupAdapterService {
         WizardPageComplexFieldOverride override = new WizardPageComplexFieldOverride();
         override.setComplexFieldElementId(reference + "." + eventComplexTypeEntity.getReference());
         override.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
-        override.setOrder(eventComplexTypeEntity.getOrder());
         override.setLabel(eventComplexTypeEntity.getLabel());
         override.setHintText(eventComplexTypeEntity.getHint());
         override.setShowCondition(eventComplexTypeEntity.getShowCondition());
