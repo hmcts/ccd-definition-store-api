@@ -4,6 +4,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEnti
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,9 +34,7 @@ public class FieldTypeListItemMapper {
     private List<FixedListItem> applyDisplayOrder(final List<FixedListItem> fixedListItems) {
 
         return fixedListItems.stream()
-            .sorted((fixedListItem1, fixedListItem2) ->
-                fixedListItem1.getOrder().compareTo(fixedListItem2.getOrder()
-                )).collect(Collectors.toList());
+            .sorted(Comparator.comparing(FixedListItem::getOrder)).collect(Collectors.toList());
     }
 
     private boolean hasADisplayOrder(final List<FixedListItem> fixedListItems) {
