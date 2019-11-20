@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +12,8 @@ import org.mapstruct.Mapping;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTypeListItemMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+
+import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_COMPARATOR;
 
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
@@ -282,7 +286,11 @@ public interface EntityToResponseDTOMapper {
         }
 
         private static List<CaseField> getCaseFields(List<ComplexFieldEntity> complexFieldEntityList) {
-            return complexFieldEntityList.stream().map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity)).collect(Collectors.toList());
+            List<CaseField> caseFields = complexFieldEntityList.stream()
+                                                               .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
+                                                               .collect(Collectors.toList());
+            Collections.sort(caseFields, NULLS_LAST_COMPARATOR);
+            return caseFields;
         }
 
         private static boolean isComplexField(String reference) {

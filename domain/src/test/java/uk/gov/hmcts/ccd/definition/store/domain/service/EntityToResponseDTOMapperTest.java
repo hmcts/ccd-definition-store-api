@@ -1012,21 +1012,36 @@ class EntityToResponseDTOMapperTest {
 
             FieldTypeListItemEntity fieldTypeListItemEntity1 = new FieldTypeListItemEntity();
             fieldTypeListItemEntity1.setLabel("label1");
+            fieldTypeListItemEntity1.setOrder(3);
             FieldTypeListItemEntity fieldTypeListItemEntity2 = new FieldTypeListItemEntity();
             fieldTypeListItemEntity2.setLabel("label2");
+            fieldTypeListItemEntity2.setOrder(2);
             FieldTypeListItemEntity fieldTypeListItemEntity3 = new FieldTypeListItemEntity();
             fieldTypeListItemEntity3.setLabel("label3");
+            fieldTypeListItemEntity3.setOrder(1);
+            FieldTypeListItemEntity fieldTypeListItemEntity4 = new FieldTypeListItemEntity();
+            fieldTypeListItemEntity4.setLabel("label4");
+            fieldTypeListItemEntity4.setOrder(null);
+            FieldTypeListItemEntity fieldTypeListItemEntity5 = new FieldTypeListItemEntity();
+            fieldTypeListItemEntity5.setLabel("label5");
+            fieldTypeListItemEntity5.setOrder(null);
             FixedListItem fixedListItem1 = new FixedListItem();
             fixedListItem1.setLabel("label1");
             FixedListItem fixedListItem2 = new FixedListItem();
             fixedListItem2.setLabel("label2");
             FixedListItem fixedListItem3 = new FixedListItem();
             fixedListItem3.setLabel("label3");
+            FixedListItem fixedListItem4 = new FixedListItem();
+            fixedListItem4.setLabel("label4");
+            FixedListItem fixedListItem5 = new FixedListItem();
+            fixedListItem5.setLabel("label5");
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity1)).thenReturn(fixedListItem1);
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity2)).thenReturn(fixedListItem2);
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity3)).thenReturn(fixedListItem3);
+            when(spyOnClassUnderTest.map(fieldTypeListItemEntity4)).thenReturn(fixedListItem4);
+            when(spyOnClassUnderTest.map(fieldTypeListItemEntity5)).thenReturn(fixedListItem5);
             fieldTypeEntity.addListItems(
-                asList(fieldTypeListItemEntity1, fieldTypeListItemEntity2, fieldTypeListItemEntity3));
+                asList(fieldTypeListItemEntity1, fieldTypeListItemEntity4, fieldTypeListItemEntity5, fieldTypeListItemEntity2, fieldTypeListItemEntity3));
 
             FieldTypeEntity collectionFieldTypeEntity = fieldTypeEntity("CollectionFieldType");
             FieldType collectionFieldType = new FieldType();
@@ -1040,9 +1055,11 @@ class EntityToResponseDTOMapperTest {
             assertEquals(fieldTypeEntity.getRegularExpression(), fieldType.getRegularExpression());
 
             assertEquals(fieldTypeEntity.getListItems().size(), fieldType.getFixedListItems().size());
-            assertEquals(fieldType.getFixedListItems().get(0).getLabel(), fixedListItem1.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(0).getLabel(), fixedListItem3.getLabel());
             assertEquals(fieldType.getFixedListItems().get(1).getLabel(), fixedListItem2.getLabel());
-            assertEquals(fieldType.getFixedListItems().get(2).getLabel(), fixedListItem3.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(2).getLabel(), fixedListItem1.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(3).getLabel(), fixedListItem4.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(4).getLabel(), fixedListItem5.getLabel());
 
             assertEquals(fieldTypeEntity.getCollectionFieldType(), fieldType.getCollectionFieldType());
 

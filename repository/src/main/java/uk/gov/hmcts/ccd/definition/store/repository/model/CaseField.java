@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel(description = "")
-public class CaseField implements HasAcls {
+public class CaseField implements HasAcls, Orderable {
 
     private String id = null;
     private String caseTypeId = null;
@@ -148,6 +148,7 @@ public class CaseField implements HasAcls {
 
     @ApiModelProperty(value = "")
     @JsonProperty("order")
+    @Override
     public Integer getOrder() {
         return order;
     }
