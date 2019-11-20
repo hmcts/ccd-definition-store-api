@@ -286,11 +286,10 @@ public interface EntityToResponseDTOMapper {
         }
 
         private static List<CaseField> getCaseFields(List<ComplexFieldEntity> complexFieldEntityList) {
-            List<CaseField> caseFields = complexFieldEntityList.stream()
+            return complexFieldEntityList.stream()
                                                                .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
+                                                               .sorted(NULLS_LAST_COMPARATOR)
                                                                .collect(Collectors.toList());
-            Collections.sort(caseFields, NULLS_LAST_COMPARATOR);
-            return caseFields;
         }
 
         private static boolean isComplexField(String reference) {
