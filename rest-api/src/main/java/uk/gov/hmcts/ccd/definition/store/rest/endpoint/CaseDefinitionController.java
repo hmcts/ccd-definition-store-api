@@ -91,7 +91,12 @@ public class CaseDefinitionController {
             @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
 
         LOG.debug("received find jurisdictions request with ids: {}", idsOptional);
-        return idsOptional.map(ids -> jurisdictionService.getAll(ids)).orElse(jurisdictionService.getAll());
+
+        if (idsOptional.isPresent()) {
+            return jurisdictionService.getAll(idsOptional.get());
+        }
+
+        return jurisdictionService.getAll();
     }
 
     @RequestMapping(value = "/data/case-type/{ctid}/version",
