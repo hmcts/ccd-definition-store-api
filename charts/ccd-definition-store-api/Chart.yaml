@@ -2,7 +2,7 @@ description: Helm chart for the HMCTS CCD Definition Store
 name: ccd-definition-store-api
 apiVersion: v1
 home: https://github.com/hmcts/ccd-definition-store-api
-version: 1.1.0
+version: 1.1.1
 maintainers:
   - name: HMCTS CCD Dev Team
     email: ccd-devops@HMCTS.NET
