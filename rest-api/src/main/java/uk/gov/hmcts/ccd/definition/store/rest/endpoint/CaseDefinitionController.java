@@ -92,11 +92,7 @@ public class CaseDefinitionController {
 
         LOG.debug("received find jurisdictions request with ids: {}", idsOptional);
 
-        if (idsOptional.isPresent()) {
-            return jurisdictionService.getAll(idsOptional.get());
-        }
-
-        return jurisdictionService.getAll();
+        return idsOptional.map(ids -> jurisdictionService.getAll(ids)).orElseGet(jurisdictionService::getAll);
     }
 
     @RequestMapping(value = "/data/case-type/{ctid}/version",
