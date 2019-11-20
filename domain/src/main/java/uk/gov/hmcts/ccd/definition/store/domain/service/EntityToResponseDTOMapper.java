@@ -101,7 +101,7 @@ public interface EntityToResponseDTOMapper {
         + "               stateEntity.getStateACLEntities()"
         + "           )"
         + "       )",
-             target = "acls")
+        target = "acls")
     @Mapping(source = "stateEntity.reference", target = "id")
     CaseState map(StateEntity stateEntity);
 
@@ -114,36 +114,36 @@ public interface EntityToResponseDTOMapper {
         + "               caseFieldEntity.getCaseFieldACLEntities()"
         + "           )"
         + "       )",
-             target = "acls")
+        target = "acls")
     @Mapping(expression = "java("
         + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.mapComplex("
         + "               caseFieldEntity.getComplexFieldACLEntities()"
         + "           )"
         + "       )",
-             target = "complexACLs")
+        target = "complexACLs")
     @Mapping(expression = "java(caseFieldEntity.isMetadataField())", target = "metadata")
     CaseField map(CaseFieldEntity caseFieldEntity);
 
     @Mapping(source = "fieldTypeEntity.reference", target = "id")
     @Mapping(
-            expression = "java("
-                         + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.FixedListMapper.map("
-                         + "               fieldTypeEntity"
-                         + "           )"
-                         + "       )",
-            target = "fixedListItems"
+        expression = "java("
+            + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.FixedListMapper.map("
+            + "               fieldTypeEntity"
+            + "           )"
+            + "       )",
+        target = "fixedListItems"
     )
     @Mapping(
-            expression = "java("
-                         + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.ComplexFieldsMapper.map("
-                         + "               fieldTypeEntity))",
-            target = "complexFields"
+        expression = "java("
+            + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.ComplexFieldsMapper.map("
+            + "               fieldTypeEntity))",
+        target = "complexFields"
     )
     @Mapping(source = "fieldTypeEntity.minimum", target = "min")
     @Mapping(source = "fieldTypeEntity.maximum", target = "max")
     @Mapping(expression = "java(fieldTypeEntity.getBaseFieldType() == null"
         + " ? fieldTypeEntity.getReference() : fieldTypeEntity.getBaseFieldType().getReference())",
-             target = "type")
+        target = "type")
     FieldType map(FieldTypeEntity fieldTypeEntity);
 
     @Mapping(source = "caseRoleEntity.reference", target = "id")
@@ -158,7 +158,7 @@ public interface EntityToResponseDTOMapper {
         + "           eventCaseFieldEntity.getEventComplexTypes()"
         + "       )"
         + "   )",
-             target = "caseEventFieldComplex"
+        target = "caseEventFieldComplex"
     )
     CaseEventField map(EventCaseFieldEntity eventCaseFieldEntity);
 
@@ -209,13 +209,13 @@ public interface EntityToResponseDTOMapper {
 
         static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
             return eventComplexTypeEntity.stream()
-                .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
-                                                                    complexTypeEntity.getHint(),
-                                                                    complexTypeEntity.getLabel(),
-                                                                    complexTypeEntity.getOrder(),
-                                                                    complexTypeEntity.getDisplayContext(),
-                                                                    complexTypeEntity.getShowCondition()))
-                .collect(Collectors.toList());
+                                         .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
+                                                                                             complexTypeEntity.getHint(),
+                                                                                             complexTypeEntity.getLabel(),
+                                                                                             complexTypeEntity.getOrder(),
+                                                                                             complexTypeEntity.getDisplayContext(),
+                                                                                             complexTypeEntity.getShowCondition()))
+                                         .collect(Collectors.toList());
         }
     }
 
@@ -234,23 +234,23 @@ public interface EntityToResponseDTOMapper {
 
         static List<AccessControlList> map(List<? extends Authorisation> authorisation) {
             return authorisation.stream()
-                .map(auth -> new AccessControlList(auth.getUserRole().getReference(),
-                                                   auth.getCreate(),
-                                                   auth.getRead(),
-                                                   auth.getUpdate(),
-                                                   auth.getDelete()))
-                .collect(Collectors.toList());
+                                .map(auth -> new AccessControlList(auth.getUserRole().getReference(),
+                                                                   auth.getCreate(),
+                                                                   auth.getRead(),
+                                                                   auth.getUpdate(),
+                                                                   auth.getDelete()))
+                                .collect(Collectors.toList());
         }
 
         static List<ComplexACL> mapComplex(List<ComplexFieldACLEntity> complexFieldACLEntities) {
             return complexFieldACLEntities.stream()
-                .map(el -> new ComplexACL(el.getUserRole().getReference(),
-                    el.getCreate(),
-                    el.getRead(),
-                    el.getUpdate(),
-                    el.getDelete(),
-                    el.getListElementCode()))
-                .collect(Collectors.toList());
+                                          .map(el -> new ComplexACL(el.getUserRole().getReference(),
+                                                                    el.getCreate(),
+                                                                    el.getRead(),
+                                                                    el.getUpdate(),
+                                                                    el.getDelete(),
+                                                                    el.getListElementCode()))
+                                          .collect(Collectors.toList());
         }
     }
 
@@ -287,13 +287,13 @@ public interface EntityToResponseDTOMapper {
 
         private static List<CaseField> getCaseFields(List<ComplexFieldEntity> complexFieldEntityList) {
             return complexFieldEntityList.stream()
-                                                               .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
-                                                               .sorted(NULLS_LAST_COMPARATOR)
-                                                               .collect(Collectors.toList());
+                                         .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
+                                         .sorted(NULLS_LAST_COMPARATOR)
+                                         .collect(Collectors.toList());
         }
 
         private static boolean isComplexField(String reference) {
-            return "Complex".equalsIgnoreCase(reference);
+            return "Complex" .equalsIgnoreCase(reference);
         }
     }
 }
