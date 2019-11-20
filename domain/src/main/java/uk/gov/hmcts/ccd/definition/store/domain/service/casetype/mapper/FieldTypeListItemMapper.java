@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 
-import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_COMPARATOR;
+import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_ORDER_COMPARATOR;
 
 public class FieldTypeListItemMapper {
 
@@ -24,7 +24,7 @@ public class FieldTypeListItemMapper {
                                               .setOrder(fieldTypeListItemEntity.getOrder());
                                           return fixedListItem;
                                       })
-                                 .sorted(NULLS_LAST_COMPARATOR)
+                                 .sorted(NULLS_LAST_ORDER_COMPARATOR)
                                  .collect(Collectors.toList());
     }
 

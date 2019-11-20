@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTyp
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
-import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_COMPARATOR;
+import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_ORDER_COMPARATOR;
 
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
@@ -288,7 +286,7 @@ public interface EntityToResponseDTOMapper {
         private static List<CaseField> getCaseFields(List<ComplexFieldEntity> complexFieldEntityList) {
             return complexFieldEntityList.stream()
                                          .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
-                                         .sorted(NULLS_LAST_COMPARATOR)
+                                         .sorted(NULLS_LAST_ORDER_COMPARATOR)
                                          .collect(Collectors.toList());
         }
 

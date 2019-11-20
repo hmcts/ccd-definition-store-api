@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 public class Comparators {
 
-    public static final Comparator<Orderable> NULLS_LAST_COMPARATOR = (o1, o2) -> {
+    public static final Comparator<Orderable> NULLS_LAST_ORDER_COMPARATOR = (o1, o2) -> {
         if (o1.getOrder() == null) {
             return 1;
         }
