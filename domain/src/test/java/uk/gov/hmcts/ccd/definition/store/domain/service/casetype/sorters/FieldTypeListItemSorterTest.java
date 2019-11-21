@@ -89,7 +89,6 @@ public class FieldTypeListItemSorterTest {
     }
 
 
-
     @Test
     public void testWithAndWithoutDisplayOrder() {
 

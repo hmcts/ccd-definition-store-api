@@ -7,51 +7,53 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 public class FieldTypeListItemSorter {
 
-
     public List<FixedListItem> sortFixedListItems(final List<FixedListItem> fixedListItems) {
-        // if there is not a defined value for displayOrder it will return the values as they come.
-        if (isItNotASortedFixedList(fixedListItems)) {
+
+        if (noDisplayOrder(fixedListItems)) {
             return fixedListItems;
         }
-        //if there is a defined display order it has to be applied.
-        return applyDisplayOrderLogic(fixedListItems);
+        return sortFixedList(fixedListItems);
     }
 
-    private List<FixedListItem> applyDisplayOrderLogic(final List<FixedListItem> fixedListItems) {
-        // if all elements have a defined a display order it will order all elements using display order.
-        if (hasAllElementGotAnDisplayOrder(fixedListItems)) {
+    private List<FixedListItem> sortFixedList(final List<FixedListItem> fixedListItems) {
+        if (allDisplayOrder(fixedListItems)) {
             return fixedListItems.stream()
                 .sorted(Comparator.comparing(FixedListItem::getOrder)).collect(Collectors.toList());
         } else {
-            // if only some elements has a display order it will sort them only and put the others with order
-            // at the top of the list.
             return sortFixedListItemWithMixedOrderCriteria(fixedListItems);
         }
     }
 
     private List<FixedListItem> sortFixedListItemWithMixedOrderCriteria(final List<FixedListItem> fixedListItems) {
 
-        final List<FixedListItem> elementsWithDisplayOrder = fixedListItems.stream()
-            .filter(fixedListItem -> fixedListItem.getOrder() != null).collect(Collectors.toList());
-
-        final List<FixedListItem> elementsWithoutDisplayOrder = fixedListItems.stream()
-            .filter(fixedListItem -> fixedListItem.getOrder() == null).collect(Collectors.toList());
+        final List<FixedListItem> elementsWithDisplayOrder = getItemsWithDisplayOrder(fixedListItems);
+        final List<FixedListItem> elementsWithoutDisplayOrder = getItemsWithoutDisplayOrder(fixedListItems);
 
         return Stream.concat(
-            applyDisplayOrderLogic(elementsWithDisplayOrder).stream(),
-            elementsWithoutDisplayOrder.stream()).collect(Collectors.toList()
-        );
+            sortFixedList(elementsWithDisplayOrder).stream(),
+            elementsWithoutDisplayOrder.stream())
+            .collect(Collectors.toList()
+            );
     }
 
-    private boolean isItNotASortedFixedList(final List<FixedListItem> fixedListItems) {
-        return fixedListItems.stream().allMatch(fixedListItem -> fixedListItem.getOrder() == null);
+    private boolean noDisplayOrder(final List<FixedListItem> fixedListItems) {
+        return getItemsWithDisplayOrder(fixedListItems).isEmpty();
     }
 
-
-    private boolean hasAllElementGotAnDisplayOrder(final List<FixedListItem> fixedListItems) {
-        return fixedListItems.stream().allMatch(fixedListItem -> fixedListItem.getOrder() != null);
+    private boolean allDisplayOrder(final List<FixedListItem> fixedListItems) {
+        return getItemsWithDisplayOrder(fixedListItems).size() == fixedListItems.size();
     }
 
+    private List<FixedListItem> getItemsWithDisplayOrder(List<FixedListItem> fixedListItems) {
+        return fixedListItems.stream()
+            .filter(fixedListItem -> fixedListItem.getOrder() != null).collect(Collectors.toList());
+    }
+
+    private List<FixedListItem> getItemsWithoutDisplayOrder(List<FixedListItem> fixedListItems) {
+        return fixedListItems.stream()
+            .filter(fixedListItem -> fixedListItem.getOrder() == null).collect(Collectors.toList());
+    }
 }
