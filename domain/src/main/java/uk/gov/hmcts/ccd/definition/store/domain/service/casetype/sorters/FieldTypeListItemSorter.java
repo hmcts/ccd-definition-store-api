@@ -15,16 +15,18 @@ public class FieldTypeListItemSorter {
         if (isItNotASortedFixedList(fixedListItems)) {
             return fixedListItems;
         }
+        //if there is a defined display order it has to be applied.
         return applyDisplayOrderLogic(fixedListItems);
     }
 
     private List<FixedListItem> applyDisplayOrderLogic(final List<FixedListItem> fixedListItems) {
-        // if all elements has a defined a display order it will order all elements using display order.
+        // if all elements have a defined a display order it will order all elements using display order.
         if (hasAllElementGotAnDisplayOrder(fixedListItems)) {
             return fixedListItems.stream()
                 .sorted(Comparator.comparing(FixedListItem::getOrder)).collect(Collectors.toList());
         } else {
-            // if if some elements has a display order it will sort them only and put them at the top of the list.
+            // if only some elements has a display order it will sort them only and put the others with order
+            // at the top of the list.
             return sortFixedListItemWithMixedOrderCriteria(fixedListItems);
         }
     }
