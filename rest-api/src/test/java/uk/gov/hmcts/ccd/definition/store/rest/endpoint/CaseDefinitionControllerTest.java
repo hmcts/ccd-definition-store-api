@@ -27,6 +27,7 @@ import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -177,6 +178,7 @@ public class CaseDefinitionControllerTest {
         @Test
         public void shouldCallJurisdictionGetAllWhenNoIds() {
             subject.findJurisdictions(Optional.empty());
+            verify(jurisdictionService, times(0)).getAll(anyList());
             verify(jurisdictionService, times(1)).getAll();
         }
     }
