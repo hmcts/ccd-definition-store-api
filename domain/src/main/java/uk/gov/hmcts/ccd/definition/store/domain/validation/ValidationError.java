@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public abstract class ValidationError implements Serializable {
 
@@ -22,4 +23,12 @@ public abstract class ValidationError implements Serializable {
     public String toString() {
         return "validationError: " + defaultMessage;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        ValidationError that = (ValidationError) o;
+        return Objects.equals(defaultMessage, that.defaultMessage);
+    }
+
 }

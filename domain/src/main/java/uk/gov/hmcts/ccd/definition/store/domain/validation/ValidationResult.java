@@ -41,6 +41,6 @@ public class ValidationResult implements Serializable {
     }
 
     private boolean hasError(ValidationError error) {
-        return this.validationErrors.stream().anyMatch(validationError -> validationError.getDefaultMessage().equals(error.getDefaultMessage()));
+        return this.validationErrors.stream().anyMatch(validationError -> validationError.equals(error));
     }
 }
