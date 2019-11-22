@@ -1,10 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidator;
@@ -13,6 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import static java.util.Comparator.comparingInt;
+import static java.util.stream.IntStream.range;
 
 @Component
 public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldEntityValidator {
@@ -23,23 +26,20 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldEntityVali
 
         ValidationResult validationResult = new ValidationResult();
 
-        validateComplexField(caseFieldEntity, validationResult, caseFieldEntity.getFieldType().getChildren());
-
         List<ComplexFieldEntity> children = caseFieldEntity.getFieldType().getChildren();
-        children.forEach(child -> {
-            validate(child);
-        });
 
-        if (!validationResult.isValid()) {
-            return validationResult;
-        }
+        validateComplexField(caseFieldEntity, children).ifPresent(validationResult::addError);
+
+        children.forEach(child -> {
+            validationResult.addErrors(validate(child));
+        });
 
         return validationResult;
 
     }
 
-    private ValidationResult validate(ComplexFieldEntity complexField) {
-        ValidationResult validationResult = new ValidationResult();
+    private List<ValidationError> validate(ComplexFieldEntity complexField) {
+        List<ValidationError> validationErrors = Lists.newArrayList();
 
         if (complexField.isCompound()) {
             List<ComplexFieldEntity> children = complexField.getFieldType().getChildren();
@@ -50,30 +50,26 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldEntityVali
                     validate(childField);
                 }
             });
-            validateComplexField(complexField, validationResult, children);
+            validateComplexField(complexField, children).ifPresent(validationErrors::add);
         }
-        return validationResult;
+        return validationErrors;
     }
 
-    private void validateComplexField(FieldEntity fieldEntity, ValidationResult validationResult, List<ComplexFieldEntity> children) {
+    private Optional<ValidationError> validateComplexField(FieldEntity fieldEntity, List<ComplexFieldEntity> children) {
+        Optional<ValidationError> validationErrorOptional = Optional.empty();
         List<ComplexFieldEntity> sortedFields = getSortedComplexFieldEntities(children);
         if (isChildOfComplexFieldMissingOrder(children, sortedFields)) {
-            validationResult.addError(
-                new ComplexFieldEntityMissingOrderValidationError(fieldEntity)
-            );
+            validationErrorOptional = Optional.of(new ComplexFieldEntityMissingOrderValidationError(fieldEntity.getFieldType()));
         } else if (!sortedFields.isEmpty()) {
-            validateOrdering(fieldEntity, validationResult, sortedFields);
+            if (isNotIncrementallyOrdered(sortedFields)) {
+                validationErrorOptional = Optional.of(new ComplexFieldEntityIncorrectOrderValidationError(fieldEntity.getFieldType()));
+            }
         }
+        return validationErrorOptional;
     }
 
-    private void validateOrdering(FieldEntity fieldEntity, ValidationResult validationResult, List<ComplexFieldEntity> sortedFields) {
-        IntStream.range(0, sortedFields.size()).forEach(index -> {
-            if (sortedFields.get(index).getOrder() != index + 1) {
-                validationResult.addError(
-                    new ComplexFieldEntityIncorrectOrderValidationError(fieldEntity, index + 1, sortedFields.get(index))
-                );
-            }
-        });
+    private boolean isNotIncrementallyOrdered(List<ComplexFieldEntity> sortedFields) {
+        return range(0, sortedFields.size()).anyMatch(index -> sortedFields.get(index).getOrder() != index + 1);
     }
 
     private boolean isChildOfComplexFieldMissingOrder(List<ComplexFieldEntity> children, List<ComplexFieldEntity> sortedFields) {

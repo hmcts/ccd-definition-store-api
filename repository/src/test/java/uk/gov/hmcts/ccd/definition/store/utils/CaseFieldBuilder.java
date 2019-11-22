@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.utils;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public class CaseFieldBuilder {
 
     private String reference;
     private String fieldTypeReference;
+    private FieldTypeEntity fieldTypeEntity;
+    private DataFieldType dataFieldType;
     private List<ComplexFieldEntity> fieldsForComplex = newArrayList();
 
     private CaseFieldBuilder(String reference) {
@@ -21,6 +24,11 @@ public class CaseFieldBuilder {
 
     public CaseFieldBuilder withFieldTypeReference(String reference) {
         this.fieldTypeReference = reference;
+        return this;
+    }
+
+    public CaseFieldBuilder withFieldType(FieldTypeEntity fieldType) {
+        this.fieldTypeEntity = fieldType;
         return this;
     }
 
@@ -43,16 +51,31 @@ public class CaseFieldBuilder {
         return field;
     }
 
+    public CaseFieldBuilder withDataFieldType(DataFieldType dataFieldType) {
+        this.dataFieldType = dataFieldType;
+        return this;
+    }
+
     public CaseFieldEntity build() {
         CaseFieldEntity field = new CaseFieldEntity();
         field.setReference(this.reference);
-        field.setFieldType(newType(fieldTypeReference).build());
+        if (fieldTypeEntity != null) {
+            field.setFieldType(fieldTypeEntity);
+        } else {
+            field.setFieldType(newType(fieldTypeReference).build());
+            field.setDataFieldType(dataFieldType);
+        }
         return field;
     }
 
     public static CaseFieldBuilder newField(String reference, String fieldTypeReference) {
         CaseFieldBuilder caseFieldBuilder = new CaseFieldBuilder(reference);
         caseFieldBuilder.withFieldTypeReference(fieldTypeReference);
+        return caseFieldBuilder;
+    }
+
+    public static CaseFieldBuilder newField(String reference) {
+        CaseFieldBuilder caseFieldBuilder = new CaseFieldBuilder(reference);
         return caseFieldBuilder;
     }
 

@@ -118,29 +118,12 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(ComplexFieldEntityMissingOrderValidationError error) {
-
-        return newMessageIfDefinitionExists(error,
-                                            error.getFieldEntity(),
-                                            def -> String.format(
-                                                "Order of elements for ComplexField with reference '%s' is optional but if defined all must have ordering ",
-                                                error.getFieldEntity().getReference(),
-                                                def.getSheetName()));
-
+        return withWorkSheetName(error);
     }
 
     @Override
-    public String createErrorMessage(ComplexFieldEntityIncorrectOrderValidationError
-                                         error) {
-
-        return newMessageIfDefinitionExists(error,
-                                            error.getFieldEntity(),
-                                            def -> String.format(
-                                                "ComplexField with reference=%s has incorrect order at index=%s for nested fieldReference=%s'",
-                                                error.getFieldEntity().getReference(),
-                                                error.getIndex(),
-                                                error.getNestedFieldEntity().getReference(),
-                                                def.getSheetName()));
-
+    public String createErrorMessage(ComplexFieldEntityIncorrectOrderValidationError error) {
+        return withWorkSheetName(error);
     }
 
     @Override

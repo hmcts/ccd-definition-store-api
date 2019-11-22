@@ -1,20 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-public class ComplexFieldEntityMissingOrderValidationError extends ValidationError {
+public class ComplexFieldEntityMissingOrderValidationError extends SimpleValidationError {
 
-    private FieldEntity fieldEntity;
-
-    public ComplexFieldEntityMissingOrderValidationError(FieldEntity complexFieldEntity) {
-        super(String.format("ComplexField with reference '%s' must have ordering for all children defined", complexFieldEntity.getReference()));
-        this.fieldEntity = complexFieldEntity;
-    }
-
-    public FieldEntity getFieldEntity() {
-        return fieldEntity;
+    public ComplexFieldEntityMissingOrderValidationError(FieldTypeEntity fieldTypeEntity) {
+        super(String.format("ComplexField with reference=%s must have ordering for all children defined. WorkSheet 'ComplexTypes'",
+                            fieldTypeEntity.isCollectionFieldType() ?
+                                fieldTypeEntity.getCollectionFieldType().getReference() :
+                                fieldTypeEntity.getReference()),
+              fieldTypeEntity);
     }
 
     @Override

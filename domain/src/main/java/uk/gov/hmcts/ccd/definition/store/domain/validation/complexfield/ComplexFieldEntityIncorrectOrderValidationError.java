@@ -1,34 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-public class ComplexFieldEntityIncorrectOrderValidationError extends ValidationError {
+public class ComplexFieldEntityIncorrectOrderValidationError extends SimpleValidationError {
 
-    private FieldEntity fieldEntity;
-    private Integer index;
-    private ComplexFieldEntity nestedFieldEntity;
 
-    public ComplexFieldEntityIncorrectOrderValidationError(FieldEntity complexFieldEntity, int index, ComplexFieldEntity nestedFieldEntity) {
-        super(String.format("ComplexField with reference=%s has incorrect order at index=%s for nested fieldReference=%s",
-                            complexFieldEntity.getReference(), index, nestedFieldEntity.getReference()));
-        this.fieldEntity = complexFieldEntity;
-        this.index = index;
-        this.nestedFieldEntity = nestedFieldEntity;
-    }
-
-    public FieldEntity getFieldEntity() {
-        return fieldEntity;
-    }
-
-    public Integer getIndex() {
-        return index;
-    }
-
-    public ComplexFieldEntity getNestedFieldEntity() {
-        return nestedFieldEntity;
+    public ComplexFieldEntityIncorrectOrderValidationError(FieldTypeEntity fieldTypeEntity) {
+        super(String.format("ComplexField with reference=%s has incorrect order for nested fields. Order has to be incremental and start from 1. WorkSheet 'ComplexTypes'",
+                            fieldTypeEntity.isCollectionFieldType() ?
+                                fieldTypeEntity.getCollectionFieldType().getReference() :
+                                fieldTypeEntity.getReference()),
+              fieldTypeEntity);
     }
 
     @Override

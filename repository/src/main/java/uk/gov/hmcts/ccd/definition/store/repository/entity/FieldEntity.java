@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import java.io.Serializable;
+
 import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
@@ -8,7 +10,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASELINK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
-public interface FieldEntity {
+public interface FieldEntity extends Serializable {
 
     String getReference();
 
