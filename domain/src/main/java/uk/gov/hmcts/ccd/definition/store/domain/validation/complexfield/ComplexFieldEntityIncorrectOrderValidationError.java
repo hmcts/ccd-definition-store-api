@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 public class ComplexFieldEntityIncorrectOrderValidationError extends SimpleValidationError {
