@@ -18,9 +18,9 @@ import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.ComplexFieldBuilder.newComplexField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
-class ComplexFieldEntityOrderValidatorImplTest {
+class CaseFieldEntityComplexFieldEntityOrderValidatorImplTest {
 
-    private ComplexFieldEntityOrderValidatorImpl complexFieldEntityOrderValidator = new ComplexFieldEntityOrderValidatorImpl();
+    private CaseFieldEntityComplexFieldEntityOrderValidatorImpl complexFieldEntityOrderValidator = new CaseFieldEntityComplexFieldEntityOrderValidatorImpl();
 
     CaseFieldEntityValidationContext caseFieldEntityValidationContext;
 
@@ -147,6 +147,29 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                                         .build())
                                                      .withOrder(3)
                                                      .build())
+                               .withComplexField(newComplexField("nested2")
+                                                     .withFieldType(newType("nested2FieldType1")
+                                                                        .withReference(BASE_TEXT)
+                                                                        .build())
+                                                     .withOrder(2)
+                                                     .build())
+                               .build())
+            .withDataFieldType(DataFieldType.CASE_DATA)
+            .build();
+
+        ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, caseFieldEntityValidationContext);
+
+        assertThat(validate.getValidationErrors(), hasSize(1));
+        assertThat(validate.getValidationErrors(),
+                   hasItem(hasProperty("defaultMessage",
+                                       is("ComplexField with reference=fieldType1 has incorrect order for nested fields. Order has to be incremental and start from 1. WorkSheet 'ComplexTypes'"))));
+    }
+
+    @Test
+    void shouldFailIfSingleElementOrderDoesNotStartWithOne() {
+        CaseFieldEntity caseField = newField("field1")
+            .withFieldType(newType("fieldType1")
+                               .withBaseFieldType(newType(BASE_COMPLEX).build())
                                .withComplexField(newComplexField("nested2")
                                                      .withFieldType(newType("nested2FieldType1")
                                                                         .withReference(BASE_TEXT)
