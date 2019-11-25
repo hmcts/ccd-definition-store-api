@@ -18,12 +18,7 @@ public class CaseRoleEntityUniquenessValidatorImpl implements CaseRoleEntityVali
     public ValidationResult validate(CaseRoleEntity caseRoleEntity,
                                      CaseRoleEntityValidationContext caseRoleEntityValidationContext) {
         final ValidationResult validationResult = new ValidationResult();
-        if (CREATOR.equalsIgnoreCase(caseRoleEntity.getReference())) {
-            validationResult.addError(new CaseRoleEntityUniquenessValidatorImpl.ValidationError(String.format(
-                "CaseRole Id [CREATOR] is reserved. Please check case type'%s'",
-                caseRoleEntity.getReference()),
-                caseRoleEntity));
-        } else if (caseRoleEntity.getReference() != null) {
+        if (caseRoleEntity.getReference() != null) {
             final List<CaseRoleEntity> caseRoleEntities = caseRoleEntityValidationContext.getCaseRoleEntities();
             final Optional<CaseRoleEntity> duplicateEntity =
                 caseRoleEntities

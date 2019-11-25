@@ -25,7 +25,7 @@ interface AuthorisationParser {
         final String userRole = definition.getString(ColumnName.USER_ROLE);
         final String caseType = definition.getString(ColumnName.CASE_TYPE_ID);
 
-        parseContext.getRole(caseType, userRole).ifPresent(roleEntity -> entity.setUserRole((UserRoleEntity) roleEntity));
+        parseContext.getRole(caseType, userRole).ifPresent(entity::setUserRole);
     }
 
     default void parseCrud(final Authorisation entity, final DefinitionDataItem definition) {
