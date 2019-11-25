@@ -13,6 +13,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
+import org.assertj.core.util.Lists;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
@@ -267,7 +268,7 @@ class DisplayGroupAdapterServiceTest {
     private static WebhookEntity webhookEntity() {
         WebhookEntity webhookEntity = new WebhookEntity();
         webhookEntity.setUrl("http://test1.com");
-        webhookEntity.addTimeout(120);
+        webhookEntity.setTimeouts(Lists.newArrayList(120));
         return webhookEntity;
     }
 
