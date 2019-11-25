@@ -18,7 +18,7 @@ import static java.util.Comparator.comparingInt;
 import static java.util.stream.IntStream.range;
 
 @Component
-public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldEntityValidator {
+public class CaseFieldEntityComplexFieldEntityOrderValidatorImpl implements CaseFieldEntityValidator {
 
     @Override
     public ValidationResult validate(CaseFieldEntity caseFieldEntity,
