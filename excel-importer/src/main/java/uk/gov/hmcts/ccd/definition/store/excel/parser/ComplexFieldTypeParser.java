@@ -109,7 +109,7 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         complexField.setHidden(definitionDataItem.getBoolean(ColumnName.DEFAULT_HIDDEN));
         complexField.setHint(definitionDataItem.getString(ColumnName.HINT_TEXT));
         Integer order = definitionDataItem.getInteger(ColumnName.DISPLAY_ORDER);
-        if (order != null && order > itemsCount) {
+        if (isOrderNotWithinSize(itemsCount, order)) {
             throw new MapperException(String.format(INVALID_ORDER_COLUMN, fieldId));
         }
         complexField.setOrder(order);
@@ -120,6 +120,10 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         result.add(resultEntry);
 
         return complexField;
+    }
+
+    private boolean isOrderNotWithinSize(int itemsCount, Integer order) {
+        return order != null && order > itemsCount;
     }
 
     @Override
