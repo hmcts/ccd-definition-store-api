@@ -4,50 +4,48 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.IntStream.range;
 
 @Component
-public class CaseFieldEntityComplexFieldEntityOrderValidatorImpl implements CaseFieldEntityValidator {
+public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFieldEntityValidator {
 
     @Override
-    public ValidationResult validate(CaseFieldEntity caseFieldEntity,
-                                     CaseFieldEntityValidationContext caseFieldEntityValidationContext) {
+    public ValidationResult validate(ComplexFieldEntity complexFieldEntity,
+                                     ValidationContext validationContext) {
 
         ValidationResult validationResult = new ValidationResult();
 
-        List<ComplexFieldEntity> children = caseFieldEntity.getFieldType().getChildren();
+        if (doesOrderStartFromOneIfPresent(complexFieldEntity)) {
+            validationResult.addError(new ComplexFieldEntityIncorrectOrderValidationError(complexFieldEntity));
+        }
 
-        validateComplexField(caseFieldEntity, children).ifPresent(validationResult::addError);
-
-        children.forEach(child -> {
-            validationResult.addErrors(validate(child));
-        });
+        validationResult.addErrors(validate(complexFieldEntity));
 
         return validationResult;
 
     }
 
+    private boolean doesOrderStartFromOneIfPresent(ComplexFieldEntity complexFieldEntity) {
+        return complexFieldEntity.getOrder() != null && complexFieldEntity.getOrder() != 1;
+    }
+
     private List<ValidationError> validate(ComplexFieldEntity complexField) {
-        List<ValidationError> validationErrors = Lists.newArrayList();
+        List<ValidationError> validationErrors = newArrayList();
 
         if (complexField.isCompound()) {
             List<ComplexFieldEntity> children = complexField.getFieldType().getChildren();
             children.forEach(childField -> {
                 if (childField.isCollectionFieldType()) {
-                    validate(childField);
+                    validationErrors.addAll(validate(childField));
                 } else if (childField.isComplexFieldType()) {
-                    validate(childField);
+                    validationErrors.addAll(validate(childField));
                 }
             });
             validateComplexField(complexField, children).ifPresent(validationErrors::add);
@@ -55,14 +53,14 @@ public class CaseFieldEntityComplexFieldEntityOrderValidatorImpl implements Case
         return validationErrors;
     }
 
-    private Optional<ValidationError> validateComplexField(FieldEntity fieldEntity, List<ComplexFieldEntity> children) {
+    private Optional<ValidationError> validateComplexField(ComplexFieldEntity complexFieldEntity, List<ComplexFieldEntity> children) {
         Optional<ValidationError> validationErrorOptional = Optional.empty();
         List<ComplexFieldEntity> sortedFields = getSortedComplexFieldEntities(children);
         if (isChildOfComplexFieldMissingOrder(children, sortedFields)) {
-            validationErrorOptional = Optional.of(new ComplexFieldEntityMissingOrderValidationError(fieldEntity.getFieldType()));
+            validationErrorOptional = Optional.of(new ComplexFieldEntityMissingOrderValidationError(complexFieldEntity));
         } else if (!sortedFields.isEmpty()) {
             if (isNotIncrementallyOrdered(sortedFields)) {
-                validationErrorOptional = Optional.of(new ComplexFieldEntityIncorrectOrderValidationError(fieldEntity.getFieldType()));
+                validationErrorOptional = Optional.of(new ComplexFieldEntityIncorrectOrderValidationError(complexFieldEntity));
             }
         }
         return validationErrorOptional;
