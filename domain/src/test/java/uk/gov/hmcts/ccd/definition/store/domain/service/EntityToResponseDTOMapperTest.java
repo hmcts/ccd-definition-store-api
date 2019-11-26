@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -741,9 +742,7 @@ class EntityToResponseDTOMapperTest {
         private WebhookEntity webHook(String url, Integer... retriesTimeouts) {
             WebhookEntity webhookEntity = new WebhookEntity();
             webhookEntity.setUrl(url);
-            for (Integer timeout : retriesTimeouts) {
-                webhookEntity.addTimeout(timeout);
-            }
+            webhookEntity.setTimeouts(Lists.newArrayList(retriesTimeouts));
             return webhookEntity;
         }
 
