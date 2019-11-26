@@ -92,7 +92,7 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         return result;
     }
 
-    private ComplexFieldEntity parseComplexField(DefinitionDataItem definitionDataItem, int itemsSize, ParseResult<FieldTypeEntity> result) {
+    private ComplexFieldEntity parseComplexField(DefinitionDataItem definitionDataItem, int itemsCount, ParseResult<FieldTypeEntity> result) {
         final ComplexFieldEntity complexField = new ComplexFieldEntity();
 
         final String fieldId = definitionDataItem.getString(ColumnName.LIST_ELEMENT_CODE);
@@ -109,7 +109,7 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         complexField.setHidden(definitionDataItem.getBoolean(ColumnName.DEFAULT_HIDDEN));
         complexField.setHint(definitionDataItem.getString(ColumnName.HINT_TEXT));
         Integer order = definitionDataItem.getInteger(ColumnName.DISPLAY_ORDER);
-        if (order != null && order > itemsSize) {
+        if (order != null && order > itemsCount) {
             throw new MapperException(String.format(INVALID_ORDER_COLUMN, fieldId));
         }
         complexField.setOrder(order);
