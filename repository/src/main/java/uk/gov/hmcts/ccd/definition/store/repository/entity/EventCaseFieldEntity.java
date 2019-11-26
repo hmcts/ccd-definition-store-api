@@ -41,7 +41,7 @@ public class EventCaseFieldEntity implements Serializable {
     @JoinColumn(name = "event_id", nullable = false)
     private EventEntity event;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_field_id", nullable = false)
     private CaseFieldEntity caseField;
 

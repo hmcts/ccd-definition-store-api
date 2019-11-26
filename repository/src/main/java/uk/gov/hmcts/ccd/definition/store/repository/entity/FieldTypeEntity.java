@@ -62,11 +62,11 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @Column(name = "regular_expression")
     private String regularExpression = null;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_field_type_id")
     private FieldTypeEntity baseFieldType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "collection_field_type_id")
     private FieldTypeEntity collectionFieldType;
 
