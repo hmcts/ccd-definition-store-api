@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
@@ -39,6 +40,19 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                                         .build())
                                                      .build())
                                .build())
+            .withComplexFieldType(newType("parentType")
+                                      .withBaseFieldType(newType(BASE_COMPLEX).build())
+                                      .withComplexField(newComplexField("field1")
+                                                            .withFieldType(newType("nested1FieldType1")
+                                                                               .withReference(BASE_TEXT)
+                                                                               .build())
+                                                            .build())
+                                      .withComplexField(newComplexField("nested2")
+                                                            .withFieldType(newType("nested2FieldType1")
+                                                                               .withReference(BASE_TEXT)
+                                                                               .build())
+                                                            .build())
+                                      .build())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -52,6 +66,7 @@ class ComplexFieldEntityOrderValidatorImplTest {
             .withFieldType(newType("fieldType1")
                                .withBaseFieldType(newType(BASE_DOCUMENT).build())
                                .build())
+            .withComplexFieldType(aParentType())
             .withOrder(2)
             .build();
 
@@ -80,6 +95,7 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                                         .build())
                                                      .build())
                                .build())
+            .withComplexFieldType(aParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -108,6 +124,7 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                      .withOrder(1)
                                                      .build())
                                .build())
+            .withComplexFieldType(aParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -133,22 +150,8 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                      .withOrder(1)
                                                      .build())
                                .build())
-            .withComplexFieldType(newType("parentType")
-                                      .withBaseFieldType(newType(BASE_COMPLEX).build())
-                                      .withComplexField(newComplexField("nested1")
-                                                            .withFieldType(newType("nested1FieldType1")
-                                                                               .withReference(BASE_TEXT)
-                                                                               .build())
-                                                            .withOrder(2)
-                                                            .build())
-                                      .withComplexField(newComplexField("nested2")
-                                                            .withFieldType(newType("nested2FieldType1")
-                                                                               .withReference(BASE_TEXT)
-                                                                               .build())
-                                                            .withOrder(1)
-                                                            .build())
-                                      .build())
-            .withOrder(3)
+            .withComplexFieldType(aParentType())
+            .withOrder(2)
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -183,6 +186,7 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                      .withOrder(3)
                                                      .build())
                                .build())
+            .withComplexFieldType(aParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -211,6 +215,7 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                      .withOrder(2)
                                                      .build())
                                .build())
+            .withComplexFieldType(aParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -233,6 +238,7 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                      .withOrder(2)
                                                      .build())
                                .build())
+            .withComplexFieldType(aParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -289,6 +295,7 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                      .withOrder(1)
                                                      .build())
                                .build())
+            .withComplexFieldType(aParentType())
             .build();
 
         ValidationResult result = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -301,6 +308,17 @@ class ComplexFieldEntityOrderValidatorImplTest {
                                                   is("ComplexField with reference=nested1 has incorrect order for nested fields. Order has to be incremental and start from 1")),
                                       hasProperty("defaultMessage",
                                                   is("ComplexField with reference=nested2 must have ordering for all children defined"))));
+    }
+
+    private FieldTypeEntity aParentType() {
+        return newType("parentType")
+            .withBaseFieldType(newType(BASE_COMPLEX).build())
+            .withComplexField(newComplexField("field1")
+                                  .withFieldType(newType("nested1FieldType1")
+                                                     .withReference(BASE_TEXT)
+                                                     .build())
+                                  .build())
+            .build();
     }
 
 }
