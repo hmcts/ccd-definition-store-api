@@ -25,6 +25,7 @@ public abstract class ValidationError implements Serializable {
     }
 
     @Override
+    @SuppressWarnings("squid:S2097")
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
