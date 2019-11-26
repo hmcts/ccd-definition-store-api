@@ -22,7 +22,7 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
 
         ValidationResult validationResult = new ValidationResult();
 
-        if (doesOrderStartFromOneIfPresent(complexFieldEntity)) {
+        if (isOrderNotWithinSize(complexFieldEntity)) {
             validationResult.addError(new ComplexFieldEntityIncorrectOrderValidationError(complexFieldEntity));
         }
 
@@ -32,8 +32,9 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
 
     }
 
-    private boolean doesOrderStartFromOneIfPresent(ComplexFieldEntity complexFieldEntity) {
-        return complexFieldEntity.getOrder() != null && complexFieldEntity.getOrder() != 1;
+    private boolean isOrderNotWithinSize(ComplexFieldEntity complexFieldEntity) {
+        int sizeOfComplexType = complexFieldEntity.getComplexFieldType().getComplexFields().size();
+        return complexFieldEntity.getOrder() != null && complexFieldEntity.getOrder() > sizeOfComplexType;
     }
 
     private List<ValidationError> validate(ComplexFieldEntity complexField) {

@@ -23,6 +23,11 @@ public class ComplexFieldBuilder {
         return this;
     }
 
+    public ComplexFieldBuilder withComplexFieldType(FieldTypeEntity complexFieldType) {
+        complexFieldEntity.setComplexFieldType(complexFieldType);
+        return this;
+    }
+
     public ComplexFieldEntity build() {
         return complexFieldEntity;
     }
