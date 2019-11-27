@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_TYPE;
-
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +8,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_TYPE;
 
 class AuthorisationCaseTypeParser implements AuthorisationParser {
 

@@ -149,7 +149,7 @@ class ImportDefinitionTest extends BaseTest {
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_Invalid_User_Role.xlsx"))
             .expect()
-            .statusCode(422)
+            .statusCode(400)
             .when()
             .post("/import");
     }
