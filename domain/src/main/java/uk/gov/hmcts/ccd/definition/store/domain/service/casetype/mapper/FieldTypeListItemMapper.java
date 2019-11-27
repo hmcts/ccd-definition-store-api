@@ -28,5 +28,5 @@ public class FieldTypeListItemMapper {
                                  .collect(Collectors.toList());
     }
 
-
 }
+
