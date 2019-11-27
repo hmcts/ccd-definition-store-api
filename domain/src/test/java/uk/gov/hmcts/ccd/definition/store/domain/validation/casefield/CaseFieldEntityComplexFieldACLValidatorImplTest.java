@@ -110,6 +110,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     @DisplayName("should fail when user not found")
     public void shouldHaveValidationErrorWhenUserNotFound() {
         complexACL0.setUserRole(null);
+        complexACL0.setUserRoleId("nf_user_role_id");
         caseField.addComplexFieldACL(complexACL0);
         fieldACL.setUserRole(userRole);
         caseField.addCaseFieldACL(fieldACL);
@@ -120,7 +121,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
             () -> assertThat(result.getValidationErrors().size(), is(2)),
             () -> assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidUserRoleValidationError.class)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
-                "Invalid UserRole for case type 'case_type', case field 'case_field'"))
+                "Invalid UserRole nf_user_role_id for case type 'case_type', case field 'case_field'"))
         );
     }
 

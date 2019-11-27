@@ -1,18 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.groupingBy;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.STATE_ID;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_STATE;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
-
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +10,18 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.groupingBy;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.STATE_ID;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_STATE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
 
 class AuthorisationCaseStateParser implements AuthorisationParser {
 
@@ -37,7 +36,9 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
     }
 
-    public Collection<StateACLEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseTypeEntity, StateEntity stateEntity) {
+    public Collection<StateACLEntity> parseAll(Map<String, DefinitionSheet> definitionSheets,
+                                               CaseTypeEntity caseTypeEntity,
+                                               StateEntity stateEntity) {
         Collection<StateACLEntity> parseResults = Lists.newArrayList();
 
         final String caseTypeReference = caseTypeEntity.getReference();
