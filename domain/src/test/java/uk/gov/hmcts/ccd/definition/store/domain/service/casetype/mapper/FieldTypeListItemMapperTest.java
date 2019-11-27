@@ -21,6 +21,49 @@ class FieldTypeListItemMapperTest {
     private FieldTypeListItemMapper fieldTypeListItemMapper = new FieldTypeListItemMapper();
 
     @Test
+    void shouldMapWithoutDisplayOrder() {
+        List<FieldTypeListItemEntity> fieldTypeListItemEntities = newArrayList(
+            newFieldTypeListItem().withLabel("ONE").withValue("1").build(),
+            newFieldTypeListItem().withLabel("TWO").withValue("2").build(),
+            newFieldTypeListItem().withLabel("THREE").withValue("3").build());
+
+
+        List<FixedListItem> fixedListItems = fieldTypeListItemMapper.entityToModel(fieldTypeListItemEntities);
+
+        assertAll(
+            () -> assertThat(fixedListItems, contains(allOf(hasProperty("label", is("ONE")),
+                                                            hasProperty("code", is("1"))),
+                                                      allOf(hasProperty("label", is("TWO")),
+                                                            hasProperty("code", is("2"))),
+                                                      allOf(hasProperty("label", is("THREE")),
+                                                            hasProperty("code", is("3")))))
+        );
+    }
+
+    @Test
+    void shouldMapWithDisplayOrder() {
+        List<FieldTypeListItemEntity> fieldTypeListItemEntities = newArrayList(
+            newFieldTypeListItem().withOrder(3).withLabel("ONE").withValue("1").build(),
+            newFieldTypeListItem().withOrder(2).withLabel("TWO").withValue("2").build(),
+            newFieldTypeListItem().withOrder(1).withLabel("THREE").withValue("3").build());
+
+
+        List<FixedListItem> fixedListItems = fieldTypeListItemMapper.entityToModel(fieldTypeListItemEntities);
+
+        assertAll(
+            () -> assertThat(fixedListItems, contains(allOf(hasProperty("order", is(1)),
+                                                            hasProperty("label", is("THREE")),
+                                                            hasProperty("code", is("3"))),
+                                                      allOf(hasProperty("order", is(2)),
+                                                            hasProperty("label", is("TWO")),
+                                                            hasProperty("code", is("2"))),
+                                                      allOf(hasProperty("order", is(3)),
+                                                            hasProperty("label", is("ONE")),
+                                                            hasProperty("code", is("1")))))
+        );
+    }
+
+        @Test
     void shouldMapAllFields() {
         List<FieldTypeListItemEntity> fieldTypeListItemEntities = newArrayList(
             newFieldTypeListItem().withOrder(5).withLabel("Label 1").withValue("LABEL1").build(),
@@ -30,7 +73,6 @@ class FieldTypeListItemMapperTest {
             newFieldTypeListItem().withOrder(9).withLabel("Label 4").withValue("LABEL4").build());
 
         List<FixedListItem> fixedListItems = fieldTypeListItemMapper.entityToModel(fieldTypeListItemEntities);
-
 
         assertAll(
             () -> assertThat(fixedListItems, contains(allOf(hasProperty("order", is(2)),
