@@ -11,6 +11,8 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Table(name = "display_group")
 @Entity
@@ -53,6 +55,7 @@ public class DisplayGroupEntity implements Serializable {
     private EventEntity event;
 
     @OneToMany(mappedBy = "displayGroup", fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
     private final List<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new ArrayList<>();
 
     @ManyToOne(cascade = ALL)
