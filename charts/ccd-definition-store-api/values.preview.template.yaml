@@ -17,5 +17,5 @@ java:
     ENABLE_DB_MIGRATE: true
     ELASTIC_SEARCH_ENABLED: false
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
-postgresql:
-  enabled: true
+  postgresql:
+    enabled: true
