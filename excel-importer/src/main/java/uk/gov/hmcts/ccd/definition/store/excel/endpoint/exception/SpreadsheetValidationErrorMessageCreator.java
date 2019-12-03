@@ -258,6 +258,20 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
+    public String createErrorMessage(final CaseFieldEntityInvalidCaseRoleValidationError error) {
+        return newMessageIfDefinitionExists(error,
+                                            error.getCaseFieldACLEntity(),
+                                            def -> String.format(
+                                                "Invalid case role '%s' in %s tab, case type '%s', case field '%s', "
+                                                    + "crud '%s'. Please make sure it is declared in the list of supported case roles.",
+                                                defaultString(def.getString(ColumnName.USER_ROLE)),
+                                                def.getSheetName(),
+                                                def.getString(ColumnName.CASE_TYPE_ID),
+                                                def.getString(ColumnName.CASE_FIELD_ID),
+                                                defaultString(def.getString(ColumnName.CRUD))));
+    }
+
+    @Override
     public String createErrorMessage(final EventEntityInvalidCrudValidationError error) {
         return newMessageIfDefinitionExists(error,
                                             error.getEventACLEntity(),

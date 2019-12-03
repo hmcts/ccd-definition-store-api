@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -13,6 +13,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import java.util.HashSet;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -63,7 +65,7 @@ public class CaseFieldEntityACLValidatorImplTest {
         caseRoleDefendant.setReference(ROLE_DEFENDANT);
 
         given(caseFieldEntityValidationContext.getCaseReference()).willReturn("case_type");
-        given(caseFieldEntityValidationContext.getCaseRoles()).willReturn(emptyList());
+        given(caseFieldEntityValidationContext.getCaseTypeCaseRoles()).willReturn(emptySet());
 
         caseField = new CaseFieldEntity();
         caseField.addCaseFieldACL(caseFieldUserRole);
@@ -97,7 +99,7 @@ public class CaseFieldEntityACLValidatorImplTest {
 
     @Test
     public void shouldHaveNoValidationErrorWhenCaseRoleIsFoundOnCaseType() {
-        given(caseFieldEntityValidationContext.getCaseRoles()).willReturn(asList(caseRoleCreator, caseRoleDefendant));
+        given(caseFieldEntityValidationContext.getCaseTypeCaseRoles()).willReturn(new HashSet<>(asList(ROLE_CREATOR, ROLE_DEFENDANT)));
 
         caseFieldUserRole.setUserRole(caseRoleCreator);
 
@@ -108,14 +110,14 @@ public class CaseFieldEntityACLValidatorImplTest {
 
     @Test
     public void shouldHaveValidationErrorWhenCaseRoleNotFoundOnCaseType() {
-        given(caseFieldEntityValidationContext.getCaseRoles()).willReturn(asList(caseRoleCreator));
+        given(caseFieldEntityValidationContext.getCaseTypeCaseRoles()).willReturn(new HashSet<>(asList(ROLE_CREATOR)));
 
         caseFieldUserRole.setUserRole(caseRoleDefendant);
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 
         assertThat(result.getValidationErrors().size(), is(1));
-        assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidUserRoleValidationError.class));
+        assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidCaseRoleValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
-            "Invalid UserRole for case type 'case_type', case field 'case_field'"));
+            "Unknown case role 'case_type'. Please make sure it is declared in the list of supported case roles for the case type 'case_field'"));
     }
 }

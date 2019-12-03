@@ -80,6 +80,9 @@ class CaseRoleServiceImplTest {
     @Test
     void isCaseRole() {
         assertAll(
+            () -> assertThat(CaseRoleServiceImpl.isCaseRole(null), is(false)),
+            () -> assertThat(CaseRoleServiceImpl.isCaseRole(""), is(false)),
+            () -> assertThat(CaseRoleServiceImpl.isCaseRole("[]"), is(false)),
             () -> assertThat(CaseRoleServiceImpl.isCaseRole("caseworker-test"), is(false)),
             () -> assertThat(CaseRoleServiceImpl.isCaseRole("[anything]"), is(true))
         );

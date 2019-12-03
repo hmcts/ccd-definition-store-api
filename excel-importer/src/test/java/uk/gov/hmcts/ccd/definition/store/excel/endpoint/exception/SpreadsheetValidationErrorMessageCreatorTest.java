@@ -426,6 +426,48 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
+    public void caseFieldUserRoleEntityInvalidCaseRole_createErrorMessageCalled_customMessageReturned() {
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
+        final CaseFieldACLEntity entity = caseFieldUserRoleEntity("crud");
+
+        final CaseFieldEntityInvalidCaseRoleValidationError error = new CaseFieldEntityInvalidCaseRoleValidationError(
+            entity,
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                new CaseFieldEntityValidationContext(caseTypeEntity)));
+
+        when(entityToDefinitionDataItemRegistry.getForEntity(entity))
+            .thenReturn(
+                definitionDataItem(SheetName.AUTHORISATION_CASE_FIELD,
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "X"),
+                    new ImmutablePair<>(ColumnName.CRUD, "Y"))
+            );
+
+        assertEquals(
+            "Invalid case role 'X' in AuthorisationCaseField tab, case type 'case type', case field 'case field', crud 'Y'." +
+                " Please make sure it is declared in the list of supported case roles.",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void caseFieldUserRoleEntityInvalidCaseRole_createErrorMessageCalled_defaultMessageReturned() {
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
+        final CaseFieldACLEntity entity = caseFieldUserRoleEntity("crud");
+
+        final CaseFieldEntityInvalidCaseRoleValidationError error = new CaseFieldEntityInvalidCaseRoleValidationError(
+            entity,
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                new CaseFieldEntityValidationContext(caseTypeEntity)));
+
+        assertEquals(
+            "Unknown case role 'case type'. Please make sure it is declared in the list of supported case roles for the case type 'case field'",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
     public void caseFieldUserRoleEnttyInvalidCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);

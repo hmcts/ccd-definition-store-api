@@ -7,7 +7,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.Authori
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
@@ -131,13 +130,13 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
 
     private void validateUserRole(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                   ValidationResult validationResult, ComplexFieldACLEntity entity) {
-        Set<String> caseRoles = caseFieldEntityValidationContext.getCaseRoles().stream().map(CaseRoleEntity::getReference).collect(Collectors.toSet());
+        Set<String> caseRoles = caseFieldEntityValidationContext.getCaseTypeCaseRoles();
 
         if (null == entity.getUserRole()) {
             validationResult.addError(new CaseFieldEntityInvalidUserRoleValidationError(entity,
                 new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
         } else if (isCaseRole(entity.getUserRole().getReference()) && !caseRoles.contains(entity.getUserRole().getReference())) {
-            validationResult.addError(new CaseFieldEntityInvalidUserRoleValidationError(entity,
+            validationResult.addError(new CaseFieldEntityInvalidCaseRoleValidationError(entity,
                 new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
         }
     }

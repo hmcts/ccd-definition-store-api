@@ -6,6 +6,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CaseFieldEntityValidationContext implements ValidationContext {
 
@@ -33,7 +35,7 @@ public class CaseFieldEntityValidationContext implements ValidationContext {
         return this.caseReference;
     }
 
-    public List<CaseRoleEntity> getCaseRoles() {
-        return caseRoles;
+    public Set<String> getCaseTypeCaseRoles() {
+        return caseRoles.stream().map(CaseRoleEntity::getReference).collect(Collectors.toSet());
     }
 }
