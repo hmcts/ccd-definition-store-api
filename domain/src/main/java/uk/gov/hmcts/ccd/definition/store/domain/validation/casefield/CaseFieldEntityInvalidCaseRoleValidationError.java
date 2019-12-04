@@ -12,9 +12,10 @@ public class CaseFieldEntityInvalidCaseRoleValidationError extends ValidationErr
 
     public CaseFieldEntityInvalidCaseRoleValidationError(final Authorisation entity,
                                                          final AuthorisationCaseFieldValidationContext context) {
-        super(String.format("Unknown case role '%s'. Please make sure it is declared in the list of supported case roles for the case type '%s'",
-            context.getCaseReference(),
-            context.getCaseFieldReference()));
+        super(String.format("Unknown case role '%s' for case field '%s'. Please make sure it is declared in the list of supported case roles for the case type '%s'",
+            context.getCaseRole(),
+            context.getCaseFieldReference(),
+            context.getCaseReference()));
         this.caseFieldACLEntity = entity;
         this.authorisationCaseFieldValidationContext = context;
     }

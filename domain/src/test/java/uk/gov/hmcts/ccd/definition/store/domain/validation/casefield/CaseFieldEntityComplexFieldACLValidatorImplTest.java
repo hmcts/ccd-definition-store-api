@@ -156,8 +156,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(2)),
             () -> assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidCaseRoleValidationError.class)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
-                "Unknown case role 'case_type'. Please make sure it is declared in the list of supported case roles for the case type 'case_field'"))
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Unknown case role '[CREATOR]' for case field 'case_field'." +
+                " Please make sure it is declared in the list of supported case roles for the case type 'case_type'"))
         );
     }
 
@@ -379,8 +379,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         assertAll(
             () -> assertThat(result.getValidationErrors(), not(empty())),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Unknown case role 'case_type'. Please make sure it is declared in the list of supported case roles for the case type 'case_field'"))
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Unknown case role '[DEFENDANT]' for case field 'case_field'." +
+                " Please make sure it is declared in the list of supported case roles for the case type 'case_type'"))
         );
     }
 

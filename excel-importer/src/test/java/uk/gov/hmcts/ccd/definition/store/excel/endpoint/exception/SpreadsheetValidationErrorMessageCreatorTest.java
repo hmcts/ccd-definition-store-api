@@ -453,17 +453,17 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @Test
     public void caseFieldUserRoleEntityInvalidCaseRole_createErrorMessageCalled_defaultMessageReturned() {
-        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
-        final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case_type");
+        final CaseFieldEntity caseFieldEntity = caseFieldEntity("case_field", SecurityClassification.RESTRICTED);
         final CaseFieldACLEntity entity = caseFieldUserRoleEntity("crud");
 
         final CaseFieldEntityInvalidCaseRoleValidationError error = new CaseFieldEntityInvalidCaseRoleValidationError(
             entity,
-            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+            new AuthorisationCaseFieldValidationContext("[CREATOR]", caseFieldEntity,
                 new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
-            "Unknown case role 'case type'. Please make sure it is declared in the list of supported case roles for the case type 'case field'",
+            "Unknown case role '[CREATOR]' for case field 'case_field'. Please make sure it is declared in the list of supported case roles for the case type 'case_type'",
             classUnderTest.createErrorMessage(error));
     }
 

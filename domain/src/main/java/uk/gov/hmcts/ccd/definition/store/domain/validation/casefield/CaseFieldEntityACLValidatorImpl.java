@@ -28,7 +28,8 @@ public class CaseFieldEntityACLValidatorImpl implements CaseFieldEntityValidator
                     new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
             } else if (isCaseRole(entity.getUserRole().getReference()) && !caseRoles.contains(entity.getUserRole().getReference())) {
                 validationResult.addError(new CaseFieldEntityInvalidCaseRoleValidationError(entity,
-                    new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
+                    new AuthorisationCaseFieldValidationContext(entity.getUserRole().getReference(),
+                        caseField, caseFieldEntityValidationContext)));
             }
         }
 
