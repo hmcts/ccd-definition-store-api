@@ -39,10 +39,16 @@ public class FieldTypeBuilder {
         return this;
     }
 
+    public FieldTypeBuilder withComplexField(ComplexFieldEntity field) {
+        this.fieldsForComplex.add(field);
+        return this;
+    }
+
     public FieldTypeEntity build() {
         FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference(this.reference);
         fieldType.setBaseFieldType(this.baseFieldType);
+        fieldType.addComplexFields(fieldsForComplex);
         return fieldType;
     }
 

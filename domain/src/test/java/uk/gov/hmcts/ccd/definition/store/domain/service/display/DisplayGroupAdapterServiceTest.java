@@ -198,7 +198,6 @@ class DisplayGroupAdapterServiceTest {
 
             assertThat(findWizardPageComplexFieldOverrides(wizardPage, "finalReturn").size(), is(10));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getDisplayContext(), is("READONLY"));
-            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getOrder(), is(3));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(), is("Bailiff Name"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(), is("Hint text override"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",

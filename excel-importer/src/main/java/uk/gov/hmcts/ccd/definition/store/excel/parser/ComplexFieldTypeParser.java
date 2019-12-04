@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -24,6 +25,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_C
  * This includes Complex types themselves and the custom simple types they use.
  */
 public class ComplexFieldTypeParser implements FieldShowConditionParser {
+    private static final String INVALID_ORDER_COLUMN = "ComplexField with reference='%s' has incorrect order for nested fields. Order has to be incremental and start from 1";
     private static final Logger logger = LoggerFactory.getLogger(ComplexFieldTypeParser.class);
 
     private ParseContext parseContext;
@@ -75,7 +77,7 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         final List<DefinitionDataItem> items = complexTypeItems.getValue();
 
         final List<ComplexFieldEntity> complexFields = items.stream()
-                                                               .map(item -> parseComplexField(item, result))
+                                                               .map(item -> parseComplexField(item, items.size(), result))
                                                                .collect(toList());
 
         final FieldTypeEntity complexType = new FieldTypeEntity();
@@ -90,7 +92,7 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         return result;
     }
 
-    private ComplexFieldEntity parseComplexField(DefinitionDataItem definitionDataItem, ParseResult<FieldTypeEntity> result) {
+    private ComplexFieldEntity parseComplexField(DefinitionDataItem definitionDataItem, int itemsCount, ParseResult<FieldTypeEntity> result) {
         final ComplexFieldEntity complexField = new ComplexFieldEntity();
 
         final String fieldId = definitionDataItem.getString(ColumnName.LIST_ELEMENT_CODE);
@@ -106,6 +108,11 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         complexField.setLabel(definitionDataItem.getString(ColumnName.ELEMENT_LABEL));
         complexField.setHidden(definitionDataItem.getBoolean(ColumnName.DEFAULT_HIDDEN));
         complexField.setHint(definitionDataItem.getString(ColumnName.HINT_TEXT));
+        Integer order = definitionDataItem.getInteger(ColumnName.DISPLAY_ORDER);
+        if (isOrderNotWithinItemsCount(itemsCount, order)) {
+            throw new MapperException(String.format(INVALID_ORDER_COLUMN, fieldId));
+        }
+        complexField.setOrder(order);
         complexField.setShowCondition(parseShowCondition(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
 
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(complexField, definitionDataItem);
@@ -113,6 +120,10 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         result.add(resultEntry);
 
         return complexField;
+    }
+
+    private boolean isOrderNotWithinItemsCount(int itemsCount, Integer order) {
+        return order != null && order > itemsCount;
     }
 
     @Override
