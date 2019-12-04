@@ -446,7 +446,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid case role 'X' in AuthorisationCaseField tab, case type 'case type', case field 'case field', crud 'Y'." +
+            "Invalid case role 'X' in AuthorisationCaseField tab, case type 'case type', case field 'case field'." +
                 " Please make sure it is declared in the list of supported case roles.",
             classUnderTest.createErrorMessage(error));
     }

@@ -262,8 +262,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
                                             error.getCaseFieldACLEntity(),
                                             def -> String.format(
-                                                "Invalid case role '%s' in %s tab, case type '%s', case field '%s', "
-                                                    + "crud '%s'. Please make sure it is declared in the list of supported case roles.",
+                                                "Invalid case role '%s' in %s tab, case type '%s', case field '%s'. Please make sure it is declared in the list of supported case roles.",
                                                 defaultString(def.getString(ColumnName.USER_ROLE)),
                                                 def.getSheetName(),
                                                 def.getString(ColumnName.CASE_TYPE_ID),
