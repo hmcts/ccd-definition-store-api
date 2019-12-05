@@ -12,8 +12,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 @Component
 public class CaseRoleEntityUniquenessValidatorImpl implements CaseRoleEntityValidator {
 
-    private static final String CREATOR = "[CREATOR]";
-
     @Override
     public ValidationResult validate(CaseRoleEntity caseRoleEntity,
                                      CaseRoleEntityValidationContext caseRoleEntityValidationContext) {
