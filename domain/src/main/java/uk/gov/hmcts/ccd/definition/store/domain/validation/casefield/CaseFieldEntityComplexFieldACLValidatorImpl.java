@@ -1,7 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import static uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleServiceImpl.isCaseRole;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
@@ -9,15 +14,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 @Component
 public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEntityValidator {
@@ -130,14 +126,9 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
 
     private void validateUserRole(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                   ValidationResult validationResult, ComplexFieldACLEntity entity) {
-        Set<String> caseRoles = caseFieldEntityValidationContext.getCaseTypeCaseRoles();
-
         if (null == entity.getUserRole()) {
             validationResult.addError(new CaseFieldEntityInvalidUserRoleValidationError(entity,
                 new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
-        } else if (isCaseRole(entity.getUserRole().getReference()) && !caseRoles.contains(entity.getUserRole().getReference())) {
-            validationResult.addError(new CaseFieldEntityInvalidCaseRoleValidationError(entity,
-                new AuthorisationCaseFieldValidationContext(entity.getUserRole().getReference(), caseField, caseFieldEntityValidationContext)));
         }
     }
 }

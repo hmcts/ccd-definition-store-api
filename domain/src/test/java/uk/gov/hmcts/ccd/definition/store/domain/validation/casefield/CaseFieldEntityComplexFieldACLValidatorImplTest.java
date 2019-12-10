@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import static com.google.common.collect.Sets.newHashSet;
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
@@ -13,28 +14,21 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
-
-import java.util.HashSet;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 public class CaseFieldEntityComplexFieldACLValidatorImplTest {
 
     private static final String ROLE1 = "Role1";
-    private static final String ROLE_CREATOR = "[CREATOR]";
-    private static final String ROLE_DEFENDANT = "[DEFENDANT]";
     private static final String CLASS = "Class";
     private static final String CLASS_MEMBERS = "ClassMembers";
     private static final String CHILDREN = "Children";
@@ -52,13 +46,11 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     private ComplexFieldACLEntity complexACL8;
 
     private CaseFieldACLEntity fieldACL;
-    private CaseFieldACLEntity fieldACLCreator;
 
     private CaseFieldEntity caseField;
 
+    @Mock
     private UserRoleEntity userRole;
-    private CaseRoleEntity caseRoleCreator;
-    private CaseRoleEntity caseRoleDefendant;
 
     @Mock
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
@@ -69,12 +61,6 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
 
         userRole = new UserRoleEntity();
         userRole.setReference(ROLE1);
-
-        caseRoleCreator = new CaseRoleEntity();
-        caseRoleCreator.setReference(ROLE_CREATOR);
-
-        caseRoleDefendant = new CaseRoleEntity();
-        caseRoleDefendant.setReference(ROLE_DEFENDANT);
 
         complexACL0 = new ComplexFieldACLEntity();
         complexACL0.setListElementCode(CLASS);
@@ -116,7 +102,6 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         );
 
         fieldACL = new CaseFieldACLEntity();
-        fieldACLCreator = new CaseFieldACLEntity();
 
         validator = new CaseFieldEntityComplexFieldACLValidatorImpl();
     }
@@ -136,28 +121,6 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
             () -> assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidUserRoleValidationError.class)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
                 "Invalid UserRole for case type 'case_type', case field 'case_field'"))
-        );
-    }
-
-    @Test
-    @DisplayName("should fail when user has no valid access")
-    public void shouldHaveValidationErrorWhenUserHasNoValidAccess() {
-        given(caseFieldEntityValidationContext.getCaseTypeCaseRoles()).willReturn(newHashSet(ROLE_DEFENDANT));
-
-        complexACL0.setUserRole(caseRoleCreator);
-        complexACL0.setCreate(true);
-        caseField.addComplexFieldACL(complexACL0);
-        fieldACL.setCreate(true);
-        fieldACL.setUserRole(userRole);
-        caseField.addCaseFieldACL(fieldACL);
-
-        final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
-
-        assertAll(
-            () -> assertThat(result.getValidationErrors().size(), is(2)),
-            () -> assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidCaseRoleValidationError.class)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Unknown case role '[CREATOR]' for case field 'case_field'." +
-                " Please make sure it is declared in the list of supported case roles for the case type 'case_type'"))
         );
     }
 
@@ -324,64 +287,6 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 
         assertThat(result.getValidationErrors(), empty());
-    }
-
-    @Test
-    @DisplayName("should succeed when a complex children have a [CREATOR] caseRole existent in the CaseType")
-    public void shouldSucceedWhenComplexChildrenHaveCorrectCaseRole() {
-        given(caseFieldEntityValidationContext.getCaseTypeCaseRoles()).willReturn(new HashSet<>(asList(ROLE_CREATOR, ROLE_DEFENDANT)));
-
-        complexACL0.setUserRole(caseRoleCreator);
-        complexACL0.setCreate(true);
-
-        complexACL1.setUserRole(caseRoleCreator);
-        complexACL1.setCreate(true);
-
-        complexACL2.setUserRole(caseRoleCreator);
-        complexACL2.setCreate(true);
-
-        complexACL3.setUserRole(caseRoleCreator);
-        complexACL3.setCreate(true);
-
-        caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2, complexACL3));
-        fieldACL.setUserRole(userRole);
-        fieldACL.setCreate(true);
-        caseField.addCaseFieldACL(fieldACL);
-        fieldACLCreator.setUserRole(caseRoleCreator);
-        fieldACLCreator.setCreate(true);
-        caseField.addCaseFieldACL(fieldACLCreator);
-
-        final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
-
-        assertThat(result.getValidationErrors(), empty());
-    }
-
-    @Test
-    @DisplayName("should fail when a complex children have a caseRole not existent in the CaseType")
-    public void shouldFailWhenComplexChildrenHaveIncorrectCaseRole() {
-        given(caseFieldEntityValidationContext.getCaseTypeCaseRoles()).willReturn(new HashSet<>(asList(ROLE_CREATOR)));
-
-        complexACL0.setUserRole(caseRoleDefendant);
-        complexACL0.setCreate(true);
-
-        caseField.addComplexFieldACLEntities(asList(complexACL0));
-
-        fieldACL.setUserRole(caseRoleDefendant);
-        fieldACL.setCreate(true);
-        caseField.addCaseFieldACL(fieldACL);
-
-        fieldACLCreator.setUserRole(caseRoleCreator);
-        fieldACLCreator.setCreate(true);
-        caseField.addCaseFieldACL(fieldACLCreator);
-
-        final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
-
-        assertAll(
-            () -> assertThat(result.getValidationErrors(), not(empty())),
-            () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Unknown case role '[DEFENDANT]' for case field 'case_field'." +
-                " Please make sure it is declared in the list of supported case roles for the case type 'case_type'"))
-        );
     }
 
     @Test

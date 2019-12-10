@@ -82,9 +82,6 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(CaseFieldEntityInvalidUserRoleValidationError
                                   caseFieldEntityInvalidUserRoleValidationError);
 
-    String createErrorMessage(CaseFieldEntityInvalidCaseRoleValidationError
-                                  caseFieldEntityInvalidCaseRoleValidationError);
-
     String createErrorMessage(EventEntityInvalidCrudValidationError eventEntityInvalidCrudValidationError);
 
     String createErrorMessage(EventEntityInvalidUserRoleValidationError eventEntityInvalidUserRoleValidationError);
