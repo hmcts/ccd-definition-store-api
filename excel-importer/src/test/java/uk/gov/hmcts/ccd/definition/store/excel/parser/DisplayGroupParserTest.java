@@ -182,6 +182,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.PAGE_ID.toString(), "Name");
         item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+        item.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1);
 
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -189,6 +190,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
         item2.addAttribute(ColumnName.PAGE_ID.toString(), "Name");
         item2.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+        item2.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1);
 
         caseEventToFieldsSheet.addDataItem(item);
         caseEventToFieldsSheet.addDataItem(item2);

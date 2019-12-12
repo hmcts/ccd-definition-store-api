@@ -617,7 +617,7 @@ public class SpreadSheetImportTest extends BaseTest {
                          hasItem(allOf(hasColumn("reference", "enterCaseIntoLegacyPage1"),
                                        hasColumn("label", "A Label"),
                                        hasColumn("show_condition", null),
-                                       hasColumn("display_order", null)))));
+                                       hasColumn("display_order", 2)))));
 
         Map<Object, Object> caseFieldIds = getIdsByReference(
             "SELECT reference, id FROM case_field where case_type_id = ?",

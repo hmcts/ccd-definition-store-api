@@ -108,7 +108,8 @@ public enum ColumnName {
                 return columnName.equals(ColumnName.CASE_FIELD_ID) ||
                     columnName.equals(ColumnName.CASE_TYPE_ID) ||
                     columnName.equals(ColumnName.CASE_EVENT_ID) ||
-                    columnName.equals(ColumnName.PAGE_ID);
+                    columnName.equals(ColumnName.PAGE_ID) ||
+                    columnName.equals(ColumnName.PAGE_DISPLAY_ORDER);
             case FIXED_LISTS:
                 return columnName.equals(ColumnName.LIST_ELEMENT_CODE) ||
                     columnName.equals(ColumnName.LIST_ELEMENT);

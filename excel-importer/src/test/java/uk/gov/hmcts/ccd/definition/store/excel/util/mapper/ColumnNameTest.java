@@ -25,7 +25,7 @@ public class ColumnNameTest {
         assertRequired(
             SheetName.CASE_EVENT_TO_FIELDS,
             Arrays.asList(ColumnName.CASE_FIELD_ID, ColumnName.CASE_TYPE_ID,
-                ColumnName.CASE_EVENT_ID, ColumnName.PAGE_ID)
+                ColumnName.CASE_EVENT_ID, ColumnName.PAGE_ID, ColumnName.PAGE_DISPLAY_ORDER)
         );
 
     }

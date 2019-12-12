@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -59,7 +60,7 @@ public class EventCaseFieldParserTest {
         String hint = "hint";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
-        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, label, hint);
+        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, label, hint, 1);
 
         EventCaseFieldEntity eventCaseFieldEntity = classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem);
 
@@ -73,6 +74,7 @@ public class EventCaseFieldParserTest {
         verify(parseContext).getCaseFieldForCaseType(eq(caseTypeId), eq(caseFieldId));
         verify(definitionDataItem).getString(ColumnName.CASE_EVENT_FIELD_LABEL);
         verify(definitionDataItem).getString(ColumnName.CASE_EVENT_FIELD_HINT);
+        verify(definitionDataItem).getInteger(ColumnName.PAGE_DISPLAY_ORDER);
     }
 
     @Test
@@ -84,7 +86,7 @@ public class EventCaseFieldParserTest {
         String originalShowCondition = "Original Show Condition";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
-        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, null, null);
+        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, null, null, 1);
 
         when(showConditionParser.parseShowCondition(any())).thenThrow(
             new InvalidShowConditionException("")
@@ -100,7 +102,7 @@ public class EventCaseFieldParserTest {
         verify(parseContext).getCaseFieldForCaseType(eq(caseTypeId), eq(caseFieldId));
     }
 
-    private DefinitionDataItem definitionDataItem(String caseFieldId, DisplayContextColumn displayContext, String showCondition, String label, String hint) {
+    private DefinitionDataItem definitionDataItem(String caseFieldId, DisplayContextColumn displayContext, String showCondition, String label, String hint, Integer pageDisplayOrder) {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
 
         when(definitionDataItem.getString(eq(ColumnName.CASE_FIELD_ID))).thenReturn(caseFieldId);
@@ -108,6 +110,7 @@ public class EventCaseFieldParserTest {
         when(definitionDataItem.getString(eq(ColumnName.FIELD_SHOW_CONDITION))).thenReturn(showCondition);
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_LABEL)).thenReturn(label);
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_HINT)).thenReturn(hint);
+        when(definitionDataItem.getInteger(ColumnName.PAGE_DISPLAY_ORDER)).thenReturn(pageDisplayOrder);
 
         return definitionDataItem;
     }

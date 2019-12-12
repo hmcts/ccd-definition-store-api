@@ -202,6 +202,7 @@ class LayoutParserTest {
         item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID);
         item.addAttribute(ColumnName.CASE_EVENT_ID, "office is that way");
         item.addAttribute(ColumnName.PAGE_ID, "page ngi");
+        item.addAttribute(ColumnName.PAGE_DISPLAY_ORDER, 1);
         sheet.addDataItem(item);
         return sheet;
     }

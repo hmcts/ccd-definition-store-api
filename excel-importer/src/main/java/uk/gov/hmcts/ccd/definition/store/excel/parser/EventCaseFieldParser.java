@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
@@ -24,6 +25,8 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
     }
 
     public EventCaseFieldEntity parseEventCaseField(String caseTypeId, DefinitionDataItem eventCaseFieldDefinition) {
+
+        eventCaseFieldDefinition.getInteger(ColumnName.PAGE_DISPLAY_ORDER);
 
         final EventCaseFieldEntity eventCaseField = new EventCaseFieldEntity();
 
