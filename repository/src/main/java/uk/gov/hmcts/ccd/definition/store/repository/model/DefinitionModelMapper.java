@@ -79,6 +79,10 @@ public class DefinitionModelMapper {
             jurisdiction.setDescription(jurisdictionEntity.getDescription());
             jurisdiction.setLiveFrom(jurisdictionEntity.getLiveFrom());
             jurisdiction.setLiveUntil(jurisdictionEntity.getLiveTo());
+            jurisdiction.setBannerEnabled(jurisdictionEntity.getBannerEnabled());
+            jurisdiction.setBannerDescription(jurisdictionEntity.getBannerDescription());
+            jurisdiction.setBannerUrlText(jurisdictionEntity.getBannerUrlText());
+            jurisdiction.setBannerUrl(jurisdictionEntity.getBannerUrl());
             definition.setJurisdiction(jurisdiction);
         }
         definition.setCaseTypes(definitionEntity.getCaseTypes());

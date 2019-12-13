@@ -1,0 +1,30 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-6719" author="kiran.yenigala@hmcts.net">
+
+        <addColumn tableName="jurisdiction">
+            <column name="banner_enabled" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="jurisdiction">
+            <column name="banner_description" type="varchar(300)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="jurisdiction">
+            <column name="banner_url_text" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="jurisdiction">
+            <column name="banner_url" type="varchar(300)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+</databaseChangeLog>

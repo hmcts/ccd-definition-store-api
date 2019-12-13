@@ -135,16 +135,16 @@ class DraftDefinitionControllerTest {
                    .andExpect(status().isOk())
                    .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(),
-                   is("[{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null,"
-                      + "\"live_until\":null,\"case_types\":[]},\"description\":\"Description\","
-                      + "\"version\":null,\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},"
-                      + "\"author\":\"ccd2@hmcts\",\"status\":null,\"case_types\":\"CaseType1,CaseType2\","
-                      + "\"created_at\":null,\"last_modified\":null,\"deleted\":false},"
-                      + "{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null,"
-                      + "\"live_until\":null,\"case_types\":[]},\"description\":\"Description\","
-                      + "\"version\":null,\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},"
-                      + "\"author\":\"ccd2@hmcts\",\"status\":null,\"case_types\":\"CaseType1,CaseType2\","
-                      + "\"created_at\":null,\"last_modified\":null,\"deleted\":false}]"));
+                   is("[{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null," +
+                       "\"live_until\":null,\"banner_enabled\":null,\"banner_description\":null,\"banner_url_text\":null," +
+                       "\"banner_url\":null,\"case_types\":[]},\"description\":\"Description\",\"version\":null," +
+                       "\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},\"author\":\"ccd2@hmcts\",\"status\":null,\"case_types\":" +
+                       "\"CaseType1,CaseType2\",\"created_at\":null,\"last_modified\":null,\"deleted\":false},{\"jurisdiction\":{\"id\":" +
+                       "\"TEST\",\"name\":null,\"description\":null,\"live_from\":null,\"live_until\":null,\"banner_enabled\":null,\"banner_description" +
+                       "\":null,\"banner_url_text\":null,\"banner_url\":null,\"case_types\":[]},\"description\":\"Description\",\"version\":null," +
+                       "\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},\"author\":\"ccd2@hmcts\",\"status\":null,\"case_types\":" +
+                       "\"CaseType1,CaseType2\",\"created_at\":null,\"last_modified\":null,\"deleted\":false}]"
+                   ));
     }
 
     @DisplayName("should return 200 when finding a draft by jurisdiction and version")
@@ -159,11 +159,12 @@ class DraftDefinitionControllerTest {
                    .andExpect(status().isOk())
                    .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(),
-                   is("{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null,"
-                      + "\"live_until\":null,\"case_types\":[]},\"description\":\"Description\",\"version\":null,"
-                      + "\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},\"author\":\"ccd2@hmcts\","
-                      + "\"status\":null,\"case_types\":\"CaseType1,CaseType2\",\"created_at\":null,"
-                      + "\"last_modified\":null,\"deleted\":false}"));
+            is("{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null,\"live_until\":null," +
+                "\"banner_enabled\":null,\"banner_description\":null,\"banner_url_text\":null,\"banner_url\":null,\"case_types\":[]}," +
+                "\"description\":\"Description\",\"version\":null,\"data\":{\"Data\":{\"Field1\":" +
+                "\"Value1\",\"Field2\":[]}},\"author\":\"ccd2@hmcts\",\"status\":null,\"case_types\":\"CaseType1,CaseType2\"," +
+                "\"created_at\":null,\"last_modified\":null,\"deleted\":false}"
+            ));
     }
 
     private Definition createDefinition() throws IOException {

@@ -339,6 +339,10 @@ class EntityToResponseDTOMapperTest {
             jurisdictionEntity.setDescription("Jurisdiction Description");
             jurisdictionEntity.setName("Jurisdiction Name");
             jurisdictionEntity.setReference("Jurisdiction Reference");
+            jurisdictionEntity.setBannerEnabled(true);
+            jurisdictionEntity.setBannerDescription("Banner Description");
+            jurisdictionEntity.setBannerUrlText("Click here to see it.>>>");
+            jurisdictionEntity.setBannerUrl("http://localhost:3451/test");
             jurisdictionEntity.setLiveFrom(new Date());
             jurisdictionEntity.setLiveTo(new Date());
 
@@ -349,6 +353,10 @@ class EntityToResponseDTOMapperTest {
             assertEquals(jurisdictionEntity.getReference(), jurisdiction.getId());
             assertEquals(jurisdictionEntity.getLiveFrom(), jurisdiction.getLiveFrom());
             assertEquals(jurisdictionEntity.getLiveTo(), jurisdiction.getLiveUntil());
+            assertEquals(jurisdictionEntity.getBannerEnabled(), jurisdiction.getBannerEnabled());
+            assertEquals(jurisdictionEntity.getBannerDescription(), jurisdiction.getBannerDescription());
+            assertEquals(jurisdictionEntity.getBannerUrlText(), jurisdiction.getBannerUrlText());
+            assertEquals(jurisdictionEntity.getBannerUrl(), jurisdiction.getBannerUrl());
 
         }
 

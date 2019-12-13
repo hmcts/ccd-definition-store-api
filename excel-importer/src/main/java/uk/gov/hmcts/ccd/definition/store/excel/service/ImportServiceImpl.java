@@ -228,9 +228,7 @@ public class ImportServiceImpl implements ImportService {
     }
 
     private JurisdictionEntity importJurisdiction(JurisdictionEntity jurisdiction) {
-        return jurisdictionService.get(jurisdiction.getReference()).orElseGet(() -> {
-            jurisdictionService.create(jurisdiction);
-            return jurisdiction;
-        });
+        jurisdictionService.create(jurisdiction);
+        return jurisdiction;
     }
 }

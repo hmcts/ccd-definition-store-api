@@ -141,6 +141,10 @@ class DefinitionModelMapperTest {
         assertThat(model.getJurisdiction().getDescription(), is(definitionEntity.getJurisdiction().getDescription()));
         assertThat(model.getJurisdiction().getLiveFrom(), is(definitionEntity.getJurisdiction().getLiveFrom()));
         assertThat(model.getJurisdiction().getLiveUntil(), is(definitionEntity.getJurisdiction().getLiveTo()));
+        assertThat(model.getJurisdiction().getBannerEnabled(), is(definitionEntity.getJurisdiction().getBannerEnabled()));
+        assertThat(model.getJurisdiction().getBannerDescription(), is(definitionEntity.getJurisdiction().getBannerDescription()));
+        assertThat(model.getJurisdiction().getBannerUrlText(), is(definitionEntity.getJurisdiction().getBannerUrlText()));
+        assertThat(model.getJurisdiction().getBannerUrl(), is(definitionEntity.getJurisdiction().getBannerUrl()));
         assertThat(model.getCaseTypes(), is(definitionEntity.getCaseTypes()));
         assertThat(model.getDescription(), is(definitionEntity.getDescription()));
         assertThat(model.getVersion(), is(definitionEntity.getVersion()));
@@ -196,5 +200,9 @@ class DefinitionModelMapperTest {
             .atZone(ZoneId.systemDefault()).toInstant()));
         when(jurisdictionEntity.getName()).thenReturn("Test 2 Jurisdiction");
         when(jurisdictionEntity.getDescription()).thenReturn("Second jurisdiction used for testing");
+        when(jurisdictionEntity.getBannerEnabled()).thenReturn(true);
+        when(jurisdictionEntity.getBannerDescription()).thenReturn("Banner Description");
+        when(jurisdictionEntity.getBannerUrlText()).thenReturn("Click here to see it.>>>");
+        when(jurisdictionEntity.getBannerUrl()).thenReturn("http://localhost:3451/test");
     }
 }

@@ -13,6 +13,10 @@
     "description" : "Content for the Test Jurisdiction.",
     "live_from" : "2017-01-01T00:00:00.000+0000",
     "live_until" : null,
+    "banner_enabled" : true,
+    "banner_description" : "Test Description",
+    "banner_url_text" : "Click here to see it.>>>",
+    "banner_url" : "http://localhost:3451/test",
     "case_types" : [ ]
   },
   "events" : [ {

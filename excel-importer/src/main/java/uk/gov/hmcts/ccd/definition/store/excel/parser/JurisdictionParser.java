@@ -19,6 +19,10 @@ public class JurisdictionParser {
         jurisdiction.setDescription(jurisdictionItem.getString(ColumnName.DESCRIPTION));
         jurisdiction.setLiveFrom(jurisdictionItem.getDate(ColumnName.LIVE_FROM));
         jurisdiction.setLiveTo(jurisdictionItem.getDate(ColumnName.LIVE_TO));
+        jurisdiction.setBannerEnabled(jurisdictionItem.getBoolean(ColumnName.BANNER_ENABLED));
+        jurisdiction.setBannerDescription(jurisdictionItem.getString(ColumnName.BANNER_DESCRIPTION));
+        jurisdiction.setBannerUrlText(jurisdictionItem.getString(ColumnName.BANNER_URL_TEXT));
+        jurisdiction.setBannerUrl(jurisdictionItem.getString(ColumnName.BANNER_URL));
 
         return jurisdiction;
     }
