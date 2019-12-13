@@ -118,8 +118,6 @@ class DisplayGroupAdapterServiceTest {
                 wizardPage.getWizardPageFields().get(0).getOrder());
             assertEquals(displayGroupEntity.getDisplayGroupCaseFields().get(0).getColumnNumber(),
                 wizardPage.getWizardPageFields().get(0).getPageColumnNumber());
-            assertEquals(DisplayContext.MANDATORY.toString(),
-                wizardPage.getWizardPageFields().get(0).getDisplayContext());
         }
 
         @Test
@@ -192,7 +190,6 @@ class DisplayGroupAdapterServiceTest {
 
             WizardPage wizardPage = wizardPagesByCaseTypeId.getWizardPages().get(0);
 
-            assertThat(findWizardPageField(wizardPage, "finalReturn").getDisplayContext(), is("COMPLEX"));
             assertThat(findWizardPageField(wizardPage, "finalReturn").getOrder(), is(77));
             assertThat(findWizardPageField(wizardPage, "finalReturn").getPageColumnNumber(), is(66));
 
