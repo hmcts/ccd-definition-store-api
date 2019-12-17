@@ -37,10 +37,10 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public List<Banner> findByJurisdictionId(String jurisdictionId) {
-        LOG.debug("Find Banner information for the jurisdiction {}", jurisdictionId);
+    public List<Banner> findByJurisdictionId(String jurisdictionReference) {
+        LOG.debug("Find Banner information for the jurisdiction {}", jurisdictionReference);
         Optional<List<BannerEntity>> bannerEntities
-            = Optional.ofNullable(bannerRepository.findByJurisdictionId(jurisdictionId));
+            = Optional.ofNullable(bannerRepository.findByJurisdictionId(jurisdictionReference));
 
         return bannerEntities.orElse(Collections.emptyList())
             .stream()

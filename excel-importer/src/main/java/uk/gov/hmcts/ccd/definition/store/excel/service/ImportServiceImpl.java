@@ -248,6 +248,9 @@ public class ImportServiceImpl implements ImportService {
     }
 
     private void importBanner(BannerEntity bannerEntity) {
-        bannerService.create(bannerEntity);
+        String reference = bannerEntity.getJurisdiction().getReference();
+        if (bannerService.findByJurisdictionId(reference).size() == 0) {
+            bannerService.create(bannerEntity);
+        }
     }
 }

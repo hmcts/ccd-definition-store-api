@@ -8,5 +8,5 @@ public interface BannerService {
 
     void create(BannerEntity bannerEntity);
 
-    List<Banner> findByJurisdictionId(String jurisdictionId);
+    List<Banner> findByJurisdictionId(String jurisdictionReference);
 }
