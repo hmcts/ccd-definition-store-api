@@ -1,11 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 
 @ApiModel(description = "")
 public class WizardPageField {
@@ -13,7 +12,6 @@ public class WizardPageField {
     private String caseFieldId = null;
     private Integer order = null;
     private Integer pageColumnNumber;
-    private String displayContext = null;
     private List<WizardPageComplexFieldOverride> complexFieldOverrides = new ArrayList<>();
 
     @JsonProperty("case_field_id")
@@ -41,15 +39,6 @@ public class WizardPageField {
 
     public void setPageColumnNumber(Integer number) {
         this.pageColumnNumber = number;
-    }
-
-    @JsonProperty("display_context")
-    public String getDisplayContext() {
-        return displayContext;
-    }
-
-    public void setDisplayContext(DisplayContext displayContext) {
-        this.displayContext = displayContext != null ? displayContext.toString() : null;
     }
 
     @JsonProperty("complex_field_overrides")
