@@ -1,18 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
-
-import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -23,17 +24,20 @@ public class JurisdictionServiceImpl implements JurisdictionService {
 
     private final JurisdictionRepository repository;
     private final CaseTypeLiteRepository caseTypeLiteRepository;
+    private final BannerRepository bannerRepository;
     private final EntityToResponseDTOMapper entityToResponseDTOMapper;
     private final VersionedDefinitionRepositoryDecorator<JurisdictionEntity, Integer> versionedRepository;
 
     @Autowired
     public JurisdictionServiceImpl(JurisdictionRepository repository,
                                    CaseTypeLiteRepository caseTypeLiteRepository,
-                                   EntityToResponseDTOMapper entityToResponseDTOMapper) {
+                                   EntityToResponseDTOMapper entityToResponseDTOMapper,
+                                   BannerRepository bannerRepository) {
         this.repository = repository;
         this.caseTypeLiteRepository = caseTypeLiteRepository;
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
+        this.bannerRepository = bannerRepository;
     }
 
     @Override
@@ -47,6 +51,7 @@ public class JurisdictionServiceImpl implements JurisdictionService {
         return jurisdictionEntities.stream()
             .map(entityToResponseDTOMapper::map)
             .map(this::attachCaseTypes)
+            .map(this::attachBanners)
             .collect(toList());
     }
 
@@ -58,6 +63,7 @@ public class JurisdictionServiceImpl implements JurisdictionService {
         return jurisdictionEntities.stream()
             .map(entityToResponseDTOMapper::map)
             .map(this::attachCaseTypes)
+            .map(this::attachBanners)
             .collect(toList());
     }
 
@@ -70,6 +76,12 @@ public class JurisdictionServiceImpl implements JurisdictionService {
         List<CaseTypeLiteEntity> caseTypeLiteEntities =
             caseTypeLiteRepository.findByJurisdictionId(jurisdiction.getId());
         jurisdiction.setCaseTypes(caseTypeLiteEntities.stream().map(entityToResponseDTOMapper::map).collect(toList()));
+        return jurisdiction;
+    }
+
+    private Jurisdiction attachBanners(Jurisdiction jurisdiction) {
+        List<BannerEntity> banners = bannerRepository.findByJurisdictionId(jurisdiction.getId());
+        jurisdiction.setBanners(banners.stream().map(entityToResponseDTOMapper::map).collect(toList()));
         return jurisdiction;
     }
 }

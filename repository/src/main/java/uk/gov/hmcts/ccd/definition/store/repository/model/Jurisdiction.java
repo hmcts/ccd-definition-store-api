@@ -16,13 +16,11 @@ public class Jurisdiction {
     private String description = null;
     private Date liveFrom = null;
     private Date liveUntil = null;
-    private Boolean bannerEnabled = null;
-    private String bannerDescription = null;
-    private String bannerUrlText = null;
-    private String bannerUrl = null;
 
     // Use the "lite" version of CaseType, since we do not require the full entity mapping.
     private List<CaseTypeLite> caseTypes = new ArrayList<>();
+
+    private List<Banner> banners = new ArrayList<>();
 
     /**
      **/
@@ -92,47 +90,19 @@ public class Jurisdiction {
         return caseTypes;
     }
 
-    @ApiModelProperty(value = "")
-    @JsonProperty("banner_enabled")
-    public Boolean getBannerEnabled() {
-        return bannerEnabled;
-    }
-
-    public void setBannerEnabled(boolean bannerEnabled) {
-        this.bannerEnabled = bannerEnabled;
-    }
-
-    @ApiModelProperty
-    @JsonProperty("banner_description")
-    public String getBannerDescription() {
-        return bannerDescription;
-    }
-
-    public void setBannerDescription(String bannerDescription) {
-        this.bannerDescription = bannerDescription;
-    }
-
-    @ApiModelProperty
-    @JsonProperty("banner_url_text")
-    public String getBannerUrlText() {
-        return bannerUrlText;
-    }
-
-    public void setBannerUrlText(String bannerUrlText) {
-        this.bannerUrlText = bannerUrlText;
-    }
-
-    @ApiModelProperty
-    @JsonProperty("banner_url")
-    public String getBannerUrl() {
-        return bannerUrl;
-    }
-
-    public void setBannerUrl(String bannerUrl) {
-        this.bannerUrl = bannerUrl;
-    }
-
     public void setCaseTypes(List<CaseTypeLite> caseTypes) {
         this.caseTypes = caseTypes;
+    }
+
+    /**
+     **/
+    @ApiModelProperty(value = "")
+    @JsonProperty("banners")
+    public List<Banner> getBanners() {
+        return banners;
+    }
+
+    public void setBanners(List<Banner> banners) {
+        this.banners = banners;
     }
 }

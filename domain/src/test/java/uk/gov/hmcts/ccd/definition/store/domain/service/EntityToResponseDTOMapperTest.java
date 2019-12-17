@@ -339,10 +339,6 @@ class EntityToResponseDTOMapperTest {
             jurisdictionEntity.setDescription("Jurisdiction Description");
             jurisdictionEntity.setName("Jurisdiction Name");
             jurisdictionEntity.setReference("Jurisdiction Reference");
-            jurisdictionEntity.setBannerEnabled(true);
-            jurisdictionEntity.setBannerDescription("Banner Description");
-            jurisdictionEntity.setBannerUrlText("Click here to see it.>>>");
-            jurisdictionEntity.setBannerUrl("http://localhost:3451/test");
             jurisdictionEntity.setLiveFrom(new Date());
             jurisdictionEntity.setLiveTo(new Date());
 
@@ -353,10 +349,6 @@ class EntityToResponseDTOMapperTest {
             assertEquals(jurisdictionEntity.getReference(), jurisdiction.getId());
             assertEquals(jurisdictionEntity.getLiveFrom(), jurisdiction.getLiveFrom());
             assertEquals(jurisdictionEntity.getLiveTo(), jurisdiction.getLiveUntil());
-            assertEquals(jurisdictionEntity.getBannerEnabled(), jurisdiction.getBannerEnabled());
-            assertEquals(jurisdictionEntity.getBannerDescription(), jurisdiction.getBannerDescription());
-            assertEquals(jurisdictionEntity.getBannerUrlText(), jurisdiction.getBannerUrlText());
-            assertEquals(jurisdictionEntity.getBannerUrl(), jurisdiction.getBannerUrl());
 
         }
 
@@ -1488,6 +1480,41 @@ class EntityToResponseDTOMapperTest {
                 );
             }
         };
+    }
+
+    @Nested
+    @DisplayName("Should return `a Banner which matches the BannerEntity")
+    class MapBannerEntityTests {
+
+        @Test
+        void testMapBannerEntity() {
+
+            BannerEntity bannerEntity = new BannerEntity();
+            bannerEntity.setBannerUrlText("Click here to see it.>>>");
+            bannerEntity.setBannerEnabled(true);
+            bannerEntity.setBannerUrl("http://localhost:3451/test");
+            bannerEntity.setBannerDescription("Test Description");
+
+            Banner banner = classUnderTest.map(bannerEntity);
+
+            assertEquals(bannerEntity.getBannerDescription(), banner.getBannerDescription());
+            assertEquals(bannerEntity.getBannerEnabled(), banner.getBannerEnabled());
+            assertEquals(bannerEntity.getBannerUrl(), banner.getBannerUrl());
+            assertEquals(bannerEntity.getBannerUrlText(), banner.getBannerUrlText());
+        }
+
+        @Test
+        void testMapEmptyBannerEntity() {
+
+            BannerEntity bannerEntity = new BannerEntity();
+
+            Banner banner = classUnderTest.map(bannerEntity);
+
+            assertNull(banner.getBannerDescription());
+            assertNull(banner.getBannerEnabled());
+            assertNull(banner.getBannerUrl());
+            assertNull(banner.getBannerUrlText());
+        }
     }
 
 }

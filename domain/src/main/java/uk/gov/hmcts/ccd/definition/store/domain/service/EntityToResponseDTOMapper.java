@@ -221,6 +221,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "searchAliasFieldEntity.caseType.reference", target = "caseTypeId")
     SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
 
+    Banner map(BannerEntity bannerEntity);
+
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
     // but this does not play nicely with Mockito v1
