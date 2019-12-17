@@ -12,7 +12,6 @@ public class Banner {
     private String bannerUrl = null;
     private String bannerUrlText = null;
 
-    @JsonProperty("id")
     public String getId() {
         return id;
     }
@@ -21,7 +20,6 @@ public class Banner {
         this.id = id;
     }
 
-    @JsonProperty("banner_enabled")
     public Boolean getBannerEnabled() {
         return bannerEnabled;
     }
@@ -30,7 +28,6 @@ public class Banner {
         this.bannerEnabled = bannerEnabled;
     }
 
-    @JsonProperty("banner_description")
     public String getBannerDescription() {
         return bannerDescription;
     }
@@ -39,7 +36,6 @@ public class Banner {
         this.bannerDescription = bannerDescription;
     }
 
-    @JsonProperty("banner_url")
     public String getBannerUrl() {
         return bannerUrl;
     }
@@ -48,7 +44,6 @@ public class Banner {
         this.bannerUrl = bannerUrl;
     }
 
-    @JsonProperty("banner_url_text")
     public String getBannerUrlText() {
         return bannerUrlText;
     }
