@@ -61,5 +61,6 @@ withPipeline(type, product, app) {
     loadVaultSecrets(secrets)
     enableAksStagingDeployment()
     disableLegacyDeploymentOnAAT()
+    disableLegacyDeployment()
     installCharts()
 }
