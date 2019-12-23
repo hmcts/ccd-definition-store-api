@@ -1,6 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
+import com.microsoft.azure.storage.ResultContinuation;
+import com.microsoft.azure.storage.ResultSegment;
 import com.microsoft.azure.storage.StorageException;
+import com.microsoft.azure.storage.blob.BlobListingDetails;
 import com.microsoft.azure.storage.blob.BlobProperties;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
@@ -14,6 +17,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,22 +31,34 @@ public class AzureImportAuditsClient {
     public static final String CASE_TYPES = "CaseTypes";
 
     private final CloudBlobContainer cloudBlobContainer;
+    private final AzureStorageConfiguration azureStorageConfiguration;
 
     @Autowired
-    public AzureImportAuditsClient(CloudBlobContainer cloudBlobContainer) {
+    public AzureImportAuditsClient(CloudBlobContainer cloudBlobContainer, AzureStorageConfiguration azureStorageConfiguration) {
         this.cloudBlobContainer = cloudBlobContainer;
+        this.azureStorageConfiguration = azureStorageConfiguration;
     }
 
     /**
      * Fetches All import audits.
+     *
      * @return import audits in reverse chronological order
      * @throws StorageException Exception thrown when trying to connect to Azure Blob store
      */
     public List<ImportAudit> fetchAllImportAudits() throws StorageException {
         List<ImportAudit> audits = new ArrayList<>();
-        for (ListBlobItem lbi : cloudBlobContainer.listBlobs()) {
+        ResultContinuation nextBlobsPage = null;
+        ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(null,
+                                                                                      false,
+                                                                                      EnumSet.noneOf(BlobListingDetails.class),
+                                                                                      azureStorageConfiguration.getAzureImportAuditsGetLimit(),
+                                                                                      nextBlobsPage,
+                                                                                      null,
+                                                                                      null);
+
+        for (ListBlobItem lbi : blobsPage.getResults()) {
             if (lbi instanceof CloudBlockBlob) {
-                final CloudBlockBlob cbb = (CloudBlockBlob)lbi;
+                final CloudBlockBlob cbb = (CloudBlockBlob) lbi;
                 cbb.downloadAttributes();
                 final ImportAudit audit = new ImportAudit();
                 final BlobProperties properties = cbb.getProperties();

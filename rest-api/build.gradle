@@ -11,6 +11,7 @@ ext {
 
 dependencies {
     compile project(':domain')
+    compile project(':excel-importer')
     compile project(':elastic-search-support')
     testCompile project(path: ':domain', configuration: 'testOutput')
     testCompile project(":domain").sourceSets.main.output
