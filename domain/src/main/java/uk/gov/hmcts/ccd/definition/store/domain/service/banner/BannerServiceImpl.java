@@ -47,4 +47,20 @@ public class BannerServiceImpl implements BannerService {
             .map(dtoMapper::map)
             .collect(toList());
     }
+
+    @Override
+    public List<Banner> getAll() {
+        List<BannerEntity> bannerEntities = bannerRepository.findAll();
+        return bannerEntities.stream()
+            .map(dtoMapper::map)
+            .collect(toList());
+    }
+
+    @Override
+    public List<Banner> getAll(List<String> references) {
+        List<BannerEntity> bannerEntities = bannerRepository.findAllByReference(references);
+        return bannerEntities.stream()
+            .map(dtoMapper::map)
+            .collect(toList());
+    }
 }

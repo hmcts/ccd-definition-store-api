@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,8 +18,6 @@ public class Jurisdiction {
 
     // Use the "lite" version of CaseType, since we do not require the full entity mapping.
     private List<CaseTypeLite> caseTypes = new ArrayList<>();
-
-    private List<Banner> banners = new ArrayList<>();
 
     /**
      **/
@@ -92,17 +89,5 @@ public class Jurisdiction {
 
     public void setCaseTypes(List<CaseTypeLite> caseTypes) {
         this.caseTypes = caseTypes;
-    }
-
-    /**
-     **/
-    @ApiModelProperty(value = "")
-    @JsonProperty("banners")
-    public List<Banner> getBanners() {
-        return banners;
-    }
-
-    public void setBanners(List<Banner> banners) {
-        this.banners = banners;
     }
 }

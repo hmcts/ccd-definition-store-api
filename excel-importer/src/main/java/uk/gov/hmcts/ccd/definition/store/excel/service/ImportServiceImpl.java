@@ -30,6 +30,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -125,13 +126,13 @@ public class ImportServiceImpl implements ImportService {
 
         logger.info("Importing spreadsheet: Jurisdiction {} : OK ", jurisdiction.getReference());
 
-        logger.debug("Importing spreadsheet: Banner...");
-
-        final BannerParser bannerParser = parserFactory.createBannerParser(parseContext);
-        BannerEntity bannerEntity = bannerParser.parse(definitionSheets);
-        importBanner(bannerEntity);
-
-        logger.debug("Importing spreadsheet: Banner...: OK");
+        if (definitionSheets.get(SheetName.BANNER.getName()) != null) {
+            logger.debug("Importing spreadsheet: Banner...");
+            final BannerParser bannerParser = parserFactory.createBannerParser(parseContext);
+            BannerEntity bannerEntity = bannerParser.parse(definitionSheets);
+            importBanner(bannerEntity);
+            logger.debug("Importing spreadsheet: Banner...: OK");
+        }
 
         /*
             2 - Field types
