@@ -26,6 +26,9 @@ public class AzureStorageConfiguration {
     @Value("${azure.storage.definition-upload-enabled}")
     private Boolean azureUploadEnabled;
 
+    @Value("${azure.storage.import_audits.get-limit}")
+    private Integer azureImportAuditsGetLimit;
+
     @Bean
     public CloudStorageAccount storageAccount() throws URISyntaxException, InvalidKeyException {
         return CloudStorageAccount.parse(connectionString);
@@ -49,5 +52,10 @@ public class AzureStorageConfiguration {
     @Bean
     public Boolean isAzureUploadEnabled() {
         return azureUploadEnabled;
+    }
+
+    @Bean
+    public Integer getAzureImportAuditsGetLimit() {
+        return azureImportAuditsGetLimit;
     }
 }
