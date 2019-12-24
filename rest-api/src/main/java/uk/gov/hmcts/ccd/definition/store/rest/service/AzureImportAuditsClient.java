@@ -1,5 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+
 import com.microsoft.azure.storage.ResultContinuation;
 import com.microsoft.azure.storage.ResultSegment;
 import com.microsoft.azure.storage.StorageException;
@@ -11,16 +19,8 @@ import com.microsoft.azure.storage.blob.ListBlobItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
-
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
 
 import static java.util.Collections.sort;
 
@@ -32,12 +32,12 @@ public class AzureImportAuditsClient {
     public static final String CASE_TYPES = "CaseTypes";
 
     private final CloudBlobContainer cloudBlobContainer;
-    private final AzureStorageConfiguration azureStorageConfiguration;
+    private final ApplicationParams applicationParams;
 
     @Autowired
-    public AzureImportAuditsClient(CloudBlobContainer cloudBlobContainer, AzureStorageConfiguration azureStorageConfiguration) {
+    public AzureImportAuditsClient(CloudBlobContainer cloudBlobContainer, ApplicationParams applicationParams) {
         this.cloudBlobContainer = cloudBlobContainer;
-        this.azureStorageConfiguration = azureStorageConfiguration;
+        this.applicationParams = applicationParams;
     }
 
     /**
@@ -50,9 +50,9 @@ public class AzureImportAuditsClient {
         List<ImportAudit> audits = new ArrayList<>();
         ResultContinuation nextBlobsPage = null;
         ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(null,
-                                                                                      false,
+                                                                                      true,
                                                                                       EnumSet.noneOf(BlobListingDetails.class),
-                                                                                      azureStorageConfiguration.getAzureImportAuditsGetLimit(),
+                                                                                      applicationParams.getAzureImportAuditsGetLimit(),
                                                                                       nextBlobsPage,
                                                                                       null,
                                                                                       null);

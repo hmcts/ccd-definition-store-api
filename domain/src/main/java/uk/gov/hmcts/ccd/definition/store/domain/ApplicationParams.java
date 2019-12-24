@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -33,6 +34,9 @@ public class ApplicationParams {
     @Value("#{'${ccd.am.read.from_am}'.split(',')}")
     private List<String> caseTypesWithAmReadFromAm;
 
+    @Value("${azure.storage.import_audits.get-limit}")
+    private Integer azureImportAuditsGetLimit;
+
     public String userProfilePutURL() {
         return userProfileHost + "/user-profile/users";
     }
@@ -61,8 +65,13 @@ public class ApplicationParams {
         return caseTypesWithAmReadFromAm;
     }
 
+    public Integer getAzureImportAuditsGetLimit() {
+        return azureImportAuditsGetLimit;
+    }
+
     @PostConstruct
     public void init() {
         new AmSwitchValidator().validateAmPersistenceSwitchesIn(this);
     }
+
 }
