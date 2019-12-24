@@ -8,10 +8,13 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
+import com.microsoft.azure.storage.OperationContext;
+import com.microsoft.azure.storage.ResultContinuation;
 import com.microsoft.azure.storage.ResultSegment;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.BlobListingDetails;
 import com.microsoft.azure.storage.blob.BlobProperties;
+import com.microsoft.azure.storage.blob.BlobRequestOptions;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
@@ -29,6 +32,12 @@ public class AzureImportAuditsClient {
 
     public static final String USER_ID = "UserID";
     public static final String CASE_TYPES = "CaseTypes";
+    public static final String NO_PREFIX = null;
+    public static final boolean FLAT_BLOB_LISTING = true;
+    public static final ResultContinuation NO_CONTINUATION_TOKEN = null;
+    public static final BlobRequestOptions NO_OPTIONS = null;
+    public static final OperationContext NO_OP_CONTEXT = null;
+    public static final EnumSet<BlobListingDetails> ONLY_COMMITTED_BLOBS = EnumSet.noneOf(BlobListingDetails.class);
 
     private final CloudBlobContainer cloudBlobContainer;
     private final ApplicationParams applicationParams;
@@ -45,15 +54,15 @@ public class AzureImportAuditsClient {
      * @return import audits in reverse chronological order based on AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT
      * @throws StorageException Exception thrown when trying to connect to Azure Blob store
      */
-    public List<ImportAudit> fetchAllImportAudits() throws StorageException {
+    public List<ImportAudit> fetchImportAudits() throws StorageException {
         List<ImportAudit> audits = new ArrayList<>();
-        ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(null,
-                                                                                      true,
-                                                                                      EnumSet.noneOf(BlobListingDetails.class),
+        ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(NO_PREFIX,
+                                                                                      FLAT_BLOB_LISTING,
+                                                                                      ONLY_COMMITTED_BLOBS,
                                                                                       applicationParams.getAzureImportAuditsGetLimit(),
-                                                                                      null,
-                                                                                      null,
-                                                                                      null);
+                                                                                      NO_CONTINUATION_TOKEN,
+                                                                                      NO_OPTIONS,
+                                                                                      NO_OP_CONTEXT);
 
         for (ListBlobItem lbi : blobsPage.getResults()) {
             if (lbi instanceof CloudBlockBlob) {

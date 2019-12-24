@@ -53,7 +53,7 @@ class ImportAuditControllerTest {
     @Test
     @DisplayName("Should fetch import audits")
     void shouldFetchImportAudits() throws Exception {
-        given(azureImportAuditsClient.fetchAllImportAudits()).willReturn(asList(buildImportAudit()));
+        given(azureImportAuditsClient.fetchImportAudits()).willReturn(asList(buildImportAudit()));
         final MvcResult
             mvcResult =
             mockMvc.perform(get(URL_IMPORT_AUDITS))
@@ -65,13 +65,13 @@ class ImportAuditControllerTest {
                       + ".net/bugbear/20201015093302_definition_upload\",\"order\":1582934400000,"
                       + "\"date_imported\":\"2020-02-29\",\"who_imported\":\"Who else\","
                       + "\"case_type\":\"Some case type\"}]"));
-        verify(azureImportAuditsClient).fetchAllImportAudits();
+        verify(azureImportAuditsClient).fetchImportAudits();
     }
 
     @Test
     @DisplayName("Should handle empty collection")
     void shouldHandleEmptyCollection() throws Exception {
-        given(azureImportAuditsClient.fetchAllImportAudits()).willReturn(emptyList());
+        given(azureImportAuditsClient.fetchImportAudits()).willReturn(emptyList());
         final MvcResult
             mvcResult =
             mockMvc.perform(get(URL_IMPORT_AUDITS))
@@ -79,7 +79,7 @@ class ImportAuditControllerTest {
                    .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                    .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(), is("[]"));
-        verify(azureImportAuditsClient).fetchAllImportAudits();
+        verify(azureImportAuditsClient).fetchImportAudits();
     }
 
     @Test
