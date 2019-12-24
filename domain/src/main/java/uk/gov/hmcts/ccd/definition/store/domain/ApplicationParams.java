@@ -71,5 +71,4 @@ public class ApplicationParams {
     public void init() {
         new AmSwitchValidator().validateAmPersistenceSwitchesIn(this);
     }
-
 }
