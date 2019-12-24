@@ -33,6 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class, BlobProperties.class})
 public class AzureImportAuditsClientTest {
 
+    public static final int IMPORT_AUDITS_GET_LIMIT = 20;
     private AzureImportAuditsClient subject;
 
     private CloudBlockBlob b1;
@@ -57,12 +58,12 @@ public class AzureImportAuditsClientTest {
 
         MockitoAnnotations.initMocks(this);
 
-        when(applicationParams.getAzureImportAuditsGetLimit()).thenReturn(20);
+        when(applicationParams.getAzureImportAuditsGetLimit()).thenReturn(IMPORT_AUDITS_GET_LIMIT);
         subject = new AzureImportAuditsClient(cloudBlobContainer, applicationParams);
         when(cloudBlobContainer.listBlobsSegmented(eq(null),
                                                    eq(true),
                                                    any(EnumSet.class),
-                                                   eq(20),
+                                                   eq(IMPORT_AUDITS_GET_LIMIT),
                                                    eq(null),
                                                    eq(null),
                                                    eq(null))).thenReturn(blobsPage);
