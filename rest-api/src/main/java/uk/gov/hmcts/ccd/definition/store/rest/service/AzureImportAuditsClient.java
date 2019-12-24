@@ -8,7 +8,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
-import com.microsoft.azure.storage.ResultContinuation;
 import com.microsoft.azure.storage.ResultSegment;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.BlobListingDetails;
@@ -41,19 +40,18 @@ public class AzureImportAuditsClient {
     }
 
     /**
-     * Fetches All import audits.
+     * Fetches configurable size of import audits.
      *
-     * @return import audits in reverse chronological order
+     * @return import audits in reverse chronological order based on AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT
      * @throws StorageException Exception thrown when trying to connect to Azure Blob store
      */
     public List<ImportAudit> fetchAllImportAudits() throws StorageException {
         List<ImportAudit> audits = new ArrayList<>();
-        ResultContinuation nextBlobsPage = null;
         ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(null,
                                                                                       true,
                                                                                       EnumSet.noneOf(BlobListingDetails.class),
                                                                                       applicationParams.getAzureImportAuditsGetLimit(),
-                                                                                      nextBlobsPage,
+                                                                                      null,
                                                                                       null,
                                                                                       null);
 
