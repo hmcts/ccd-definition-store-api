@@ -32,12 +32,12 @@ public class AzureImportAuditsClient {
 
     public static final String USER_ID = "UserID";
     public static final String CASE_TYPES = "CaseTypes";
-    public static final String NO_PREFIX = null;
-    public static final boolean FLAT_BLOB_LISTING = true;
-    public static final ResultContinuation NO_CONTINUATION_TOKEN = null;
-    public static final BlobRequestOptions NO_OPTIONS = null;
-    public static final OperationContext NO_OP_CONTEXT = null;
-    public static final EnumSet<BlobListingDetails> ONLY_COMMITTED_BLOBS = EnumSet.noneOf(BlobListingDetails.class);
+    private static final String NO_PREFIX = null;
+    private static final boolean FLAT_BLOB_LISTING = true;
+    private static final ResultContinuation NO_CONTINUATION_TOKEN = null;
+    private static final BlobRequestOptions NO_OPTIONS = null;
+    private static final OperationContext NO_OP_CONTEXT = null;
+    private static final EnumSet<BlobListingDetails> ONLY_COMMITTED_BLOBS = EnumSet.noneOf(BlobListingDetails.class);
 
     private final CloudBlobContainer cloudBlobContainer;
     private final ApplicationParams applicationParams;
