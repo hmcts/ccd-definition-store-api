@@ -33,7 +33,7 @@ public class ApplicationParams {
     private List<String> caseTypesWithAmReadFromAm;
 
     @Value("${azure.storage.import_audits.get-limit}")
-    private Integer azureImportAuditsGetLimit;
+    private String azureImportAuditsGetLimit;
 
     public String userProfilePutURL() {
         return userProfileHost + "/user-profile/users";
@@ -64,7 +64,7 @@ public class ApplicationParams {
     }
 
     public Integer getAzureImportAuditsGetLimit() {
-        return azureImportAuditsGetLimit;
+        return Integer.valueOf(azureImportAuditsGetLimit);
     }
 
     @PostConstruct
