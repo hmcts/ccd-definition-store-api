@@ -50,5 +50,4 @@ public class AzureStorageConfiguration {
     public Boolean isAzureUploadEnabled() {
         return azureUploadEnabled;
     }
-
 }
