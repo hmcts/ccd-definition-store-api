@@ -17,6 +17,6 @@ java:
     ENABLE_DB_MIGRATE: true
     ELASTIC_SEARCH_ENABLED: false
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
-    AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT: 20
+
   postgresql:
     enabled: true
