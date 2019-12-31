@@ -10,7 +10,5 @@ public interface BannerService {
 
     List<Banner> findByJurisdictionId(String jurisdictionReference);
 
-    List<Banner> getAll();
-
     List<Banner> getAll(List<String> references);
 }
