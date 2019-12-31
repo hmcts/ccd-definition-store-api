@@ -1,12 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.inject.Singleton;
-
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 
 @Named
 @Singleton
@@ -32,6 +31,9 @@ public class ApplicationParams {
 
     @Value("#{'${ccd.am.read.from_am}'.split(',')}")
     private List<String> caseTypesWithAmReadFromAm;
+
+    @Value("${azure.storage.import_audits.get-limit}")
+    private String azureImportAuditsGetLimit;
 
     public String userProfilePutURL() {
         return userProfileHost + "/user-profile/users";
@@ -59,6 +61,10 @@ public class ApplicationParams {
 
     public List<String> getCaseTypesWithAmReadFromAm() {
         return caseTypesWithAmReadFromAm;
+    }
+
+    public Integer getAzureImportAuditsGetLimit() {
+        return Integer.valueOf(azureImportAuditsGetLimit);
     }
 
     @PostConstruct

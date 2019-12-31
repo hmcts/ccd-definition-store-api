@@ -98,7 +98,6 @@ public class DisplayGroupAdapterService {
         wizardPageField.setCaseFieldId(reference);
         wizardPageField.setOrder(displayGroupCaseFieldEntity.getOrder());
         wizardPageField.setPageColumnNumber(displayGroupCaseFieldEntity.getColumnNumber());
-        wizardPageField.setDisplayContext(eventCaseFieldEntity.getDisplayContext());
 
         if (DisplayContext.COMPLEX == eventCaseFieldEntity.getDisplayContext()) {
 

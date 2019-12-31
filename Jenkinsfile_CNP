@@ -60,5 +60,7 @@ withPipeline(type, product, app) {
     overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
     enableAksStagingDeployment()
+    disableLegacyDeploymentOnAAT()
+    disableLegacyDeployment()
     installCharts()
 }
