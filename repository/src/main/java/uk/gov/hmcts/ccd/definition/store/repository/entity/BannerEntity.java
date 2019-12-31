@@ -91,6 +91,13 @@ public class BannerEntity implements Serializable {
         this.jurisdiction = jurisdiction;
     }
 
+    public void copy(BannerEntity bannerEntity) {
+        this.setBannerDescription(bannerEntity.getBannerDescription());
+        this.setBannerUrl(bannerEntity.getBannerUrl());
+        this.setBannerEnabled(bannerEntity.getBannerEnabled());
+        this.setBannerUrlText(bannerEntity.getBannerUrlText());
+    }
+
     @Override
     public String toString() {
         return "JurisdictionEntity{" +

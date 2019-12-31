@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.banner;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -31,21 +30,16 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public void create(BannerEntity bannerEntity) {
+    public void save(BannerEntity bannerEntity) {
         LOG.debug("Create Banner Entity {}", bannerEntity);
-        this.bannerRepository.save(bannerEntity);
-    }
-
-    @Override
-    public List<Banner> findByJurisdictionId(String jurisdictionReference) {
-        LOG.debug("Find Banner information for the jurisdiction {}", jurisdictionReference);
-        Optional<List<BannerEntity>> bannerEntities
-            = Optional.ofNullable(bannerRepository.findByJurisdictionId(jurisdictionReference));
-
-        return bannerEntities.orElse(Collections.emptyList())
-            .stream()
-            .map(dtoMapper::map)
-            .collect(toList());
+        String reference = bannerEntity.getJurisdiction().getReference();
+        Optional<BannerEntity> bannerEntityObj = Optional.ofNullable(bannerRepository.findByJurisdictionId(reference));
+        BannerEntity bannerEntityDB = bannerEntity;
+        if (bannerEntityObj.isPresent()) {
+            bannerEntityDB = bannerEntityObj.get();
+            bannerEntityDB.copy(bannerEntity);
+        }
+        this.bannerRepository.save(bannerEntityDB);
     }
 
     @Override

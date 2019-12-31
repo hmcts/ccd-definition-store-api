@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 public interface BannerRepository extends JpaRepository<BannerEntity, Integer> {
 
     @Query("select b from BannerEntity b where b.jurisdiction.reference=:jurisdictionReference")
-    List<BannerEntity> findByJurisdictionId(@Param("jurisdictionReference") String jurisdiction);
+    BannerEntity findByJurisdictionId(@Param("jurisdictionReference") String jurisdiction);
 
     @Query("select b from BannerEntity b where b.jurisdiction.reference in :references")
     List<BannerEntity> findAllByReference(@Param("references") List<String> references);

@@ -6,9 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 
 public interface BannerService {
 
-    void create(BannerEntity bannerEntity);
-
-    List<Banner> findByJurisdictionId(String jurisdictionReference);
+    void save(BannerEntity bannerEntity);
 
     List<Banner> getAll(List<String> references);
 }
