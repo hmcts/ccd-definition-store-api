@@ -15,10 +15,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="banner_url_text" type="varchar(50)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="banner_url" type="varchar(300)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="created_at" type="datetime" defaultValue="now()">
                 <constraints nullable="false"/>
