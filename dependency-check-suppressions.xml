@@ -49,3 +49,17 @@
         <cve>CVE-2019-11358</cve>
     </suppress>
 </suppressions>
+<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.21.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-websocket@.*$</packageUrl>
+   <cve>CVE-2019-12418</cve>
+</suppress>
+<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.21.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-websocket@.*$</packageUrl>
+   <cve>CVE-2019-17563</cve>
+</suppress>
