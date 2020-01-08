@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
@@ -129,6 +130,9 @@ public class ImportServiceImplTest {
 
     @Mock
     private BannerService bannerService;
+    
+    @Mock
+    private JurisdictionUiConfigService jurisdictionUiConfigService;
 
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
@@ -173,7 +177,8 @@ public class ImportServiceImplTest {
                                         caseFieldRepository,
                                         applicationEventPublisher,
                                         idamProfileClient,
-                                        bannerService);
+                                        bannerService,
+                                        jurisdictionUiConfigService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -331,7 +336,8 @@ public class ImportServiceImplTest {
             caseFieldRepository,
             applicationEventPublisher,
             idamProfileClient,
-            bannerService);
+            bannerService,
+            jurisdictionUiConfigService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 
