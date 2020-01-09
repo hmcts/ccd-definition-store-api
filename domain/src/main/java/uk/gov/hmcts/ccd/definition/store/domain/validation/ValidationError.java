@@ -25,10 +25,10 @@ public abstract class ValidationError implements Serializable {
     }
 
     @Override
-    @SuppressWarnings("squid:S2097")
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
+        if (!(o instanceof ValidationError))
+            return false;
         ValidationError that = (ValidationError) o;
         return Objects.equals(defaultMessage, that.defaultMessage);
     }
