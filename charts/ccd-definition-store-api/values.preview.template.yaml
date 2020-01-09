@@ -3,7 +3,7 @@ java:
   ingressHost: ${SERVICE_FQDN}
   aadIdentityName:
   memoryRequests: "1G"
-  memoryLimits: "2G"
+  memoryLimits: "3G"
   keyVaults:
     ccd:
       secrets:
