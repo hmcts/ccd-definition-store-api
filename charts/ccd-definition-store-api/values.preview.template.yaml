@@ -2,6 +2,8 @@ java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   aadIdentityName:
+  memoryRequests: "1G"
+  memoryLimits: "2G"
   keyVaults:
     ccd:
       secrets:
