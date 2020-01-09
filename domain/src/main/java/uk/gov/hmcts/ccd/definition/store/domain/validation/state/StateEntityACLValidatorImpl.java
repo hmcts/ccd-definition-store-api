@@ -18,7 +18,8 @@ public class StateEntityACLValidatorImpl implements StateEntityValidator {
 
         for (StateACLEntity entity : stateEntity.getStateACLEntities()) {
             if (null == entity.getUserRole()) {
-                String message = String.format("Invalid UserRole for case type '%s', case state '%s'",
+                String message = String.format("Invalid UserRole %s for case type '%s', case state '%s'",
+                    entity.getUserRoleId(),
                     stateEntityValidationContext.getCaseReference(),
                     entity.getStateEntity().getReference());
                 validationResult.addError(new ValidationError(message, entity));

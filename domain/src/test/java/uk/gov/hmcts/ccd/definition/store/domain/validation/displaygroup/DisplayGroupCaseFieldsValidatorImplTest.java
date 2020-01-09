@@ -62,7 +62,7 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
         verify(validator1).validate(e2);
         verify(validator2).validate(e1);
         verify(validator2).validate(e2);
-        assertThat(result.getValidationErrors(), hasSize(4));
+        assertThat(result.getValidationErrors(), hasSize(2));
         assertThat(result.getValidationErrors(), hasItems(ve1, ve2));
     }
 

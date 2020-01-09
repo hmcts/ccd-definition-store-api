@@ -221,4 +221,20 @@ public class FieldTypeEntity implements Serializable, Versionable {
     public boolean isDocumentType() {
         return (BASE_DOCUMENT.equals(reference) || (baseFieldType != null && BASE_DOCUMENT.equals(baseFieldType.getReference())));
     }
+
+    @Transient
+    public boolean isCollectionFieldType() {
+        return collectionFieldType != null;
+    }
+
+    @Transient
+    public boolean isComplexFieldType() {
+        FieldTypeEntity baseFieldType = this.baseFieldType.getBaseFieldType();
+        if (baseFieldType != null) {
+            return baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX);
+        } else {
+            return this.baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX);
+        }
+    }
+
 }

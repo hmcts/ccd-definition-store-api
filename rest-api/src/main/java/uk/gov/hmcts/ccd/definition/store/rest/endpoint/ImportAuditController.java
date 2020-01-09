@@ -35,7 +35,7 @@ class ImportAuditController {
     })
     public Collection<ImportAudit> fetchAllAudits() throws StorageException {
         if (null != azureImportAuditsClient) {
-            return azureImportAuditsClient.fetchAllImportAudits();
+            return azureImportAuditsClient.fetchImportAudits();
         } else {
             return emptyList();
         }
