@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
@@ -126,6 +127,9 @@ public class ImportServiceImplTest {
     @Captor
     private ArgumentCaptor<DefinitionImportedEvent> eventCaptor;
 
+    @Mock
+    private BannerService bannerService;
+
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -168,7 +172,8 @@ public class ImportServiceImplTest {
                                         workBasketUserDefaultService,
                                         caseFieldRepository,
                                         applicationEventPublisher,
-                                        idamProfileClient);
+                                        idamProfileClient,
+                                        bannerService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -325,7 +330,8 @@ public class ImportServiceImplTest {
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,
-            idamProfileClient);
+            idamProfileClient,
+            bannerService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

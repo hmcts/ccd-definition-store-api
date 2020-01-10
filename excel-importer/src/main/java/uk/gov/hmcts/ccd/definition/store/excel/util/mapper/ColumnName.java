@@ -71,7 +71,11 @@ public enum ColumnName {
     RESULTS_ORDERING("ResultsOrdering"),
     WORK_BASKET_DEFAULT_JURISDICTION("WorkBasketDefaultJurisdiction"),
     WORK_BASKET_DEFAULT_CASETYPE("WorkBasketDefaultCaseType"),
-    WORK_BASKET_DEFAULT_STATE("WorkBasketDefaultState");
+    WORK_BASKET_DEFAULT_STATE("WorkBasketDefaultState"),
+    BANNER_ENABLED("BannerEnabled"),
+    BANNER_DESCRIPTION("BannerDescription"),
+    BANNER_URL_TEXT("BannerURLText"),
+    BANNER_URL("BannerURL");
 
     private final String name;
 

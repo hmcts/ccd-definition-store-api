@@ -5,12 +5,24 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
-import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
+import uk.gov.hmcts.ccd.definition.store.repository.model.BannersResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
 
 @Api(value = "/api/display")
 @RequestMapping(value = "/api")
@@ -19,8 +31,11 @@ public class DisplayApiController {
 
     private DisplayService displayService;
 
-    public DisplayApiController(DisplayService displayService) {
+    private final BannerService bannerService;
+
+    public DisplayApiController(DisplayService displayService, BannerService bannerService) {
         this.displayService = displayService;
+        this.bannerService = bannerService;
     }
 
     @RequestMapping(value = "/display/search-input-definition/{id}", method = RequestMethod.GET, produces = {"application/json"})
@@ -90,4 +105,14 @@ public class DisplayApiController {
         return this.displayService.findWorkBasketDefinitionForCaseType(id);
     }
 
+    @RequestMapping(value = "/display/banners", method = RequestMethod.GET, produces = {"application/json"})
+    @ApiOperation(value = "Get Banner details for list of jurisdictions", response = BannersResult.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of Banners")
+    })
+    public BannersResult getBanners(
+        @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> referencesOptional) {
+        List<Banner> banners = referencesOptional.map(references -> bannerService.getAll(references)).orElse(Collections.emptyList());
+        return new BannersResult(banners);
+    }
 }
