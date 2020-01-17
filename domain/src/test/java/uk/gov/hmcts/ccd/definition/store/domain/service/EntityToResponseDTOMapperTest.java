@@ -1400,7 +1400,7 @@ class EntityToResponseDTOMapperTest {
             return caseTypeLiteEntity;
         }
     }
-    
+
     @Nested
     @DisplayName("Should return a JurisdictionUiConfig model whose fields match those in the JurisdictionUiConfigEntity")
     class MapJurisdictionUiConfigEntityTests {
@@ -1409,6 +1409,7 @@ class EntityToResponseDTOMapperTest {
         void testMapJurisdictionUiConfigEntity() {
         	JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
         	jurisdictionEntity.setReference("Reference");
+        	jurisdictionEntity.setName("Name");
             
         	JurisdictionUiConfigEntity jurisdictionUiConfigEntity = new JurisdictionUiConfigEntity();
         	jurisdictionUiConfigEntity.setShuttered(true);
@@ -1417,7 +1418,8 @@ class EntityToResponseDTOMapperTest {
         	JurisdictionUiConfig jurisdictionUiConfig = classUnderTest.map(jurisdictionUiConfigEntity);
 
         	assertEquals(jurisdictionUiConfig.getShuttered(), jurisdictionUiConfigEntity.getShuttered());
-        	assertEquals(jurisdictionUiConfig.getId(), jurisdictionUiConfigEntity.getJurisdiction().getReference());
+            assertEquals(jurisdictionUiConfig.getName(), jurisdictionUiConfigEntity.getJurisdiction().getName());
+            assertEquals(jurisdictionUiConfig.getId(), jurisdictionUiConfigEntity.getJurisdiction().getReference());
         }
 
         @Test
@@ -1427,6 +1429,7 @@ class EntityToResponseDTOMapperTest {
         	JurisdictionUiConfig jurisdictionUiConfig = classUnderTest.map(jurisdictionUiConfigEntity);
 
             assertNull(jurisdictionUiConfig.getId());
+            assertNull(jurisdictionUiConfig.getName());
             assertNull(jurisdictionUiConfig.getShuttered());
         }
     }
