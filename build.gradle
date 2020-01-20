@@ -341,7 +341,7 @@ targetCompatibility = 1.8
 sonarqube {
     properties {
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
-        property "sonar.cpd.exclusions", "**/*/*.java,**/*.java"
+        property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
         property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
