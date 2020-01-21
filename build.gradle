@@ -342,7 +342,6 @@ project.tasks['sonarqube'].dependsOn jacocoTestReport
 
 sonarqube {
     properties {
-        property "sonar.exclusions", "**/**/*.java,**/service/doclink/**,**/*.java"
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
         property "sonar.projectName", "ccd-definition-store-api"
