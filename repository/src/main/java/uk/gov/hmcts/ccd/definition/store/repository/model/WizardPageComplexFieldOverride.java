@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiModel;
 public class WizardPageComplexFieldOverride {
     private String complexFieldElementId;
     private String displayContext;
-    private Integer order;
     private String label;
     private String hintText;
     private String showCondition;
@@ -28,15 +27,6 @@ public class WizardPageComplexFieldOverride {
 
     public void setDisplayContext(String displayContext) {
         this.displayContext = displayContext;
-    }
-
-    @JsonProperty("order")
-    public Integer getOrder() {
-        return order;
-    }
-
-    public void setOrder(Integer order) {
-        this.order = order;
     }
 
     @JsonProperty("label")

@@ -98,7 +98,6 @@ public class DisplayGroupAdapterService {
         wizardPageField.setCaseFieldId(reference);
         wizardPageField.setOrder(displayGroupCaseFieldEntity.getOrder());
         wizardPageField.setPageColumnNumber(displayGroupCaseFieldEntity.getColumnNumber());
-        wizardPageField.setDisplayContext(eventCaseFieldEntity.getDisplayContext());
 
         if (DisplayContext.COMPLEX == eventCaseFieldEntity.getDisplayContext()) {
 
@@ -133,7 +132,6 @@ public class DisplayGroupAdapterService {
         WizardPageComplexFieldOverride override = new WizardPageComplexFieldOverride();
         override.setComplexFieldElementId(reference + "." + eventComplexTypeEntity.getReference());
         override.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
-        override.setOrder(eventComplexTypeEntity.getOrder());
         override.setLabel(eventComplexTypeEntity.getLabel());
         override.setHintText(eventComplexTypeEntity.getHint());
         override.setShowCondition(eventComplexTypeEntity.getShowCondition());

@@ -370,6 +370,7 @@
       "delete" : false
     } ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -399,6 +400,7 @@
       "delete" : false
     } ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -440,6 +442,7 @@
       "delete" : false
     } ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -455,75 +458,6 @@
       "regular_expression" : null,
       "fixed_list_items" : [ ],
       "complex_fields" : [ {
-        "metadata" : false,
-        "id" : "AddressLine1",
-        "case_type_id" : null,
-        "label" : "Address Line 1",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
-        "hidden" : null,
-        "security_classification" : "RESTRICTED",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "complexACLs" : [ ],
-        "show_condition" : null
-      }, {
-        "metadata" : false,
-        "id" : "AddressLine2",
-        "case_type_id" : null,
-        "label" : "Address Line 2",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
-        "hidden" : null,
-        "security_classification" : "PRIVATE",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "complexACLs" : [ ],
-        "show_condition" : null
-      }, {
-        "metadata" : false,
-        "id" : "AddressLine3",
-        "case_type_id" : null,
-        "label" : "Address Line 3",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
-        "hidden" : null,
-        "security_classification" : "PRIVATE",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "complexACLs" : [ ],
-        "show_condition" : null
-      }, {
         "metadata" : false,
         "id" : "Country",
         "case_type_id" : null,
@@ -545,6 +479,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : 1,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -568,7 +503,80 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : 2,
         "show_condition" : "Country=\"Italy\""
+      }, {
+        "metadata" : false,
+        "id" : "AddressLine1",
+        "case_type_id" : null,
+        "label" : "Address Line 1",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "RESTRICTED",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "complexACLs" : [ ],
+        "order" : 3,
+        "show_condition" : null
+      }, {
+        "metadata" : false,
+        "id" : "AddressLine2",
+        "case_type_id" : null,
+        "label" : "Address Line 2",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PRIVATE",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "complexACLs" : [ ],
+        "order" : 4,
+        "show_condition" : null
+      }, {
+        "metadata" : false,
+        "id" : "AddressLine3",
+        "case_type_id" : null,
+        "label" : "Address Line 3",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PRIVATE",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "complexACLs" : [ ],
+        "order" : 5,
+        "show_condition" : null
       } ],
       "collection_field_type" : null
     },
@@ -631,6 +639,7 @@
       "delete" : false,
       "listElementCode" : "Postcode"
     } ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -660,6 +669,7 @@
       "delete" : false
     } ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -675,75 +685,6 @@
       "regular_expression" : null,
       "fixed_list_items" : [ ],
       "complex_fields" : [ {
-        "metadata" : false,
-        "id" : "AddressLine1",
-        "case_type_id" : null,
-        "label" : "Address Line 1",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
-        "hidden" : null,
-        "security_classification" : "RESTRICTED",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "complexACLs" : [ ],
-        "show_condition" : null
-      }, {
-        "metadata" : false,
-        "id" : "AddressLine2",
-        "case_type_id" : null,
-        "label" : "Address Line 2",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
-        "hidden" : null,
-        "security_classification" : "PRIVATE",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "complexACLs" : [ ],
-        "show_condition" : null
-      }, {
-        "metadata" : false,
-        "id" : "AddressLine3",
-        "case_type_id" : null,
-        "label" : "Address Line 3",
-        "hint_text" : null,
-        "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
-        "hidden" : null,
-        "security_classification" : "PRIVATE",
-        "live_from" : null,
-        "live_until" : null,
-        "acls" : null,
-        "complexACLs" : [ ],
-        "show_condition" : null
-      }, {
         "metadata" : false,
         "id" : "Country",
         "case_type_id" : null,
@@ -765,6 +706,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : 1,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -788,7 +730,80 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : 2,
         "show_condition" : "Country=\"Italy\""
+      }, {
+        "metadata" : false,
+        "id" : "AddressLine1",
+        "case_type_id" : null,
+        "label" : "Address Line 1",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "RESTRICTED",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "complexACLs" : [ ],
+        "order" : 3,
+        "show_condition" : null
+      }, {
+        "metadata" : false,
+        "id" : "AddressLine2",
+        "case_type_id" : null,
+        "label" : "Address Line 2",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PRIVATE",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "complexACLs" : [ ],
+        "order" : 4,
+        "show_condition" : null
+      }, {
+        "metadata" : false,
+        "id" : "AddressLine3",
+        "case_type_id" : null,
+        "label" : "Address Line 3",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "Text",
+          "type" : "Text",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
+        "hidden" : null,
+        "security_classification" : "PRIVATE",
+        "live_from" : null,
+        "live_until" : null,
+        "acls" : null,
+        "complexACLs" : [ ],
+        "order" : 5,
+        "show_condition" : null
       } ],
       "collection_field_type" : null
     },
@@ -810,6 +825,7 @@
       "delete" : false
     } ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -833,6 +849,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -869,6 +886,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -892,6 +910,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -915,6 +934,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -938,6 +958,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -961,6 +982,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -984,6 +1006,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1007,6 +1030,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       } ],
       "collection_field_type" : null
@@ -1017,6 +1041,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -1053,6 +1078,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1076,6 +1102,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1099,6 +1126,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1122,6 +1150,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1145,6 +1174,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1168,6 +1198,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1191,6 +1222,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       } ],
       "collection_field_type" : null
@@ -1201,6 +1233,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -1237,6 +1270,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1260,6 +1294,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1283,6 +1318,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1306,6 +1342,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1329,6 +1366,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1352,6 +1390,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1375,6 +1414,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       } ],
       "collection_field_type" : null
@@ -1385,6 +1425,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -1421,6 +1462,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1444,6 +1486,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       }, {
         "metadata" : false,
@@ -1488,6 +1531,7 @@
               "live_until" : null,
               "acls" : null,
               "complexACLs" : [ ],
+              "order" : null,
               "show_condition" : null
             }, {
               "metadata" : false,
@@ -1511,6 +1555,7 @@
               "live_until" : null,
               "acls" : null,
               "complexACLs" : [ ],
+              "order" : null,
               "show_condition" : null
             }, {
               "metadata" : false,
@@ -1534,6 +1579,7 @@
               "live_until" : null,
               "acls" : null,
               "complexACLs" : [ ],
+              "order" : null,
               "show_condition" : null
             }, {
               "metadata" : false,
@@ -1557,6 +1603,7 @@
               "live_until" : null,
               "acls" : null,
               "complexACLs" : [ ],
+              "order" : null,
               "show_condition" : null
             } ],
             "collection_field_type" : null
@@ -1568,6 +1615,7 @@
         "live_until" : null,
         "acls" : null,
         "complexACLs" : [ ],
+        "order" : null,
         "show_condition" : null
       } ],
       "collection_field_type" : null
@@ -1584,6 +1632,7 @@
       "delete" : false
     } ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -1613,6 +1662,7 @@
       "delete" : false
     } ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -1642,6 +1692,7 @@
       "delete" : false
     } ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -1686,6 +1737,7 @@
           "live_until" : null,
           "acls" : null,
           "complexACLs" : [ ],
+          "order" : null,
           "show_condition" : null
         }, {
           "metadata" : false,
@@ -1709,6 +1761,7 @@
           "live_until" : null,
           "acls" : null,
           "complexACLs" : [ ],
+          "order" : null,
           "show_condition" : null
         }, {
           "metadata" : false,
@@ -1732,6 +1785,7 @@
           "live_until" : null,
           "acls" : null,
           "complexACLs" : [ ],
+          "order" : null,
           "show_condition" : null
         }, {
           "metadata" : false,
@@ -1755,6 +1809,7 @@
           "live_until" : null,
           "acls" : null,
           "complexACLs" : [ ],
+          "order" : null,
           "show_condition" : null
         }, {
           "metadata" : false,
@@ -1778,6 +1833,7 @@
           "live_until" : null,
           "acls" : null,
           "complexACLs" : [ ],
+          "order" : null,
           "show_condition" : null
         }, {
           "metadata" : false,
@@ -1801,6 +1857,7 @@
           "live_until" : null,
           "acls" : null,
           "complexACLs" : [ ],
+          "order" : null,
           "show_condition" : null
         } ],
         "collection_field_type" : null
@@ -1812,8 +1869,9 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
-  },{
+  }, {
     "metadata" : false,
     "id" : "dynamicListWithoutFTP",
     "case_type_id" : "TestAddressBookCase",
@@ -1835,6 +1893,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : false,
@@ -1858,6 +1917,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : true,
@@ -1893,6 +1953,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : true,
@@ -1916,6 +1977,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : true,
@@ -1939,6 +2001,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : true,
@@ -1962,6 +2025,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : true,
@@ -1985,6 +2049,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : true,
@@ -2008,6 +2073,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   }, {
     "metadata" : true,
@@ -2031,6 +2097,7 @@
     "live_until" : null,
     "acls" : [ ],
     "complexACLs" : [ ],
+    "order" : null,
     "show_condition" : null
   } ],
   "printable_document_url" : null,
