@@ -11,3 +11,4 @@ database_max_pool_size = "32"
 
 elastic_search_enabled = "true"
 elastic_search_fail_on_import = "true"
+enable_ase = true
