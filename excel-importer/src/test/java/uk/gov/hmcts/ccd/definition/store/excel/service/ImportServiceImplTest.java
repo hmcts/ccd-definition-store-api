@@ -260,8 +260,49 @@ public class ImportServiceImplTest {
         service.importFormDefinitions(inputStream);
     }
 
+    @Test(expected = MissingUserRolesException.class)
+    public void importDefinitionThrowsMissingUserRole() throws Exception {
+
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
+            multiSelectBaseType,
+            complexType,
+            textBaseType,
+            numberBaseType,
+            emailBaseType,
+            yesNoBaseType,
+            dateBaseType,
+            dateTimeBaseType,
+            postCodeBaseType,
+            moneyGBPBaseType,
+            phoneUKBaseType,
+            textAreaBaseType,
+            collectionBaseType,
+            documentBaseType,
+            labelBaseType,
+            casePaymentHistoryViewerBaseType,
+            caseHistoryViewerBaseType,
+            fixedListRadioTypeBaseType,
+            dynamicListBaseType));
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+        doThrow(MissingUserRolesException.class)
+            .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
+
+        service.importFormDefinitions(inputStream);
+    }
+
     @Test
-    public void importDefinition() throws Exception {
+    public void shouldImportDefinition() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
