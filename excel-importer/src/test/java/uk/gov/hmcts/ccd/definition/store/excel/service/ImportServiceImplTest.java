@@ -261,7 +261,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void importDefinition() throws Exception {
+    public void shouldImportDefinition() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
