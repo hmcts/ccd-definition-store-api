@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.banner;
 
 import com.google.common.collect.Lists;
 import java.util.List;
-import java.util.Optional;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
