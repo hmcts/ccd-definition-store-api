@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.1.4.RELEASE'
+        springBootVersion = '2.2.4.RELEASE'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
