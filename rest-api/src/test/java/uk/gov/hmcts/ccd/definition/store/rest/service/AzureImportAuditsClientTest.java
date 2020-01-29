@@ -1,5 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+import com.microsoft.azure.storage.ResultSegment;
+import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.BlobProperties;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
@@ -9,16 +17,14 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -27,6 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class, BlobProperties.class})
 public class AzureImportAuditsClientTest {
 
+    public static final int IMPORT_AUDITS_GET_LIMIT = 20;
     private AzureImportAuditsClient subject;
 
     private CloudBlockBlob b1;
@@ -37,18 +44,30 @@ public class AzureImportAuditsClientTest {
 
     private BlobProperties p2;
 
+    private ResultSegment blobsPage;
+
     @Before
-    public void setUp() {
+    public void setUp() throws StorageException {
         final CloudBlobContainer cloudBlobContainer = mock(CloudBlobContainer.class);
+        final ApplicationParams applicationParams = mock(ApplicationParams.class);
         b1 = mock(CloudBlockBlob.class);
         b2 = mock(CloudBlockBlob.class);
         p1 = mock(BlobProperties.class);
         p2 = mock(BlobProperties.class);
+        blobsPage = mock(ResultSegment.class);
 
         MockitoAnnotations.initMocks(this);
 
-        subject = new AzureImportAuditsClient(cloudBlobContainer);
-        when(cloudBlobContainer.listBlobs()).thenReturn(asList(b1, b2));
+        when(applicationParams.getAzureImportAuditsGetLimit()).thenReturn(IMPORT_AUDITS_GET_LIMIT);
+        subject = new AzureImportAuditsClient(cloudBlobContainer, applicationParams);
+        when(cloudBlobContainer.listBlobsSegmented(eq(null),
+                                                   eq(true),
+                                                   any(EnumSet.class),
+                                                   eq(IMPORT_AUDITS_GET_LIMIT),
+                                                   eq(null),
+                                                   eq(null),
+                                                   eq(null))).thenReturn(blobsPage);
+        when(blobsPage.getResults()).thenReturn(Lists.newArrayList(b1, b2));
         when(b1.getProperties()).thenReturn(p1);
         when(b2.getProperties()).thenReturn(p2);
 
@@ -69,7 +88,7 @@ public class AzureImportAuditsClientTest {
 
     @Test
     public void shouldFetchAllImportAudits() throws Exception {
-        final List<ImportAudit> audits = subject.fetchAllImportAudits();
+        final List<ImportAudit> audits = subject.fetchImportAudits();
         assertThat(audits.size(), is(2));
         assertThat(audits.get(0).getFilename(), is("b2"));
         assertThat(audits.get(1).getFilename(), is("b1"));

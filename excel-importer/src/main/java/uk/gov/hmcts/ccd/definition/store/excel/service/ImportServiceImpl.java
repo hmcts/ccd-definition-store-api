@@ -1,6 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +13,13 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
@@ -24,9 +30,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
@@ -36,11 +44,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
 @Component
 public class ImportServiceImpl implements ImportService {
@@ -59,6 +62,7 @@ public class ImportServiceImpl implements ImportService {
     private final CaseFieldRepository caseFieldRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final IdamProfileClient idamProfileClient;
+    private final BannerService bannerService;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -72,7 +76,8 @@ public class ImportServiceImpl implements ImportService {
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
                              ApplicationEventPublisher applicationEventPublisher,
-                             IdamProfileClient idamProfileClient) {
+                             IdamProfileClient idamProfileClient,
+                             BannerService bannerService) {
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
         this.parserFactory = parserFactory;
@@ -85,6 +90,7 @@ public class ImportServiceImpl implements ImportService {
         this.caseFieldRepository = caseFieldRepository;
         this.idamProfileClient = idamProfileClient;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.bannerService = bannerService;
     }
 
     /**
@@ -120,6 +126,14 @@ public class ImportServiceImpl implements ImportService {
 
         logger.info("Importing spreadsheet: Jurisdiction {} : OK ", jurisdiction.getReference());
 
+        if (definitionSheets.get(SheetName.BANNER.getName()) != null) {
+            logger.debug("Importing spreadsheet: Banner...");
+            final BannerParser bannerParser = parserFactory.createBannerParser(parseContext);
+            BannerEntity bannerEntity = bannerParser.parse(definitionSheets);
+            importBanner(bannerEntity);
+            logger.debug("Importing spreadsheet: Banner...: OK");
+        }
+
         /*
             2 - Field types
          */
@@ -152,7 +166,9 @@ public class ImportServiceImpl implements ImportService {
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
         List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
-        caseTypeService.createAll(jurisdiction, caseTypes); // runs validation
+        caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingUserRoles()); // runs validation
+
+        logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 
         logger.info("Importing spreadsheet: Case types: OK: {} case types imported",
                     caseTypes.size());
@@ -230,5 +246,9 @@ public class ImportServiceImpl implements ImportService {
             jurisdictionService.create(jurisdiction);
             return jurisdiction;
         });
+    }
+
+    private void importBanner(BannerEntity bannerEntity) {
+        bannerService.save(bannerEntity);
     }
 }

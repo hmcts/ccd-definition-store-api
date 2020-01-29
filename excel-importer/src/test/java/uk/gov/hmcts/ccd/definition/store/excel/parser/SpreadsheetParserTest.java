@@ -35,14 +35,14 @@ public class SpreadsheetParserTest {
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(ImportServiceImplTest.BAD_FILE);
 
         final Map<String, DefinitionSheet> map = spreadsheetParser.parse(inputStream);
-        assertThat(map.size(), is(17));
+        assertThat(map.size(), is(18));
 
         assertThat(map.keySet(), containsInAnyOrder("SearchInputFields", "UserProfile", "CaseField",
             "ComplexTypes", "WorkBasketResultFields", "CaseTypeTab",
             "FixedLists", "CaseEvent", "Jurisdiction",
             "SearchResultFields", "AuthorisationCaseField", "CaseType", "State",
             "AuthorisationCaseType", "AuthorisationComplexType",
-            "AuthorisationCaseEvent", "CaseEventFieldRestriction"
+            "AuthorisationCaseEvent", "CaseEventFieldRestriction", "Banner"
         ));
 
         final List<String> importWarnings = spreadsheetParser.getImportWarnings();

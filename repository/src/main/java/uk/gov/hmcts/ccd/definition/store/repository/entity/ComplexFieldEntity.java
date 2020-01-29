@@ -52,6 +52,9 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     @Column(name = "show_condition")
     private String showCondition;
 
+    @Column(name = "display_order")
+    private Integer order;
+
     @Override
     public String getReference() {
         return reference;
@@ -122,5 +125,13 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     public String getShowCondition() {
         return showCondition;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 }

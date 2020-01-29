@@ -118,8 +118,6 @@ class DisplayGroupAdapterServiceTest {
                 wizardPage.getWizardPageFields().get(0).getOrder());
             assertEquals(displayGroupEntity.getDisplayGroupCaseFields().get(0).getColumnNumber(),
                 wizardPage.getWizardPageFields().get(0).getPageColumnNumber());
-            assertEquals(DisplayContext.MANDATORY.toString(),
-                wizardPage.getWizardPageFields().get(0).getDisplayContext());
         }
 
         @Test
@@ -192,13 +190,11 @@ class DisplayGroupAdapterServiceTest {
 
             WizardPage wizardPage = wizardPagesByCaseTypeId.getWizardPages().get(0);
 
-            assertThat(findWizardPageField(wizardPage, "finalReturn").getDisplayContext(), is("COMPLEX"));
             assertThat(findWizardPageField(wizardPage, "finalReturn").getOrder(), is(77));
             assertThat(findWizardPageField(wizardPage, "finalReturn").getPageColumnNumber(), is(66));
 
             assertThat(findWizardPageComplexFieldOverrides(wizardPage, "finalReturn").size(), is(10));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getDisplayContext(), is("READONLY"));
-            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getOrder(), is(3));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(), is("Bailiff Name"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(), is("Hint text override"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",

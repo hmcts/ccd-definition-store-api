@@ -1,15 +1,27 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.*;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toMap;
-
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.map.MultiKeyMap;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Accumulate everything that has been parsed so far and which is required for a subsequent parse stage. This is not meant
@@ -56,6 +68,11 @@ public class ParseContext {
      * Store metadata fields for linking to layouts
      */
     private final Map<String, CaseFieldEntity> metadataFields = new HashMap<>();
+
+    /**
+     * Missing User Roles.
+     */
+    private final Set<String> missingUserRoles = new HashSet<>();
 
     public JurisdictionEntity getJurisdiction() {
         return jurisdiction;
@@ -284,5 +301,13 @@ public class ParseContext {
         metadataFields.putAll(fields.stream()
                                   .filter(Objects::nonNull)
                                   .collect(toMap(CaseFieldEntity::getReference, Function.identity())));
+    }
+
+    public Set<String> getMissingUserRoles() {
+        return missingUserRoles;
+    }
+
+    public void addMissingUserRole(String missingUserRole) {
+        this.missingUserRoles.add(missingUserRole);
     }
 }

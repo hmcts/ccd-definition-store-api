@@ -105,6 +105,7 @@ module "case-definition-store-api" {
   capacity = "${var.capacity}"
   java_container_version = "9.0"
   appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
+  enable_ase                      = "${var.enable_ase}"
 
   app_settings = {
     DEFINITION_STORE_DB_HOST = "${module.definition-store-db.host_name}"
@@ -129,6 +130,7 @@ module "case-definition-store-api" {
     AZURE_STORAGE_CONNECTION_STRING = "${data.azurerm_key_vault_secret.storageaccount_primary_connection_string.value}"
     AZURE_STORAGE_BLOB_CONTAINER_REFERENCE = "${azurerm_storage_container.imports_container.name}"
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED = "true"
+    AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT = "20"
 
     ELASTIC_SEARCH_HOST = "${local.elastic_search_host}"
     ELASTIC_SEARCH_PASSWORD = "${local.elastic_search_password}"
