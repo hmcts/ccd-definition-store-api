@@ -1,10 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import static java.util.stream.Collectors.groupingBy;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
+
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -12,14 +17,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import static java.util.stream.Collectors.groupingBy;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 
 interface AuthorisationParser {
 
