@@ -448,3 +448,8 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
             "${buildDir}/reports/jacoco/jacocoTestReport.xml"
     ]
 }
+
+cucumberReports {
+    outputDir = file("${projectDir}/target/cucumber")
+    reports = files("${projectDir}/target/cucumber.json")
+}
