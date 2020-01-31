@@ -10,12 +10,12 @@ dependencies {
 sourceSets {
     aat {
         java {
-            srcDir('aat/src/aat/java')
+            srcDir('src/aat/java')
             compileClasspath += main.output
             runtimeClasspath += main.output
         }
         resources {
-            srcDir('aat/src/aat/resources')
+            srcDir('src/aat/resources')
         }
     }
 }
