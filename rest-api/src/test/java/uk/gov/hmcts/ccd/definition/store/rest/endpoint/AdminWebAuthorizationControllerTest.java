@@ -94,7 +94,7 @@ class AdminWebAuthorizationControllerTest {
     private AdminWebAuthorization callApi() throws Exception {
         final MvcResult
             mvcResult = mockMvc.perform(get("/api/idam/adminweb/authorization")).andExpect(status().isOk()).andReturn();
-        assertThat(mvcResult.getResponse().getContentType(), is("application/json;charset=UTF-8"));
+        assertThat(mvcResult.getResponse().getContentType(), is("application/json"));
         final AdminWebAuthorization
             response =
             MAPPER.readValue(mvcResult.getResponse().getContentAsString(), AdminWebAuthorization.class);
