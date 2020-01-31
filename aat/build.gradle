@@ -67,7 +67,7 @@ task functional(type: Test) {
             args = ['--plugin', "json:${projectDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
                     'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
         }
-        generateCucumberReports.enabled = true
+        generateCucumberReports.enabled = false
     }
 }
 
