@@ -1482,4 +1482,39 @@ class EntityToResponseDTOMapperTest {
         };
     }
 
+    @Nested
+    @DisplayName("Should return `a Banner which matches the BannerEntity")
+    class MapBannerEntityTests {
+
+        @Test
+        void testMapBannerEntity() {
+
+            BannerEntity bannerEntity = new BannerEntity();
+            bannerEntity.setBannerUrlText("Click here to see it.>>>");
+            bannerEntity.setBannerEnabled(true);
+            bannerEntity.setBannerUrl("http://localhost:3451/test");
+            bannerEntity.setBannerDescription("Test Description");
+
+            Banner banner = classUnderTest.map(bannerEntity);
+
+            assertEquals(bannerEntity.getBannerDescription(), banner.getBannerDescription());
+            assertEquals(bannerEntity.getBannerEnabled(), banner.getBannerEnabled());
+            assertEquals(bannerEntity.getBannerUrl(), banner.getBannerUrl());
+            assertEquals(bannerEntity.getBannerUrlText(), banner.getBannerUrlText());
+        }
+
+        @Test
+        void testMapEmptyBannerEntity() {
+
+            BannerEntity bannerEntity = new BannerEntity();
+
+            Banner banner = classUnderTest.map(bannerEntity);
+
+            assertNull(banner.getBannerDescription());
+            assertNull(banner.getBannerEnabled());
+            assertNull(banner.getBannerUrl());
+            assertNull(banner.getBannerUrlText());
+        }
+    }
+
 }
