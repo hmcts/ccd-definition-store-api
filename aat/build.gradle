@@ -56,6 +56,8 @@ task functional(type: Test) {
     setClasspath(sourceSets.aat.runtimeClasspath)
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
     useJUnitPlatform()
+    
+    generateCucumberReports.enabled = false
 
     doFirst {
         generateCucumberReports.enabled = true
@@ -67,8 +69,6 @@ task functional(type: Test) {
         }
     }
 }
-
-check.dependsOn.remove("generateCucumberReports")
 
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
