@@ -74,10 +74,10 @@ withPipeline(type, product, app) {
     installCharts()
 
     after('functionalTest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/aat/target/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
     }
 
     after('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/aat/target/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
     }
 }

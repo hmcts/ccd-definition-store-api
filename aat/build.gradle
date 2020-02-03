@@ -65,15 +65,15 @@ task functional(type: Test) {
         javaexec {
             main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
             classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', "json:${projectDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
+            args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
                     'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
         }
     }
 }
 
 cucumberReports {
-    outputDir = file("${projectDir}/target/cucumber")
-    reports = files("${projectDir}/target/cucumber.json")
+    outputDir = file("${rootDir}/target/cucumber")
+    reports = files("${rootDir}/target/cucumber.json")
 }
 
 bootJar {
