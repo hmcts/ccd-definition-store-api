@@ -24,40 +24,42 @@
     }
   },
   "expectedResponse": {
-    "responseCode": 200,
-    "responseMessage": "OK",
-    "headers" : {
-      "Content-Length" : "[[ANY]]",
-      "Content-Type" : "application/vnd.spring-boot.actuator.v2+json;charset=UTF-8",
-      "Date" : "[[ANY]]",
-      "Request-Context" : "[[ANY]]",
-      "Vary" : "Accept-Encoding"
-    },
-    "body" : {
-      "status" : "UP",
-      "details" : {
-        "diskSpace" : {
-          "status" : "UP",
-          "details" : {
-            "total" : "[[ANY]]",
-            "free" : "[[ANY]]",
-            "threshold" : "[[ANY]]"
+      "responseCode" : 200,
+      "responseMessage" : "OK",
+      "headers" : {
+        "Content-Length" : "[[ANY]]",
+        "Content-Type" : "application/vnd.spring-boot.actuator.v2+json;charset=UTF-8",
+        "Date" : "[[ANY]]",
+        "Vary" : "Accept-Encoding"
+      },
+      "body" : {
+        "status" : "UP",
+        "details" : {
+          "diskSpace" : {
+            "status" : "UP",
+            "details" : {
+              "total" : "[[ANY]]",
+              "free" : "[[ANY]]",
+              "threshold" : "[[ANY]]"
+            }
+          },
+          "db" : {
+            "status" : "UP",
+            "details" : {
+              "database" : "PostgreSQL",
+              "hello" : 1
+            }
+          },
+          "liveness" : {
+            "status" : "UP"
+          },
+          "refreshScope" : {
+            "status" : "UP"
+          },
+          "uk.gov.hmcts.reform.authorisation.healthcheck.ServiceAuth" : {
+            "status" : "UP"
           }
-        },
-        "db" : {
-          "status" : "UP",
-          "details" : {
-            "database" : "PostgreSQL",
-            "hello" : 1
-          }
-        },
-        "liveness" : {
-          "status" : "UP"
-        },
-        "refreshScope" : {
-          "status" : "UP"
         }
       }
-    }
   }
 }
