@@ -43,7 +43,6 @@ public class AzureImportAuditsClient {
     private static final BlobRequestOptions NO_OPTIONS = null;
     private static final OperationContext NO_OP_CONTEXT = null;
     private static final EnumSet<BlobListingDetails> ONLY_COMMITTED_BLOBS = EnumSet.noneOf(BlobListingDetails.class);
-    private static final Integer DAY = 1;
 
     private final CloudBlobContainer cloudBlobContainer;
     private final ApplicationParams applicationParams;
@@ -75,9 +74,8 @@ public class AzureImportAuditsClient {
                                                                                           NO_CONTINUATION_TOKEN,
                                                                                           NO_OPTIONS,
                                                                                           NO_OP_CONTEXT);
-            localDateTime = localDateTime.minus(DAY, ChronoUnit.DAYS);
+            localDateTime = localDateTime.minus(1, ChronoUnit.DAYS);
             List<ImportAudit> auditsLastBatch = populateListOfAuditsUpToGivenLimit(audits, azureImportAuditsGetLimit, blobsPage);
-//            Collections.reverse(auditsLastBatch);
             audits.addAll(auditsLastBatch);
         }
         sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
