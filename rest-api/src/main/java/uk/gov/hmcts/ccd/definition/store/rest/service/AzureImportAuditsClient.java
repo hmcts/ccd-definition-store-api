@@ -6,11 +6,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 import com.microsoft.azure.storage.OperationContext;
@@ -70,22 +70,23 @@ public class AzureImportAuditsClient {
             ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(currentDateTime,
                                                                                           FLAT_BLOB_LISTING,
                                                                                           ONLY_COMMITTED_BLOBS,
-                                                                                          azureImportAuditsGetLimit,
+                                                                                          Integer.MAX_VALUE,
                                                                                           NO_CONTINUATION_TOKEN,
                                                                                           NO_OPTIONS,
                                                                                           NO_OP_CONTEXT);
             localDateTime = localDateTime.minus(1, ChronoUnit.DAYS);
-            List<ImportAudit> auditsLastBatch = populateListOfAuditsUpToGivenLimit(audits, azureImportAuditsGetLimit, blobsPage);
+            List<ImportAudit> auditsLastBatch = populateListOfAudits(blobsPage);
+
             audits.addAll(auditsLastBatch);
         }
         sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
-        return audits;
+        return audits.stream().limit(azureImportAuditsGetLimit).collect(Collectors.toList());
     }
 
-    private List<ImportAudit> populateListOfAuditsUpToGivenLimit(List<ImportAudit> audits, Integer azureImportAuditsGetLimit, ResultSegment<ListBlobItem> blobsPage) throws StorageException {
+    private List<ImportAudit> populateListOfAudits(ResultSegment<ListBlobItem> blobsPage) throws StorageException {
         List<ImportAudit> auditsLastBatch = Lists.newArrayList();
         for (ListBlobItem lbi : blobsPage.getResults()) {
-            if (lbi instanceof CloudBlockBlob && isTotalLimitNotReached(audits, azureImportAuditsGetLimit, auditsLastBatch)) {
+            if (lbi instanceof CloudBlockBlob) {
                 final CloudBlockBlob cbb = (CloudBlockBlob) lbi;
                 cbb.downloadAttributes();
                 final ImportAudit audit = new ImportAudit();
@@ -105,10 +106,6 @@ public class AzureImportAuditsClient {
             }
         }
         return auditsLastBatch;
-    }
-
-    private boolean isTotalLimitNotReached(List<ImportAudit> audits, Integer azureImportAuditsGetLimit, List<ImportAudit> auditsLastBatch) {
-        return (audits.size() + auditsLastBatch.size()) < azureImportAuditsGetLimit;
     }
 
 }
