@@ -1,13 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
 import com.microsoft.azure.storage.OperationContext;
 import com.microsoft.azure.storage.ResultContinuation;
 import com.microsoft.azure.storage.ResultSegment;
@@ -32,7 +37,7 @@ public class AzureImportAuditsClient {
 
     public static final String USER_ID = "UserID";
     public static final String CASE_TYPES = "CaseTypes";
-    private static final String NO_PREFIX = null;
+    private static final String DATE_PATTERN = "yyyyMMdd";
     private static final boolean FLAT_BLOB_LISTING = true;
     private static final ResultContinuation NO_CONTINUATION_TOKEN = null;
     private static final BlobRequestOptions NO_OPTIONS = null;
@@ -54,16 +59,32 @@ public class AzureImportAuditsClient {
      * @return import audits in reverse chronological order based on AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT
      * @throws StorageException Exception thrown when trying to connect to Azure Blob store
      */
-    public List<ImportAudit> fetchImportAudits() throws StorageException {
+    public List<ImportAudit> fetchLatestImportAudits() throws StorageException {
         List<ImportAudit> audits = new ArrayList<>();
-        ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(NO_PREFIX,
-                                                                                      FLAT_BLOB_LISTING,
-                                                                                      ONLY_COMMITTED_BLOBS,
-                                                                                      applicationParams.getAzureImportAuditsGetLimit(),
-                                                                                      NO_CONTINUATION_TOKEN,
-                                                                                      NO_OPTIONS,
-                                                                                      NO_OP_CONTEXT);
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+        String currentDateTime;
+        Integer azureImportAuditsGetLimit = applicationParams.getAzureImportAuditsGetLimit();
 
+        while (audits.size() < azureImportAuditsGetLimit) {
+            currentDateTime = localDateTime.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
+            ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(currentDateTime,
+                                                                                          FLAT_BLOB_LISTING,
+                                                                                          ONLY_COMMITTED_BLOBS,
+                                                                                          Integer.MAX_VALUE,
+                                                                                          NO_CONTINUATION_TOKEN,
+                                                                                          NO_OPTIONS,
+                                                                                          NO_OP_CONTEXT);
+            localDateTime = localDateTime.minus(1, ChronoUnit.DAYS);
+            List<ImportAudit> auditsLastBatch = populateListOfAudits(blobsPage);
+
+            audits.addAll(auditsLastBatch);
+        }
+        sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
+        return audits.stream().limit(azureImportAuditsGetLimit).collect(Collectors.toList());
+    }
+
+    private List<ImportAudit> populateListOfAudits(ResultSegment<ListBlobItem> blobsPage) throws StorageException {
+        List<ImportAudit> auditsLastBatch = Lists.newArrayList();
         for (ListBlobItem lbi : blobsPage.getResults()) {
             if (lbi instanceof CloudBlockBlob) {
                 final CloudBlockBlob cbb = (CloudBlockBlob) lbi;
@@ -78,12 +99,13 @@ public class AzureImportAuditsClient {
                 audit.setWhoImported(metadata.get(USER_ID));
                 audit.setCaseType(metadata.get(CASE_TYPES));
                 audit.setFilename(cbb.getName());
+
                 audit.setUri(cbb.getUri());
                 audit.setOrder(createdTime);
-                audits.add(audit);
+                auditsLastBatch.add(audit);
             }
         }
-        sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
-        return audits;
+        return auditsLastBatch;
     }
+
 }
