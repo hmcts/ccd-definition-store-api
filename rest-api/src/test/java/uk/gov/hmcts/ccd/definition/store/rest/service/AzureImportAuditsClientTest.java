@@ -84,7 +84,7 @@ public class AzureImportAuditsClientTest {
         when(cloudBlobContainer.listBlobsSegmented(anyString(),
                                                    eq(true),
                                                    any(EnumSet.class),
-                                                   eq(IMPORT_AUDITS_GET_LIMIT),
+                                                   eq(Integer.MAX_VALUE),
                                                    eq(null),
                                                    eq(null),
                                                    eq(null)))
@@ -122,35 +122,32 @@ public class AzureImportAuditsClientTest {
             when(propsAfter.getCreatedTime()).thenReturn(secondDate);
             assertTrue(secondDate.after(firstDate));
         }
-
     }
 
     @Test
     public void shouldFetchAllImportAuditsInCorrectDescOrder() throws Exception {
         final List<ImportAudit> audits = subject.fetchLatestImportAudits();
         assertThat(audits.size(), is(5));
-        assertThat(audits.get(0).getFilename(), is("b31"));
-        assertThat(audits.get(1).getFilename(), is("b22"));
-        assertThat(audits.get(2).getFilename(), is("b21"));
-        assertThat(audits.get(3).getFilename(), is("b12"));
-        assertThat(audits.get(4).getFilename(), is("b11"));
+        assertThat(audits.get(0).getFilename(), is("b32"));
+        assertThat(audits.get(1).getFilename(), is("b31"));
+        assertThat(audits.get(2).getFilename(), is("b22"));
+        assertThat(audits.get(3).getFilename(), is("b21"));
+        assertThat(audits.get(4).getFilename(), is("b12"));
 
-        verifyCloudBlockBlobBehaviour(b11, p11, 1);
-        verifyCloudBlockBlobBehaviour(b12, p12, 1);
-        verifyCloudBlockBlobBehaviour(b21, p21, 1);
-        verifyCloudBlockBlobBehaviour(b22, p22, 1);
-        verifyCloudBlockBlobBehaviour(b31, p31, 1);
-        verifyCloudBlockBlobBehaviour(b31, p31, 1);
-
-        verifyCloudBlockBlobBehaviour(b32, p32, 0);
+        verifyCloudBlockBlobBehaviour(b32, p32);
+        verifyCloudBlockBlobBehaviour(b31, p31);
+        verifyCloudBlockBlobBehaviour(b22, p22);
+        verifyCloudBlockBlobBehaviour(b21, p21);
+        verifyCloudBlockBlobBehaviour(b12, p12);
+        verifyCloudBlockBlobBehaviour(b11, p11);
     }
 
-    private void verifyCloudBlockBlobBehaviour(CloudBlockBlob blob, BlobProperties properties, int times) throws Exception {
-        verify(blob, times(times)).downloadAttributes();
-        verify(blob, times(times)).getProperties();
-        verify(blob, times(times)).getMetadata();
-        verify(blob, times(times)).getName();
-        verify(blob, times(times)).getUri();
-        verify(properties, times(times)).getCreatedTime();
+    private void verifyCloudBlockBlobBehaviour(CloudBlockBlob blob, BlobProperties properties) throws Exception {
+        verify(blob).downloadAttributes();
+        verify(blob).getProperties();
+        verify(blob).getMetadata();
+        verify(blob).getName();
+        verify(blob).getUri();
+        verify(properties).getCreatedTime();
     }
 }
