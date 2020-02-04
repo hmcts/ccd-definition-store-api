@@ -87,7 +87,7 @@ public class AzureImportAuditsClientTest {
     }
 
     @Test
-    public void shouldFetchAllImportAudits() throws Exception {
+    public void shouldFetchAllImportAuditsInCorrectDescOrder() throws Exception {
         final List<ImportAudit> audits = subject.fetchImportAudits();
         assertThat(audits.size(), is(2));
         assertThat(audits.get(0).getFilename(), is("b2"));
