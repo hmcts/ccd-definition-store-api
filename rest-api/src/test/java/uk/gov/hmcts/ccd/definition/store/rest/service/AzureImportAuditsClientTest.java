@@ -27,7 +27,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -113,9 +112,9 @@ public class AzureImportAuditsClientTest {
 
         final Date currentDate = new Date();
         ArrayList<BlobProperties> blobProperties = newArrayList(p11, p12, p21, p22, p31, p32);
-        for (int i = 0, millisec = 0; i < blobProperties.size(); i+=2, millisec+=2000) {
+        for (int i = 0, millisec = 0; i < blobProperties.size(); i += 2, millisec += 2000) {
             BlobProperties props = blobProperties.get(i);
-            BlobProperties propsAfter = blobProperties.get(i+1);
+            BlobProperties propsAfter = blobProperties.get(i + 1);
             final Date firstDate = new Date(currentDate.getTime() + millisec);
             final Date secondDate = new Date(currentDate.getTime() + millisec + 1000);
             when(props.getCreatedTime()).thenReturn(firstDate);
