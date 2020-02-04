@@ -37,7 +37,7 @@ public class AzureImportAuditsClient {
 
     public static final String USER_ID = "UserID";
     public static final String CASE_TYPES = "CaseTypes";
-    public static final String DATE_PATTERN = "yyyyMMdd";
+    private static final String DATE_PATTERN = "yyyyMMdd";
     private static final boolean FLAT_BLOB_LISTING = true;
     private static final ResultContinuation NO_CONTINUATION_TOKEN = null;
     private static final BlobRequestOptions NO_OPTIONS = null;

@@ -5,10 +5,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
 import com.microsoft.azure.storage.ResultSegment;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.BlobProperties;
@@ -23,17 +20,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
-import static com.google.common.collect.ImmutableMap.of;
-import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.stream.Collectors.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
