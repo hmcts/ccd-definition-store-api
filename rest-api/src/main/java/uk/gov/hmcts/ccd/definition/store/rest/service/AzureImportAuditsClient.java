@@ -60,7 +60,7 @@ public class AzureImportAuditsClient {
      * @return import audits in reverse chronological order based on AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT
      * @throws StorageException Exception thrown when trying to connect to Azure Blob store
      */
-    public List<ImportAudit> fetchImportAudits() throws StorageException {
+    public List<ImportAudit> fetchLatestImportAudits() throws StorageException {
         List<ImportAudit> audits = new ArrayList<>();
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("UTC"));
         String currentDateTime;
@@ -77,7 +77,7 @@ public class AzureImportAuditsClient {
                                                                                           NO_OP_CONTEXT);
             localDateTime = localDateTime.minus(DAY, ChronoUnit.DAYS);
             List<ImportAudit> auditsLastBatch = populateListOfAuditsUpToGivenLimit(audits, azureImportAuditsGetLimit, blobsPage);
-            Collections.reverse(auditsLastBatch);
+//            Collections.reverse(auditsLastBatch);
             audits.addAll(auditsLastBatch);
         }
         sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
