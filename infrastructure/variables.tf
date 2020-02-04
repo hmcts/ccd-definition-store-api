@@ -160,3 +160,6 @@ variable "ccd_am_read_from_ccd" {
 variable "ccd_am_read_from_am" {
   default = ""
 }
+variable "enable_ase" {
+  default = false
+}

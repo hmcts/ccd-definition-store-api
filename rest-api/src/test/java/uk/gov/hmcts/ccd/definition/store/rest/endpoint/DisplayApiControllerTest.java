@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
@@ -17,10 +18,13 @@ public class DisplayApiControllerTest {
 
     private DisplayService displayService;
 
+    private BannerService bannerService;
+
     @Before
     public void setup() {
         displayService = mock(DisplayService.class);
-        subject = new DisplayApiController(displayService);
+        bannerService = mock(BannerService.class);
+        subject = new DisplayApiController(displayService, bannerService);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
@@ -78,5 +77,9 @@ public class ParserFactory {
 
     public UserProfilesParser createUserProfileParser() {
         return new UserProfilesParser();
+    }
+
+    public BannerParser createBannerParser(ParseContext context) {
+        return new BannerParser(context);
     }
 }
