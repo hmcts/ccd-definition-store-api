@@ -25,7 +25,7 @@
       "Content-Encoding" : "gzip",
       "Content-Length" : "85",
       "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "Wed, 05 Feb 2020 11:17:44 GMT",
+      "Date" : "[[ANY]]",
       "Expires" : "0",
       "Pragma" : "no-cache",
       "Vary" : "accept-encoding",
