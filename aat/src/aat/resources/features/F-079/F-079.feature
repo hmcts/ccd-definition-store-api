@@ -24,7 +24,7 @@ Feature: CCD Definition Store Api :: GET /api/data/case-type/{ctid}
     And the response [contains 401 unauthorised code]
     And the response has all the details as expected
 
-  @S-510 @Ignore
+  @S-510 @Ignore # Response code mismatch, expected: 403, actual: 200
   Scenario: must return 403 when request provides authentic credentials without authorised access to the operation 
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
     When a request is prepared with appropriate values
