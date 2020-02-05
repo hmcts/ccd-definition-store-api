@@ -39,43 +39,7 @@
           "description": null,
           "order": 1,
           "title_display": null,
-          "acls": [
-            {
-              "role": "caseworker-befta_jurisdiction_2",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "citizen",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "caseworker-befta_jurisdiction_2-solicitor_1",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "caseworker-befta_jurisdiction_2-solicitor_2",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "caseworker-befta_jurisdiction_2-solicitor_3",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            }
-          ]
+          "acls": "[[ANY]]"
         },
         {
           "id": "IN_PROGRESS",
@@ -83,43 +47,7 @@
           "description": null,
           "order": 2,
           "title_display": null,
-          "acls": [
-            {
-              "role": "caseworker-befta_jurisdiction_2",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "citizen",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "caseworker-befta_jurisdiction_2-solicitor_1",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "caseworker-befta_jurisdiction_2-solicitor_2",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "caseworker-befta_jurisdiction_2-solicitor_3",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            }
-          ]
+          "acls": "[[ANY]]"
         },
         {
           "id": "DONE",
@@ -127,43 +55,7 @@
           "description": null,
           "order": 3,
           "title_display": null,
-          "acls": [
-            {
-              "role": "caseworker-befta_jurisdiction_2",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "citizen",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "caseworker-befta_jurisdiction_2-solicitor_1",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "caseworker-befta_jurisdiction_2-solicitor_2",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            },
-            {
-              "role": "caseworker-befta_jurisdiction_2-solicitor_3",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": false
-            }
-          ]
+          "acls": "[[ANY]]"
         }
       ],
       "acls": "[[ANY]]",
