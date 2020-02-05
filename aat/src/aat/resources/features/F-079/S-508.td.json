@@ -10,10 +10,8 @@
   "expectedResponse": {
     "_extends_": "Common_200_Response",
     "headers": {
-      "Connection": "keep-alive",
       "Content-Encoding": "gzip",
       "Content-Type": "application/json;charset=UTF-8",
-      "Keep-Alive": "timeout=60",
       "Transfer-Encoding": "chunked"
     },
     "body": {
@@ -168,43 +166,7 @@
           ]
         }
       ],
-      "acls": [
-        {
-          "role": "caseworker-befta_jurisdiction_2",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
-        },
-        {
-          "role": "citizen",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
-        },
-        {
-          "role": "caseworker-befta_jurisdiction_2-solicitor_1",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
-        },
-        {
-          "role": "caseworker-befta_jurisdiction_2-solicitor_2",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
-        },
-        {
-          "role": "caseworker-befta_jurisdiction_2-solicitor_3",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
-        }
-      ],
+      "acls": "[[ANY]]",
       "searchAliasFields": [],
       "case_fields": "[[ANY]]",
       "printable_document_url": null,
