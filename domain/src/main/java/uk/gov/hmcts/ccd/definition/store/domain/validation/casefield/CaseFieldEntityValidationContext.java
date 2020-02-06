@@ -6,8 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 public class CaseFieldEntityValidationContext implements ValidationContext {
 
-    private SecurityClassification parentSecurityClassification;
-
+    private final SecurityClassification parentSecurityClassification;
     private final String caseName;
     private final String caseReference;
 
