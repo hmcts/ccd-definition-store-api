@@ -1,0 +1,65 @@
+{
+  "_guid_": "S-000",
+  "title": "must return a successful response when hitting user profile health endpoint",
+  "productName": "CCD Definition Store",
+  "operationName": "Health Endpoint",
+  "method": "GET",
+  "uri": "/health",
+  "specs": [
+    "an active profile in CCD",
+    "has the 200 OK code"
+  ],
+  "users": {
+    "invokingUser": {
+      "username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
+      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+    }
+  },
+  "request": {
+    "extends": "",
+    "headers": {
+      "Authorization": "[[DYNAMIC]]",
+      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Content-Type": "application/json"
+    }
+  },
+  "expectedResponse": {
+      "responseCode" : 200,
+      "responseMessage" : "OK",
+      "headers" : {
+        "Content-Length" : "[[ANY]]",
+        "Content-Type" : "application/vnd.spring-boot.actuator.v2+json;charset=UTF-8",
+        "Date" : "[[ANY]]",
+        "Vary" : "Accept-Encoding"
+      },
+      "body" : {
+        "status" : "UP",
+        "details" : {
+          "diskSpace" : {
+            "status" : "UP",
+            "details" : {
+              "total" : "[[ANY]]",
+              "free" : "[[ANY]]",
+              "threshold" : "[[ANY]]"
+            }
+          },
+          "db" : {
+            "status" : "UP",
+            "details" : {
+              "database" : "PostgreSQL",
+              "hello" : 1
+            }
+          },
+          "liveness" : {
+            "status" : "UP"
+          },
+          "refreshScope" : {
+            "status" : "UP"
+          },
+          "uk.gov.hmcts.reform.authorisation.healthcheck.ServiceAuth" : {
+            "status" : "UP"
+          }
+        }
+      }
+  }
+}
