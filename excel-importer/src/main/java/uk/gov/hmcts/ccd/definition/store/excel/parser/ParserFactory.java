@@ -82,4 +82,8 @@ public class ParserFactory {
     public BannerParser createBannerParser(ParseContext context) {
         return new BannerParser(context);
     }
+    
+    public JurisdictionUiConfigParser createJurisdictionUiConfigParser(ParseContext context) {
+        return new JurisdictionUiConfigParser(context);
+    }
 }
