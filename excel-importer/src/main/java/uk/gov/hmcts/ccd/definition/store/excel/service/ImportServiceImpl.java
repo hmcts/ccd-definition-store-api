@@ -1,15 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
-import com.google.common.annotations.VisibleForTesting;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+
+import com.google.common.annotations.VisibleForTesting;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
@@ -83,6 +86,7 @@ public class ImportServiceImpl implements ImportService {
                              IdamProfileClient idamProfileClient,
                              BannerService bannerService,
                              JurisdictionUiConfigService jurisdictionUiConfigService) {
+
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
         this.parserFactory = parserFactory;
@@ -139,11 +143,10 @@ public class ImportServiceImpl implements ImportService {
             importBanner(bannerEntity);
             logger.debug("Importing spreadsheet: Banner...: OK");
         }
-        
         final JurisdictionUiConfigParser jurisdictionUiConfigParser = parserFactory.createJurisdictionUiConfigParser(parseContext);
         JurisdictionUiConfigEntity jurisdictionUiConfigEntity = jurisdictionUiConfigParser.parse(definitionSheets);
         importJurisdictionUiConfig(jurisdictionUiConfigEntity);
-        
+
         /*
             2 - Field types
          */
@@ -265,4 +268,5 @@ public class ImportServiceImpl implements ImportService {
     private void importJurisdictionUiConfig(JurisdictionUiConfigEntity jurisdictionUiConfigEntity) {
         jurisdictionUiConfigService.save(jurisdictionUiConfigEntity);
     }
+
 }
