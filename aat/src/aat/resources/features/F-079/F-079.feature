@@ -10,7 +10,6 @@ Feature: CCD Definition Store Api :: GET /api/data/case-type/{ctid}
     When a request is prepared with appropriate values
     And the request [contains a valid case type id]
     And it is submitted to call the [fetch a Case Type Schema] operation of [CCD Definition Store]
-    Then a positive response is received
     And the response [has the 200 OK code]
     And the response has all other details as expected
 
@@ -37,6 +36,7 @@ Feature: CCD Definition Store Api :: GET /api/data/case-type/{ctid}
   Scenario: must return 404 when request provides an invalid case type id
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
+    And the request [contains an invalid case type id]
     And it is submitted to call the [fetch a Case Type Schema] operation of [CCD Definition Store]
     Then a negative response is received
     And the response [contains 404 not found code]
