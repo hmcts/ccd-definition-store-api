@@ -42,4 +42,11 @@ public class CaseRoleServiceImpl implements CaseRoleService {
             .map(dtoMapper::map)
             .collect(toList());
     }
+
+    public static boolean isCaseRole(final String reference) {
+        return reference != null
+            && reference.length() > 2
+            && reference.trim().startsWith("[")
+            && reference.trim().endsWith("]");
+    }
 }
