@@ -4,7 +4,7 @@ Feature: CCD Definition Store Api :: GET /api/data/case-type/{ctid}
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-508
+  @S-508 #RDM-6858
   Scenario: must return the case type for an appropriate request
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -14,7 +14,7 @@ Feature: CCD Definition Store Api :: GET /api/data/case-type/{ctid}
     And the response [has the 200 OK code]
     And the response has all other details as expected
 
-  @S-509  @Ignore # Response code mismatch, expected: 401, actual: 403
+  @S-509  @Ignore # Response code mismatch, expected: 401, actual: 403 RDM-6628
   Scenario: must return 401 when request does not provide valid authentication credentials
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -24,7 +24,7 @@ Feature: CCD Definition Store Api :: GET /api/data/case-type/{ctid}
     And the response [contains 401 unauthorised code]
     And the response has all the details as expected
 
-  @S-510 @Ignore # Response code mismatch, expected: 403, actual: 200
+  @S-510 @Ignore # Response code mismatch, expected: 403, actual: 200 RDM-7562
   Scenario: must return 403 when request provides authentic credentials without authorised access to the operation 
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
     When a request is prepared with appropriate values
