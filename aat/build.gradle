@@ -1,3 +1,4 @@
+apply plugin: 'com.github.spacialcircumstances.gradle-cucumber-reporting'
 dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
     compile group: 'org.awaitility', name: 'awaitility', version: '3.1.6'
@@ -6,7 +7,7 @@ dependencies {
 sourceSets {
     aat {
         java {
-            srcDir('${rootDir}/src/aat/java')
+            srcDir('src/aat/java')
             compileClasspath += main.output
             runtimeClasspath += main.output
         }
@@ -33,6 +34,14 @@ task smoke(type: Test) {
     useJUnitPlatform {
         includeTags 'smoke'
     }
+
+    doFirst {
+        javaexec {
+            main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreTestDataLoader"
+            classpath += sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['']
+        }
+    }
 }
 
 task functional(type: Test) {
@@ -47,8 +56,23 @@ task functional(type: Test) {
     setClasspath(sourceSets.aat.runtimeClasspath)
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
     useJUnitPlatform()
-}
+    
+    generateCucumberReports.enabled = false
 
+    doFirst {
+        generateCucumberReports.enabled = true
+        javaexec {
+            main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
+            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
+                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+        }
+    }
+}
+cucumberReports {
+    outputDir = file("${rootDir}/target/cucumber")
+    reports = files("${rootDir}/target/cucumber.json")
+}
 bootJar {
     enabled = false
 }
