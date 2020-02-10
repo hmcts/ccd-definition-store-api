@@ -26,7 +26,7 @@
       "Content-Encoding" : "gzip",
       "Content-Length" : "85",
       "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "[[ANY_TIMESTAMP_NOT_NULLABLE]]",
+      "Date" : "[[ANYTHING_PRESENT]]",
       "Expires" : "0",
       "Pragma" : "no-cache",
       "Vary" : "accept-encoding",
