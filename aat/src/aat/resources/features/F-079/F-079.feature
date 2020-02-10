@@ -4,7 +4,7 @@ Feature: CCD Definition Store Api :: GET /api/data/case-type/{ctid}
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-508 #RDM-6858
+  @S-508 #RDM-6858 #RDM-7131
   Scenario: must return the case type for an appropriate request
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
