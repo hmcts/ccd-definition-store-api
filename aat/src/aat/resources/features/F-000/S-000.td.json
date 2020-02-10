@@ -29,7 +29,7 @@
       "headers" : {
         "Content-Length" : "[[ANYTHING_PRESENT]]",
         "Content-Type" : "application/vnd.spring-boot.actuator.v2+json;charset=UTF-8",
-        "Date" : "[[ANY_DATE_NOT_NULLABLE]]",
+        "Date" : "[[ANY_TIMESTAMP_NOT_NULLABLE]]",
         "Vary" : "Accept-Encoding"
       },
       "body" : {
