@@ -17,7 +17,6 @@
       "Content-Length" : "[[ANYTHING_PRESENT]]",
       "Expires" : "0",
       "Pragma" : "no-cache",
-      "Transfer-Encoding" : "chunked",
       "Vary" : "accept-encoding",
       "X-Content-Type-Options" : "nosniff",
       "X-Frame-Options" : "DENY",
