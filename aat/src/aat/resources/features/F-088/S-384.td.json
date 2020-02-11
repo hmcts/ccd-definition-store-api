@@ -1,0 +1,41 @@
+{
+  "_guid_": "S-384",
+  "_extends_": "F-088_Test_Base_Data",
+  "title": "must return 404 when request provides a non-existing case type id",
+  "specs": [
+    "an active profile in CCD",
+    "contains a non-existing case type id",
+    "contains 404 not found code"
+  ],
+  "user": {
+    "invokingUser": {
+      "username": "befta.citizen.3@gmail.com",
+      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+    }
+  },
+  "request": {
+    "pathVariables": {
+      "id": "BEFTA_CASETYPE_3_4_sdfhdj"
+    }
+  },
+  "expectedResponse": {
+    "responseCode" : 404,
+    "responseMessage" : "Not Found",
+    "headers" : {
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Encoding" : "gzip",
+      "Content-Length" : "85",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "[[ANY_DATE_NOT_NULLABLE]]",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "Vary" : "accept-encoding",
+      "X-Content-Type-Options" : "nosniff",
+      "X-Frame-Options" : "DENY",
+      "X-Xss-Protection" : "1; mode=block"
+    },
+    "body" : {
+      "message" : "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+    }
+  }
+}

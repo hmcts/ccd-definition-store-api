@@ -1,0 +1,59 @@
+{
+  "_guid_": "S-364",
+  "_extends_": "F-084_Test_Base_Data",
+  "title": "must return the case type for an appropriate request",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid case type id",
+    "has the 200 OK code"
+  ],
+  "user": {
+    "invokingUser": {
+      "username": "befta.citizen.3@gmail.com",
+      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 200,
+    "body": {
+      "case_type_id": "BEFTA_CASETYPE_3_4",
+      "fields": [
+        {
+          "metadata": true,
+          "case_field_id": "[LAST_STATE_MODIFIED_DATE]",
+          "case_field_element_path": null,
+          "label": "Last Modified State Date",
+          "order": 1,
+          "role": null,
+          "sort_order": null
+        },
+      {
+        "metadata": false,
+        "case_field_id": "TextField",
+        "case_field_element_path": null,
+        "label": "`Text` field",
+        "order": 2,
+        "role": null,
+        "sort_order": null
+      },
+      {
+        "metadata": false,
+        "case_field_id": "NumberField",
+        "case_field_element_path": null,
+        "label": "`Number` field",
+        "order": 3,
+        "role": null,
+        "sort_order": null
+      },
+      {
+        "metadata": false,
+        "case_field_id": "YesOrNoField",
+        "case_field_element_path": null,
+        "label": "`Yes/No` field",
+        "order": 4,
+        "role": null,
+        "sort_order": null
+      }]
+    }
+  }
+}

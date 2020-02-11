@@ -1,0 +1,29 @@
+{
+  "_guid_": "S-380",
+  "_extends_": "F-087_Test_Base_Data",
+  "title": "must return the case type for an appropriate request",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid case type id",
+    "has the 200 OK code"
+  ],
+  "expectedResponse": {
+    "responseCode": 200,
+    "body": {
+      "case_type_id" : "BEFTA_CASETYPE_3_4",
+      "fields" : [ {
+        "case_field_id" : "TextField",
+        "case_field_element_path" : null,
+        "label" : "Search `Text` field",
+        "order" : 1,
+        "role" : null
+      }, {
+        "case_field_id" : "[LAST_STATE_MODIFIED_DATE]",
+        "case_field_element_path" : null,
+        "label" : "Last Modified State Date",
+        "order" : 2,
+        "role" : null
+      } ]
+    }
+  }
+}
