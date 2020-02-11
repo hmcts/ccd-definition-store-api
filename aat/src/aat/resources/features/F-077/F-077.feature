@@ -23,7 +23,7 @@ Feature: CCD Definition Store Api :: GET /api/base-types
     And the response [contains 403 forbidden code]
     And the response has all the details as expected
 
-  @S-331
+  @S-331 #RDM-7131
   Scenario: Should return all valid base types
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
