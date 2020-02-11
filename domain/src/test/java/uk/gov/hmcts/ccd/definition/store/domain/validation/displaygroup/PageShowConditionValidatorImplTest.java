@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -176,6 +177,27 @@ public class PageShowConditionValidatorImplTest {
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidShowConditionError.class));
+    }
+
+    @Test
+    public void successfullyValidatesShowConditionWithMetadataField() throws InvalidShowConditionException {
+        displayGroup.setShowCondition("someShowCondition");
+        displayGroup.setType(DisplayGroupType.PAGE);
+        String field = MetadataField.STATE.getReference();
+        EventEntity event = mock(EventEntity.class);
+        when(event.hasField(field)).thenReturn(false);
+        displayGroup.setEvent(event);
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field(field).build();
+        when(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .thenReturn(validParsedShowCondition);
+
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference("SimpleType");
+        displayGroup.setCaseType(caseTypeEntity);
+
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
+
+        assertThat(result.isValid(), is(true));
     }
 
     @Test
