@@ -1,0 +1,20 @@
+{
+  "_guid_": "F-081_Test_Base_Data",
+  "productName": "CCD Definition Store",
+  "operationName": "get jurisdiction details",
+  "method": "GET",
+  "uri": "/api/data/jurisdictions?jurisdictions={id}",
+  "user": {
+    "_extends_": "Common_User_For_Request"
+  },
+  "request": {
+    "headers": {
+      "Authorization": "[[DYNAMIC]]",
+      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Content-Type": "application/json"
+    },
+    "pathVariables": {
+      "id": "BEFTA_CASETYPE_2_1"
+    }
+  }
+}
