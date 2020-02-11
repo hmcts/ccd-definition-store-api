@@ -33,10 +33,10 @@ Feature: CCD Definition Store Api :: GET /api/data/case-type/{ctid}
     And the response has all the details as expected
 
   @S-507
-  Scenario: must return 404 when request provides an invalid case type id
+  Scenario: must return 404 when request provides a non-existing case type id
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
-    And the request [contains an invalid case type id]
+    And the request [contains a non-existing case type id]
     And it is submitted to call the [fetch a Case Type Schema] operation of [CCD Definition Store]
     Then a negative response is received
     And the response [contains 404 not found code]

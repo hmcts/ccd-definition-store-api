@@ -1,10 +1,10 @@
 {
   "_guid_": "S-507",
   "_extends_": "F-079_Test_Base_Data",
-  "title": "must return 404 when request provides an invalid case type id",
+  "title": "must return 404 when request provides a non-existing case type id",
   "specs": [
     "an active profile in CCD",
-    "contains an invalid case type id",
+    "contains a non-existing case type id",
     "contains 404 not found code"
   ],
   "user": {
