@@ -32,7 +32,7 @@ Feature: CCD Definition Store Api :: GET /api/data/jurisdictions
     And the response [has the 200 OK code]
     And the response has all other details as expected
 
-  @S-350 @Ignore
+  @S-350 @Ignore # Response code mismatch, expected: 404, actual: 200 #RDM-7615
   Scenario: must return 404 when user provide non-existing JID {jurisdiction references} within the request
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
