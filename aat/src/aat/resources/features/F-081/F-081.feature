@@ -23,7 +23,7 @@ Feature: CCD Definition Store Api :: GET /api/data/jurisdictions
     And the response [contains 403 forbidden code]
     And the response has all the details as expected
 
-  @S-347
+  @S-347 #RDM-6858
   Scenario: must return 200 with List of jurisdictions
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
