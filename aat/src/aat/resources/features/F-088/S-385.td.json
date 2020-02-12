@@ -7,9 +7,9 @@
     "contains a valid case type id",
     "has the 200 OK code"
   ],
-  "user": {
+  "users": {
     "invokingUser": {
-      "username": "befta.citizen.3@gmail.com",
+      "username": "befta.caseworker.3@gmail.com",
       "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
     }
   },

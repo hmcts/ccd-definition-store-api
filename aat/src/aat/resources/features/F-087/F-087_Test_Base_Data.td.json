@@ -4,12 +4,6 @@
   "operationName": "fetch UI definition for work basket inputs",
   "method": "GET",
   "uri": "/api/display/work-basket-input-definition/{id}",
-  "users": {
-    "invokingUser": {
-      "username": "befta.citizen.3@gmail.com",
-      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
-    }
-  },
   "request": {
     "headers": {
       "Authorization": "[[DYNAMIC]]",

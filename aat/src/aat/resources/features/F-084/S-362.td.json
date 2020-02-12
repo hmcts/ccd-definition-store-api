@@ -6,6 +6,12 @@
     "an active profile in CCD, and insufficient privilege to the case type",
     "contains 403 forbidden code"
   ],
+  "users": {
+    "invokingUser": {
+      "username": "befta.caseworker.3@gmail.com",
+      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+    }
+  },
   "request": {
     "pathVariables": {
       "id": "BEFTA_CASETYPE_3_2"

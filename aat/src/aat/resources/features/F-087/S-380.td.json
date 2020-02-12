@@ -7,6 +7,12 @@
     "contains a valid case type id",
     "has the 200 OK code"
   ],
+  "users": {
+    "invokingUser": {
+      "username": "befta.caseworker.3@gmail.com",
+      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+    }
+  },
   "expectedResponse": {
     "_extends_": "Common_200_Response",
     "responseCode": 200,

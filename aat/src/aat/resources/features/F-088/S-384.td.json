@@ -7,9 +7,9 @@
     "contains a non-existing case type id",
     "contains 404 not found code"
   ],
-  "user": {
+  "users": {
     "invokingUser": {
-      "username": "befta.citizen.3@gmail.com",
+      "username": "befta.caseworker.3@gmail.com",
       "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
     }
   },
