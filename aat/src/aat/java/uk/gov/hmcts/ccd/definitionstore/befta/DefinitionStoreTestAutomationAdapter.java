@@ -100,7 +100,7 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
 
         String s2sToken = getNewS2SToken();
         return RestAssured
-            .given(new RequestSpecBuilder().setBaseUri(BeftaMain.getConfig().getDefinitionStoreUrl())
+            .given(new RequestSpecBuilder().setBaseUri(BeftaMain.getConfig().getTestUrl())
                 .build())
             .header("Authorization", "Bearer " + caseworker.getAccessToken())
             .header("ServiceAuthorization", s2sToken);
