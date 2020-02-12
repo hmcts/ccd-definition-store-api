@@ -38,13 +38,14 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
 
     @Override
     public void doLoadTestData() {
+        RestAssured.useRelaxedHTTPSValidation();
         addCcdRoles();
         importDefinitions();
     }
 
     private void addCcdRoles() {
         logger.info("{} roles will be added to '{}'.", CCD_ROLES_NEEDED_FOR_TA.length,
-            BeftaMain.getConfig().getDefinitionStoreUrl());
+            BeftaMain.getConfig().getTestUrl());
         for (String[] roleInfo : CCD_ROLES_NEEDED_FOR_TA) {
             try {
                 logger.info("\n\nAdding CCD Role {}, {}...", roleInfo[0], roleInfo[1]);
@@ -72,7 +73,7 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
 
     private void importDefinitions() {
         logger.info("{} definition files will be uploaded to '{}'.", TEST_DEFINITIONS_NEEDED_FOR_TA.length,
-            BeftaMain.getConfig().getDefinitionStoreUrl());
+            BeftaMain.getConfig().getTestUrl());
         for (String fileName : TEST_DEFINITIONS_NEEDED_FOR_TA) {
             try {
                 logger.info("\n\nImporting {}...", fileName);
