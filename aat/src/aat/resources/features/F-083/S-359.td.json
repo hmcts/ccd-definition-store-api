@@ -26,7 +26,7 @@
       }, {
         "case_field_id" : "[LAST_STATE_MODIFIED_DATE]",
         "case_field_element_path" : null,
-        "label" : "Search `Last Modified State Date` meta data",
+        "label" : "Last State Modified Date",
         "order" : 2,
         "role" : null
       } ]

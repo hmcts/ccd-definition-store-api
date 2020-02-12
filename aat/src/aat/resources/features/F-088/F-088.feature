@@ -4,7 +4,7 @@ Feature: Fetch the UI definition for the work basket results for a given Case Ty
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-385 @Ignore @RDM-7618
+  @S-385
   Scenario: must return the UI definition of work basket results for a given case type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values

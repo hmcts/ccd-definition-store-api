@@ -20,7 +20,7 @@
       }, {
         "case_field_id" : "[LAST_STATE_MODIFIED_DATE]",
         "case_field_element_path" : null,
-        "label" : "Last Modified State Date",
+        "label" : "Last State Modified Date",
         "order" : 2,
         "role" : null
       } ]
