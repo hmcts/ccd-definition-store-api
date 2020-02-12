@@ -19,6 +19,7 @@
     }
   },
   "expectedResponse": {
+    "_extends_": "Common_404_Response",
     "responseCode" : 404,
     "responseMessage" : "Not Found",
     "headers" : {
