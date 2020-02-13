@@ -14,8 +14,20 @@
     }
   },
   "expectedResponse": {
-    "_extends_": "Common_200_Response",
     "responseCode": 200,
+    "headers" : {
+      "Cache-Control" : "[[ANYTHING_PRESENT]]",
+      "Content-Encoding" : "[[ANYTHING_PRESENT]]",
+      "Content-Length" : "[[ANYTHING_PRESENT]]",
+      "Content-Type" : "[[ANYTHING_PRESENT]]",
+      "Date" : "[[ANYTHING_PRESENT]]",
+      "Expires" : "[[ANYTHING_PRESENT]]",
+      "Pragma" : "no-cache",
+      "Vary" : "accept-encoding",
+      "X-Content-Type-Options" : "nosniff",
+      "X-Frame-Options" : "DENY",
+      "X-Xss-Protection" : "1; mode=block"
+    },
     "body": {
       "case_type_id" : "BEFTA_CASETYPE_3_4",
       "fields" : [ {

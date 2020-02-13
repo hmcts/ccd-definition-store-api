@@ -245,7 +245,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:3.1.0"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'ccd-api-test-automation-fw', version: '1.0.24'
+        testCompile group: 'uk.gov.hmcts', name: 'ccd-api-test-automation-fw', version: '1.0.29'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
