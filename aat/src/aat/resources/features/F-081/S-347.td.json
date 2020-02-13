@@ -1,0 +1,30 @@
+{
+  "_guid_": "S-347",
+  "_extends_": "F-081_Test_Base_Data",
+  "title": "must return 200 with List of jurisdictions",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid jurisdiction id",
+    "has the 200 OK code"
+  ],
+  "expectedResponse": {
+    "responseCode" : 200,
+    "responseMessage" : "OK",
+    "headers": {
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Encoding" : "gzip",
+      "Content-Length" : "[[ANYTHING_PRESENT]]",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "[[ANYTHING_PRESENT]]",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "Vary" : "accept-encoding",
+      "X-Content-Type-Options" : "nosniff",
+      "X-Frame-Options" : "DENY",
+      "X-Xss-Protection" : "1; mode=block"
+    },
+    "body" : {
+      "arrayInMap" : "[[ANYTHING_PRESENT]]"
+    }
+  }
+}
