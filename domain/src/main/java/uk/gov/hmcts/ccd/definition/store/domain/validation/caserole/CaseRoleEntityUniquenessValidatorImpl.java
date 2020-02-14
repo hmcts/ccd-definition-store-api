@@ -12,18 +12,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 @Component
 public class CaseRoleEntityUniquenessValidatorImpl implements CaseRoleEntityValidator {
 
-    private static final String CREATOR = "[CREATOR]";
-
     @Override
     public ValidationResult validate(CaseRoleEntity caseRoleEntity,
                                      CaseRoleEntityValidationContext caseRoleEntityValidationContext) {
         final ValidationResult validationResult = new ValidationResult();
-        if (CREATOR.equalsIgnoreCase(caseRoleEntity.getReference())) {
-            validationResult.addError(new CaseRoleEntityUniquenessValidatorImpl.ValidationError(String.format(
-                "CaseRole Id [CREATOR] is reserved. Please check case type'%s'",
-                caseRoleEntity.getReference()),
-                caseRoleEntity));
-        } else if (caseRoleEntity.getReference() != null) {
+        if (caseRoleEntity.getReference() != null) {
             final List<CaseRoleEntity> caseRoleEntities = caseRoleEntityValidationContext.getCaseRoleEntities();
             final Optional<CaseRoleEntity> duplicateEntity =
                 caseRoleEntities

@@ -21,6 +21,7 @@ plugins {
     id "com.github.spotbugs" version "1.6.6"
     id 'io.franzbecker.gradle-lombok' version '2.0'
     id 'net.ltgt.apt' version '0.21'
+    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
 }
 
 apply plugin: 'java'
@@ -124,7 +125,7 @@ allprojects {
     }
 
     apply plugin: 'java'
-
+    
     ext {
         hibernateVersion = '5.2.18.Final'
         elasticSearchVersion = '6.4.2'
@@ -177,6 +178,7 @@ subprojects { subproject ->
 
         aatCompile.extendsFrom(testCompile)
         aatRuntime.extendsFrom(testRuntime)
+        cucumberRuntime.extendsFrom(functionalRuntime)
     }
 
     dependencyUpdates.resolutionStrategy = {
@@ -243,6 +245,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:3.1.0"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
+        testCompile group: 'uk.gov.hmcts', name: 'ccd-api-test-automation-fw', version: '1.0.26'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
@@ -301,7 +304,7 @@ subprojects { subproject ->
 
     test {
         environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-
+        generateCucumberReports.enabled = false
         useJUnitPlatform()
 
         testLogging {
@@ -438,4 +441,9 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
             "-r",
             "${buildDir}/reports/jacoco/jacocoTestReport.xml"
     ]
+}
+
+cucumberReports {
+    outputDir = file("${rootDir}/target/cucumber")
+    reports = files("${rootDir}/target/cucumber.json")
 }
