@@ -29,44 +29,43 @@
       "X-Xss-Protection" : "1; mode=block"
     },
     "body": {
-      "case_type_id": "BEFTA_CASETYPE_3_4",
-      "fields": [
-        {
-          "metadata": true,
-          "case_field_id": "[LAST_STATE_MODIFIED_DATE]",
-          "case_field_element_path": null,
-          "label": "Last State Modified Date",
-          "order": 1,
-          "role": null,
-          "sort_order": null
-        },
-      {
-        "metadata": false,
-        "case_field_id": "TextField",
-        "case_field_element_path": null,
-        "label": "`Text` field",
-        "order": 2,
-        "role": null,
-        "sort_order": null
-      },
-      {
-        "metadata": false,
-        "case_field_id": "NumberField",
-        "case_field_element_path": null,
-        "label": "`Number` field",
-        "order": 3,
-        "role": null,
-        "sort_order": null
-      },
-      {
-        "metadata": false,
-        "case_field_id": "YesOrNoField",
-        "case_field_element_path": null,
-        "label": "`YesOrNo` field",
-        "order": 4,
-        "role": null,
-        "sort_order": null
-      }]
+      "case_type_id" : "BEFTA_CASETYPE_3_4",
+      "fields" : [ {
+        "metadata" : true,
+        "case_field_id" : "[LAST_STATE_MODIFIED_DATE]",
+        "case_field_element_path" : null,
+        "label" : "Last State Modified Date",
+        "order" : 1,
+        "role" : null,
+        "sort_order" : {
+          "direction" : "ASC",
+          "priority" : 1
+        }
+      }, {
+        "metadata" : false,
+        "case_field_id" : "TextField",
+        "case_field_element_path" : null,
+        "label" : "`Text` field",
+        "order" : 2,
+        "role" : null,
+        "sort_order" : null
+      }, {
+        "metadata" : false,
+        "case_field_id" : "NumberField",
+        "case_field_element_path" : null,
+        "label" : "`Number` field",
+        "order" : 3,
+        "role" : null,
+        "sort_order" : null
+      }, {
+        "metadata" : false,
+        "case_field_id" : "YesOrNoField",
+        "case_field_element_path" : null,
+        "label" : "`YesOrNo` field",
+        "order" : 4,
+        "role" : null,
+        "sort_order" : null
+      } ]
     }
   }
 }

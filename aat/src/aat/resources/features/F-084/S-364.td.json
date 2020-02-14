@@ -37,7 +37,10 @@
         "label" : "Last State Modified Date",
         "order" : 1,
         "role" : null,
-        "sort_order" : null
+        "sort_order" : {
+          "direction" : "DESC",
+          "priority" : 1
+        }
       }, {
         "metadata" : false,
         "case_field_id" : "TextField",
