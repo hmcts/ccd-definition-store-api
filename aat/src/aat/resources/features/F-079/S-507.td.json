@@ -20,8 +20,18 @@
   },
   "expectedResponse": {
     "_extends_" : "Common_404_Response",
+    "headers": {
+      "Content-Encoding" : "gzip",
+      "Content-Length" : "85",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
     "body" : {
-      "message" : "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+      "message" : "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj",
+      "status": "[[ANY_STRING_NULLABLE]]",
+      "error": "[[ANY_STRING_NULLABLE]]",
+      "timestamp": "[[ANY_STRING_NULLABLE]]",
+      "path": "[[ANY_STRING_NULLABLE]]"
     }
   }
 }
