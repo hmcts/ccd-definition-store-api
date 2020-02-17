@@ -5,7 +5,8 @@
   "specs": [
     "an active profile in CCD",
     "contains a valid jurisdiction id",
-    "has the 200 OK code"
+    "has the 200 OK code",
+    "contains the jurisdictions details for jurisdiction id BEFTA_CASETYPE_2_1"
   ],
   "expectedResponse": {
     "responseCode" : 200,

@@ -1,7 +1,7 @@
 {
   "_guid_": "F-081_Test_Base_Data",
   "productName": "CCD Definition Store",
-  "operationName": "get jurisdiction details",
+  "operationName": "Get Jurisdiction Details",
   "method": "GET",
   "uri": "/api/data/jurisdictions?jurisdictions={id}",
   "user": {
