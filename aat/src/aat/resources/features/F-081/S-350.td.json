@@ -19,21 +19,7 @@
     }
   },
   "expectedResponse": {
-    "responseCode" : 404,
-    "responseMessage" : "Not Found",
-    "headers" : {
-      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
-      "Content-Encoding" : "gzip",
-      "Content-Length" : "85",
-      "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "[[ANYTHING_PRESENT]]",
-      "Expires" : "0",
-      "Pragma" : "no-cache",
-      "Vary" : "accept-encoding",
-      "X-Content-Type-Options" : "nosniff",
-      "X-Frame-Options" : "DENY",
-      "X-Xss-Protection" : "1; mode=block"
-    },
+    "_extends_" : "Common_404_Response",
     "body" : {
       "message" : "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
     }

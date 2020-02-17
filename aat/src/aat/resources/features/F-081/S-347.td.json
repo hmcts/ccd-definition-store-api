@@ -9,21 +9,7 @@
     "contains the jurisdictions details for jurisdiction id BEFTA_CASETYPE_2_1"
   ],
   "expectedResponse": {
-    "responseCode" : 200,
-    "responseMessage" : "OK",
-    "headers": {
-      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
-      "Content-Encoding" : "gzip",
-      "Content-Length" : "[[ANYTHING_PRESENT]]",
-      "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "[[ANYTHING_PRESENT]]",
-      "Expires" : "0",
-      "Pragma" : "no-cache",
-      "Vary" : "accept-encoding",
-      "X-Content-Type-Options" : "nosniff",
-      "X-Frame-Options" : "DENY",
-      "X-Xss-Protection" : "1; mode=block"
-    },
+    "_extends_" : "Common_200_Response",
     "body" : {
       "arrayInMap" : "[[ANYTHING_PRESENT]]"
     }
