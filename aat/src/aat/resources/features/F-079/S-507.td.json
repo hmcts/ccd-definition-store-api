@@ -22,7 +22,7 @@
     "_extends_" : "Common_404_Response",
     "headers": {
       "Content-Encoding" : "gzip",
-      "Content-Length" : "85",
+      "Content-Length" : "[[ANYTHING_PRESENT]]",
       "Content-Type" : "application/json;charset=UTF-8",
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
