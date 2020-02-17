@@ -5,7 +5,8 @@
   "specs": [
     "an active profile in CCD",
     "contains a valid case type id",
-    "has the 200 OK code"
+    "has the 200 OK code",
+    "returns the version number for case type id BEFTA_CASETYPE_2_1"
   ],
   "expectedResponse": {
     "responseCode" : 200,
