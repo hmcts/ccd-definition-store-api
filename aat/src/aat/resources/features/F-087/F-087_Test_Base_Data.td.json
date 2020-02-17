@@ -1,7 +1,7 @@
 {
   "_guid_": "F-087_Test_Base_Data",
   "productName": "CCD Definition Store",
-  "operationName": "fetch UI definition for work basket inputs",
+  "operationName": "Fetch UI definition for Work Basket Inputs By CaseType",
   "method": "GET",
   "uri": "/api/display/work-basket-input-definition/{id}",
   "request": {

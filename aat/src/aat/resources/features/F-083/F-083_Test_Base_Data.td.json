@@ -1,7 +1,7 @@
 {
   "_guid_": "F-083_Test_Base_Data",
   "productName": "CCD Definition Store",
-  "operationName": "fetch UI definition for search inputs",
+  "operationName": "Fetch UI definition for Search Inputs by CaseType",
   "method": "GET",
   "uri": "/api/display/search-input-definition/{id}",
   "request": {

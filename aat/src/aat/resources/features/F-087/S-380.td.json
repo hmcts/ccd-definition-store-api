@@ -5,7 +5,8 @@
   "specs": [
     "an active profile in CCD",
     "contains a valid case type id",
-    "has the 200 OK code"
+    "has the 200 OK code",
+    "has Work Basket input definition details"
   ],
   "users": {
     "invokingUser": {

@@ -1,7 +1,7 @@
 {
   "_guid_": "F-084_Test_Base_Data",
   "productName": "CCD Definition Store",
-  "operationName": "fetch UI definition for search results",
+  "operationName": "Fetch UI definition for Search Results By CaseType",
   "method": "GET",
   "uri": "/api/display/search-result-definition/{id}",
   "request": {
