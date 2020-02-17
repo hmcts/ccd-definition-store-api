@@ -1,7 +1,7 @@
 {
   "_guid_": "F-077_Test_Base_Data",
   "productName": "CCD Definition Store",
-  "operationName": "fetch all Base Types",
+  "operationName": "Fetch All Base Types",
   "method": "GET",
   "uri": "/api/base-types",
   "user": {
