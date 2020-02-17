@@ -9,6 +9,12 @@
   ],
   "expectedResponse": {
     "_extends_" : "Common_200_Response",
+    "headers": {
+      "Content-Encoding" : "gzip",
+      "Content-Length" : "506",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
     "body": {
       "arrayInMap": [
         {
