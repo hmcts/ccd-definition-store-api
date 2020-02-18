@@ -65,8 +65,6 @@ withPipeline(type, product, app) {
     }
 
     enableDbMigration('ccd')
-    enableDockerBuild()
-
     overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
     enableAksStagingDeployment()
