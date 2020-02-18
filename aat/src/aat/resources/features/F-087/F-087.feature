@@ -1,5 +1,5 @@
 @F-087
-Feature: Fetch UI definition for Work Basket Inputs By CaseType
+Feature: F087: Fetch UI definition for Work Basket Inputs By CaseType
 
   Background:
     Given an appropriate test context as detailed in the test data source
