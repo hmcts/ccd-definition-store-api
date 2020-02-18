@@ -12,6 +12,7 @@ Feature: Fetch UI definition for Search Results By CaseType
     And it is submitted to call the [Fetch UI definition for Search Results By CaseType] operation of [CCD Definition Store]
     And the response [has the 200 OK code]
     And the response [has Search Results definition details]
+    And the response has all the details as expected
 
   @S-361 @Ignore @RDM-7618
   Scenario: must return 401 when request does not provide valid authentication credentials
