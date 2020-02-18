@@ -140,41 +140,7 @@
                 "delete" : false
               } ]
             } ],
-            "events" : [ {
-              "id" : "CREATE",
-              "name" : "Create a new case",
-              "description" : null,
-              "acls" : [ {
-                "role" : "caseworker-befta_jurisdiction_2",
-                "create" : true,
-                "read" : true,
-                "update" : true,
-                "delete" : false
-              }, {
-                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
-                "create" : true,
-                "read" : true,
-                "update" : true,
-                "delete" : false
-              }, {
-                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
-                "create" : true,
-                "read" : true,
-                "update" : true,
-                "delete" : false
-              }, {
-                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
-                "create" : true,
-                "read" : true,
-                "update" : true,
-                "delete" : false
-              }, {
-                "role" : "citizen",
-                "create" : true,
-                "read" : true,
-                "update" : true,
-                "delete" : false
-              } ],
+            "events" : "[[ANYTHING_PRESENT]]",
               "pre_states" : [ ]
             }, {
               "id" : "START_PROGRESS",
