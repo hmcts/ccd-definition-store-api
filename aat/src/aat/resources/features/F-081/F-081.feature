@@ -11,7 +11,7 @@ Feature: CCD Definition Store Api : Get Jurisdiction Details
     And the request [contains a valid jurisdiction id]
     And it is submitted to call the [Get Jurisdiction Details] operation of [CCD Definition Store]
     And the response [has the 200 OK code]
-    And the response [contains the jurisdictions details for jurisdiction id BEFTA_CASETYPE_2_1]
+    And the response [contains the jurisdiction details for the jurisdiction id provided to the request]
     And the response has all other details as expected
 
   @S-348 @Ignore # Response code mismatch, expected: 401, actual: 403 RDM-6628
