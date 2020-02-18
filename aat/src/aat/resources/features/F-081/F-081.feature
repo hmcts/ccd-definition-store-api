@@ -4,7 +4,7 @@ Feature: CCD Definition Store Api : Get Jurisdiction Details
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-347 #RDM-6858
+  @S-347
   Scenario: must return 200 with List of jurisdictions
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -33,7 +33,7 @@ Feature: CCD Definition Store Api : Get Jurisdiction Details
     And the response [contains 403 forbidden code]
     And the response has all the details as expected
 
-  @S-350 @Ignore # Response code mismatch, expected: 404, actual: 200 #RDM-7615
+  @S-350 @Ignore #RDM-7615
   Scenario: must return 404 when user provide non-existing JID {jurisdiction references} within the request
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values

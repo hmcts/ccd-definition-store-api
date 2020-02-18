@@ -17,7 +17,504 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body" : {
-      "arrayInMap" : "[[ANYTHING_PRESENT]]"
+      "arrayInMap" : [
+        {
+          "id" : "BEFTA_JURISDICTION_2",
+          "name" : "BEFTA JURISDICTION 2",
+          "description" : "Content for the BEFTA Jurisdiction 2.",
+          "live_from" : "2017-01-01T00:00:00.000+0000",
+          "live_until" : null,
+          "case_types" : [ {
+            "id" : "BEFTA_CASETYPE_2_1",
+            "description" : "Demo Case BEFTA CASETYPE 2 1",
+            "name" : "Demo Case BEFTA CASETYPE 2 1",
+            "states" : [ {
+              "id" : "TODO",
+              "name" : "To do",
+              "description" : null,
+              "order" : 1,
+              "title_display" : null,
+              "acls" : [ {
+                "role" : "caseworker-befta_jurisdiction_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ]
+            }, {
+              "id" : "IN_PROGRESS",
+              "name" : "In progress",
+              "description" : null,
+              "order" : 2,
+              "title_display" : null,
+              "acls" : [ {
+                "role" : "caseworker-befta_jurisdiction_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ]
+            }, {
+              "id" : "DONE",
+              "name" : "Done",
+              "description" : null,
+              "order" : 3,
+              "title_display" : null,
+              "acls" : [ {
+                "role" : "caseworker-befta_jurisdiction_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ]
+            } ],
+            "events" : [ {
+              "id" : "CREATE",
+              "name" : "Create a new case",
+              "description" : null,
+              "acls" : [ {
+                "role" : "caseworker-befta_jurisdiction_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ ]
+            }, {
+              "id" : "START_PROGRESS",
+              "name" : "Start",
+              "description" : null,
+              "acls" : [ {
+                "role" : "caseworker-befta_jurisdiction_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "TODO" ]
+            }, {
+              "id" : "STOP_PROGRESS",
+              "name" : "Stop",
+              "description" : null,
+              "acls" : [ {
+                "role" : "caseworker-befta_jurisdiction_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "IN_PROGRESS" ]
+            }, {
+              "id" : "COMPLETE",
+              "name" : "Mark as done",
+              "description" : null,
+              "acls" : [ {
+                "role" : "caseworker-befta_jurisdiction_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "IN_PROGRESS" ]
+            }, {
+              "id" : "UPDATE",
+              "name" : "Update",
+              "description" : null,
+              "acls" : [ {
+                "role" : "caseworker-befta_jurisdiction_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "*" ]
+            }, {
+              "id" : "REVIEW",
+              "name" : "Review",
+              "description" : null,
+              "acls" : [ {
+                "role" : "caseworker-befta_jurisdiction_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              }, {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "*" ]
+            } ],
+            "acls" : [ {
+              "role" : "caseworker-befta_jurisdiction_2",
+              "create" : true,
+              "read" : true,
+              "update" : true,
+              "delete" : true
+            }, {
+              "role" : "caseworker-befta_jurisdiction_2-solicitor_1",
+              "create" : true,
+              "read" : true,
+              "update" : true,
+              "delete" : true
+            }, {
+              "role" : "caseworker-befta_jurisdiction_2-solicitor_2",
+              "create" : true,
+              "read" : true,
+              "update" : true,
+              "delete" : true
+            }, {
+              "role" : "caseworker-befta_jurisdiction_2-solicitor_3",
+              "create" : true,
+              "read" : true,
+              "update" : true,
+              "delete" : true
+            }, {
+              "role" : "citizen",
+              "create" : true,
+              "read" : true,
+              "update" : true,
+              "delete" : true
+            } ]
+          }, {
+            "id" : "BEFTA_CASETYPE_2_2",
+            "description" : "Demo Case BEFTA CASETYPE 2 2",
+            "name" : "Demo Case BEFTA CASETYPE 2 2",
+            "states" : [ {
+              "id" : "TODO",
+              "name" : "To do",
+              "description" : null,
+              "order" : 1,
+              "title_display" : null,
+              "acls" : [ {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ]
+            }, {
+              "id" : "IN_PROGRESS",
+              "name" : "In progress",
+              "description" : null,
+              "order" : 2,
+              "title_display" : null,
+              "acls" : [ {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ]
+            }, {
+              "id" : "DONE",
+              "name" : "Done",
+              "description" : null,
+              "order" : 3,
+              "title_display" : null,
+              "acls" : [ {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ]
+            } ],
+            "events" : [ {
+              "id" : "CREATE",
+              "name" : "Create a new case",
+              "description" : null,
+              "acls" : [ {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ ]
+            }, {
+              "id" : "START_PROGRESS",
+              "name" : "Start",
+              "description" : null,
+              "acls" : [ {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "TODO" ]
+            }, {
+              "id" : "STOP_PROGRESS",
+              "name" : "Stop",
+              "description" : null,
+              "acls" : [ {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "IN_PROGRESS" ]
+            }, {
+              "id" : "COMPLETE",
+              "name" : "Mark as done",
+              "description" : null,
+              "acls" : [ {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "IN_PROGRESS" ]
+            }, {
+              "id" : "UPDATE",
+              "name" : "Update",
+              "description" : null,
+              "acls" : [ {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "*" ]
+            }, {
+              "id" : "REVIEW",
+              "name" : "Review",
+              "description" : null,
+              "acls" : [ {
+                "role" : "citizen",
+                "create" : true,
+                "read" : true,
+                "update" : true,
+                "delete" : false
+              } ],
+              "pre_states" : [ "*" ]
+            } ],
+            "acls" : [ {
+              "role" : "citizen",
+              "create" : true,
+              "read" : true,
+              "update" : true,
+              "delete" : false
+            } ]
+          } ]
+        }
+      ]
     }
   }
 }

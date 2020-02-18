@@ -3,7 +3,7 @@
   "productName": "CCD Definition Store",
   "operationName": "Get Jurisdiction Details",
   "method": "GET",
-  "uri": "/api/data/jurisdictions?jurisdictions={id}",
+  "uri": "/api/data/jurisdictions",
   "user": {
     "_extends_": "Common_User_For_Request"
   },
@@ -13,8 +13,8 @@
       "ServiceAuthorization": "[[DYNAMIC]]",
       "Content-Type": "application/json"
     },
-    "pathVariables": {
-      "id": "BEFTA_CASETYPE_2_1"
+    "queryParams": {
+      "ids": "BEFTA_JURISDICTION_2"
     }
   }
 }

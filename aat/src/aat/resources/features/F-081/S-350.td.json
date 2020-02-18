@@ -14,8 +14,8 @@
     }
   },
   "request": {
-    "pathVariables": {
-      "id": "BEFTA_3_sdfhdj"
+    "queryParams": {
+      "ids": "BEFTA_3_sdfhdj"
     }
   },
   "expectedResponse": {
