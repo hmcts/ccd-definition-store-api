@@ -12,6 +12,7 @@ Feature: Fetch UI definition for Work Basket Inputs By CaseType
     And it is submitted to call the [Fetch UI definition for Work Basket Inputs By CaseType] operation of [CCD Definition Store]
     And the response [has the 200 OK code]
     And the response [has Work Basket input definition details]
+    And the response has all the details as expected
 
   @S-377 @Ignore @RDM-7618
   Scenario: must return 401 when request does not provide valid authentication credentials

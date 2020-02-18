@@ -1,5 +1,5 @@
 @F-088
-Feature: Fetch UI definition Work Basket results by CaseType :: GET /api/display/work-basket-result-definition/{id}
+Feature: Fetch UI definition Work Basket results by CaseType
 
   Background:
     Given an appropriate test context as detailed in the test data source
@@ -12,6 +12,7 @@ Feature: Fetch UI definition Work Basket results by CaseType :: GET /api/display
     And it is submitted to call the [Fetch UI definition Work Basket results by CaseType] operation of [CCD Definition Store]
     And the response [has the 200 OK code]
     And the response [has Work Basket results definition details]
+    And the response has all the details as expected
 
   @S-382 @Ignore @RDM-7618
   Scenario: must return 401 when request does not provide valid authentication credentials
