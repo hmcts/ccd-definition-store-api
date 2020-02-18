@@ -1,5 +1,5 @@
 @F-084
-Feature: Fetch UI definition for Search Results By CaseType :: GET /api/display/search-result-definition/{id}
+Feature: Fetch UI definition for Search Results By CaseType
 
   Background:
     Given an appropriate test context as detailed in the test data source
