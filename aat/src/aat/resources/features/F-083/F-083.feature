@@ -1,5 +1,5 @@
 @F-083
-Feature: Fetch UI definition for Search Inputs by CaseType :: GET /api/display/search-input-definition/{id}
+Feature: Fetch UI definition for Search Inputs by CaseType
 
   Background:
     Given an appropriate test context as detailed in the test data source
