@@ -42,7 +42,7 @@ Feature: CCD Definition Store Api :: Get version of case type
     And the response [contains 403 forbidden code]
     And the response has all the details as expected
 
-  @S-338 #Cant extend common response
+  @S-338
   Scenario: must return 404 when user provide non-existing Case Type ID within the request
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
