@@ -1,7 +1,7 @@
 {
   "_guid_": "F-079_Test_Base_Data",
   "productName": "CCD Definition Store",
-  "operationName": "Fetch A Case Type Schema",
+  "operationName": "fetch a Case Type Schema",
   "method": "GET",
   "uri": "/api/data/case-type/{id}",
   "user": {
