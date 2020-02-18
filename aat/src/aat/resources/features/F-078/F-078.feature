@@ -1,5 +1,5 @@
 @F-078
-Feature: CCD Definition Store Api :: Get version of case type
+Feature: CCD Definition Store Api : Get Version of Case Type
 
   Background:
     Given an appropriate test context as detailed in the test data source
