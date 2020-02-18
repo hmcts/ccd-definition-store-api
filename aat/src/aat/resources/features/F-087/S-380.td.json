@@ -15,7 +15,7 @@
     }
   },
   "expectedResponse": {
-    "_extends_" : "Common_200_Response_Headers",
+    "_extends_" : "Common_200_Response",
     "body": {
       "case_type_id" : "BEFTA_CASETYPE_3_4",
       "fields" : [ {
