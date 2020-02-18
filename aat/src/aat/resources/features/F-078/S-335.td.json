@@ -10,20 +10,11 @@
   ],
   "expectedResponse": {
     "_extends_" : "Common_200_Response",
-    "responseCode" : 200,
-    "responseMessage" : "OK",
-    "headers" : {
-      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
-      "Content-Length" : "[[ANYTHING_PRESENT]]",
+    "headers": {
       "Content-Encoding" : "gzip",
+      "Content-Length" : "[[ANYTHING_PRESENT]]",
       "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "[[ANYTHING_PRESENT]]",
-      "Expires" : "0",
-      "Pragma" : "no-cache",
-      "vary" : "accept-encoding",
-      "X-Content-Type-Options" : "nosniff",
-      "X-Frame-Options" : "DENY",
-      "X-XSS-Protection" : "1; mode=block"
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body" : {
       "version" : "[[ANY_NUMBER_NOT_NULLABLE]]"
