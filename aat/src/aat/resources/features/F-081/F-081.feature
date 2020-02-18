@@ -1,5 +1,5 @@
 @F-081
-Feature: CCD Definition Store Api : Get Jurisdiction Details
+Feature: F-081: Get Jurisdiction Details
 
   Background:
     Given an appropriate test context as detailed in the test data source
