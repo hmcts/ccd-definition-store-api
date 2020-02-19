@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional.elasticsearch;
 
-import java.io.File;
-import java.util.stream.Stream;
-
 import static java.util.Optional.ofNullable;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -10,19 +7,26 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static uk.gov.hmcts.ccd.definitionstore.tests.util.TestUtils.withRetries;
 
-import io.restassured.response.ValidatableResponse;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.stream.Stream;
+
+import io.restassured.response.ValidatableResponse;
+import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 
 class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
 
     private static final Logger log = LoggerFactory.getLogger(ElasticsearchImportDefinitionTest.class);
-    private static final String DEFINITION_FILE = "src/resource/CCD_CNP_27.xlsx";
+
     private static final String DEFINITION_FILE_WITH_NEW_FIELD = "src/resource/CCD_CNP_27_WithNewField.xlsx";
 
     private static final String CASE_INDEX_NAME = "mapper_cases-000001";
@@ -49,11 +53,16 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
 
     @Test
     @DisplayName("should import a valid definition multiple times and create Elasticsearch index, alias and field mappings")
-    void shouldImportValidDefinitionMultipleTimes() {
+    void shouldImportValidDefinitionMultipleTimes() throws Exception {
         // invoke definition import
+        InputStream stream = getClass().getClassLoader().getResource(
+               TestDataLoaderToDefinitionStore.DEFAULT_DEFINITIONS_PATH + "CCD_CNP_27.xlsx")
+                .openStream();
+        File file = new File("_mock_file.temp");
+        FileUtils.copyInputStreamToFile(stream, file);
         asAutoTestImporter().get()
             .given()
-            .multiPart(new File(DEFINITION_FILE))
+                .multiPart(file)
             .expect()
             .statusCode(201)
             .when()
