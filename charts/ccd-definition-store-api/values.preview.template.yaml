@@ -1,7 +1,6 @@
 java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
-  aadIdentityName:
   memoryRequests: "1024Mi"
   devmemoryRequests: "1024Mi"
   devmemoryLimits: "2048Mi"

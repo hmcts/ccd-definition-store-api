@@ -56,7 +56,7 @@ dependencyCheck {
         assemblyEnabled = false
     }
     // Ignore these non-runtime configurations
-    skipConfigurations = ['codacy', 'spotbugs']
+    skipConfigurations = ['codacy', 'spotbugs', 'checkstyle']
 }
 
 //spring boot dependency override

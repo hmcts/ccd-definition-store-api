@@ -1,0 +1,27 @@
+{
+  "_guid_": "S-350",
+  "_extends_": "F-081_Test_Base_Data",
+  "title": "must return 404 when user provide non-existing JID {jurisdiction references} within the request",
+  "specs": [
+    "an active profile in CCD",
+    "contains a non-existing jurisdiction id",
+    "contains 404 not found code"
+  ],
+  "user": {
+    "invokingUser": {
+      "username": "befta.citizen.2@gmail.com",
+      "password": "[[$CCD_BEFTA_CITIZEN_2_PWD]]"
+    }
+  },
+  "request": {
+    "queryParams": {
+      "ids": "BEFTA_3_sdfhdj"
+    }
+  },
+  "expectedResponse": {
+    "_extends_" : "Common_404_Response",
+    "body" : {
+      "message" : "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+    }
+  }
+}
