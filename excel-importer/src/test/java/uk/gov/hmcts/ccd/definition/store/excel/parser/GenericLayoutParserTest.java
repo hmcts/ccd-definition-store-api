@@ -34,6 +34,7 @@ public class GenericLayoutParserTest {
     private static final String CASE_FIELD_ID_1 = "Field 1";
     private static final String CASE_FIELD_ID_2 = "Field 2";
     private static final String LIST_ELEMENT_CODE_1 = "Code1";
+    private static final String DISPLAY_CONTEXT_PARAMETER = "Display Context Parameter";
     private GenericLayoutParser classUnderTest;
     private Map<String, DefinitionSheet> definitionSheets;
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
@@ -435,6 +436,40 @@ public class GenericLayoutParserTest {
             hasProperty("direction", equalTo("DESC")))));
         assertThat(parseResult.getAllResults(), hasItem(hasProperty("sortOrder",
             hasProperty("priority", equalTo(1)))));
+    }
+
+    @Test
+    @DisplayName("Should create a generic layout entity")
+    public void shouldCreateGenericLayoutEntity() {
+        ParseContext context = new ParseContext();
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference(CASE_TYPE_ID);
+        CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+        caseFieldEntity1.setReference(CASE_FIELD_ID_1);
+        context.registerCaseType(caseTypeEntity);
+        context.registerCaseFieldForCaseType(CASE_TYPE_ID, caseFieldEntity1);
+
+        final String label = "LABEL";
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(SEARCH_RESULT_FIELD.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        item.addAttribute(ColumnName.RESULTS_ORDERING, "1:DESC");
+        item.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, DISPLAY_CONTEXT_PARAMETER);
+        item.addAttribute(ColumnName.LABEL, label);
+        sheet.addDataItem(item);
+        definitionSheets.put(SEARCH_RESULT_FIELD.getName(), sheet);
+
+        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry);
+        ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
+
+        GenericLayoutEntity entity = parseResult.getAllResults().get(0);
+        assertEquals(CASE_TYPE_ID, entity.getCaseType().getReference());
+        assertEquals(CASE_FIELD_ID_1, entity.getCaseField().getReference());
+        assertEquals((Integer) 3, entity.getOrder());
+        assertEquals(label, entity.getLabel());
+        assertEquals(DISPLAY_CONTEXT_PARAMETER, entity.getDisplayContextParameter());
     }
 
     private void addCaseType2Field(DefinitionSheet sheet) {

@@ -60,6 +60,9 @@ public class EventComplexTypeEntity implements Serializable {
     @JoinColumn(name = "event_case_field_id", nullable = false)
     private EventCaseFieldEntity complexFieldType;
 
+    @Column(name = "display_context_parameter")
+    private String displayContextParameter;
+
     public String getReference() {
         return reference;
     }
@@ -130,5 +133,13 @@ public class EventComplexTypeEntity implements Serializable {
 
     public void setComplexFieldType(EventCaseFieldEntity complexFieldType) {
         this.complexFieldType = complexFieldType;
+    }
+
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }

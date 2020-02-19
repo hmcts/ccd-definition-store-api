@@ -89,6 +89,7 @@ class EntityToResponseDTOMapperTest {
             eventComplexTypeEntity1.setDisplayContext(DisplayContext.MANDATORY);
             eventComplexTypeEntity1.setHint("Hint text");
             eventComplexTypeEntity1.setLabel("Label text");
+            eventComplexTypeEntity1.setDisplayContextParameter("DisplayContextParameter");
 
             EventComplexTypeEntity eventComplexTypeEntity2 = new EventComplexTypeEntity();
             String ref2 = "Some ref2";
@@ -98,6 +99,7 @@ class EntityToResponseDTOMapperTest {
             eventComplexTypeEntity2.setDisplayContext(DisplayContext.OPTIONAL);
             eventComplexTypeEntity2.setHint("Hint text2");
             eventComplexTypeEntity2.setLabel("Label text2");
+            eventComplexTypeEntity2.setDisplayContextParameter("DisplayContextParameter2");
 
             EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
             eventCaseFieldEntity.setShowSummaryChangeOption(true);
@@ -123,7 +125,10 @@ class EntityToResponseDTOMapperTest {
                                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContext()),
                 () -> assertEquals("order",
                                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getOrder(),
-                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder())
+                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder()),
+                () -> assertEquals("displayContextParameter",
+                                   findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDisplayContextParameter(),
+                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContextParameter())
             );
         }
     }
@@ -1223,6 +1228,7 @@ class EntityToResponseDTOMapperTest {
             searchInputCaseFieldEntity.setOrder(69);
             searchInputCaseFieldEntity.setUserRole(userRoleEntity);
             searchInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
+            searchInputCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             SearchInputField searchInputField = spyOnClassUnderTest.map(searchInputCaseFieldEntity);
 
@@ -1230,6 +1236,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(searchInputCaseFieldEntity.getLabel(), searchInputField.getLabel());
             assertEquals(searchInputCaseFieldEntity.getCaseFieldElementPath(), searchInputField.getCaseFieldElementPath());
             assertEquals(searchInputCaseFieldEntity.getCaseField().getReference(), searchInputField.getCaseFieldId());
+            assertEquals(searchInputCaseFieldEntity.getDisplayContextParameter(), searchInputField.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), searchInputField.getRole());
         }
 
@@ -1253,6 +1260,7 @@ class EntityToResponseDTOMapperTest {
             searchResultCaseFieldEntity.setOrder(69);
             searchResultCaseFieldEntity.setUserRole(userRoleEntity);
             searchResultCaseFieldEntity.setSortOrder(sortOrder);
+            searchResultCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             SearchResultsField searchResultsField = spyOnClassUnderTest.map(searchResultCaseFieldEntity);
 
@@ -1261,6 +1269,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(searchResultCaseFieldEntity.getLabel(), searchResultsField.getLabel());
             assertEquals(searchResultCaseFieldEntity.getCaseField().getReference(),
                          searchResultsField.getCaseFieldId());
+            assertEquals(searchResultCaseFieldEntity.getDisplayContextParameter(), searchResultsField.getDisplayContextParameter());
             assertThat(searchResultsField.isMetadata(), is(false));
             assertEquals(userRoleEntity.getReference(), searchResultsField.getRole());
 
@@ -1301,6 +1310,7 @@ class EntityToResponseDTOMapperTest {
             workBasketInputCaseFieldEntity.setOrder(69);
             workBasketInputCaseFieldEntity.setUserRole(userRoleEntity);
             workBasketInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
+            workBasketInputCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             WorkbasketInputField workbasketInputField = spyOnClassUnderTest.map(workBasketInputCaseFieldEntity);
 
@@ -1308,6 +1318,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(workBasketInputCaseFieldEntity.getLabel(), workbasketInputField.getLabel());
             assertEquals(workBasketInputCaseFieldEntity.getCaseFieldElementPath(), workbasketInputField.getCaseFieldElementPath());
             assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(), workbasketInputField.getCaseFieldId());
+            assertEquals(workBasketInputCaseFieldEntity.getDisplayContextParameter(), workbasketInputField.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), workbasketInputField.getRole());
         }
 
@@ -1331,6 +1342,7 @@ class EntityToResponseDTOMapperTest {
             workBasketCaseFieldEntity.setOrder(69);
             workBasketCaseFieldEntity.setUserRole(userRoleEntity);
             workBasketCaseFieldEntity.setSortOrder(sortOrder);
+            workBasketCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
 
@@ -1338,6 +1350,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(workBasketCaseFieldEntity.getCaseFieldElementPath(), workBasketResult.getCaseFieldElementPath());
             assertEquals(workBasketCaseFieldEntity.getLabel(), workBasketResult.getLabel());
             assertEquals(workBasketCaseFieldEntity.getCaseField().getReference(), workBasketResult.getCaseFieldId());
+            assertEquals(workBasketCaseFieldEntity.getDisplayContextParameter(), workBasketResult.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), workBasketResult.getRole());
 
             assertEquals(sortOrder.getDirection(), workBasketResult.getSortOrder().getDirection());
@@ -1410,7 +1423,7 @@ class EntityToResponseDTOMapperTest {
         	JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
         	jurisdictionEntity.setReference("Reference");
         	jurisdictionEntity.setName("Name");
-            
+
         	JurisdictionUiConfigEntity jurisdictionUiConfigEntity = new JurisdictionUiConfigEntity();
         	jurisdictionUiConfigEntity.setShuttered(true);
         	jurisdictionUiConfigEntity.setJurisdiction(jurisdictionEntity);

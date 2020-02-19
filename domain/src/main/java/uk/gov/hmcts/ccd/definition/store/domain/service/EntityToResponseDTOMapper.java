@@ -212,7 +212,8 @@ public interface EntityToResponseDTOMapper {
                                                                                              complexTypeEntity.getLabel(),
                                                                                              complexTypeEntity.getOrder(),
                                                                                              complexTypeEntity.getDisplayContext(),
-                                                                                             complexTypeEntity.getShowCondition()))
+                                                                                             complexTypeEntity.getShowCondition(),
+                                                                                             complexTypeEntity.getDisplayContextParameter()))
                                          .collect(Collectors.toList());
         }
     }

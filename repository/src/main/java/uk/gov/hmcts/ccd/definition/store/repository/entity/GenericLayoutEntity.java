@@ -43,6 +43,9 @@ public abstract class GenericLayoutEntity implements Serializable {
     @JoinColumn(name = "role_id", nullable = false)
     private UserRoleEntity userRole;
 
+    @Column(name = "display_context_parameter")
+    private String displayContextParameter;
+
     public Integer getId() {
         return id;
     }
@@ -109,5 +112,13 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     public void setUserRole(UserRoleEntity userRole) {
         this.userRole = userRole;
+    }
+
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }

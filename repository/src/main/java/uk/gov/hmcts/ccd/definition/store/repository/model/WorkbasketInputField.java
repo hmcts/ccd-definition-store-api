@@ -11,6 +11,7 @@ public class WorkbasketInputField {
     private String label = null;
     private Integer order = null;
     private String role;
+    private String displayContextParameter;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -55,5 +56,14 @@ public class WorkbasketInputField {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @JsonProperty("display_context_parameter")
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }
