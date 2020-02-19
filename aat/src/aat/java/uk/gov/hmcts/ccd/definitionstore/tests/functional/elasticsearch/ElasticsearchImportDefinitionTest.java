@@ -7,7 +7,6 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static uk.gov.hmcts.ccd.definitionstore.tests.util.TestUtils.withRetries;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,11 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.stream.Stream;
 
 import io.restassured.response.ValidatableResponse;
 import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
+import uk.gov.hmcts.befta.util.BeftaUtils;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 
 class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
@@ -55,18 +54,19 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     @DisplayName("should import a valid definition multiple times and create Elasticsearch index, alias and field mappings")
     void shouldImportValidDefinitionMultipleTimes() throws Exception {
         // invoke definition import
-        InputStream stream = getClass().getClassLoader().getResource(
-               TestDataLoaderToDefinitionStore.DEFAULT_DEFINITIONS_PATH + "CCD_CNP_27.xlsx")
-                .openStream();
-        File file = new File("_mock_file.temp");
-        FileUtils.copyInputStreamToFile(stream, file);
-        asAutoTestImporter().get()
+        File file = BeftaUtils.getClassPathResourceIntoTemporaryFile(
+                TestDataLoaderToDefinitionStore.DEFAULT_DEFINITIONS_PATH + "CCD_CNP_27.xlsx");
+        try {
+            asAutoTestImporter().get()
             .given()
                 .multiPart(file)
             .expect()
             .statusCode(201)
             .when()
             .post("/import");
+        } finally {
+            file.delete();
+        }
 
         withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS, "ES index verification", () -> verifyIndexAndFieldMappings(false));
 
