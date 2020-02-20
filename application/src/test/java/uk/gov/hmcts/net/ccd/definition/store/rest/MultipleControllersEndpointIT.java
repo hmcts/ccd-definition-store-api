@@ -260,7 +260,16 @@ public class MultipleControllersEndpointIT extends BaseTest {
 
     // To be @Nested - CaseDefinition Controller
     @Test
-    public void shouldReturnJurisdictions() throws Exception {
+    public void shouldReturnJurisdictionsUpperCase() throws Exception {
+        shouldReturnJurisdictions("TEST");
+    }
+
+    @Test
+    public void shouldReturnJurisdictionsLowerCase() throws Exception {
+        shouldReturnJurisdictions("test");
+    }
+
+    private  void shouldReturnJurisdictions(String id) throws Exception {
         givenUserProfileReturnsSuccess();
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -269,7 +278,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
                                                   .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
-        final String URL = JURISDICTIONS_URL + "?ids=test";
+        final String URL = JURISDICTIONS_URL + "?ids=" + id;
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
