@@ -269,7 +269,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
                                                   .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
-        final String URL = JURISDICTIONS_URL + "?ids=TEST";
+        final String URL = JURISDICTIONS_URL + "?ids=test";
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
