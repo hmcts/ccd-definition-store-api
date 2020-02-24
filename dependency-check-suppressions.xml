@@ -63,4 +63,10 @@
         <packageUrl regex="true">^pkg:maven/com\.puppycrawl\.tools/checkstyle@.*$</packageUrl>
         <cpe>cpe:/a:checkstyle:checkstyle</cpe>
     </suppress>
+
+    <!-- FIXME : RDM-???? -->
+    <suppress>
+        <notes>Temporary suppression for on-going developments</notes>
+        <cve>CVE-2020-8840</cve>
+    </suppress>
 </suppressions>
