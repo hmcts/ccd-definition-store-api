@@ -265,6 +265,7 @@ public class SpreadsheetValidatorTest {
             throw ex;
         }
     }
+
     @Test(expected = Test.None.class)
     public void shouldVaidate_WithAllWorkSheetsInPlace() {
 

@@ -10,8 +10,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperExceptio
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT_TO_FIELDS;
-
 @Component
 public class SpreadsheetValidator {
 
