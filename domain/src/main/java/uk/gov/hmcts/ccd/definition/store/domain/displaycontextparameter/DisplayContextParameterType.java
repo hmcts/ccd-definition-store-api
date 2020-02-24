@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter;
 
 import com.google.common.base.Strings;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,21 +16,33 @@ public enum DisplayContextParameterType {
     private static final int TYPE_GROUP = 1;
     private static final int VALUE_GROUP = 2;
 
-    private static final String ERROR_MESSAGE_INVALID_PARAMETER = "Invalid display context parameter '%s'";
+    public static Optional<DisplayContextParameter> getDisplayContextParameterFor(String displayContextParameter) {
+        Optional<DisplayContextParameterType> type = getParameterTypeFor(displayContextParameter);
+        Optional<String> value = getParameterValueFor(displayContextParameter);
 
-    public static DisplayContextParameterType getParameterTypeFor(String displayContextParameter) throws IllegalArgumentException {
-        Matcher m = PATTERN.matcher(displayContextParameter);
-        if (m.matches()) {
-            return valueOf(m.group(TYPE_GROUP));
+        if (!type.isPresent() || !value.isPresent()) {
+            return Optional.empty();
         }
-        throw new IllegalArgumentException(String.format(ERROR_MESSAGE_INVALID_PARAMETER, displayContextParameter));
+        return Optional.of(new DisplayContextParameter(type.get(), value.get()));
     }
 
-    public static String getParameterValueFor(String displayContextParameter) throws IllegalArgumentException {
+    public static Optional<DisplayContextParameterType> getParameterTypeFor(String displayContextParameter) {
+        Matcher m = PATTERN.matcher(displayContextParameter);
+        if (m.matches()) {
+            try {
+                return Optional.of(valueOf(m.group(TYPE_GROUP)));
+            } catch (IllegalArgumentException e) {
+                return Optional.empty();
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<String> getParameterValueFor(String displayContextParameter) throws IllegalArgumentException {
         Matcher m = PATTERN.matcher(displayContextParameter);
         if (m.matches() && !Strings.isNullOrEmpty(m.group(VALUE_GROUP))) {
-            return m.group(VALUE_GROUP);
+            return Optional.of(m.group(VALUE_GROUP));
         }
-        throw new IllegalArgumentException(String.format(ERROR_MESSAGE_INVALID_PARAMETER, displayContextParameter));
+        return Optional.empty();
     }
 }

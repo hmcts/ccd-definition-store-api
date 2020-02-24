@@ -4,7 +4,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayC
 
 public interface DisplayContextParameterValidator {
 
-    public DisplayContextParameterType getType();
+    DisplayContextParameterType getType();
 
-    public void validate(String parameterValue) throws Exception;
+    void validate(String parameterValue) throws Exception;
 }

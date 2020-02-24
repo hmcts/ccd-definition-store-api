@@ -11,15 +11,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 
-import java.util.List;
+import java.util.Optional;
 
 @Component
 public class EventComplexTypeEntityDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<EventComplexTypeEntity> implements EventComplexTypeEntityValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
-        { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };
+        {DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY};
     private static final String[] ALLOWED_FIELD_TYPES =
-        { FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME };
+        {FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME};
 
     @Autowired
     public EventComplexTypeEntityDisplayContextParameterValidatorImpl(final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
@@ -38,40 +38,23 @@ public class EventComplexTypeEntityDisplayContextParameterValidatorImpl extends 
 
     @Override
     protected String getFieldType(final EventComplexTypeEntity entity) {
-        // Always return allowed field type
-        List<ComplexFieldEntity> list = entity.getComplexFieldType().getCaseField().getFieldType().getCollectionFieldType().getComplexFields();
-        return ALLOWED_FIELD_TYPES[0];
+        String reference = entity.getReference();
+        Optional<ComplexFieldEntity> complexFieldEntity = entity.getComplexFieldType()
+            .getCaseField()
+            .getFieldType()
+            .getCollectionFieldType()
+            .getComplexFields()
+            .stream()
+            .filter(e -> e.getReference().equals(reference)).findAny();
+        return complexFieldEntity.map(ComplexFieldEntity::getBaseTypeString).orElse("");
     }
 
-    @Override
-    protected ValidationError unsupportedDisplayContextParameterTypeError(final EventComplexTypeEntity entity) {
-        return new ValidationError(
-            String.format(ERROR_MESSAGE_UNSUPPORTED_PARAMETER_TYPE,
-                getDisplayContextParameter(entity),
-                getCaseFieldReference(entity)
-            ), entity);
-    }
-
-    @Override
-    protected ValidationError invalidValueError(final EventComplexTypeEntity entity) {
-        return new ValidationError(
-            String.format(ERROR_MESSAGE_INVALID_VALUE,
-                getDisplayContextParameter(entity),
-                getCaseFieldReference(entity)
-            ), entity);
-    }
-
-    @Override
-    protected ValidationError unsupportedFieldTypeError(final EventComplexTypeEntity entity) {
-        return new ValidationError(
-            String.format(ERROR_MESSAGE_UNSUPPORTED_FIELD_TYPE,
-                getDisplayContextParameter(entity),
-                getFieldType(entity),
-                getCaseFieldReference(entity)
-            ), entity);
-    }
-
-    private String getCaseFieldReference(final EventComplexTypeEntity entity) {
+    protected String getCaseFieldReference(final EventComplexTypeEntity entity) {
         return (entity.getComplexFieldType().getCaseField() != null ? entity.getComplexFieldType().getCaseField().getReference() : "");
+    }
+
+    @Override
+    protected String getSheetName(EventComplexTypeEntity entity) {
+        return "CaseEventToComplexTypes";
     }
 }

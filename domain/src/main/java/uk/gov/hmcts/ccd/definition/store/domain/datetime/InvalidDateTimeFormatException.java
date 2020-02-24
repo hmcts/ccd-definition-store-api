@@ -11,5 +11,4 @@ public class InvalidDateTimeFormatException extends Exception {
     public String getDateTimeFormat() {
         return this.dateTimeFormat;
     }
-
 }

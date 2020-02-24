@@ -28,38 +28,16 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImpl extends Abs
 
     @Override
     protected String getFieldType(final GenericLayoutEntity entity) {
-        return entity.getCaseField().getFieldType().getReference();
+        return entity.getCaseField().getBaseTypeString();
     }
 
     @Override
-    protected ValidationError unsupportedDisplayContextParameterTypeError(final GenericLayoutEntity entity) {
-        return new ValidationError(
-            String.format(ERROR_MESSAGE_UNSUPPORTED_PARAMETER_TYPE,
-                getDisplayContextParameter(entity),
-                getCaseFieldReference(entity)
-            ), entity);
-    }
-
-    @Override
-    protected ValidationError invalidValueError(final GenericLayoutEntity entity) {
-        return new ValidationError(
-            String.format(ERROR_MESSAGE_INVALID_VALUE,
-                getDisplayContextParameter(entity),
-                getCaseFieldReference(entity)
-            ), entity);
-    }
-
-    @Override
-    protected ValidationError unsupportedFieldTypeError(final GenericLayoutEntity entity) {
-        return new ValidationError(
-            String.format(ERROR_MESSAGE_UNSUPPORTED_FIELD_TYPE,
-                getDisplayContextParameter(entity),
-                getFieldType(entity),
-                getCaseFieldReference(entity)
-            ), entity);
-    }
-
-    private String getCaseFieldReference(final GenericLayoutEntity entity) {
+    protected String getCaseFieldReference(final GenericLayoutEntity entity) {
         return (entity.getCaseField() != null ? entity.getCaseField().getReference() : "");
+    }
+
+    @Override
+    protected String getSheetName(GenericLayoutEntity entity) {
+        return entity.getSheetName();
     }
 }

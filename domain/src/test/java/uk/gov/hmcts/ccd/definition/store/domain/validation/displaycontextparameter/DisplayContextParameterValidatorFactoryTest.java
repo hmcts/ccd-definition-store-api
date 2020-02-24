@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.datetime.DateTimeFormatParser;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -43,12 +44,12 @@ public class DisplayContextParameterValidatorFactoryTest {
     }
 
     @Test
-    void shouldErrorForInvalidValidatorType() {
+    void shouldErrorForTypeWithNoValidator() {
         DisplayContextParameterValidator validator = new DateTimeDisplayValidatorImpl(dateTimeFormatParser);
-        factory = new DisplayContextParameterValidatorFactory(Arrays.asList(validator));
+        factory = new DisplayContextParameterValidatorFactory(Collections.singletonList(validator));
 
         assertThrows(NoSuchElementException.class, () -> {
-            factory.getValidator(DisplayContextParameterType.DATETIMEENTRY);
+            factory.getValidator(DisplayContextParameterType.LIST);
         });
     }
 }

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventC
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -100,7 +100,8 @@ public class EventComplexTypeEntityDisplayContextParameterValidatorImplTest {
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Display context parameter '#DATETIMEENTRY(0123456789)' has been incorrectly configured or is invalid for field 'CASE_FIELD'"))
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Display context parameter '#DATETIMEENTRY(0123456789)' has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'CaseEventToComplexTypes'"))
         );
     }
 
@@ -114,7 +115,8 @@ public class EventComplexTypeEntityDisplayContextParameterValidatorImplTest {
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Unsupported display context parameter type '#INVALIDPARAMETER(hhmmss)' for field 'CASE_FIELD'"))
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Display context parameter '#INVALIDPARAMETER(hhmmss)' has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'CaseEventToComplexTypes'"))
         );
     }
 
@@ -128,23 +130,24 @@ public class EventComplexTypeEntityDisplayContextParameterValidatorImplTest {
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD'"))
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD' on tab 'CaseEventToComplexTypes'"))
         );
     }
 
-//    @Test
-//    void shouldFailValidationForNotAllowedFieldType() {
-//        EventComplexTypeEntity entity = eventComplexTypeEntity("CASE_FIELD", FieldTypeUtils.BASE_TEXT);
-//        entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss)");
-//
-//        final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
-//
-//        assertAll(
-//            () -> assertThat(result.isValid(), is(false)),
-//            () -> assertThat(result.getValidationErrors().size(), is(1)),
-//            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Display context parameter '#DATETIMEDISPLAY(hhmmss)' is unsupported for field type 'Text' of field 'CASE_FIELD'"))
-//        );
-//    }
+    @Test
+    void shouldFailValidationForNotAllowedFieldType() {
+        EventComplexTypeEntity entity = eventComplexTypeEntity("CASE_FIELD", FieldTypeUtils.BASE_TEXT);
+        entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss)");
+
+        final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(false)),
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Display context parameter '#DATETIMEDISPLAY(hhmmss)' is unsupported for field type 'Text' of field 'CASE_FIELD' on tab 'CaseEventToComplexTypes'"))
+        );
+    }
 
     private EventComplexTypeEntity eventComplexTypeEntity(String reference) {
         EventComplexTypeEntity eventComplexTypeEntity = new EventComplexTypeEntity();
@@ -153,11 +156,13 @@ public class EventComplexTypeEntityDisplayContextParameterValidatorImplTest {
     }
 
     private EventComplexTypeEntity eventComplexTypeEntity(String caseFieldReference, String caseFieldType) {
-        EventComplexTypeEntity eventComplexTypeEntity = eventComplexTypeEntity("Reference");
+        EventComplexTypeEntity eventComplexTypeEntity = eventComplexTypeEntity(caseFieldReference);
         eventComplexTypeEntity.setComplexFieldType(
             eventCaseFieldEntity(
-                caseFieldEntity(caseFieldReference, fieldTypeEntity(caseFieldType)),
-                null
+                caseFieldEntity("CASE_FIELD", fieldTypeEntityWithCollection("Collection Field Type",
+                    fieldTypeEntityWithComplex(caseFieldReference,
+                        Arrays.asList(complexFieldEntity(caseFieldReference, fieldTypeEntity(caseFieldType)))))
+                ),null
             )
         );
         return eventComplexTypeEntity;
@@ -180,9 +185,31 @@ public class EventComplexTypeEntityDisplayContextParameterValidatorImplTest {
         return caseFieldEntity;
     }
 
-    private static FieldTypeEntity fieldTypeEntity(String fieldType) {
+    private static FieldTypeEntity fieldTypeEntity(String reference) {
+        FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
+        fieldTypeEntity.setReference(reference);
+        return fieldTypeEntity;
+    }
+
+    private static FieldTypeEntity fieldTypeEntityWithCollection(String fieldType, FieldTypeEntity collectionFieldType) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(fieldType);
+        fieldTypeEntity.setCollectionFieldType(collectionFieldType);
         return fieldTypeEntity;
+    }
+
+    private static FieldTypeEntity fieldTypeEntityWithComplex(String reference,
+                                                   List<ComplexFieldEntity> complexFieldEntityList) {
+        FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
+        fieldTypeEntity.setReference(reference);
+        fieldTypeEntity.addComplexFields(complexFieldEntityList);
+        return fieldTypeEntity;
+    }
+
+    private static ComplexFieldEntity complexFieldEntity(String reference, FieldTypeEntity fieldType) {
+        ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
+        complexFieldEntity.setReference(reference);
+        complexFieldEntity.setFieldType(fieldType);
+        return complexFieldEntity;
     }
 }

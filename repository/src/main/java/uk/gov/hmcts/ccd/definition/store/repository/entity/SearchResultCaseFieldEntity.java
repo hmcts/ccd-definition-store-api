@@ -17,4 +17,8 @@ public class SearchResultCaseFieldEntity extends GenericLayoutEntity {
         this.sortOrder = sortOrder;
     }
 
+    @Override
+    public String getSheetName() {
+        return "SearchResultFields";
+    }
 }

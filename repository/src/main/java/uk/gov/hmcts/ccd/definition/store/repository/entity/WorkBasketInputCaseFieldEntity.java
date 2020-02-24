@@ -7,4 +7,8 @@ import javax.persistence.Table;
 @Entity
 public class WorkBasketInputCaseFieldEntity extends GenericLayoutEntity {
 
+    @Override
+    public String getSheetName() {
+        return "WorkBasketInputFields";
+    }
 }

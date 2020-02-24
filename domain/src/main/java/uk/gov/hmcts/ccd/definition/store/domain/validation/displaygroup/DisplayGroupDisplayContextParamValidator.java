@@ -1,11 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+
+import java.util.Optional;
 
 @Component
 public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCaseFieldValidator {
@@ -15,8 +19,12 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
 
     @Override
     public ValidationResult validate(DisplayGroupCaseFieldEntity entity) {
-
         ValidationResult validationResult = new ValidationResult();
+
+        if (Strings.isNullOrEmpty(entity.getDisplayContextParameter()) || isDisplayContextParameterDateTimeType(entity)) {
+            return validationResult;
+        }
+
         if (isFieldTypeNotCollection(entity)) {
 
             validationResult.addError(new ValidationError("Display context parameter is not of type collection") {
@@ -25,7 +33,7 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
         if (StringUtils.isNotBlank(entity.getDisplayContextParameter())) {
 
             if (isFieldTypeNotTableOrList(entity)) {
-                validationResult.addError(new ValidationError("DisplayContextParameter text should begin with #LIST( or #TABLE("){});
+                validationResult.addError(new ValidationError("DisplayContextParameter text should begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY("){});
             } else {
                 String removeBeginingSection = entity.getDisplayContextParameter().indexOf(LIST_PREFIX) > -1
                     ? entity.getDisplayContextParameter().replace(LIST_PREFIX, "") :
@@ -50,6 +58,11 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
                 });
             }
         }
+    }
+
+    private boolean isDisplayContextParameterDateTimeType(DisplayGroupCaseFieldEntity entity) {
+        Optional<DisplayContextParameterType> type = DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter());
+        return type.isPresent() ? type.get() == DisplayContextParameterType.DATETIMEDISPLAY || type.get() == DisplayContextParameterType.DATETIMEENTRY : false;
     }
 
     private boolean isFieldTypeNotTableOrList(DisplayGroupCaseFieldEntity entity) {
