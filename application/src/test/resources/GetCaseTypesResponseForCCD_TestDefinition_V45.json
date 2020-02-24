@@ -83,7 +83,7 @@
     }, {
       "case_field_id" : "referenceCollection",
       "display_context" : "OPTIONAL",
-      "display_context_parameter" : "#TABLE(Title, FirstName, MiddleName)",
+      "display_context_parameter" : null,
       "show_condition" : null,
       "show_summary_change_option" : null,
       "show_summary_content_option" : null,
