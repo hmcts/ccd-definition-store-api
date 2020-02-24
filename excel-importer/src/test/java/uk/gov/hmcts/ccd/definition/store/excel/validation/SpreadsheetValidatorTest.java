@@ -224,6 +224,7 @@ public class SpreadsheetValidatorTest {
         final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#TABLE()");
+        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
         sheetCETF.addDataItem(definitionDataItem);
 
         addDefinitionSheet(SheetName.CASE_FIELD);
@@ -233,7 +234,7 @@ public class SpreadsheetValidatorTest {
         try {
             validator.validate(definitionSheets);
         } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("DisplayContextParameter contains incorrect or invalid configuration in tab CaseEventToFields"));
+            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab CaseEventToFields"));
             throw ex;
         }
     }
@@ -250,6 +251,7 @@ public class SpreadsheetValidatorTest {
         final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#LIST()");
+        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
         sheetCETF.addDataItem(definitionDataItem);
 
         addDefinitionSheet(SheetName.CASE_FIELD);
@@ -259,7 +261,7 @@ public class SpreadsheetValidatorTest {
         try {
             validator.validate(definitionSheets);
         } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("DisplayContextParameter contains incorrect or invalid configuration in tab CaseEventToFields"));
+            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab CaseEventToFields"));
             throw ex;
         }
     }
@@ -275,6 +277,7 @@ public class SpreadsheetValidatorTest {
         final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#DATETIMEENTRY()");
+        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
         sheetCETF.addDataItem(definitionDataItem);
 
         addDefinitionSheet(SheetName.CASE_FIELD);

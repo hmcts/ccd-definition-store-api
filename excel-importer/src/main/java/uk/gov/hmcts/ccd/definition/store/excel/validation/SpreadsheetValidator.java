@@ -114,7 +114,7 @@ public class SpreadsheetValidator {
                 definitionSheet.getDataItems().forEach(item -> {
                     if (item.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER) != null) {
                         if (isFieldTypeTableOrList(item.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER))) {
-                            throw new InvalidImportException("DisplayContextParameter contains incorrect or invalid configuration in tab " + definitionSheet.getName());
+                            throw new InvalidImportException(item.getString(ColumnName.CASE_FIELD_ID) + " contains incorrect or invalid configuration in tab " + definitionSheet.getName());
                         }
                     }
                 });
