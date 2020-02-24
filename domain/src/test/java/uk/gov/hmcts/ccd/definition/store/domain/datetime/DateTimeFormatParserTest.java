@@ -18,33 +18,33 @@ public class DateTimeFormatParserTest {
     private DateTimeFormatParser parser;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         parser = new DateTimeFormatParser();
     }
 
     @ParameterizedTest
     @ArgumentsSource(ValidDateTimeFormatArgumentsProvider.class)
-    public void shouldParseValidFormat(String dateTimeFormat) throws InvalidDateTimeFormatException {
+    void shouldParseValidFormat(String dateTimeFormat) throws InvalidDateTimeFormatException {
         parser.parseDateTimeFormat(dateTimeFormat);
     }
 
     @ParameterizedTest
     @ArgumentsSource(InvalidDateTimeFormatArgumentsProvider.class)
-    public void shouldFailToParseInvalidFormat(String dateTimeFormat) {
+    void shouldFailToParseInvalidFormat(String dateTimeFormat) {
         assertThrows(InvalidDateTimeFormatException.class, () -> {
             parser.parseDateTimeFormat(dateTimeFormat);
         });
     }
 
     @Test
-    public void shouldParseValidFormatWithProvidedPattern() throws InvalidDateTimeFormatException {
+    void shouldParseValidFormatWithProvidedPattern() throws InvalidDateTimeFormatException {
         final String dateTimeFormat = "yyyyMMddHHmmssSSS";
         final Pattern pattern = Pattern.compile("[yMdHmsS]+");
         parser.parseDateTimeFormat(dateTimeFormat, pattern);
     }
 
     @Test
-    public void shouldFailIfValidFormatDoesNotMeetProvidedPattern() {
+    void shouldFailIfValidFormatDoesNotMeetProvidedPattern() {
         final String dateTimeFormat = "HHmmss";
         final Pattern pattern = Pattern.compile("[a]+");
         assertThrows(InvalidDateTimeFormatException.class, () -> {
@@ -52,7 +52,7 @@ public class DateTimeFormatParserTest {
         });
     }
 
-    static class ValidDateTimeFormatArgumentsProvider implements ArgumentsProvider {
+    private static class ValidDateTimeFormatArgumentsProvider implements ArgumentsProvider {
         @Override
         public Stream<Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
@@ -65,7 +65,7 @@ public class DateTimeFormatParserTest {
         }
     }
 
-    static class InvalidDateTimeFormatArgumentsProvider implements ArgumentsProvider {
+    private static class InvalidDateTimeFormatArgumentsProvider implements ArgumentsProvider {
         @Override
         public Stream<Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(

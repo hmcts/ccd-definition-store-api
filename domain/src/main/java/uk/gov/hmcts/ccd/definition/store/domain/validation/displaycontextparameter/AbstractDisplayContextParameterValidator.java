@@ -13,17 +13,17 @@ import java.util.Optional;
 
 public abstract class AbstractDisplayContextParameterValidator<T extends Serializable> {
 
-    protected static final String ERROR_MESSAGE_UNSUPPORTED_PARAMETER_TYPE =
+    private static final String ERROR_MESSAGE_UNSUPPORTED_PARAMETER_TYPE =
         "Unsupported display context parameter type '%s' for field '%s' on tab '%s'";
-    protected static final String ERROR_MESSAGE_INVALID_VALUE =
+    private static final String ERROR_MESSAGE_INVALID_VALUE =
         "Display context parameter '%s' has been incorrectly configured or is invalid for field '%s' on tab '%s'";
-    protected static final String ERROR_MESSAGE_UNSUPPORTED_FIELD_TYPE =
+    private static final String ERROR_MESSAGE_UNSUPPORTED_FIELD_TYPE =
         "Display context parameter '%s' is unsupported for field type '%s' of field '%s' on tab '%s'";
 
     private final DisplayContextParameterType[] ALLOWED_TYPES;
     private final String[] ALLOWED_FIELD_TYPES;
 
-    protected DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory;
+    private DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory;
 
     public AbstractDisplayContextParameterValidator(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory,
                                                     DisplayContextParameterType[] allowedTypes,

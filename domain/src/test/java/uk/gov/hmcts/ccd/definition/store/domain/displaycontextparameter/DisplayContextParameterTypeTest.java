@@ -13,7 +13,7 @@ public class DisplayContextParameterTypeTest {
     private static final String DATE_TIME_ENTRY_PARAMETER = "#DATETIMEENTRY(HHmmss)";
 
     @Test
-    public void shouldGetDisplayContextParameterForValidInput() {
+    void shouldGetDisplayContextParameterForValidInput() {
         Optional<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor(DATE_TIME_ENTRY_PARAMETER);
 
         assertAll(
@@ -23,7 +23,7 @@ public class DisplayContextParameterTypeTest {
     }
 
     @Test
-    public void shouldNotReturnDisplayContextParameterForInvalidType() {
+    void shouldNotReturnDisplayContextParameterForInvalidType() {
         Optional<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor("#INVALID(123)");
 
         assertAll(
@@ -32,7 +32,7 @@ public class DisplayContextParameterTypeTest {
     }
 
     @Test
-    public void shouldNotReturnDisplayContextParameterForInvalidValue() {
+    void shouldNotReturnDisplayContextParameterForInvalidValue() {
         Optional<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor("#DATETIMEENTRY()");
 
         assertAll(
@@ -41,7 +41,7 @@ public class DisplayContextParameterTypeTest {
     }
 
     @Test
-    public void shouldGetParameterTypeForKnownType() {
+    void shouldGetParameterTypeForKnownType() {
         Optional<DisplayContextParameterType> result = DisplayContextParameterType.getParameterTypeFor(DATE_TIME_ENTRY_PARAMETER);
 
         assertAll(
@@ -50,7 +50,7 @@ public class DisplayContextParameterTypeTest {
     }
 
     @Test
-    public void shouldNotReturnTypeForUnknownType() {
+    void shouldNotReturnTypeForUnknownType() {
         Optional<DisplayContextParameterType> result = DisplayContextParameterType.getParameterTypeFor("#INVALID(123)");
 
         assertAll(
@@ -59,7 +59,7 @@ public class DisplayContextParameterTypeTest {
     }
 
     @Test
-    public void shouldNotReturnTypeForInvalidFormat() {
+    void shouldNotReturnTypeForInvalidFormat() {
         Optional<DisplayContextParameterType> result = DisplayContextParameterType.getParameterTypeFor("INVALID_FORMAT");
 
         assertAll(
@@ -68,7 +68,7 @@ public class DisplayContextParameterTypeTest {
     }
 
     @Test
-    public void shouldGetParameterValueForKnownType() {
+    void shouldGetParameterValueForKnownType() {
         Optional<String> result = DisplayContextParameterType.getParameterValueFor(DATE_TIME_ENTRY_PARAMETER);
 
         assertAll(
@@ -77,7 +77,7 @@ public class DisplayContextParameterTypeTest {
     }
 
     @Test
-    public void shouldNotReturnParameterValueForNoValuePassed() {
+    void shouldNotReturnParameterValueForNoValuePassed() {
         Optional<String> result = DisplayContextParameterType.getParameterValueFor("#DATETIMEENTRY()");
 
         assertAll(
@@ -86,7 +86,7 @@ public class DisplayContextParameterTypeTest {
     }
 
     @Test
-    public void shouldNotReturnParameterValueForInvalidFormat() {
+    void shouldNotReturnParameterValueForInvalidFormat() {
         Optional<String> result = DisplayContextParameterType.getParameterValueFor("(123)");
 
         assertAll(
