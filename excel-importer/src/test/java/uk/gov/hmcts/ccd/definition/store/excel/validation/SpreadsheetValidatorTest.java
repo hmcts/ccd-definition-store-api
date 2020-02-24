@@ -6,7 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportE
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -212,6 +212,57 @@ public class SpreadsheetValidatorTest {
         }
     }
 
+    @Test(expected = InvalidImportException.class)
+    public void shouldFail_whenDisplayContextParameterHasTableInCaseEventToFields() {
+
+        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
+        addDataItem(sheetJ);
+
+        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
+        addDataItem(sheetCT);
+
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#TABLE()");
+        sheetCETF.addDataItem(definitionDataItem);
+
+        addDefinitionSheet(SheetName.CASE_FIELD);
+        addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        addDefinitionSheet(SheetName.FIXED_LISTS);
+
+        try {
+            validator.validate(definitionSheets);
+        } catch (InvalidImportException ex) {
+            assertThat(ex.getMessage(), is("DisplayContextParameter contains incorrect or invalid configuration in tab CaseEventToFields"));
+            throw ex;
+        }
+    }
+
+    @Test(expected = InvalidImportException.class)
+    public void shouldFail_whenDisplayContextParameterHasListInCaseEventToFields() {
+
+        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
+        addDataItem(sheetJ);
+
+        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
+        addDataItem(sheetCT);
+
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#LIST()");
+        sheetCETF.addDataItem(definitionDataItem);
+
+        addDefinitionSheet(SheetName.CASE_FIELD);
+        addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        addDefinitionSheet(SheetName.FIXED_LISTS);
+
+        try {
+            validator.validate(definitionSheets);
+        } catch (InvalidImportException ex) {
+            assertThat(ex.getMessage(), is("DisplayContextParameter contains incorrect or invalid configuration in tab CaseEventToFields"));
+            throw ex;
+        }
+    }
     @Test(expected = Test.None.class)
     public void shouldVaidate_WithAllWorkSheetsInPlace() {
 
@@ -220,6 +271,11 @@ public class SpreadsheetValidatorTest {
 
         final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
         addDataItem(sheetCT);
+
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#DATETIMEENTRY()");
+        sheetCETF.addDataItem(definitionDataItem);
 
         addDefinitionSheet(SheetName.CASE_FIELD);
         addDefinitionSheet(SheetName.COMPLEX_TYPES);
