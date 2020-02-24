@@ -22,6 +22,15 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
     }
 
     @Test
+    public void shouldNotFireValidationErrorWhenDateTimeDisplayContextParameter() {
+        EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#DATETIMEENTRY(HHmmss)");
+        ValidationResult validationResult
+            = new EventCaseFieldDisplayContextParameterValidatorImpl().validate(eventCaseFieldEntity, null);
+
+        assertTrue(validationResult.isValid());
+    }
+
+    @Test
     public void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#TABLE(firstname)");
         eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);

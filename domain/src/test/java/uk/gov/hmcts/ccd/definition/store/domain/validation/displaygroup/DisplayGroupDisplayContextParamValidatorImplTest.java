@@ -21,6 +21,15 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
     }
 
     @Test
+    public void shouldNotFireValidationErrorWhenDateTimeDisplayContextParameter() {
+        DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#DATETIMEENTRY(HHmmss)");
+        ValidationResult validationResult
+            = new DisplayGroupDisplayContextParamValidator().validate(entity);
+
+        assertTrue(validationResult.isValid());
+    }
+
+    @Test
     public void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
         DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#TABLE(firstname)");
         ValidationResult validationResult
