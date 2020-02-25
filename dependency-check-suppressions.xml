@@ -57,6 +57,14 @@
         <cve>CVE-2020-5398</cve>
     </suppress>
 
+    <suppress>
+        <notes><![CDATA[
+   file name: checkstyle-8.18.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.puppycrawl\.tools/checkstyle@.*$</packageUrl>
+        <cpe>cpe:/a:checkstyle:checkstyle</cpe>
+    </suppress>
+
     <!-- FIXME : RDM-???? -->
     <suppress>
         <notes>Temporary suppression for on-going developments</notes>
