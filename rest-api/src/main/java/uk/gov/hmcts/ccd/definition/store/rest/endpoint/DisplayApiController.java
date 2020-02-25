@@ -1,28 +1,23 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 import uk.gov.hmcts.ccd.definition.store.repository.model.BannersResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
-import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
-import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfigResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputDefinition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultDefinition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
@@ -37,15 +32,10 @@ public class DisplayApiController {
     private DisplayService displayService;
 
     private final BannerService bannerService;
-    
-    private final JurisdictionUiConfigService jurisdictionUiConfigService;
 
-    public DisplayApiController(DisplayService displayService,
-    		BannerService bannerService,
-    		JurisdictionUiConfigService jurisdictionUiConfigService) {
+    public DisplayApiController(DisplayService displayService, BannerService bannerService) {
         this.displayService = displayService;
         this.bannerService = bannerService;
-        this.jurisdictionUiConfigService = jurisdictionUiConfigService;
     }
 
     @RequestMapping(value = "/display/search-input-definition/{id}", method = RequestMethod.GET, produces = {"application/json"})
@@ -124,16 +114,5 @@ public class DisplayApiController {
         @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> referencesOptional) {
         List<Banner> banners = referencesOptional.map(references -> bannerService.getAll(references)).orElse(Collections.emptyList());
         return new BannersResult(banners);
-    }
-    
-    @RequestMapping(value = "/display/jurisdiction-ui-configs", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Get UI config details for list of jurisdictions", response = JurisdictionUiConfigResult.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of Jurisdiction UI Configs")
-    })
-    public JurisdictionUiConfigResult getJurisdictionUiConfigs(
-        @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> referencesOptional) {
-        List<JurisdictionUiConfig> configs = referencesOptional.map(references -> jurisdictionUiConfigService.getAll(references)).orElse(Collections.emptyList());
-        return new JurisdictionUiConfigResult(configs);
     }
 }

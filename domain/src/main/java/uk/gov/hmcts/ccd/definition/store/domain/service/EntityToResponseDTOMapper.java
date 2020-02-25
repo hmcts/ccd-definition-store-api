@@ -222,10 +222,6 @@ public interface EntityToResponseDTOMapper {
     SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
 
     Banner map(BannerEntity bannerEntity);
-    
-    @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.reference", target = "id")
-    @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.name", target = "name")
-    JurisdictionUiConfig map(JurisdictionUiConfigEntity jurisdictionUiConfigEntity);
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
