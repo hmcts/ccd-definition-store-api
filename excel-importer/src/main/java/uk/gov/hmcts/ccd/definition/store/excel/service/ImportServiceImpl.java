@@ -1,21 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
+import com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
-import com.google.common.annotations.VisibleForTesting;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
@@ -27,7 +23,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionUiConfigParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.LayoutParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
@@ -46,7 +41,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
@@ -69,7 +63,6 @@ public class ImportServiceImpl implements ImportService {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final IdamProfileClient idamProfileClient;
     private final BannerService bannerService;
-    private final JurisdictionUiConfigService jurisdictionUiConfigService;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -84,9 +77,7 @@ public class ImportServiceImpl implements ImportService {
                              CaseFieldRepository caseFieldRepository,
                              ApplicationEventPublisher applicationEventPublisher,
                              IdamProfileClient idamProfileClient,
-                             BannerService bannerService,
-                             JurisdictionUiConfigService jurisdictionUiConfigService) {
-
+                             BannerService bannerService) {
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
         this.parserFactory = parserFactory;
@@ -100,7 +91,6 @@ public class ImportServiceImpl implements ImportService {
         this.idamProfileClient = idamProfileClient;
         this.applicationEventPublisher = applicationEventPublisher;
         this.bannerService = bannerService;
-        this.jurisdictionUiConfigService = jurisdictionUiConfigService;
     }
 
     /**
@@ -143,9 +133,6 @@ public class ImportServiceImpl implements ImportService {
             importBanner(bannerEntity);
             logger.debug("Importing spreadsheet: Banner...: OK");
         }
-        final JurisdictionUiConfigParser jurisdictionUiConfigParser = parserFactory.createJurisdictionUiConfigParser(parseContext);
-        JurisdictionUiConfigEntity jurisdictionUiConfigEntity = jurisdictionUiConfigParser.parse(definitionSheets);
-        importJurisdictionUiConfig(jurisdictionUiConfigEntity);
 
         /*
             2 - Field types
@@ -264,9 +251,4 @@ public class ImportServiceImpl implements ImportService {
     private void importBanner(BannerEntity bannerEntity) {
         bannerService.save(bannerEntity);
     }
-    
-    private void importJurisdictionUiConfig(JurisdictionUiConfigEntity jurisdictionUiConfigEntity) {
-        jurisdictionUiConfigService.save(jurisdictionUiConfigEntity);
-    }
-
 }

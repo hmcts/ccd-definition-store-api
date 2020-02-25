@@ -1401,39 +1401,6 @@ class EntityToResponseDTOMapperTest {
         }
     }
 
-    @Nested
-    @DisplayName("Should return a JurisdictionUiConfig model whose fields match those in the JurisdictionUiConfigEntity")
-    class MapJurisdictionUiConfigEntityTests {
-
-        @Test
-        void testMapJurisdictionUiConfigEntity() {
-        	JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
-        	jurisdictionEntity.setReference("Reference");
-        	jurisdictionEntity.setName("Name");
-            
-        	JurisdictionUiConfigEntity jurisdictionUiConfigEntity = new JurisdictionUiConfigEntity();
-        	jurisdictionUiConfigEntity.setShuttered(true);
-        	jurisdictionUiConfigEntity.setJurisdiction(jurisdictionEntity);
-
-        	JurisdictionUiConfig jurisdictionUiConfig = classUnderTest.map(jurisdictionUiConfigEntity);
-
-        	assertEquals(jurisdictionUiConfig.getShuttered(), jurisdictionUiConfigEntity.getShuttered());
-            assertEquals(jurisdictionUiConfig.getName(), jurisdictionUiConfigEntity.getJurisdiction().getName());
-            assertEquals(jurisdictionUiConfig.getId(), jurisdictionUiConfigEntity.getJurisdiction().getReference());
-        }
-
-        @Test
-        void testMapEmptyJurisdictionUiConfigEntity() {
-        	JurisdictionUiConfigEntity jurisdictionUiConfigEntity = new JurisdictionUiConfigEntity();
-
-        	JurisdictionUiConfig jurisdictionUiConfig = classUnderTest.map(jurisdictionUiConfigEntity);
-
-            assertNull(jurisdictionUiConfig.getId());
-            assertNull(jurisdictionUiConfig.getName());
-            assertNull(jurisdictionUiConfig.getShuttered());
-        }
-    }
-
     private void assertComplexACLs(List<ComplexFieldACLEntity> authorisation, List<ComplexACL> accessControlList) {
         for (ComplexFieldACLEntity authItem : authorisation) {
             assertThat(accessControlList, hasItem(aclWhichMatchesComplexFieldACL(authItem)));

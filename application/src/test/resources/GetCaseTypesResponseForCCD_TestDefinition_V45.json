@@ -2099,30 +2099,6 @@
     "complexACLs" : [ ],
     "order" : null,
     "show_condition" : null
-  }, {
-    "metadata" : true,
-    "id" : "[LAST_STATE_MODIFIED_DATE]",
-    "case_type_id" : null,
-    "label" : "Last State Modified Date",
-    "hint_text" : null,
-    "field_type" : {
-      "id" : "Date",
-      "type" : "Date",
-      "min" : null,
-      "max" : null,
-      "regular_expression" : null,
-      "fixed_list_items" : [ ],
-      "complex_fields" : [ ],
-      "collection_field_type" : null
-    },
-    "hidden" : false,
-    "security_classification" : "PUBLIC",
-    "live_from" : "#date",
-    "live_until" : null,
-    "acls" : [ ],
-    "complexACLs" : [ ],
-    "order" : null,
-    "show_condition" : null
   } ],
   "printable_document_url" : null,
   "security_classification" : "PRIVATE"

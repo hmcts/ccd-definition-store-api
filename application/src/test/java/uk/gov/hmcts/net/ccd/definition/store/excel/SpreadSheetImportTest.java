@@ -490,7 +490,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
     private void assertSearchResult(Map<Object, Object> caseFieldIds) {
         List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM search_result_case_field");
-        assertThat(allWorkbasket, hasSize(7));
+        assertThat(allWorkbasket, hasSize(6));
 
         Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(

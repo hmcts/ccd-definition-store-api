@@ -1,23 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
-import static java.util.Collections.sort;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Lists;
-import com.microsoft.azure.storage.OperationContext;
-import com.microsoft.azure.storage.ResultContinuation;
-import com.microsoft.azure.storage.ResultSegment;
-import com.microsoft.azure.storage.StorageException;
-import com.microsoft.azure.storage.blob.BlobListingDetails;
-import com.microsoft.azure.storage.blob.BlobProperties;
-import com.microsoft.azure.storage.blob.BlobRequestOptions;
-import com.microsoft.azure.storage.blob.CloudBlobContainer;
-import com.microsoft.azure.storage.blob.CloudBlockBlob;
-import com.microsoft.azure.storage.blob.ListBlobItem;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -30,8 +12,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
+import com.microsoft.azure.storage.OperationContext;
+import com.microsoft.azure.storage.ResultContinuation;
+import com.microsoft.azure.storage.ResultSegment;
+import com.microsoft.azure.storage.StorageException;
+import com.microsoft.azure.storage.blob.BlobListingDetails;
+import com.microsoft.azure.storage.blob.BlobProperties;
+import com.microsoft.azure.storage.blob.BlobRequestOptions;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import com.microsoft.azure.storage.blob.ListBlobItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
+
+import static java.util.Collections.sort;
 
 @Service
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
@@ -39,9 +37,7 @@ public class AzureImportAuditsClient {
 
     public static final String USER_ID = "UserID";
     public static final String CASE_TYPES = "CaseTypes";
-
     private static final String DATE_PATTERN = "yyyyMMdd";
-
     private static final boolean FLAT_BLOB_LISTING = true;
     private static final ResultContinuation NO_CONTINUATION_TOKEN = null;
     private static final BlobRequestOptions NO_OPTIONS = null;
@@ -63,11 +59,8 @@ public class AzureImportAuditsClient {
      * @return import audits in reverse chronological order based on AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT
      * @throws StorageException Exception thrown when trying to connect to Azure Blob store
      */
-
     public List<ImportAudit> fetchLatestImportAudits() throws StorageException {
-
         List<ImportAudit> audits = new ArrayList<>();
-
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("UTC"));
         String currentDateTime;
         Integer azureImportAuditsGetLimit = applicationParams.getAzureImportAuditsGetLimit();
@@ -92,7 +85,6 @@ public class AzureImportAuditsClient {
 
     private List<ImportAudit> populateListOfAudits(ResultSegment<ListBlobItem> blobsPage) throws StorageException {
         List<ImportAudit> auditsLastBatch = Lists.newArrayList();
-
         for (ListBlobItem lbi : blobsPage.getResults()) {
             if (lbi instanceof CloudBlockBlob) {
                 final CloudBlockBlob cbb = (CloudBlockBlob) lbi;
