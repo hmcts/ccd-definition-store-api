@@ -11,7 +11,6 @@ public enum MetadataField {
     CASE_REFERENCE,
     CREATED_DATE,
     LAST_MODIFIED_DATE,
-    LAST_STATE_MODIFIED_DATE,
     SECURITY_CLASSIFICATION;
 
     private boolean dynamic;

@@ -45,11 +45,11 @@ public enum AATHelper {
     }
 
     public String getGatewayServiceName() {
-        return Env.require("BEFTA_S2S_CLIENT_ID");
+        return Env.require("CCD_GW_SERVICE_NAME");
     }
 
     public String getGatewayServiceSecret() {
-        return Env.require("BEFTA_S2S_CLIENT_SECRET");
+        return Env.require("CCD_GW_SERVICE_SECRET");
     }
 
     public IdamHelper getIdamHelper() {
