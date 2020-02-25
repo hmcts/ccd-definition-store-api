@@ -1,0 +1,29 @@
+{
+  "_guid_": "S-363",
+  "_extends_": "F-084_Test_Base_Data",
+  "title": "must return 404 when request provides a non-existing case type id",
+  "specs": [
+    "an active profile in CCD",
+    "contains a non-existing case type id",
+    "contains 404 not found code"
+  ],
+  "users": {
+    "invokingUser": {
+      "username": "befta.caseworker.3@gmail.com",
+      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
+    }
+  },
+  "request": {
+    "pathVariables": {
+      "id": "BEFTA_CASETYPE_3_4_sdfhdj"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_404_Response_Headers",
+    "responseCode" : 404,
+    "responseMessage" : "Not Found",
+    "body" : {
+      "message" : "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+    }
+  }
+}
