@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparameter.DisplayContextParameterValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparameter.DisplayContextParameterValidatorFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
@@ -86,6 +87,22 @@ public class EventComplexTypeEntityDisplayContextParameterValidatorImplTest {
 
         assertAll(
             () -> assertThat(result.isValid(), is(true))
+        );
+    }
+
+    @Test
+    void shouldFailValidationForReadonlyFieldWithDateTimeEntry() throws Exception {
+        EventComplexTypeEntity entity = eventComplexTypeEntity("CASE_FIELD", FieldTypeUtils.BASE_DATE);
+        entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
+        entity.setDisplayContext(DisplayContext.READONLY);
+
+        final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(false)),
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' on tab 'CaseEventToComplexTypes'"))
         );
     }
 

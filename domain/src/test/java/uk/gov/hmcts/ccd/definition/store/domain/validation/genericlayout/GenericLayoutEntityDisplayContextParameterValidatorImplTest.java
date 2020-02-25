@@ -56,9 +56,9 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(EntityArgumentsProvider.class)
-    void shouldValidateEntityWithDateTimeEntryDisplayContextParameter(GenericLayoutEntity entity) {
-        entity.setDisplayContextParameter("#DATETIMEENTRY(hhmmss)");
+    @ArgumentsSource(ResultEntityArgumentsProvider.class)
+    void shouldValidateResultEntityWithDateTimeDisplayDisplayContextParameter(GenericLayoutEntity entity) {
+        entity.setDisplayContextParameter("#DATETIMEDISPLAY(HHmmss)");
         entity.setCaseField(caseFieldEntity());
 
         final ValidationResult result = validator.validate(entity);
@@ -69,9 +69,9 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(EntityArgumentsProvider.class)
-    void shouldValidateEntityWithDateTimeDisplayDisplayContextParameter(GenericLayoutEntity entity) {
-        entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss)");
+    @ArgumentsSource(InputEntityArgumentsProvider.class)
+    void shouldValidateInputEntityWithDateTimeEntryDisplayContextParameter(GenericLayoutEntity entity) {
+        entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
         entity.setCaseField(caseFieldEntity());
 
         final ValidationResult result = validator.validate(entity);
@@ -82,9 +82,9 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(EntityArgumentsProvider.class)
+    @ArgumentsSource(ResultEntityArgumentsProvider.class)
     void shouldValidateEntityWithDisplayContextParameterForDateFieldType(GenericLayoutEntity entity) {
-        entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss)");
+        entity.setDisplayContextParameter("#DATETIMEDISPLAY(HHmmss)");
         entity.setCaseField(caseFieldEntity(fieldTypeEntity(FieldTypeUtils.BASE_DATE)));
 
         final ValidationResult result = validator.validate(entity);
@@ -95,7 +95,39 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(EntityArgumentsProvider.class)
+    @ArgumentsSource(InputEntityArgumentsProvider.class)
+    void shouldFailValidationForDisplayParameterOnInputTab(GenericLayoutEntity entity, String tab) throws Exception {
+        entity.setDisplayContextParameter("#DATETIMEDISPLAY(HHmmss)");
+        entity.setCaseField(caseFieldEntity());
+
+        final ValidationResult result = validator.validate(entity);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(false)),
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Unsupported display context parameter type '#DATETIMEDISPLAY(HHmmss)' for field 'CASE_FIELD' on tab '"  + tab + "'"))
+        );
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(ResultEntityArgumentsProvider.class)
+    void shouldFailValidationForEntryParameterOnResultTab(GenericLayoutEntity entity, String tab) throws Exception {
+        entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
+        entity.setCaseField(caseFieldEntity());
+
+        final ValidationResult result = validator.validate(entity);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(false)),
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' on tab '"  + tab + "'"))
+        );
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(InputEntityArgumentsProvider.class)
     void shouldFailValidationForInvalidDateTimeFormat(GenericLayoutEntity entity, String tab) throws Exception {
         entity.setDisplayContextParameter("#DATETIMEENTRY(0123456789)");
         entity.setCaseField(caseFieldEntity());
@@ -166,6 +198,26 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
                 Arguments.of(new SearchInputCaseFieldEntity(), "SearchInputFields"),
                 Arguments.of(new SearchResultCaseFieldEntity(), "SearchResultFields"),
                 Arguments.of(new WorkBasketInputCaseFieldEntity(), "WorkBasketInputFields"),
+                Arguments.of(new WorkBasketCaseFieldEntity(), "WorkBasketResultFields")
+            );
+        }
+    }
+
+    static class InputEntityArgumentsProvider implements ArgumentsProvider {
+        @Override
+        public Stream<Arguments> provideArguments(ExtensionContext context) {
+            return Stream.of(
+                Arguments.of(new SearchInputCaseFieldEntity(), "SearchInputFields"),
+                Arguments.of(new WorkBasketInputCaseFieldEntity(), "WorkBasketInputFields")
+            );
+        }
+    }
+
+    static class ResultEntityArgumentsProvider implements ArgumentsProvider {
+        @Override
+        public Stream<Arguments> provideArguments(ExtensionContext context) {
+            return Stream.of(
+                Arguments.of(new SearchResultCaseFieldEntity(), "SearchResultFields"),
                 Arguments.of(new WorkBasketCaseFieldEntity(), "WorkBasketResultFields")
             );
         }

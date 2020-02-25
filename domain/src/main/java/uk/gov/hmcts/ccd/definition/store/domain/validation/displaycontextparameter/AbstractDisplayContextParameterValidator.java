@@ -86,7 +86,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         }
     }
 
-    private void validateDisplayContextParameterType(final DisplayContextParameter displayContextParameter,
+    protected void validateDisplayContextParameterType(final DisplayContextParameter displayContextParameter,
                                                      final T entity,
                                                      final ValidationResult validationResult) {
         if (Arrays.stream(ALLOWED_TYPES).noneMatch(displayContextParameter.getType()::equals)) {
@@ -94,7 +94,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         }
     }
 
-    private void validateDisplayContextParameterValue(final DisplayContextParameter displayContextParameter,
+    protected void validateDisplayContextParameterValue(final DisplayContextParameter displayContextParameter,
                                                       final T entity,
                                                       final ValidationResult validationResult) {
         DisplayContextParameterValidator parameterValidator = displayContextParameterValidatorFactory
@@ -106,7 +106,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         }
     }
 
-    private ValidationError unsupportedDisplayContextParameterTypeError(final T entity) {
+    protected ValidationError unsupportedDisplayContextParameterTypeError(final T entity) {
         return new SimpleValidationError<>(
             String.format(ERROR_MESSAGE_UNSUPPORTED_PARAMETER_TYPE,
                 getDisplayContextParameter(entity),
@@ -115,7 +115,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
             ), entity);
     }
 
-    private ValidationError invalidValueError(final T entity) {
+    protected ValidationError invalidValueError(final T entity) {
         return new SimpleValidationError<>(
             String.format(ERROR_MESSAGE_INVALID_VALUE,
                 getDisplayContextParameter(entity),
@@ -124,7 +124,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
             ), entity);
     }
 
-    private ValidationError unsupportedFieldTypeError(final T entity) {
+    protected ValidationError unsupportedFieldTypeError(final T entity) {
         return new SimpleValidationError<>(
             String.format(ERROR_MESSAGE_UNSUPPORTED_FIELD_TYPE,
                 getDisplayContextParameter(entity),
