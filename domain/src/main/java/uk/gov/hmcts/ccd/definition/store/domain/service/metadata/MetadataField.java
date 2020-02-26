@@ -42,4 +42,8 @@ public enum MetadataField {
     public static List<MetadataField> getDynamicFields() {
         return Arrays.stream(values()).filter(MetadataField::isDynamic).collect(Collectors.toList());
     }
+
+    public static boolean isMetadataField(String reference) {
+        return Arrays.stream(values()).map(MetadataField::getReference).anyMatch(f -> f.equals(reference));
+    }
 }

@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -70,7 +71,8 @@ public class EventCaseFieldShowConditionValidatorImpl implements EventCaseFieldE
         showCondition.getFields().forEach(showConditionField -> {
             if (!forShowConditionFieldExistsAtLeastOneEventCaseFieldEntity(
                 showConditionField,
-                allOtherEventCaseFieldEntities(eventCaseFieldEntity, allEventCaseFieldEntitiesForEventCase))) {
+                allOtherEventCaseFieldEntities(eventCaseFieldEntity, allEventCaseFieldEntitiesForEventCase))
+                && !MetadataField.isMetadataField(showConditionField)) {
                 validationResult.addError(
                     new EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError(
                         showConditionField,

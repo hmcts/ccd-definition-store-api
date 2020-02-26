@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -53,7 +54,7 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
             });
 
             showCondition.getFields().forEach(showConditionField -> {
-                if (!displayGroup.getEvent().hasField(showConditionField)) {
+                if (!displayGroup.getEvent().hasField(showConditionField) && !MetadataField.isMetadataField(showConditionField)) {
                     validationResult.addError(new DisplayGroupInvalidEventFieldShowCondition(showConditionField, displayGroup));
                 }
             });
