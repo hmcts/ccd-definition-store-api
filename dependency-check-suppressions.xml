@@ -56,6 +56,7 @@
         <cpe>cpe:/a:pivotal_software:spring_framework</cpe>
         <cve>CVE-2020-5398</cve>
     </suppress>
+
     <suppress>
         <notes><![CDATA[
    file name: checkstyle-8.18.jar
