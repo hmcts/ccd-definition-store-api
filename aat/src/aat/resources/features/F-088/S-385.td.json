@@ -1,0 +1,69 @@
+{
+  "_guid_": "S-385",
+  "_extends_": "F-088_Test_Base_Data",
+  "title": "must return the case type for an appropriate request",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid case type id",
+    "has the 200 OK code",
+    "has Work Basket results definition details"
+  ],
+  "users": {
+    "invokingUser": {
+      "username": "befta.caseworker.3@gmail.com",
+      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
+    }
+  },
+  "expectedResponse": {
+    "_extends_" : "Common_200_Response",
+    "headers" : {
+      "Content-Encoding":"[[ANYTHING_PRESENT]]",
+      "Content-Length":"[[ANYTHING_PRESENT]]",
+      "Content-Type":"[[ANYTHING_PRESENT]]",
+      "Strict-Transport-Security":"[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "case_type_id" : "BEFTA_CASETYPE_3_4",
+      "fields" : [ {
+        "metadata" : true,
+        "case_field_id" : "[LAST_STATE_MODIFIED_DATE]",
+        "case_field_element_path" : null,
+        "label" : "Last State Modified Date",
+        "order" : 1,
+        "role" : null,
+        "sort_order" : {
+          "direction" : "ASC",
+          "priority" : 1
+        },
+        "display_context_parameter" : null
+      }, {
+        "metadata" : false,
+        "case_field_id" : "TextField",
+        "case_field_element_path" : null,
+        "label" : "`Text` field",
+        "order" : 2,
+        "role" : null,
+        "sort_order" : null,
+        "display_context_parameter" : null
+      }, {
+        "metadata" : false,
+        "case_field_id" : "NumberField",
+        "case_field_element_path" : null,
+        "label" : "`Number` field",
+        "order" : 3,
+        "role" : null,
+        "sort_order" : null,
+        "display_context_parameter" : null
+      }, {
+        "metadata" : false,
+        "case_field_id" : "YesOrNoField",
+        "case_field_element_path" : null,
+        "label" : "`YesOrNo` field",
+        "order" : 4,
+        "role" : null,
+        "sort_order" : null,
+        "display_context_parameter" : null
+      } ]
+    }
+  }
+}

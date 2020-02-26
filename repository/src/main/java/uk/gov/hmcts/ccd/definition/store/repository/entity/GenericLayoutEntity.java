@@ -46,6 +46,8 @@ public abstract class GenericLayoutEntity implements Serializable {
     @Column(name = "display_context_parameter")
     private String displayContextParameter;
 
+    public abstract String getSheetName();
+
     public Integer getId() {
         return id;
     }

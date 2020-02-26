@@ -129,6 +129,7 @@ class DisplayGroupAdapterServiceTest {
             bailiffName.setHint("Hint text override");
             bailiffName.setLabel("Bailiff Name");
             bailiffName.setShowCondition("fieldName1.subField2=\"potato\"");
+            bailiffName.setDisplayContextParameter("DisplayContextParameter");
 
             EventComplexTypeEntity addressLine1 = new EventComplexTypeEntity();
             addressLine1.setReference("addressAttended.AddressLine1");
@@ -199,6 +200,8 @@ class DisplayGroupAdapterServiceTest {
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(), is("Hint text override"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.bailiffName").getShowCondition(), is("fieldName1.subField2=\"potato\""));
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
+                "finalReturn.bailiffName").getDisplayContextParameter(), is("DisplayContextParameter"));
 
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.dateOfVisit").getDisplayContext(), is("HIDDEN"));
