@@ -19,7 +19,7 @@ services:
       - REFORM_SERVICE_NAME=ccd-definition-store-api
       - REFORM_TEAM=ccd
       - REFORM_ENVIRONMENT=local
-      - AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY
+      - AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY=key
     ports:
       - 4451:4451
     depends_on:
