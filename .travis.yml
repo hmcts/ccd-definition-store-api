@@ -20,6 +20,7 @@ before_install:
 env:
   global:
     - CODACY_PROJECT_TOKEN=e9c07f97fad84186826f873f384a6112
+    - GRADLE_OPTS="-Dorg.gradle.jvmargs='-Xmx4608m -XX:+HeapDumpOnOutOfMemoryError'"
 
 after_success:
   - "bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'"
