@@ -14,9 +14,14 @@ script:
   - "./gradlew build"
   - "./gradlew codeCoverageReport || echo 'code coverage upload failed'"
 
+before_install:
+  - curl https://raw.githubusercontent.com/hmcts/reform-api-docs/master/bin/publish-swagger-docs.sh > publish-swagger-docs.sh
+
 env:
   global:
     - CODACY_PROJECT_TOKEN=e9c07f97fad84186826f873f384a6112
 
 after_success:
   - "bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'"
+  - test "$TRAVIS_BRANCH" = "master" && sh ./publish-swagger-docs.sh
+#  - test "$TRAVIS_BRANCH" = "master" && test "$TRAVIS_PULL_REQUEST" = "false" && sh ./publish-swagger-docs.sh

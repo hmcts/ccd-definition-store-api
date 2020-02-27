@@ -38,6 +38,7 @@ services:
     environment:
       - DEFINITION_STORE_DB_USERNAME=definition_store
       - DEFINITION_STORE_DB_PASSWORD=definition_store
+      - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - 5451:5432
     volumes:
