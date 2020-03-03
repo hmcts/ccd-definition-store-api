@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,7 +59,7 @@ class ImportAuditControllerTest {
             mvcResult =
             mockMvc.perform(get(URL_IMPORT_AUDITS))
                    .andExpect(status().isOk())
-                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(content().contentType(APPLICATION_JSON))
                    .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(),
                    is("[{\"filename\":\"filename\",\"uri\":\"https://ffs.blob.core.windows"
@@ -77,7 +77,7 @@ class ImportAuditControllerTest {
             mvcResult =
             mockMvc.perform(get(URL_IMPORT_AUDITS))
                    .andExpect(status().isOk())
-                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(content().contentType(APPLICATION_JSON))
                    .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(), is("[]"));
         verify(azureImportAuditsClient).fetchLatestImportAudits();
