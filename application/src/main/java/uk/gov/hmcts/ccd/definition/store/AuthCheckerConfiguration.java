@@ -22,7 +22,7 @@ public class AuthCheckerConfiguration {
     protected static final String ROLE_CCD_IMPORT = "ccd-import";
     private static final String REGEX_URI_IMPORT = "^" + ImportController.URI_IMPORT  + "/?$";
 
-    @Value("#{'${casedefinitionstore.authorised.services}'.split(',')}")
+    @Value("#{'${idam.s2s-authorised.services}'.split(',')}")
     private List<String> authorisedServices;
 
     @Autowired

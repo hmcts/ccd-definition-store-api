@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
+import com.hazelcast.config.EvictionPolicy;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -13,9 +14,6 @@ public class ApplicationParams {
 
     @Value("${ccd.user-profile.host}")
     private String userProfileHost;
-
-    @Value("${auth.idam.client.baseUrl}")
-    private String idamHost;
 
     @Value("#{'${ccd.am.write.to_ccd_only}'.split(',')}")
     private List<String> caseTypesWithAmWrittenOnlyToCcd;
@@ -35,12 +33,17 @@ public class ApplicationParams {
     @Value("${azure.storage.import_audits.get-limit}")
     private String azureImportAuditsGetLimit;
 
+    @Value("${definition.cache.max.size}")
+    private Integer definitionCacheMaxSize;
+
+    @Value("${definition.cache.eviction.policy}")
+    private EvictionPolicy definitionCacheEvictionPolicy;
+
+    @Value("${user.cache.ttl.secs}")
+    private Integer userCacheTTLSecs;
+
     public String userProfilePutURL() {
         return userProfileHost + "/user-profile/users";
-    }
-
-    public String idamUserProfileURL() {
-        return idamHost + "/details";
     }
 
     public List<String> getCaseTypesWithAmWrittenOnlyToCcd() {
@@ -70,5 +73,17 @@ public class ApplicationParams {
     @PostConstruct
     public void init() {
         new AmSwitchValidator().validateAmPersistenceSwitchesIn(this);
+    }
+
+    public Integer getUserCacheTTLSecs() {
+        return userCacheTTLSecs;
+    }
+
+    public EvictionPolicy getDefinitionCacheEvictionPolicy() {
+        return definitionCacheEvictionPolicy;
+    }
+
+    public Integer getDefinitionCacheMaxSize() {
+        return definitionCacheMaxSize;
     }
 }

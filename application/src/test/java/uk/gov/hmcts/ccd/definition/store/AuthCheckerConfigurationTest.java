@@ -1,24 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store;
 
+import java.util.Collection;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ccd.definition.store.rest.configuration.AdminWebAuthorizationProperties;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
@@ -62,15 +57,6 @@ public class AuthCheckerConfigurationTest {
     @Test
     public void shouldReturnEmptyCollectionWhenUserIdExtractorIsInvoked() {
         assertThat(configuration.userIdExtractor().apply(request), is(Optional.empty()));
-    }
-
-    @Test
-    public void shouldReturnServiceCollectionWhenAuthorizedServicesExtractorIsInvoked() {
-        final List<String> authorisedServices = Arrays.asList("s1", "s2", "s3");
-        ReflectionTestUtils.setField(configuration, "authorisedServices", authorisedServices);
-        final Collection<String> result = configuration.authorizedServicesExtractor().apply(request);
-        assertThat(result, hasSize(3));
-        assertThat(result, hasItems("s1", "s2", "s3"));
     }
 
     @Test

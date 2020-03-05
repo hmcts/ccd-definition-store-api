@@ -11,8 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
@@ -50,7 +48,7 @@ class IdamProfileServiceTest {
 
     @BeforeEach
     void setUp() {
-        client = new IdamProfileClient(securityUtils, restTemplate, applicationParams);
+        client = new IdamProfileClient(securityUtils);
     }
 
     @DisplayName("Should get logged in user details")
@@ -76,13 +74,9 @@ class IdamProfileServiceTest {
         httpHeaders.add(HttpHeaders.AUTHORIZATION, "ey123.ey456");
         given(securityUtils.userAuthorizationHeaders()).willReturn(httpHeaders);
         final HttpEntity requestEntity = new HttpEntity(securityUtils.userAuthorizationHeaders());
-        given(applicationParams.idamUserProfileURL()).willReturn("http://idam.local/details");
         final IdamProperties idamProperties = new IdamProperties();
         idamProperties.setId("445");
         idamProperties.setEmail("user@hmcts.net");
-        final ResponseEntity<IdamProperties> responseEntity = new ResponseEntity<>(idamProperties, HttpStatus.OK);
-        given(restTemplate.exchange(applicationParams.idamUserProfileURL(), HttpMethod.GET, requestEntity,
-                                    IdamProperties.class)).willReturn(responseEntity);
         return requestEntity;
     }
 }

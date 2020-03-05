@@ -1,32 +1,17 @@
 package uk.gov.hmcts.integration;
 
-import com.opentable.db.postgres.embedded.EmbeddedPostgres;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.context.ContextCleanupListener;
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
-
-import javax.annotation.PreDestroy;
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
 
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
@@ -50,39 +35,39 @@ abstract class IntegrationTest {
     @Autowired
     protected TestRestTemplate restTemplate;
 
-    @TestConfiguration
-    static class Configuration extends ContextCleanupListener {
-
-        private EmbeddedPostgres pg;
-        private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
-
-        @Bean
-        public DataSource dataSource() throws IOException, SQLException {
-
-            pg = EmbeddedPostgres
-                .builder()
-                .setPort(0)
-                .start();
-            return dataSource(pg);
-        }
-
-        @PreDestroy
-        public void contextDestroyed() throws IOException {
-            if (null != pg) {
-                LOG.info("Closing down Postgres, port number = {}", pg.getPort());
-                pg.close();
-            }
-        }
-
-        private DataSource dataSource(final EmbeddedPostgres pg) throws SQLException {
-            final Properties props = new Properties();
-            // Instruct JDBC to accept JSON string for JSONB
-            props.setProperty("stringtype", "unspecified");
-            final Connection connection = DriverManager.getConnection(pg.getJdbcUrl("postgres", "postgres"), props);
-            LOG.info("Started Postgres, port number = {}", pg.getPort());
-            return new SingleConnectionDataSource(connection, true);
-        }
-    }
+//    @TestConfiguration
+//    static class Configuration extends ContextCleanupListener {
+//
+//        private EmbeddedPostgres pg;
+//        private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
+//
+//        @Bean
+//        public DataSource dataSource() throws IOException, SQLException {
+//
+//            pg = EmbeddedPostgres
+//                .builder()
+//                .setPort(0)
+//                .start();
+//            return dataSource(pg);
+//        }
+//
+//        @PreDestroy
+//        public void contextDestroyed() throws IOException {
+//            if (null != pg) {
+//                LOG.info("Closing down Postgres, port number = {}", pg.getPort());
+//                pg.close();
+//            }
+//        }
+//
+//        private DataSource dataSource(final EmbeddedPostgres pg) throws SQLException {
+//            final Properties props = new Properties();
+//            // Instruct JDBC to accept JSON string for JSONB
+//            props.setProperty("stringtype", "unspecified");
+//            final Connection connection = DriverManager.getConnection(pg.getJdbcUrl("postgres", "postgres"), props);
+//            LOG.info("Started Postgres, port number = {}", pg.getPort());
+//            return new SingleConnectionDataSource(connection, true);
+//        }
+//    }
 
 
     protected HttpEntity<Object> invalidRequestEntity() {
