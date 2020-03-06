@@ -3,12 +3,11 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-
-import javax.validation.constraints.NotNull;
-import java.util.Map;
 
 @Component
 public class DefinitionModelMapper {
@@ -85,7 +84,8 @@ public class DefinitionModelMapper {
         definition.setDescription(definitionEntity.getDescription());
         definition.setVersion(definitionEntity.getVersion());
         definition.setStatus(definitionEntity.getStatus());
-        definition.setData(mapper.convertValue(definitionEntity.getData(), stringJsonMapType));
+        Map<String, JsonNode> data = (Map<String, JsonNode>) mapper.convertValue(definitionEntity.getData(), stringJsonMapType);
+        definition.setData(data);
         definition.setAuthor(definitionEntity.getAuthor());
         definition.setCreatedAt(definitionEntity.getCreatedAt());
         definition.setLastModified(definitionEntity.getLastModified());
