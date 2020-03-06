@@ -24,7 +24,7 @@ public enum DisplayContextParameterType {
             Optional<DisplayContextParameterType> type = getParameterTypeFor(s);
             Optional<String> value = getParameterValueFor(s);
 
-            if (!type.isPresent()|| !value.isPresent() ) {
+            if (!type.isPresent() || !value.isPresent()) {
                 displayContextParameterTypeList.add(new DisplayContextParameter(null, null));
             } else {
                 displayContextParameterTypeList.add(new DisplayContextParameter(type.get(), value.get()));
@@ -33,17 +33,6 @@ public enum DisplayContextParameterType {
         }
         return displayContextParameterTypeList;
     }
-
-//    public static Optional<DisplayContextParameter> getDisplayContextParameterFor(String displayContextParameter) {
-//        Optional<DisplayContextParameterType> type = getParameterTypeFor(displayContextParameter);
-//        Optional<String> value = getParameterValueFor(displayContextParameter);
-//
-//        if (!type.isPresent() || !value.isPresent()) {
-//            return Optional.empty();
-//        }
-//        return Optional.of(new DisplayContextParameter(type.get(), value.get()));
-//    }
-
 
     public static Optional<DisplayContextParameterType> getParameterTypeFor(String displayContextParameter) {
         Matcher m = PATTERN.matcher(displayContextParameter);
