@@ -62,8 +62,6 @@ public class SpreadSheetImportTest extends BaseTest {
     @Transactional
     public void importValidDefinitionFile() throws Exception {
 
-        givenUserProfileReturnsSuccess();
-
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -185,8 +183,6 @@ public class SpreadSheetImportTest extends BaseTest {
 
     @Test
     public void userProfileIsNotStoredWhenImportFails() throws Exception {
-
-        givenUserProfileReturnsSuccess();
 
         InputStream inputStream = new ClassPathResource("/ccd-definition-wrong-complex-type.xlsx",
                                                         getClass()).getInputStream();
