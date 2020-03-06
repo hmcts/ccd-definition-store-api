@@ -221,20 +221,19 @@ public class SpreadsheetValidatorTest {
         final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
         addDataItem(sheetCT);
 
-        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
-        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
         definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#TABLE()");
         definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
         sheetCETF.addDataItem(definitionDataItem);
 
         addDefinitionSheet(SheetName.CASE_FIELD);
-        addDefinitionSheet(SheetName.COMPLEX_TYPES);
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
         try {
             validator.validate(definitionSheets);
         } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab CaseEventToFields"));
+            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab ComplexTypes"));
             throw ex;
         }
     }
@@ -248,20 +247,19 @@ public class SpreadsheetValidatorTest {
         final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
         addDataItem(sheetCT);
 
-        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
-        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
         definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#LIST()");
         definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
         sheetCETF.addDataItem(definitionDataItem);
 
         addDefinitionSheet(SheetName.CASE_FIELD);
-        addDefinitionSheet(SheetName.COMPLEX_TYPES);
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
         try {
             validator.validate(definitionSheets);
         } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab CaseEventToFields"));
+            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab ComplexTypes"));
             throw ex;
         }
     }
@@ -275,8 +273,8 @@ public class SpreadsheetValidatorTest {
         final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
         addDataItem(sheetCT);
 
-        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
-        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
         definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#DATETIMEENTRY()");
         definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
         sheetCETF.addDataItem(definitionDataItem);
