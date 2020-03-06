@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
-import com.hazelcast.config.EvictionPolicy;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -32,12 +31,6 @@ public class ApplicationParams {
 
     @Value("${azure.storage.import_audits.get-limit}")
     private String azureImportAuditsGetLimit;
-
-    @Value("${definition.cache.max.size}")
-    private Integer definitionCacheMaxSize;
-
-    @Value("${definition.cache.eviction.policy}")
-    private EvictionPolicy definitionCacheEvictionPolicy;
 
     @Value("${user.cache.ttl.secs}")
     private Integer userCacheTTLSecs;
@@ -79,11 +72,4 @@ public class ApplicationParams {
         return userCacheTTLSecs;
     }
 
-    public EvictionPolicy getDefinitionCacheEvictionPolicy() {
-        return definitionCacheEvictionPolicy;
-    }
-
-    public Integer getDefinitionCacheMaxSize() {
-        return definitionCacheMaxSize;
-    }
 }

@@ -1,32 +1,5 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static java.util.stream.Collectors.toMap;
-import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.apache.http.HttpStatus;
@@ -41,6 +14,27 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.io.FileUtils.readFileToString;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.collection.IsMapContaining.hasEntry;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 /**
  * Component-level tests for the Core Case Definition Importer API.
@@ -115,7 +109,7 @@ public class SpreadSheetImportTest extends BaseTest {
             final MockMultipartFile file = new MockMultipartFile("file", inputStream);
 
             // Given wiremock returns http status 403
-            WireMock.givenThat(WireMock.put(WireMock.urlEqualTo("/user-profile/users"))
+            stubFor(put(urlEqualTo("/user-profile/users"))
                 .willReturn(WireMock.aResponse().withStatus(403)));
 
             // when I import a definition file
@@ -202,8 +196,6 @@ public class SpreadSheetImportTest extends BaseTest {
                                                      .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn();
-
-        WireMock.verify(0, putRequestedFor(urlEqualTo("/user-profile/users")));
 
         // Check that no Definition data has been persisted.
         assertEquals("Unexpected number of rows returned from case_type_items table",

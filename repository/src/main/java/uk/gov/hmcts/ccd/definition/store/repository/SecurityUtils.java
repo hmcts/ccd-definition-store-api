@@ -32,10 +32,6 @@ public class SecurityUtils {
         return idamRepository.getUserInfo(getUserToken());
     }
 
-    public String getUserId() {
-        return getUserInfo().getUid();
-    }
-
     public HttpHeaders userAuthorizationHeaders() {
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, getUserBearerToken());
