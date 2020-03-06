@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -56,9 +57,6 @@ public class TabShowConditionValidatorImplTest {
         allTabDisplayGroups = Lists.newArrayList();
     }
 
-//    @Nested
-//    class TabFieldShowCondition {
-
     @Test
     @DisplayName("should not execute when tab field show condition is empty")
     public void shouldNotExecuteWhenShowConditionIsEmpty() throws InvalidShowConditionException {
@@ -74,7 +72,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should not execute when tab field show condition is blank")
     public void TabFieldShowCondition_shouldNotExecuteWhenShowConditionIsBlank() throws InvalidShowConditionException {
 
         DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
@@ -88,7 +85,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should not execute when tab show type is not tab")
     public void TabFieldShowCondition_shouldNotExecuteWhenShowTypeIsNotTab() throws InvalidShowConditionException {
 
         DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
@@ -102,7 +98,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should return no errors when tab field referenced field in other tab")
     public void TabFieldShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInOtherTab() throws InvalidShowConditionException {
 
         displayGroup.setType(DisplayGroupType.TAB);
@@ -133,7 +128,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should return no errors when tab field referenced field in this tab")
     public void TabFieldShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInThisTab() throws InvalidShowConditionException {
 
         displayGroup.setType(DisplayGroupType.TAB);
@@ -219,7 +213,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should fail when unable to parse show condition for tab field")
     public void TabFieldShowCondition_returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition() throws InvalidShowConditionException {
 
         displayGroup.setType(DisplayGroupType.TAB);
@@ -239,7 +232,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should fail when tab field show condition references invalid field from same tab")
     public void TabFieldShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromSameTab() throws InvalidShowConditionException {
 
         displayGroup.setType(DisplayGroupType.TAB);
@@ -264,9 +256,29 @@ public class TabShowConditionValidatorImplTest {
         assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabFieldShowCondition.class));
     }
 
+    @Test
+    public void TabFieldShowCondition_shouldValidateShowConditionForMetadataField() throws InvalidShowConditionException {
+        displayGroup.setType(DisplayGroupType.TAB);
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference("SimpleType");
+        displayGroup.setCaseType(caseTypeEntity);
+
+        DisplayGroupCaseFieldEntity displayGroupCaseField = new DisplayGroupCaseFieldEntity();
+        displayGroupCaseField.setCaseField(caseFieldEntity("otherField"));
+        displayGroupCaseField.setShowCondition("someShowCondition");
+        displayGroup.addDisplayGroupCaseField(displayGroupCaseField);
+        allTabDisplayGroups.add(displayGroup);
+
+        ShowCondition sc = new ShowCondition.Builder().showConditionExpression("parsedSC").field(MetadataField.STATE.getReference()).build();
+        when(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .thenReturn(sc);
+
+        ValidationResult result = testObj.validate(displayGroup, allTabDisplayGroups);
+
+        assertThat(result.isValid(), is(true));
+    }
 
     @Test
-//    @DisplayName("should fail when tab field show condition references invalid field from other tab")
     public void TabFieldShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromOtherTab() throws InvalidShowConditionException {
 
         displayGroup.setType(DisplayGroupType.TAB);
@@ -297,12 +309,7 @@ public class TabShowConditionValidatorImplTest {
         assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabFieldShowCondition.class));
     }
 
-//}
-//    @Nested
-//    class TabShowCondition {
-
     @Test
-//    @DisplayName("should not execute when tab show condition is empty")
     public void TabShowCondition_shouldNotExecuteWhenShowConditionIsEmpty() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition(null);
@@ -314,7 +321,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should not execute when tab show condition is blank")
     public void TabShowCondition_shouldNotExecuteWhenShowConditionIsBlank() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("");
@@ -326,7 +332,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should not execute when tab show type is not tab")
     public void TabShowCondition_shouldNotExecuteWhenShowTypeIsNotTab() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
@@ -338,7 +343,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should return no errors when tab referenced field in other tab")
     public void TabShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInOtherTab() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
@@ -365,7 +369,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should return no errors when tab referenced field in this tab")
     public void TabShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInThisTab() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
@@ -451,7 +454,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should fail when unable to parse show condition for tab")
     public void TabShowCondition_returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
@@ -467,7 +469,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should fail when tab show condition references invalid field from same tab")
     public void TabShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromSameTab() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
@@ -492,7 +493,6 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-//    @DisplayName("should fail when tab show condition references invalid field from other tab")
     public void TabShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromOtherTab() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
@@ -523,7 +523,27 @@ public class TabShowConditionValidatorImplTest {
         assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabShowCondition.class));
     }
 
-//    }
+    @Test
+    public void TabShowCondition_shouldValidateShowConditionForMetadataField() throws InvalidShowConditionException {
+        displayGroup.setShowCondition("someShowCondition");
+        displayGroup.setType(DisplayGroupType.TAB);
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference("SimpleType");
+        displayGroup.setCaseType(caseTypeEntity);
+
+        DisplayGroupCaseFieldEntity displayGroupCaseField = new DisplayGroupCaseFieldEntity();
+        displayGroupCaseField.setCaseField(caseFieldEntity("otherField"));
+        displayGroup.addDisplayGroupCaseField(displayGroupCaseField);
+
+        ShowCondition sc = new ShowCondition.Builder().showConditionExpression("parsedSC").field(MetadataField.STATE.getReference()).build();
+        when(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .thenReturn(sc);
+
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
+
+        assertThat(result.isValid(), is(true));
+    }
+
     private static FieldTypeEntity exampleFieldTypeEntityWithComplexFields() {
         return fieldTypeEntity("FullName",
             asList(
