@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -51,7 +50,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
@@ -151,14 +149,6 @@ public abstract class BaseTest {
         displayItemsData.setType(resultSet.getString("type"));
 
         return displayItemsData;
-    }
-
-    protected void givenUserProfileReturnsSuccess() {
-        stubFor(put(urlEqualTo("/user-profile/users"))
-            .willReturn(WireMock.aResponse()
-                .withStatus(201)
-                .withHeader("Content-Type", "text/plain")
-                .withBody("Hello world!")));
     }
 
     protected void assertResponseCode(MvcResult mvcResult, int httpResponseCode) throws UnsupportedEncodingException {
