@@ -2,7 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -14,29 +14,29 @@ public class DisplayContextParameterTypeTest {
 
     @Test
     void shouldGetDisplayContextParameterForValidInput() {
-        Optional<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor(DATE_TIME_ENTRY_PARAMETER);
+        List<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor(DATE_TIME_ENTRY_PARAMETER);
 
         assertAll(
-            () -> assertThat(result.get().getType(), is(DisplayContextParameterType.DATETIMEENTRY)),
-            () -> assertThat(result.get().getValue(), is("HHmmss"))
+            () -> assertThat(result.get(0).getType(), is(DisplayContextParameterType.DATETIMEENTRY)),
+            () -> assertThat(result.get(0).getValue(), is("HHmmss"))
         );
     }
 
     @Test
     void shouldNotReturnDisplayContextParameterForInvalidType() {
-        Optional<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor("#INVALID(123)");
+        List<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor("#INVALID(123)");
 
         assertAll(
-            () -> assertThat(result.isPresent(), is(false))
+            () -> assertThat(result.isEmpty(), is(false))
         );
     }
 
     @Test
     void shouldNotReturnDisplayContextParameterForInvalidValue() {
-        Optional<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor("#DATETIMEENTRY()");
+        List<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor("#DATETIMEENTRY()");
 
         assertAll(
-            () -> assertThat(result.isPresent(), is(false))
+            () -> assertThat(result.isEmpty(), is(false))
         );
     }
 

@@ -8,8 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class AbstractDisplayContextParameterValidator<T extends Serializable> {
 
@@ -66,25 +65,50 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     }
 
     private void validateDisplayContextParameter(final T entity, final ValidationResult validationResult) {
-        Optional<DisplayContextParameter> displayContextParameter =
+        List<DisplayContextParameter> displayContextParameterList =
             DisplayContextParameterType.getDisplayContextParameterFor(getDisplayContextParameter(entity));
-        if (displayContextParameter.isPresent()) {
-            validateDisplayContextParameterType(displayContextParameter.get(), entity, validationResult);
-            if (!validationResult.isValid()) {
-                return;
+        displayContextParameterList.forEach(displayContextParameter -> {
+            if (displayContextParameter.getValue() != null) {
+                validateDisplayContextParameterType(displayContextParameter, entity, validationResult);
+                if (!validationResult.isValid()) {
+                    return;
+                }
+                validateDisplayContextParameterValue(displayContextParameter, entity, validationResult);
+            } else {
+                validationResult.addError(
+                    new SimpleValidationError<>(String.format(
+                        ERROR_MESSAGE_INVALID_VALUE,
+                        getDisplayContextParameter(entity),
+                        getCaseFieldReference(entity),
+                        getSheetName(entity)
+                    ), entity)
+                );
             }
-            validateDisplayContextParameterValue(displayContextParameter.get(), entity, validationResult);
-        } else {
-            validationResult.addError(
-                new SimpleValidationError<>(String.format(
-                    ERROR_MESSAGE_INVALID_VALUE,
-                    getDisplayContextParameter(entity),
-                    getCaseFieldReference(entity),
-                    getSheetName(entity)
-                ), entity)
-            );
-        }
+
+        });
+
     }
+
+//    private void validateDisplayContextParameter(final T entity, final ValidationResult validationResult) {
+//        Optional<DisplayContextParameter> displayContextParameter =
+//            DisplayContextParameterType.getDisplayContextParameterFor(getDisplayContextParameter(entity));
+//        if (displayContextParameter.isPresent()) {
+//            validateDisplayContextParameterType(displayContextParameter.get(), entity, validationResult);
+//            if (!validationResult.isValid()) {
+//                return;
+//            }
+//            validateDisplayContextParameterValue(displayContextParameter.get(), entity, validationResult);
+//        } else {
+//            validationResult.addError(
+//                new SimpleValidationError<>(String.format(
+//                    ERROR_MESSAGE_INVALID_VALUE,
+//                    getDisplayContextParameter(entity),
+//                    getCaseFieldReference(entity),
+//                    getSheetName(entity)
+//                ), entity)
+//            );
+//        }
+//    }
 
     protected void validateDisplayContextParameterType(final DisplayContextParameter displayContextParameter,
                                                      final T entity,

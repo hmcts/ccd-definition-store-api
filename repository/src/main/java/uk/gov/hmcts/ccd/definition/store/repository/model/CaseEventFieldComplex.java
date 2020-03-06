@@ -16,8 +16,6 @@ public class CaseEventFieldComplex {
 
     private String showCondition;
 
-    private String displayContextParameter;
-
     public CaseEventFieldComplex() {
     }
 
@@ -26,15 +24,13 @@ public class CaseEventFieldComplex {
                                  String label,
                                  Integer order,
                                  DisplayContext displayContext,
-                                 String showCondition,
-                                 String displayContextParameter) {
+                                 String showCondition) {
         this.reference = reference;
         this.hint = hint;
         this.label = label;
         this.order = order;
         this.displayContext = displayContext;
         this.showCondition = showCondition;
-        this.displayContextParameter = displayContextParameter;
     }
 
     public String getReference() {
@@ -83,13 +79,5 @@ public class CaseEventFieldComplex {
 
     public void setShowCondition(String showCondition) {
         this.showCondition = showCondition;
-    }
-
-    public String getDisplayContextParameter() {
-        return displayContextParameter;
-    }
-
-    public void setDisplayContextParameter(String displayContextParameter) {
-        this.displayContextParameter = displayContextParameter;
     }
 }

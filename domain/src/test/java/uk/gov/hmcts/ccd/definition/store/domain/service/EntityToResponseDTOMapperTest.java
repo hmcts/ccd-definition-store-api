@@ -125,10 +125,7 @@ class EntityToResponseDTOMapperTest {
                                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContext()),
                 () -> assertEquals("order",
                                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getOrder(),
-                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder()),
-                () -> assertEquals("displayContextParameter",
-                                   findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDisplayContextParameter(),
-                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContextParameter())
+                                   findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder())
             );
         }
     }
