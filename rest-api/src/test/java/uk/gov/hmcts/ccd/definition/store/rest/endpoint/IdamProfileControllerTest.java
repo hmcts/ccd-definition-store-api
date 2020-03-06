@@ -51,7 +51,7 @@ class IdamProfileControllerTest {
     @Test
     public void shouldGetIdamProfile() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(get("/api/idam/profile")).andExpect(status().isOk()).andReturn();
-        assertThat(mvcResult.getResponse().getContentType(), is("application/json;charset=UTF-8"));
+        assertThat(mvcResult.getResponse().getContentType(), is("application/json"));
         final IdamProperties
             response =
             MAPPER.readValue(mvcResult.getResponse().getContentAsString(), IdamProperties.class);
