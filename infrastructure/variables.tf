@@ -65,15 +65,6 @@ variable "appinsights_instrumentation_key" {
   default = ""
 }
 
-variable "definition_cache_max_size" {
-  type = "string"
-  default = "5000"
-}
-
-variable "definition_cache_eviction_policy" {
-  type = "string"
-  default = "NONE"
-}
 
 ////////////////////////////////
 // Database

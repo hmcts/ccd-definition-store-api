@@ -32,9 +32,6 @@ public class ApplicationParams {
     @Value("${azure.storage.import_audits.get-limit}")
     private String azureImportAuditsGetLimit;
 
-    @Value("${user.cache.ttl.secs}")
-    private Integer userCacheTTLSecs;
-
     public String userProfilePutURL() {
         return userProfileHost + "/user-profile/users";
     }
@@ -66,10 +63,6 @@ public class ApplicationParams {
     @PostConstruct
     public void init() {
         new AmSwitchValidator().validateAmPersistenceSwitchesIn(this);
-    }
-
-    public Integer getUserCacheTTLSecs() {
-        return userCacheTTLSecs;
     }
 
 }

@@ -117,8 +117,6 @@ module "case-definition-store-api" {
     DEFINITION_STORE_DB_PASSWORD = "${module.definition-store-db.postgresql_password}"
     DEFINITION_STORE_DB_OPTIONS = "?sslmode=require"
     DEFINITION_STORE_DB_MAX_POOL_SIZE = "${var.database_max_pool_size}"
-    DEFINITION_CACHE_MAX_SIZE           = "${var.definition_cache_max_size}"
-    DEFINITION_CACHE_EVICTION_POLICY    = "${var.definition_cache_eviction_policy}"
 
     ENABLE_DB_MIGRATE = "false"
 
