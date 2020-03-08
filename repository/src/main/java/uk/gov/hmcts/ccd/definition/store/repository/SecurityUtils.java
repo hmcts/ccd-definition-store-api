@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-
-import java.util.Objects;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import uk.gov.hmcts.ccd.definition.store.security.idam.IdamRepository;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
+
+import java.util.Objects;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 @Named
 @Singleton
