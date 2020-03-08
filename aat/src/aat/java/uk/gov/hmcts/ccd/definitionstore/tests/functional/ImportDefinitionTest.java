@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-@Ignore
 class ImportDefinitionTest extends BaseTest {
 
     protected ImportDefinitionTest(AATHelper aat) {
@@ -64,6 +62,7 @@ class ImportDefinitionTest extends BaseTest {
             .contains("Case Type with name 'Demo case' must have a Security Classification defined"));
     }
 
+    @Disabled
     @Test
     @DisplayName("Invalid SecurityType ACL in CaseType tab")
     void shouldNotImportInvalidCaseTypeACLInfo() {
@@ -114,6 +113,7 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 
+    @Disabled
     @Test
     @DisplayName("Should Not import a definition with missing CRUD permissions")
     void shouldNotImportDefinitionWithMissingCrudPermissions() {
@@ -128,6 +128,7 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 
+    @Disabled
     @Test
     @DisplayName("Should Not import a definition with invalid CRUD permissions")
     void shouldNotImportDefinitionWithInvalidPermissions() {
@@ -142,6 +143,7 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
     }
 
+    @Disabled
     @Test
     @DisplayName("Should Not import a definition with invalid User Roles")
     void shouldNotImportDefinitionHavingInvalidUserRole() {

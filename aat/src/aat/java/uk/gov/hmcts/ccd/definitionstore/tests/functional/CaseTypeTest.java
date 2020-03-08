@@ -7,13 +7,12 @@ import static org.hamcrest.Matchers.not;
 
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
-@Ignore
 class CaseTypeTest extends BaseTest {
 
     private static final String JURISDICTION = "AUTOTEST1";
@@ -27,6 +26,7 @@ class CaseTypeTest extends BaseTest {
     Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
 
 
+    @Disabled
     @Test
     @DisplayName("should return case type definition")
     void shouldReturnCaseTypeDefinition() {
