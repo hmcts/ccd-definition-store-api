@@ -28,7 +28,7 @@
       "responseMessage" : "OK",
       "headers" : {
         "Content-Length" : "[[ANYTHING_PRESENT]]",
-        "Content-Type" : "application/vnd.spring-boot.actuator.v2+json;charset=UTF-8",
+        "Content-Type" : "application/vnd.spring-boot.actuator.v3+json",
         "Date" : "[[ANYTHING_PRESENT]]",
         "Vary" : "Accept-Encoding"
       },

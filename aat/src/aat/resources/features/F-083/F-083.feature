@@ -4,7 +4,7 @@ Feature: F-083: Fetch UI definition for Search Inputs by CaseType
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-359
+  @S-359 @Ignore
   Scenario: must return the UI definition of search inputs for a given case type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
