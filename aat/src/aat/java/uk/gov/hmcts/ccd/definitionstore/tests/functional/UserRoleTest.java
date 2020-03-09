@@ -52,7 +52,7 @@ class UserRoleTest extends BaseTest {
             .put(
                 "/api/user-role")
             .then()
-            .statusCode(400); // security_classification is mandatory
+            .statusCode(409);
     }
 
 }
