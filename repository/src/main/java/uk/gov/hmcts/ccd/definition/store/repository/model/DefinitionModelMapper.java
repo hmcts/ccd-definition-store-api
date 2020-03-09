@@ -84,7 +84,7 @@ public class DefinitionModelMapper {
         definition.setDescription(definitionEntity.getDescription());
         definition.setVersion(definitionEntity.getVersion());
         definition.setStatus(definitionEntity.getStatus());
-        Map<String, JsonNode> data = (Map<String, JsonNode>) mapper.convertValue(definitionEntity.getData(), stringJsonMapType);
+        Map<String, JsonNode> data = mapper.convertValue(definitionEntity.getData(), stringJsonMapType);
         definition.setData(data);
         definition.setAuthor(definitionEntity.getAuthor());
         definition.setCreatedAt(definitionEntity.getCreatedAt());

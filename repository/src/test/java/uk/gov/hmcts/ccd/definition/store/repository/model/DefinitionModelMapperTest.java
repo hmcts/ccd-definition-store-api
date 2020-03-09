@@ -145,7 +145,7 @@ class DefinitionModelMapperTest {
         assertThat(model.getDescription(), is(definitionEntity.getDescription()));
         assertThat(model.getVersion(), is(definitionEntity.getVersion()));
         assertThat(model.getStatus(), is(definitionEntity.getStatus()));
-        Map<String, JsonNode> data = (Map<String, JsonNode>) mapper.convertValue(definitionEntity.getData(), stringJsonMapType);
+        Map<String, JsonNode> data = mapper.convertValue(definitionEntity.getData(), stringJsonMapType);
         assertThat(model.getData(), is(data));
         assertThat(model.getAuthor(), is(definitionEntity.getAuthor()));
         assertThat(model.getCreatedAt(), is(definitionEntity.getCreatedAt()));
