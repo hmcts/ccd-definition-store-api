@@ -158,6 +158,10 @@ allprojects {
                 if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
                     details.useVersion '3.6.3'
                 }
+
+                if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
+                    details.useVersion '2.7.0'
+                }
             }
         }
     }
@@ -229,8 +233,8 @@ subprojects { subproject ->
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
 
+        compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
         compile('org.springframework.boot:spring-boot-starter-cache')
-        implementation 'com.github.ben-manes.caffeine:caffeine:2.7.0'
 
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
 
