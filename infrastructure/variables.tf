@@ -65,7 +65,6 @@ variable "appinsights_instrumentation_key" {
   default = ""
 }
 
-
 ////////////////////////////////
 // Database
 ////////////////////////////////
