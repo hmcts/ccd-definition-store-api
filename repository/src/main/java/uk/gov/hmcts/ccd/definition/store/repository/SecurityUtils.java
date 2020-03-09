@@ -27,6 +27,7 @@ public class SecurityUtils {
         headers.add("ServiceAuthorization", authTokenGenerator.generate());
         return headers;
     }
+
     public UserInfo getUserInfo() {
         return idamRepository.getUserInfo(getUserToken());
     }
