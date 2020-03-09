@@ -40,7 +40,8 @@
             "status" : "UP",
             "details" : {
               "database" : "PostgreSQL",
-              "hello" : 1
+              "result" : 1,
+              "validationQuery" : "SELECT 1"
             }
           },
           "discoveryComposite": {
