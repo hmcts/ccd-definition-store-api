@@ -71,7 +71,7 @@
           "refreshScope" : {
             "status" : "UP"
           },
-          "uk.gov.hmcts.reform.authorisation.healthcheck.ServiceAuth" : {
+          "ServiceAuth" : {
             "status" : "UP"
           }
         }
