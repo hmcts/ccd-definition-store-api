@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
@@ -38,7 +37,6 @@ class UserRoleTest extends BaseTest {
             .statusCode(205);
     }
 
-    @Disabled
     @Test
     @DisplayName("Should not update / create a user profile")
     void shouldNotCreateOrUpdateUserProfile() {

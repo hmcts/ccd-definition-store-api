@@ -4,7 +4,7 @@ Feature: F-081: Get Jurisdiction Details
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-347 @Ignore  #RDM-6858
+  @S-347  #RDM-6858
   Scenario: must return 200 with List of jurisdictions
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values

@@ -4,7 +4,7 @@ Feature: F087: Fetch UI definition for Work Basket Inputs By CaseType
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-380 @Ignore
+  @S-380
   Scenario: must return the UI definition of work basket inputs for a given case type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
