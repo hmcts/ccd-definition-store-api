@@ -71,7 +71,7 @@
           "refreshScope" : {
             "status" : "UP"
           },
-          "ServiceAuth" : {
+          "serviceAuth" : {
             "status" : "UP"
           }
         }
