@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 class DefinitionModelMapperTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private final TypeReference stringJsonMapType = new TypeReference<Map<String, JsonNode>>() {};
+    private final TypeReference<Map<String, JsonNode>> stringJsonMapType = new TypeReference<Map<String, JsonNode>>() {};
 
     @Mock
     private DefinitionEntity definitionEntity;

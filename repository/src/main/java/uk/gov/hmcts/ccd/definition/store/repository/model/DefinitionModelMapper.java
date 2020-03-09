@@ -13,7 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 public class DefinitionModelMapper {
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private final TypeReference stringJsonMapType = new TypeReference<Map<String, JsonNode>>() {};
+    private final TypeReference<Map<String, JsonNode>> stringJsonMapType = new TypeReference<Map<String, JsonNode>>() {};
 
     /**
      * Maps a Definition model object to its corresponding entity class. Note: The Jurisdiction object within a

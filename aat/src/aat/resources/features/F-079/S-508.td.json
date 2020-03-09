@@ -13,10 +13,11 @@
     "headers": {
       "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
       "Content-Encoding" : "gzip",
-      "Content-Type" : "application/json;charset=UTF-8",
+      "Content-Type" : "application/json",
       "Date" : "[[ANYTHING_PRESENT]]",
       "Expires" : "0",
       "Pragma" : "no-cache",
+      "Strict-Transport-Security": "[[ANYTHING_PRESENT]]",
       "Transfer-Encoding" : "chunked",
       "Vary" : "accept-encoding",
       "X-Content-Type-Options" : "nosniff",
