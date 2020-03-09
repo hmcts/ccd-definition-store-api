@@ -84,13 +84,5 @@
    <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
    <cve>CVE-2020-1938</cve>
 </suppress>
-    <!-- FIXME : find a way to fix this -->
-    <suppress>
-        <notes><![CDATA[
-   file name: caffeine-2.8.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.github\.ben-manes\.caffeine/caffeine@.*$</packageUrl>
-        <cve>CVE-2017-18365</cve>
-    </suppress>
 
 </suppressions>
