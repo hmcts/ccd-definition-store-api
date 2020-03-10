@@ -15,7 +15,7 @@ import java.util.Optional;
 public class DisplayGroupDateTimeDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<DisplayGroupCaseFieldEntity> implements DisplayGroupCaseFieldValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
-        { DisplayContextParameterType.DATETIMEDISPLAY };
+        { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };
     private static final String[] ALLOWED_FIELD_TYPES =
         { FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME };
 
