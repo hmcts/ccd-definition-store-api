@@ -89,7 +89,6 @@ class EntityToResponseDTOMapperTest {
             eventComplexTypeEntity1.setDisplayContext(DisplayContext.MANDATORY);
             eventComplexTypeEntity1.setHint("Hint text");
             eventComplexTypeEntity1.setLabel("Label text");
-            eventComplexTypeEntity1.setDisplayContextParameter("DisplayContextParameter");
 
             EventComplexTypeEntity eventComplexTypeEntity2 = new EventComplexTypeEntity();
             String ref2 = "Some ref2";
@@ -99,7 +98,6 @@ class EntityToResponseDTOMapperTest {
             eventComplexTypeEntity2.setDisplayContext(DisplayContext.OPTIONAL);
             eventComplexTypeEntity2.setHint("Hint text2");
             eventComplexTypeEntity2.setLabel("Label text2");
-            eventComplexTypeEntity2.setDisplayContextParameter("DisplayContextParameter2");
 
             EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
             eventCaseFieldEntity.setShowSummaryChangeOption(true);

@@ -110,7 +110,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     void shouldFailValidationForReadonlyFieldWithDateTimeEntry() {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
-        entity.setDisplayContext(DisplayContext.OPTIONAL);
+        entity.setDisplayContext(DisplayContext.READONLY);
         entity.setCaseField(caseFieldEntity());
 
         final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
