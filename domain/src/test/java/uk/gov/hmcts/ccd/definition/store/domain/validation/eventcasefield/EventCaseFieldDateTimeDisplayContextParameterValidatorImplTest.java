@@ -93,7 +93,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    void shouldValidateReadonlyFieldWithDateTimeDisplay() throws Exception {
+    void shouldValidateReadonlyFieldWithDateTimeDisplay() {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(HHmmss)");
         entity.setDisplayContext(DisplayContext.READONLY);
@@ -107,7 +107,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    void shouldFailValidationForReadonlyFieldWithDateTimeEntry() throws Exception {
+    void shouldFailValidationForReadonlyFieldWithDateTimeEntry() {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
         entity.setDisplayContext(DisplayContext.READONLY);

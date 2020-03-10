@@ -89,27 +89,6 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
 
     }
 
-//    private void validateDisplayContextParameter(final T entity, final ValidationResult validationResult) {
-//        Optional<DisplayContextParameter> displayContextParameter =
-//            DisplayContextParameterType.getDisplayContextParameterFor(getDisplayContextParameter(entity));
-//        if (displayContextParameter.isPresent()) {
-//            validateDisplayContextParameterType(displayContextParameter.get(), entity, validationResult);
-//            if (!validationResult.isValid()) {
-//                return;
-//            }
-//            validateDisplayContextParameterValue(displayContextParameter.get(), entity, validationResult);
-//        } else {
-//            validationResult.addError(
-//                new SimpleValidationError<>(String.format(
-//                    ERROR_MESSAGE_INVALID_VALUE,
-//                    getDisplayContextParameter(entity),
-//                    getCaseFieldReference(entity),
-//                    getSheetName(entity)
-//                ), entity)
-//            );
-//        }
-//    }
-
     protected void validateDisplayContextParameterType(final DisplayContextParameter displayContextParameter,
                                                      final T entity,
                                                      final ValidationResult validationResult) {

@@ -72,8 +72,6 @@ public class EventCaseFieldComplexTypeParserTest {
         assertEquals(definitionDataItem.getInteger(ColumnName.FIELD_DISPLAY_ORDER),
             eventComplexTypeEntities.get(0).getOrder());
         assertEquals(DisplayContext.OPTIONAL, eventComplexTypeEntities.get(0).getDisplayContext());
-        assertEquals(definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER),
-            eventComplexTypeEntities.get(0).getDisplayContextParameter());
     }
 
     private DefinitionDataItem definitionDataItem(String caseFieldId, DisplayContextColumn displayContext, String showCondition, String label, String hint, String displayContextParameter) {
