@@ -190,6 +190,8 @@ public class SpreadSheetImportTest extends BaseTest {
     @Test
     public void userProfileIsNotStoredWhenImportFails() throws Exception {
 
+        WireMock.reset();
+
         InputStream inputStream = new ClassPathResource("/ccd-definition-wrong-complex-type.xlsx",
                                                         getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -198,6 +200,8 @@ public class SpreadSheetImportTest extends BaseTest {
                                                      .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn();
+
+        WireMock.verify(0, putRequestedFor(urlEqualTo("/user-profile/users")));
 
         // Check that no Definition data has been persisted.
         assertEquals("Unexpected number of rows returned from case_type_items table",
