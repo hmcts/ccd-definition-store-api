@@ -22,14 +22,23 @@
       "Content-Type":"[[ANYTHING_PRESENT]]",
       "Strict-Transport-Security":"[[ANY_STRING_NULLABLE]]"
     },
-    "body": {
+    "body" : {
       "case_type_id" : "BEFTA_CASETYPE_3_4",
       "fields" : [ {
+        "metadata" : true,
+        "case_field_id" : "[CASE_REFERENCE]",
+        "case_field_element_path" : null,
+        "label" : "Case Reference",
+        "order" : 1,
+        "role" : null,
+        "sort_order" : null,
+        "display_context_parameter" : null
+      }, {
         "metadata" : true,
         "case_field_id" : "[LAST_STATE_MODIFIED_DATE]",
         "case_field_element_path" : null,
         "label" : "Last State Modified Date",
-        "order" : 1,
+        "order" : 2,
         "role" : null,
         "sort_order" : {
           "direction" : "ASC",
@@ -41,7 +50,7 @@
         "case_field_id" : "TextField",
         "case_field_element_path" : null,
         "label" : "`Text` field",
-        "order" : 2,
+        "order" : 3,
         "role" : null,
         "sort_order" : null,
         "display_context_parameter" : null
@@ -50,16 +59,25 @@
         "case_field_id" : "NumberField",
         "case_field_element_path" : null,
         "label" : "`Number` field",
-        "order" : 3,
+        "order" : 4,
         "role" : null,
         "sort_order" : null,
         "display_context_parameter" : null
       }, {
         "metadata" : false,
-        "case_field_id" : "YesOrNoField",
+        "case_field_id" : "DateField",
         "case_field_element_path" : null,
-        "label" : "`YesOrNo` field",
-        "order" : 4,
+        "label" : "Date",
+        "order" : 5,
+        "role" : null,
+        "sort_order" : null,
+        "display_context_parameter" : null
+      }, {
+        "metadata" : false,
+        "case_field_id" : "DateTimeField",
+        "case_field_element_path" : null,
+        "label" : "Date & Time",
+        "order" : 6,
         "role" : null,
         "sort_order" : null,
         "display_context_parameter" : null

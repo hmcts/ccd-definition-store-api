@@ -1,0 +1,46 @@
+{
+  "_guid_": "S-080.1",
+  "_extends_": "F-080_Test_Base_Data",
+  "title": "must return 200",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid jurisdiction id",
+    "contains a valid caseType id",
+    "has the 200 OK code",
+    "contains case type details"
+  ],
+  "users": {
+    "invokingUser": {
+      "username": "befta.caseworker.3@gmail.com",
+      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
+    }
+  },
+  "request": {
+    "pathVariables": {
+      "uid": "[[DYNAMIC]]"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Encoding": "gzip",
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "id": "BEFTA_CASETYPE_3_4",
+      "description": "[[ANYTHING_PRESENT]]",
+      "version": "[[ANYTHING_PRESENT]]",
+      "name" : "[[ANYTHING_PRESENT]]",
+      "jurisdiction": "[[ANYTHING_PRESENT]]",
+      "events": "[[ANYTHING_PRESENT]]",
+      "states": "[[ANYTHING_PRESENT]]",
+      "acls": "[[ANYTHING_PRESENT]]",
+      "searchAliasFields": "[[ANYTHING_PRESENT]]",
+      "case_fields": "[[ANYTHING_PRESENT]]",
+      "printable_document_url" : "[[ANY_NULLABLE]]",
+      "security_classification" : "[[ANYTHING_PRESENT]]"
+    }
+  }
+}

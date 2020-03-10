@@ -22,7 +22,7 @@
       "Content-Type":"[[ANYTHING_PRESENT]]",
       "Strict-Transport-Security":"[[ANY_STRING_NULLABLE]]"
     },
-    "body": {
+    "body" : {
       "case_type_id" : "BEFTA_CASETYPE_3_4",
       "fields" : [ {
         "case_field_id" : "TextField",
@@ -30,14 +30,28 @@
         "label" : "Search `Text` field",
         "order" : 1,
         "role" : null,
-        "display_context_parameter" : null
+        "display_context_parameter" : "[[ANY_STRING_NULLABLE]]"
       }, {
         "case_field_id" : "[LAST_STATE_MODIFIED_DATE]",
         "case_field_element_path" : null,
         "label" : "Last State Modified Date",
         "order" : 2,
         "role" : null,
-        "display_context_parameter" : null
+        "display_context_parameter" : "[[ANY_STRING_NULLABLE]]"
+      }, {
+        "case_field_id" : "DateField",
+        "case_field_element_path" : null,
+        "label" : "Date",
+        "order" : 3,
+        "role" : null,
+        "display_context_parameter" : "[[ANY_STRING_NULLABLE]]"
+      }, {
+        "case_field_id" : "DateTimeField",
+        "case_field_element_path" : null,
+        "label" : "Date & Time",
+        "order" : 4,
+        "role" : null,
+        "display_context_parameter" : "[[ANY_STRING_NULLABLE]]"
       } ]
     }
   }

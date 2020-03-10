@@ -1,0 +1,29 @@
+{
+  "_guid_": "S-082.1",
+  "_extends_": "F-082_Test_Base_Data",
+  "title": "must return 200",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid jurisdiction id",
+    "has the 200 OK code",
+    "contains case type details"
+  ],
+  "users": {
+    "invokingUser": {
+      "username": "befta.caseworker.3@gmail.com",
+      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Encoding": "gzip",
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "arrayInMap": "[[ANYTHING_PRESENT]]"
+    }
+  }
+}

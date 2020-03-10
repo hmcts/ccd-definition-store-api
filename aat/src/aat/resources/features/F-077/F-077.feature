@@ -1,5 +1,5 @@
 @F-077
-Feature: CCD Definition Store Api : Get All Base Types
+Feature: F-077: Get All Base Types
   Background:
     Given an appropriate test context as detailed in the test data source
 

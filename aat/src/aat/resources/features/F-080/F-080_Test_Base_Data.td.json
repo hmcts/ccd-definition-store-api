@@ -1,0 +1,19 @@
+{
+  "_guid_": "F-080_Test_Base_Data",
+  "productName": "CCD Definition Store",
+  "operationName": "Get Case Type Details",
+  "method": "GET",
+  "uri": "/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}",
+  "request": {
+    "headers": {
+      "Authorization": "[[DYNAMIC]]",
+      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Content-Type": "application/json"
+    },
+    "pathVariables": {
+      "uid": "${[scenarioContext][childContexts][testData][id]}",
+      "jid": "BEFTA_CASETYPE_3",
+      "ctid": "BEFTA_CASETYPE_3_4"
+    }
+  }
+}
