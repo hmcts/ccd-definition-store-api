@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparamet
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.Optional;
 
@@ -19,10 +20,10 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };
     private static final String[] ALLOWED_FIELD_TYPES =
-        { FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME };
+        { FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME, FieldTypeUtils.BASE_COLLECTION };
 
     public EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
-        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES);
+        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, ALLOWED_FIELD_TYPES);
     }
 
     @Override
@@ -47,8 +48,8 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
     }
 
     @Override
-    protected String getFieldType(EventCaseFieldEntity entity) {
-        return entity.getCaseField().getBaseTypeString();
+    protected FieldTypeEntity getFieldTypeEntity(EventCaseFieldEntity entity) {
+        return entity.getCaseField().getFieldType();
     }
 
     private boolean shouldSkipValidatorForEntity(EventCaseFieldEntity entity) {
