@@ -36,7 +36,7 @@ public class DateTimeEntryValidatorImplTest {
 
     @Test
     void shouldValidateValidFormat() throws Exception {
-        validator.validate("HHmmss");
+        validator.validate("yyyy-MM-dd'T'HH:mm:ss");
     }
 
     @Test
