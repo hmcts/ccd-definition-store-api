@@ -103,21 +103,21 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
         );
     }
 
-//    @Test
-//    void shouldFailValidationForUnsupportedDisplayContextParameterType() throws Exception {
-//        DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
-//        entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
-//        entity.setCaseField(caseFieldEntity());
-//
-//        final ValidationResult result = validator.validate(entity);
-//
-//        assertAll(
-//            () -> assertThat(result.isValid(), is(false)),
-//            () -> assertThat(result.getValidationErrors().size(), is(1)),
-//            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-//                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' on tab 'CaseTypeTab'"))
-//        );
-//    }
+    @Test
+    void shouldFailValidationForUnsupportedDisplayContextParameterType() throws Exception {
+        DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
+        entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
+        entity.setCaseField(caseFieldEntity());
+
+        final ValidationResult result = validator.validate(entity);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(false)),
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' on tab 'CaseTypeTab'"))
+        );
+    }
 
     @Test
     void shouldSkipValidationForInvalidDisplayContextParameterType() {

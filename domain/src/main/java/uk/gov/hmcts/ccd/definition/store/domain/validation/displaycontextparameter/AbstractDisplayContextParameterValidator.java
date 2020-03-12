@@ -6,6 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayC
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.io.Serializable;
 import java.util.*;
@@ -20,21 +21,24 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         "Display context parameter '%s' is unsupported for field type '%s' of field '%s' on tab '%s'";
 
     private final DisplayContextParameterType[] ALLOWED_TYPES;
+    private final String[] ALLOWED_COLLECTION_FIELD_TYPES;
     private final List<String> ALLOWED_FIELD_TYPES;
 
     private DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory;
 
     public AbstractDisplayContextParameterValidator(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory,
                                                     DisplayContextParameterType[] allowedTypes,
+                                                    String[] allowedCollectionFieldTypes),
                                                     List<String> allowedFieldTypes) {
         this.displayContextParameterValidatorFactory = displayContextParameterValidatorFactory;
         this.ALLOWED_TYPES = allowedTypes;
         this.ALLOWED_FIELD_TYPES = allowedFieldTypes;
+        this.ALLOWED_COLLECTION_FIELD_TYPES = allowedCollectionFieldTypes;
     }
 
     protected abstract String getDisplayContextParameter(final T entity);
 
-    protected abstract String getFieldType(final T entity);
+    protected abstract FieldTypeEntity getFieldTypeEntity(final T entity);
 
     protected abstract String getCaseFieldReference(final T entity);
 
@@ -60,7 +64,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     private void validateCaseFieldType(final T entity, final ValidationResult validationResult) {
         String fieldType = getFieldType(entity);
 
-        if (!ALLOWED_FIELD_TYPES.contains(fieldType)) {
+        if (!ALLOWED_FIELD_TYPES.contains(fieldType) && !isAllowedCollectionFieldType(entity)) {
             validationResult.addError(unsupportedFieldTypeError(entity));
         }
     }
@@ -108,6 +112,23 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         } catch (Exception e) {
             validationResult.addError(invalidValueError(entity));
         }
+    }
+
+    private String getFieldType(T entity) {
+        FieldTypeEntity baseFieldType = getFieldTypeEntity(entity).getBaseFieldType();
+        if (baseFieldType != null) {
+            return baseFieldType.getReference();
+        } else {
+            return getFieldTypeEntity(entity).getReference();
+        }
+    }
+
+    private String getCollectionFieldType(T entity) {
+        return getFieldTypeEntity(entity).getCollectionFieldType().getReference();
+    }
+
+    private boolean isAllowedCollectionFieldType(T entity) {
+        return getFieldType(entity).equals("Collection") && Arrays.asList(ALLOWED_COLLECTION_FIELD_TYPES).contains(getCollectionFieldType(entity));
     }
 
     protected ValidationError unsupportedDisplayContextParameterTypeError(final T entity) {

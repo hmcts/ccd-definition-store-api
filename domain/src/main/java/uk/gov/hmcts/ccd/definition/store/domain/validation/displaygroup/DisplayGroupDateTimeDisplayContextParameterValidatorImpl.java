@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparamet
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparameter.DisplayContextParameterValidatorFactory;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,12 +18,12 @@ import java.util.Optional;
 public class DisplayGroupDateTimeDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<DisplayGroupCaseFieldEntity> implements DisplayGroupCaseFieldValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
-        { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };
+        { DisplayContextParameterType.DATETIMEDISPLAY};
     private static final List<String> ALLOWED_FIELD_TYPES =
         Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
 
     public DisplayGroupDateTimeDisplayContextParameterValidatorImpl(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
-        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES);
+        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, ALLOWED_FIELD_TYPES);
     }
 
     @Override
@@ -36,8 +37,8 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImpl extends Ab
     }
 
     @Override
-    protected String getFieldType(DisplayGroupCaseFieldEntity entity) {
-        return entity.getCaseField().getBaseTypeString();
+    protected FieldTypeEntity getFieldTypeEntity(DisplayGroupCaseFieldEntity entity) {
+        return entity.getCaseField().getFieldType();
     }
 
     private boolean shouldSkipValidatorForEntity(DisplayGroupCaseFieldEntity entity) {

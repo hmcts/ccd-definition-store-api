@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import joptsimple.internal.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameter;
@@ -24,7 +23,7 @@ public class ComplexFieldEntityDisplayContextParameterValidatorImpl extends Abst
 
     @Autowired
     public ComplexFieldEntityDisplayContextParameterValidatorImpl(final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
-        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES);
+        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, new String[0]);
     }
 
     @Override
@@ -49,12 +48,8 @@ public class ComplexFieldEntityDisplayContextParameterValidatorImpl extends Abst
     }
 
     @Override
-    protected String getFieldType(final ComplexFieldEntity entity) {
-        if (entity.getFieldType() == null) {
-            return Strings.EMPTY;
-        } else {
-            return entity.getFieldType().getReference();
-        }
+    protected FieldTypeEntity getFieldTypeEntity(final ComplexFieldEntity entity) {
+        return entity.getFieldType();
     }
 
     protected String getCaseFieldReference(final ComplexFieldEntity entity) {
