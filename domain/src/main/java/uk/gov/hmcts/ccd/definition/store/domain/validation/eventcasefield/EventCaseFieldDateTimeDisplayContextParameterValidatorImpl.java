@@ -11,15 +11,20 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<EventCaseFieldEntity> implements EventCaseFieldEntityValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };
-    private static final String[] ALLOWED_FIELD_TYPES =
-        { FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME };
+    private static final List<String> ALLOWED_FIELD_TYPES =
+        Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
+    private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP = new EnumMap<DisplayContext, DisplayContextParameterType>(DisplayContext.class) {{
+        put(DisplayContext.READONLY, DisplayContextParameterType.DATETIMEENTRY);
+        put(DisplayContext.OPTIONAL, DisplayContextParameterType.DATETIMEDISPLAY);
+        put(DisplayContext.MANDATORY, DisplayContextParameterType.DATETIMEDISPLAY);
+    }};
 
     public EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
         super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES);
@@ -76,7 +81,6 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
 
     private boolean isUnsupportedForEventCaseField(final DisplayContextParameter displayContextParameter,
                                                    final EventCaseFieldEntity entity) {
-        return entity.getDisplayContext() == DisplayContext.READONLY &&
-            displayContextParameter.getType() == DisplayContextParameterType.DATETIMEENTRY;
+        return DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.get(entity.getDisplayContext()) == displayContextParameter.getType();
     }
 }

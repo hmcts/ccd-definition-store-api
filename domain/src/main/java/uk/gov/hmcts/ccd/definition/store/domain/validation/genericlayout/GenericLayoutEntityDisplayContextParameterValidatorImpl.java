@@ -10,13 +10,16 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparamet
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 public class GenericLayoutEntityDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<GenericLayoutEntity> implements GenericLayoutValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         {DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY};
-    private static final String[] ALLOWED_FIELD_TYPES =
-        {FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME};
+    private static final List<String> ALLOWED_FIELD_TYPES =
+        Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
 
     @Autowired
     public GenericLayoutEntityDisplayContextParameterValidatorImpl(final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {

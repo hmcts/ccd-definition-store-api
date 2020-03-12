@@ -20,13 +20,13 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         "Display context parameter '%s' is unsupported for field type '%s' of field '%s' on tab '%s'";
 
     private final DisplayContextParameterType[] ALLOWED_TYPES;
-    private final String[] ALLOWED_FIELD_TYPES;
+    private final List<String> ALLOWED_FIELD_TYPES;
 
     private DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory;
 
     public AbstractDisplayContextParameterValidator(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory,
                                                     DisplayContextParameterType[] allowedTypes,
-                                                    String[] allowedFieldTypes) {
+                                                    List<String> allowedFieldTypes) {
         this.displayContextParameterValidatorFactory = displayContextParameterValidatorFactory;
         this.ALLOWED_TYPES = allowedTypes;
         this.ALLOWED_FIELD_TYPES = allowedFieldTypes;
@@ -59,14 +59,15 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
 
     private void validateCaseFieldType(final T entity, final ValidationResult validationResult) {
         String fieldType = getFieldType(entity);
-        if (Arrays.stream(ALLOWED_FIELD_TYPES).noneMatch(fieldType::equals)) {
+
+        if (!ALLOWED_FIELD_TYPES.contains(fieldType)) {
             validationResult.addError(unsupportedFieldTypeError(entity));
         }
     }
 
     private void validateDisplayContextParameter(final T entity, final ValidationResult validationResult) {
         List<DisplayContextParameter> displayContextParameterList =
-            DisplayContextParameterType.getDisplayContextParameterFor(getDisplayContextParameter(entity));
+            DisplayContextParameter.getDisplayContextParameterFor(getDisplayContextParameter(entity));
         displayContextParameterList.forEach(displayContextParameter -> {
             if (displayContextParameter.getValue() != null) {
                 validateDisplayContextParameterType(displayContextParameter, entity, validationResult);
