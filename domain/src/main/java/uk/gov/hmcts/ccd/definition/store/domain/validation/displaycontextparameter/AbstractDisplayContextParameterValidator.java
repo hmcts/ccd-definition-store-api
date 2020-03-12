@@ -21,14 +21,14 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         "Display context parameter '%s' is unsupported for field type '%s' of field '%s' on tab '%s'";
 
     private final DisplayContextParameterType[] ALLOWED_TYPES;
-    private final String[] ALLOWED_COLLECTION_FIELD_TYPES;
+    private final List<String> ALLOWED_COLLECTION_FIELD_TYPES;
     private final List<String> ALLOWED_FIELD_TYPES;
 
     private DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory;
 
     public AbstractDisplayContextParameterValidator(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory,
                                                     DisplayContextParameterType[] allowedTypes,
-                                                    String[] allowedCollectionFieldTypes),
+                                                    List<String> allowedCollectionFieldTypes,
                                                     List<String> allowedFieldTypes) {
         this.displayContextParameterValidatorFactory = displayContextParameterValidatorFactory;
         this.ALLOWED_TYPES = allowedTypes;
