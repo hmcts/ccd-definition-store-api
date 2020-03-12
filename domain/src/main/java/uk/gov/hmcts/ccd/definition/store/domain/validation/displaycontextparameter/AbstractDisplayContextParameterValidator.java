@@ -28,8 +28,8 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
 
     public AbstractDisplayContextParameterValidator(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory,
                                                     DisplayContextParameterType[] allowedTypes,
-                                                    List<String> allowedCollectionFieldTypes,
-                                                    List<String> allowedFieldTypes) {
+                                                    List<String> allowedFieldTypes,
+                                                    List<String> allowedCollectionFieldTypes) {
         this.displayContextParameterValidatorFactory = displayContextParameterValidatorFactory;
         this.ALLOWED_TYPES = allowedTypes;
         this.ALLOWED_FIELD_TYPES = allowedFieldTypes;
@@ -62,9 +62,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     }
 
     private void validateCaseFieldType(final T entity, final ValidationResult validationResult) {
-        String fieldType = getFieldType(entity);
-
-        if (!ALLOWED_FIELD_TYPES.contains(fieldType) && !isAllowedCollectionFieldType(entity)) {
+        if (!ALLOWED_FIELD_TYPES.contains(getFieldType(entity)) && !isAllowedCollectionFieldType(entity)) {
             validationResult.addError(unsupportedFieldTypeError(entity));
         }
     }
@@ -128,7 +126,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     }
 
     private boolean isAllowedCollectionFieldType(T entity) {
-        return getFieldType(entity).equals("Collection") && Arrays.asList(ALLOWED_COLLECTION_FIELD_TYPES).contains(getCollectionFieldType(entity));
+        return getFieldType(entity).equals("Collection") && ALLOWED_COLLECTION_FIELD_TYPES.contains(getCollectionFieldType(entity));
     }
 
     protected ValidationError unsupportedDisplayContextParameterTypeError(final T entity) {

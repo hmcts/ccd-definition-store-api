@@ -20,7 +20,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };
     private static final List<String> ALLOWED_FIELD_TYPES =
-        Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME, FieldTypeUtils.BASE_COLLECTION);
+        Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
     private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP = new EnumMap<DisplayContext, DisplayContextParameterType>(DisplayContext.class) {{
         put(DisplayContext.READONLY, DisplayContextParameterType.DATETIMEENTRY);
         put(DisplayContext.OPTIONAL, DisplayContextParameterType.DATETIMEDISPLAY);
@@ -64,8 +64,8 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
                 DisplayContextParameterType.getParameterTypeFor(displayContextParameter);
             // Validation for #TABLE and #LIST covered in EventCaseFieldDisplayContextParameterValidatorImpl
             return parameterType
-                .map(t -> t.equals(DisplayContextParameterType.TABLE) || t.equals(DisplayContextParameterType.LIST))
-                .orElse(false);
+                .map(t -> !(t.equals(DisplayContextParameterType.DATETIMEDISPLAY) || t.equals(DisplayContextParameterType.DATETIMEENTRY)))
+                .orElse(true);
         }
         return true;
     }
