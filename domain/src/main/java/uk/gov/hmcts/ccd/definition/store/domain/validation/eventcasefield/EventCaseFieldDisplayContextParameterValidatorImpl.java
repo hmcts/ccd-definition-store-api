@@ -9,8 +9,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
-import java.util.Optional;
-
 @Component
 public class EventCaseFieldDisplayContextParameterValidatorImpl implements EventCaseFieldEntityValidator {
 
@@ -68,8 +66,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
     }
 
     private boolean isDisplayContextParameterDateTimeType(EventCaseFieldEntity entity) {
-        Optional<DisplayContextParameterType> type = DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter());
-        return type.isPresent() ? type.get() == DisplayContextParameterType.DATETIMEDISPLAY || type.get() == DisplayContextParameterType.DATETIMEENTRY : false;
+        return DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter())
+            .map(t -> t == DisplayContextParameterType.DATETIMEDISPLAY || t == DisplayContextParameterType.DATETIMEENTRY).orElse(false);
     }
 
     private boolean isFieldTypeNotTableOrList(EventCaseFieldEntity eventCaseFieldEntity) {

@@ -10,17 +10,21 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparamet
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @Component
 public class ComplexFieldEntityDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<ComplexFieldEntity> implements ComplexFieldValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         {DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY};
-    private static final String[] ALLOWED_FIELD_TYPES =
-        {FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME};
+    private static final List<String> ALLOWED_FIELD_TYPES =
+        Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
 
     @Autowired
     public ComplexFieldEntityDisplayContextParameterValidatorImpl(final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
-        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, new String[0]);
+        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, Collections.emptyList());
     }
 
     @Override

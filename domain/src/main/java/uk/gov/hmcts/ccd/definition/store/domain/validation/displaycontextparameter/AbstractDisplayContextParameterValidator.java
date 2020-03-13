@@ -21,15 +21,15 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         "Display context parameter '%s' is unsupported for field type '%s' of field '%s' on tab '%s'";
 
     private final DisplayContextParameterType[] ALLOWED_TYPES;
-    private final String[] ALLOWED_FIELD_TYPES;
-    private final String[] ALLOWED_COLLECTION_FIELD_TYPES;
+    private final List<String> ALLOWED_COLLECTION_FIELD_TYPES;
+    private final List<String> ALLOWED_FIELD_TYPES;
 
     private DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory;
 
     public AbstractDisplayContextParameterValidator(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory,
                                                     DisplayContextParameterType[] allowedTypes,
-                                                    String[] allowedFieldTypes,
-                                                    String[] allowedCollectionFieldTypes) {
+                                                    List<String> allowedFieldTypes,
+                                                    List<String> allowedCollectionFieldTypes) {
         this.displayContextParameterValidatorFactory = displayContextParameterValidatorFactory;
         this.ALLOWED_TYPES = allowedTypes;
         this.ALLOWED_FIELD_TYPES = allowedFieldTypes;
@@ -62,15 +62,14 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     }
 
     private void validateCaseFieldType(final T entity, final ValidationResult validationResult) {
-        String fieldType = getFieldType(entity);
-        if (Arrays.stream(ALLOWED_FIELD_TYPES).noneMatch(fieldType::equals) && !isAllowedCollectionFieldType(entity)) {
+        if (!ALLOWED_FIELD_TYPES.contains(getFieldType(entity)) && !isAllowedCollectionFieldType(entity)) {
             validationResult.addError(unsupportedFieldTypeError(entity));
         }
     }
 
     private void validateDisplayContextParameter(final T entity, final ValidationResult validationResult) {
         List<DisplayContextParameter> displayContextParameterList =
-            DisplayContextParameterType.getDisplayContextParameterFor(getDisplayContextParameter(entity));
+            DisplayContextParameter.getDisplayContextParameterFor(getDisplayContextParameter(entity));
         displayContextParameterList.forEach(displayContextParameter -> {
             if (displayContextParameter.getValue() != null) {
                 validateDisplayContextParameterType(displayContextParameter, entity, validationResult);
@@ -127,7 +126,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     }
 
     private boolean isAllowedCollectionFieldType(T entity) {
-        return getFieldType(entity).equals("Collection") && Arrays.asList(ALLOWED_COLLECTION_FIELD_TYPES).contains(getCollectionFieldType(entity));
+        return getFieldType(entity).equals("Collection") && ALLOWED_COLLECTION_FIELD_TYPES.contains(getCollectionFieldType(entity));
     }
 
     protected ValidationError unsupportedDisplayContextParameterTypeError(final T entity) {

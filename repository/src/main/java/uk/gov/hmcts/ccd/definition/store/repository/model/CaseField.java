@@ -24,6 +24,7 @@ public class CaseField implements HasAcls, Orderable {
     private Integer order;
     private String showCondition;
     private boolean metadata;
+    private String displayContextParameter;
 
     /**
      * The id of the case field
@@ -184,5 +185,15 @@ public class CaseField implements HasAcls, Orderable {
 
     public void setMetadata(boolean metadata) {
         this.metadata = metadata;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("display_context_parameter")
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }
