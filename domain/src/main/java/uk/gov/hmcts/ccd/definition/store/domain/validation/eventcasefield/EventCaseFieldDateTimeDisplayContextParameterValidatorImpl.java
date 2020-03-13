@@ -24,9 +24,9 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
     private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP = new EnumMap<>(DisplayContext.class);
 
     static {
-        DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.READONLY, DisplayContextParameterType.DATETIMEENTRY);
-        DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.OPTIONAL, DisplayContextParameterType.DATETIMEDISPLAY);
-        DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.MANDATORY, DisplayContextParameterType.DATETIMEDISPLAY);
+        DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.READONLY, DisplayContextParameterType.DATETIMEDISPLAY);
+        DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.OPTIONAL, DisplayContextParameterType.DATETIMEENTRY);
+        DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.MANDATORY, DisplayContextParameterType.DATETIMEENTRY);
     }
 
     public EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
@@ -43,7 +43,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
     protected void validateDisplayContextParameterType(final DisplayContextParameter displayContextParameter,
                                                        final EventCaseFieldEntity entity,
                                                        final ValidationResult validationResult) {
-        if (isUnsupportedForEventCaseField(displayContextParameter, entity)) {
+        if (!isSupportedForEventCaseField(displayContextParameter, entity)) {
             validationResult.addError(unsupportedDisplayContextParameterTypeError(entity));
         }
         super.validateDisplayContextParameterType(displayContextParameter, entity, validationResult);
@@ -82,8 +82,9 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
         return "CaseEventToFields";
     }
 
-    private boolean isUnsupportedForEventCaseField(final DisplayContextParameter displayContextParameter,
+    private boolean isSupportedForEventCaseField(final DisplayContextParameter displayContextParameter,
                                                    final EventCaseFieldEntity entity) {
-        return DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.get(entity.getDisplayContext()) == displayContextParameter.getType();
+        return DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.containsKey(entity.getDisplayContext())
+            && DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.get(entity.getDisplayContext()) == displayContextParameter.getType();
     }
 }
