@@ -61,8 +61,8 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
     }
 
     private boolean isDisplayContextParameterDateTimeType(DisplayGroupCaseFieldEntity entity) {
-        Optional<DisplayContextParameterType> type = DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter());
-        return type.isPresent() ? type.get() == DisplayContextParameterType.DATETIMEDISPLAY || type.get() == DisplayContextParameterType.DATETIMEENTRY : false;
+        return DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter())
+            .map(t -> t == DisplayContextParameterType.DATETIMEDISPLAY || t == DisplayContextParameterType.DATETIMEENTRY).orElse(false);
     }
 
     private boolean isFieldTypeNotTableOrList(DisplayGroupCaseFieldEntity entity) {

@@ -21,11 +21,13 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
         { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };
     private static final List<String> ALLOWED_FIELD_TYPES =
         Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
-    private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP = new EnumMap<DisplayContext, DisplayContextParameterType>(DisplayContext.class) {{
-        put(DisplayContext.READONLY, DisplayContextParameterType.DATETIMEENTRY);
-        put(DisplayContext.OPTIONAL, DisplayContextParameterType.DATETIMEDISPLAY);
-        put(DisplayContext.MANDATORY, DisplayContextParameterType.DATETIMEDISPLAY);
-    }};
+    private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP= new EnumMap<>(DisplayContext.class);
+
+    static {
+        DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.READONLY, DisplayContextParameterType.DATETIMEENTRY);
+        DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.OPTIONAL, DisplayContextParameterType.DATETIMEDISPLAY);
+        DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.MANDATORY, DisplayContextParameterType.DATETIMEDISPLAY);
+    }
 
     public EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
         super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, ALLOWED_FIELD_TYPES);
