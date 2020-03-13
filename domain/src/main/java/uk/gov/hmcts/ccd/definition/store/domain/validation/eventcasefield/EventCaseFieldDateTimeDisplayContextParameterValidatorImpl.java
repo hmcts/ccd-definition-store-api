@@ -21,7 +21,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
         { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };
     private static final List<String> ALLOWED_FIELD_TYPES =
         Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
-    private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP= new EnumMap<>(DisplayContext.class);
+    private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP = new EnumMap<>(DisplayContext.class);
 
     static {
         DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.READONLY, DisplayContextParameterType.DATETIMEENTRY);

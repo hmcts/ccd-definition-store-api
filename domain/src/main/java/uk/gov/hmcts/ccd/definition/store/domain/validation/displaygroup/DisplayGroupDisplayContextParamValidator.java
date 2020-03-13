@@ -9,8 +9,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 
-import java.util.Optional;
-
 @Component
 public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCaseFieldValidator {
 
