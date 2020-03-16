@@ -96,7 +96,7 @@ dependencyManagement {
         dependency 'com.google.guava:guava:24.1.1-jre'
         
         // CVE-2019-0232, CVE-2019-0199  - Java and Command Line injections in Windows
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.30') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.31') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -133,7 +133,7 @@ allprojects {
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 
-        compile "com.fasterxml.jackson.core:jackson-databind:2.9.10.2"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.9.10.3"
     }
 
     checkstyle {
