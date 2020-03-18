@@ -60,7 +60,6 @@
 		<cpe>cpe:/a:pivotal_software:spring_framework</cpe>
 		<cve>CVE-2020-5398</cve>
 	</suppress>
-	<<<<<<< HEAD
 
 	<suppress>
 		<notes><![CDATA[
@@ -75,6 +74,7 @@
 	<suppress>
 		<notes>Temporary suppression for on-going developments</notes>
 		<cve>CVE-2020-8840</cve>
+		<cve>CVE-2018-1258</cve>
 	</suppress>
 	<suppress>
 		<notes><![CDATA[
