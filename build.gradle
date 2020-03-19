@@ -127,7 +127,7 @@ allprojects {
     }
 
     apply plugin: 'java'
-
+    
     ext {
         hibernateVersion = '5.2.18.Final'
         elasticSearchVersion = '6.4.2'
@@ -135,7 +135,6 @@ allprojects {
 
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-
         compile "com.fasterxml.jackson.core:jackson-databind:2.10.0"
     }
 
@@ -158,7 +157,6 @@ allprojects {
                 if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
                     details.useVersion '3.6.3'
                 }
-
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.7.0'
                 }
@@ -270,7 +268,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:3.1.0"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '1.2.1'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '1.2.3'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
