@@ -31,7 +31,8 @@
         "Content-Length" : "[[ANYTHING_PRESENT]]",
         "Content-Type" : "application/vnd.spring-boot.actuator.v3+json",
         "Date" : "[[ANYTHING_PRESENT]]",
-        "Vary" : "Accept-Encoding"
+        "Vary" : "Accept-Encoding",
+        "Request-Context": "[[ANY_NULLABLE]]"
       },
       "body" : {
         "status" : "UP",
@@ -71,7 +72,7 @@
           "refreshScope" : {
             "status" : "UP"
           },
-          "serviceAuth" : {
+          "uk.gov.hmcts.reform.authorisation.healthcheck.ServiceAuth" : {
             "status" : "UP"
           }
         }

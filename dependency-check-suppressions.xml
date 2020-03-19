@@ -74,6 +74,7 @@
 	<suppress>
 		<notes>Temporary suppression for on-going developments</notes>
 		<cve>CVE-2020-8840</cve>
+		<cve>CVE-2018-1258</cve>
 		<cve>CVE-2018-17244</cve>
 	</suppress>
 	<suppress>
@@ -92,7 +93,6 @@
 		</packageUrl>
 		<cve>CVE-2020-1938</cve>
 	</suppress>
-
 	<suppress>
 		<notes><![CDATA[
         file name: jackson-databind-2.9.10.3.jar
