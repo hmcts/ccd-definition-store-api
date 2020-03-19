@@ -1,21 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
-import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
-import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-
 import static java.util.Collections.emptyList;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.core.Is.is;
@@ -24,11 +8,28 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
+import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
+import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
+import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
 
 class ImportAuditControllerTest {
 
@@ -58,7 +59,7 @@ class ImportAuditControllerTest {
             mvcResult =
             mockMvc.perform(get(URL_IMPORT_AUDITS))
                    .andExpect(status().isOk())
-                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(content().contentType(APPLICATION_JSON))
                    .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(),
                    is("[{\"filename\":\"filename\",\"uri\":\"https://ffs.blob.core.windows"
@@ -76,7 +77,7 @@ class ImportAuditControllerTest {
             mvcResult =
             mockMvc.perform(get(URL_IMPORT_AUDITS))
                    .andExpect(status().isOk())
-                   .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                   .andExpect(content().contentType(APPLICATION_JSON))
                    .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(), is("[]"));
         verify(azureImportAuditsClient).fetchLatestImportAudits();

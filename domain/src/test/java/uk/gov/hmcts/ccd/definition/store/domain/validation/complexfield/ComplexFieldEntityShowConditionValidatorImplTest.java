@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -106,6 +107,22 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors().get(0), instanceOf(ComplexFieldShowConditionReferencesInvalidFieldError.class));
+    }
+
+    @Test
+    public void returnsNoValidationErrorsWhenShowConditionIncludesMetadataField() throws InvalidShowConditionException {
+        String field = MetadataField.STATE.getReference();
+        complexField.setShowCondition("someShowCondition");
+        FieldTypeEntity complexFieldType = mock(FieldTypeEntity.class);
+        when(complexFieldType.hasComplexField(field)).thenReturn(false);
+        complexField.setComplexFieldType(complexFieldType);
+        ShowCondition sc = new ShowCondition.Builder().showConditionExpression("parsedSC").field(field).build();
+        when(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .thenReturn(sc);
+
+        ValidationResult result = testObj.validate(complexField, mockValidationContext);
+
+        assertThat(result.isValid(), is(true));
     }
 
 

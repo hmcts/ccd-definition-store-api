@@ -14,6 +14,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -120,6 +121,36 @@ public class EventComplexTypeShowConditionValidatorImplTest {
                     caseFieldEntity("NonMatchingCaseFieldId2"),
                     null)
                   ));
+
+        assertTrue(classUnderTest.validate(eventComplexTypeEntityWithShowCondition,
+            eventCaseFieldEntityValidationContext)
+            .isValid());
+    }
+
+    @Test
+    public void shouldValidateShowConditionForMetadataField() throws InvalidShowConditionException {
+        String field = MetadataField.STATE.getReference();
+        String showCondition = field + "=\"TODO\"";
+
+        EventComplexTypeEntity eventComplexTypeEntityWithShowCondition = eventComplexTypeEntity("reference1",
+            showCondition);
+
+        EventCaseFieldEntity eventCaseFieldWithEventComplexTypeEntity = eventCaseFieldEntity(
+            null,
+            asList(eventComplexTypeEntityWithShowCondition));
+
+        when(showConditionExtractor.parseShowCondition(any())).thenReturn(
+            new ShowCondition.Builder().showConditionExpression(showCondition).field(field).build());
+
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
+            new EventCaseFieldEntityValidationContext(
+                "EventId",
+                asList(
+                    eventCaseFieldWithEventComplexTypeEntity,
+                    eventCaseFieldEntity(
+                        caseFieldEntity("NonMatchingCaseFieldId"),
+                        null)
+                ));
 
         assertTrue(classUnderTest.validate(eventComplexTypeEntityWithShowCondition,
             eventCaseFieldEntityValidationContext)

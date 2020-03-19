@@ -11,6 +11,7 @@ public enum MetadataField {
     CASE_REFERENCE,
     CREATED_DATE,
     LAST_MODIFIED_DATE,
+    LAST_STATE_MODIFIED_DATE,
     SECURITY_CLASSIFICATION;
 
     private boolean dynamic;
@@ -40,5 +41,9 @@ public enum MetadataField {
 
     public static List<MetadataField> getDynamicFields() {
         return Arrays.stream(values()).filter(MetadataField::isDynamic).collect(Collectors.toList());
+    }
+
+    public static boolean isMetadataField(String reference) {
+        return Arrays.stream(values()).map(MetadataField::getReference).anyMatch(f -> f.equals(reference));
     }
 }
