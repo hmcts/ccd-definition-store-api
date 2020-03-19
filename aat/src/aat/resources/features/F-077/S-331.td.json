@@ -13,7 +13,8 @@
       "Content-Encoding" : "gzip",
       "Content-Length" : "506",
       "Content-Type" : "application/json",
-      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
+      "Request-Context": "[[ANY_NULLABLE]]"
     },
     "body": {
       "arrayInMap": [
