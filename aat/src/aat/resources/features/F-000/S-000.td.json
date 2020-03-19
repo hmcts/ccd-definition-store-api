@@ -27,14 +27,33 @@
       "responseCode" : 200,
       "responseMessage" : "OK",
       "headers" : {
+        "Content-Encoding" : "gzip",
         "Content-Length" : "[[ANYTHING_PRESENT]]",
-        "Content-Type" : "application/vnd.spring-boot.actuator.v2+json;charset=UTF-8",
+        "Content-Type" : "application/vnd.spring-boot.actuator.v3+json",
         "Date" : "[[ANYTHING_PRESENT]]",
         "Vary" : "Accept-Encoding"
       },
       "body" : {
         "status" : "UP",
-        "details" : {
+        "components" : {
+          "db" : {
+            "status" : "UP",
+            "details" : {
+              "database" : "PostgreSQL",
+              "result" : 1,
+              "validationQuery" : "SELECT 1"
+            }
+          },
+          "discoveryComposite": {
+            "description": "Discovery Client not initialized",
+            "status": "UNKNOWN",
+            "components": {
+              "discoveryClient": {
+                "description": "Discovery Client not initialized",
+                "status": "UNKNOWN"
+              }
+            }
+          },
           "diskSpace" : {
             "status" : "UP",
             "details" : {
@@ -43,15 +62,11 @@
               "threshold" : "[[ANYTHING_PRESENT]]"
             }
           },
-          "db" : {
-            "status" : "UP",
-            "details" : {
-              "database" : "PostgreSQL",
-              "hello" : 1
-            }
-          },
           "liveness" : {
             "status" : "UP"
+          },
+          "ping": {
+            "status": "UP"
           },
           "refreshScope" : {
             "status" : "UP"

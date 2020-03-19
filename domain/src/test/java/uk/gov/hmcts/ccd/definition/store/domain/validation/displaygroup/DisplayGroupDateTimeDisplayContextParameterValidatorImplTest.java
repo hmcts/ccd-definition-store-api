@@ -120,7 +120,7 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    void shouldFailValidationForInvalidDisplayContextParameterType() {
+    void shouldSkipValidationForInvalidDisplayContextParameterType() {
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setDisplayContextParameter("#INVALIDPARAMETER(HHmmss)");
         entity.setCaseField(caseFieldEntity());
@@ -128,10 +128,7 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
         final ValidationResult result = validator.validate(entity);
 
         assertAll(
-            () -> assertThat(result.isValid(), is(false)),
-            () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Display context parameter '#INVALIDPARAMETER(HHmmss)' has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'CaseTypeTab'"))
+            () -> assertThat(result.isValid(), is(true))
         );
     }
 

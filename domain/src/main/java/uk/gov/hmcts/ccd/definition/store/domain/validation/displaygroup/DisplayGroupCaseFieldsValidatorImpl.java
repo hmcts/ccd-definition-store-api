@@ -3,8 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.List;
 
@@ -25,8 +24,10 @@ public class DisplayGroupCaseFieldsValidatorImpl implements DisplayGroupValidato
     public ValidationResult validate(DisplayGroupEntity displayGroup, List<DisplayGroupEntity> allDisplayGroups) {
         ValidationResult vr = new ValidationResult();
         for (DisplayGroupCaseFieldEntity e : displayGroup.getDisplayGroupCaseFields()) {
-            for (DisplayGroupCaseFieldValidator v : validators) {
-                vr.merge(v.validate(e));
+            if (displayGroup.getType() == DisplayGroupType.TAB) {
+                for (DisplayGroupCaseFieldValidator v : validators) {
+                    vr.merge(v.validate(e));
+                }
             }
         }
         return vr;

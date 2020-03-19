@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 @Component
 public class DateTimeEntryValidatorImpl implements DisplayContextParameterValidator {
 
-    private static final Pattern ALLOWED_CHARACTERS_PATTERN = Pattern.compile("[yMdHmsS]+");
+    private static final Pattern ALLOWED_CHARACTERS_PATTERN = Pattern.compile("[yMdHmsS\\-'T:]+");
 
     private DateTimeFormatParser dateTimeFormatParser;
 

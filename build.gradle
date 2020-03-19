@@ -98,7 +98,7 @@ dependencyManagement {
         dependency 'com.google.guava:guava:24.1.1-jre'
 
         // CVE-2019-0232, CVE-2019-0199  - Java and Command Line injections in Windows
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.30') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.31') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -135,7 +135,7 @@ allprojects {
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 
-        compile "com.fasterxml.jackson.core:jackson-databind:2.9.10.2"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.10.0"
     }
 
     checkstyle {
@@ -252,7 +252,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:3.1.0"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '1.1.1'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '1.2.1'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024

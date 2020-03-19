@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import joptsimple.internal.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameter;
@@ -11,17 +10,21 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparamet
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @Component
 public class ComplexFieldEntityDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<ComplexFieldEntity> implements ComplexFieldValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         {DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY};
-    private static final String[] ALLOWED_FIELD_TYPES =
-        {FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME};
+    private static final List<String> ALLOWED_FIELD_TYPES =
+        Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
 
     @Autowired
     public ComplexFieldEntityDisplayContextParameterValidatorImpl(final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
-        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES);
+        super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, Collections.emptyList());
     }
 
     @Override
@@ -46,12 +49,8 @@ public class ComplexFieldEntityDisplayContextParameterValidatorImpl extends Abst
     }
 
     @Override
-    protected String getFieldType(final ComplexFieldEntity entity) {
-        if (entity.getFieldType() == null) {
-            return Strings.EMPTY;
-        } else {
-            return entity.getFieldType().getReference();
-        }
+    protected FieldTypeEntity getFieldTypeEntity(final ComplexFieldEntity entity) {
+        return entity.getFieldType();
     }
 
     protected String getCaseFieldReference(final ComplexFieldEntity entity) {

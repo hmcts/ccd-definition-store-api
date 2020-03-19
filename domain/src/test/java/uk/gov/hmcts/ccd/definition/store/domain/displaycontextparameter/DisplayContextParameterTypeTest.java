@@ -13,34 +13,6 @@ public class DisplayContextParameterTypeTest {
     private static final String DATE_TIME_ENTRY_PARAMETER = "#DATETIMEENTRY(HHmmss)";
 
     @Test
-    void shouldGetDisplayContextParameterForValidInput() {
-        List<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor(DATE_TIME_ENTRY_PARAMETER);
-
-        assertAll(
-            () -> assertThat(result.get(0).getType(), is(DisplayContextParameterType.DATETIMEENTRY)),
-            () -> assertThat(result.get(0).getValue(), is("HHmmss"))
-        );
-    }
-
-    @Test
-    void shouldNotReturnDisplayContextParameterForInvalidType() {
-        List<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor("#INVALID(123)");
-
-        assertAll(
-            () -> assertThat(result.isEmpty(), is(false))
-        );
-    }
-
-    @Test
-    void shouldNotReturnDisplayContextParameterForInvalidValue() {
-        List<DisplayContextParameter> result = DisplayContextParameterType.getDisplayContextParameterFor("#DATETIMEENTRY()");
-
-        assertAll(
-            () -> assertThat(result.isEmpty(), is(false))
-        );
-    }
-
-    @Test
     void shouldGetParameterTypeForKnownType() {
         Optional<DisplayContextParameterType> result = DisplayContextParameterType.getParameterTypeFor(DATE_TIME_ENTRY_PARAMETER);
 

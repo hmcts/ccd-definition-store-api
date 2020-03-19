@@ -93,7 +93,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    void shouldValidateReadonlyFieldWithDateTimeDisplay() throws Exception {
+    void shouldValidateReadonlyFieldWithDateTimeDisplay() {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(HHmmss)");
         entity.setDisplayContext(DisplayContext.READONLY);
@@ -107,7 +107,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    void shouldFailValidationForReadonlyFieldWithDateTimeEntry() throws Exception {
+    void shouldFailValidationForReadonlyFieldWithDateTimeEntry() {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
         entity.setDisplayContext(DisplayContext.READONLY);
@@ -141,7 +141,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    void shouldFailValidationForInvalidDisplayContextParameterType() {
+    void shouldSkipValidationForInvalidDisplayContextParameterType() {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setDisplayContextParameter("#INVALIDPARAMETER(HHmmss)");
         entity.setCaseField(caseFieldEntity());
@@ -149,10 +149,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
         final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
 
         assertAll(
-            () -> assertThat(result.isValid(), is(false)),
-            () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Display context parameter '#INVALIDPARAMETER(HHmmss)' has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'CaseEventToFields'"))
+            () -> assertThat(result.isValid(), is(true))
         );
     }
 

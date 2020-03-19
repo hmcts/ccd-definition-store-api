@@ -4,14 +4,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class DateTimeFormatParser {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DateTimeFormatParser.class);
 
     private static final Pattern DEFAULT_PATTERN = Pattern.compile(".+");
 
@@ -27,7 +25,7 @@ public class DateTimeFormatParser {
         try {
             DateTimeFormatter.ofPattern(dateTimeFormat);
         } catch (IllegalArgumentException e) {
-            LOG.error("Error occurred while parsing date time format " + dateTimeFormat, e);
+            log.error("Error occurred while parsing date time format " + dateTimeFormat, e);
             throw new InvalidDateTimeFormatException(dateTimeFormat);
         }
     }
