@@ -39,7 +39,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
 
     @Test
     public void shouldReturnCaseType() throws Exception {
-        givenUserProfileReturnsSuccess();
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -79,7 +78,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
     // To be @Nested - DisplayAPI Controller
     @Test
     public void shouldReturnThreeWorkbasketInputFieldsForTestAddressBookCase() throws Exception {
-        givenUserProfileReturnsSuccess();
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
@@ -109,7 +107,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
 
     @Test
     public void shouldReturnTabsForTestAddressBookCase() throws Exception {
-        givenUserProfileReturnsSuccess();
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
@@ -143,7 +140,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
 
     @Test
     public void shouldReturnThreeWizardPagesForTestAddressBookCase() throws Exception {
-        givenUserProfileReturnsSuccess();
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
@@ -176,7 +172,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
 
     @Test
     public void shouldReturnSingleWizardPageForTestComplexAddressBookCase() throws Exception {
-        givenUserProfileReturnsSuccess();
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
@@ -270,12 +265,11 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     private  void shouldReturnJurisdictions(String id) throws Exception {
-        givenUserProfileReturnsSuccess();
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                                  .file(file)
-                                                  .header(AUTHORIZATION, "Bearer testUser"))
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String URL = JURISDICTIONS_URL + "?ids=" + id;
@@ -284,8 +278,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andReturn();
 
         List<Jurisdiction> jurisdictions = mapper.readValue(result.getResponse().getContentAsString(),
-                                                            TypeFactory.defaultInstance().constructType(new TypeReference<List<Jurisdiction>>() {
-                                                            }));
+            TypeFactory.defaultInstance().constructType(new TypeReference<List<Jurisdiction>>() {
+            }));
 
         assertAll(
             () -> assertThat(jurisdictions, hasSize(1)),

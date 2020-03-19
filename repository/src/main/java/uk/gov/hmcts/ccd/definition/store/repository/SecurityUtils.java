@@ -1,23 +1,25 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
-import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
+import uk.gov.hmcts.ccd.definition.store.security.idam.IdamRepository;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import uk.gov.hmcts.reform.idam.client.models.UserInfo;
+
+import javax.inject.Named;
 
 @Named
-@Singleton
 public class SecurityUtils {
 
     private final AuthTokenGenerator authTokenGenerator;
+    private final IdamRepository idamRepository;
 
     @Autowired
-    public SecurityUtils(final AuthTokenGenerator authTokenGenerator) {
+    public SecurityUtils(final AuthTokenGenerator authTokenGenerator, IdamRepository idamRepository) {
         this.authTokenGenerator = authTokenGenerator;
+        this.idamRepository = idamRepository;
     }
 
     public HttpHeaders authorizationHeaders() {
@@ -26,18 +28,12 @@ public class SecurityUtils {
         return headers;
     }
 
-    public ServiceAndUserDetails getCurrentUser() {
-        if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            return (ServiceAndUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        }
-        return null;
+    public UserInfo getUserInfo() {
+        return idamRepository.getUserInfo(getUserToken());
     }
 
-    public HttpHeaders userAuthorizationHeaders() {
-        final ServiceAndUserDetails serviceAndUser =
-            (ServiceAndUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        final HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, serviceAndUser.getPassword());
-        return headers;
+    public String getUserToken() {
+        Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return jwt.getTokenValue();
     }
 }
