@@ -69,7 +69,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
 
     private void validateDisplayContextParameter(final T entity, final ValidationResult validationResult) {
         List<DisplayContextParameter> displayContextParameterList =
-            DisplayContextParameter.getDisplayContextParameterFor(getDisplayContextParameter(entity));
+            DisplayContextParameter.getDisplayContextParametersFor(getDisplayContextParameter(entity));
         displayContextParameterList.forEach(displayContextParameter -> {
             if (displayContextParameter.getValue() != null) {
                 validateDisplayContextParameterType(displayContextParameter, entity, validationResult);

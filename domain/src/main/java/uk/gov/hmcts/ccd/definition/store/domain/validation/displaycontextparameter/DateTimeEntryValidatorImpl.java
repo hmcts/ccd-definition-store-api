@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparame
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.datetime.DateTimeFormatParser;
+import uk.gov.hmcts.ccd.definition.store.domain.datetime.InvalidDateTimeFormatException;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 
 import java.util.regex.Pattern;
@@ -25,7 +26,7 @@ public class DateTimeEntryValidatorImpl implements DisplayContextParameterValida
     }
 
     @Override
-    public void validate(final String parameterValue) throws Exception {
+    public void validate(final String parameterValue) throws InvalidDateTimeFormatException {
         dateTimeFormatParser.parseDateTimeFormat(parameterValue, ALLOWED_CHARACTERS_PATTERN);
     }
 }
