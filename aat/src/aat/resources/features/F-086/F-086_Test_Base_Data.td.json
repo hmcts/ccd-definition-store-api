@@ -1,0 +1,18 @@
+{
+  "_guid_": "F-086_Test_Base_Data",
+  "productName": "CCD Definition Store",
+  "operationName": "Case Wizard page collection By CaseType",
+  "method": "GET",
+  "uri": "/api/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}",
+  "request": {
+    "headers": {
+      "Authorization": "[[DYNAMIC]]",
+      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Content-Type": "application/json"
+    },
+    "pathVariables": {
+      "ctid": "BEFTA_CASETYPE_3_4",
+      "etid": "CREATE"
+    }
+  }
+}

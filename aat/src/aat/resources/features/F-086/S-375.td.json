@@ -1,0 +1,99 @@
+{
+  "_guid_": "S-375",
+  "_extends_": "F-086_Test_Base_Data",
+  "title": "must return the Case Wizard Page Collection for a given case type",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid case type id",
+    "has the 200 OK code",
+    "has Case Wizard Collection details"
+  ],
+  "users": {
+    "invokingUser": {
+      "username": "befta.caseworker.3@gmail.com",
+      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "[[ANYTHING_PRESENT]]",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "case_type_id" : "BEFTA_CASETYPE_3_4",
+      "event_id" : "CREATE",
+      "wizard_pages" : [ {
+        "id" : "CREATEfirst",
+        "label" : "First page",
+        "order" : 1,
+        "wizard_page_fields" : [ {
+          "case_field_id" : "TextField",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "NumberField",
+          "order" : 3,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "MetaLabelField",
+          "order" : 2,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "YesOrNoField",
+          "order" : 4,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "DateField",
+          "order" : 5,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "DateTimeField",
+          "order" : 6,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "StandardDate",
+          "order" : 7,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "StandardDateTime",
+          "order" : 8,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "CollectionDate",
+          "order" : 9,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "CollectionDateTime",
+          "order" : 10,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "ComplexDateTime",
+          "order" : 11,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "CollectionComplexDateTime",
+          "order" : 12,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        } ],
+        "show_condition" : null,
+        "callback_url_mid_event" : null,
+        "retries_timeout_mid_event" : [ ]
+      } ]
+    }
+  }
+}
