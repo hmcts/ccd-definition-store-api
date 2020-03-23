@@ -122,6 +122,7 @@ module "case-definition-store-api" {
 
     OIDC_ISSUER   = "${local.oidc_issuer}"
     IDAM_USER_URL = "${var.idam_api_url}"
+    IDAM_BASE_URL = "${var.idam_base_url}"
     IDAM_S2S_URL = "${local.s2s_url}"
     DEFINITION_STORE_IDAM_KEY = "${data.azurerm_key_vault_secret.definition_store_s2s_secret.value}"
 

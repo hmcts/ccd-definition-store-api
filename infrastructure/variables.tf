@@ -97,6 +97,10 @@ variable "idam_api_url" {
   default = "http://betaDevBccidamAppLB.reform.hmcts.net"
 }
 
+variable "idam_base_url" {
+  default = "https://idam-web-public.demo.platform.hmcts.net"
+}
+
 ////////////////////////////////
 // S2S
 ////////////////////////////////
