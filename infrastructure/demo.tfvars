@@ -1,5 +1,4 @@
-idam_api_url = "https://idam-api.demo.platform.hmcts.net/"
-idam_base_url = "https://idam-web-public.demo.platform.hmcts.net"
+idam_api_url = "https://idam-web-public.demo.platform.hmcts.net"
 frontend_url = "https://www.ccd.demo.platform.hmcts.net"
 
 asp_name = "ccd-definition-store-api-demo"
