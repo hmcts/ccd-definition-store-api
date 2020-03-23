@@ -264,7 +264,7 @@ public class ImportServiceImpl implements ImportService {
     private void importBanner(BannerEntity bannerEntity) {
         bannerService.save(bannerEntity);
     }
-    
+
     private void importJurisdictionUiConfig(JurisdictionUiConfigEntity jurisdictionUiConfigEntity) {
         jurisdictionUiConfigService.save(jurisdictionUiConfigEntity);
     }

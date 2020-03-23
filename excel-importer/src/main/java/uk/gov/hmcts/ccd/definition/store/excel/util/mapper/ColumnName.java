@@ -76,7 +76,13 @@ public enum ColumnName {
     BANNER_ENABLED("BannerEnabled"),
     BANNER_DESCRIPTION("BannerDescription"),
     BANNER_URL_TEXT("BannerURLText"),
-    BANNER_URL("BannerURL");
+    BANNER_URL("BannerURL"),
+    CATEGORY_GROUP_ID("CategoryGroupId"),
+    CATEGORY_GROUP_NAME("CategoryGroupName"),
+    CATEGORY_ID("CategoryID"),
+    CATEGORY_PARENT_ID("ParentCategoryID"),
+    CATEGORY_LABEL("CategoryLabel"),
+    CATEGORY_DISPLAY_ORDER("CategoryDisplayOrder");
 
     private final String name;
 
@@ -109,6 +115,13 @@ public enum ColumnName {
                     columnName.equals(ColumnName.CASE_TYPE_ID);
             case STATE:
                 return columnName.equals(ColumnName.ID);
+            case CATEGORY:
+                return columnName.equals(ColumnName.CASE_TYPE_ID) ||
+                    columnName.equals(ColumnName.CATEGORY_GROUP_ID) ||
+                    columnName.equals(ColumnName.CATEGORY_GROUP_NAME) ||
+                    columnName.equals(ColumnName.CATEGORY_ID) ||
+                    columnName.equals(ColumnName.CATEGORY_LABEL) ||
+                    columnName.equals(ColumnName.CATEGORY_DISPLAY_ORDER);
             case CASE_EVENT_TO_FIELDS:
                 return columnName.equals(ColumnName.CASE_FIELD_ID) ||
                     columnName.equals(ColumnName.CASE_TYPE_ID) ||

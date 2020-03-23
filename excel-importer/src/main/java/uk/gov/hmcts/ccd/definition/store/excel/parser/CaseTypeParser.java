@@ -30,6 +30,7 @@ public class CaseTypeParser {
     private final ParseContext parseContext;
     private final CaseFieldParser caseFieldParser;
     private final CaseRoleParser caseRoleParser;
+    private final CategoryParser categoryParser;
     private final StateParser stateParser;
     private final EventParser eventParser;
     private final AuthorisationCaseTypeParser authorisationCaseTypeParser;
@@ -43,6 +44,7 @@ public class CaseTypeParser {
     public CaseTypeParser(ParseContext parseContext,
                           CaseFieldParser caseFieldParser,
                           StateParser stateParser,
+                          CategoryParser categoryParser,
                           EventParser eventParser,
                           AuthorisationCaseTypeParser authorisationParser,
                           AuthorisationCaseFieldParser authorisationCaseFieldParser,
@@ -54,6 +56,7 @@ public class CaseTypeParser {
                           SearchAliasFieldParser searchAliasFieldParser) {
         this.parseContext = parseContext;
         this.caseFieldParser = caseFieldParser;
+        this.categoryParser = categoryParser;
         this.stateParser = stateParser;
         this.eventParser = eventParser;
         this.authorisationCaseTypeParser = authorisationParser;
@@ -66,7 +69,7 @@ public class CaseTypeParser {
         this.searchAliasFieldParser = searchAliasFieldParser;
     }
 
-        public ParseResult<CaseTypeEntity> parseAll(Map<String, DefinitionSheet> definitionSheets) {
+    public ParseResult<CaseTypeEntity> parseAll(Map<String, DefinitionSheet> definitionSheets) {
         logger.debug("Case types parsing...");
 
         final ParseResult<CaseTypeEntity> result = new ParseResult<>();
@@ -90,6 +93,7 @@ public class CaseTypeParser {
             Collection<CaseRoleEntity> caseRoleEntities = caseRoleParser.parseAll(definitionSheets, caseType);
             caseType.addCaseFields(caseFieldParser.parseAll(definitionSheets, caseType))
                 .addStates(stateParser.parseAll(definitionSheets, caseType))
+                .addCategories(categoryParser.parseAll(definitionSheets, caseType))
                 .addCaseFields(metadataCaseFieldParser.parseAll(caseType))
                 .addEvents(eventParser.parseAll(definitionSheets, caseType))
                 .addCaseRoles(caseRoleEntities)

@@ -90,6 +90,11 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "case_type_id")
     private final List<StateEntity> states = new ArrayList<>();
 
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private final List<CategoryEntity> categories = new ArrayList<>();
+
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
@@ -140,6 +145,19 @@ public class CaseTypeEntity implements Serializable, Versionable {
     public CaseTypeEntity addStates(@NotNull final Collection<StateEntity> states) {
         for (StateEntity state : states) {
             addState(state);
+        }
+        return this;
+    }
+
+    public CaseTypeEntity addCategory(@NotNull final CategoryEntity category) {
+        category.setCaseType(this);
+        categories.add(category);
+        return this;
+    }
+
+    public CaseTypeEntity addCategories(@NotNull final Collection<CategoryEntity> categories) {
+        for (CategoryEntity category : categories) {
+            addCategory(category);
         }
         return this;
     }

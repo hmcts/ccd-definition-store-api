@@ -1,13 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +14,14 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CaseTypeParserTest extends ParserTestBase {
 
@@ -29,6 +29,9 @@ public class CaseTypeParserTest extends ParserTestBase {
 
     @Mock
     private StateParser stateParser;
+
+    @Mock
+    private CategoryParser categoryParser;
 
     @Mock
     private EventParser eventParser;
@@ -73,6 +76,7 @@ public class CaseTypeParserTest extends ParserTestBase {
             parseContext,
             caseFieldParser,
             stateParser,
+            categoryParser,
             eventParser,
             authorisationCaseTypeParser,
             authorisationCaseFieldParser,
@@ -102,6 +106,7 @@ public class CaseTypeParserTest extends ParserTestBase {
         InOrder inOrder = inOrder(caseFieldParser,
                                   stateParser,
                                   metadataCaseFieldParser,
+                                  categoryParser,
                                   eventParser,
                                   searchAliasFieldParser,
                                   authorisationCaseTypeParser);
@@ -113,6 +118,7 @@ public class CaseTypeParserTest extends ParserTestBase {
             () -> assertThat(caseTypeEntity.getReference(), is(CASE_TYPE_UNDER_TEST)),
             () -> inOrder.verify(caseFieldParser).parseAll(definitionSheets, caseTypeEntity),
             () -> inOrder.verify(stateParser).parseAll(definitionSheets, caseTypeEntity),
+            () -> inOrder.verify(categoryParser).parseAll(definitionSheets, caseTypeEntity),
             () -> inOrder.verify(metadataCaseFieldParser).parseAll(caseTypeEntity),
             () -> inOrder.verify(eventParser).parseAll(definitionSheets, caseTypeEntity),
             () -> inOrder.verify(searchAliasFieldParser).parseAll(definitionSheets, caseTypeEntity),

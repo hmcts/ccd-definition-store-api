@@ -47,6 +47,7 @@ public class ParserFactory {
             context,
             new CaseFieldParser(context, entityToDefinitionDataItemRegistry),
             new StateParser(context),
+            new CategoryParser(),
             new EventParser(
                 context,
                 new EventCaseFieldParser(
@@ -84,7 +85,7 @@ public class ParserFactory {
     public BannerParser createBannerParser(ParseContext context) {
         return new BannerParser(context);
     }
-    
+
     public JurisdictionUiConfigParser createJurisdictionUiConfigParser(ParseContext context) {
         return new JurisdictionUiConfigParser(context);
     }
