@@ -108,8 +108,8 @@ public class SpreadsheetValidator {
             if (definitionSheet != null) {
                 definitionSheet.getDataItems().forEach(item -> {
                     if (item.getDisplayContextParameter() != null) {
-                        if (isDisplayContextParameter(item.getDisplayContextParameter(), DisplayContextParameter.DisplayContextParameterValues.LIST) ||
-                            isDisplayContextParameter(item.getDisplayContextParameter(), DisplayContextParameter.DisplayContextParameterValues.TABLE) ) {
+                        if (isDisplayContextParameter(item.getDisplayContextParameter(), DisplayContextParameter.DisplayContextParameterValues.LIST)
+                            || isDisplayContextParameter(item.getDisplayContextParameter(), DisplayContextParameter.DisplayContextParameterValues.TABLE)) {
                             throw new InvalidImportException(item.getCaseFieldId() + " contains incorrect or invalid configuration in tab " + definitionSheet.getName());
                         }
                     }
