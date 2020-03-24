@@ -23,6 +23,7 @@ plugins {
     id 'io.franzbecker.gradle-lombok' version '2.0'
     id 'net.ltgt.apt' version '0.21'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
+    id "info.solidsoft.pitest" version '1.4.0' apply(false)
 }
 
 apply plugin: 'java'
@@ -126,7 +127,7 @@ allprojects {
     }
 
     apply plugin: 'java'
-    
+
     ext {
         hibernateVersion = '5.2.18.Final'
         elasticSearchVersion = '6.4.2'

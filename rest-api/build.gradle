@@ -2,6 +2,7 @@ jar {
     enabled = true
     baseName = 'definition-store-rest-api'
 }
+apply plugin: 'info.solidsoft.pitest'
 
 ext {
     limits = [
@@ -23,4 +24,25 @@ dependencies {
 
 bootJar {
     enabled = false
+}
+
+pitest {
+    targetClasses = ['uk.gov.hmcts.ccd.definition.store.rest.*']
+    targetTests = ['uk.gov.hmcts.ccd.definition.store.rest.*'
+    ]
+    enableDefaultIncrementalAnalysis = true
+    historyInputLocation = ['build/reports/pitest/fastermutationtesting']
+    historyOutputLocation = ['build/reports/pitest/fastermutationtestingoutput']
+    threads = 15
+    testSourceSets = [sourceSets.test]
+    mainSourceSets = [sourceSets.main]
+    fileExtensionsToFilter.addAll('xml', 'json')
+    outputFormats = ['XML', 'HTML', 'CSV']
+    mutationThreshold = 0
+    coverageThreshold = 0
+    maxMutationsPerClass = 15
+    jvmArgs = ['-Xms1G', '-Xmx3G']
+    timestampedReports = false
+    failWhenNoMutations = false
+    detectInlinedCode = true
 }
