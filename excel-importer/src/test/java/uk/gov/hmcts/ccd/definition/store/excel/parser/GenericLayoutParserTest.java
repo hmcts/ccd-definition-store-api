@@ -15,6 +15,8 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -39,6 +41,9 @@ public class GenericLayoutParserTest {
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     private final ParseContext context = new ParseContext();
 
+    @Mock
+    private ShowConditionParser showConditionParser;
+
     @BeforeEach
     public void setup() {
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
@@ -59,7 +64,7 @@ public class GenericLayoutParserTest {
         definitionSheets = new HashMap<>();
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
-        classUnderTest = new WorkbasketLayoutParser(context, entityToDefinitionDataItemRegistry);
+        classUnderTest = new WorkbasketLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
     }
 
     @Test
@@ -427,7 +432,7 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item2);
         definitionSheets.put(SEARCH_RESULT_FIELD.getName(), sheet);
 
-        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry);
+        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
         ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
 
         assertEquals(parseResult.getAllResults().size(), 2);
