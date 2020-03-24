@@ -1,9 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import com.google.common.collect.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -17,7 +15,6 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
 
 public class SpreadsheetValidatorTest {
 
