@@ -1,20 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import java.util.*;
-import java.util.stream.*;
 
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.*;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+
+import static uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.isDisplayContextParameter;
 
 @Component
 public class SpreadsheetValidator {
-
-    public static final String LIST_PREFIX = "#LIST(";
-    public static final String TABLE_PREFIX = "#TABLE(";
 
     public void validate(String sheetName, DefinitionSheet definitionSheet, List<String> headings) {
         if (definitionSheet.getName() == null) {
@@ -110,18 +107,14 @@ public class SpreadsheetValidator {
         definitionSheetList.forEach(definitionSheet -> {
             if (definitionSheet != null) {
                 definitionSheet.getDataItems().forEach(item -> {
-                    if (item.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER) != null) {
-                        if (isFieldTypeTableOrList(item.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER))) {
-                            throw new InvalidImportException(item.getString(ColumnName.CASE_FIELD_ID) + " contains incorrect or invalid configuration in tab " + definitionSheet.getName());
+                    if (item.getDisplayContextParameter() != null) {
+                        if (isDisplayContextParameter(item.getDisplayContextParameter(), DisplayContextParameter.DisplayContextParameterValues.LIST) ||
+                            isDisplayContextParameter(item.getDisplayContextParameter(), DisplayContextParameter.DisplayContextParameterValues.TABLE) ) {
+                            throw new InvalidImportException(item.getCaseFieldId() + " contains incorrect or invalid configuration in tab " + definitionSheet.getName());
                         }
                     }
                 });
             }
         });
     }
-
-    private boolean isFieldTypeTableOrList(String displayContextColumn) {
-        return displayContextColumn.startsWith(LIST_PREFIX) || displayContextColumn.startsWith(TABLE_PREFIX);
-    }
-
 }
