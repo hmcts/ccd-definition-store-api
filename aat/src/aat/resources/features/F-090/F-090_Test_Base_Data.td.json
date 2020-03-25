@@ -15,8 +15,8 @@
       "Content-Type": "multipart/form-data"
     },
     "body": {
-      "key": "files",
-      "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/CCD_BEFTA_JURISDICTION3_CATEGORIES1.xlsx"
+      "key": "file",
+      "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/GenericDefinitionFile.xlsx"
     }
   }
 }
