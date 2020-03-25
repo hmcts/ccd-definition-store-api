@@ -1,0 +1,12 @@
+{
+  "_guid_": "S-390",
+  "_extends_": "F-090_Test_Base_Data",
+  "title": "must return 200 when request does not provide valid authentication credentials",
+  "specs": [
+    "an active profile in CCD"
+  ],
+  "expectedResponse": {
+    "_extends_" : "Common_201_Response",
+    "headers": "[[ANYTHING_PRESENT]]"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_guid_": "F-090_Test_Base_Data",
+  "productName": "CCD Definition Store",
+  "operationName": "Upload definition with invalid categories",
+  "method": "POST",
+  "uri": "/import",
+  "user": {
+    "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
+    "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
+  },
+  "request": {
+    "headers": {
+      "Authorization": "[[DYNAMIC]]",
+      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Content-Type": "multipart/form-data"
+    },
+    "body": {
+      "key": "files",
+      "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/CCD_BEFTA_JURISDICTION3_CATEGORIES1.xlsx"
+    }
+  }
+}
