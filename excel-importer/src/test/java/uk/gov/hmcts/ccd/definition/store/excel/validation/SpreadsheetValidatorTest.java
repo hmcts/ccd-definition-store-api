@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -25,7 +24,6 @@ public class SpreadsheetValidatorTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         definitionSheets = new LinkedHashMap<>();
         validator = new SpreadsheetValidator();
     }
