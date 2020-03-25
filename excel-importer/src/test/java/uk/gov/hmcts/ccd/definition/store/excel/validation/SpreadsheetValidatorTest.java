@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.*;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -18,12 +19,16 @@ import static org.junit.Assert.assertThat;
 
 public class SpreadsheetValidatorTest {
 
-    private SpreadsheetValidator validator = new SpreadsheetValidator();
+  //  private SpreadsheetValidator validator = new SpreadsheetValidator();
     private Map<String, DefinitionSheet> definitionSheets;
+    private DisplayContextParameterValidator displayContextParameterValidator = new DisplayContextParameterValidator();
+    private SpreadsheetValidator validator;
 
     @Before
     public void setup() {
+        MockitoAnnotations.initMocks(this);
         definitionSheets = new LinkedHashMap<>();
+        validator = new SpreadsheetValidator();
     }
 
     @Test(expected = InvalidImportException.class)
@@ -212,58 +217,6 @@ public class SpreadsheetValidatorTest {
         }
     }
 
-    @Test(expected = InvalidImportException.class)
-    public void shouldFail_whenDisplayContextParameterHasTableInCaseEventToFields() {
-
-        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
-        addDataItem(sheetJ);
-
-        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
-        addDataItem(sheetCT);
-
-        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
-        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
-        definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#TABLE()");
-        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
-        sheetCETF.addDataItem(definitionDataItem);
-
-        addDefinitionSheet(SheetName.CASE_FIELD);
-        addDefinitionSheet(SheetName.FIXED_LISTS);
-
-        try {
-            validator.validate(definitionSheets);
-        } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab ComplexTypes"));
-            throw ex;
-        }
-    }
-
-    @Test(expected = InvalidImportException.class)
-    public void shouldFail_whenDisplayContextParameterHasListInCaseEventToFields() {
-
-        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
-        addDataItem(sheetJ);
-
-        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
-        addDataItem(sheetCT);
-
-        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
-        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
-        definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#LIST()");
-        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
-        sheetCETF.addDataItem(definitionDataItem);
-
-        addDefinitionSheet(SheetName.CASE_FIELD);
-        addDefinitionSheet(SheetName.FIXED_LISTS);
-
-        try {
-            validator.validate(definitionSheets);
-        } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab ComplexTypes"));
-            throw ex;
-        }
-    }
-
     @Test(expected = Test.None.class)
     public void shouldVaidate_WithAllWorkSheetsInPlace() {
 
@@ -275,7 +228,6 @@ public class SpreadsheetValidatorTest {
 
         final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
-        definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#DATETIMEENTRY()");
         definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
         sheetCETF.addDataItem(definitionDataItem);
 

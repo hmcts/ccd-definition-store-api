@@ -8,10 +8,10 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.*;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
 
-import static uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.isDisplayContextParameter;
-
 @Component
 public class SpreadsheetValidator {
+
+    private DisplayContextParameterValidator displayContextParameterValidator = new DisplayContextParameterValidator();
 
     public void validate(String sheetName, DefinitionSheet definitionSheet, List<String> headings) {
         if (definitionSheet.getName() == null) {
@@ -43,7 +43,7 @@ public class SpreadsheetValidator {
         validateCaseFieldWorkSheetIsPresent(definitionSheets);
         validateComplexTypesWorkSheetIsPresent(definitionSheets);
         validateFixedListWorkSheetIsPresent(definitionSheets);
-        validateDisplayContextParameter(definitionSheets);
+        displayContextParameterValidator.validate(definitionSheets);
     }
 
     private void validateOnlyOneJurisdictionPresent(Map<String, DefinitionSheet> sheets) {
@@ -93,28 +93,5 @@ public class SpreadsheetValidator {
         return String.format("Invalid Case Definition sheet - In sheet '%s' the column '%s' value should not" +
                 " be more than '%s' characters length %s", sheetName,
             columnName, columnMaxLength, rowNumberInfo);
-    }
-
-    private void validateDisplayContextParameter(Map<String, DefinitionSheet> definitionSheets) {
-        List<DefinitionSheet> definitionSheetList = new ArrayList<>();
-        definitionSheetList.add(definitionSheets.get(SheetName.COMPLEX_TYPES.getName()));
-        definitionSheetList.add(definitionSheets.get(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName()));
-        definitionSheetList.add(definitionSheets.get(SheetName.WORK_BASKET_INPUT_FIELD.getName()));
-        definitionSheetList.add(definitionSheets.get(SheetName.WORK_BASKET_RESULT_FIELDS.getName()));
-        definitionSheetList.add(definitionSheets.get(SheetName.SEARCH_INPUT_FIELD.getName()));
-        definitionSheetList.add(definitionSheets.get(SheetName.SEARCH_RESULT_FIELD.getName()));
-
-        definitionSheetList.forEach(definitionSheet -> {
-            if (definitionSheet != null) {
-                definitionSheet.getDataItems().forEach(item -> {
-                    if (item.getDisplayContextParameter() != null) {
-                        if (isDisplayContextParameter(item.getDisplayContextParameter(), DisplayContextParameter.DisplayContextParameterValues.LIST)
-                            || isDisplayContextParameter(item.getDisplayContextParameter(), DisplayContextParameter.DisplayContextParameterValues.TABLE)) {
-                            throw new InvalidImportException(item.getCaseFieldId() + " contains incorrect or invalid configuration in tab " + definitionSheet.getName());
-                        }
-                    }
-                });
-            }
-        });
     }
 }
