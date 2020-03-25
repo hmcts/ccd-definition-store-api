@@ -20,8 +20,7 @@
       "Content-Encoding":"[[ANYTHING_PRESENT]]",
       "Content-Length":"[[ANYTHING_PRESENT]]",
       "Content-Type":"[[ANYTHING_PRESENT]]",
-      "Strict-Transport-Security":"[[ANY_STRING_NULLABLE]]",
-      "Request-Context": "[[ANY_NULLABLE]]"
+      "Strict-Transport-Security":"[[ANY_STRING_NULLABLE]]"
     },
     "body": {
       "case_type_id" : "BEFTA_CASETYPE_3_4",

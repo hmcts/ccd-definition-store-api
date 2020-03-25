@@ -22,8 +22,7 @@
       "Vary" : "accept-encoding",
       "X-Content-Type-Options" : "nosniff",
       "X-Frame-Options" : "DENY",
-      "X-Xss-Protection" : "1; mode=block",
-      "Request-Context": "[[ANY_NULLABLE]]"
+      "X-Xss-Protection" : "1; mode=block"
     },
     "body": {
       "id": "BEFTA_CASETYPE_2_1",
