@@ -4,9 +4,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
+import java.util.List;
+
 public interface GenericLayoutValidator {
 
-    ValidationResult validate(GenericLayoutEntity genericLayoutEntity);
+    ValidationResult validate(GenericLayoutEntity genericLayoutEntity, List<GenericLayoutEntity> allGenericLayouts);
 
     class ValidationError extends SimpleValidationError<GenericLayoutEntity> {
 

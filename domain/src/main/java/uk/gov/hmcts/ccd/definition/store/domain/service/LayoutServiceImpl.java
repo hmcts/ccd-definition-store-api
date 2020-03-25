@@ -58,7 +58,7 @@ public class LayoutServiceImpl implements LayoutService {
 
         for (GenericLayoutEntity entity : genericLayouts) {
             for (GenericLayoutValidator validator : genericLayoutValidators) {
-                result.merge(validator.validate(entity));
+                result.merge(validator.validate(entity, genericLayouts));
             }
         }
 
