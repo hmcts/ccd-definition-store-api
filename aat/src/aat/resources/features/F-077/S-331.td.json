@@ -11,7 +11,7 @@
 		"_extends_": "Common_200_Response",
 		"headers": {
 			"Content-Encoding": "gzip",
-			"Content-Length": "506",
+			"Content-Length": "ANY_INTEGER_NOT_NULLABLE",
 			"Content-Type": "application/json",
 			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
 		},
