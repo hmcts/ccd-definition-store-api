@@ -19,8 +19,8 @@
 		}
 	},
 	"expectedResponse": {
-		"_extends_": "Common_404_Response",
 		"headers": {
+			"_extends_": "Common_404_Response_Headers",
 			"Content-Encoding": "gzip",
 			"Content-Length": "85",
 			"Content-Type": "application/json",
