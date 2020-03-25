@@ -6,7 +6,6 @@
     "an active profile in CCD"
   ],
   "expectedResponse": {
-    "_extends_" : "Common_201_Response",
-    "headers": "[[ANYTHING_PRESENT]]"
+    "_extends_" : "Common_201_Response"
   }
 }
