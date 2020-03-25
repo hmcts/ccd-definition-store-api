@@ -20,10 +20,12 @@ public class SpreadsheetValidatorTest {
 
     private SpreadsheetValidator validator = new SpreadsheetValidator();
     private Map<String, DefinitionSheet> definitionSheets;
+    private DisplayContextParameterValidator displayContextParameterValidator = new DisplayContextParameterValidator();
 
     @Before
     public void setup() {
         definitionSheets = new LinkedHashMap<>();
+        validator = new SpreadsheetValidator();
     }
 
     @Test(expected = InvalidImportException.class)
@@ -33,7 +35,7 @@ public class SpreadsheetValidatorTest {
         int rowNumber = 6;
         try {
             validator.validate(sheetName, columnName,
-                               "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
+                "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
         } catch (InvalidImportException ex) {
             String rowNumberInfo = " at row number '" + rowNumber + "'";
             assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(sheetName, columnName, 70, rowNumberInfo)));
@@ -49,7 +51,7 @@ public class SpreadsheetValidatorTest {
             validator.validate("sheet", columnName, "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
         } catch (InvalidImportException ex) {
             assertThat(ex.getMessage(), is(
-                    "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
+                "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
             throw ex;
         }
     }
@@ -62,7 +64,7 @@ public class SpreadsheetValidatorTest {
             validator.validate("sheet", columnName, "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
         } catch (InvalidImportException ex) {
             assertThat(ex.getMessage(), is(
-                    "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
+                "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
             throw ex;
         }
     }
@@ -212,58 +214,6 @@ public class SpreadsheetValidatorTest {
         }
     }
 
-    @Test(expected = InvalidImportException.class)
-    public void shouldFail_whenDisplayContextParameterHasTableInCaseEventToFields() {
-
-        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
-        addDataItem(sheetJ);
-
-        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
-        addDataItem(sheetCT);
-
-        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
-        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
-        definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#TABLE()");
-        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
-        sheetCETF.addDataItem(definitionDataItem);
-
-        addDefinitionSheet(SheetName.CASE_FIELD);
-        addDefinitionSheet(SheetName.FIXED_LISTS);
-
-        try {
-            validator.validate(definitionSheets);
-        } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab ComplexTypes"));
-            throw ex;
-        }
-    }
-
-    @Test(expected = InvalidImportException.class)
-    public void shouldFail_whenDisplayContextParameterHasListInCaseEventToFields() {
-
-        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
-        addDataItem(sheetJ);
-
-        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
-        addDataItem(sheetCT);
-
-        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
-        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
-        definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#LIST()");
-        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
-        sheetCETF.addDataItem(definitionDataItem);
-
-        addDefinitionSheet(SheetName.CASE_FIELD);
-        addDefinitionSheet(SheetName.FIXED_LISTS);
-
-        try {
-            validator.validate(definitionSheets);
-        } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("fieldId contains incorrect or invalid configuration in tab ComplexTypes"));
-            throw ex;
-        }
-    }
-
     @Test(expected = Test.None.class)
     public void shouldVaidate_WithAllWorkSheetsInPlace() {
 
@@ -275,7 +225,6 @@ public class SpreadsheetValidatorTest {
 
         final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
-        definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, "#DATETIMEENTRY()");
         definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
         sheetCETF.addDataItem(definitionDataItem);
 

@@ -1,38 +1,32 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
-import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
-
-import static org.springframework.http.HttpMethod.GET;
+import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 
 @Service
 public class IdamProfileClient {
 
     private final SecurityUtils securityUtils;
-    private final RestTemplate restTemplate;
-    private ApplicationParams applicationParams;
 
-    @Autowired IdamProfileClient(final SecurityUtils securityUtils,
-                                 final RestTemplate restTemplate,
-                                 final ApplicationParams applicationParams) {
-
+    @Autowired IdamProfileClient(final SecurityUtils securityUtils) {
         this.securityUtils = securityUtils;
-        this.restTemplate = restTemplate;
-        this.applicationParams = applicationParams;
     }
 
     public IdamProperties getLoggedInUserDetails() {
-        final HttpEntity<ServiceAndUserDetails>
-            requestEntity =
-            new HttpEntity<>(securityUtils.userAuthorizationHeaders());
-        return restTemplate.exchange(applicationParams.idamUserProfileURL(), GET, requestEntity, IdamProperties.class)
-                           .getBody();
+        return toIdamProperties(securityUtils.getUserInfo());
+    }
+
+    private IdamProperties toIdamProperties(UserInfo userInfo) {
+        IdamProperties idamProperties = new IdamProperties();
+        idamProperties.setId(userInfo.getUid());
+        idamProperties.setEmail(userInfo.getSub());
+        idamProperties.setForename(userInfo.getGivenName());
+        idamProperties.setSurname(userInfo.getFamilyName());
+        idamProperties.setRoles(userInfo.getRoles().toArray(new String[0]));
+        return idamProperties;
     }
 
 }

@@ -14,6 +14,8 @@ locals {
 
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 
+  oidc_issuer = "https://forgerock-am.service.core-compute-idam-${var.env}.internal:8443/openam/oauth2/hmcts"
+
   // Vault name
   previewVaultName = "${var.raw_product}-aat"
   nonPreviewVaultName = "${var.raw_product}-${var.env}"
@@ -118,6 +120,7 @@ module "case-definition-store-api" {
 
     ENABLE_DB_MIGRATE = "false"
 
+    OIDC_ISSUER   = "${local.oidc_issuer}"
     IDAM_USER_URL = "${var.idam_api_url}"
     IDAM_S2S_URL = "${local.s2s_url}"
     DEFINITION_STORE_IDAM_KEY = "${data.azurerm_key_vault_secret.definition_store_s2s_secret.value}"

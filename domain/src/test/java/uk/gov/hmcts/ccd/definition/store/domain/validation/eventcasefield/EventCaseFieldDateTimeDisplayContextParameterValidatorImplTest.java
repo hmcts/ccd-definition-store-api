@@ -32,7 +32,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     private DisplayContextParameterValidator displayContextParameterValidator;
 
     @Mock
-    private  EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext;
+    private EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext;
 
     @BeforeEach
     void setUp() {
@@ -71,6 +71,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss)");
         entity.setCaseField(caseFieldEntity());
+        entity.setDisplayContext(DisplayContext.READONLY);
 
         final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
 
@@ -84,6 +85,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss)");
         entity.setCaseField(caseFieldEntity(fieldTypeEntity(FieldTypeUtils.BASE_DATE)));
+        entity.setDisplayContext(DisplayContext.READONLY);
 
         final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
 
@@ -128,6 +130,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEENTRY(0123456789)");
         entity.setCaseField(caseFieldEntity());
+        entity.setDisplayContext(DisplayContext.MANDATORY);
         doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any());
 
         final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);

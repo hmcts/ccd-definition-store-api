@@ -26,7 +26,7 @@ public class DisplayContextParameter {
         return value;
     }
 
-    public static List<DisplayContextParameter> getDisplayContextParameterFor(String displayContextParameter) {
+    public static List<DisplayContextParameter> getDisplayContextParametersFor(String displayContextParameter) {
         List<DisplayContextParameter> displayContextParameterTypeList = new ArrayList<>();
 
         String[] displayContextParameters = displayContextParameter.split(",");
