@@ -19,6 +19,8 @@
 		}
 	},
 	"expectedResponse": {
+		"responseCode": 404,
+		"responseMessage": "Not Found",
 		"headers": {
 			"_extends_": "Common_404_Response_Headers",
 			"Content-Encoding": "gzip",
