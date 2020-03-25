@@ -19,10 +19,9 @@ import static org.junit.Assert.assertThat;
 
 public class SpreadsheetValidatorTest {
 
-  //  private SpreadsheetValidator validator = new SpreadsheetValidator();
+    private SpreadsheetValidator validator = new SpreadsheetValidator();
     private Map<String, DefinitionSheet> definitionSheets;
     private DisplayContextParameterValidator displayContextParameterValidator = new DisplayContextParameterValidator();
-    private SpreadsheetValidator validator;
 
     @Before
     public void setup() {

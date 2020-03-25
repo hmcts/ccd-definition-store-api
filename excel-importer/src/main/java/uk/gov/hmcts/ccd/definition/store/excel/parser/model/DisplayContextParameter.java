@@ -8,13 +8,12 @@ public class DisplayContextParameter {
         DATETIMEENTRY("#DATETIMEENTRY(");
 
         private String value;
-        DisplayContextParameterValues(String value)
-        {
+
+        DisplayContextParameterValues(String value) {
             this.value = value;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return this.value;
         }
     }
