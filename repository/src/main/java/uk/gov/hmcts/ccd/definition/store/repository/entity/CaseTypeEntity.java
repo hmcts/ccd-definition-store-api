@@ -183,6 +183,10 @@ public class CaseTypeEntity implements Serializable, Versionable {
         return states;
     }
 
+    public List<CategoryEntity> getCategories() {
+        return categories;
+    }
+
     @Override
     public String getReference() {
         return reference;

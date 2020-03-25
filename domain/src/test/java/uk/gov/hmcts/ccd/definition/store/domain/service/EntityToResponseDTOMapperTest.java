@@ -279,6 +279,7 @@ class EntityToResponseDTOMapperTest {
 
             assertEquals(0, caseType.getEvents().size());
             assertEquals(0, caseType.getStates().size());
+            assertEquals(0, caseType.getCaseCategoryGroups().size());
             assertEquals(0, caseType.getAcls().size());
             assertEquals(0, caseType.getCaseFields().size());
         }
@@ -1410,7 +1411,7 @@ class EntityToResponseDTOMapperTest {
         	JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
         	jurisdictionEntity.setReference("Reference");
         	jurisdictionEntity.setName("Name");
-            
+
         	JurisdictionUiConfigEntity jurisdictionUiConfigEntity = new JurisdictionUiConfigEntity();
         	jurisdictionUiConfigEntity.setShuttered(true);
         	jurisdictionUiConfigEntity.setJurisdiction(jurisdictionEntity);

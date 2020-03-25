@@ -14,6 +14,7 @@ public class CaseType implements HasAcls {
     private Jurisdiction jurisdiction = null;
     private List<CaseEvent> events = new ArrayList<>();
     private List<CaseState> states = new ArrayList<>();
+    private List<CaseCategoryGroup> caseCategoryGroups = new ArrayList<>();
     @JsonProperty("case_fields")
     private List<CaseField> caseFields = new ArrayList<>();
     @JsonProperty("printable_document_url")
@@ -77,6 +78,14 @@ public class CaseType implements HasAcls {
 
     public void setStates(List<CaseState> states) {
         this.states = states;
+    }
+
+    public List<CaseCategoryGroup> getCaseCategoryGroups() {
+        return caseCategoryGroups;
+    }
+
+    public void setCaseCategoryGroups(List<CaseCategoryGroup> caseCategoryGroups) {
+        this.caseCategoryGroups = caseCategoryGroups;
     }
 
     public List<CaseField> getCaseFields() {

@@ -1,16 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTypeListItemMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_ORDER_COMPARATOR;
 
 @Mapper(componentModel = "spring")
@@ -30,6 +34,14 @@ public interface EntityToResponseDTOMapper {
             + "           )"
             + "       )",
         target = "acls"
+    )
+    @Mapping(
+        expression = "java("
+            + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.CategoriesToCaseCategoryGroupsMapper.map("
+            + "               caseTypeEntity.getCategories()"
+            + "           )"
+            + "       )",
+        target = "caseCategoryGroups"
     )
     @Mapping(source = "caseTypeEntity.printWebhook.url", target = "printableDocumentsUrl")
     CaseType map(CaseTypeEntity caseTypeEntity);
@@ -213,7 +225,7 @@ public interface EntityToResponseDTOMapper {
                                                                                              complexTypeEntity.getOrder(),
                                                                                              complexTypeEntity.getDisplayContext(),
                                                                                              complexTypeEntity.getShowCondition()))
-                                         .collect(Collectors.toList());
+                                         .collect(toList());
         }
     }
 
@@ -222,7 +234,7 @@ public interface EntityToResponseDTOMapper {
     SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
 
     Banner map(BannerEntity bannerEntity);
-    
+
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.reference", target = "id")
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.name", target = "name")
     JurisdictionUiConfig map(JurisdictionUiConfigEntity jurisdictionUiConfigEntity);
@@ -243,7 +255,7 @@ public interface EntityToResponseDTOMapper {
                                                                    auth.getRead(),
                                                                    auth.getUpdate(),
                                                                    auth.getDelete()))
-                                .collect(Collectors.toList());
+                                .collect(toList());
         }
 
         static List<ComplexACL> mapComplex(List<ComplexFieldACLEntity> complexFieldACLEntities) {
@@ -254,7 +266,7 @@ public interface EntityToResponseDTOMapper {
                                                                     el.getUpdate(),
                                                                     el.getDelete(),
                                                                     el.getListElementCode()))
-                                          .collect(Collectors.toList());
+                                          .collect(toList());
         }
     }
 
@@ -293,11 +305,36 @@ public interface EntityToResponseDTOMapper {
             return complexFieldEntityList.stream()
                                          .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
                                          .sorted(NULLS_LAST_ORDER_COMPARATOR)
-                                         .collect(Collectors.toList());
+                                         .collect(toList());
         }
 
         private static boolean isComplexField(String reference) {
             return "Complex" .equalsIgnoreCase(reference);
+        }
+    }
+
+    class CategoriesToCaseCategoryGroupsMapper {
+
+        private CategoriesToCaseCategoryGroupsMapper() {
+            // Default constructor
+        }
+
+        static List<CaseCategoryGroup> map(List<CategoryEntity> categories) {
+            Map<String, List<CategoryEntity>> categoriesByGroupId = categories
+                .stream()
+                .collect(Collectors.groupingBy(CategoryEntity::getGroupId, toList()));
+
+            return categoriesByGroupId.entrySet().stream()
+                .map(e -> createCaseCategoryGroup(e.getKey(), e.getValue()))
+                .collect(toList());
+        }
+
+        // TODO: finish recoursion of categories
+        static CaseCategoryGroup createCaseCategoryGroup(String groupId, List<CategoryEntity> categoryEntities) {
+            CaseCategoryGroup categoryGroup = new CaseCategoryGroup();
+            categoryGroup.setId(groupId);
+            categoryGroup.setCategories(Collections.emptyList());
+            return categoryGroup;
         }
     }
 }
