@@ -10,7 +10,6 @@ public class WizardPageComplexFieldOverride {
     private String label;
     private String hintText;
     private String showCondition;
-    private String displayContextParameter;
 
     @JsonProperty("complex_field_element_id")
     public String getComplexFieldElementId() {
@@ -55,14 +54,5 @@ public class WizardPageComplexFieldOverride {
 
     public void setShowCondition(String showCondition) {
         this.showCondition = showCondition;
-    }
-
-    @JsonProperty("display_context_parameter")
-    public String getDisplayContextParameter() {
-        return displayContextParameter;
-    }
-
-    public void setDisplayContextParameter(String displayContextParameter) {
-        this.displayContextParameter = displayContextParameter;
     }
 }
