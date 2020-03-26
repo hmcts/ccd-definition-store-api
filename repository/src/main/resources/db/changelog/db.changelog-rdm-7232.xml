@@ -44,5 +44,23 @@
         <addUniqueConstraint columnNames="case_type_id, group_id, category_id"
                              constraintName="unique_category_case_type_id_group_id_category_id"
                              tableName="category"/>
+
+        <addColumn tableName="case_field">
+            <column name="category_id" type="varchar(100)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="complex_field">
+            <column name="category_id" type="varchar(100)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="field_type_list_item">
+            <column name="category_id" type="varchar(100)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

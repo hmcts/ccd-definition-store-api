@@ -45,6 +45,9 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     @JoinColumn(name = "field_type_id", nullable = false)
     private FieldTypeEntity fieldType;
 
+    @Column(name = "category_id")
+    private String categoryId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "complex_field_type_id", nullable = false)
     private FieldTypeEntity complexFieldType;
@@ -109,6 +112,14 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     public void setFieldType(FieldTypeEntity fieldType) {
         this.fieldType = fieldType;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public FieldTypeEntity getComplexFieldType() {

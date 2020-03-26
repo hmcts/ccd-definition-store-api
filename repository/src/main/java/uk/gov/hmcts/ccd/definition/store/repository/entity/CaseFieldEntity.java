@@ -81,6 +81,9 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     @JoinColumn(name = "field_type_id", nullable = false)
     private FieldTypeEntity fieldType;
 
+    @Column(name = "category_id")
+    private String categoryId;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
@@ -171,6 +174,14 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
 
     public void setFieldType(FieldTypeEntity fieldType) {
         this.fieldType = fieldType;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void setCaseType(final CaseTypeEntity caseType) {

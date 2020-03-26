@@ -101,6 +101,7 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
 
         complexField.setReference(fieldId);
         complexField.setFieldType(resultEntry.getValue());
+        complexField.setCategoryId(definitionDataItem.getString(ColumnName.CATEGORY_ID));
 
         SecurityClassificationColumn securityClassificationColumn = definitionDataItem.getSecurityClassification();
         complexField.setSecurityClassification(securityClassificationColumn.getSecurityClassification());

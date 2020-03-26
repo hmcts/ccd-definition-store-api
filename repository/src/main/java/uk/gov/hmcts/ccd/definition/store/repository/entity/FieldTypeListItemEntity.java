@@ -17,15 +17,18 @@ public class FieldTypeListItemEntity implements Serializable {
     @Column(name = "value", nullable = false)
     private String value;
 
-    @Column(name = "display_order")
-    private Integer order;
-
     @Column(name = "label", nullable = false)
     private String label;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_type_id", nullable = false)
     private FieldTypeEntity fieldType;
+
+    @Column(name = "category_id")
+    private String categoryId;
+
+    @Column(name = "display_order")
+    private Integer order;
 
     public Integer getId() {
         return id;
@@ -53,6 +56,14 @@ public class FieldTypeListItemEntity implements Serializable {
 
     public void setFieldType(final FieldTypeEntity fieldType) {
         this.fieldType = fieldType;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Integer getOrder() {

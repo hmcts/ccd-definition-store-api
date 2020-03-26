@@ -66,6 +66,7 @@ public class CaseFieldParserTest extends ParserTestBase {
         assertThat(entity.getReference(), is("Case_Field"));
         assertThat(entity.getLabel(), is("Case Field"));
         assertThat(entity.getFieldType(), is(field));
+        assertThat(entity.getCategoryId(), is("someCategory"));
         MatcherAssert.assertThat(entityToDefinitionDataItemRegistry.getForEntity(entity), Matchers.is(Optional.of(dataItem)));
     }
 
@@ -75,6 +76,7 @@ public class CaseFieldParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.ID.toString(), "Case_Field");
         item.addAttribute(ColumnName.LABEL.toString(), "Case Field");
         item.addAttribute(ColumnName.FIELD_TYPE.toString(), "Text");
+        item.addAttribute(ColumnName.CATEGORY_ID.toString(), "someCategory");
         return item;
     }
 }

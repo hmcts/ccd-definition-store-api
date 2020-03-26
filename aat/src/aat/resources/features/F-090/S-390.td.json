@@ -1,11 +1,21 @@
 {
   "_guid_": "S-390",
   "_extends_": "F-090_Test_Base_Data",
-  "title": "must return 200 when request does not provide valid authentication credentials",
+  "title": "must return 201 when request does not provide valid authentication credentials",
   "specs": [
     "an active profile in CCD"
   ],
+  "user": {
+    "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
+    "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
+  },
   "expectedResponse": {
-    "_extends_" : "Common_201_Response"
+    "_extends_" : "Common_201_Response",
+    "header": {
+      "Definition-Import-Warnings": "Case Definition data successfully imported%"
+    },
+    "body": {
+      "__plainTextValue__": "Case Definition data successfully imported"
+    }
   }
 }

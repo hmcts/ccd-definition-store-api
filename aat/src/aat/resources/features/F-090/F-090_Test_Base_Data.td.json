@@ -1,13 +1,9 @@
 {
   "_guid_": "F-090_Test_Base_Data",
   "productName": "CCD Definition Store",
-  "operationName": "Upload definition with invalid categories",
+  "operationName": "Upload definition with valid categories",
   "method": "POST",
   "uri": "/import",
-  "user": {
-    "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
-    "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
-  },
   "request": {
     "headers": {
       "Authorization": "[[DYNAMIC]]",

@@ -67,6 +67,7 @@ public class CaseFieldParser {
 
         caseField.setReference(caseFieldId);
         caseField.setFieldType(parseContext.getCaseFieldType(caseTypeId, caseFieldId));
+        caseField.setCategoryId(caseFieldDefinition.getString(ColumnName.CATEGORY_ID));
 
         SecurityClassificationColumn securityClassificationColumn = caseFieldDefinition.getSecurityClassification();
         caseField.setSecurityClassification(securityClassificationColumn.getSecurityClassification());
