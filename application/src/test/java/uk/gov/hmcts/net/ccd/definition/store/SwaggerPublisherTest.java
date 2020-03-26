@@ -3,8 +3,8 @@ package uk.gov.hmcts.net.ccd.definition.store;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.OutputStream;
