@@ -16,7 +16,7 @@ public class SwaggerPublisherTest extends BaseTest {
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-    void generateDocs() throws Exception {
+    public void generateDocs() throws Exception {
         try {
             ResultActions perform = mockMvc.perform(get("/v2/api-docs"));
             byte[] specs = perform.andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();
