@@ -21,7 +21,7 @@ jobs:
         with:
           java-version: 8
       - name: Run Swagger Publisher
-        run: ./gradlew application:test --tests uk.gov.hmcts.net.ccd.definition.store.SwaggerPublisherTest
+        run: ./gradlew application:test --tests uk.gov.hmcts.net.ccd.definition.store.SwaggerPublisherTest --debug
       - name: Commit to repository
         run: |
           mkdir swagger-staging
