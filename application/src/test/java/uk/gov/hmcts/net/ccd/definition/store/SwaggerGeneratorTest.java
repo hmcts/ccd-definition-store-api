@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class SwaggerPublisherTest extends BaseTest {
+public class SwaggerGeneratorTest extends BaseTest {
 
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
