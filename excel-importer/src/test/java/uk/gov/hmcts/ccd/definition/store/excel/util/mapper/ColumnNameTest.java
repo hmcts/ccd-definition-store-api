@@ -30,6 +30,17 @@ public class ColumnNameTest {
 
     }
 
+    @Test
+    public void testRequiredColumnsForCategory() {
+
+        assertRequired(
+            SheetName.CATEGORY,
+            Arrays.asList(ColumnName.CASE_TYPE_ID, ColumnName.CATEGORY_GROUP_ID, ColumnName.CATEGORY_GROUP_NAME,
+                ColumnName.CATEGORY_ID, ColumnName.CATEGORY_LABEL, ColumnName.CATEGORY_DISPLAY_ORDER)
+        );
+
+    }
+
     private void assertRequired(SheetName sheetName, List<ColumnName> requiredColumns) {
         for (ColumnName columnName : ColumnName.values()) {
             boolean required

@@ -42,7 +42,7 @@ public class FieldTypeRepositoryTest {
     private FieldTypeRepository fieldTypeRepository;
 
     private VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedFieldTypeRepository;
-    private static FieldTypeEntity textBaseType;
+    private FieldTypeEntity textBaseType;
 
     @Before
     public void setup() {
