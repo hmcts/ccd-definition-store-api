@@ -27,6 +27,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.category.CategoryEntityDuplicateCategoryIDPerCaseTypeValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingSecurityClassificationValidationError;
@@ -64,23 +65,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 
 import java.util.Optional;
@@ -1258,6 +1243,28 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         );
     }
 
+    @Test
+    public void testCreateErrorMessage_CategoryEntityDuplicateCategoryIDPerCaseTypeValidatorImplValidationError_customMessageReturned() {
+
+        CategoryEntity entity = new CategoryEntity();
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CATEGORY.toString());
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(entity))).thenReturn(Optional.of(definitionDataItem));
+
+        assertEquals("default message. WorkSheet 'Category'",
+            classUnderTest.createErrorMessage(
+                new CategoryEntityDuplicateCategoryIDPerCaseTypeValidatorImpl.ValidationError("default message", entity))
+        );
+    }
+
+    @Test
+    public void testCreateErrorMessage_CategoryEntityDuplicateCategoryIDPerCaseTypeValidatorImplValidationError_defaultMessageReturned() {
+        assertEquals(
+            "default message",
+            classUnderTest.createErrorMessage(
+                new CategoryEntityDuplicateCategoryIDPerCaseTypeValidatorImpl.ValidationError("default message", new CategoryEntity()))
+        );
+    }
 
     @Test
     public void testCreateErrorMessage_CaseFieldEntityDisplayContextMustHaveValidValueValidationError() {

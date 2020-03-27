@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.category.CategoryEntityDuplicateCategoryIDPerCaseTypeValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityIncorrectOrderValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingSecurityClassificationValidationError;
@@ -128,6 +129,8 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(StateEntityACLValidatorImpl.ValidationError error);
 
     String createErrorMessage(StateEntityCrudValidatorImpl.ValidationError error);
+
+    String createErrorMessage(CategoryEntityDuplicateCategoryIDPerCaseTypeValidatorImpl.ValidationError error);
 
     String createErrorMessage(UserProfileValidatorImpl.ValidationError error);
 

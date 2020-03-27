@@ -25,6 +25,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.category.CategoryEntityDuplicateCategoryIDPerCaseTypeValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityIncorrectOrderValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingOrderValidationError;
@@ -541,6 +542,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(StateEntityCrudValidatorImpl.ValidationError error) {
+        return withWorkSheetName(error);
+    }
+
+    @Override
+    public String createErrorMessage(CategoryEntityDuplicateCategoryIDPerCaseTypeValidatorImpl.ValidationError error) {
         return withWorkSheetName(error);
     }
 
