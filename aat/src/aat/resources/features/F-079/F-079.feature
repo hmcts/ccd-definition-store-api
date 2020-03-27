@@ -1,6 +1,5 @@
 @F-079 
-Feature: CCD Definition Store Api :: GET /api/data/case-type/{ctid}
-
+Feature: F-079: Fetch a Case Type Schema
   Background:
     Given an appropriate test context as detailed in the test data source
 
