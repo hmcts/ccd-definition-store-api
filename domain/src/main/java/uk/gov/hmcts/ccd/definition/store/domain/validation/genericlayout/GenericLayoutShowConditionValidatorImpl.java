@@ -33,14 +33,14 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
 
     @Override
     public ValidationResult validate(GenericLayoutEntity entity, List<GenericLayoutEntity> allGenericLayouts) {
-        List<GenericLayoutEntity> layoutEntities = getLayoutsByMatchingCaseType(entity, allGenericLayouts);
-
         ValidationResult validationResult = new ValidationResult();
         Optional<String> showConditionOptional = entity.fetchShowCondition();
 
         if (!showConditionOptional.isPresent()) {
             return validationResult;
         }
+
+        List<GenericLayoutEntity> layoutEntities = getLayoutsByMatchingCaseType(entity, allGenericLayouts);
 
         ShowCondition showCondition;
         try {
