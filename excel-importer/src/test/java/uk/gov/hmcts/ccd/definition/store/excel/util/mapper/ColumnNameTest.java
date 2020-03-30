@@ -48,7 +48,7 @@ public class ColumnNameTest {
             assertEquals(
                 String.format(
                     "Expected column %s on %s to be %s", columnName, sheetName,
-                    required == true ? "required" : "not required"),
+                    required ? "required" : "not required"),
                 ColumnName.isRequired(sheetName, columnName),
                 required
             );
