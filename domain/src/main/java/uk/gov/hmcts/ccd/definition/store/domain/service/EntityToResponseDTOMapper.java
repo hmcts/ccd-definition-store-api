@@ -323,6 +323,7 @@ public interface EntityToResponseDTOMapper {
 
             return categoriesByGroupId.entrySet().stream()
                 .map(e -> createCaseCategoryGroup(e.getKey(), e.getValue()))
+                .sorted(Comparator.comparingInt(CaseCategoryGroup::getOrder))
                 .collect(toList());
         }
 
@@ -334,8 +335,47 @@ public interface EntityToResponseDTOMapper {
             CategoryEntity category = categoryEntities.stream().min(Comparator.comparing(CategoryEntity::getDisplayOrder)).get();
             categoryGroup.setName(category.getGroupName());
             categoryGroup.setOrder(category.getDisplayOrder());
-            categoryGroup.setCategories(Collections.emptyList());
+            categoryGroup.setCategories(flatToHierarchy(categoryEntities));
+
             return categoryGroup;
+        }
+
+        private static List<CaseCategory> flatToHierarchy(List<CategoryEntity> categoryEntities) {
+            List<CaseCategory> caseCategories = new ArrayList<>();
+
+            for (CategoryEntity category: categoryEntities) {
+                if (category.getParentCategoryId() == null) {
+                    caseCategories.add(categoryEntityToCaseCategory(category, categoryEntities));
+                }
+            }
+            caseCategories.sort(Comparator.comparingInt(CaseCategory::getOrder));
+            return caseCategories;
+        }
+
+        private static List<CaseCategory> findChildrenForCategory(List<CategoryEntity> categoryEntities, CategoryEntity parent) {
+            List<CaseCategory> caseCategories = new ArrayList<>();
+            List<CategoryEntity> childrenFound = categoryEntities.stream()
+                .filter(e -> parent.getCategoryId().equals(e.getParentCategoryId()))
+                .collect(Collectors.toList());
+
+            if (childrenFound.size() == 0) {
+                return Collections.emptyList();
+            }
+
+            for (CategoryEntity category: childrenFound) {
+                caseCategories.add(categoryEntityToCaseCategory(category, categoryEntities));
+            }
+            caseCategories.sort(Comparator.comparingInt(CaseCategory::getOrder));
+            return caseCategories;
+        }
+
+        private static CaseCategory categoryEntityToCaseCategory(CategoryEntity categoryEntity, List<CategoryEntity> categoryEntities) {
+            CaseCategory caseCategory = new CaseCategory();
+            caseCategory.setId(categoryEntity.getCategoryId());
+            caseCategory.setLabel(categoryEntity.getLabel());
+            caseCategory.setOrder(categoryEntity.getDisplayOrder());
+            caseCategory.setChildren(findChildrenForCategory(categoryEntities, categoryEntity));
+            return caseCategory;
         }
     }
 }

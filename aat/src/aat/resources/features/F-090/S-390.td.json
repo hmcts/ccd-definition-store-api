@@ -38,13 +38,65 @@
           "id": "translatedDocs",
           "name": "Translated Documents",
           "order": 10,
-          "categories": "[[ANYTHING_PRESENT]]"
+          "categories": [
+            {
+              "id": "translatedEvidence",
+              "label": "Evidence",
+              "order": 10,
+              "children": []
+            },
+            {
+              "id": "translatedDivorceDocs",
+              "label": "Divorce Documents",
+              "order": 20,
+              "children": [
+                {
+                  "id": "translatedDecreeNisi",
+                  "label": "Decree Nisi",
+                  "order": 21,
+                  "children": []
+                },
+                {
+                  "id": "translatedMarriageCert",
+                  "label": "Marriage Certificate",
+                  "order": 22,
+                  "children": []
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "mainDocs",
           "name": "Main Documents",
           "order": 100,
-          "categories": "[[ANYTHING_PRESENT]]"
+          "categories": [
+            {
+              "id": "evidence",
+              "label": "Evidence",
+              "order": 100,
+              "children": []
+            },
+            {
+              "id": "divorceDocs",
+              "label": "Divorce Documents",
+              "order": 200,
+              "children": [
+                {
+                  "id": "decreeNisi",
+                  "label": "Decree Nisi",
+                  "order": 201,
+                  "children": []
+                },
+                {
+                  "id": "marriageCert",
+                  "label": "Marriage Certificate",
+                  "order": 202,
+                  "children": []
+                }
+              ]
+            }
+          ]
         }
       ],
 			"acls": "[[ANYTHING_PRESENT]]",

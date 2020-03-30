@@ -11,14 +11,10 @@ import java.util.List;
 public class CaseCategory {
 
     private String id = null;
-    private String name = null;
-    private String description = null;
+    private String label = null;
     private Integer order = null;
-    private String titleDisplay;
-    private List<AccessControlList> acls = new ArrayList<>();
+    private List<CaseCategory> children = new ArrayList<>();
 
-    /**
-     **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("id")
     public String getId() {
@@ -29,31 +25,17 @@ public class CaseCategory {
         this.id = id;
     }
 
-    /**
-     * Short name to display.
-     **/
-    @ApiModelProperty(value = "Short name to display.")
-    @JsonProperty("name")
-    public String getName() {
-        return name;
+    @ApiModelProperty(value = "Label to display.")
+    @JsonProperty("label")
+    public String getLabel() {
+        return label;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    /**
-     **/
-    @ApiModelProperty(value = "")
-    @JsonProperty("description")
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    @ApiModelProperty(value = "Category order.")
     @JsonProperty("order")
     public Integer getOrder() {
         return order;
@@ -63,24 +45,13 @@ public class CaseCategory {
         this.order = order;
     }
 
-    @ApiModelProperty(value = "Title label to be displayed for state")
-    @JsonProperty("title_display")
-    public String getTitleDisplay() {
-        return titleDisplay;
+    @ApiModelProperty(value = "Category children.")
+    @JsonProperty("children")
+    public List<CaseCategory> getChildren() {
+        return children;
     }
 
-    public void setTitleDisplay(String titleDisplay) {
-        this.titleDisplay = titleDisplay;
+    public void setChildren(List<CaseCategory> children) {
+        this.children = children;
     }
-
-    @ApiModelProperty(value = "State Access Control Lists")
-    @JsonProperty("acls")
-    public List<AccessControlList> getAcls() {
-        return acls;
-    }
-
-    public void setAcls(List<AccessControlList> acls) {
-        this.acls = acls;
-    }
-
 }
