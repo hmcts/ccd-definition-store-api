@@ -1,0 +1,20 @@
+{
+  "_guid_": "F-090_Test_CaseType_CategoryGroups",
+  "productName": "CCD Definition Store",
+  "operationName": "fetch a Case Type Schema",
+  "method": "GET",
+  "uri": "/api/data/case-type/{id}",
+  "user": {
+    "_extends_": "Common_User_For_Request"
+  },
+  "request": {
+    "headers": {
+      "Authorization": "[[DYNAMIC]]",
+      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Content-Type": "application/json"
+    },
+    "pathVariables": {
+      "id": "AllDataTypes2"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_guid_": "S-394",
+  "_extends_": "F-094_Test_Base_Data",
+  "title": "must return 422 when request uploads the definition with a category on non Document type",
+  "specs": [
+    "an active profile in CCD"
+  ],
+  "user": {
+    "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
+    "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
+  },
+  "expectedResponse": {
+    "_extends_": "Common_Response",
+
+    "responseCode": 422,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "_extends_": "Common_422_Response_Headers"
+    },
+    "body": {
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- Invalid complex field type 'Text' for a categoryID 'marriageCert'. WorkSheet 'ComplexTypes'"
+    }
+  }
+}

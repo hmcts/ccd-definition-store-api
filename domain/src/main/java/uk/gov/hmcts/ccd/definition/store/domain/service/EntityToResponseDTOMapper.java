@@ -7,10 +7,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTyp
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -329,10 +326,14 @@ public interface EntityToResponseDTOMapper {
                 .collect(toList());
         }
 
-        // TODO: finish recoursion of categories
+        // TODO: finish recursion of categories
         static CaseCategoryGroup createCaseCategoryGroup(String groupId, List<CategoryEntity> categoryEntities) {
             CaseCategoryGroup categoryGroup = new CaseCategoryGroup();
             categoryGroup.setId(groupId);
+
+            CategoryEntity category = categoryEntities.stream().min(Comparator.comparing(CategoryEntity::getDisplayOrder)).get();
+            categoryGroup.setName(category.getGroupName());
+            categoryGroup.setOrder(category.getDisplayOrder());
             categoryGroup.setCategories(Collections.emptyList());
             return categoryGroup;
         }

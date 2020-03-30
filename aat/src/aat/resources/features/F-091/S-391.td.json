@@ -1,0 +1,24 @@
+{
+  "_guid_": "S-391",
+  "_extends_": "F-091_Test_Base_Data",
+  "title": "must return 400 when request does not provide valid category order number",
+  "specs": [
+    "an active profile in CCD"
+  ],
+  "user": {
+    "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
+    "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
+  },
+  "expectedResponse": {
+    "_extends_": "Common_Response",
+
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "_extends_": "Common_400_Response_Headers"
+    },
+    "body": {
+      "__plainTextValue__": "Invalid value 'ten' is found in column 'CategoryDisplayOrder' in the sheet 'Category'"
+    }
+  }
+}
