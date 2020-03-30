@@ -1,5 +1,5 @@
 @F-088
-Feature: F088: Fetch UI definition Work Basket results by CaseType
+Feature: F-088: Fetch UI definition Work Basket results by CaseType
 
   Background:
     Given an appropriate test context as detailed in the test data source

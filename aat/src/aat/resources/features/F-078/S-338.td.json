@@ -18,8 +18,7 @@
       "Content-Encoding" : "gzip",
       "Content-Length" : "[[ANYTHING_PRESENT]]",
       "Content-Type" : "application/json",
-      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
-      "Request-Context": "[[ANY_NULLABLE]]"
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body" : {
       "message" : "Object Not Found for:NON_EXISTING_BEFTA_CASETYPE",
