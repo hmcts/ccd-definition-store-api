@@ -474,7 +474,7 @@ public class GenericLayoutParserTest {
         ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
 
         assertEquals(parseResult.getAllResults().size(), 2);
-        assertThat(parseResult.getAllResults().get(0), hasProperty("showCondition", equalTo(PARSED_SHOW_CONDITION)));
+        assertThat(parseResult.getAllResults(), hasItem(hasProperty("showCondition", equalTo(PARSED_SHOW_CONDITION))));
     }
 
     @Test
@@ -501,7 +501,7 @@ public class GenericLayoutParserTest {
         ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
 
         assertEquals(parseResult.getAllResults().size(), 2);
-        assertThat(parseResult.getAllResults().get(0), hasProperty("showCondition", equalTo(PARSED_SHOW_CONDITION)));
+        assertThat(parseResult.getAllResults(), hasItem(hasProperty("showCondition", equalTo(PARSED_SHOW_CONDITION))));
     }
 
     @DisplayName("Should fail when show condition appears in search results")
