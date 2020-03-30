@@ -1,0 +1,18 @@
+{
+  "_guid_": "F-097_Test_Base_Data",
+  "productName": "CCD Definition Store",
+  "operationName": "Upload definition with invalid categoryIds in ComplexTypes",
+  "method": "POST",
+  "uri": "/import",
+  "request": {
+    "headers": {
+      "Authorization": "[[DYNAMIC]]",
+      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Content-Type": "multipart/form-data"
+    },
+    "body": {
+      "key": "file",
+      "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/CCD_BEFTA_JURISDICTION3_CATEGORIES_invalid_categoryId_in_ComplexTypes.xlsx"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
-  "_guid_": "S-394",
-  "_extends_": "F-094_Test_Base_Data",
-  "title": "must return 422 when request uploads the definition with a category on non Document type",
+  "_guid_": "S-397",
+  "_extends_": "F-097_Test_Base_Data",
+  "title": "must return 422 when request uploads definition with invalid categoryIds in ComplexTypes",
   "specs": [
     "an active profile in CCD"
   ],
@@ -18,7 +18,7 @@
       "_extends_": "Common_422_Response_Headers"
     },
     "body": {
-      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- Invalid ComplexTypes FieldType 'Text' for a categoryID 'marriageCert'.. WorkSheet 'ComplexTypes'"
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- Invalid format of CategoryID 'invalid*&Category2' on complex field 'Doc1'. WorkSheet 'ComplexTypes'"
     }
   }
 }

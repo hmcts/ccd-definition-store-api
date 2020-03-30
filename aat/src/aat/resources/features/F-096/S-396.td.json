@@ -1,0 +1,24 @@
+{
+  "_guid_": "S-396",
+  "_extends_": "F-096_Test_Base_Data",
+  "title": "must return 422 when request uploads definition with invalid categoryIds in CaseField",
+  "specs": [
+    "an active profile in CCD"
+  ],
+  "user": {
+    "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
+    "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
+  },
+  "expectedResponse": {
+    "_extends_": "Common_Response",
+
+    "responseCode": 422,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "_extends_": "Common_422_Response_Headers"
+    },
+    "body": {
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- Invalid format of CategoryID '##?^InvalidCategory1' on case field 'DocumentField' for caseType 'BEFTA_CASETYPE_3_1'. WorkSheet 'CaseField'- CategoryID 'nonExistentCategory1' not defined in Category tab. Case field 'DocumentField2', caseType 'BEFTA_CASETYPE_3_1'. WorkSheet 'CaseField'"
+    }
+  }
+}
