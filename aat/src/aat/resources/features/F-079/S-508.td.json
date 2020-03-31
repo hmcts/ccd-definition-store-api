@@ -58,7 +58,7 @@
 					"acls": "[[ANYTHING_PRESENT]]"
 				}
 			],
-      "caseCategoryGroups": "[[ANYTHING_PRESENT]]",
+      "categoryGroups": "[[ANYTHING_PRESENT]]",
 			"acls": "[[ANYTHING_PRESENT]]",
 			"searchAliasFields": [],
 			"case_fields": "[[ANYTHING_PRESENT]]",

@@ -33,7 +33,7 @@
 			},
 			"events": "[[ANYTHING_PRESENT]]",
 			"states": "[[ANYTHING_PRESENT]]",
-      "caseCategoryGroups": [
+      "categoryGroups": [
         {
           "id": "translatedDocs",
           "name": "Translated Documents",

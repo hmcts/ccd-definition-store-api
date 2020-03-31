@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
@@ -14,6 +15,8 @@ public class CaseType implements HasAcls {
     private Jurisdiction jurisdiction = null;
     private List<CaseEvent> events = new ArrayList<>();
     private List<CaseState> states = new ArrayList<>();
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonProperty("categoryGroups")
     private List<CaseCategoryGroup> caseCategoryGroups = new ArrayList<>();
     @JsonProperty("case_fields")
     private List<CaseField> caseFields = new ArrayList<>();
