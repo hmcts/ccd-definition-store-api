@@ -72,7 +72,13 @@ public class LayoutServiceImpl implements LayoutService {
     private List<GenericLayoutEntity> getLayoutsByMatchingCaseType(GenericLayoutEntity entity,
                                                                    List<GenericLayoutEntity> allGenericLayouts) {
         return allGenericLayouts.stream()
-            .filter(l -> l.getCaseType().getReference().equalsIgnoreCase(entity.getCaseType().getReference()))
+            .filter(layoutEntity -> {
+                if (layoutEntity.getCaseType() != null & entity.getCaseType() != null) {
+                    return layoutEntity.getCaseType().getReference()
+                        .equalsIgnoreCase(entity.getCaseType().getReference());
+                }
+                return false;
+            })
             .collect(Collectors.toList());
     }
 
