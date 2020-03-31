@@ -34,13 +34,11 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
     @Override
     public ValidationResult validate(GenericLayoutEntity entity, List<GenericLayoutEntity> allGenericLayouts) {
         ValidationResult validationResult = new ValidationResult();
-        Optional<String> showConditionOptional = entity.fetchShowCondition();
+        Optional<String> showConditionOptional = entity.showCondition();
 
         if (!showConditionOptional.isPresent()) {
             return validationResult;
         }
-
-        List<GenericLayoutEntity> layoutEntities = getLayoutsByMatchingCaseType(entity, allGenericLayouts);
 
         ShowCondition showCondition;
         try {
@@ -52,7 +50,7 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
             return validationResult;
         }
 
-        List<String> allSubTypePossibilities = getAllSubTypePossibilities(layoutEntities);
+        List<String> allSubTypePossibilities = getAllSubTypePossibilities(allGenericLayouts);
         showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
             if (!allSubTypePossibilities.contains(showConditionField)) {
                 validationResult.addError(buildError(entity, showConditionField, showConditionOptional.get()));
@@ -60,8 +58,8 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
         });
 
         showCondition.getFields().forEach(showConditionField -> {
-            if (!forShowConditionFieldExistsAtLeastOneEventCaseFieldEntity(
-                showConditionField, layoutEntities)
+            if (!showConditionFieldExistsInAtLeastOneLayOutEntity(
+                showConditionField, allGenericLayouts)
                 && !MetadataField.isMetadataField(showConditionField)) {
                 validationResult.addError(buildError(entity, showConditionField, showConditionOptional.get()));
             }
@@ -77,18 +75,11 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
                     .collect(Collectors.toList()));
     }
 
-    private List<GenericLayoutEntity> getLayoutsByMatchingCaseType(GenericLayoutEntity entity,
-                                                                   List<GenericLayoutEntity> allGenericLayouts) {
-        return allGenericLayouts.stream()
-            .filter(l -> l.getCaseType().getReference().equalsIgnoreCase(entity.getCaseType().getReference()))
-            .collect(Collectors.toList());
-    }
-
-    private boolean forShowConditionFieldExistsAtLeastOneEventCaseFieldEntity(
+    private boolean showConditionFieldExistsInAtLeastOneLayOutEntity(
         String showConditionField, List<GenericLayoutEntity> layoutEntities) {
         return layoutEntities
             .stream()
-            .anyMatch(f -> f.getCaseField().getReference().equals(showConditionField));
+            .anyMatch(layoutEntity -> layoutEntity.getCaseField().getReference().equals(showConditionField));
     }
 
     private ValidationError buildError(GenericLayoutEntity entity, String showConditionField, String showCondition) {

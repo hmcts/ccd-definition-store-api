@@ -19,7 +19,7 @@ public class InputCaseFieldEntity extends GenericLayoutEntity {
     }
 
     @Override
-    public Optional<String> fetchShowCondition() {
+    public Optional<String> showCondition() {
         return Optional.ofNullable(showCondition);
     }
 }

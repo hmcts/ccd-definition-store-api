@@ -112,7 +112,7 @@ public abstract class GenericLayoutEntity implements Serializable {
         this.userRole = userRole;
     }
 
-    public Optional<String> fetchShowCondition() {
+    public Optional<String> showCondition() {
         return Optional.empty();
     }
 }
