@@ -9,7 +9,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_ORDER_COMPARATOR;
@@ -306,7 +305,7 @@ public interface EntityToResponseDTOMapper {
         }
 
         private static boolean isComplexField(String reference) {
-            return "Complex" .equalsIgnoreCase(reference);
+            return "Complex".equalsIgnoreCase(reference);
         }
     }
 
