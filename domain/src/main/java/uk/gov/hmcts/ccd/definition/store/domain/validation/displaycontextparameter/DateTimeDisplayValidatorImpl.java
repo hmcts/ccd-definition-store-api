@@ -22,7 +22,7 @@ public class DateTimeDisplayValidatorImpl implements DisplayContextParameterVali
     }
 
     @Override
-    public void validate(final String parameterValue) throws InvalidDateTimeFormatException {
+    public void validate(final String parameterValue, String fieldType) throws InvalidDateTimeFormatException {
         dateTimeFormatParser.parseDateTimeFormat(parameterValue);
     }
 }

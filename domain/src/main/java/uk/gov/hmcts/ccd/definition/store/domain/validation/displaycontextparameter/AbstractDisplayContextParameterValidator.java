@@ -106,7 +106,8 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         DisplayContextParameterValidator parameterValidator = displayContextParameterValidatorFactory
             .getValidator(displayContextParameter.getType());
         try {
-            parameterValidator.validate(displayContextParameter.getValue());
+            String fieldType = getFieldTypeEntity(entity).getBaseFieldType().getReference();
+            parameterValidator.validate(displayContextParameter.getValue(), fieldType);
         } catch (Exception e) {
             validationResult.addError(invalidValueError(entity));
         }

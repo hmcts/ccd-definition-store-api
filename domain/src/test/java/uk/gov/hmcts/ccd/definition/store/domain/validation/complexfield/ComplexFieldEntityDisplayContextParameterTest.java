@@ -90,7 +90,7 @@ public class ComplexFieldEntityDisplayContextParameterTest {
         ComplexFieldEntity entity = complexFieldEntity("CASE_FIELD", fieldTypeEntity(FieldTypeUtils.BASE_DATE_TIME));
 
         entity.setDisplayContextParameter("#DATETIMEENTRY(0123456789)");
-        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any());
+        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
 
         final ValidationResult result = validator.validate(entity, caseFieldComplexFieldEntityValidator);
 
