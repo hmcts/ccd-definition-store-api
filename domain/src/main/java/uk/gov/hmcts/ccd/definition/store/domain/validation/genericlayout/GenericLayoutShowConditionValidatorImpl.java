@@ -39,13 +39,13 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
         if (!showConditionOptional.isPresent()) {
             return validationResult;
         }
-
+        String showConditionString = showConditionOptional.get();
         ShowCondition showCondition;
         try {
-            showCondition = showConditionExtractor.parseShowCondition(showConditionOptional.get());
+            showCondition = showConditionExtractor.parseShowCondition(showConditionString);
         } catch (InvalidShowConditionException e) {
             validationResult.addError(
-                new ValidationError(String.format(ERROR_MESSAGE_SHOW_CONDITION, showConditionOptional.get(),
+                new ValidationError(String.format(ERROR_MESSAGE_SHOW_CONDITION, showConditionString,
                         entity.getCaseType().getReference(), entity.getCaseField().getReference()), entity));
             return validationResult;
         }
@@ -53,7 +53,7 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
         List<String> allSubTypePossibilities = getAllSubTypePossibilities(allGenericLayouts);
         showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
             if (!allSubTypePossibilities.contains(showConditionField)) {
-                validationResult.addError(buildError(entity, showConditionField, showConditionOptional.get()));
+                validationResult.addError(buildError(entity, showConditionField, showConditionString));
             }
         });
 
@@ -61,7 +61,7 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
             if (!showConditionFieldExistsInAtLeastOneLayOutEntity(
                 showConditionField, allGenericLayouts)
                 && !MetadataField.isMetadataField(showConditionField)) {
-                validationResult.addError(buildError(entity, showConditionField, showConditionOptional.get()));
+                validationResult.addError(buildError(entity, showConditionField, showConditionString));
             }
         });
 
