@@ -322,21 +322,28 @@ public interface EntityToResponseDTOMapper {
 
             return categoriesByGroupId.entrySet().stream()
                 .map(e -> createCaseCategoryGroup(e.getKey(), e.getValue()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .sorted(Comparator.comparingInt(CaseCategoryGroup::getOrder))
                 .collect(toList());
         }
 
-        // TODO: finish recursion of categories
-        static CaseCategoryGroup createCaseCategoryGroup(String groupId, List<CategoryEntity> categoryEntities) {
+        static Optional<CaseCategoryGroup> createCaseCategoryGroup(String groupId, List<CategoryEntity> categoryEntities) {
             CaseCategoryGroup categoryGroup = new CaseCategoryGroup();
             categoryGroup.setId(groupId);
 
-            CategoryEntity category = categoryEntities.stream().min(Comparator.comparing(CategoryEntity::getDisplayOrder)).get();
-            categoryGroup.setName(category.getGroupName());
-            categoryGroup.setOrder(category.getDisplayOrder());
-            categoryGroup.setCategories(flatToHierarchy(categoryEntities));
+            Optional<CategoryEntity> categoryOptional = categoryEntities.stream()
+                .min(Comparator.comparing(CategoryEntity::getDisplayOrder));
+            if (categoryOptional.isPresent()) {
+                CategoryEntity category = categoryOptional.get();
+                categoryGroup.setName(category.getGroupName());
+                categoryGroup.setOrder(category.getDisplayOrder());
+                categoryGroup.setCategories(flatToHierarchy(categoryEntities));
 
-            return categoryGroup;
+                return Optional.of(categoryGroup);
+            } else {
+                return Optional.empty();
+            }
         }
 
         private static List<CaseCategory> flatToHierarchy(List<CategoryEntity> categoryEntities) {
@@ -357,7 +364,7 @@ public interface EntityToResponseDTOMapper {
                 .filter(e -> parent.getCategoryId().equals(e.getParentCategoryId()))
                 .collect(Collectors.toList());
 
-            if (childrenFound.size() == 0) {
+            if (childrenFound.isEmpty()) {
                 return Collections.emptyList();
             }
 
