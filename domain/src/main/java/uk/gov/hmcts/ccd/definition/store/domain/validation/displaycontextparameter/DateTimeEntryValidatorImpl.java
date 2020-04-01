@@ -14,7 +14,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_D
 public class DateTimeEntryValidatorImpl implements DisplayContextParameterValidator {
 
     private static final Pattern ALLOWED_CHARACTERS_PATTERN_DATETIME = Pattern.compile("[yMdHmsS\\-'T:]+");
-    private static final Pattern ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("[yMd':]+");
+    private static final Pattern ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("[yMd\\-':]+");
 
     private DateTimeFormatParser dateTimeFormatParser;
 

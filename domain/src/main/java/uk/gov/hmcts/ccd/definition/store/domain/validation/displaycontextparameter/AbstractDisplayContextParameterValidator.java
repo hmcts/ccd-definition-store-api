@@ -106,8 +106,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         DisplayContextParameterValidator parameterValidator = displayContextParameterValidatorFactory
             .getValidator(displayContextParameter.getType());
         try {
-            String fieldType = getFieldTypeEntity(entity).getBaseFieldType().getReference();
-            parameterValidator.validate(displayContextParameter.getValue(), fieldType);
+            parameterValidator.validate(displayContextParameter.getValue(), getFieldType(entity));
         } catch (Exception e) {
             validationResult.addError(invalidValueError(entity));
         }
@@ -123,7 +122,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     }
 
     private String getCollectionFieldType(T entity) {
-        return getFieldTypeEntity(entity).getCollectionFieldType().getReference();
+        return getFieldTypeEntity(entity).getReference();
     }
 
     private boolean isAllowedCollectionFieldType(T entity) {
