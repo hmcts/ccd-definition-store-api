@@ -1223,12 +1223,14 @@ class EntityToResponseDTOMapperTest {
             searchInputCaseFieldEntity.setOrder(69);
             searchInputCaseFieldEntity.setUserRole(userRoleEntity);
             searchInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
+            searchInputCaseFieldEntity.setShowCondition("aShowCondition");
 
             SearchInputField searchInputField = spyOnClassUnderTest.map(searchInputCaseFieldEntity);
 
             assertEquals(searchInputCaseFieldEntity.getOrder(), searchInputField.getOrder());
             assertEquals(searchInputCaseFieldEntity.getLabel(), searchInputField.getLabel());
             assertEquals(searchInputCaseFieldEntity.getCaseFieldElementPath(), searchInputField.getCaseFieldElementPath());
+            assertEquals(searchInputCaseFieldEntity.getShowCondition(), searchInputField.getShowCondition());
             assertEquals(searchInputCaseFieldEntity.getCaseField().getReference(), searchInputField.getCaseFieldId());
             assertEquals(userRoleEntity.getReference(), searchInputField.getRole());
         }
@@ -1301,9 +1303,11 @@ class EntityToResponseDTOMapperTest {
             workBasketInputCaseFieldEntity.setOrder(69);
             workBasketInputCaseFieldEntity.setUserRole(userRoleEntity);
             workBasketInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
+            workBasketInputCaseFieldEntity.setShowCondition("aShowCondition");
 
             WorkbasketInputField workbasketInputField = spyOnClassUnderTest.map(workBasketInputCaseFieldEntity);
 
+            assertEquals(workBasketInputCaseFieldEntity.getShowCondition(), workbasketInputField.getShowCondition());
             assertEquals(workBasketInputCaseFieldEntity.getOrder(), workbasketInputField.getOrder());
             assertEquals(workBasketInputCaseFieldEntity.getLabel(), workbasketInputField.getLabel());
             assertEquals(workBasketInputCaseFieldEntity.getCaseFieldElementPath(), workbasketInputField.getCaseFieldElementPath());
