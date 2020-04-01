@@ -29,13 +29,15 @@
         "case_field_element_path" : null,
         "label" : "Search `Text` field",
         "order" : 1,
-        "role" : null
+        "role" : null,
+        "show_condition": null
       }, {
         "case_field_id" : "[LAST_STATE_MODIFIED_DATE]",
         "case_field_element_path" : null,
         "label" : "Last State Modified Date",
         "order" : 2,
-        "role" : null
+        "role" : null,
+        "show_condition": null
       } ]
     }
   }
