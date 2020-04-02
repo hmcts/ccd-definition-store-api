@@ -16,7 +16,7 @@ public class DateTimeDisplayValidatorImpl implements DisplayContextParameterVali
     private DateTimeFormatParser dateTimeFormatParser;
 
     private static final Pattern DEFAULT_PATTERN = Pattern.compile(".+");
-    private static final Pattern ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("[yMd\\-':.+]+");
+    private static final Pattern ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("[yMd\\-\\/ ':]+");
 
     @Autowired
     public DateTimeDisplayValidatorImpl(DateTimeFormatParser dateTimeFormatParser) {

@@ -42,10 +42,20 @@ public class DateTimeDisplayValidatorImplTest {
     }
 
     @Test
-    void shouldValidateValidFormat1() throws Exception {
-        validator.validate("hhmmss", BASE_DATE);
+    void shouldValidateValidFormatWhenFieldIsDate() throws Exception {
+        validator.validate("yyyy-MM-dd", BASE_DATE);
     }
 
+    @Test
+    void shouldValidateValidFormatWhenFieldIsDateWithSPace() throws Exception {
+        validator.validate("yyyy MM dd", BASE_DATE);
+    }
+
+    @Test
+    void shouldErrorWhenTimeIsConfiguredInDcpForDateField() throws Exception {
+        doThrow(InvalidDateTimeFormatException.class).when(dateTimeFormatParser).parseDateTimeFormat(any(), any());
+        assertThrows(InvalidDateTimeFormatException.class, () -> validator.validate("yyyy-MM-dd'T'HH:mm:ss", BASE_DATE));
+    }
 
     @Test
     void shouldErrorWhenDateTimeFormatParserErrors() throws Exception {
