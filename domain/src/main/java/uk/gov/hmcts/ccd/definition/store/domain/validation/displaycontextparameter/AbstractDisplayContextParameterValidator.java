@@ -122,7 +122,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     }
 
     private String getCollectionFieldType(T entity) {
-        return getFieldTypeEntity(entity).getReference();
+        return getFieldTypeEntity(entity).getCollectionFieldType().getReference();
     }
 
     private boolean isAllowedCollectionFieldType(T entity) {
