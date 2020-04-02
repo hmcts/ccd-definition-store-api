@@ -49,7 +49,7 @@ public class DateTimeDisplayValidatorImplTest {
 
     @Test
     void shouldErrorWhenDateTimeFormatParserErrors() throws Exception {
-        doThrow(InvalidDateTimeFormatException.class).when(dateTimeFormatParser).parseDateTimeFormat(any());
+        doThrow(InvalidDateTimeFormatException.class).when(dateTimeFormatParser).parseDateTimeFormat(any(), any());
         assertThrows(InvalidDateTimeFormatException.class, () -> validator.validate("###", BASE_DATE_TIME));
     }
 }

@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class DateTimeFormatParserTest {
 
     private DateTimeFormatParser parser;
+    private static final Pattern DEFAULT_PATTERN = Pattern.compile(".+");
 
     @BeforeEach
     void setUp() {
@@ -25,14 +26,14 @@ public class DateTimeFormatParserTest {
     @ParameterizedTest
     @ArgumentsSource(ValidDateTimeFormatArgumentsProvider.class)
     void shouldParseValidFormat(String dateTimeFormat) throws InvalidDateTimeFormatException {
-        parser.parseDateTimeFormat(dateTimeFormat);
+        parser.parseDateTimeFormat(dateTimeFormat, DEFAULT_PATTERN);
     }
 
     @ParameterizedTest
     @ArgumentsSource(InvalidDateTimeFormatArgumentsProvider.class)
     void shouldFailToParseInvalidFormat(String dateTimeFormat) {
         assertThrows(InvalidDateTimeFormatException.class, () -> {
-            parser.parseDateTimeFormat(dateTimeFormat);
+            parser.parseDateTimeFormat(dateTimeFormat, DEFAULT_PATTERN);
         });
     }
 

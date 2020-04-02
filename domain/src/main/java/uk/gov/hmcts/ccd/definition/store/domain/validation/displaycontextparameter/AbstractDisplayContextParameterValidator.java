@@ -93,16 +93,16 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     }
 
     protected void validateDisplayContextParameterType(final DisplayContextParameter displayContextParameter,
-                                                     final T entity,
-                                                     final ValidationResult validationResult) {
+                                                       final T entity,
+                                                       final ValidationResult validationResult) {
         if (Arrays.stream(ALLOWED_TYPES).noneMatch(displayContextParameter.getType()::equals)) {
             validationResult.addError(unsupportedDisplayContextParameterTypeError(entity));
         }
     }
 
     protected void validateDisplayContextParameterValue(final DisplayContextParameter displayContextParameter,
-                                                      final T entity,
-                                                      final ValidationResult validationResult) {
+                                                        final T entity,
+                                                        final ValidationResult validationResult) {
         DisplayContextParameterValidator parameterValidator = displayContextParameterValidatorFactory
             .getValidator(displayContextParameter.getType());
         try {

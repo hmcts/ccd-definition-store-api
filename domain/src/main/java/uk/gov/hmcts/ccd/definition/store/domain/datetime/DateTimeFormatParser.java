@@ -11,12 +11,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DateTimeFormatParser {
 
-    private static final Pattern DEFAULT_PATTERN = Pattern.compile(".+");
-
-    public void parseDateTimeFormat(String dateTimeFormat) throws InvalidDateTimeFormatException {
-        parseDateTimeFormat(dateTimeFormat, DEFAULT_PATTERN);
-    }
-
     public void parseDateTimeFormat(String dateTimeFormat, Pattern dateTimeFormatPattern) throws InvalidDateTimeFormatException {
         Matcher m = dateTimeFormatPattern.matcher(dateTimeFormat);
         if (!m.matches()) {
