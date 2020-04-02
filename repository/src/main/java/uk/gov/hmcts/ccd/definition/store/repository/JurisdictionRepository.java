@@ -12,8 +12,8 @@ public interface JurisdictionRepository extends VersionedDefinitionRepository<Ju
     @Query("select max(entity.version) from JurisdictionEntity as entity where entity.reference = :reference")
     Optional<Integer> findLastVersion(@Param("reference") String reference);
 
-    @Query("select j from JurisdictionEntity j where j.reference in :references and j.version = (" +
-            "select max(j2.version) from JurisdictionEntity j2 where j2.reference = j.reference) ")
+    @Query("select j from JurisdictionEntity j where lower(j.reference) in :references and j.version = (" +
+            "select max(j2.version) from JurisdictionEntity j2 where lower(j2.reference) = lower(j.reference)) ")
     List<JurisdictionEntity> findAllLatestVersionByReference(@Param("references") List<String> references);
 
     @Query("select j from JurisdictionEntity j where j.version = (" +
