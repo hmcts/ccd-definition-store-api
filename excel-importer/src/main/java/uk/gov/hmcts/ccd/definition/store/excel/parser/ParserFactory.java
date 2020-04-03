@@ -69,10 +69,10 @@ public class ParserFactory {
 
     public LayoutParser createLayoutParser(ParseContext parseContext) {
         return new LayoutParser(
-            new WorkbasketInputLayoutParser(parseContext, entityToDefinitionDataItemRegistry),
-            new WorkbasketLayoutParser(parseContext, entityToDefinitionDataItemRegistry),
-            new SearchInputLayoutParser(parseContext, entityToDefinitionDataItemRegistry),
-            new SearchResultLayoutParser(parseContext, entityToDefinitionDataItemRegistry),
+            new WorkbasketInputLayoutParser(parseContext, entityToDefinitionDataItemRegistry, showConditionParser),
+            new WorkbasketLayoutParser(parseContext, entityToDefinitionDataItemRegistry, showConditionParser),
+            new SearchInputLayoutParser(parseContext, entityToDefinitionDataItemRegistry, showConditionParser),
+            new SearchResultLayoutParser(parseContext, entityToDefinitionDataItemRegistry, showConditionParser),
             new CaseTypeTabParser(parseContext, showConditionParser, entityToDefinitionDataItemRegistry),
             new WizardPageParser(parseContext, showConditionParser, entityToDefinitionDataItemRegistry));
     }

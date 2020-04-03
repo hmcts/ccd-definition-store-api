@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 
@@ -22,6 +23,9 @@ public class WorkbasketLayoutParserTest {
     @Mock
     private ParseContext parseContext;
 
+    @Mock
+    private ShowConditionParser showConditionParser;
+
     private WorkbasketLayoutParser classUnderTest;
     private Map<String, DefinitionSheet> definitionSheets;
 
@@ -30,7 +34,7 @@ public class WorkbasketLayoutParserTest {
         MockitoAnnotations.initMocks(this);
 
         definitionSheets = new HashMap<>();
-        classUnderTest = new WorkbasketLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry());
+        classUnderTest = new WorkbasketLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
     }
 
     @Test

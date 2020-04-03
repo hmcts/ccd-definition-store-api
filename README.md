@@ -113,6 +113,10 @@ Secured endpoint and specific logic for importing case definition as an Excel sp
 
 Spring application entry point and configuration.
 
+### Functional Tests
+The functional tests are located in `aat` folder. The tests are written using 
+befta-fw library. To find out more about BEFTA Framework, see the repository and its README [here](https://github.com/hmcts/befta-fw).
+
 ## LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
