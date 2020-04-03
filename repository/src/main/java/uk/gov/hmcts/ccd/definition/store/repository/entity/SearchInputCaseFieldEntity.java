@@ -4,6 +4,6 @@ import javax.persistence.*;
 
 @Table(name = "search_input_case_field")
 @Entity
-public class SearchInputCaseFieldEntity extends GenericLayoutEntity {
+public class SearchInputCaseFieldEntity extends InputCaseFieldEntity {
 
 }

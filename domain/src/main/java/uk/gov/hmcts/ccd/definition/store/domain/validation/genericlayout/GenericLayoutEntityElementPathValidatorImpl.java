@@ -28,7 +28,7 @@ public class GenericLayoutEntityElementPathValidatorImpl implements GenericLayou
     }
 
     @Override
-    public ValidationResult validate(GenericLayoutEntity entity) {
+    public ValidationResult validate(GenericLayoutEntity entity, List<GenericLayoutEntity> allGenericLayouts) {
         final ValidationResult validationResult = new ValidationResult();
 
         validatePaths(entity, validationResult);

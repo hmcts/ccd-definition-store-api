@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -14,8 +15,9 @@ public class SearchResultLayoutParser extends GenericLayoutParser {
     private static final Logger logger = LoggerFactory.getLogger(SearchResultLayoutParser.class);
 
     public SearchResultLayoutParser(final ParseContext parseContext,
-                                    final EntityToDefinitionDataItemRegistry registry) {
-        super(parseContext, registry);
+                                    final EntityToDefinitionDataItemRegistry registry,
+                                    final ShowConditionParser showConditionParser) {
+        super(parseContext, registry, showConditionParser);
     }
 
     @Override
@@ -48,6 +50,12 @@ public class SearchResultLayoutParser extends GenericLayoutParser {
     protected void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrderString) {
         SearchResultCaseFieldEntity resultCaseFieldEntity = ((SearchResultCaseFieldEntity)layoutEntity);
         resultCaseFieldEntity.setSortOrder(getSortOrder(sortOrderString));
+    }
+
+    @Override
+    protected void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition) {
+        throw new MapperException(String.format("showCondition is not supported in worksheet '%s' for "
+            + "caseType '%s'", SheetName.SEARCH_RESULT_FIELD.getName(), layoutEntity.getCaseType().getReference()));
     }
 
 }
