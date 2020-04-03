@@ -1,24 +1,26 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+
+;
 
 @Slf4j
 public class HighLevelCCDElasticClient implements CCDElasticClient {
@@ -52,9 +54,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         String currentIndex = getCurrentAliasIndex(aliasName, aliasesResponse);
         log.info("upsert mapping of index {}", currentIndex);
         PutMappingRequest request = new PutMappingRequest(currentIndex);
-        request.type(config.getCasesIndexType());
         request.source(caseTypeMapping, XContentType.JSON);
-        PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
+        AcknowledgedResponse putMappingResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
         log.info("mapping upserted: {}", putMappingResponse.isAcknowledged());
         return putMappingResponse.isAcknowledged();
     }
