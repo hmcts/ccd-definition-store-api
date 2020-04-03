@@ -7,6 +7,8 @@
 			(any version), see https://pivotal.io/security/cve-2018-1258</notes>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
+
+<!---
 	<suppress>
 		<notes><![CDATA[
             A permission issue was found in Elasticsearch versions before 5.6.15 and 6.6.1 when Field Level Security and Document Level
@@ -22,6 +24,7 @@
 		<vulnerabilityName>CVE-2019-7611</vulnerabilityName>
 		<vulnerabilityName>CVE-2018-17244</vulnerabilityName>
 	</suppress>
+
 	<suppress>
 		<notes><![CDATA[
         The checker is misidentifying our support jar as the elastic search client jar
@@ -35,8 +38,12 @@
 		<cve>CVE-2019-7611</cve>
 		<cve>CVE-2019-7614</cve>
 	</suppress>
+-->
+
+
 	<!--Liquibase bundles bootstrap and jquery in order to provide an admin 
 		UI Suppressing on the basis that we do not expose this UI. -->
+<!---
 	<suppress>
 		<notes><![CDATA[ file name: liquibase-core-3.6.3.jar: bootstrap.js ]]></notes>
 		<packageUrl regex="true">^pkg:javascript/bootstrap@.*$
@@ -46,12 +53,17 @@
 		<cve>CVE-2018-14042</cve>
 		<cve>CVE-2019-8331</cve>
 	</suppress>
+-->
+<!---
 	<suppress>
 		<notes><![CDATA[ file name: liquibase-core-3.6.3.jar: jquery-1.11.0.min.js ]]></notes>
 		<packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
 		<cve>CVE-2015-9251</cve>
 		<cve>CVE-2019-11358</cve>
 	</suppress>
+
+-->
+
 	<!-- FIXME : RDM-7451 -->
 	<suppress>
 		<notes><![CDATA[
