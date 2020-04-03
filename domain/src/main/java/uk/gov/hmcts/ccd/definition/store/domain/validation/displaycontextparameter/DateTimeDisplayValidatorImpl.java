@@ -15,8 +15,8 @@ public class DateTimeDisplayValidatorImpl implements DisplayContextParameterVali
 
     private DateTimeFormatParser dateTimeFormatParser;
 
-    private static final Pattern DEFAULT_PATTERN = Pattern.compile(".+");
-    private static final Pattern ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("[yMd\\-\\/ ':]+");
+    private static final Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME = Pattern.compile("VzOXxZ");
+    private static final Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("ahKkHmsSAnNVzOXxZ");
 
     @Autowired
     public DateTimeDisplayValidatorImpl(DateTimeFormatParser dateTimeFormatParser) {
@@ -30,7 +30,7 @@ public class DateTimeDisplayValidatorImpl implements DisplayContextParameterVali
 
     @Override
     public void validate(final String parameterValue, String fieldType) throws InvalidDateTimeFormatException {
-        Pattern pattern = ((fieldType.equals(BASE_DATE)) ? ALLOWED_CHARACTERS_PATTERN_DATE : DEFAULT_PATTERN);
+        Pattern pattern = ((fieldType.equals(BASE_DATE)) ? NOT_ALLOWED_CHARACTERS_PATTERN_DATE : NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME);
         dateTimeFormatParser.parseDateTimeFormat(parameterValue, pattern);
     }
 }

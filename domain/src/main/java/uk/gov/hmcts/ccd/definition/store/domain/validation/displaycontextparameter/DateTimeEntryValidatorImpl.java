@@ -13,8 +13,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_D
 @Component
 public class DateTimeEntryValidatorImpl implements DisplayContextParameterValidator {
 
-    private static final Pattern ALLOWED_CHARACTERS_PATTERN_DATETIME = Pattern.compile("[yMdHmsS\\-'T:]+");
-    private static final Pattern ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("[yMd\\-':]+");
+    private static final Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME = Pattern.compile("VzOXxZ");
+    private static final Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("ahKkHmsSAnNVzOXxZ");
 
     private DateTimeFormatParser dateTimeFormatParser;
 
@@ -30,7 +30,7 @@ public class DateTimeEntryValidatorImpl implements DisplayContextParameterValida
 
     @Override
     public void validate(final String parameterValue, String fieldType) throws InvalidDateTimeFormatException {
-        Pattern pattern = ((fieldType.equals(BASE_DATE)) ? ALLOWED_CHARACTERS_PATTERN_DATE : ALLOWED_CHARACTERS_PATTERN_DATETIME);
+        Pattern pattern = ((fieldType.equals(BASE_DATE)) ? NOT_ALLOWED_CHARACTERS_PATTERN_DATE : NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME);
         dateTimeFormatParser.parseDateTimeFormat(parameterValue, pattern);
     }
 }
