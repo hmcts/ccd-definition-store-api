@@ -13,7 +13,7 @@ public class DateTimeFormatParser {
 
     public void parseDateTimeFormat(String dateTimeFormat, Pattern dateTimeFormatPattern) throws InvalidDateTimeFormatException {
         Matcher m = dateTimeFormatPattern.matcher(dateTimeFormat);
-        if (m.matches()) {
+        if (m.find()) {
             throw new InvalidDateTimeFormatException(dateTimeFormat);
         }
         try {

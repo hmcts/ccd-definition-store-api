@@ -15,9 +15,6 @@ public class DateTimeDisplayValidatorImpl implements DisplayContextParameterVali
 
     private DateTimeFormatParser dateTimeFormatParser;
 
-    private static final Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME = Pattern.compile("VzOXxZ");
-    private static final Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("ahKkHmsSAnNVzOXxZ");
-
     @Autowired
     public DateTimeDisplayValidatorImpl(DateTimeFormatParser dateTimeFormatParser) {
         this.dateTimeFormatParser = dateTimeFormatParser;
