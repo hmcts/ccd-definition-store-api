@@ -220,9 +220,45 @@
         }, {
           "case_field" : {
             "metadata" : false,
+            "id" : "LabelDateField",
+            "case_type_id" : "BEFTA_CASETYPE_3_4",
+            "label" : "[[ANYTHING_PRESENT]]",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Label",
+              "type" : "Label",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : false,
+            "security_classification" : "PUBLIC",
+            "live_from" : "2017-01-01",
+            "live_until" : null,
+            "acls" : [ {
+              "role" : "caseworker-befta_jurisdiction_3",
+              "create" : true,
+              "read" : true,
+              "update" : true,
+              "delete" : false
+            } ],
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          },
+          "order" : 5,
+          "show_condition" : null,
+          "display_context_parameter" : null
+        }, {
+          "case_field" : {
+            "metadata" : false,
             "id" : "DateField",
             "case_type_id" : "BEFTA_CASETYPE_3_4",
-            "label" : "dd-MM-yy formatted date field",
+            "label" : "MM-yyyy formatted date field",
             "hint_text" : "Date Field",
             "field_type" : {
               "id" : "Date",
@@ -250,9 +286,9 @@
             "show_condition" : null,
             "display_context_parameter" : null
           },
-          "order" : 5,
+          "order" : 6,
           "show_condition" : null,
-          "display_context_parameter" : "#DATETIMEDISPLAY(dd-MM-yy)"
+          "display_context_parameter" : null
         }, {
           "case_field" : {
             "metadata" : false,
@@ -286,9 +322,9 @@
             "show_condition" : null,
             "display_context_parameter" : null
           },
-          "order" : 6,
+          "order" : 7,
           "show_condition" : null,
-          "display_context_parameter" : "#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm)"
+          "display_context_parameter" : null
         }, {
           "case_field" : {
             "metadata" : false,
@@ -322,7 +358,7 @@
             "show_condition" : null,
             "display_context_parameter" : null
           },
-          "order" : 7,
+          "order" : 8,
           "show_condition" : null,
           "display_context_parameter" : null
         }, {
@@ -358,7 +394,7 @@
             "show_condition" : null,
             "display_context_parameter" : null
           },
-          "order" : 8,
+          "order" : 9,
           "show_condition" : null,
           "display_context_parameter" : null
         }, {
@@ -366,10 +402,10 @@
             "metadata" : false,
             "id" : "CollectionDate",
             "case_type_id" : "BEFTA_CASETYPE_3_4",
-            "label" : "yy-MM-dd formatted collection date",
+            "label" : "MM-yyyy formatted collection date",
             "hint_text" : "Date Field",
             "field_type" : {
-              "id" : "CollectionDate-716ae2fc-24f4-4249-808d-e9c8551c43de",
+              "id" : "CollectionDate-be181c60-9cea-4943-b767-ec240d3be721",
               "type" : "Collection",
               "min" : null,
               "max" : null,
@@ -403,9 +439,9 @@
             "show_condition" : null,
             "display_context_parameter" : null
           },
-          "order" : 9,
+          "order" : 10,
           "show_condition" : null,
-          "display_context_parameter" : "#DATETIMEDISPLAY(yy-MM-dd)"
+          "display_context_parameter" : null
         }, {
           "case_field" : {
             "metadata" : false,
@@ -414,7 +450,7 @@
             "label" : "yyyy-MM-dd formatted collection DateTime",
             "hint_text" : "DateTime Field",
             "field_type" : {
-              "id" : "CollectionDateTime-7cd2015a-a4cb-4af5-a4fc-31c4fd8d076c",
+              "id" : "CollectionDateTime-e200212d-88ea-4ff3-83f8-59ec001d089f",
               "type" : "Collection",
               "min" : null,
               "max" : null,
@@ -448,15 +484,15 @@
             "show_condition" : null,
             "display_context_parameter" : null
           },
-          "order" : 10,
+          "order" : 11,
           "show_condition" : null,
-          "display_context_parameter" : "#DATETIMEDISPLAY(yyyy-MM-dd)"
+          "display_context_parameter" : null
         }, {
           "case_field" : {
             "metadata" : false,
             "id" : "ComplexDateTime",
             "case_type_id" : "BEFTA_CASETYPE_3_4",
-            "label" : "Formatted Date in Collection",
+            "label" : "Formatted Date in ComplexType",
             "hint_text" : "Date Field",
             "field_type" : {
               "id" : "FormatComplex",
@@ -469,7 +505,7 @@
                 "metadata" : false,
                 "id" : "DateField",
                 "case_type_id" : null,
-                "label" : "dd-MM-yy formatted date field",
+                "label" : "MM-yyyy formatted date field",
                 "hint_text" : "Date Field",
                 "field_type" : {
                   "id" : "Date",
@@ -489,7 +525,7 @@
                 "complexACLs" : [ ],
                 "order" : null,
                 "show_condition" : null,
-                "display_context_parameter" : "#DATETIMEENTRY(dd-MM-yy),#DATETIMEDISPLAY(dd-MM-yy)"
+                "display_context_parameter" : "#DATETIMEENTRY(dd-MM-yyyy),#DATETIMEDISPLAY(yyyy)"
               }, {
                 "metadata" : false,
                 "id" : "DateTimeField",
@@ -514,7 +550,7 @@
                 "complexACLs" : [ ],
                 "order" : null,
                 "show_condition" : null,
-                "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm)"
+                "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy MM dd HH:mm)"
               }, {
                 "metadata" : false,
                 "id" : "StandardDate",
@@ -582,7 +618,7 @@
                     "metadata" : false,
                     "id" : "DateField",
                     "case_type_id" : null,
-                    "label" : "dd-MM-yy formatted date field",
+                    "label" : "MM-yyyy formatted date field",
                     "hint_text" : "Date Field",
                     "field_type" : {
                       "id" : "Date",
@@ -602,7 +638,7 @@
                     "complexACLs" : [ ],
                     "order" : null,
                     "show_condition" : null,
-                    "display_context_parameter" : "#DATETIMEENTRY(dd-MM-yy),#DATETIMEDISPLAY(dd-MM-yy)"
+                    "display_context_parameter" : "#DATETIMEENTRY(MM-yyyy),#DATETIMEDISPLAY(MM-yyyy)"
                   }, {
                     "metadata" : false,
                     "id" : "DateTimeField",
@@ -627,7 +663,7 @@
                     "complexACLs" : [ ],
                     "order" : null,
                     "show_condition" : null,
-                    "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm)"
+                    "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd),#DATETIMEDISPLAY(yyyy-MM-dd)"
                   }, {
                     "metadata" : false,
                     "id" : "StandardDate",
@@ -709,7 +745,7 @@
             "show_condition" : null,
             "display_context_parameter" : null
           },
-          "order" : 11,
+          "order" : 12,
           "show_condition" : null,
           "display_context_parameter" : null
         }, {
@@ -720,7 +756,7 @@
             "label" : "Formatted Date in Collection",
             "hint_text" : "Date Field",
             "field_type" : {
-              "id" : "CollectionComplexDateTime-28c7ee63-a9a9-4db6-829a-ede9525774fe",
+              "id" : "CollectionComplexDateTime-efdb5955-8b26-4313-8bdd-3bee5ad869cf",
               "type" : "Collection",
               "min" : null,
               "max" : null,
@@ -738,7 +774,7 @@
                   "metadata" : false,
                   "id" : "DateField",
                   "case_type_id" : null,
-                  "label" : "dd-MM-yy formatted date field",
+                  "label" : "MM-yyyy formatted date field",
                   "hint_text" : "Date Field",
                   "field_type" : {
                     "id" : "Date",
@@ -758,7 +794,7 @@
                   "complexACLs" : [ ],
                   "order" : null,
                   "show_condition" : null,
-                  "display_context_parameter" : "#DATETIMEENTRY(dd-MM-yy),#DATETIMEDISPLAY(dd-MM-yy)"
+                  "display_context_parameter" : "#DATETIMEENTRY(dd-MM-yyyy),#DATETIMEDISPLAY(yyyy)"
                 }, {
                   "metadata" : false,
                   "id" : "DateTimeField",
@@ -783,7 +819,7 @@
                   "complexACLs" : [ ],
                   "order" : null,
                   "show_condition" : null,
-                  "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm)"
+                  "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy MM dd HH:mm)"
                 }, {
                   "metadata" : false,
                   "id" : "StandardDate",
@@ -851,7 +887,7 @@
                       "metadata" : false,
                       "id" : "DateField",
                       "case_type_id" : null,
-                      "label" : "dd-MM-yy formatted date field",
+                      "label" : "MM-yyyy formatted date field",
                       "hint_text" : "Date Field",
                       "field_type" : {
                         "id" : "Date",
@@ -871,7 +907,7 @@
                       "complexACLs" : [ ],
                       "order" : null,
                       "show_condition" : null,
-                      "display_context_parameter" : "#DATETIMEENTRY(dd-MM-yy),#DATETIMEDISPLAY(dd-MM-yy)"
+                      "display_context_parameter" : "#DATETIMEENTRY(MM-yyyy),#DATETIMEDISPLAY(MM-yyyy)"
                     }, {
                       "metadata" : false,
                       "id" : "DateTimeField",
@@ -896,7 +932,7 @@
                       "complexACLs" : [ ],
                       "order" : null,
                       "show_condition" : null,
-                      "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm)"
+                      "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd),#DATETIMEDISPLAY(yyyy-MM-dd)"
                     }, {
                       "metadata" : false,
                       "id" : "StandardDate",
@@ -979,9 +1015,9 @@
             "show_condition" : null,
             "display_context_parameter" : null
           },
-          "order" : 12,
+          "order" : 13,
           "show_condition" : null,
-          "display_context_parameter" : null
+          "display_context_parameter" : "#TABLE(DateField)"
         } ],
         "show_condition" : null
       } ]

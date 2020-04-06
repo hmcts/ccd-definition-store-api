@@ -44,7 +44,7 @@
         "label" : "Formatted Date",
         "order" : 3,
         "role" : null,
-        "display_context_parameter" : "#DATETIMEENTRY(dd-MM-yy)"
+        "display_context_parameter" : "#DATETIMEENTRY(ddMMyy)"
       }, {
         "case_field_id" : "DateTimeField",
         "case_field_element_path" : null,

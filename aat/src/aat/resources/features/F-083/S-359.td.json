@@ -51,7 +51,7 @@
         "label" : "Formatted DateTime",
         "order" : 4,
         "role" : null,
-        "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd'T'HH:mm)"
+        "display_context_parameter" : "#DATETIMEENTRY(yyyy-MM-dd'T'HH:mm:ss)"
       }, {
         "case_field_id" : "StandardDate",
         "case_field_element_path" : null,
@@ -92,6 +92,20 @@
         "case_field_element_path" : null,
         "label" : "Collection Complex DateTime",
         "order" : 10,
+        "role" : null,
+        "display_context_parameter" : null
+      }, {
+        "case_field_id" : "ComplexDateTime",
+        "case_field_element_path" : "DateField",
+        "label" : "Complex DateTime",
+        "order" : 11,
+        "role" : null,
+        "display_context_parameter" : null
+      }, {
+        "case_field_id" : "CollectionComplexDateTime",
+        "case_field_element_path" : "NestedComplex.DateTimeField",
+        "label" : "Collection Complex DateTime",
+        "order" : 12,
         "role" : null,
         "display_context_parameter" : null
       } ]
