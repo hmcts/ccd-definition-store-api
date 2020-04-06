@@ -30,6 +30,7 @@
         "label" : "Search `Text` field",
         "order" : 1,
         "role" : null,
+        "show_condition": null,
         "display_context_parameter" : null
       }, {
         "case_field_id" : "[LAST_STATE_MODIFIED_DATE]",
@@ -37,6 +38,7 @@
         "label" : "Last State Modified Date",
         "order" : 2,
         "role" : null,
+        "show_condition": null,
         "display_context_parameter" : null
       } ]
     }

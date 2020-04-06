@@ -11,7 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -24,6 +26,9 @@ public class SearchInputLayoutParserTest {
 
     private SearchInputLayoutParser classUnderTest;
     private Map<String, DefinitionSheet> definitionSheets;
+
+    @Mock
+    private ShowConditionParser showConditionParser;
 
     @BeforeEach
     public void setup() {
@@ -39,7 +44,7 @@ public class SearchInputLayoutParserTest {
         parseContext.registerCaseFieldForCaseType(CASE_TYPE_ID, caseFieldEntity);
 
         definitionSheets = new HashMap<>();
-        classUnderTest = new SearchInputLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry());
+        classUnderTest = new SearchInputLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
     }
 
     @Test
