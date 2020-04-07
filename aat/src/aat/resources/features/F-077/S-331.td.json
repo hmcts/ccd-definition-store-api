@@ -1,0 +1,227 @@
+{
+	"_guid_": "S-331",
+	"_extends_": "F-077_Test_Base_Data",
+	"title": "Should return all valid base types",
+	"specs": [
+		"an active profile in CCD",
+		"has the 200 OK code",
+		"contains a list of all the base type data structures"
+	],
+	"expectedResponse": {
+		"_extends_": "Common_200_Response",
+		"headers": {
+			"Content-Encoding": "gzip",
+			"Content-Length": "[[ANY_INTEGER_NOT_NULLABLE]]",
+			"Content-Type": "application/json",
+			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+		},
+		"body": {
+			"arrayInMap": [
+				{
+					"__operator__": "equivalent",
+					"__ordering__": "unordered"
+				},
+				{
+					"id": "Text",
+					"type": "Text",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "Number",
+					"type": "Number",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "Email",
+					"type": "Email",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "YesOrNo",
+					"type": "YesOrNo",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "Date",
+					"type": "Date",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "FixedList",
+					"type": "FixedList",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "Postcode",
+					"type": "Postcode",
+					"min": null,
+					"max": null,
+					"regular_expression": "^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$",
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "MoneyGBP",
+					"type": "MoneyGBP",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "PhoneUK",
+					"type": "PhoneUK",
+					"min": null,
+					"max": null,
+					"regular_expression": "^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$",
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "TextArea",
+					"type": "TextArea",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "Complex",
+					"type": "Complex",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "Collection",
+					"type": "Collection",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "MultiSelectList",
+					"type": "MultiSelectList",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "Document",
+					"type": "Document",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "Label",
+					"type": "Label",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "DateTime",
+					"type": "DateTime",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "CasePaymentHistoryViewer",
+					"type": "CasePaymentHistoryViewer",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "FixedRadioList",
+					"type": "FixedRadioList",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "CaseHistoryViewer",
+					"type": "CaseHistoryViewer",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				},
+				{
+					"id": "DynamicList",
+					"type": "DynamicList",
+					"min": null,
+					"max": null,
+					"regular_expression": null,
+					"fixed_list_items": [],
+					"complex_fields": [],
+					"collection_field_type": null
+				}
+			]
+		}
+	}
+}

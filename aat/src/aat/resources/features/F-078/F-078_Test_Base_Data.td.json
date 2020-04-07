@@ -1,0 +1,20 @@
+{
+  "_guid_": "F-078_Test_Base_Data",
+  "productName": "CCD Definition Store",
+  "operationName": "Gets The Current Version Of A Case Type Schema",
+  "method": "GET",
+  "uri": "/api/data/case-type/{ctid}/version",
+  "user": {
+    "_extends_": "Common_User_For_Request"
+  },
+  "request": {
+    "headers": {
+      "Authorization": "[[DYNAMIC]]",
+      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Content-Type": "application/json"
+    },
+    "pathVariables": {
+      "ctid": "BEFTA_CASETYPE_2_1"
+    }
+  }
+}

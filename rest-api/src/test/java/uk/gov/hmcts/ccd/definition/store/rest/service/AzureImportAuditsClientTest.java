@@ -1,41 +1,44 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-
-import com.microsoft.azure.storage.ResultSegment;
-import com.microsoft.azure.storage.StorageException;
-import com.microsoft.azure.storage.blob.BlobProperties;
-import com.microsoft.azure.storage.blob.CloudBlobContainer;
-import com.microsoft.azure.storage.blob.CloudBlockBlob;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
-import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
-
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import com.microsoft.azure.storage.ResultSegment;
+import com.microsoft.azure.storage.StorageException;
+import com.microsoft.azure.storage.blob.BlobProperties;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class, BlobProperties.class})
 public class AzureImportAuditsClientTest {
 
     public static final int IMPORT_AUDITS_GET_LIMIT = 5;
+
     private AzureImportAuditsClient subject;
 
     private CloudBlockBlob b11;
@@ -56,10 +59,13 @@ public class AzureImportAuditsClientTest {
     private ResultSegment blobsPage2;
     private ResultSegment blobsPage3;
 
+    private ResultSegment blobsPage;
+
     @Before
     public void setUp() throws StorageException {
         final CloudBlobContainer cloudBlobContainer = mock(CloudBlobContainer.class);
         final ApplicationParams applicationParams = mock(ApplicationParams.class);
+
         b11 = mock(CloudBlockBlob.class);
         b12 = mock(CloudBlockBlob.class);
         b21 = mock(CloudBlockBlob.class);
@@ -80,6 +86,7 @@ public class AzureImportAuditsClientTest {
 
         when(applicationParams.getAzureImportAuditsGetLimit()).thenReturn(IMPORT_AUDITS_GET_LIMIT);
         subject = new AzureImportAuditsClient(cloudBlobContainer, applicationParams);
+
         when(cloudBlobContainer.listBlobsSegmented(anyString(),
                                                    eq(true),
                                                    any(EnumSet.class),
@@ -124,6 +131,7 @@ public class AzureImportAuditsClientTest {
     }
 
     @Test
+
     public void shouldFetchAllImportAuditsInCorrectDescOrder() throws Exception {
         final List<ImportAudit> audits = subject.fetchLatestImportAudits();
         assertThat(audits.size(), is(5));
