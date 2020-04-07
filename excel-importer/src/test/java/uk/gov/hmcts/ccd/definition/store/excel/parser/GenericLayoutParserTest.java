@@ -581,7 +581,7 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item);
         definitionSheets.put(SEARCH_RESULT_FIELD.getName(), sheet);
 
-        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry);
+        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
         ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
 
         GenericLayoutEntity entity = parseResult.getAllResults().get(0);

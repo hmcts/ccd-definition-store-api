@@ -5,7 +5,7 @@ import javax.persistence.MappedSuperclass;
 import java.util.Optional;
 
 @MappedSuperclass
-public class InputCaseFieldEntity extends GenericLayoutEntity {
+public abstract class InputCaseFieldEntity extends GenericLayoutEntity {
 
     @Column(name = "show_condition")
     private String showCondition;
