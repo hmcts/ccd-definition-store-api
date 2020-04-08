@@ -5,6 +5,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.google.common.collect.Lists;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -73,7 +74,7 @@ class GenericLayoutEntityOrderValidatorImplTest {
             entity.setCaseType(caseType);
             entity.setOrder(9);
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -88,7 +89,7 @@ class GenericLayoutEntityOrderValidatorImplTest {
             entity.setCaseType(caseType);
             entity.setOrder(-1);
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),

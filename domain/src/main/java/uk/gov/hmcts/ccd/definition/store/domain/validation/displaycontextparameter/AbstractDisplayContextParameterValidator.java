@@ -6,7 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayC
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -44,7 +44,8 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
 
     protected abstract String getSheetName(final T entity);
 
-    public ValidationResult validate(T entity) {
+    public ValidationResult validate(T entity, List<T> allGenericLayouts) {
+
         final ValidationResult validationResult = new ValidationResult();
         final String displayContextParameter = getDisplayContextParameter(entity);
 

@@ -36,7 +36,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends 
     @Override
     public ValidationResult validate(EventCaseFieldEntity entity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
-        return shouldSkipValidatorForEntity(entity) ? new ValidationResult() : super.validate(entity);
+        return shouldSkipValidatorForEntity(entity) ? new ValidationResult() : super.validate(entity, Collections.EMPTY_LIST);
     }
 
     @Override
