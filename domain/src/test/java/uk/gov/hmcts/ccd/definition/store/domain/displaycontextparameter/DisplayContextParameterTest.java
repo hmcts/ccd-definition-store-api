@@ -23,6 +23,18 @@ public class DisplayContextParameterTest {
     }
 
     @Test
+    void shouldGetDisplayContextParameterForValidInputForMultipleParameters() {
+        List<DisplayContextParameter> result = DisplayContextParameter.getDisplayContextParametersFor(DATE_TIME_ENTRY_PARAMETER + ", " + DATE_TIME_ENTRY_PARAMETER );
+
+        assertAll(
+            () -> assertThat(result.get(0).getType(), is(DisplayContextParameterType.DATETIMEENTRY)),
+            () -> assertThat(result.get(0).getValue(), is("HHmmss")),
+            () -> assertThat(result.get(1).getType(), is(DisplayContextParameterType.DATETIMEENTRY)),
+            () -> assertThat(result.get(1).getValue(), is("HHmmss"))
+        );
+    }
+
+    @Test
     void shouldNotReturnDisplayContextParameterForInvalidType() {
         List<DisplayContextParameter> result = DisplayContextParameter.getDisplayContextParametersFor("#INVALID(123)");
 
