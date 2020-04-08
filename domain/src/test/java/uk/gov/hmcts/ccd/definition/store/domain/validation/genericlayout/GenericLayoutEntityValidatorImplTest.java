@@ -5,6 +5,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.google.common.collect.Lists;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -73,7 +74,7 @@ class GenericLayoutEntityValidatorImplTest {
 //            System.out.println("testing... " + entity.getClass().getSimpleName());
             entity.setCaseField(caseField);
             entity.setCaseType(caseType);
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -85,7 +86,7 @@ class GenericLayoutEntityValidatorImplTest {
         void shouldFailWhenCaseTypeIsEmpty(GenericLayoutEntity entity) {
             entity.setLabel("Label");
             entity.setCaseField(caseField);
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -100,7 +101,7 @@ class GenericLayoutEntityValidatorImplTest {
         void shouldFailWhenCaseFieldIsEmpty(GenericLayoutEntity entity) {
             entity.setLabel("Label");
             entity.setCaseType(caseType);
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -114,7 +115,7 @@ class GenericLayoutEntityValidatorImplTest {
         @ArgumentsSource(EntityArgumentsProvider.class)
         void shouldFailWhenBothCaseTypeAndCaseFieldAreEmpty(GenericLayoutEntity entity) {
             entity.setLabel("Label");
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),

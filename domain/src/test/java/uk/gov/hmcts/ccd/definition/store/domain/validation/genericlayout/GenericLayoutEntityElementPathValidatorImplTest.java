@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
+import com.google.common.collect.Lists;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -139,7 +140,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             caseType.addCaseField(complexCaseField);
             entity.setCaseFieldElementPath(path);
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -156,7 +157,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             caseType.addCaseField(collectionCaseField);
             entity.setCaseFieldElementPath(path);
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(true))
@@ -170,7 +171,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             entity.setCaseType(caseType);
             entity.setCaseFieldElementPath("SomeNonExistingPath");
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
@@ -190,7 +191,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             caseType.addCaseField(collectionComplexCaseField);
             entity.setCaseFieldElementPath("SomeNonExistingPath");
 
-            final ValidationResult result = validator.validate(entity);
+            final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));
 
             assertAll(
                 () -> assertThat(result.isValid(), is(false)),
