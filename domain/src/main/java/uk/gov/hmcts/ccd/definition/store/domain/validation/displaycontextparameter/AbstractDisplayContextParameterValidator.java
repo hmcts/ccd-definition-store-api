@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractDisplayContextParameterValidator<T extends Serializable> {
 
@@ -71,6 +72,11 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     private void validateDisplayContextParameter(final T entity, final ValidationResult validationResult) {
         List<DisplayContextParameter> displayContextParameterList =
             DisplayContextParameter.getDisplayContextParametersFor(getDisplayContextParameter(entity));
+        if (hasDuplicateTypes(displayContextParameterList)) {
+            validationResult.addError(invalidValueError(entity));
+            return;
+        }
+
         displayContextParameterList.forEach(displayContextParameter -> {
             if (displayContextParameter.getValue() != null) {
                 validateDisplayContextParameterType(displayContextParameter, entity, validationResult);
@@ -79,14 +85,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
                 }
                 validateDisplayContextParameterValue(displayContextParameter, entity, validationResult);
             } else {
-                validationResult.addError(
-                    new SimpleValidationError<>(String.format(
-                        ERROR_MESSAGE_INVALID_VALUE,
-                        getDisplayContextParameter(entity),
-                        getCaseFieldReference(entity),
-                        getSheetName(entity)
-                    ), entity)
-                );
+                validationResult.addError(invalidValueError(entity));
             }
 
         });
@@ -111,6 +110,13 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
         } catch (Exception e) {
             validationResult.addError(invalidValueError(entity));
         }
+    }
+
+    private boolean hasDuplicateTypes(List<DisplayContextParameter> displayContextParameters) {
+        return displayContextParameters.size() != displayContextParameters.stream()
+            .map(DisplayContextParameter::getType)
+            .collect(Collectors.toSet())
+            .size();
     }
 
     private String getFieldType(T entity) {
