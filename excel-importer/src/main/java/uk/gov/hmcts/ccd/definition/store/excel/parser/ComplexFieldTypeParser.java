@@ -114,6 +114,7 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         }
         complexField.setOrder(order);
         complexField.setShowCondition(parseShowCondition(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
+        complexField.setDisplayContextParameter(definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
 
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(complexField, definitionDataItem);
 

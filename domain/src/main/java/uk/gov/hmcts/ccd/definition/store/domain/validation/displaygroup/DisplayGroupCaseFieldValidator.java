@@ -6,5 +6,4 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseField
 public interface DisplayGroupCaseFieldValidator {
 
     ValidationResult validate(DisplayGroupCaseFieldEntity entity);
-
 }
