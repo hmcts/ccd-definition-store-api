@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class DateTimeFormatParserTest {
 
     private DateTimeFormatParser parser;
+    private static final Pattern DEFAULT_PATTERN = Pattern.compile("VzOXxZ");
 
     @BeforeEach
     void setUp() {
@@ -25,28 +26,28 @@ public class DateTimeFormatParserTest {
     @ParameterizedTest
     @ArgumentsSource(ValidDateTimeFormatArgumentsProvider.class)
     void shouldParseValidFormat(String dateTimeFormat) throws InvalidDateTimeFormatException {
-        parser.parseDateTimeFormat(dateTimeFormat);
+        parser.parseDateTimeFormat(dateTimeFormat, DEFAULT_PATTERN);
     }
 
     @ParameterizedTest
     @ArgumentsSource(InvalidDateTimeFormatArgumentsProvider.class)
     void shouldFailToParseInvalidFormat(String dateTimeFormat) {
         assertThrows(InvalidDateTimeFormatException.class, () -> {
-            parser.parseDateTimeFormat(dateTimeFormat);
+            parser.parseDateTimeFormat(dateTimeFormat, DEFAULT_PATTERN);
         });
     }
 
     @Test
     void shouldParseValidFormatWithProvidedPattern() throws InvalidDateTimeFormatException {
         final String dateTimeFormat = "yyyyMMddHHmmssSSS";
-        final Pattern pattern = Pattern.compile("[yMdHmsS]+");
+        final Pattern pattern = Pattern.compile("VzOXxZ");
         parser.parseDateTimeFormat(dateTimeFormat, pattern);
     }
 
     @Test
     void shouldFailIfValidFormatDoesNotMeetProvidedPattern() {
-        final String dateTimeFormat = "HHmmss";
-        final Pattern pattern = Pattern.compile("[a]+");
+        final String dateTimeFormat = "HHmmss V";
+        final Pattern pattern = Pattern.compile("VzOXxZ");
         assertThrows(InvalidDateTimeFormatException.class, () -> {
             parser.parseDateTimeFormat(dateTimeFormat, pattern);
         });

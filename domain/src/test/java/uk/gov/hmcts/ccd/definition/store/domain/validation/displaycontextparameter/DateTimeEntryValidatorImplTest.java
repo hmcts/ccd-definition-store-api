@@ -13,6 +13,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE_TIME;
 
 public class DateTimeEntryValidatorImplTest {
 
@@ -36,12 +38,18 @@ public class DateTimeEntryValidatorImplTest {
 
     @Test
     void shouldValidateValidFormat() throws Exception {
-        validator.validate("yyyy-MM-dd'T'HH:mm:ss");
+        validator.validate("yyyy-MM-dd'T'HH:mm:ss", BASE_DATE_TIME);
+    }
+
+    @Test
+    void shouldErrorWhenTimeIsConfiguredInDcpForDateField() throws Exception {
+        doThrow(InvalidDateTimeFormatException.class).when(dateTimeFormatParser).parseDateTimeFormat(any(), any());
+        assertThrows(InvalidDateTimeFormatException.class, () -> validator.validate("yyyy-MM-dd'T'HH:mm:ss", BASE_DATE));
     }
 
     @Test
     void shouldErrorWhenDateTimeFormatParserErrors() throws Exception {
         doThrow(InvalidDateTimeFormatException.class).when(dateTimeFormatParser).parseDateTimeFormat(any(), any());
-        assertThrows(InvalidDateTimeFormatException.class, () -> validator.validate("###"));
+        assertThrows(InvalidDateTimeFormatException.class, () -> validator.validate("###", BASE_DATE_TIME));
     }
 }

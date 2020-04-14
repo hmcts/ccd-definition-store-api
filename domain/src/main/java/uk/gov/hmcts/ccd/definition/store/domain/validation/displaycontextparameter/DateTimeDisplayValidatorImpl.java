@@ -6,6 +6,10 @@ import uk.gov.hmcts.ccd.definition.store.domain.datetime.DateTimeFormatParser;
 import uk.gov.hmcts.ccd.definition.store.domain.datetime.InvalidDateTimeFormatException;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 
+import java.util.regex.*;
+
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE;
+
 @Component
 public class DateTimeDisplayValidatorImpl implements DisplayContextParameterValidator {
 
@@ -22,7 +26,8 @@ public class DateTimeDisplayValidatorImpl implements DisplayContextParameterVali
     }
 
     @Override
-    public void validate(final String parameterValue) throws InvalidDateTimeFormatException {
-        dateTimeFormatParser.parseDateTimeFormat(parameterValue);
+    public void validate(final String parameterValue, String fieldType) throws InvalidDateTimeFormatException {
+        Pattern pattern = ((fieldType.equals(BASE_DATE)) ? NOT_ALLOWED_CHARACTERS_PATTERN_DATE : NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME);
+        dateTimeFormatParser.parseDateTimeFormat(parameterValue, pattern);
     }
 }

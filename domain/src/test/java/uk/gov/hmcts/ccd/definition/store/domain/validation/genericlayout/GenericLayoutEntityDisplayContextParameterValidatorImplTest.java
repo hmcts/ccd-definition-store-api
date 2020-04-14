@@ -74,7 +74,6 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     void shouldValidateInputEntityWithDateTimeEntryDisplayContextParameter(GenericLayoutEntity entity) {
         entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
         entity.setCaseField(caseFieldEntity());
-
         final ValidationResult result = validator.validate(entity,  Collections.emptyList());
 
         assertAll(
@@ -132,7 +131,7 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     void shouldFailValidationForInvalidDateTimeFormat(GenericLayoutEntity entity, String tab) throws Exception {
         entity.setDisplayContextParameter("#DATETIMEENTRY(0123456789)");
         entity.setCaseField(caseFieldEntity());
-        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any());
+        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
 
         final ValidationResult result = validator.validate(entity,  Collections.emptyList());
 

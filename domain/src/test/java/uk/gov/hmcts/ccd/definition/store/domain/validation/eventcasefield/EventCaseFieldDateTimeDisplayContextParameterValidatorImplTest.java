@@ -131,7 +131,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter("#DATETIMEENTRY(0123456789)");
         entity.setCaseField(caseFieldEntity());
         entity.setDisplayContext(DisplayContext.MANDATORY);
-        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any());
+        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
 
         final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
 
