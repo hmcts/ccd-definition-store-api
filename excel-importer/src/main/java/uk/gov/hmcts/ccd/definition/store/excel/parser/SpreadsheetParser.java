@@ -41,7 +41,8 @@ public class SpreadsheetParser {
         this.cellFormatter = new DataFormatter();
     }
 
-
+    @SuppressWarnings("java:S1874") // cell.getCellTypeEnum() is marked for removal and
+    // cell.getCellType() is still deprecated - so it's a loop you cannot escape until library is updated
     public Map<String, DefinitionSheet> parse(InputStream inputStream) throws IOException {
         final Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
         importWarnings = new ArrayList<>();
