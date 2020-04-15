@@ -6,4 +6,8 @@ import javax.persistence.*;
 @Entity
 public class SearchInputCaseFieldEntity extends InputCaseFieldEntity {
 
+    @Override
+    public String getSheetName() {
+        return "SearchInputFields";
+    }
 }

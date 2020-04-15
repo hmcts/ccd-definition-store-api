@@ -6,7 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportE
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,10 +20,12 @@ public class SpreadsheetValidatorTest {
 
     private SpreadsheetValidator validator = new SpreadsheetValidator();
     private Map<String, DefinitionSheet> definitionSheets;
+    private DisplayContextParameterValidator displayContextParameterValidator = new DisplayContextParameterValidator();
 
     @Before
     public void setup() {
         definitionSheets = new LinkedHashMap<>();
+        validator = new SpreadsheetValidator();
     }
 
     @Test(expected = InvalidImportException.class)
@@ -33,7 +35,7 @@ public class SpreadsheetValidatorTest {
         int rowNumber = 6;
         try {
             validator.validate(sheetName, columnName,
-                               "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
+                "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
         } catch (InvalidImportException ex) {
             String rowNumberInfo = " at row number '" + rowNumber + "'";
             assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(sheetName, columnName, 70, rowNumberInfo)));
@@ -49,7 +51,7 @@ public class SpreadsheetValidatorTest {
             validator.validate("sheet", columnName, "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
         } catch (InvalidImportException ex) {
             assertThat(ex.getMessage(), is(
-                    "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
+                "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
             throw ex;
         }
     }
@@ -62,7 +64,7 @@ public class SpreadsheetValidatorTest {
             validator.validate("sheet", columnName, "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
         } catch (InvalidImportException ex) {
             assertThat(ex.getMessage(), is(
-                    "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
+                "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
             throw ex;
         }
     }
@@ -220,6 +222,11 @@ public class SpreadsheetValidatorTest {
 
         final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
         addDataItem(sheetCT);
+
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
+        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
+        sheetCETF.addDataItem(definitionDataItem);
 
         addDefinitionSheet(SheetName.CASE_FIELD);
         addDefinitionSheet(SheetName.COMPLEX_TYPES);

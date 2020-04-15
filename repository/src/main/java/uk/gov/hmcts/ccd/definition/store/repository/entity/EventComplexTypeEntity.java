@@ -131,4 +131,5 @@ public class EventComplexTypeEntity implements Serializable {
     public void setComplexFieldType(EventCaseFieldEntity complexFieldType) {
         this.complexFieldType = complexFieldType;
     }
+
 }

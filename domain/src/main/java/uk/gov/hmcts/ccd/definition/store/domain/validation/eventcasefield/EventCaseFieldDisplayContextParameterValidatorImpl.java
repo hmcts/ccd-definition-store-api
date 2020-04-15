@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
@@ -23,6 +25,11 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
     public ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
         ValidationResult validationResult = new ValidationResult();
+
+        if (Strings.isNullOrEmpty(eventCaseFieldEntity.getDisplayContextParameter()) || isDisplayContextParameterDateTimeType(eventCaseFieldEntity)) {
+            return validationResult;
+        }
+
         if (isFieldTypeNotCollection(eventCaseFieldEntity)) {
 
             validationResult.addError(new ValidationError("Display context parameter is not of type collection") {
@@ -56,6 +63,11 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
                 });
             }
         }
+    }
+
+    private boolean isDisplayContextParameterDateTimeType(EventCaseFieldEntity entity) {
+        return DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter())
+            .map(t -> t == DisplayContextParameterType.DATETIMEDISPLAY || t == DisplayContextParameterType.DATETIMEENTRY).orElse(false);
     }
 
     private boolean isFieldTypeNotTableOrList(EventCaseFieldEntity eventCaseFieldEntity) {

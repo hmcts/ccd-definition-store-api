@@ -139,6 +139,7 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         layoutEntity.setCaseFieldElementPath(definition.getString(LIST_ELEMENT_CODE));
         layoutEntity.setLabel(definition.getString(ColumnName.LABEL));
         layoutEntity.setOrder(definition.getInteger(ColumnName.DISPLAY_ORDER));
+        layoutEntity.setDisplayContextParameter(definition.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
         final String userRole = definition.getString(USER_ROLE);
         if (StringUtils.isNotEmpty(userRole)) {
             layoutEntity.setUserRole(getRoleEntity(layoutEntity, definition.getSheetName(), userRole));

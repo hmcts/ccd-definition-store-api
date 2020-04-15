@@ -13,7 +13,10 @@ import static java.util.stream.Collectors.toList;
  * name of the definition data, e.g. Jurisdiction, CaseType; ii) a list of {@link DefinitionDataItem}s, one per each row
  * of data.
  */
+
 public class DefinitionSheet {
+
+
     private String name;
     private final List<DefinitionDataItem> dataItems = new ArrayList<>();
 
@@ -48,5 +51,9 @@ public class DefinitionSheet {
 
     public Map<String, List<DefinitionDataItem>> groupDataItemsByCaseType() {
         return dataItems.stream().collect(groupingBy(DefinitionDataItem::getCaseTypeId));
+    }
+
+    public static boolean isDisplayContextParameter(String item, DisplayContextParameter.DisplayContextParameterValues displayContextParameterValue) {
+        return item.startsWith(displayContextParameterValue.toString());
     }
 }
