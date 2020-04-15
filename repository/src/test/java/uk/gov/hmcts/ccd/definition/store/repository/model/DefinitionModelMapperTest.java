@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 class DefinitionModelMapperTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private final TypeReference<Map<String, JsonNode>> stringJsonMapType = new TypeReference<Map<String, JsonNode>>() {};
 
     @Mock
     private DefinitionEntity definitionEntity;
@@ -69,7 +68,7 @@ class DefinitionModelMapperTest {
             () -> assertThat(entity.getDescription(), is(definition.getDescription())),
             () -> assertThat(entity.getVersion(), is(definition.getVersion())),
             () -> assertThat(entity.getStatus(), is(definition.getStatus())),
-            () -> assertThat(entity.getData(), is(mapper.convertValue(definition.getData(), JsonNode.class))),
+            () -> assertThat(entity.getData(), is(JacksonUtils.convertValueJsonNode(definition.getData()))),
             () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
             () -> assertThat(entity.getCreatedAt(), is(nullValue())),
             () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
@@ -106,7 +105,7 @@ class DefinitionModelMapperTest {
             () -> assertThat(entity.getDescription(), is(definition.getDescription())),
             () -> assertThat(entity.getVersion(), is(nullValue())),
             () -> assertThat(entity.getStatus(), is(definition.getStatus())),
-            () -> assertThat(entity.getData(), is(mapper.convertValue(definition.getData(), JsonNode.class))),
+            () -> assertThat(entity.getData(), is(JacksonUtils.convertValueJsonNode(definition.getData()))),
             () -> assertThat(entity.getAuthor(), is(definition.getAuthor())),
             () -> assertThat(entity.getCreatedAt(), is(nullValue())),
             () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
@@ -145,7 +144,7 @@ class DefinitionModelMapperTest {
         assertThat(model.getDescription(), is(definitionEntity.getDescription()));
         assertThat(model.getVersion(), is(definitionEntity.getVersion()));
         assertThat(model.getStatus(), is(definitionEntity.getStatus()));
-        Map<String, JsonNode> data = mapper.convertValue(definitionEntity.getData(), stringJsonMapType);
+        Map<String, JsonNode> data = JacksonUtils.convertValue(definitionEntity.getData());
         assertThat(model.getData(), is(data));
         assertThat(model.getAuthor(), is(definitionEntity.getAuthor()));
         assertThat(model.getCreatedAt(), is(definitionEntity.getCreatedAt()));
