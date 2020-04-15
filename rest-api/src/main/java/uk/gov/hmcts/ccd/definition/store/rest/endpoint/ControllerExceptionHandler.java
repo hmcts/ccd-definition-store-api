@@ -1,6 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import com.google.common.collect.ImmutableMap;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -8,18 +11,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
-import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.DuplicateFoundException;
-import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
+
+import com.google.common.collect.ImmutableMap;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
+import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
+import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.DuplicateFoundException;
 
 @RestControllerAdvice
 class ControllerExceptionHandler {
@@ -75,6 +77,13 @@ class ControllerExceptionHandler {
         return getMessage(e, "ElasticSearch initialisation exception:%s");
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(code = BAD_REQUEST)
+    @ResponseBody
+    Map<String, String> handleAnyOtherException(Exception e) {
+        LOG.error("Handling an unexpected exception.", e);
+        return getMessage(e, e.getClass() + "%s");
+    }
 
     private Map<String, String> getMessage(Throwable e, String message) {
         return ImmutableMap.of("message", String.format(message, e.getMessage()));
