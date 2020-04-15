@@ -1,0 +1,22 @@
+jar {
+    enabled = true
+    manifest {
+        attributes 'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+    }
+    
+}
+
+bootJar {
+    enabled = false
+}
+
+ext {
+    limits = [  // A lot of the model objects are not covered
+                'class' : 57
+    ]
+}
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:2.10.3"
+}
