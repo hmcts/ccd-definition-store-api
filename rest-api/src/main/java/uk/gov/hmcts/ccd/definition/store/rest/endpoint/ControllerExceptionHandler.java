@@ -77,14 +77,6 @@ class ControllerExceptionHandler {
         return getMessage(e, "ElasticSearch initialisation exception:%s");
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(code = BAD_REQUEST)
-    @ResponseBody
-    Map<String, String> handleAnyOtherException(Exception e) {
-        LOG.error("Handling an unexpected exception.", e);
-        return getMessage(e, e.getClass() + "%s");
-    }
-
     private Map<String, String> getMessage(Throwable e, String message) {
         return ImmutableMap.of("message", String.format(message, e.getMessage()));
     }
