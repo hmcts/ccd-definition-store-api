@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
 import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
 class EntityToResponseDTOMapperTest {
@@ -740,9 +742,7 @@ class EntityToResponseDTOMapperTest {
         private WebhookEntity webHook(String url, Integer... retriesTimeouts) {
             WebhookEntity webhookEntity = new WebhookEntity();
             webhookEntity.setUrl(url);
-            for (Integer timeout : retriesTimeouts) {
-                webhookEntity.addTimeout(timeout);
-            }
+            webhookEntity.setTimeouts(Lists.newArrayList(retriesTimeouts));
             return webhookEntity;
         }
 
@@ -1011,21 +1011,36 @@ class EntityToResponseDTOMapperTest {
 
             FieldTypeListItemEntity fieldTypeListItemEntity1 = new FieldTypeListItemEntity();
             fieldTypeListItemEntity1.setLabel("label1");
+            fieldTypeListItemEntity1.setOrder(3);
             FieldTypeListItemEntity fieldTypeListItemEntity2 = new FieldTypeListItemEntity();
             fieldTypeListItemEntity2.setLabel("label2");
+            fieldTypeListItemEntity2.setOrder(2);
             FieldTypeListItemEntity fieldTypeListItemEntity3 = new FieldTypeListItemEntity();
             fieldTypeListItemEntity3.setLabel("label3");
+            fieldTypeListItemEntity3.setOrder(1);
+            FieldTypeListItemEntity fieldTypeListItemEntity4 = new FieldTypeListItemEntity();
+            fieldTypeListItemEntity4.setLabel("label4");
+            fieldTypeListItemEntity4.setOrder(null);
+            FieldTypeListItemEntity fieldTypeListItemEntity5 = new FieldTypeListItemEntity();
+            fieldTypeListItemEntity5.setLabel("label5");
+            fieldTypeListItemEntity5.setOrder(null);
             FixedListItem fixedListItem1 = new FixedListItem();
             fixedListItem1.setLabel("label1");
             FixedListItem fixedListItem2 = new FixedListItem();
             fixedListItem2.setLabel("label2");
             FixedListItem fixedListItem3 = new FixedListItem();
             fixedListItem3.setLabel("label3");
+            FixedListItem fixedListItem4 = new FixedListItem();
+            fixedListItem4.setLabel("label4");
+            FixedListItem fixedListItem5 = new FixedListItem();
+            fixedListItem5.setLabel("label5");
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity1)).thenReturn(fixedListItem1);
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity2)).thenReturn(fixedListItem2);
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity3)).thenReturn(fixedListItem3);
+            when(spyOnClassUnderTest.map(fieldTypeListItemEntity4)).thenReturn(fixedListItem4);
+            when(spyOnClassUnderTest.map(fieldTypeListItemEntity5)).thenReturn(fixedListItem5);
             fieldTypeEntity.addListItems(
-                asList(fieldTypeListItemEntity1, fieldTypeListItemEntity2, fieldTypeListItemEntity3));
+                asList(fieldTypeListItemEntity1, fieldTypeListItemEntity4, fieldTypeListItemEntity5, fieldTypeListItemEntity2, fieldTypeListItemEntity3));
 
             FieldTypeEntity collectionFieldTypeEntity = fieldTypeEntity("CollectionFieldType");
             FieldType collectionFieldType = new FieldType();
@@ -1039,9 +1054,11 @@ class EntityToResponseDTOMapperTest {
             assertEquals(fieldTypeEntity.getRegularExpression(), fieldType.getRegularExpression());
 
             assertEquals(fieldTypeEntity.getListItems().size(), fieldType.getFixedListItems().size());
-            assertEquals(fieldType.getFixedListItems().get(0).getLabel(), fixedListItem1.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(0).getLabel(), fixedListItem3.getLabel());
             assertEquals(fieldType.getFixedListItems().get(1).getLabel(), fixedListItem2.getLabel());
-            assertEquals(fieldType.getFixedListItems().get(2).getLabel(), fixedListItem3.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(2).getLabel(), fixedListItem1.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(3).getLabel(), fixedListItem4.getLabel());
+            assertEquals(fieldType.getFixedListItems().get(4).getLabel(), fixedListItem5.getLabel());
 
             assertEquals(fieldTypeEntity.getCollectionFieldType(), fieldType.getCollectionFieldType());
 
@@ -1226,6 +1243,7 @@ class EntityToResponseDTOMapperTest {
         void testMapSearchResultCaseFieldEntity() {
             UserRoleEntity userRoleEntity = new UserRoleEntity();
             userRoleEntity.setReference("role1");
+            SortOrder sortOrder = new SortOrder(2, "ASC");
             SearchResultCaseFieldEntity searchResultCaseFieldEntity = new SearchResultCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
@@ -1234,6 +1252,7 @@ class EntityToResponseDTOMapperTest {
             searchResultCaseFieldEntity.setLabel("Label");
             searchResultCaseFieldEntity.setOrder(69);
             searchResultCaseFieldEntity.setUserRole(userRoleEntity);
+            searchResultCaseFieldEntity.setSortOrder(sortOrder);
 
             SearchResultsField searchResultsField = spyOnClassUnderTest.map(searchResultCaseFieldEntity);
 
@@ -1244,6 +1263,9 @@ class EntityToResponseDTOMapperTest {
                          searchResultsField.getCaseFieldId());
             assertThat(searchResultsField.isMetadata(), is(false));
             assertEquals(userRoleEntity.getReference(), searchResultsField.getRole());
+
+            assertEquals(sortOrder.getDirection(), searchResultsField.getSortOrder().getDirection());
+            assertEquals(sortOrder.getPriority(), searchResultsField.getSortOrder().getPriority());
         }
 
         @Test
@@ -1299,6 +1321,7 @@ class EntityToResponseDTOMapperTest {
         void testMapWorkBasketCaseFieldEntity() {
             UserRoleEntity userRoleEntity = new UserRoleEntity();
             userRoleEntity.setReference("role1");
+            SortOrder sortOrder = new SortOrder(2, "ASC");
             WorkBasketCaseFieldEntity workBasketCaseFieldEntity = new WorkBasketCaseFieldEntity();
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             caseFieldEntity.setReference("CaseFieldReference");
@@ -1307,6 +1330,7 @@ class EntityToResponseDTOMapperTest {
             workBasketCaseFieldEntity.setLabel("Label");
             workBasketCaseFieldEntity.setOrder(69);
             workBasketCaseFieldEntity.setUserRole(userRoleEntity);
+            workBasketCaseFieldEntity.setSortOrder(sortOrder);
 
             WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
 
@@ -1315,6 +1339,9 @@ class EntityToResponseDTOMapperTest {
             assertEquals(workBasketCaseFieldEntity.getLabel(), workBasketResult.getLabel());
             assertEquals(workBasketCaseFieldEntity.getCaseField().getReference(), workBasketResult.getCaseFieldId());
             assertEquals(userRoleEntity.getReference(), workBasketResult.getRole());
+
+            assertEquals(sortOrder.getDirection(), workBasketResult.getSortOrder().getDirection());
+            assertEquals(sortOrder.getPriority(), workBasketResult.getSortOrder().getPriority());
         }
 
         @Test
@@ -1371,6 +1398,39 @@ class EntityToResponseDTOMapperTest {
             caseTypeLiteEntity.setName("Name");
             caseTypeLiteEntity.addState(new StateEntity());
             return caseTypeLiteEntity;
+        }
+    }
+
+    @Nested
+    @DisplayName("Should return a JurisdictionUiConfig model whose fields match those in the JurisdictionUiConfigEntity")
+    class MapJurisdictionUiConfigEntityTests {
+
+        @Test
+        void testMapJurisdictionUiConfigEntity() {
+        	JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
+        	jurisdictionEntity.setReference("Reference");
+        	jurisdictionEntity.setName("Name");
+            
+        	JurisdictionUiConfigEntity jurisdictionUiConfigEntity = new JurisdictionUiConfigEntity();
+        	jurisdictionUiConfigEntity.setShuttered(true);
+        	jurisdictionUiConfigEntity.setJurisdiction(jurisdictionEntity);
+
+        	JurisdictionUiConfig jurisdictionUiConfig = classUnderTest.map(jurisdictionUiConfigEntity);
+
+        	assertEquals(jurisdictionUiConfig.getShuttered(), jurisdictionUiConfigEntity.getShuttered());
+            assertEquals(jurisdictionUiConfig.getName(), jurisdictionUiConfigEntity.getJurisdiction().getName());
+            assertEquals(jurisdictionUiConfig.getId(), jurisdictionUiConfigEntity.getJurisdiction().getReference());
+        }
+
+        @Test
+        void testMapEmptyJurisdictionUiConfigEntity() {
+        	JurisdictionUiConfigEntity jurisdictionUiConfigEntity = new JurisdictionUiConfigEntity();
+
+        	JurisdictionUiConfig jurisdictionUiConfig = classUnderTest.map(jurisdictionUiConfigEntity);
+
+            assertNull(jurisdictionUiConfig.getId());
+            assertNull(jurisdictionUiConfig.getName());
+            assertNull(jurisdictionUiConfig.getShuttered());
         }
     }
 
@@ -1453,6 +1513,41 @@ class EntityToResponseDTOMapperTest {
                 );
             }
         };
+    }
+
+    @Nested
+    @DisplayName("Should return `a Banner which matches the BannerEntity")
+    class MapBannerEntityTests {
+
+        @Test
+        void testMapBannerEntity() {
+
+            BannerEntity bannerEntity = new BannerEntity();
+            bannerEntity.setBannerUrlText("Click here to see it.>>>");
+            bannerEntity.setBannerEnabled(true);
+            bannerEntity.setBannerUrl("http://localhost:3451/test");
+            bannerEntity.setBannerDescription("Test Description");
+
+            Banner banner = classUnderTest.map(bannerEntity);
+
+            assertEquals(bannerEntity.getBannerDescription(), banner.getBannerDescription());
+            assertEquals(bannerEntity.getBannerEnabled(), banner.getBannerEnabled());
+            assertEquals(bannerEntity.getBannerUrl(), banner.getBannerUrl());
+            assertEquals(bannerEntity.getBannerUrlText(), banner.getBannerUrlText());
+        }
+
+        @Test
+        void testMapEmptyBannerEntity() {
+
+            BannerEntity bannerEntity = new BannerEntity();
+
+            Banner banner = classUnderTest.map(bannerEntity);
+
+            assertNull(banner.getBannerDescription());
+            assertNull(banner.getBannerEnabled());
+            assertNull(banner.getBannerUrl());
+            assertNull(banner.getBannerUrlText());
+        }
     }
 
 }

@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description = "")
-public class FixedListItem {
+public class FixedListItem implements Orderable {
 
     private String code = null;
     private String label = null;
@@ -42,6 +42,7 @@ public class FixedListItem {
     }
 
     @JsonProperty("order")
+    @Override
     public Integer getOrder() {
         return order;
     }

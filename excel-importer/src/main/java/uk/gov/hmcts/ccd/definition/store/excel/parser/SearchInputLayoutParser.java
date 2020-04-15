@@ -42,4 +42,10 @@ public class SearchInputLayoutParser extends GenericLayoutParser {
     protected GenericLayoutEntity createLayoutCaseFieldEntity() {
         return new SearchInputCaseFieldEntity();
     }
+
+    @Override
+    protected void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrder) {
+        throw new MapperException(String.format("Results ordering is not supported in worksheet '%s' for "
+            + "caseType '%s'", SheetName.SEARCH_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()));
+    }
 }

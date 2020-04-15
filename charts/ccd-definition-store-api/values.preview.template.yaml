@@ -1,7 +1,9 @@
 java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
-  aadIdentityName:
+  memoryRequests: "1024Mi"
+  devmemoryRequests: "1024Mi"
+  devmemoryLimits: "2048Mi"
   keyVaults:
     ccd:
       secrets:
@@ -17,5 +19,8 @@ java:
     ENABLE_DB_MIGRATE: true
     ELASTIC_SEARCH_ENABLED: false
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
-postgresql:
-  enabled: true
+
+    USER_PROFILE_HOST: http://ccd-user-profile-api-pr-224.service.core-compute-preview.internal
+
+  postgresql:
+    enabled: true

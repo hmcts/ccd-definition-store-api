@@ -13,6 +13,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
+import org.assertj.core.util.Lists;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
@@ -117,8 +118,6 @@ class DisplayGroupAdapterServiceTest {
                 wizardPage.getWizardPageFields().get(0).getOrder());
             assertEquals(displayGroupEntity.getDisplayGroupCaseFields().get(0).getColumnNumber(),
                 wizardPage.getWizardPageFields().get(0).getPageColumnNumber());
-            assertEquals(DisplayContext.MANDATORY.toString(),
-                wizardPage.getWizardPageFields().get(0).getDisplayContext());
         }
 
         @Test
@@ -191,13 +190,11 @@ class DisplayGroupAdapterServiceTest {
 
             WizardPage wizardPage = wizardPagesByCaseTypeId.getWizardPages().get(0);
 
-            assertThat(findWizardPageField(wizardPage, "finalReturn").getDisplayContext(), is("COMPLEX"));
             assertThat(findWizardPageField(wizardPage, "finalReturn").getOrder(), is(77));
             assertThat(findWizardPageField(wizardPage, "finalReturn").getPageColumnNumber(), is(66));
 
             assertThat(findWizardPageComplexFieldOverrides(wizardPage, "finalReturn").size(), is(10));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getDisplayContext(), is("READONLY"));
-            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getOrder(), is(3));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(), is("Bailiff Name"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(), is("Hint text override"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
@@ -267,7 +264,7 @@ class DisplayGroupAdapterServiceTest {
     private static WebhookEntity webhookEntity() {
         WebhookEntity webhookEntity = new WebhookEntity();
         webhookEntity.setUrl("http://test1.com");
-        webhookEntity.addTimeout(120);
+        webhookEntity.setTimeouts(Lists.newArrayList(120));
         return webhookEntity;
     }
 

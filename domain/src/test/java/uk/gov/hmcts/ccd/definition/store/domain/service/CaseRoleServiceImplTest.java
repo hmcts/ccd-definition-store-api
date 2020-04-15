@@ -75,4 +75,16 @@ class CaseRoleServiceImplTest {
             final List<CaseRole> caseRoles = classUnderTest.findByCaseTypeId(CASE_TYPE_REFERENCE);
         });
     }
+
+    @DisplayName("should determine if the reference is a caseRole")
+    @Test
+    void isCaseRole() {
+        assertAll(
+            () -> assertThat(CaseRoleServiceImpl.isCaseRole(null), is(false)),
+            () -> assertThat(CaseRoleServiceImpl.isCaseRole(""), is(false)),
+            () -> assertThat(CaseRoleServiceImpl.isCaseRole("[]"), is(false)),
+            () -> assertThat(CaseRoleServiceImpl.isCaseRole("caseworker-test"), is(false)),
+            () -> assertThat(CaseRoleServiceImpl.isCaseRole("[anything]"), is(true))
+        );
+    }
 }

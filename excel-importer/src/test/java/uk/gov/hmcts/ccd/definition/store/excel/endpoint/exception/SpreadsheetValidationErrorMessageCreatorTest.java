@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
-import java.util.Optional;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyObject;
@@ -9,17 +7,17 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
@@ -29,10 +27,32 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.*;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldInvalidShowConditionError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexFieldShowConditionReferencesInvalidFieldError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupColumnNumberValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidEventFieldShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidShowConditionError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityValidationContext;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCaseHistoryViewerCaseFieldValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityInvalidShowConditionError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldLabelCaseFieldValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldMetadataValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldOrderSummaryCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityInvalidShowConditionError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
@@ -44,8 +64,34 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
+
+import java.util.Optional;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class SpreadsheetValidationErrorMessageCreatorTest {
 
@@ -338,15 +384,43 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseTypeUserRoleEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned() {
+    public void caseTypeEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeUserRoleEntity("crud");
 
         final CaseTypeEntityInvalidUserRoleValidationError error = new CaseTypeEntityInvalidUserRoleValidationError(
             caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
 
+        when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
+            .thenReturn(
+                definitionDataItem(SheetName.AUTHORISATION_CASE_TYPE,
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
+            );
+
         assertEquals(
-            "Invalid UserRole is not defined for case type 'case type'",
+            "Invalid idam role 'user role' in AuthorisationCaseType tab for case type 'case type'",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void caseTypeEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final CaseTypeACLEntity caseTypeACLEntity = caseTypeUserRoleEntity("crud");
+
+        final CaseTypeEntityInvalidUserRoleValidationError error = new CaseTypeEntityInvalidUserRoleValidationError(
+            caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
+
+        when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
+            .thenReturn(
+                definitionDataItem(SheetName.AUTHORISATION_CASE_TYPE,
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "[CASE_ROLE]"))
+            );
+
+        assertEquals(
+            "Invalid case role '[CASE_ROLE]' in AuthorisationCaseType tab for case type 'case type'." +
+                " Please make sure it is defined in the CaseRoles sheet.",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -385,7 +459,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldUserRoleEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned() {
+    public void caseFieldEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
         final CaseFieldACLEntity entity = caseFieldUserRoleEntity("crud");
@@ -405,12 +479,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid idam or case role 'X' in AuthorisationCaseField tab, case type 'case type', case field 'case field', crud 'Y'",
+            "Invalid idam role 'X' in AuthorisationCaseField tab, case type 'case type', case field 'case field', crud 'Y'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void caseFieldUserRoleEntityInvalidUserRole_createErrorMessageCalled_defaultMessageReturned() {
+    public void caseFieldEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
         final CaseFieldACLEntity entity = caseFieldUserRoleEntity("crud");
@@ -420,13 +494,39 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             new AuthorisationCaseFieldValidationContext(caseFieldEntity,
                 new CaseFieldEntityValidationContext(caseTypeEntity)));
 
+        when(entityToDefinitionDataItemRegistry.getForEntity(entity))
+            .thenReturn(
+                definitionDataItem(SheetName.AUTHORISATION_CASE_FIELD,
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "[SOME_CASE_ROLE]"))
+            );
+
         assertEquals(
-            "Invalid UserRole for case type 'case type', case field 'case field'",
+            "Invalid case role '[SOME_CASE_ROLE]' in AuthorisationCaseField tab, case type 'case type', case field 'case field'." +
+                " Please make sure it is defined in the CaseRoles sheet.",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void caseFieldUserRoleEnttyInvalidCrud_createErrorMessageCalled_customMessageReturned() {
+    public void caseFieldUserRoleEntityInvalidUserRole_createErrorMessageCalled_defaultMessageReturned() {
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
+        final CaseFieldACLEntity entity = caseFieldUserRoleEntity("crud");
+        entity.setUserRoleId("nf_user_role_id");
+
+        final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
+            entity,
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                new CaseFieldEntityValidationContext(caseTypeEntity)));
+
+        assertEquals(
+            "Invalid UserRole nf_user_role_id for case type 'case type', case field 'case field'",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void caseFieldUserRoleEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
         final CaseFieldACLEntity entity = caseFieldUserRoleEntity("Xcrud");
@@ -567,7 +667,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventFieldUserRoleEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned() {
+    public void eventEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventUserRoleEntity(null, "crud");
@@ -586,12 +686,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid idam or case role 'u' in AuthorisationCaseEvent tab, case type 'case type', event 'event', crud 'x'",
+            "Invalid idam role 'u' in AuthorisationCaseEvent tab, case type 'case type', event 'event', crud 'x'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void eventUserRoleEntityInvalidUserRole_createErrorMessageCalled_defaultMessageReturned() {
+    public void eventEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventUserRoleEntity(null, "crud");
@@ -600,8 +700,34 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             entity,
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
+        when(entityToDefinitionDataItemRegistry.getForEntity(entity))
+            .thenReturn(
+                definitionDataItem(SheetName.AUTHORISATION_CASE_EVENT,
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_EVENT_ID, "event"),
+                    new ImmutablePair<>(ColumnName.CRUD, "x"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "[CASE_ROLE]"))
+            );
+
         assertEquals(
-            "Invalid UserRole for case type 'case type', event 'event'",
+            "Invalid case role '[CASE_ROLE]' in AuthorisationCaseEvent tab, case type 'case type', event 'event'." +
+                " Please make sure it is defined in the CaseRoles sheet.",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void eventUserRoleEntityInvalidUserRole_createErrorMessageCalled_defaultMessageReturned() {
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
+        final EventACLEntity entity = eventUserRoleEntity(null, "crud");
+        entity.setUserRoleId("nf_user_role_id");
+
+        final EventEntityInvalidUserRoleValidationError error = new EventEntityInvalidUserRoleValidationError(
+            entity,
+            new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
+
+        assertEquals(
+            "Invalid UserRole nf_user_role_id for case type 'case type', event 'event'",
             classUnderTest.createErrorMessage(error));
     }
 

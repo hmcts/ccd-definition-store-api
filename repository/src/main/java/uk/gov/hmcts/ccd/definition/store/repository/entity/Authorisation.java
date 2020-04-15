@@ -53,6 +53,12 @@ public abstract class Authorisation implements Serializable {
     @Transient
     private String crudAsString;
 
+    /**
+     * Used for holding userRoleId, so that we can use this in logs if User Role is missing.
+     */
+    @Transient
+    private String userRoleId;
+
     public Integer getId() {
         return id;
     }
@@ -123,6 +129,14 @@ public abstract class Authorisation implements Serializable {
 
     public void setCrudAsString(final String crudAsString) {
         this.crudAsString = crudAsString;
+    }
+
+    public String getUserRoleId() {
+        return userRole == null ? userRoleId : userRole.getReference();
+    }
+
+    public void setUserRoleId(String userRoleId) {
+        this.userRoleId = userRoleId;
     }
 
     @Transient

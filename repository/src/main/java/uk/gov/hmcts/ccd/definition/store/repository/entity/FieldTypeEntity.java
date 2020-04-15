@@ -62,11 +62,11 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @Column(name = "regular_expression")
     private String regularExpression = null;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_field_type_id")
     private FieldTypeEntity baseFieldType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "collection_field_type_id")
     private FieldTypeEntity collectionFieldType;
 
@@ -221,4 +221,20 @@ public class FieldTypeEntity implements Serializable, Versionable {
     public boolean isDocumentType() {
         return (BASE_DOCUMENT.equals(reference) || (baseFieldType != null && BASE_DOCUMENT.equals(baseFieldType.getReference())));
     }
+
+    @Transient
+    public boolean isCollectionFieldType() {
+        return collectionFieldType != null;
+    }
+
+    @Transient
+    public boolean isComplexFieldType() {
+        FieldTypeEntity baseFieldType = this.baseFieldType.getBaseFieldType();
+        if (baseFieldType != null) {
+            return baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX);
+        } else {
+            return this.baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX);
+        }
+    }
+
 }

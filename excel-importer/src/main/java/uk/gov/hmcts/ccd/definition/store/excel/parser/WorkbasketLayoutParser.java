@@ -43,4 +43,10 @@ public class WorkbasketLayoutParser extends GenericLayoutParser {
     protected GenericLayoutEntity createLayoutCaseFieldEntity() {
         return new WorkBasketCaseFieldEntity();
     }
+
+    @Override
+    protected void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrderString) {
+        WorkBasketCaseFieldEntity resultCaseFieldEntity = ((WorkBasketCaseFieldEntity)layoutEntity);
+        resultCaseFieldEntity.setSortOrder(getSortOrder(sortOrderString));
+    }
 }

@@ -20,6 +20,10 @@ public class ValidationResult implements Serializable {
         this.validationErrors.add(error);
     }
 
+    public void addErrors(List<ValidationError> errors) {
+        this.validationErrors.addAll(errors);
+    }
+
     public boolean isValid() {
         return validationErrors.isEmpty();
     }
@@ -29,6 +33,14 @@ public class ValidationResult implements Serializable {
     }
 
     public void merge(ValidationResult validationResult) {
-        this.validationErrors.addAll(validationResult.getValidationErrors());
+        validationResult.getValidationErrors().forEach(validationError -> {
+            if (!hasError(validationError)) {
+                this.validationErrors.addAll(validationResult.getValidationErrors());
+            }
+        });
+    }
+
+    private boolean hasError(ValidationError error) {
+        return this.validationErrors.stream().anyMatch(validationError -> validationError.equals(error));
     }
 }

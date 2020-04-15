@@ -1,18 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import java.util.Collection;
-
 import static java.util.Collections.emptyList;
 
-import com.microsoft.azure.storage.StorageException;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.microsoft.azure.storage.StorageException;
+
+import java.util.Collection;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
 
@@ -35,7 +37,7 @@ class ImportAuditController {
     })
     public Collection<ImportAudit> fetchAllAudits() throws StorageException {
         if (null != azureImportAuditsClient) {
-            return azureImportAuditsClient.fetchAllImportAudits();
+            return azureImportAuditsClient.fetchLatestImportAudits();
         } else {
             return emptyList();
         }

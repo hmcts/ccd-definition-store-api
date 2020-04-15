@@ -19,6 +19,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -364,6 +365,36 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         assertThat(validationResult.getValidationErrors().get(0), instanceOf(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError.class));
 
         verify(showConditionExtractor).parseShowCondition(eq(showCondition));
+    }
+
+    @Test
+    public void shouldValidateShowConditionWithMetadataField() throws InvalidShowConditionException {
+        String field = MetadataField.STATE.getReference();
+        String showCondition = field + "=\"TODO\"";
+
+        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(
+            null,
+            showCondition
+        );
+
+        when(showConditionExtractor.parseShowCondition(any())).thenReturn(
+            new ShowCondition.Builder().field(field).build()
+        );
+
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext = new EventCaseFieldEntityValidationContext(
+            "EventId",
+            asList(
+                eventCaseFieldEntityWithShowCondition,
+                eventCaseFieldEntity(
+                    caseFieldEntity("NonMatchingCaseFieldId"),
+                    null
+                )
+            )
+        );
+
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext);
+
+        assertThat(validationResult.isValid(), is(true));
     }
 
     private static FieldTypeEntity exampleFieldTypeEntityWithComplexFields() {

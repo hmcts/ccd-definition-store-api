@@ -1,0 +1,68 @@
+{
+	"_guid_": "S-508",
+	"_extends_": "F-079_Test_Base_Data",
+	"title": "must return the case type for an appropriate request",
+	"specs": [
+		"an active profile in CCD",
+		"contains a valid case type id",
+		"has the 200 OK code"
+	],
+	"expectedResponse": {
+		"_extends_": "Common_200_Response",
+		"headers": {
+			"Content-Encoding": "gzip",
+			"Content-Type": "application/json",
+			"Transfer-Encoding": "chunked"
+		},
+		"body": {
+			"id": "BEFTA_CASETYPE_2_1",
+			"description": "Demo Case BEFTA CASETYPE 2 1",
+			"version": {
+				"number": "[[ANYTHING_PRESENT]]",
+				"live_from": "2017-01-01T00:00:00.000+0000",
+				"live_until": null
+			},
+			"name": "Demo Case BEFTA CASETYPE 2 1",
+			"jurisdiction": {
+				"id": "BEFTA_JURISDICTION_2",
+				"name": "BEFTA JURISDICTION 2",
+				"description": "Content for the BEFTA Jurisdiction 2.",
+				"live_from": "2017-01-01T00:00:00.000+0000",
+				"live_until": null,
+				"case_types": []
+			},
+			"events": "[[ANYTHING_PRESENT]]",
+			"states": [
+				{
+					"id": "TODO",
+					"name": "To do",
+					"description": null,
+					"order": 1,
+					"title_display": null,
+					"acls": "[[ANYTHING_PRESENT]]"
+				},
+				{
+					"id": "IN_PROGRESS",
+					"name": "In progress",
+					"description": null,
+					"order": 2,
+					"title_display": null,
+					"acls": "[[ANYTHING_PRESENT]]"
+				},
+				{
+					"id": "DONE",
+					"name": "Done",
+					"description": null,
+					"order": 3,
+					"title_display": null,
+					"acls": "[[ANYTHING_PRESENT]]"
+				}
+			],
+			"acls": "[[ANYTHING_PRESENT]]",
+			"searchAliasFields": [],
+			"case_fields": "[[ANYTHING_PRESENT]]",
+			"printable_document_url": null,
+			"security_classification": "PUBLIC"
+		}
+	}
+}

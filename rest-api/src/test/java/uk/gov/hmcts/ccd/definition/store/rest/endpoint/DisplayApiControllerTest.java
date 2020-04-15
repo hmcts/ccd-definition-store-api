@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import static org.mockito.Matchers.any;
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -8,8 +10,22 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
-import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
+import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfigResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
 
 public class DisplayApiControllerTest {
 
@@ -17,10 +33,16 @@ public class DisplayApiControllerTest {
 
     private DisplayService displayService;
 
+    private BannerService bannerService;
+    
+    private JurisdictionUiConfigService jurisdictionUiConfigService;
+
     @Before
     public void setup() {
         displayService = mock(DisplayService.class);
-        subject = new DisplayApiController(displayService);
+        bannerService = mock(BannerService.class);
+        jurisdictionUiConfigService = mock(JurisdictionUiConfigService.class);
+        subject = new DisplayApiController(displayService, bannerService, jurisdictionUiConfigService);
     }
 
     @Test
@@ -69,5 +91,16 @@ public class DisplayApiControllerTest {
         when(displayService.findWizardPageForCaseType(any(), any())).thenReturn(wizardPageCollection);
         subject.displayWizardPageStructureIdGet("TestAddressBookCase", "createCase");
         verify(displayService).findWizardPageForCaseType("TestAddressBookCase", "createCase");
+    }
+    
+    @Test
+    public void getJurisdictionUiConfigs() {
+    	List<String> references = Collections.singletonList("AUTOTEST1");
+    	JurisdictionUiConfig jurisdictionUiConfig = new JurisdictionUiConfig();
+    	when(jurisdictionUiConfigService.getAll(any())).thenReturn(Collections.singletonList(jurisdictionUiConfig));
+    	JurisdictionUiConfigResult result = subject.getJurisdictionUiConfigs(Optional.of(references));
+    	verify(jurisdictionUiConfigService).getAll(references);
+    	assertAll(() -> assertEquals(1, result.getConfigs().size()),
+				() -> assertEquals(jurisdictionUiConfig, result.getConfigs().get(0)));
     }
 }

@@ -56,6 +56,7 @@ public enum ColumnName {
     PAGE_SHOW_CONDITION("PageShowCondition"),
     TAB_SHOW_CONDITION("TabShowCondition"),
     SEARCH_ALIAS_ID("SearchAliasID"),
+    SHUTTERED("Shuttered"),
     SHOW_SUMMARY("ShowSummary"),
     SHOW_EVENT_NOTES("ShowEventNotes"),
     SHOW_SUMMARY_CHANGE_OPTION("ShowSummaryChangeOption"),
@@ -68,9 +69,14 @@ public enum ColumnName {
     TITLE_DISPLAY("TitleDisplay"),
     USER_IDAM_ID("UserIDAMId"),
     USER_ROLE("UserRole"),
+    RESULTS_ORDERING("ResultsOrdering"),
     WORK_BASKET_DEFAULT_JURISDICTION("WorkBasketDefaultJurisdiction"),
     WORK_BASKET_DEFAULT_CASETYPE("WorkBasketDefaultCaseType"),
-    WORK_BASKET_DEFAULT_STATE("WorkBasketDefaultState");
+    WORK_BASKET_DEFAULT_STATE("WorkBasketDefaultState"),
+    BANNER_ENABLED("BannerEnabled"),
+    BANNER_DESCRIPTION("BannerDescription"),
+    BANNER_URL_TEXT("BannerURLText"),
+    BANNER_URL("BannerURL");
 
     private final String name;
 

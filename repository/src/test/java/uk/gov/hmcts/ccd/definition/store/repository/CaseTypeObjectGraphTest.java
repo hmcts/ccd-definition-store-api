@@ -10,9 +10,11 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
 
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -151,12 +153,12 @@ public class CaseTypeObjectGraphTest {
         )));
 
         final List<EventEntity> fetchedEvents = fetched.getEvents();
-        assertThat(fetchedEvents, hasItemWithProperty("webhookStart", hasProperty("timeouts", contains(3, 5, 6, 7, 8))));
-        assertThat(fetchedEvents, hasItemWithProperty("webhookPreSubmit", hasProperty("timeouts", contains(3, 50, 6, 20))));
-        assertThat(fetchedEvents, hasItemWithProperty("webhookPostSubmit", hasProperty("timeouts", contains(23, 5, 6))));
+        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookStart() != null &&  x.getWebhookStart().getTimeouts().equals(Lists.newArrayList(3, 5, 6, 7, 8))));
+        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPreSubmit() != null && x.getWebhookPreSubmit().getTimeouts().equals(Lists.newArrayList(3, 50, 6, 20))));
+        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPostSubmit() != null && x.getWebhookPostSubmit().getTimeouts().equals(Lists.newArrayList(23, 5, 6))));
         assertThat(fetchedEvents, hasItem(hasProperty("securityClassification", equalTo(SecurityClassification.PRIVATE))));
-        assertThat(fetchedEvents.get(0).getEventCaseFields(), hasSize(1));
-        EventCaseFieldEntity eventCaseFieldEntity = fetchedEvents.get(0).getEventCaseFields().get(0);
+        assertThat(fetchedEvents.get(1).getEventCaseFields(), hasSize(1));
+        EventCaseFieldEntity eventCaseFieldEntity = fetchedEvents.get(1).getEventCaseFields().get(0);
         assertThat(eventCaseFieldEntity.getCaseField().getReference(), equalTo(cf.getReference()));
         assertThat(eventCaseFieldEntity.getEvent().getReference(), equalTo(e1.getReference()));
         assertThat(eventCaseFieldEntity.getDisplayContext(), equalTo(DisplayContext.READONLY));
@@ -342,9 +344,7 @@ public class CaseTypeObjectGraphTest {
     private WebhookEntity createWebHook(final String url, final Integer... timeouts) {
         final WebhookEntity webhook = new WebhookEntity();
         webhook.setUrl(url);
-        for (Integer t: timeouts) {
-            webhook.addTimeout(t);
-        }
+        webhook.setTimeouts(Lists.newArrayList(timeouts));
         return webhook;
     }
 
