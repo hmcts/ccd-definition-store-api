@@ -13,8 +13,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_D
 @Component
 public class DateTimeDisplayValidatorImpl implements DisplayContextParameterValidator {
 
-    Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME = Pattern.compile("[VzOXxZ]");
-    Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("[ahKkHmsSAnNVzOXxZ]");
+    private static final Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME = Pattern.compile("[VzOXxZ]");
+    private static final Pattern NOT_ALLOWED_CHARACTERS_PATTERN_DATE = Pattern.compile("[ahKkHmsSAnNVzOXxZ]");
 
     private DateTimeFormatParser dateTimeFormatParser;
 
