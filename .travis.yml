@@ -12,7 +12,7 @@ cache:
 
 script:
   - "./gradlew build"
-  - "travis_wait ./gradlew codeCoverageReport || echo 'code coverage upload failed'"
+  - "travis_wait 60 ./gradlew codeCoverageReport || echo 'code coverage upload failed'"
 
 env:
   global:
