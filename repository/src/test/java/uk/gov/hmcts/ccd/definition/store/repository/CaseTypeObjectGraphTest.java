@@ -101,10 +101,6 @@ public class CaseTypeObjectGraphTest {
         s1.addStateACL(stateACLEntity1);
         s1.addStateACL(stateACLEntity2);
 
-        WebhookEntity h1 = createWebHook("url1", 3, 5, 6, 7, 8);
-        WebhookEntity h2 = createWebHook("url2", 3, 50, 6, 20);
-        WebhookEntity h3 = createWebHook("url3", 23, 5, 6);
-
         caseType.addEvent(e1);
         caseType.addEvent(e2);
         caseType.addState(s1);
@@ -119,6 +115,9 @@ public class CaseTypeObjectGraphTest {
 
         e1.setPostState(s1);
 
+        WebhookEntity h1 = createWebHook("url1", 3, 5, 6, 7, 8);
+        WebhookEntity h2 = createWebHook("url2", 3, 50, 6, 20);
+        WebhookEntity h3 = createWebHook("url3", 23, 5, 6);
         e1.setWebhookStart(h1);
         e1.setWebhookPreSubmit(h2);
         e1.setWebhookPostSubmit(h3);
@@ -153,9 +152,12 @@ public class CaseTypeObjectGraphTest {
         )));
 
         final List<EventEntity> fetchedEvents = fetched.getEvents();
-        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookStart() != null &&  x.getWebhookStart().getTimeouts().equals(Lists.newArrayList(3, 5, 6, 7, 8))));
-        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPreSubmit() != null && x.getWebhookPreSubmit().getTimeouts().equals(Lists.newArrayList(3, 50, 6, 20))));
-        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPostSubmit() != null && x.getWebhookPostSubmit().getTimeouts().equals(Lists.newArrayList(23, 5, 6))));
+        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookStart() != null
+            &&  x.getWebhookStart().getTimeouts().equals(Lists.newArrayList(3, 5, 6, 7, 8))));
+        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPreSubmit() != null
+            && x.getWebhookPreSubmit().getTimeouts().equals(Lists.newArrayList(3, 50, 6, 20))));
+        assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPostSubmit() != null
+            && x.getWebhookPostSubmit().getTimeouts().equals(Lists.newArrayList(23, 5, 6))));
         assertThat(fetchedEvents, hasItem(hasProperty("securityClassification", equalTo(SecurityClassification.PRIVATE))));
         assertThat(fetchedEvents.get(1).getEventCaseFields(), hasSize(1));
         EventCaseFieldEntity eventCaseFieldEntity = fetchedEvents.get(1).getEventCaseFields().get(0);

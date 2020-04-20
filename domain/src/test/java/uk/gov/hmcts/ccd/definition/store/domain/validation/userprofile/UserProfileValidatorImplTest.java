@@ -187,7 +187,7 @@ class UserProfileValidatorImplTest {
                                                              final String caseType,
                                                              final String state) {
         WorkBasketUserDefault userDefault = new WorkBasketUserDefault();
-        userDefault.setUserIDAMId(idamId);
+        userDefault.setUserIdamId(idamId);
         userDefault.setWorkBasketDefaultJurisdiction(jurisdiction);
         userDefault.setWorkBasketDefaultCaseType(caseType);
         userDefault.setWorkBasketDefaultState(state);

@@ -13,8 +13,6 @@ public class SearchResultDefinition {
     private String caseTypeId = null;
     private List<SearchResultsField> fields = new ArrayList<>();
 
-    /**
-     **/
     @ApiModelProperty(value = "")
     @JsonProperty("case_type_id")
     public String getCaseTypeId() {
@@ -25,8 +23,6 @@ public class SearchResultDefinition {
         this.caseTypeId = caseTypeId;
     }
 
-    /**
-     **/
     @ApiModelProperty(value = "")
     @JsonProperty("fields")
     public List<SearchResultsField> getFields() {
