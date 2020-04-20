@@ -68,8 +68,6 @@ public class SpreadSheetImportTest extends BaseTest {
     @Transactional
     public void importValidDefinitionFile() throws Exception {
 
-        givenUserProfileReturnsSuccess();
-
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -115,7 +113,7 @@ public class SpreadSheetImportTest extends BaseTest {
             final MockMultipartFile file = new MockMultipartFile("file", inputStream);
 
             // Given wiremock returns http status 403
-            WireMock.givenThat(WireMock.put(WireMock.urlEqualTo("/user-profile/users"))
+            WireMock.stubFor(WireMock.put(urlEqualTo("/user-profile/users"))
                 .willReturn(WireMock.aResponse().withStatus(403)));
 
             // when I import a definition file
@@ -192,7 +190,7 @@ public class SpreadSheetImportTest extends BaseTest {
     @Test
     public void userProfileIsNotStoredWhenImportFails() throws Exception {
 
-        givenUserProfileReturnsSuccess();
+        WireMock.reset();
 
         InputStream inputStream = new ClassPathResource("/ccd-definition-wrong-complex-type.xlsx",
                                                         getClass()).getInputStream();
