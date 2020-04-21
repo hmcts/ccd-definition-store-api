@@ -10,7 +10,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 
 public class WizardPageParser extends AbstractDisplayGroupParser {
 
-    public WizardPageParser(ParseContext parseContext, ShowConditionParser showConditionParser, EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+    public WizardPageParser(ParseContext parseContext,
+                            ShowConditionParser showConditionParser,
+                            EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
         super(parseContext, showConditionParser, entityToDefinitionDataItemRegistry);
         this.displayGroupId = ColumnName.PAGE_ID;
         this.displayGroupLabel = ColumnName.PAGE_LABEL;
