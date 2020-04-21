@@ -31,7 +31,7 @@ Feature: F-079: Fetch a Case Type Schema
     And the response [contains 403 forbidden code]
     And the response has all the details as expected
 
-  @S-507 @Ignore # investigate jackson failure
+  @S-507
   Scenario: must return 404 when request provides a non-existing case type id
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
