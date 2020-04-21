@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - RDM-7740
 
 jobs:
   build:
