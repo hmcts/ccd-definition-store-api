@@ -139,7 +139,7 @@ allprojects {
     }
 
     checkstyle {
-        maxWarnings = 156  // In the Ideal world this should be 0
+        maxWarnings = 0  // In the Ideal world this should be 0
         toolVersion = '8.18'
         configDir = new File(rootDir, 'config/checkstyle')
     }

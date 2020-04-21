@@ -53,8 +53,10 @@ class CaseFieldEntityComplexFieldCrudValidatorImplTest {
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidComplexCrudValidationError.class)),
-            () -> assertThat(((CaseFieldEntityInvalidComplexCrudValidationError) result.getValidationErrors().get(0)).getAuthorisationCaseFieldValidationContext().getCaseFieldReference(), is(caseField.getReference())),
-            () -> assertThat(((CaseFieldEntityInvalidComplexCrudValidationError) result.getValidationErrors().get(0)).getComplexFieldACLEntity(), is(complexFieldACLEntity)),
+            () -> assertThat(((CaseFieldEntityInvalidComplexCrudValidationError)
+                result.getValidationErrors().get(0)).getAuthorisationCaseFieldValidationContext().getCaseFieldReference(), is(caseField.getReference())),
+            () -> assertThat(((CaseFieldEntityInvalidComplexCrudValidationError)
+                result.getValidationErrors().get(0)).getComplexFieldACLEntity(), is(complexFieldACLEntity)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
             "Invalid CRUD value ' CRUD   DD ' for case type 'case type', case field 'case field', list element code '" + LIST_ELEMENT_CODE + "'"))
         );

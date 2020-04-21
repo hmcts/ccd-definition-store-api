@@ -44,13 +44,13 @@ class MetadataFieldServiceImplTest {
     @DisplayName("Should return list of metadata case fields")
     void shouldReturnListOfMetadataFields() {
         CaseType caseType = new CaseType();
-        CaseFieldEntity metadataFieldEntity = new CaseFieldEntity();
         CaseField metadataField = new CaseField();
         metadataField.setId(MetadataField.CASE_REFERENCE.name());
         FieldType fieldType = new FieldType();
         fieldType.setType(BASE_TEXT);
         metadataField.setFieldType(fieldType);
 
+        CaseFieldEntity metadataFieldEntity = new CaseFieldEntity();
         when(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(METADATA)).thenReturn(singletonList(metadataFieldEntity));
         when(dtoMapper.map(metadataFieldEntity)).thenReturn(metadataField);
 

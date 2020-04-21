@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 class CaseRoleEntityUniquenessValidatorImplTest {
-    private final String REFERENCE = "[SOMEID]";
+    private final String reference = "[SOMEID]";
     private CaseTypeEntity caseTypeEntity;
     private CaseRoleEntityValidationContext caseRoleEntityValidationContext;
 
@@ -23,14 +23,14 @@ class CaseRoleEntityUniquenessValidatorImplTest {
 
     @BeforeEach
     void setUp() {
-        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
         classUnderTest = new CaseRoleEntityUniquenessValidatorImpl();
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setName("Case Type One");
         caseTypeEntity.setReference("Case Type I");
+        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
         caseTypeEntity.addCaseRole(caseRoleEntity);
         caseRoleEntityValidationContext = new CaseRoleEntityValidationContext(caseTypeEntity);
-        caseRoleEntity.setReference(REFERENCE);
+        caseRoleEntity.setReference(reference);
     }
 
     @DisplayName("should pass - when no validation failures")
@@ -52,7 +52,7 @@ class CaseRoleEntityUniquenessValidatorImplTest {
     @Test
     void duplicateCaseRole() {
         CaseRoleEntity dupCaseRole = new CaseRoleEntity();
-        dupCaseRole.setReference(REFERENCE.toUpperCase());
+        dupCaseRole.setReference(reference.toUpperCase());
         caseTypeEntity.addCaseRole(dupCaseRole);
 
         final ValidationResult result = classUnderTest.validate(dupCaseRole, caseRoleEntityValidationContext);

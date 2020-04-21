@@ -15,11 +15,11 @@ public class SwaggerGeneratorTest extends BaseTest {
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     public void generateDocs() throws Exception {
-            ResultActions perform = mockMvc.perform(get("/v2/api-docs"));
-            byte[] specs = perform.andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();
+        ResultActions perform = mockMvc.perform(get("/v2/api-docs"));
+        byte[] specs = perform.andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();
 
-            try (OutputStream outputStream = Files.newOutputStream(Paths.get("/tmp/swagger-specs.json"))) {
-                outputStream.write(specs);
+        try (OutputStream outputStream = Files.newOutputStream(Paths.get("/tmp/swagger-specs.json"))) {
+            outputStream.write(specs);
         }
     }
 }

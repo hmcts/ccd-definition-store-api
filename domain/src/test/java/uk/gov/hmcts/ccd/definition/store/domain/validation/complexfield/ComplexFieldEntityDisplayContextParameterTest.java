@@ -127,7 +127,8 @@ public class ComplexFieldEntityDisplayContextParameterTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Display context parameter '#DATETIMEENTRY(0123456789)' has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'ComplexTypes'"))
+                is("Display context parameter '#DATETIMEENTRY(0123456789)' has been "
+                    + "incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'ComplexTypes'"))
         );
     }
 
@@ -142,7 +143,8 @@ public class ComplexFieldEntityDisplayContextParameterTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Display context parameter '#INVALIDPARAMETER(hhmmss)' has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'ComplexTypes'"))
+                is("Display context parameter '#INVALIDPARAMETER(hhmmss)' has been "
+                    + "incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'ComplexTypes'"))
         );
     }
 
@@ -156,7 +158,8 @@ public class ComplexFieldEntityDisplayContextParameterTest {
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(2)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD' on tab 'ComplexTypes'"))
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD' on tab 'ComplexTypes'"))
         );
     }
 

@@ -63,7 +63,7 @@ class FieldTypeListItemMapperTest {
         );
     }
 
-        @Test
+    @Test
     void shouldMapAllFields() {
         List<FieldTypeListItemEntity> fieldTypeListItemEntities = newArrayList(
             newFieldTypeListItem().withOrder(5).withLabel("Label 1").withValue("LABEL1").build(),
@@ -90,6 +90,6 @@ class FieldTypeListItemMapperTest {
                                                       allOf(hasProperty("order", is(nullValue())),
                                                             hasProperty("label", is("Label 5")),
                                                             hasProperty("code", is("LABEL5")))))
-            );
+        );
     }
 }
