@@ -24,7 +24,7 @@ public class SwaggerGeneratorTest extends BaseTest {
                 .getResponse()
                 .getContentAsByteArray();
 
-            try (OutputStream outputStream = Files.newOutputStream(Paths.get("/tmp/swagger-specs.json"))) {
+        try (OutputStream outputStream = Files.newOutputStream(Paths.get("/tmp/ccd-defination-store-api.json"))) {
                 outputStream.write(specs);
         }
     }
