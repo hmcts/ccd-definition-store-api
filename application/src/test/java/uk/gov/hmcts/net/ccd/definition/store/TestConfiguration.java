@@ -1,10 +1,11 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
-import com.opentable.db.postgres.embedded.EmbeddedPostgres;
-import java.io.IOException;
-import java.util.concurrent.ThreadLocalRandom;
 import javax.annotation.PreDestroy;
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.concurrent.ThreadLocalRandom;
+
+import com.opentable.db.postgres.embedded.EmbeddedPostgres;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.support.ResourcePropertySource;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.ContextCleanupListener;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 
@@ -55,11 +54,6 @@ public class TestConfiguration extends ContextCleanupListener {
             environment.getPropertySources().addFirst(localPropertySource);
         } catch (IOException ignored) {
         }
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate(new HttpComponentsClientHttpRequestFactory());
     }
 
     @Bean

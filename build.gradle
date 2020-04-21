@@ -23,7 +23,6 @@ plugins {
     id 'io.franzbecker.gradle-lombok' version '2.0'
     id 'net.ltgt.apt' version '0.21'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
-    id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
 }
 
 apply plugin: 'java'
@@ -157,9 +156,6 @@ allprojects {
                 if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
                     details.useVersion '3.6.3'
                 }
-                if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
-                    details.useVersion '2.7.0'
-                }
             }
         }
     }
@@ -211,17 +207,11 @@ subprojects { subproject ->
         compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.3'
         compile "org.hibernate:hibernate-core:${hibernateVersion}"
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
-        compile group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
-        compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.1'
-        compile group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '1.3.1'
-
-        compile "org.springframework.security:spring-security-web"
-        compile "org.springframework.security:spring-security-config"
-        compile "org.springframework.boot:spring-boot-starter-oauth2-client"
-        compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
-        compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '7.9'
-        implementation "io.github.openfeign:feign-httpclient:10.7.0"
-
+        compile (group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.3') {
+            // TODO remove when auth-checker-lib upgrades its dependency to spring boot 2.0.x
+            exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
+        }
+        compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
         compile('org.springframework.boot:spring-boot-starter-web')
         compile('org.springframework.boot:spring-boot-starter-data-jpa') {
             exclude group: 'org.hibernate', module: 'hibernate-core'
@@ -230,10 +220,6 @@ subprojects { subproject ->
         compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
-
-        compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
-        compile('org.springframework.boot:spring-boot-starter-cache')
-
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
 
         compile group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
@@ -241,6 +227,7 @@ subprojects { subproject ->
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
 
+        testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.18.0'
         testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.12.0'
         testCompile "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
@@ -249,11 +236,8 @@ subprojects { subproject ->
         testRuntime "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
         testCompile "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
         testImplementation('org.springframework.boot:spring-boot-starter-test')
-        testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.1.0.RELEASE') {
-            exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
-        }
-        testCompile ('com.github.tomakehurst:wiremock-jre8:2.25.1')
-        testCompile ('org.springframework.cloud:spring-cloud-contract-wiremock:2.2.1.RELEASE')
+        testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.1.0.RELEASE')
+        testCompile('org.springframework.cloud:spring-cloud-contract-wiremock:2.1.0.RELEASE')
         testCompile ("org.mockito:mockito-core:2.24.0") {
             exclude group: 'org.hamcrest'
         }
@@ -261,9 +245,8 @@ subprojects { subproject ->
         testCompile 'org.mockito:mockito-junit-jupiter:2.24.0'
         testCompile 'com.github.npathai:hamcrest-optional:2.0.0'
         testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-        testCompile 'io.github.openfeign:feign-jackson:10.7.0'
-        testCompile 'io.github.openfeign.form:feign-form:3.8.0'
-        testCompile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+        testCompile 'io.github.openfeign:feign-jackson:9.7.0'
+        testCompile 'io.github.openfeign.form:feign-form:3.3.0'
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "io.rest-assured:rest-assured:3.1.0"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
@@ -280,10 +263,6 @@ subprojects { subproject ->
                 xml.enabled true
                 html.enabled true
             }
-
-            classDirectories = files(classDirectories.files.collect {
-                fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**'])
-            })
 
             doLast {
                 def report = file("${jacoco.reportsDir}/test/jacocoTestReport.xml")
@@ -379,18 +358,6 @@ sonarqube {
         property "sonar.coverage.exclusions", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/CaseTypeItem.java,**/ApplicationParams.java,**/CaseTypePresentationControllerService.java,**/DisplayService.java,**/DisplayItemAdapterService.java,**/DisplayApiPresentationControllerService.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
-    }
-}
-
-compileJava {
-    options.compilerArgs << '-parameters' << '-Xlint:deprecation'
-}
-
-idea.project.settings {
-    compiler {
-        javac {
-            javacAdditionalOptions "-parameters"
-        }
     }
 }
 

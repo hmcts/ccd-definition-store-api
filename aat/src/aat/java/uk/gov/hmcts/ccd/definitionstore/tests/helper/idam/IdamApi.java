@@ -27,7 +27,7 @@ public interface IdamApi {
                                        @Param("client_secret") String clientSecret,
                                        @Param("redirect_uri") String redirectUri);
 
-    @RequestLine("GET /o/userinfo")
+    @RequestLine("GET /details")
     @Headers("Authorization: Bearer {access_token}")
     IdamUser getUser(@Param("access_token") String accessToken);
 
@@ -51,14 +51,14 @@ public interface IdamApi {
     }
 
     class IdamUser {
-        @JsonProperty("uid")
-        private String uid;
+        @JsonProperty("id")
+        private String id;
 
         @JsonProperty("roles")
         private List<String> roles;
 
-        public String getUid() {
-            return uid;
+        public String getId() {
+            return id;
         }
 
         public List<String> getRoles() {
