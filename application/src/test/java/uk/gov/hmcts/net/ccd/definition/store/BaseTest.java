@@ -4,20 +4,23 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -31,9 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClient;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
-import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
 import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
 
@@ -43,20 +44,24 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
     CaseDataAPIApplication.class,
-    TestConfiguration.class
+    TestConfiguration.class,
+    TestIdamConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
+@AutoConfigureWireMock(port = 0)
 public abstract class BaseTest {
 
     public static final String EXCEL_FILE_CCD_DEFINITION = "/CCD_TestDefinition_V46_RDM-6719.xlsx";
@@ -74,8 +79,8 @@ public abstract class BaseTest {
     @Inject
     private WorkBasketUserDefaultService workBasketUserDefaultService;
 
-    @Autowired
-    private ImportServiceImpl importService;
+    @Value("${wiremock.server.port}")
+    protected Integer wiremockPort;
 
     @MockBean
     protected FileStorageService fileStorageService;
@@ -96,30 +101,29 @@ public abstract class BaseTest {
 
     protected static final ObjectMapper mapper = new ObjectMapper();
 
-    @Rule  // The @Rule 'wireMockRule' must be public
-    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
-
     @BeforeClass
     public static void init() {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
     }
 
+    @Inject
+    protected SecurityUtils securityUtils;
+
+    @Mock
+    protected Authentication authentication;
+    @Mock
+    protected SecurityContext securityContext;
+
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         jdbcTemplate = new JdbcTemplate(db);
-        final Integer port = wireMockRule.port();
-        ReflectionTestUtils.setField(applicationParams, "userProfileHost", "http://localhost:" + port);
-        final SecurityUtils securityUtils = mock(SecurityUtils.class);
-        when(securityUtils.authorizationHeaders()).thenReturn(new HttpHeaders());
+        ReflectionTestUtils.setField(applicationParams, "userProfileHost", "http://localhost:" + wiremockPort);
         ReflectionTestUtils.setField(workBasketUserDefaultService, "securityUtils", securityUtils);
 
-        final IdamProperties idamProperties = new IdamProperties();
-        idamProperties.setId("445");
-        idamProperties.setEmail("user@hmcts.net");
-
-        // Override getUserDetails to avoid calling IdAM with invalid authorization
-        doReturn(idamProperties).when(importService).getUserDetails();
+        doReturn(authentication).when(securityContext).getAuthentication();
+        SecurityContextHolder.setContext(securityContext);
+        setSecurityAuthorities(authentication);
 
         userRoleIds = new UserRoleSetup(jdbcTemplate).addUserRoleTestData();
 
@@ -147,14 +151,6 @@ public abstract class BaseTest {
         return displayItemsData;
     }
 
-    protected void givenUserProfileReturnsSuccess() {
-        WireMock.givenThat(WireMock.put(urlEqualTo("/user-profile/users"))
-            .willReturn(WireMock.aResponse()
-                .withStatus(201)
-                .withHeader("Content-Type", "text/plain")
-                .withBody("Hello world!")));
-    }
-
     protected void assertResponseCode(MvcResult mvcResult, int httpResponseCode) throws UnsupportedEncodingException {
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals("Expected [" + httpResponseCode + "] but was [" + response.getStatus() + "]" +
@@ -162,5 +158,21 @@ public abstract class BaseTest {
             httpResponseCode,
             mvcResult.getResponse().getStatus()
         );
+    }
+
+    protected void setSecurityAuthorities(Authentication authenticationMock, String... authorities) {
+
+        Jwt jwt =   Jwt.withTokenValue("Bearer a jwt token")
+            .claim("aClaim", "aClaim")
+            .header("aHeader", "aHeader")
+            .build();
+        when(authenticationMock.getPrincipal()).thenReturn(jwt);
+
+        Collection<? extends GrantedAuthority> authorityCollection = Stream.of(authorities)
+            .map(a -> new SimpleGrantedAuthority(a))
+            .collect(Collectors.toCollection(ArrayList::new));
+
+        when(authenticationMock.getAuthorities()).thenAnswer(invocationOnMock -> authorityCollection);
+
     }
 }

@@ -14,9 +14,6 @@ public class ApplicationParams {
     @Value("${ccd.user-profile.host}")
     private String userProfileHost;
 
-    @Value("${auth.idam.client.baseUrl}")
-    private String idamHost;
-
     @Value("#{'${ccd.am.write.to_ccd_only}'.split(',')}")
     private List<String> caseTypesWithAmWrittenOnlyToCcd;
 
@@ -37,10 +34,6 @@ public class ApplicationParams {
 
     public String userProfilePutURL() {
         return userProfileHost + "/user-profile/users";
-    }
-
-    public String idamUserProfileURL() {
-        return idamHost + "/details";
     }
 
     public List<String> getCaseTypesWithAmWrittenOnlyToCcd() {
@@ -71,4 +64,5 @@ public class ApplicationParams {
     public void init() {
         new AmSwitchValidator().validateAmPersistenceSwitchesIn(this);
     }
+
 }
