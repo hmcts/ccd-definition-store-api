@@ -15,7 +15,7 @@ public class DisplayContextParameterValidator {
     public void validate(Map<String, DefinitionSheet> definitionSheets) {
         List<DefinitionSheet> definitionSheetList = new ArrayList<>();
         definitionSheetList.add(definitionSheets.get(SheetName.COMPLEX_TYPES.getName()));
-        definitionSheetList.add(definitionSheets.get(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName()));
+        definitionSheetList.add(definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName()));
         definitionSheetList.add(definitionSheets.get(SheetName.WORK_BASKET_INPUT_FIELD.getName()));
         definitionSheetList.add(definitionSheets.get(SheetName.WORK_BASKET_RESULT_FIELDS.getName()));
         definitionSheetList.add(definitionSheets.get(SheetName.SEARCH_INPUT_FIELD.getName()));

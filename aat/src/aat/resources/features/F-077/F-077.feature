@@ -1,9 +1,10 @@
 @F-077
-Feature: F-077: Get All Base Types
+Feature: F-077: Fetch All Base Types
+
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-331 @Ignore
+  @S-331
   Scenario: Should return all valid base types
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values

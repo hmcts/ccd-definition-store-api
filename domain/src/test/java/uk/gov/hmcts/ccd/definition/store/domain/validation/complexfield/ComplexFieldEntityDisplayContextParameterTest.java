@@ -86,11 +86,40 @@ public class ComplexFieldEntityDisplayContextParameterTest {
     }
 
     @Test
+    void shouldValidateEntityWithDistinctSupportedDisplayContextParameterTypes() {
+        ComplexFieldEntity entity = complexFieldEntity("CASE_FIELD", fieldTypeEntity(FieldTypeUtils.BASE_DATE));
+        entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss),#DATETIMEENTRY(yyyy)");
+
+        final ValidationResult result = validator.validate(entity, caseFieldComplexFieldEntityValidator);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(true))
+        );
+    }
+
+    @Test
+    void shouldFailValidationForDuplicateSupportedDisplayContextParameterTypes() {
+        ComplexFieldEntity entity = complexFieldEntity("CASE_FIELD", fieldTypeEntity(FieldTypeUtils.BASE_DATE_TIME));
+
+        entity.setDisplayContextParameter("#DATETIMEENTRY(yyyy),#DATETIMEENTRY(MM)");
+
+        final ValidationResult result = validator.validate(entity, caseFieldComplexFieldEntityValidator);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(false)),
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Display context parameter '#DATETIMEENTRY(yyyy),#DATETIMEENTRY(MM)'"
+                   + " has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'ComplexTypes'"))
+        );
+    }
+
+    @Test
     void shouldFailValidationForInvalidDateTimeFormat() throws Exception {
         ComplexFieldEntity entity = complexFieldEntity("CASE_FIELD", fieldTypeEntity(FieldTypeUtils.BASE_DATE_TIME));
 
         entity.setDisplayContextParameter("#DATETIMEENTRY(0123456789)");
-        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any());
+        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
 
         final ValidationResult result = validator.validate(entity, caseFieldComplexFieldEntityValidator);
 

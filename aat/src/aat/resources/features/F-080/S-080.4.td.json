@@ -9,8 +9,7 @@
   ],
   "request": {
     "pathVariables": {
-      "jid": "BEFTA_3_sdfhdj",
-      "uid": "[[DYNAMIC]]"
+      "jid": "BEFTA_3_sdfhdj"
     }
   },
   "users": {

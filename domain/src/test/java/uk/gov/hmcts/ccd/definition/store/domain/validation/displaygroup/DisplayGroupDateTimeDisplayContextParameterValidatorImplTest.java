@@ -91,7 +91,7 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(0123456789)");
         entity.setCaseField(caseFieldEntity());
-        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any());
+        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
 
         final ValidationResult result = validator.validate(entity);
 

@@ -9,17 +9,6 @@
     "has the 200 OK code",
     "contains case type details"
   ],
-  "users": {
-    "invokingUser": {
-      "username": "befta.caseworker.3@gmail.com",
-      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
-    }
-  },
-  "request": {
-    "pathVariables": {
-      "uid": "[[DYNAMIC]]"
-    }
-  },
   "expectedResponse": {
     "_extends_": "Common_200_Response",
     "headers": {
@@ -29,7 +18,7 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "id": "BEFTA_CASETYPE_3_4",
+      "id": "DateTimeFormats",
       "description": "[[ANYTHING_PRESENT]]",
       "version": "[[ANYTHING_PRESENT]]",
       "name" : "[[ANYTHING_PRESENT]]",

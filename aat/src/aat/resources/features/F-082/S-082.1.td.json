@@ -8,12 +8,6 @@
     "has the 200 OK code",
     "contains case type details"
   ],
-  "users": {
-    "invokingUser": {
-      "username": "befta.caseworker.3@gmail.com",
-      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
-    }
-  },
   "expectedResponse": {
     "_extends_": "Common_200_Response",
     "headers": {

@@ -7,12 +7,6 @@
     "contains a non-existing case type id",
     "contains 404 not found code"
   ],
-  "users": {
-    "invokingUser": {
-      "username": "befta.caseworker.3@gmail.com",
-      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
-    }
-  },
   "request": {
     "pathVariables": {
       "id": "BEFTA_CASETYPE_3_4_sdfhdj"

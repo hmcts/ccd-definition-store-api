@@ -1223,6 +1223,7 @@ class EntityToResponseDTOMapperTest {
             searchInputCaseFieldEntity.setOrder(69);
             searchInputCaseFieldEntity.setUserRole(userRoleEntity);
             searchInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
+            searchInputCaseFieldEntity.setShowCondition("aShowCondition");
             searchInputCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             SearchInputField searchInputField = spyOnClassUnderTest.map(searchInputCaseFieldEntity);
@@ -1230,6 +1231,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(searchInputCaseFieldEntity.getOrder(), searchInputField.getOrder());
             assertEquals(searchInputCaseFieldEntity.getLabel(), searchInputField.getLabel());
             assertEquals(searchInputCaseFieldEntity.getCaseFieldElementPath(), searchInputField.getCaseFieldElementPath());
+            assertEquals(searchInputCaseFieldEntity.getShowCondition(), searchInputField.getShowCondition());
             assertEquals(searchInputCaseFieldEntity.getCaseField().getReference(), searchInputField.getCaseFieldId());
             assertEquals(searchInputCaseFieldEntity.getDisplayContextParameter(), searchInputField.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), searchInputField.getRole());
@@ -1305,10 +1307,12 @@ class EntityToResponseDTOMapperTest {
             workBasketInputCaseFieldEntity.setOrder(69);
             workBasketInputCaseFieldEntity.setUserRole(userRoleEntity);
             workBasketInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
+            workBasketInputCaseFieldEntity.setShowCondition("aShowCondition");
             workBasketInputCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             WorkbasketInputField workbasketInputField = spyOnClassUnderTest.map(workBasketInputCaseFieldEntity);
 
+            assertEquals(workBasketInputCaseFieldEntity.getShowCondition(), workbasketInputField.getShowCondition());
             assertEquals(workBasketInputCaseFieldEntity.getOrder(), workbasketInputField.getOrder());
             assertEquals(workBasketInputCaseFieldEntity.getLabel(), workbasketInputField.getLabel());
             assertEquals(workBasketInputCaseFieldEntity.getCaseFieldElementPath(), workbasketInputField.getCaseFieldElementPath());

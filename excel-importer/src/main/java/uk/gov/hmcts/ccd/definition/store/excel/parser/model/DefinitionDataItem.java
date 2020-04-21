@@ -193,7 +193,12 @@ public class DefinitionDataItem {
     }
 
     public String getCaseFieldId() {
-        return getString(ColumnName.CASE_FIELD_ID);
+        return getString(ColumnName.CASE_FIELD_ID) != null ? getString(ColumnName.CASE_FIELD_ID) :
+            new StringBuilder()
+                .append(getString(ColumnName.ID))
+                .append(".")
+                .append(getString(ColumnName.LIST_ELEMENT_CODE))
+                .toString();
     }
 
 }

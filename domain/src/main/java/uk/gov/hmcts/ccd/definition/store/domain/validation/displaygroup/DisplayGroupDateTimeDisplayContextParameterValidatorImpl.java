@@ -10,9 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class DisplayGroupDateTimeDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<DisplayGroupCaseFieldEntity> implements DisplayGroupCaseFieldValidator {
@@ -28,7 +26,7 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImpl extends Ab
 
     @Override
     public ValidationResult validate(DisplayGroupCaseFieldEntity entity) {
-        return shouldSkipValidatorForEntity(entity) ? new ValidationResult() : super.validate(entity);
+        return shouldSkipValidatorForEntity(entity) ? new ValidationResult() : super.validate(entity, Collections.EMPTY_LIST);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
+import joptsimple.internal.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameter;
@@ -10,9 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparamet
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class ComplexFieldEntityDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<ComplexFieldEntity> implements ComplexFieldValidator {
@@ -29,7 +28,7 @@ public class ComplexFieldEntityDisplayContextParameterValidatorImpl extends Abst
 
     @Override
     public ValidationResult validate(ComplexFieldEntity complexFieldEntity, ValidationContext validationContext) {
-        return validate(complexFieldEntity);
+        return validate(complexFieldEntity, Collections.EMPTY_LIST);
     }
 
     @Override

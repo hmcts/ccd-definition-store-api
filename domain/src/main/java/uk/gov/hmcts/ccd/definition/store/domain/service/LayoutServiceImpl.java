@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,13 +59,27 @@ public class LayoutServiceImpl implements LayoutService {
 
         for (GenericLayoutEntity entity : genericLayouts) {
             for (GenericLayoutValidator validator : genericLayoutValidators) {
-                result.merge(validator.validate(entity));
+                List<GenericLayoutEntity> allGenericLayouts = getLayoutsByMatchingCaseType(entity, genericLayouts);
+                result.merge(validator.validate(entity, allGenericLayouts));
             }
         }
 
         if (!result.isValid()) {
             throw new ValidationException(result);
         }
+    }
+
+    private List<GenericLayoutEntity> getLayoutsByMatchingCaseType(GenericLayoutEntity entity,
+                                                                   List<GenericLayoutEntity> allGenericLayouts) {
+        return allGenericLayouts.stream()
+            .filter(layoutEntity -> {
+                if (layoutEntity.getCaseType() != null & entity.getCaseType() != null) {
+                    return layoutEntity.getCaseType().getReference()
+                        .equalsIgnoreCase(entity.getCaseType().getReference());
+                }
+                return false;
+            })
+            .collect(Collectors.toList());
     }
 
 }

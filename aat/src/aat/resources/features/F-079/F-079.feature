@@ -1,5 +1,5 @@
 @F-079 
-Feature: F-079: Get schema by Case Type
+Feature: F-079: Fetch a Case Type Schema
 
   Background:
     Given an appropriate test context as detailed in the test data source
@@ -41,12 +41,3 @@ Feature: F-079: Get schema by Case Type
     Then a negative response is received
     And the response [contains 404 not found code]
     And the response has all the details as expected
-
-  @S-079.1 # Case type to check DateFormatter example
-  Scenario: must return the case type for an appropriate request
-    Given a user with [an active profile in CCD]
-    When a request is prepared with appropriate values
-    And the request [contains a valid case type id]
-    And it is submitted to call the [fetch a Case Type Schema] operation of [CCD Definition Store]
-    And the response [has the 200 OK code]
-    And the response has all other details as expected

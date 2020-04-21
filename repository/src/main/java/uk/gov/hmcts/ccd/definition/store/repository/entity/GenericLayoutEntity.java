@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -114,6 +115,10 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     public void setUserRole(UserRoleEntity userRole) {
         this.userRole = userRole;
+    }
+
+    public Optional<String> showCondition() {
+        return Optional.empty();
     }
 
     public String getDisplayContextParameter() {

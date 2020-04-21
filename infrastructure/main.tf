@@ -5,41 +5,15 @@ provider "azurerm" {
 locals {
   app_full_name = "${var.product}-${var.component}"
 
-  aseName = "core-compute-${var.env}"
-
-  local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
-  local_ase = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "core-compute-aat" : "core-compute-saat" : local.aseName}"
-
-  env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
-
-  s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
-
-  oidc_issuer = "https://forgerock-am.service.core-compute-idam-${var.env}.internal:8443/openam/oauth2/hmcts"
-
   // Vault name
-  previewVaultName = "${var.raw_product}-aat"
-  nonPreviewVaultName = "${var.raw_product}-${var.env}"
-  vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
+  vaultName = "${var.raw_product}-${var.env}"
 
   // Shared Resource Group
-  previewResourceGroup = "${var.raw_product}-shared-aat"
-  nonPreviewResourceGroup = "${var.raw_product}-shared-${var.env}"
-  sharedResourceGroup = "${(var.env == "preview" || var.env == "spreview") ? local.previewResourceGroup : local.nonPreviewResourceGroup}"
+  sharedResourceGroup = "${var.raw_product}-shared-${var.env}"
 
   // Storage Account
-  previewStorageAccountName = "${var.raw_product}sharedaat"
-  nonPreviewStorageAccountName = "${var.raw_product}shared${var.env}"
-  storageAccountName = "${(var.env == "preview" || var.env == "spreview") ? local.previewStorageAccountName : local.nonPreviewStorageAccountName}"
+  storageAccountName = "${var.raw_product}shared${var.env}"
 
-  sharedAppServicePlan = "${var.raw_product}-${var.env}"
-  sharedASPResourceGroup = "${var.raw_product}-shared-${var.env}"
-
-  custom_redirect_uri = "${var.frontend_url}/oauth2redirect"
-  default_redirect_uri = "https://ccd-case-management-web-${local.env_ase_url}/oauth2redirect"
-  oauth2_redirect_uri = "${var.frontend_url != "" ? local.custom_redirect_uri : local.default_redirect_uri}"
-
-  elastic_search_host = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_url.*.value)}"}"
-  elastic_search_password = "${var.elastic_search_enabled == "false" ? "" : "${join("", data.azurerm_key_vault_secret.ccd_elastic_search_password.*.value)}"}"
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
@@ -48,8 +22,8 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
 }
 
 data "azurerm_key_vault" "s2s_vault" {
-  name = "s2s-${local.local_env}"
-  resource_group_name = "rpe-service-auth-provider-${local.local_env}"
+  name = "s2s-${var.env}"
+  resource_group_name = "rpe-service-auth-provider-${var.env}"
 }
 
 resource "azurerm_key_vault_secret" "ccd_definition_s2s_secret" {
@@ -70,6 +44,7 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
   key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
 }
 
+<<<<<<< HEAD
 data "azurerm_key_vault_secret" "storageaccount_primary_connection_string" {
   name = "storage-account-primary-connection-string"
   key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
@@ -163,6 +138,8 @@ module "case-definition-store-api" {
   }
   common_tags = "${var.common_tags}"
 }
+=======
+>>>>>>> refs/heads/master
 
 module "definition-store-db" {
   source = "git@github.com:hmcts/cnp-module-postgres?ref=master"

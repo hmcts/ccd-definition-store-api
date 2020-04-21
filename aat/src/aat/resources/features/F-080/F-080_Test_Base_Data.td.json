@@ -4,16 +4,22 @@
   "operationName": "Get Case Type Details",
   "method": "GET",
   "uri": "/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}",
+  "users": {
+    "invokingUser": {
+      "username": "master.caseworker@gmail.com",
+      "password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
+    }
+  },
   "request": {
     "headers": {
-      "Authorization": "[[DYNAMIC]]",
-      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
       "Content-Type": "application/json"
     },
     "pathVariables": {
-      "uid": "${[scenarioContext][childContexts][testData][id]}",
-      "jid": "BEFTA_CASETYPE_3",
-      "ctid": "BEFTA_CASETYPE_3_4"
+      "uid": "[[DEFAULT_AUTO_VALUE]]",
+      "jid": "BEFTA_MASTER",
+      "ctid": "DateTimeFormats"
     }
   }
 }
