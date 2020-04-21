@@ -26,6 +26,7 @@ dependencies {
     compile "org.apache.commons:commons-lang3:3.7"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    compile "io.springfox:springfox-spring-webmvc:${springfoxSwaggerVersion}"
     compile "javax.validation:validation-api:2.0.1.Final"
     compile "org.hibernate.validator:hibernate-validator:6.0.10.Final"
     compile "org.glassfish:javax.el:3.0.0"
