@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 
 public class SwaggerGeneratorTest extends BaseTest {
 
-    @DisplayName("Generate swagger documentation for APIs")
+    @DisplayName("Generate swagger documentation for all APIs")
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     public void generateDocs() throws Exception {
