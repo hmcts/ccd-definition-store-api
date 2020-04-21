@@ -3,6 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +24,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 class ControllerExceptionHandler {
 
     private static final String EXCEPTION_THROWN = "Exception thrown ";
