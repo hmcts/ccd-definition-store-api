@@ -33,7 +33,7 @@ jobs:
           git remote add upstream "https://jenkins-reform-hmcts:${{ secrets.GH_TOKEN }}@github.com/hmcts/reform-api-docs.git"
           git pull upstream master
           repo=`echo "$GITHUB_REPOSITORY" | cut -f2- -d/`
-          echo "$(cat /tmp/ccd-defination-store-api.json)" > "docs/specs/ccd-defination-store-api.json"
-          git add "docs/specs/ccd-defination-store-api.json"
+          echo "$(cat /tmp/ccd-definition-store-api.json)" > "docs/specs/ccd-definition-store-api.json"
+          git add "docs/specs/ccd-definition-store-api.json"
           # Only commit and push if we have changes.
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update spec for $repo#${GITHUB_SHA:7}"; git push --set-upstream upstream master)
