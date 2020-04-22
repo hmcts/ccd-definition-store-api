@@ -4,7 +4,7 @@ Feature: F-085: Fetch Tab Structure By CaseType
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-369
+  @S-369   # Update this scenario JSON to identify specific dields such as Date Formats etc.
   Scenario: must return the Tab Structure for a given case type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values

@@ -17,8 +17,8 @@
       "Content-Type": "application/json"
     },
     "pathVariables": {
-      "ctid": "DateTimeFormats",
-      "etid": "CREATE"
+      "ctid": "MasterCaseType",
+      "etid": "createCase"
     }
   }
 }

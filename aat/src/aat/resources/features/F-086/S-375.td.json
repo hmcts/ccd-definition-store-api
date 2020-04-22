@@ -17,50 +17,90 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "case_type_id" : "DateTimeFormats",
-      "event_id" : "CREATE",
+      "case_type_id" : "MasterCaseType",
+      "event_id" : "createCase",
       "wizard_pages" : [ {
-        "id" : "CREATEfirst",
-        "label" : "First page",
+        "id" : "createCaseSingleFormPage",
+        "label" : "Data Field Types Page",
         "order" : 1,
         "wizard_page_fields" : [ {
+          "case_field_id" : "TextField",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "TextAreaField",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
           "case_field_id" : "DateField",
           "order" : 1,
           "page_column_no" : null,
           "complex_field_overrides" : [ ]
         }, {
-          "case_field_id" : "DateTimeField",
+          "case_field_id" : "AddressField",
           "order" : 2,
           "page_column_no" : null,
           "complex_field_overrides" : [ ]
         }, {
-          "case_field_id" : "StandardDate",
-          "order" : 3,
+          "case_field_id" : "PhoneField",
+          "order" : 1,
           "page_column_no" : null,
           "complex_field_overrides" : [ ]
         }, {
-          "case_field_id" : "StandardDateTime",
-          "order" : 4,
+          "case_field_id" : "NumberField",
+          "order" : 1,
           "page_column_no" : null,
           "complex_field_overrides" : [ ]
         }, {
-          "case_field_id" : "CollectionDate",
-          "order" : 5,
+          "case_field_id" : "YesNoField",
+          "order" : 1,
           "page_column_no" : null,
           "complex_field_overrides" : [ ]
         }, {
-          "case_field_id" : "CollectionDateTime",
-          "order" : 6,
+          "case_field_id" : "CollectionFieldMan",
+          "order" : 1,
           "page_column_no" : null,
           "complex_field_overrides" : [ ]
         }, {
-          "case_field_id" : "ComplexDateTime",
-          "order" : 7,
+          "case_field_id" : "CollectionField",
+          "order" : 1,
           "page_column_no" : null,
           "complex_field_overrides" : [ ]
         }, {
-          "case_field_id" : "CollectionComplexDateTime",
-          "order" : 8,
+          "case_field_id" : "AddressUKField",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "MarritalStatus",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "MoneyField",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "DocumentField",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "EmailField",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "MultiSelectField",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ ]
+        }, {
+          "case_field_id" : "DynamicList",
+          "order" : 1,
           "page_column_no" : null,
           "complex_field_overrides" : [ ]
         } ],
