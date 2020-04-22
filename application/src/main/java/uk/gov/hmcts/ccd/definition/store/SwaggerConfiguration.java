@@ -19,4 +19,5 @@ public class SwaggerConfiguration {
             .apis(RequestHandlerSelectors.basePackage(CaseDataAPIApplication.class.getPackage().getName()))
             .build();
     }
+
 }
