@@ -48,7 +48,7 @@ public class ParseResult<T> {
     }
 
     /**
-     * Return all results marked at "new".
+     * Return all results marked as "new".
      * @return all registered result entries marked as `new`.
      */
     public List<T> getNewResults() {
