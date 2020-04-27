@@ -2123,8 +2123,8 @@
     "label" : "Created Date",
     "hint_text" : null,
     "field_type" : {
-      "id" : "Date",
-      "type" : "Date",
+      "id" : "DateTime",
+      "type" : "DateTime",
       "min" : null,
       "max" : null,
       "regular_expression" : null,
@@ -2148,8 +2148,8 @@
     "label" : "Last Modified Date",
     "hint_text" : null,
     "field_type" : {
-      "id" : "Date",
-      "type" : "Date",
+      "id" : "DateTime",
+      "type" : "DateTime",
       "min" : null,
       "max" : null,
       "regular_expression" : null,
@@ -2173,8 +2173,8 @@
     "label" : "Last State Modified Date",
     "hint_text" : null,
     "field_type" : {
-      "id" : "Date",
-      "type" : "Date",
+      "id" : "DateTime",
+      "type" : "DateTime",
       "min" : null,
       "max" : null,
       "regular_expression" : null,
