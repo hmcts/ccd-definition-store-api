@@ -17,7 +17,7 @@
       "Content-Type": "application/json"
     },
     "pathVariables": {
-      "ctid": "MasterCaseType",
+      "ctid": "FT_MasterCaseType",
       "etid": "createCase"
     }
   }

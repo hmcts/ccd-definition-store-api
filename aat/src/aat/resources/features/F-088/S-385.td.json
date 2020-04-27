@@ -17,7 +17,7 @@
       "Strict-Transport-Security":"[[ANY_STRING_NULLABLE]]"
     },
     "body" : {
-      "case_type_id" : "DateTimeFormats",
+      "case_type_id" : "FT_DateTimeFormats",
       "fields" : [ {
         "metadata" : true,
         "case_field_id" : "[CASE_REFERENCE]",

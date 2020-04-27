@@ -19,7 +19,7 @@
     "pathVariables": {
       "uid": "[[DEFAULT_AUTO_VALUE]]",
       "jid": "BEFTA_MASTER",
-      "ctid": "MasterCaseType"
+      "ctid": "FT_MasterCaseType"
     }
   }
 }

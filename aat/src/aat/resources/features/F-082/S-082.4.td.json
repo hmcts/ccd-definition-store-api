@@ -10,7 +10,7 @@
   "request": {
     "pathVariables": {
       "jid": "BEFTA_3_sdfhdj",
-      "uid": "[[DYNAMIC]]"
+      "uid": "[[DEFAULT_AUTO_VALUE]]"
     }
   },
   "users": {

@@ -9,7 +9,7 @@
   "request": {
     "pathVariables": {
       "jid": "BEFTA_JURISDICTION_2",
-      "uid": "[[DYNAMIC]]"
+      "uid": "[[DEFAULT_AUTO_VALUE]]"
     }
   },
   "users": {

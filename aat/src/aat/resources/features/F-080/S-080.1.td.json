@@ -18,7 +18,7 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "id": "MasterCaseType",
+      "id": "FT_MasterCaseType",
       "description": "[[ANYTHING_PRESENT]]",
       "version": "[[ANYTHING_PRESENT]]",
       "name" : "[[ANYTHING_PRESENT]]",
