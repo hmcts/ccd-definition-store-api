@@ -1,0 +1,17 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-8223" author="daniel.lysiak1@hmcts.net">
+        <sql>
+            update case_field
+            set field_type_id = (select id from field_type where reference = 'DateTime')
+            where reference in ('[CREATED_DATE]', '[LAST_MODIFIED_DATE]', '[LAST_STATE_MODIFIED_DATE]');
+        </sql>
+        <rollback>
+            update case_field
+            set field_type_id = (select id from field_type where reference = 'Date')
+            where reference in ('[CREATED_DATE]', '[LAST_MODIFIED_DATE]', '[LAST_STATE_MODIFIED_DATE]');
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
