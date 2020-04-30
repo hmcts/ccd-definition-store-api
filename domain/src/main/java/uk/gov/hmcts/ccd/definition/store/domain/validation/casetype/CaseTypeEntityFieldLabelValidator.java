@@ -59,7 +59,10 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
         return validationResult;
     }
 
-    private void processPlaceholderIfMatched(CaseTypeEntity caseType, ValidationResult validationResult, CaseFieldEntity caseFieldEntity, String placeholderToSubstitute) {
+    private void processPlaceholderIfMatched(CaseTypeEntity caseType,
+                                             ValidationResult validationResult,
+                                             CaseFieldEntity caseFieldEntity,
+                                             String placeholderToSubstitute) {
         if (isMatchingPlaceholderPattern(placeholderToSubstitute)) {
             processFieldsToResolvePlaceholder(caseType,
                                               validationResult,
@@ -68,7 +71,10 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
         }
     }
 
-    private void processFieldsToResolvePlaceholder(CaseTypeEntity caseType, ValidationResult validationResult, CaseFieldEntity caseFieldEntity, String placeholderToSubstitute) {
+    private void processFieldsToResolvePlaceholder(CaseTypeEntity caseType,
+                                                   ValidationResult validationResult,
+                                                   CaseFieldEntity caseFieldEntity,
+                                                   String placeholderToSubstitute) {
         boolean hasFoundPlaceholderField = false;
         for (CaseFieldEntity lookupEntity : caseType.getCaseFields()) {
             String[] fieldIds = placeholderToSubstitute.split("\\.");
@@ -92,7 +98,10 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
         addErrorIfPlaceholderUnresolved(validationResult, caseFieldEntity, placeholderToSubstitute, hasFoundPlaceholderField);
     }
 
-    private void addErrorIfPlaceholderUnresolved(ValidationResult validationResult, CaseFieldEntity caseFieldEntity, String placeholderToSubstitute, boolean hasFoundPlaceholderField) {
+    private void addErrorIfPlaceholderUnresolved(ValidationResult validationResult,
+                                                 CaseFieldEntity caseFieldEntity,
+                                                 String placeholderToSubstitute,
+                                                 boolean hasFoundPlaceholderField) {
         if (!hasFoundPlaceholderField) {
             validationResult.addError(new PlaceholderCannotBeResolvedValidationError(caseFieldEntity.getReference(),
                                                                                      placeholderToSubstitute,

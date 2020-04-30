@@ -77,8 +77,7 @@ public class RestEndPointExceptionHandler extends ResponseEntityExceptionHandler
         Throwable inner = ex;
         while ((inner = inner.getCause()) != null && 0 < --remaining) {
             log.debug("Remaining '{}' out of '{}'", remaining, MAX_DEPTH);
-            sb.append("\n")
-              .append(inner.getMessage());
+            sb.append("\n").append(inner.getMessage());
         }
 
         return sb.toString();

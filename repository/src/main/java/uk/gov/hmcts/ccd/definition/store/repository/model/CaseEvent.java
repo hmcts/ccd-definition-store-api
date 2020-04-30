@@ -33,6 +33,7 @@ public class CaseEvent implements HasAcls {
     private String endButtonLabel = null;
 
     /**
+     * id of a particular case event.
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("id")
@@ -45,6 +46,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * name associated with a case event.
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("name")
@@ -57,6 +59,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * description associated with a particular case event.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("description")
@@ -88,6 +91,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * pre state of a particular case event should have been in.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("pre_states")
@@ -100,6 +104,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * post state you can expect the case event to move to.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("post_state")
@@ -112,6 +117,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * url to be called on about to start event for the case event.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("callback_url_about_to_start_event")
@@ -124,6 +130,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * retries prior to timing out the event upon not receiving a response form the url defined.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("retries_timeout_about_to_start_event")
@@ -136,6 +143,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * url to be called on about to submit event for the case event.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("callback_url_about_to_submit_event")
@@ -148,6 +156,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * retries prior to timing out the event upon not receiving a response form the url defined.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("retries_timeout_url_about_to_submit_event")
@@ -160,6 +169,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * url to be called on submitted event for the case event.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("callback_url_submitted_event")
@@ -172,6 +182,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * retries prior to timing out the event upon not receiving a response form the url defined.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("retries_timeout_url_submitted_event")
@@ -203,6 +214,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * at the end of event should a summary of changes be displayed.
      */
     @ApiModelProperty(value = "")
     @JsonProperty("show_summary")
@@ -215,6 +227,7 @@ public class CaseEvent implements HasAcls {
     }
 
     /**
+     * should the event notes be displayed.
      */
     @ApiModelProperty(value = "")
     @JsonProperty("show_event_notes")

@@ -110,8 +110,8 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), containsString("CaseRole ID" +
-                " must be less than")),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), containsString("CaseRole ID"
+                + " must be less than")),
             () -> assertThat(result.isValid(), is(false))
         );
     }
@@ -123,8 +123,8 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), containsString("CaseRole ID" +
-                " must be only characters with no space and between '[]'")),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), containsString("CaseRole ID"
+                + " must be only characters with no space and between '[]'")),
             () -> assertThat(result.isValid(), is(false))
         );
     }
@@ -164,9 +164,8 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), containsString("CaseRole " +
-                "name " +
-                "must be less than")),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), containsString("CaseRole "
+                + "name must be less than")),
             () -> assertThat(result.isValid(), is(false))
         );
     }
@@ -178,8 +177,8 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), containsString("CaseRole " +
-                "name must be non-empty characters for case type")),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), containsString("CaseRole "
+                + "name must be non-empty characters for case type")),
             () -> assertThat(result.isValid(), is(false))
         );
     }

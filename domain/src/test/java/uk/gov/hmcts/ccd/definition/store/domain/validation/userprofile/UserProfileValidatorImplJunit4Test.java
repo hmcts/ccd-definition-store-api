@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * @deprecated I am here to get sonar to pass.  Needs investigation on why test coverage is picking up JUnit5 cases
- * selectively
+ * Need to investigate.
+ * @deprecated I am here to get sonar to pass.  Needs investigation on why test coverage is picking up JUnit5 cases selectively.
  */
 @Deprecated
 public class UserProfileValidatorImplJunit4Test {
@@ -86,7 +86,7 @@ public class UserProfileValidatorImplJunit4Test {
                                                              final String caseType,
                                                              final String state) {
         WorkBasketUserDefault userDefault = new WorkBasketUserDefault();
-        userDefault.setUserIDAMId(idamId);
+        userDefault.setUserIdamId(idamId);
         userDefault.setWorkBasketDefaultJurisdiction(jurisdiction);
         userDefault.setWorkBasketDefaultCaseType(caseType);
         userDefault.setWorkBasketDefaultState(state);
@@ -105,9 +105,9 @@ public class UserProfileValidatorImplJunit4Test {
         assertFalse(result.isValid());
         assertThat(result.getValidationErrors(), hasSize(equalTo(1)));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                   is("Invalid email in workbasket user default; user: 'BAYAN-The-Royal-Highnes', " + "jurisdiction: " +
-                          "'" + JURISDICTION_REFERENCE + "', case type: '" + CASE_TYPE_REFERENCE + "', state: '" +
-                          STATE_REFERENCE + "'"));
+                   is("Invalid email in workbasket user default; user: 'BAYAN-The-Royal-Highnes', " + "jurisdiction: "
+                       + "'" + JURISDICTION_REFERENCE + "', case type: '" + CASE_TYPE_REFERENCE + "', state: '"
+                       + STATE_REFERENCE + "'"));
     }
 
 }

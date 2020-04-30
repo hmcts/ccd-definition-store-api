@@ -29,13 +29,15 @@ public class FieldEntityTest {
     @Test
     public void testIsCollectionOfComplex() {
         CaseFieldEntity baseTypeField = newTextField("forename").build();
-        CaseFieldEntity complexField = newComplexField();
-        CaseFieldEntity collection = newCollectionFieldOfBaseType();
-        CaseFieldEntity collectionOfComplex = newCollectionOfComplexField();
-
         assertThat(baseTypeField.isCollectionOfComplex(), equalTo(false));
+
+        CaseFieldEntity complexField = newComplexField();
         assertThat(complexField.isCollectionOfComplex(), equalTo(false));
+
+        CaseFieldEntity collection = newCollectionFieldOfBaseType();
         assertThat(collection.isCollectionOfComplex(), equalTo(false));
+
+        CaseFieldEntity collectionOfComplex = newCollectionOfComplexField();
         assertThat(collectionOfComplex.isCollectionOfComplex(), equalTo(true));
     }
 
@@ -61,7 +63,7 @@ public class FieldEntityTest {
 
     private CaseFieldEntity newCollectionFieldOfBaseType() {
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .addFieldToCollection(textFieldType()).buildCollection();
+            .addFieldToCollection(textFieldType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");
@@ -71,7 +73,7 @@ public class FieldEntityTest {
 
     private CaseFieldEntity newCollectionOfComplexField() {
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .addFieldToCollection(newComplexType()).buildCollection();
+            .addFieldToCollection(newComplexType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");

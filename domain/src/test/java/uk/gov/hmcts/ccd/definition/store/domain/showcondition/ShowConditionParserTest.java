@@ -128,11 +128,11 @@ class ShowConditionParserTest {
 
     @Test
     void shouldParseMultipleContainsCorrectlyWithOR() throws InvalidShowConditionException {
-        ShowCondition sc = classUnderTest.parseShowCondition("field1 CONTAINS \"ABC,CDE,EFG,JKL\" OR  field2 CONTAINS" +
-                                                             " \"1,3,5,7,88\"");
+        ShowCondition sc = classUnderTest.parseShowCondition("field1 CONTAINS \"ABC,CDE,EFG,JKL\" OR  field2 CONTAINS"
+            + " \"1,3,5,7,88\"");
 
-        assertThat(sc.getShowConditionExpression(), is("field1CONTAINS\"ABC,CDE,EFG,JKL\" OR field2CONTAINS\"1,3,5,7," +
-                                                       "88\""));
+        assertThat(sc.getShowConditionExpression(), is("field1CONTAINS\"ABC,CDE,EFG,JKL\" OR field2CONTAINS\"1,3,5,7,"
+            + "88\""));
         assertThat(sc.getFields(), hasItems("field1", "field2"));
     }
 

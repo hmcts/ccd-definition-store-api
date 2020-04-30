@@ -66,7 +66,7 @@ public class CaseTypeParser {
         this.searchAliasFieldParser = searchAliasFieldParser;
     }
 
-        public ParseResult<CaseTypeEntity> parseAll(Map<String, DefinitionSheet> definitionSheets) {
+    public ParseResult<CaseTypeEntity> parseAll(Map<String, DefinitionSheet> definitionSheets) {
         logger.debug("Case types parsing...");
 
         final ParseResult<CaseTypeEntity> result = new ParseResult<>();

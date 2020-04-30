@@ -68,7 +68,11 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
                     parseResults.add(entity);
                     entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
 
-                    LOG.info("Parsing user role for case type '{}', event '{}', user role '{}', crud '{}': OK", caseTypeReference, eventReference, definition.getString(ColumnName.USER_ROLE), definition.getString(ColumnName.CRUD));
+                    LOG.info("Parsing user role for case type '{}', event '{}', user role '{}', crud '{}': OK",
+                        caseTypeReference,
+                        eventReference,
+                        definition.getString(ColumnName.USER_ROLE),
+                        definition.getString(ColumnName.CRUD));
                 }
             }
         }
@@ -93,7 +97,10 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
             .filter(typeName -> !caseEventItemsForThisCaseType.contains(typeName))
             .findFirst();
         if (unknownCaseEventId.isPresent()) {
-            throw new MapperException(String.format("Unknown CaseEvent '%s' for CaseType '%s' in worksheet '%s'", unknownCaseEventId.get(), caseTypeReference, getSheetName()));
+            throw new MapperException(String.format("Unknown CaseEvent '%s' for CaseType '%s' in worksheet '%s'",
+                unknownCaseEventId.get(),
+                caseTypeReference,
+                getSheetName()));
         }
     }
 

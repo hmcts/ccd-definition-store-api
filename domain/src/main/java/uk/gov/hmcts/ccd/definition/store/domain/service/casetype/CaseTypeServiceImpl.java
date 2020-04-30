@@ -105,12 +105,9 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         return validationResult;
     }
 
-    private CaseType addMetadataFields(CaseType caseType) {
-        caseType.addCaseFields(metadataFieldService.getCaseMetadataFields());
-        return caseType;
-    }
-
-    private void validate(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes, Set<String> missingUserRoles) {
+    private void validate(JurisdictionEntity jurisdiction,
+                          Collection<CaseTypeEntity> caseTypes,
+                          Set<String> missingUserRoles) {
         ValidationResult validationResult = new ValidationResult();
         caseTypes.forEach(
             caseTypeEntity -> {
@@ -138,4 +135,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         }
     }
 
+    private CaseType addMetadataFields(CaseType caseType) {
+        caseType.addCaseFields(metadataFieldService.getCaseMetadataFields());
+        return caseType;
+    }
 }

@@ -98,15 +98,15 @@ public class JurisdictionEntity implements Serializable, Versionable {
 
     @Override
     public String toString() {
-        return "JurisdictionEntity{" +
-                "id=" + id +
-                ", createdAt=" + createdAt +
-                ", reference='" + reference + '\'' +
-                ", version=" + version +
-                ", liveFrom=" + liveFrom +
-                ", liveTo=" + liveTo +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return "JurisdictionEntity{"
+            + "id=" + id
+            + ", createdAt=" + createdAt
+            + ", reference='" + reference + '\''
+            + ", version=" + version
+            + ", liveFrom=" + liveFrom
+            + ", liveTo=" + liveTo
+            + ", name='" + name + '\''
+            + ", description='" + description + '\''
+            + '}';
     }
 }

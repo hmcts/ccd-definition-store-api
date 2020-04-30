@@ -37,9 +37,9 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
     @Test
     public void testDefaultMessage() {
         assertEquals(
-            "Security classification for Event with reference 'Event Reference' " +
-                "has a less restrictive security classification of 'PUBLIC' than its parent CaseType 'Parent Case Name' " +
-                "which is 'PRIVATE'.",
+            "Security classification for Event with reference 'Event Reference' "
+                + "has a less restrictive security classification of 'PUBLIC' than its parent CaseType 'Parent Case Name' "
+                + "which is 'PRIVATE'.",
             classUnderTest.getDefaultMessage()
         );
     }

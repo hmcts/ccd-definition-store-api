@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-public class JSONUtils {
+public class JsonUtils {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private JSONUtils() {
+    private JsonUtils() {
     }
 
     public static <T> T fromString(String string, Class<T> clazz) {

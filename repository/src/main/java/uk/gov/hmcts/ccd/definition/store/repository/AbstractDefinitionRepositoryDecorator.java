@@ -29,6 +29,11 @@ abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable,
     }
 
     @Override
+    public <S extends T> List<S> findAll(Example<S> example) {
+        return repository.findAll(example);
+    }
+
+    @Override
     public List<T> findAll(Sort sort) {
         return repository.findAll(sort);
     }
@@ -39,6 +44,16 @@ abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable,
     }
 
     @Override
+    public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
+        return repository.findAll(example, sort);
+    }
+
+    @Override
+    public <S extends T> Page<S> findAll(Example<S> example, Pageable pageable) {
+        return repository.findAll(example, pageable);
+    }
+
+    @Override
     public List<T> findAllById(Iterable<ID> iterable) {
         return repository.findAllById(iterable);
     }
@@ -46,6 +61,11 @@ abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable,
     @Override
     public long count() {
         return repository.count();
+    }
+
+    @Override
+    public <S extends T> long count(Example<S> example) {
+        return repository.count(example);
     }
 
     @Override
@@ -106,26 +126,6 @@ abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable,
     @Override
     public <S extends T> Optional<S> findOne(Example<S> example) {
         return repository.findOne(example);
-    }
-
-    @Override
-    public <S extends T> List<S> findAll(Example<S> example) {
-        return repository.findAll(example);
-    }
-
-    @Override
-    public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
-        return repository.findAll(example, sort);
-    }
-
-    @Override
-    public <S extends T> Page<S> findAll(Example<S> example, Pageable pageable) {
-        return repository.findAll(example, pageable);
-    }
-
-    @Override
-    public <S extends T> long count(Example<S> example) {
-        return repository.count(example);
     }
 
     @Override

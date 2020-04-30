@@ -9,5 +9,5 @@ public interface JurisdictionUiConfigService {
 
     void save(JurisdictionUiConfigEntity jurisdictionUiConfig);
 
-	List<JurisdictionUiConfig> getAll(List<String> references);
+    List<JurisdictionUiConfig> getAll(List<String> references);
 }

@@ -31,5 +31,5 @@ class BaseTypeTest extends BaseTest {
                 "/api/base-types")
             .then()
             .statusCode(200);
-        }
     }
+}

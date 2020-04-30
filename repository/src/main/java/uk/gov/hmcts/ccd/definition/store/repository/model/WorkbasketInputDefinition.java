@@ -13,8 +13,6 @@ public class WorkbasketInputDefinition {
     private String caseTypeId = null;
     private List<WorkbasketInputField> fields = new ArrayList<>();
 
-    /**
-     **/
     @ApiModelProperty(value = "")
     @JsonProperty("case_type_id")
     public String getCaseTypeId() {
@@ -25,8 +23,6 @@ public class WorkbasketInputDefinition {
         this.caseTypeId = caseTypeId;
     }
 
-    /**
-     **/
     @ApiModelProperty(value = "")
     @JsonProperty("fields")
     public List<WorkbasketInputField> getFields() {

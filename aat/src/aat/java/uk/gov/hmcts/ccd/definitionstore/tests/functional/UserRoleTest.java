@@ -22,10 +22,10 @@ class UserRoleTest extends BaseTest {
     @Test
     @DisplayName("Should update a user profile")
     void shouldUpdateUserProfile() {
-        String userProfile = "{\n" +
-            "\"role\": \"caseworker-autotest1\",\n" +
-            " \"security_classification\": \"PUBLIC\"\n" +
-            "}";
+        String userProfile = "{\n"
+            + "\"role\": \"caseworker-autotest1\",\n"
+            + " \"security_classification\": \"PUBLIC\"\n"
+            + "}";
         asUser.get()
             .given()
             .contentType(ContentType.JSON)
@@ -44,10 +44,10 @@ class UserRoleTest extends BaseTest {
         asUser.get()
             .given()
             .contentType(ContentType.JSON)
-            .body("{\n" +
-                "\"role\": \"caseworker-autotest1\",\n" +
-                " \"security_classificationsss\": \"PUBLIC\"\n" +
-                "}")
+            .body("{\n"
+                + "\"role\": \"caseworker-autotest1\",\n"
+                + " \"security_classificationsss\": \"PUBLIC\"\n"
+                + "}")
             .when()
             .put(
                 "/api/user-role")
