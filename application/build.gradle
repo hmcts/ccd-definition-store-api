@@ -22,6 +22,9 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.0'
+
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
     runtime "org.liquibase:liquibase-core:3.6.3"
     testCompile project(":app-insights").sourceSets.main.output
