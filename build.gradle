@@ -431,6 +431,8 @@ bootJar {
 
 // Although there are no sources to compile, Jenkins pipeline needs the jar file to be here
 dependencies {
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.0'
     compile "org.hibernate:hibernate-core:${hibernateVersion}"
     compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
     compile project(':application')
