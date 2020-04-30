@@ -264,7 +264,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
         shouldReturnJurisdictions("test");
     }
 
-    private  void shouldReturnJurisdictions(String id) throws Exception {
+    private void shouldReturnJurisdictions(String id) throws Exception {
+
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
