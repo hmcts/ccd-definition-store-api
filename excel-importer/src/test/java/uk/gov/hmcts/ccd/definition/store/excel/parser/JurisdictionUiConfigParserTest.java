@@ -20,44 +20,44 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigE
 @RunWith(MockitoJUnitRunner.class)
 class JurisdictionUiConfigParserTest extends ParserTestBase {
 
-	private JurisdictionUiConfigParser parser;
+    private JurisdictionUiConfigParser parser;
 
-	@Mock
-	private JurisdictionEntity jurisdiction;
+    @Mock
+    private JurisdictionEntity jurisdiction;
 
-	private static final String TRUE_STRING = "Yes";
+    private static final String TRUE_STRING = "Yes";
 
-	@BeforeEach
-	public void setup() {
-		init();
+    @BeforeEach
+    public void setup() {
+        init();
 
-		parseContext = mock(ParseContext.class);
-		parser = new JurisdictionUiConfigParser(parseContext);
+        parseContext = mock(ParseContext.class);
+        parser = new JurisdictionUiConfigParser(parseContext);
 
-		definitionSheets.put(SheetName.JURISDICTION.getName(), definitionSheet);
+        definitionSheets.put(SheetName.JURISDICTION.getName(), definitionSheet);
         given(parseContext.getJurisdiction()).willReturn(jurisdiction);
-	}
+    }
 
-	@Test
-	public void shouldParse() {
-		definitionSheet.addDataItem(buildDefinitionDataItem(TRUE_STRING));
-		JurisdictionUiConfigEntity result = parser.parse(definitionSheets);
-		assertAll(() -> assertEquals(true, result.getShuttered()),
-				() -> assertEquals(jurisdiction, result.getJurisdiction()));
-	}
-	
-	@Test
-	public void shouldParse_WhenShutteredIsNull() {
-		definitionSheet.addDataItem(buildDefinitionDataItem(null));
-		JurisdictionUiConfigEntity result = parser.parse(definitionSheets);
-		assertAll(() -> assertEquals(false, result.getShuttered()),
-				() -> assertEquals(jurisdiction, result.getJurisdiction()));
-	}
+    @Test
+    public void shouldParse() {
+        definitionSheet.addDataItem(buildDefinitionDataItem(TRUE_STRING));
+        JurisdictionUiConfigEntity result = parser.parse(definitionSheets);
+        assertAll(() -> assertEquals(true, result.getShuttered()),
+            () -> assertEquals(jurisdiction, result.getJurisdiction()));
+    }
 
-	private DefinitionDataItem buildDefinitionDataItem(String shuttered) {
-		final DefinitionDataItem item = new DefinitionDataItem(SheetName.JURISDICTION.toString());
-		item.addAttribute(ColumnName.SHUTTERED.toString(), shuttered);
-		return item;
-	}
+    @Test
+    public void shouldParse_WhenShutteredIsNull() {
+        definitionSheet.addDataItem(buildDefinitionDataItem(null));
+        JurisdictionUiConfigEntity result = parser.parse(definitionSheets);
+        assertAll(() -> assertEquals(false, result.getShuttered()),
+            () -> assertEquals(jurisdiction, result.getJurisdiction()));
+    }
+
+    private DefinitionDataItem buildDefinitionDataItem(String shuttered) {
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.JURISDICTION.toString());
+        item.addAttribute(ColumnName.SHUTTERED.toString(), shuttered);
+        return item;
+    }
 
 }

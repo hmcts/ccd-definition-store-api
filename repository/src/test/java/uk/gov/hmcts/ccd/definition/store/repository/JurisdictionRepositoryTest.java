@@ -65,11 +65,11 @@ public class JurisdictionRepositoryTest {
         List<JurisdictionEntity> result = jurisdictionRepository.findAllLatestVersion();
 
         assertAll(
-                () -> assertThat(result, hasSize(4)),
-                () -> assertThat(result, hasItem(hasProperty("name", is("name1.2")))),
-                () -> assertThat(result, hasItem(hasProperty("name", is("name2")))),
-                () -> assertThat(result, hasItem(hasProperty("name", is("name3")))),
-                () -> assertThat(result, hasItem(hasProperty("name", is("name4.3"))))
+            () -> assertThat(result, hasSize(4)),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name1.2")))),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name2")))),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name3")))),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name4.3"))))
         );
     }
 

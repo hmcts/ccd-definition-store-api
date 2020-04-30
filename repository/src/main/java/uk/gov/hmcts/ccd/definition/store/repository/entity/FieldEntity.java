@@ -57,5 +57,7 @@ public interface FieldEntity extends Serializable {
         return isCollectionFieldType() || isComplexFieldType();
     }
 
-    default FieldTypeEntity getCollectionFieldType() { return getFieldType().getCollectionFieldType(); }
+    default FieldTypeEntity getCollectionFieldType() {
+        return getFieldType().getCollectionFieldType();
+    }
 }

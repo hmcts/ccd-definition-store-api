@@ -71,8 +71,8 @@ public class EventEntitySecurityClassificationValidatorImplTest {
         assertEquals(isValid ? 0 : 1, validationResult.getValidationErrors().size());
 
         if (!isValid) {
-            assertTrue(validationResult.getValidationErrors().get(0) instanceof
-                EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError);
+            assertTrue(validationResult.getValidationErrors().get(0)
+                instanceof EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError);
 
             assertEquals(
                 eventEntity,

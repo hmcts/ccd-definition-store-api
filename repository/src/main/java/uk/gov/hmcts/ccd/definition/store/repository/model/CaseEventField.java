@@ -21,7 +21,7 @@ public class CaseEventField {
     private List<CaseEventFieldComplex> caseEventFieldComplex = new ArrayList<>();
 
     /**
-     * Foriegn key to CaseField.id
+     * Foriegn key to CaseField.id.
      **/
     @ApiModelProperty(required = true, value = "Foreign key to CaseField.id")
     @JsonProperty("case_field_id")
@@ -34,7 +34,7 @@ public class CaseEventField {
     }
 
     /**
-     * whether this field is optional, mandatory or read only for this event
+     * whether this field is optional, mandatory or read only for this event.
      **/
     @ApiModelProperty(value = "whether this field is optional, mandatory or read only for this event")
     @JsonProperty("display_context")
@@ -47,7 +47,7 @@ public class CaseEventField {
     }
 
     /**
-     * Show Condition expression for this field
+     * Show Condition expression for this field.
      **/
     @ApiModelProperty(value = "Show Condition expression for this field")
     @JsonProperty("show_condition")
@@ -60,7 +60,7 @@ public class CaseEventField {
     }
 
     /**
-     * whether field is shown with the change option
+     * whether field is shown with the change option.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("show_summary_change_option")
@@ -73,7 +73,7 @@ public class CaseEventField {
     }
 
     /**
-     * whether field is shown and if so in what order on the read only section of the final submit page of an event
+     * whether field is shown and if so in what order on the read only section of the final submit page of an event.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("show_summary_content_option")
@@ -86,7 +86,7 @@ public class CaseEventField {
     }
 
     /**
-     * event case field label
+     * event case field label.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("label")
@@ -99,7 +99,7 @@ public class CaseEventField {
     }
 
     /**
-     * event case field hint text
+     * event case field hint text.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("hint_text")
@@ -112,7 +112,7 @@ public class CaseEventField {
     }
 
     /**
-     * whether this field is optional, mandatory or read only for this event
+     * whether this field is optional, mandatory or read only for this event.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("display_context_parameter")

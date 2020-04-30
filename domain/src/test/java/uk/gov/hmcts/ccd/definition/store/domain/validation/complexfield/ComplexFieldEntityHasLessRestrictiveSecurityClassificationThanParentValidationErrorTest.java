@@ -28,7 +28,8 @@ public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParen
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(mockValidationErrorMessageCreator.createErrorMessage(any(ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
+        when(mockValidationErrorMessageCreator.createErrorMessage(
+            any(ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
         when(mockComplexFieldEntityValidationContext.getCaseName()).thenReturn("CaseType Name");
         when(mockComplexFieldEntityValidationContext.getCaseFieldReference()).thenReturn(("Parent CaseField Reference"));
@@ -42,9 +43,9 @@ public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParen
     @Test
     public void testDefaultMessage() {
         assertEquals(
-            "Security classification for ComplexField with reference 'Complex Field Reference' " +
-                "has a less restrictive security classification of 'PUBLIC' than its parent CaseField 'Parent CaseField Reference' " +
-                "which is 'PRIVATE'.",
+            "Security classification for ComplexField with reference 'Complex Field Reference' "
+                + "has a less restrictive security classification of 'PUBLIC' than its parent CaseField 'Parent CaseField Reference' "
+                + "which is 'PRIVATE'.",
             classUnderTest.getDefaultMessage()
         );
     }

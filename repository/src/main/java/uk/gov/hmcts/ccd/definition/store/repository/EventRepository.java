@@ -9,4 +9,4 @@ public interface EventRepository extends DefinitionRepository<EventEntity, Integ
 
     List<EventEntity> findByReferenceAndCaseTypeId(@Param("reference")String eventReference, @Param("caseTypeId")Integer caseTypeId);
 
-    }
+}

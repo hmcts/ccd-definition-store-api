@@ -6,7 +6,8 @@ import java.util.Optional;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
 
-public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID extends Serializable> extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
+public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID extends Serializable>
+    extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
 
     public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository) {
         super(repository);

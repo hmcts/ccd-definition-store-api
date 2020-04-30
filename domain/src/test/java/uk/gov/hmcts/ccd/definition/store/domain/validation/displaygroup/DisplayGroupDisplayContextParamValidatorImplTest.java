@@ -38,7 +38,8 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
         assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
-        assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection", validationResult.getValidationErrors().get(1).getDefaultMessage());
+        assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
+            validationResult.getValidationErrors().get(1).getDefaultMessage());
 
         entity = dpEntityFailureCase("#LIST(firstname)");
         validationResult
@@ -47,7 +48,8 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
         assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
-        assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection", validationResult.getValidationErrors().get(1).getDefaultMessage());
+        assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
+            validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
 
     @Test
@@ -59,23 +61,24 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
         assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
-        assertEquals("DisplayContextParameter text should begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(", validationResult.getValidationErrors().get(1).getDefaultMessage());
+        assertEquals("DisplayContextParameter text should begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(",
+            validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
 
     private DisplayGroupCaseFieldEntity dpEntity() {
 
-        DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
         caseFieldEntity.setReference("Case1");
-        FieldTypeEntity fieldType = new FieldTypeEntity();
         FieldTypeEntity collectionFieldType = new FieldTypeEntity();
         List<ComplexFieldEntity> complexFields = new ArrayList<>();
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
         complexFieldEntity.setReference("title");
         complexFields.add(complexFieldEntity);
         collectionFieldType.addComplexFields(complexFields);
+        FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setCollectionFieldType(collectionFieldType);
         caseFieldEntity.setFieldType(fieldType);
+        DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setCaseField(caseFieldEntity);
         EventEntity eventEntity = new EventEntity();
         eventEntity.setReference("Event1");
@@ -88,13 +91,13 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
         entity.setDisplayContextParameter(displayContextParameter);
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
         caseFieldEntity.setReference("Case1");
-        FieldTypeEntity fieldType = new FieldTypeEntity();
         FieldTypeEntity collectionFieldType = new FieldTypeEntity();
         List<ComplexFieldEntity> complexFields = new ArrayList<>();
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
         complexFieldEntity.setReference("title");
         complexFields.add(complexFieldEntity);
         collectionFieldType.addComplexFields(complexFields);
+        FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setCollectionFieldType(collectionFieldType);
         caseFieldEntity.setFieldType(fieldType);
         entity.setCaseField(caseFieldEntity);

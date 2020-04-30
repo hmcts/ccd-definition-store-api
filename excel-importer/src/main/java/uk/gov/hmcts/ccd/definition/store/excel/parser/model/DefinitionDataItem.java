@@ -154,8 +154,8 @@ public class DefinitionDataItem {
         final SecurityClassification securityClassification;
         try {
             securityClassification =
-                securityClassificationString != null ?
-                    SecurityClassification.valueOf(securityClassificationString.toUpperCase()) :
+                securityClassificationString != null
+                    ? SecurityClassification.valueOf(securityClassificationString.toUpperCase()) :
                     null;
             return new SecurityClassificationColumn(securityClassificationString, securityClassification);
         } catch (IllegalArgumentException e) {

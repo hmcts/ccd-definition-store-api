@@ -71,7 +71,6 @@ class GenericLayoutEntityValidatorImplTest {
         @ParameterizedTest
         @ArgumentsSource(EntityArgumentsProvider.class)
         void shouldValidateGoodEntity(GenericLayoutEntity entity) {
-//            System.out.println("testing... " + entity.getClass().getSimpleName());
             entity.setCaseField(caseField);
             entity.setCaseType(caseType);
             final ValidationResult result = validator.validate(entity, Lists.newArrayList(entity));

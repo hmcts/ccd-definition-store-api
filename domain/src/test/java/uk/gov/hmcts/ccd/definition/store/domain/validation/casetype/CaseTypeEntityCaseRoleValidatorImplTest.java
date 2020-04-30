@@ -65,18 +65,18 @@ class CaseTypeEntityCaseRoleValidatorImplTest {
         caseType.addCaseRole(new CaseRoleEntity());
 
         ValidationResult vr1 = new ValidationResult();
-        vr1.addError(new CaseRoleEntityMandatoryFieldsValidatorImpl.ValidationError("Mandatory field validation error" +
-            " message...", new CaseRoleEntity()));
+        vr1.addError(new CaseRoleEntityMandatoryFieldsValidatorImpl.ValidationError("Mandatory field validation error"
+            + " message...", new CaseRoleEntity()));
         when(mandatoryValidator.validate(any(), any())).thenReturn(vr1);
 
         ValidationResult vr2 = new ValidationResult();
-        vr2.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError("Field value validation error message." +
-            "..", new CaseRoleEntity()));
+        vr2.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError("Field value validation error message."
+            + "..", new CaseRoleEntity()));
         when(fieldValueValidator.validate(any(), any())).thenReturn(vr2);
 
         ValidationResult vr3 = new ValidationResult();
-        vr3.addError(new CaseRoleEntityUniquenessValidatorImpl.ValidationError("Unique field value validation error message." +
-            "..", new CaseRoleEntity()));
+        vr3.addError(new CaseRoleEntityUniquenessValidatorImpl.ValidationError("Unique field value validation error message."
+            + "..", new CaseRoleEntity()));
         when(uniquenessValidator.validate(any(), any())).thenReturn(vr3);
 
         final ValidationResult result = classUnderTest.validate(caseType);

@@ -38,7 +38,7 @@ public class MapperUtil {
     }
 
     /**
-     * Find the given DefinitionSheet in the given sheets list
+     * Find the given DefinitionSheet in the given sheets list.
      *
      * @param sheets    - DefinitionSheets representing a Case Definition
      * @param sheetName - Name of the DefinitionSheet to be found
@@ -46,8 +46,9 @@ public class MapperUtil {
      */
     static DefinitionSheet findSheet(List<DefinitionSheet> sheets, SheetName sheetName) {
         for (DefinitionSheet sheet : sheets) {
-            if (sheet.getName().equals(sheetName.getName()))
+            if (sheet.getName().equals(sheetName.getName())) {
                 return sheet;
+            }
         }
         return null;
     }
@@ -66,8 +67,9 @@ public class MapperUtil {
     static String getString(DefinitionDataItem definitionDataItem, SheetName sheetName, ColumnName columnName) {
         Object attribute = definitionDataItem.findAttribute(columnName.toString());
         if (attribute == null) {
-            if (ColumnName.isRequired(sheetName, columnName))
+            if (ColumnName.isRequired(sheetName, columnName)) {
                 throw new MapperException(String.format(NO_COLUMN, columnName.toString(), sheetName.toString()));
+            }
             return null;
         }
         return attribute.toString();
@@ -87,8 +89,9 @@ public class MapperUtil {
     static Integer getInteger(DefinitionDataItem definitionDataItem, SheetName sheetName, ColumnName columnName) {
         Object attribute = definitionDataItem.findAttribute(columnName.toString());
         if (attribute == null) {
-            if (ColumnName.isRequired(sheetName, columnName))
+            if (ColumnName.isRequired(sheetName, columnName)) {
                 throw new MapperException(String.format(NO_COLUMN, columnName.toString(), sheetName.toString()));
+            }
             return null;
         }
         return ((Double) attribute).intValue();
@@ -108,8 +111,9 @@ public class MapperUtil {
     static BigDecimal getBigDecimal(DefinitionDataItem definitionDataItem, SheetName sheetName, ColumnName columnName) {
         Object attribute = definitionDataItem.findAttribute(columnName.toString());
         if (attribute == null) {
-            if (ColumnName.isRequired(sheetName, columnName))
+            if (ColumnName.isRequired(sheetName, columnName)) {
                 throw new MapperException(String.format(NO_COLUMN, columnName.toString(), sheetName.toString()));
+            }
             return null;
         }
         return BigDecimal.valueOf((double) attribute);
@@ -129,8 +133,9 @@ public class MapperUtil {
     static Date getDate(DefinitionDataItem definitionDataItem, SheetName sheetName, ColumnName columnName) {
         Object attribute = definitionDataItem.findAttribute(columnName.toString());
         if (attribute == null) {
-            if (ColumnName.isRequired(sheetName, columnName))
+            if (ColumnName.isRequired(sheetName, columnName)) {
                 throw new MapperException(String.format(NO_COLUMN, columnName.toString(), sheetName.toString()));
+            }
             return null;
         }
         return (Date) attribute;
@@ -155,8 +160,9 @@ public class MapperUtil {
         }
         final String attribute = (String)obj;
         if (isBlank(attribute)) {
-            if (ColumnName.isRequired(sheetName, columnName))
+            if (ColumnName.isRequired(sheetName, columnName)) {
                 throw new MapperException(String.format(INVALID_OR_BLANK_COLUMN, columnName, sheetName));
+            }
             return null;
         }
 
@@ -183,22 +189,21 @@ public class MapperUtil {
     }
 
     /**
-     * Find the Integer list attribute in the given item.  If there is an error in the attribute,
-     * then we return an empty list.
-     * @param definitionDataItem
-     * @param sheetName
-     * @param columnName
+     * Find the Integer list attribute in the given item.  If there is an error in the attribute, then we return an empty list.
+     * @param definitionDataItem    - definition data item
+     * @param sheetName             - sheetName
+     * @param columnName            - columnName
      * @return integer list
-     * @throws MapperException - thrown if the field is required, but the attribute wasn't found or numbers in the list
-     * cannot be parsed
+     * @throws MapperException - thrown if the field is required, but the attribute wasn't found or numbers in the list cannot be parsed
      */
     static List<Integer> getIntegerList(DefinitionDataItem definitionDataItem,
                                         SheetName sheetName,
                                         ColumnName columnName) {
         final String numbersString = getString(definitionDataItem, sheetName, columnName);
         if (isBlank(numbersString)) {
-            if (ColumnName.isRequired(sheetName, columnName))
+            if (ColumnName.isRequired(sheetName, columnName)) {
                 throw new MapperException(String.format(NO_COLUMN, columnName, sheetName));
+            }
             return Collections.emptyList();
         }
         try {
@@ -216,7 +221,7 @@ public class MapperUtil {
     }
 
     /**
-     * Create a FieldType object for the given DefinitionDataItem in the given Sheet
+     * Create a FieldType object for the given DefinitionDataItem in the given Sheet.
      * @param sheetName - name of the given Sheet
      * @param dataItem - given DefinitionDataItem
      * @param fixedListsByCode - all Fixed List Item's mapped by their Id
@@ -237,11 +242,13 @@ public class MapperUtil {
             fieldType.setMax(getString(dataItem, sheetName, ColumnName.MAX));
         } else {
             Date minDate = getDate(dataItem, sheetName, ColumnName.MIN);
-            if (minDate != null)
+            if (minDate != null) {
                 fieldType.setMin(String.valueOf(minDate.getTime()));
+            }
             Date maxDate = getDate(dataItem, sheetName, ColumnName.MAX);
-            if (maxDate != null)
+            if (maxDate != null) {
                 fieldType.setMax(String.valueOf(maxDate.getTime()));
+            }
         }
         fieldType.setRegularExpression(getString(dataItem, sheetName, ColumnName.REGULAR_EXPRESSION));
 
@@ -273,7 +280,7 @@ public class MapperUtil {
     }
 
     /**
-     * Create all the CaseField objects for Complex Types from the Case Definition and map them in lists by their Field Type Id
+     * Create all the CaseField objects for Complex Types from the Case Definition and map them in lists by their Field Type Id.
      *
      * @param sheets - DefinitionSheets representing a Case Definition
      * @return Map of CaseField's by CaseTypeId
@@ -282,14 +289,13 @@ public class MapperUtil {
     static Map<String, List<CaseField>> createComplexTypes(List<DefinitionSheet> sheets) {
         DefinitionSheet complexTypesSheet = findSheet(sheets, SheetName.COMPLEX_TYPES);
         // If there is no Case Field sheet then fail the import
-        if (complexTypesSheet == null)
+        if (complexTypesSheet == null) {
             throw new MapperException("A definition must contain a Complex Types worksheet");
-
+        }
         Map<String, List<FixedListItem>> fixedListsByCode = createFixedListFields(sheets);
         Map<String, List<CaseField>> complexTypeFieldsById = new HashMap<>();
         Set<String> complexTypeIds = findComplexTypes(sheets);
         for (DefinitionDataItem complexTypeItem : complexTypesSheet.getDataItems()) {
-            String complexTypeId = getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.ID);
             CaseField caseField = new CaseField();
             caseField.setId(getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.LIST_ELEMENT_CODE));
             caseField.setLabel(getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.ELEMENT_LABEL));
@@ -297,7 +303,7 @@ public class MapperUtil {
             caseField.setFieldType(createFieldType(SheetName.COMPLEX_TYPES, complexTypeItem, fixedListsByCode, complexTypeIds));
             caseField.setHidden(getBoolean(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.DEFAULT_HIDDEN));
             caseField.setSecurityClassification(getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.SECURITY_CLASSIFICATION));
-
+            String complexTypeId = getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.ID);
             complexTypeFieldsById.computeIfAbsent(complexTypeId, k -> new ArrayList<>());
             complexTypeFieldsById.get(complexTypeId).add(caseField);
         }
@@ -306,7 +312,7 @@ public class MapperUtil {
     }
 
     /**
-     * Recursive function to populate the tree of Complex Case Fields
+     * Recursive function to populate the tree of Complex Case Fields.
      * @param fieldTypeId - Id of FieldType being populated
      * @param complexTypesById - All Complex Case Fields by their Case Type Id
      */
@@ -335,20 +341,22 @@ public class MapperUtil {
                     }
                 }
                 break;
+            default:
+                break;
         }
     }
 
     /**
-     * Create a List of FixedListItem entries mapped by Fixed List Code
+     * Create a List of FixedListItem entries mapped by Fixed List Code.
      * @param sheets Case Definition sheets
      * @return Map of FixedListItem's
      */
     static Map<String, List<FixedListItem>> createFixedListFields(List<DefinitionSheet> sheets) {
         DefinitionSheet fixedListSheet = findSheet(sheets, SheetName.FIXED_LISTS);
         // If there is no Fixed List sheet then fail the import
-        if (fixedListSheet == null)
+        if (fixedListSheet == null) {
             throw new MapperException("A definition must contain a Fixed List worksheet");
-
+        }
         // Create a List of FixedListsField's mapped by their FixedListCode
         Map<String, List<FixedListItem>> fixedListsByCode = new HashMap<>();
         for (DefinitionDataItem fixedListItem : fixedListSheet.getDataItems()) {
@@ -366,16 +374,16 @@ public class MapperUtil {
     }
 
     /**
-     * Create a Set of all names of all Complex Field Types
+     * Create a Set of all names of all Complex Field Types.
      * @param sheets Case Definition Sheets
      * @return Set containing names of all Complex Types
      */
     static Set<String> findComplexTypes(List<DefinitionSheet> sheets) {
         DefinitionSheet complexTypesSheet = findSheet(sheets, SheetName.COMPLEX_TYPES);
         // If there is no Case Field sheet then fail the import
-        if (complexTypesSheet == null)
+        if (complexTypesSheet == null) {
             throw new MapperException("A definition must contain a Complex Types worksheet");
-
+        }
         Set<String> complexTypes = new HashSet<>();
         for (DefinitionDataItem complexTypeItem : complexTypesSheet.getDataItems()) {
             complexTypes.add(getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.ID));

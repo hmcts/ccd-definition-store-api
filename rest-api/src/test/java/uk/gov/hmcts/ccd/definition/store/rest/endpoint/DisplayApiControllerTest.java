@@ -34,7 +34,7 @@ public class DisplayApiControllerTest {
     private DisplayService displayService;
 
     private BannerService bannerService;
-    
+
     private JurisdictionUiConfigService jurisdictionUiConfigService;
 
     @Before
@@ -46,7 +46,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void  getSearchInputDefinitionDisplay() {
+    public void getSearchInputDefinitionDisplay() {
         SearchInputDefinition searchInputDefinition = new SearchInputDefinition();
         when(displayService.findSearchInputDefinitionForCaseType("XXX")).thenReturn(searchInputDefinition);
         subject.displaySearchInputDefinitionIdGet("XXX");
@@ -54,7 +54,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void  getSearchResultDefinitionDisplay() {
+    public void getSearchResultDefinitionDisplay() {
         SearchResultDefinition searchResultDefinition = new SearchResultDefinition();
         when(displayService.findSearchResultDefinitionForCaseType("XXX")).thenReturn(searchResultDefinition);
         subject.displaySearchResultDefinitionIdGet("XXX");
@@ -62,7 +62,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void  shouldReturnWorkbasketInputDefinition() {
+    public void shouldReturnWorkbasketInputDefinition() {
         WorkbasketInputDefinition workbasketInputDefinition = new WorkbasketInputDefinition();
         when(displayService.findWorkBasketInputDefinitionForCaseType("XXX")).thenReturn(workbasketInputDefinition);
         subject.displayWorkBasketInputDefinitionIdGet("XXX");
@@ -70,7 +70,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void  shouldReturnTabStructure() {
+    public void shouldReturnTabStructure() {
         CaseTabCollection caseTabCollection = new CaseTabCollection();
         when(displayService.findTabStructureForCaseType("XXX")).thenReturn(caseTabCollection);
         subject.displayTabStructureIdGet("XXX");
@@ -78,7 +78,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void  getWorkBasketItemResultDisplay() {
+    public void getWorkBasketItemResultDisplay() {
         WorkBasketResult workBasketResult = new WorkBasketResult();
         when(displayService.findWorkBasketDefinitionForCaseType("XXX")).thenReturn(workBasketResult);
         subject.displayWorkBasketDefinitionIdGet("XXX");
@@ -92,15 +92,15 @@ public class DisplayApiControllerTest {
         subject.displayWizardPageStructureIdGet("TestAddressBookCase", "createCase");
         verify(displayService).findWizardPageForCaseType("TestAddressBookCase", "createCase");
     }
-    
+
     @Test
     public void getJurisdictionUiConfigs() {
-    	List<String> references = Collections.singletonList("AUTOTEST1");
-    	JurisdictionUiConfig jurisdictionUiConfig = new JurisdictionUiConfig();
-    	when(jurisdictionUiConfigService.getAll(any())).thenReturn(Collections.singletonList(jurisdictionUiConfig));
-    	JurisdictionUiConfigResult result = subject.getJurisdictionUiConfigs(Optional.of(references));
-    	verify(jurisdictionUiConfigService).getAll(references);
-    	assertAll(() -> assertEquals(1, result.getConfigs().size()),
-				() -> assertEquals(jurisdictionUiConfig, result.getConfigs().get(0)));
+        List<String> references = Collections.singletonList("AUTOTEST1");
+        JurisdictionUiConfig jurisdictionUiConfig = new JurisdictionUiConfig();
+        when(jurisdictionUiConfigService.getAll(any())).thenReturn(Collections.singletonList(jurisdictionUiConfig));
+        JurisdictionUiConfigResult result = subject.getJurisdictionUiConfigs(Optional.of(references));
+        verify(jurisdictionUiConfigService).getAll(references);
+        assertAll(() -> assertEquals(1, result.getConfigs().size()),
+            () -> assertEquals(jurisdictionUiConfig, result.getConfigs().get(0)));
     }
 }

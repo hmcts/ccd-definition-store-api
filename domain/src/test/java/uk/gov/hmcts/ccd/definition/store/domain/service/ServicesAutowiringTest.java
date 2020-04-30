@@ -246,7 +246,7 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         public BannerRepository bannerRepository() {
             return mock(BannerRepository.class);
         }
-        
+
         @Bean
         @Primary
         public JurisdictionUiConfigRepository jurisdictionUiConfigRepository() {
@@ -285,15 +285,21 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
 
         @Bean
         @Primary
-        public UserRoleRepository userRoleRepository() { return mock(UserRoleRepository.class); }
+        public UserRoleRepository userRoleRepository() {
+            return mock(UserRoleRepository.class);
+        }
 
         @Bean
         @Primary
-        public EventRepository eventRepository() { return mock(EventRepository.class); }
+        public EventRepository eventRepository() {
+            return mock(EventRepository.class);
+        }
 
         @Bean
         @Primary
-        public SecurityUtils securityUtils() { return mock(SecurityUtils.class); }
+        public SecurityUtils securityUtils() {
+            return mock(SecurityUtils.class);
+        }
 
         @Bean
         @Primary

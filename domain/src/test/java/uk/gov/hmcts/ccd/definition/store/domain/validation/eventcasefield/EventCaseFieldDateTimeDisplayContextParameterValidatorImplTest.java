@@ -139,7 +139,8 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Display context parameter '#DATETIMEENTRY(0123456789)' has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab 'CaseEventToFields'"))
+                is("Display context parameter '#DATETIMEENTRY(0123456789)' has been incorrectly "
+                    + "configured or is invalid for field 'CASE_FIELD' on tab 'CaseEventToFields'"))
         );
     }
 
@@ -168,7 +169,8 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Display context parameter '#DATETIMEDISPLAY(HHmmss)' is unsupported for field type 'Text' of field 'CASE_FIELD' on tab 'CaseEventToFields'"))
+                is("Display context parameter '#DATETIMEDISPLAY(HHmmss)' is unsupported for field type 'Text' "
+                    + "of field 'CASE_FIELD' on tab 'CaseEventToFields'"))
         );
     }
 

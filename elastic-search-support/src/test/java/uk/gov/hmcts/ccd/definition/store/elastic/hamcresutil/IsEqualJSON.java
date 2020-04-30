@@ -51,7 +51,7 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
     protected boolean matches(final Object actual,
                               final Description mismatchDescription) {
         try {
-            final String actualJSON = toJSONString(actual);
+            final String actualJSON = toJsonString(actual);
             final JSONCompareResult result = JSONCompare.compareJSON(expectedJSON,
                     actualJSON,
                     jsonCompareMode);
@@ -69,7 +69,7 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
      * @param o the object to convert
      * @return the JSON string
      */
-    private static String toJSONString(final Object o) {
+    private static String toJsonString(final Object o) {
         try {
             return o instanceof String ? (String) o : new ObjectMapper().writeValueAsString(o);
         } catch (final JsonProcessingException e) {
