@@ -75,8 +75,8 @@ public class CaseFieldEntitySecurityClassificationValidatorImplTest {
         assertEquals(isValid ? 0 : 1, validationResult.getValidationErrors().size());
 
         if (!isValid) {
-            assertTrue(validationResult.getValidationErrors().get(0) instanceof
-                CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError);
+            assertTrue(validationResult.getValidationErrors().get(0)
+                instanceof CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError);
 
             assertEquals(
                 caseFieldEntity,

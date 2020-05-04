@@ -14,8 +14,6 @@ public class BannersResult {
         this.banners = banners;
     }
 
-    /**
-     **/
     @ApiModelProperty(value = "")
     @JsonProperty("banners")
     public List<Banner> getBanners() {

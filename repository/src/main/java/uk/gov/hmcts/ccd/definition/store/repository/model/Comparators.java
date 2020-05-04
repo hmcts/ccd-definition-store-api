@@ -15,4 +15,8 @@ public class Comparators {
 
     };
 
+    private Comparators() {
+        // Hide Constructor : (squid:S1118)
+    }
+
 }

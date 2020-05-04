@@ -14,7 +14,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import java.util.*;
 
 @Component
-public class ComplexFieldEntityDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<ComplexFieldEntity> implements ComplexFieldValidator {
+public class ComplexFieldEntityDisplayContextParameterValidatorImpl
+    extends AbstractDisplayContextParameterValidator<ComplexFieldEntity>
+    implements ComplexFieldValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         {DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY};
@@ -35,8 +37,8 @@ public class ComplexFieldEntityDisplayContextParameterValidatorImpl extends Abst
     protected void validateDisplayContextParameterType(final DisplayContextParameter displayContextParameter,
                                                        final ComplexFieldEntity entity,
                                                        final ValidationResult validationResult) {
-        if (displayContextParameter.getType() != DisplayContextParameterType.DATETIMEDISPLAY &&
-            displayContextParameter.getType() != DisplayContextParameterType.DATETIMEENTRY) {
+        if (displayContextParameter.getType() != DisplayContextParameterType.DATETIMEDISPLAY
+            && displayContextParameter.getType() != DisplayContextParameterType.DATETIMEENTRY) {
             validationResult.addError(unsupportedDisplayContextParameterTypeError(entity));
         }
         super.validateDisplayContextParameterType(displayContextParameter, entity, validationResult);

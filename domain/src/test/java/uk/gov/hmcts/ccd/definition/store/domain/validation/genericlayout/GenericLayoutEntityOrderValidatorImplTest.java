@@ -95,8 +95,8 @@ class GenericLayoutEntityOrderValidatorImplTest {
                 () -> assertThat(result.isValid(), is(false)),
                 () -> assertThat(result.getValidationErrors().size(), is(1)),
                 () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                    is("DisplayOrder '-1' needs to be a valid integer for row with label 'Label', case field '" +
-                        CASE_FIELD + "'"))
+                    is("DisplayOrder '-1' needs to be a valid integer for row with label 'Label', case field '"
+                        + CASE_FIELD + "'"))
             );
         }
     }

@@ -26,15 +26,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigE
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
 
 class JurisdictionUiConfigServiceImplTest {
-	
-	private final String REFERENCE = "Reference 1";
-    
-	@Mock
+
+    private final String reference = "Reference 1";
+
+    @Mock
     EntityToResponseDTOMapper dtoMapper;
-	
+
     @Mock
     private JurisdictionUiConfigRepository jurisdictionUiConfigRepository;
-    
+
     @Captor
     private ArgumentCaptor captor;
 
@@ -51,9 +51,9 @@ class JurisdictionUiConfigServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         classUnderTest = new JurisdictionUiConfigServiceImpl(jurisdictionUiConfigRepository, dtoMapper);
-        jurisdictionUiConfig1.setId(REFERENCE);
+        jurisdictionUiConfig1.setId(reference);
         jurisdictionUiConfigEntity1.setShuttered(false);
-    	jurisdictionUiConfigEntity2.setShuttered(true);
+        jurisdictionUiConfigEntity2.setShuttered(true);
         doReturn(Arrays.asList(jurisdictionUiConfigEntity1, jurisdictionUiConfigEntity2, jurisdictionUiConfigEntity3))
             .when(jurisdictionUiConfigRepository)
             .findAllByReference(any());
@@ -61,52 +61,52 @@ class JurisdictionUiConfigServiceImplTest {
         doReturn(jurisdictionUiConfig2).when(dtoMapper).map(jurisdictionUiConfigEntity2);
         doReturn(jurisdictionUiConfig3).when(dtoMapper).map(jurisdictionUiConfigEntity3);
     }
-    
+
     @DisplayName("should return all Jurisdiction UI Configs")
     @Test
     void getAll() {
-    	final List<JurisdictionUiConfig> configs = classUnderTest.getAll(Arrays.asList("Reference"));
-    	
-    	assertAll(
+        final List<JurisdictionUiConfig> configs = classUnderTest.getAll(Arrays.asList("Reference"));
+
+        assertAll(
             () -> assertThat(configs.size(), is(3)),
-            () -> assertThat(configs.get(0).getId(), is(REFERENCE))
+            () -> assertThat(configs.get(0).getId(), is(reference))
         );
     }
-    
+
     @DisplayName("should save a new Jurisdiction UI Config")
     @Test
     void saveNewConfig() {
-    	JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
-    	jurisdictionEntity.setReference(REFERENCE);
-    	jurisdictionUiConfigEntity1.setJurisdiction(jurisdictionEntity);
-    	doReturn(null).when(jurisdictionUiConfigRepository).findByJurisdictionId(REFERENCE);
-    	
-    	classUnderTest.save(jurisdictionUiConfigEntity1);
-    	
-    	Mockito.verify(jurisdictionUiConfigRepository).save((JurisdictionUiConfigEntity) captor.capture());
-    	JurisdictionUiConfigEntity savedEntity = (JurisdictionUiConfigEntity) captor.getValue();
-    	
-    	assertAll(
+        JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
+        jurisdictionEntity.setReference(reference);
+        jurisdictionUiConfigEntity1.setJurisdiction(jurisdictionEntity);
+        doReturn(null).when(jurisdictionUiConfigRepository).findByJurisdictionId(reference);
+
+        classUnderTest.save(jurisdictionUiConfigEntity1);
+
+        Mockito.verify(jurisdictionUiConfigRepository).save((JurisdictionUiConfigEntity) captor.capture());
+        JurisdictionUiConfigEntity savedEntity = (JurisdictionUiConfigEntity) captor.getValue();
+
+        assertAll(
             () -> assertThat(savedEntity, is(jurisdictionUiConfigEntity1)),
             () -> assertFalse(savedEntity.getShuttered())
         );
     }
-    
+
     @DisplayName("should save an updated Jurisdiction UI Config")
     @Test
     void saveUpdatedConfig() {
-    	JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
-    	jurisdictionEntity.setReference(REFERENCE);
-    	jurisdictionUiConfigEntity1.setJurisdiction(jurisdictionEntity);
-    	jurisdictionUiConfigEntity2.setJurisdiction(jurisdictionEntity);
-    	doReturn(jurisdictionUiConfigEntity1).when(jurisdictionUiConfigRepository).findByJurisdictionId(REFERENCE);
-    	
-    	classUnderTest.save(jurisdictionUiConfigEntity2);
-    	
-    	Mockito.verify(jurisdictionUiConfigRepository).save((JurisdictionUiConfigEntity) captor.capture());
-    	JurisdictionUiConfigEntity savedEntity = (JurisdictionUiConfigEntity) captor.getValue();
-    	
-    	assertAll(
+        JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
+        jurisdictionEntity.setReference(reference);
+        jurisdictionUiConfigEntity1.setJurisdiction(jurisdictionEntity);
+        jurisdictionUiConfigEntity2.setJurisdiction(jurisdictionEntity);
+        doReturn(jurisdictionUiConfigEntity1).when(jurisdictionUiConfigRepository).findByJurisdictionId(reference);
+
+        classUnderTest.save(jurisdictionUiConfigEntity2);
+
+        Mockito.verify(jurisdictionUiConfigRepository).save((JurisdictionUiConfigEntity) captor.capture());
+        JurisdictionUiConfigEntity savedEntity = (JurisdictionUiConfigEntity) captor.getValue();
+
+        assertAll(
             () -> assertThat(savedEntity, is(jurisdictionUiConfigEntity1)),
             () -> assertTrue(savedEntity.getShuttered())
         );

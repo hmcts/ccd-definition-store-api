@@ -39,7 +39,7 @@ public class UserProfileValidatorImpl implements UserProfileValidator {
                           final WorkBasketUserDefault workBasketUserDefault,
                           final JurisdictionEntity jurisdiction,
                           final List<CaseTypeEntity> caseTypes) {
-        if (!emailValidator.isValid(lowerCase(workBasketUserDefault.getUserIDAMId()))) {
+        if (!emailValidator.isValid(lowerCase(workBasketUserDefault.getUserIdamId()))) {
             LOG.warn("Invalid email address found for {}", workBasketUserDefault);
             result.addError(new UserProfileInvalidEmailValidationError(workBasketUserDefault));
         }
@@ -76,7 +76,7 @@ public class UserProfileValidatorImpl implements UserProfileValidator {
             super(String.format("Invalid %s in workbasket user default; " //
                       + "user: '%s', jurisdiction: '%s', case type: '%s', state: '%s'",
                   invalidEntity,
-                  workBasketUserDefault.getUserIDAMId(),
+                  workBasketUserDefault.getUserIdamId(),
                   workBasketUserDefault.getWorkBasketDefaultJurisdiction(),
                   workBasketUserDefault.getWorkBasketDefaultCaseType(),
                   workBasketUserDefault.getWorkBasketDefaultState()), workBasketUserDefault);

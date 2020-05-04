@@ -37,12 +37,12 @@ public class DisplayApiController {
     private DisplayService displayService;
 
     private final BannerService bannerService;
-    
+
     private final JurisdictionUiConfigService jurisdictionUiConfigService;
 
     public DisplayApiController(DisplayService displayService,
-    		BannerService bannerService,
-    		JurisdictionUiConfigService jurisdictionUiConfigService) {
+                                BannerService bannerService,
+                                JurisdictionUiConfigService jurisdictionUiConfigService) {
         this.displayService = displayService;
         this.bannerService = bannerService;
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
@@ -71,7 +71,8 @@ public class DisplayApiController {
     }
 
     @RequestMapping(value = "/display/tab-structure/{id}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch a Case Tab Collection for a given Case Type", notes = "Returns the schema of a single case type.\n", response = CaseTabCollection.class)
+    @ApiOperation(value = "Fetch a Case Tab Collection for a given Case Type",
+        notes = "Returns the schema of a single case type.\n", response = CaseTabCollection.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Tab Collection"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -81,8 +82,10 @@ public class DisplayApiController {
         return this.displayService.findTabStructureForCaseType(id);
     }
 
-    @RequestMapping(value = "/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch a Case Wizard Page Collection for a given Case Type", notes = "Returns the schema of a single case type.\n", response = CaseTabCollection.class)
+    @RequestMapping(value = "/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}",
+        method = RequestMethod.GET, produces = {"application/json"})
+    @ApiOperation(value = "Fetch a Case Wizard Page Collection for a given Case Type",
+        notes = "Returns the schema of a single case type.\n", response = CaseTabCollection.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Wizard Page Collection"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -125,7 +128,7 @@ public class DisplayApiController {
         List<Banner> banners = referencesOptional.map(references -> bannerService.getAll(references)).orElse(Collections.emptyList());
         return new BannersResult(banners);
     }
-    
+
     @RequestMapping(value = "/display/jurisdiction-ui-configs", method = RequestMethod.GET, produces = {"application/json"})
     @ApiOperation(value = "Get UI config details for list of jurisdictions", response = JurisdictionUiConfigResult.class)
     @ApiResponses(value = {
@@ -133,7 +136,8 @@ public class DisplayApiController {
     })
     public JurisdictionUiConfigResult getJurisdictionUiConfigs(
         @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> referencesOptional) {
-        List<JurisdictionUiConfig> configs = referencesOptional.map(references -> jurisdictionUiConfigService.getAll(references)).orElse(Collections.emptyList());
+        List<JurisdictionUiConfig> configs = referencesOptional
+            .map(references -> jurisdictionUiConfigService.getAll(references)).orElse(Collections.emptyList());
         return new JurisdictionUiConfigResult(configs);
     }
 }

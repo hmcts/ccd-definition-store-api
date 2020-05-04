@@ -42,8 +42,7 @@ public class ProxyController {
 
         try {
             return httpClient.execute(request, httpResponse -> EntityUtils.toString(httpResponse.getEntity()));
-        }
-        finally {
+        } finally {
             httpClient.close();
         }
     }

@@ -93,7 +93,7 @@ public class AmSwitchValidatorTest {
     @DisplayName("Should fail for duplicate read configurations")
     public void shouldFailForDuplicateReadConfigurations() {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
-                () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadApplicationParams));
+            () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadApplicationParams));
         assertTrue(invalidPropertyException.getMessage()
                 .endsWith("Duplicate case type configurations detected for Access Management persistence switches."));
     }
@@ -102,7 +102,7 @@ public class AmSwitchValidatorTest {
     @DisplayName("Should fail for duplicate write configurations")
     public void shouldFailForDuplicateWriteConfigurations() {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
-                () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForWriteApplicationParams));
+            () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForWriteApplicationParams));
         assertTrue(invalidPropertyException.getMessage()
                 .endsWith("Duplicate case type configurations detected for Access Management persistence switches."
                 ));
@@ -112,7 +112,7 @@ public class AmSwitchValidatorTest {
     @DisplayName("Should fail for duplicate read and write configurations")
     public void shouldFailForDuplicateReadAndWriteConfigurations() {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
-                () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadAndWriteApplicationParams));
+            () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadAndWriteApplicationParams));
         assertTrue(invalidPropertyException.getMessage()
                 .endsWith("Duplicate case type configurations detected for Access Management persistence switches."));
     }

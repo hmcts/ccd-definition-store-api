@@ -9,19 +9,19 @@ import java.io.Serializable;
 @ApiModel(description = "")
 public class WorkBasketUserDefault implements Serializable {
 
-    private String userIDAMId;
+    private String userIdamId;
     private String workBasketDefaultJurisdiction;
     private String workBasketDefaultCaseType;
     private String workBasketDefaultState;
 
     @ApiModelProperty(value = "")
     @JsonProperty("id")
-    public String getUserIDAMId() {
-        return userIDAMId;
+    public String getUserIdamId() {
+        return userIdamId;
     }
 
-    public void setUserIDAMId(String userIDAMId) {
-        this.userIDAMId = userIDAMId;
+    public void setUserIdamId(String userIdamId) {
+        this.userIdamId = userIdamId;
     }
 
     @ApiModelProperty(value = "")
@@ -56,11 +56,11 @@ public class WorkBasketUserDefault implements Serializable {
 
     @Override
     public String toString() {
-        return "WorkBasketUserDefault{" +
-            "userIDAMId='" + userIDAMId + '\'' +
-            ", workBasketDefaultJurisdiction='" + workBasketDefaultJurisdiction + '\'' +
-            ", workBasketDefaultCaseType='" + workBasketDefaultCaseType + '\'' +
-            ", workBasketDefaultState='" + workBasketDefaultState + '\'' +
-            '}';
+        return "WorkBasketUserDefault{"
+            + "userIdamId='" + userIdamId + '\''
+            + ", workBasketDefaultJurisdiction='" + workBasketDefaultJurisdiction + '\''
+            + ", workBasketDefaultCaseType='" + workBasketDefaultCaseType + '\''
+            + ", workBasketDefaultState='" + workBasketDefaultState + '\''
+            + '}';
     }
 }

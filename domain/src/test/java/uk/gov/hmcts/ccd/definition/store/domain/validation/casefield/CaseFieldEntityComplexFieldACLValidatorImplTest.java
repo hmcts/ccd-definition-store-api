@@ -173,7 +173,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         final List<ValidationError> validationErrors = result.getValidationErrors();
         assertAll(
             () -> assertThat(validationErrors, not(empty())),
-            () -> assertThat(validationErrors.get(0).getDefaultMessage(), is("Parent list element code 'Class' is missing for list element code 'Class.ClassMembers'"))
+            () -> assertThat(validationErrors.get(0).getDefaultMessage(),
+                is("Parent list element code 'Class' is missing for list element code 'Class.ClassMembers'"))
         );
     }
 

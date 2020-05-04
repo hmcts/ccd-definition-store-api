@@ -54,12 +54,12 @@ class UserProfileValidatorImplTest {
     @Test
     void invalidWorkbasketDefaultsUndefinedJurisdiction() {
         final WorkBasketUserDefault userDefault = buildWorkBasketUserDefault(VALID_EMAIL_ADDRESS,
-                                                                             JURISDICTION_REFERENCE,
-                                                                             CASE_TYPE_REFERENCE,
-                                                                             STATE_REFERENCE);
+            JURISDICTION_REFERENCE,
+            CASE_TYPE_REFERENCE,
+            STATE_REFERENCE);
         final ValidationResult result = validator.validate(Arrays.asList(userDefault),
-                                                           jurisdiction,
-                                                           Arrays.asList(caseTypeEntity));
+            jurisdiction,
+            Arrays.asList(caseTypeEntity));
         assertTrue(result.isValid());
 
     }
@@ -68,55 +68,55 @@ class UserProfileValidatorImplTest {
     @Test
     void validWorkbasketDefaults() {
         final WorkBasketUserDefault userDefault = buildWorkBasketUserDefault(VALID_EMAIL_ADDRESS,
-                                                                             "QA",
-                                                                             CASE_TYPE_REFERENCE,
-                                                                             STATE_REFERENCE);
+            "QA",
+            CASE_TYPE_REFERENCE,
+            STATE_REFERENCE);
         final ValidationResult result = validator.validate(Arrays.asList(userDefault),
-                                                           jurisdiction,
-                                                           Arrays.asList(caseTypeEntity));
+            jurisdiction,
+            Arrays.asList(caseTypeEntity));
         assertAll(() -> assertFalse(result.isValid()),
-                  () -> assertThat(result.getValidationErrors(), hasSize(equalTo(1))),
-                  () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                                   is("Invalid jurisdiction in workbasket user default; user: " + "'" +
-                                          VALID_EMAIL_ADDRESS + "', " + "jurisdiction: 'QA', case type: '" +
-                                          CASE_TYPE_REFERENCE + "', state: '" + STATE_REFERENCE + "'")));
+            () -> assertThat(result.getValidationErrors(), hasSize(equalTo(1))),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Invalid jurisdiction in workbasket user default; user: " + "'"
+                    + VALID_EMAIL_ADDRESS + "', " + "jurisdiction: 'QA', case type: '"
+                    + CASE_TYPE_REFERENCE + "', state: '" + STATE_REFERENCE + "'")));
     }
 
     @DisplayName("Invalid Workbasket defaults case type")
     @Test
     void invalidWorkbasketDefaultsUndefinedCaseType() {
         final WorkBasketUserDefault userDefault = buildWorkBasketUserDefault(VALID_EMAIL_ADDRESS,
-                                                                             JURISDICTION_REFERENCE,
-                                                                             "croissants-poi-dejeuner",
-                                                                             STATE_REFERENCE);
+            JURISDICTION_REFERENCE,
+            "croissants-poi-dejeuner",
+            STATE_REFERENCE);
         final ValidationResult result = validator.validate(Arrays.asList(userDefault),
-                                                           jurisdiction,
-                                                           Arrays.asList(caseTypeEntity));
+            jurisdiction,
+            Arrays.asList(caseTypeEntity));
         assertAll(() -> assertFalse(result.isValid()),
-                  () -> assertThat(result.getValidationErrors(), hasSize(equalTo(1))),
-                  () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                                   is("Invalid case type in workbasket user default; user: '" + VALID_EMAIL_ADDRESS +
-                                          "', " + "jurisdiction: '" + JURISDICTION_REFERENCE + "', case type: " +
-                                          "'croissants-poi-dejeuner', state: '" + STATE_REFERENCE + "'")));
+            () -> assertThat(result.getValidationErrors(), hasSize(equalTo(1))),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Invalid case type in workbasket user default; user: '" + VALID_EMAIL_ADDRESS
+                    + "', " + "jurisdiction: '" + JURISDICTION_REFERENCE + "', case type: "
+                    + "'croissants-poi-dejeuner', state: '" + STATE_REFERENCE + "'")));
     }
 
     @DisplayName("Invalid Workbasket defaults state")
     @Test
     void invalidWorkbasketDefaultsUndefinedState() {
         final WorkBasketUserDefault userDefault = buildWorkBasketUserDefault(VALID_EMAIL_ADDRESS,
-                                                                             JURISDICTION_REFERENCE,
-                                                                             CASE_TYPE_REFERENCE,
-                                                                             "PF");
+            JURISDICTION_REFERENCE,
+            CASE_TYPE_REFERENCE,
+            "PF");
         final ValidationResult result = validator.validate(Arrays.asList(userDefault),
-                                                           jurisdiction,
-                                                           Arrays.asList(caseTypeEntity));
+            jurisdiction,
+            Arrays.asList(caseTypeEntity));
         assertAll(() -> assertFalse(result.isValid()),
-                  () -> assertThat(result.getValidationErrors(), hasSize(equalTo(1))),
-                  () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                                   is("Invalid state in workbasket user default; user: '" + VALID_EMAIL_ADDRESS + "'," +
-                                          "" + "" + "" + "" + "" + "" + " " + "jurisdiction: '" +
-                                          JURISDICTION_REFERENCE + "', " + "case " + "type:" + " '" +
-                                          CASE_TYPE_REFERENCE + "', state: 'PF'")));
+            () -> assertThat(result.getValidationErrors(), hasSize(equalTo(1))),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Invalid state in workbasket user default; user: '" + VALID_EMAIL_ADDRESS + "',"
+                    + "" + "" + "" + "" + "" + "" + " " + "jurisdiction: '"
+                    + JURISDICTION_REFERENCE + "', " + "case " + "type:" + " '"
+                    + CASE_TYPE_REFERENCE + "', state: 'PF'")));
 
     }
 
@@ -124,61 +124,61 @@ class UserProfileValidatorImplTest {
     @Test
     void invalidEmailAddress() {
         final WorkBasketUserDefault userDefault = buildWorkBasketUserDefault("BAYAN-The-Royal-Highnes",
-                                                                             JURISDICTION_REFERENCE,
-                                                                             CASE_TYPE_REFERENCE,
-                                                                             STATE_REFERENCE);
+            JURISDICTION_REFERENCE,
+            CASE_TYPE_REFERENCE,
+            STATE_REFERENCE);
         final ValidationResult result = validator.validate(Arrays.asList(userDefault),
-                                                           jurisdiction,
-                                                           Arrays.asList(caseTypeEntity));
+            jurisdiction,
+            Arrays.asList(caseTypeEntity));
         assertAll(() -> assertFalse(result.isValid()),
-                  () -> assertThat(result.getValidationErrors(), hasSize(equalTo(1))),
-                  () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                                   is("Invalid email in workbasket user default; user: 'BAYAN-The-Royal-Highnes', " +
-                                          "jurisdiction: '" + JURISDICTION_REFERENCE + "', case type: '" +
-                                          CASE_TYPE_REFERENCE + "', state: '" + STATE_REFERENCE + "'")));
+            () -> assertThat(result.getValidationErrors(), hasSize(equalTo(1))),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Invalid email in workbasket user default; user: 'BAYAN-The-Royal-Highnes', "
+                    + "jurisdiction: '" + JURISDICTION_REFERENCE + "', case type: '"
+                    + CASE_TYPE_REFERENCE + "', state: '" + STATE_REFERENCE + "'")));
     }
 
     @DisplayName("Validate all items in List<WorkBasketUserDefault>")
     @Test
     void validateAllListItems() {
         final WorkBasketUserDefault userDefault1 = buildWorkBasketUserDefault("BAYAN-The-Royal-Highnes",
-                                                                              "BAYAN",
-                                                                              CASE_TYPE_REFERENCE,
-                                                                              STATE_REFERENCE);
+            "BAYAN",
+            CASE_TYPE_REFERENCE,
+            STATE_REFERENCE);
         final WorkBasketUserDefault userDefault2 = buildWorkBasketUserDefault(VALID_EMAIL_ADDRESS,
-                                                                              JURISDICTION_REFERENCE,
-                                                                              CASE_TYPE_REFERENCE,
-                                                                              "PF");
+            JURISDICTION_REFERENCE,
+            CASE_TYPE_REFERENCE,
+            "PF");
         final ValidationResult result = validator.validate(Arrays.asList(userDefault1, userDefault2),
-                                                           jurisdiction,
-                                                           Arrays.asList(caseTypeEntity));
+            jurisdiction,
+            Arrays.asList(caseTypeEntity));
         assertAll(() -> assertFalse(result.isValid()),
-                  () -> assertThat(result.getValidationErrors(), hasSize(equalTo(3))),
-                  () -> {
-                      final List<String> errorMessages = result.getValidationErrors()
-                          .stream()
-                          .map(e -> e.getDefaultMessage())
-                          .collect(Collectors.toList());
-                      assertThat(errorMessages,
-                                 hasItems("Invalid email in workbasket user default; user: " +
-                                              "'BAYAN-The-Royal-Highnes', jurisdiction: 'BAYAN', case type: '" +
-                                              CASE_TYPE_REFERENCE + "', state: '" + STATE_REFERENCE + "'",
-                                          "Invalid jurisdiction in workbasket user default; user: " +
-                                              "'BAYAN-The-Royal-Highnes', jurisdiction: 'BAYAN', case type: '" +
-                                              CASE_TYPE_REFERENCE + "', state: '" + STATE_REFERENCE + "'",
-                                          "Invalid state in workbasket user default; user: '" + VALID_EMAIL_ADDRESS +
-                                              "', " + "jurisdiction: '" + JURISDICTION_REFERENCE + "', case type: '"
-                                              + CASE_TYPE_REFERENCE + "', state: 'PF'"));
-                  });
+            () -> assertThat(result.getValidationErrors(), hasSize(equalTo(3))),
+            () -> {
+                final List<String> errorMessages = result.getValidationErrors()
+                    .stream()
+                    .map(e -> e.getDefaultMessage())
+                    .collect(Collectors.toList());
+                assertThat(errorMessages,
+                    hasItems("Invalid email in workbasket user default; user: "
+                            + "'BAYAN-The-Royal-Highnes', jurisdiction: 'BAYAN', case type: '"
+                            + CASE_TYPE_REFERENCE + "', state: '" + STATE_REFERENCE + "'",
+                        "Invalid jurisdiction in workbasket user default; user: "
+                            + "'BAYAN-The-Royal-Highnes', jurisdiction: 'BAYAN', case type: '"
+                            + CASE_TYPE_REFERENCE + "', state: '" + STATE_REFERENCE + "'",
+                        "Invalid state in workbasket user default; user: '" + VALID_EMAIL_ADDRESS
+                            + "', " + "jurisdiction: '" + JURISDICTION_REFERENCE + "', case type: '"
+                            + CASE_TYPE_REFERENCE + "', state: 'PF'"));
+            });
     }
 
     @DisplayName("Checks content in ValidationError createMessage")
     @Test
     void createMessage() {
         final WorkBasketUserDefault userDefault = buildWorkBasketUserDefault(VALID_EMAIL_ADDRESS,
-                                                                             JURISDICTION_REFERENCE,
-                                                                             CASE_TYPE_REFERENCE,
-                                                                             STATE_REFERENCE);
+            JURISDICTION_REFERENCE,
+            CASE_TYPE_REFERENCE,
+            STATE_REFERENCE);
         new UserProfileValidatorImpl.ValidationError("test case", userDefault);
     }
 
@@ -187,7 +187,7 @@ class UserProfileValidatorImplTest {
                                                              final String caseType,
                                                              final String state) {
         WorkBasketUserDefault userDefault = new WorkBasketUserDefault();
-        userDefault.setUserIDAMId(idamId);
+        userDefault.setUserIdamId(idamId);
         userDefault.setWorkBasketDefaultJurisdiction(jurisdiction);
         userDefault.setWorkBasketDefaultCaseType(caseType);
         userDefault.setWorkBasketDefaultState(state);

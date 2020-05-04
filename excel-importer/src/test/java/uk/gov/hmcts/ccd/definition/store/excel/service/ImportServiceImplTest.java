@@ -350,7 +350,7 @@ public class ImportServiceImplTest {
         assertThat(warnings.size(), equalTo(2));
         assertThat(importWarnings, containsInAnyOrder("Warning1", "Warning2"));
         verify(spreadsheetParser).getImportWarnings();
-   }
+    }
 
     private FieldTypeEntity buildBaseType(final String reference) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

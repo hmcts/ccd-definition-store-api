@@ -23,7 +23,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 class CaseRoleServiceImplTest {
-    private final String CASE_TYPE_REFERENCE = "Case Type 1";
+    private final String caseTypeReference = "Case Type 1";
     @Mock
     EntityToResponseDTOMapper dtoMapper;
     @Mock
@@ -47,7 +47,7 @@ class CaseRoleServiceImplTest {
         caseRole1.setId(caseRoleEntity1.getReference());
         doReturn(Arrays.asList(caseRoleEntity1, caseRoleEntity2, caseRoleEntity3))
             .when(caseRoleRepository)
-            .findCaseRoleEntitiesByCaseType(CASE_TYPE_REFERENCE);
+            .findCaseRoleEntitiesByCaseType(caseTypeReference);
         doReturn(caseRole1).when(dtoMapper).map(caseRoleEntity1);
         doReturn(caseRole2).when(dtoMapper).map(caseRoleEntity2);
         doReturn(caseRole3).when(dtoMapper).map(caseRoleEntity3);
@@ -56,9 +56,9 @@ class CaseRoleServiceImplTest {
     @DisplayName("should return Case Role List")
     @Test
     void findByCaseTypeId() {
-        doReturn(Optional.of(1)).when(caseTypeRepository).findLastVersion(CASE_TYPE_REFERENCE);
+        doReturn(Optional.of(1)).when(caseTypeRepository).findLastVersion(caseTypeReference);
 
-        final List<CaseRole> caseRoles = classUnderTest.findByCaseTypeId(CASE_TYPE_REFERENCE);
+        final List<CaseRole> caseRoles = classUnderTest.findByCaseTypeId(caseTypeReference);
 
         assertAll(
             () -> assertThat(caseRoles.size(), is(3)),
@@ -69,10 +69,10 @@ class CaseRoleServiceImplTest {
     @DisplayName("should throw exception when case type not found")
     @Test
     void invalidCaseTypeId() {
-        doThrow(new NotFoundException("Not found")).when(caseTypeRepository).findLastVersion(CASE_TYPE_REFERENCE);
+        doThrow(new NotFoundException("Not found")).when(caseTypeRepository).findLastVersion(caseTypeReference);
 
         assertThrows(NotFoundException.class, () -> {
-            final List<CaseRole> caseRoles = classUnderTest.findByCaseTypeId(CASE_TYPE_REFERENCE);
+            final List<CaseRole> caseRoles = classUnderTest.findByCaseTypeId(caseTypeReference);
         });
     }
 

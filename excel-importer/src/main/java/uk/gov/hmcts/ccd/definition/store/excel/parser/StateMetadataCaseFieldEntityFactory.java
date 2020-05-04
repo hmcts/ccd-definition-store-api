@@ -38,6 +38,20 @@ public class StateMetadataCaseFieldEntityFactory implements MetadataCaseFieldEnt
         return createCaseFieldEntity(createFixedListType(parseContext, caseType), caseType);
     }
 
+    private CaseFieldEntity createCaseFieldEntity(FieldTypeEntity fixedListType, CaseTypeEntity caseType) {
+        final CaseFieldEntity caseField = new CaseFieldEntity();
+
+        caseField.setReference(STATE.getReference());
+        caseField.setFieldType(fixedListType);
+        caseField.setSecurityClassification(caseType.getSecurityClassification());
+        caseField.setLabel(STATE.getLabel());
+        caseField.setHidden(false);
+        caseField.setLiveFrom(LocalDate.now());
+        caseField.setDataFieldType(DataFieldType.METADATA);
+
+        return caseField;
+    }
+
     private FieldTypeEntity createFixedListType(ParseContext parseContext, CaseTypeEntity caseType) {
         // Get base field type from context
         FieldTypeEntity fixedListBaseType = parseContext.getBaseType(BASE_FIXED_LIST)
@@ -62,19 +76,4 @@ public class StateMetadataCaseFieldEntityFactory implements MetadataCaseFieldEnt
             return listItem;
         }).collect(Collectors.toList());
     }
-
-    private CaseFieldEntity createCaseFieldEntity(FieldTypeEntity fixedListType, CaseTypeEntity caseType) {
-        final CaseFieldEntity caseField = new CaseFieldEntity();
-
-        caseField.setReference(STATE.getReference());
-        caseField.setFieldType(fixedListType);
-        caseField.setSecurityClassification(caseType.getSecurityClassification());
-        caseField.setLabel(STATE.getLabel());
-        caseField.setHidden(false);
-        caseField.setLiveFrom(LocalDate.now());
-        caseField.setDataFieldType(DataFieldType.METADATA);
-
-        return caseField;
-    }
-
 }

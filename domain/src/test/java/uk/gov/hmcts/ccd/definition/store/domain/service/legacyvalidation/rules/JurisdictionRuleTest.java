@@ -84,13 +84,13 @@ public class JurisdictionRuleTest {
 
     @Test
     public void liveFromAfterLiveUntilTest() {
-        // Given - a Case Type with a Jurisdiction whose Live From date is after the Live Until date
-        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
         JurisdictionEntity jurisdiction = new JurisdictionEntity();
         jurisdiction.setName("JURISDICTION_NAME");
         jurisdiction.setLiveFrom(new Date(100));
         jurisdiction.setLiveTo(new Date(50));
+        // Given - a Case Type with a Jurisdiction whose Live From date is after the Live Until date
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setJurisdiction(jurisdiction);
 
         // When - performing validation on the Case Type

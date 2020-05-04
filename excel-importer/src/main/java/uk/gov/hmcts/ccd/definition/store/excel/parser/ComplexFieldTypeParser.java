@@ -25,7 +25,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_C
  * This includes Complex types themselves and the custom simple types they use.
  */
 public class ComplexFieldTypeParser implements FieldShowConditionParser {
-    private static final String INVALID_ORDER_COLUMN = "ComplexField with reference='%s' has incorrect order for nested fields. Order has to be incremental and start from 1";
+    private static final String INVALID_ORDER_COLUMN = "ComplexField with reference='%s' has incorrect order for nested fields. "
+        + "Order has to be incremental and start from 1";
     private static final Logger logger = LoggerFactory.getLogger(ComplexFieldTypeParser.class);
 
     private ParseContext parseContext;
@@ -45,7 +46,8 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         this.fieldTypeParser = fieldTypeParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
 
-        complexBaseType = parseContext.getBaseType(BASE_COMPLEX).orElseThrow(() -> new SpreadsheetParsingException("No base type found for Complex field: " + BASE_COMPLEX));
+        complexBaseType = parseContext.getBaseType(BASE_COMPLEX).orElseThrow(() ->
+            new SpreadsheetParsingException("No base type found for Complex field: " + BASE_COMPLEX));
     }
 
     /**
@@ -61,7 +63,8 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         logger.debug("Complex types parsing: {} complex types detected", complexTypesItems.size());
 
         // TODO Check for already existing types with same identity
-        ParseResult<FieldTypeEntity> result = complexTypesItems.entrySet().stream().map(this::parseComplexType).reduce(new ParseResult(), (res, complexTypeParseResult) -> res.add(complexTypeParseResult));
+        ParseResult<FieldTypeEntity> result = complexTypesItems.entrySet().stream().map(this::parseComplexType).reduce(new ParseResult(),
+            (res, complexTypeParseResult) -> res.add(complexTypeParseResult));
 
         logger.info("Complex types parsing: OK: {} types parsed, including {} complex", result.getAllResults().size(), complexTypesItems.size());
 
