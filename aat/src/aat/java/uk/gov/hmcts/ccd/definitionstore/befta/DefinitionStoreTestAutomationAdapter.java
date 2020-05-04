@@ -7,7 +7,7 @@ import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
 
 public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationAdapter {
 
-    public static final String DEFAULT_DEFINITIONS_PATH = "uk/gov/hmcts/befta/dse/ccd/definitions/";
+    public static final String DEFAULT_DEFINITIONS_PATH = "uk/gov/hmcts/befta/dse/ccd/definitions/valid";
 
     private TestDataLoaderToDefinitionStore loader = new TestDataLoaderToDefinitionStore(this, DEFAULT_DEFINITIONS_PATH,
             BeftaMain.getConfig().getTestUrl());

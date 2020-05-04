@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "/user-profile/users"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "hello": "Hello world!"
+    }
+  }
+}

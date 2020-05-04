@@ -48,9 +48,10 @@ public class EventCaseFieldComplexTypeParserTest {
         String originalShowCondition = "Original Show Condition";
         String label = "label";
         String hint = "hint";
+        String displayContextParameter = "Display Context Parameter";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
-        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, label, hint);
+        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, label, hint, displayContextParameter);
 
         List<DefinitionDataItem> definitionDataItems = singletonList(definitionDataItem);
 
@@ -73,7 +74,7 @@ public class EventCaseFieldComplexTypeParserTest {
         assertEquals(DisplayContext.OPTIONAL, eventComplexTypeEntities.get(0).getDisplayContext());
     }
 
-    private DefinitionDataItem definitionDataItem(String caseFieldId, DisplayContextColumn displayContext, String showCondition, String label, String hint) {
+    private DefinitionDataItem definitionDataItem(String caseFieldId, DisplayContextColumn displayContext, String showCondition, String label, String hint, String displayContextParameter) {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
 
         when(definitionDataItem.getString(eq(ColumnName.CASE_FIELD_ID))).thenReturn(caseFieldId);
@@ -82,6 +83,7 @@ public class EventCaseFieldComplexTypeParserTest {
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_LABEL)).thenReturn(label);
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_HINT)).thenReturn(hint);
         when(definitionDataItem.getInteger(ColumnName.FIELD_DISPLAY_ORDER)).thenReturn(1);
+        when(definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER)).thenReturn(displayContextParameter);
         when(definitionDataItem.getLocalDate(ColumnName.LIVE_FROM)).thenReturn(LIVE_FROM);
         when(definitionDataItem.getLocalDate(ColumnName.LIVE_TO)).thenReturn(LIVE_TO);
 

@@ -18,4 +18,9 @@ public class WorkBasketCaseFieldEntity extends GenericLayoutEntity {
     public void setSortOrder(SortOrder sortOrder) {
         this.sortOrder = sortOrder;
     }
+
+    @Override
+    public String getSheetName() {
+        return "WorkBasketResultFields";
+    }
 }

@@ -18,8 +18,8 @@
   "request": {
     "extends": "",
     "headers": {
-      "Authorization": "[[DYNAMIC]]",
-      "ServiceAuthorization": "[[DYNAMIC]]",
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
       "Content-Type": "application/json"
     }
   },
@@ -72,7 +72,7 @@
           "refreshScope" : {
             "status" : "UP"
           },
-          "uk.gov.hmcts.reform.authorisation.healthcheck.ServiceAuth" : {
+          "serviceAuth" : {
             "status" : "UP"
           }
         }
