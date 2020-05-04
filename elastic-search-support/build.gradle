@@ -1,3 +1,4 @@
+apply plugin: 'info.solidsoft.pitest'
 jar {
     enabled = true
     baseName = 'definition-store-elastic-search-support'
@@ -19,4 +20,28 @@ dependencies {
     testCompile project(":domain").sourceSets.main.output
     testCompile project(":repository").sourceSets.test.output
     testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
+}
+
+pitest {
+    targetClasses = ['uk.gov.hmcts.ccd.definition.store.elastic.*']
+    targetTests = ['uk.gov.hmcts.ccd.definition.store.elastic.*',
+                    'uk.gov.hmcts.ccd.definition.store.elastic.hamcrestutil.*',
+                   'uk.gov.hmcts.ccd.definition.store.elastic.integration.*',
+                    'uk.gov.hmcts.ccd.definition.store.elastic.mapping.*'
+                   ]
+    enableDefaultIncrementalAnalysis = true
+    historyInputLocation = ['build/reports/pitest/fastermutationtesting']
+    historyOutputLocation = ['build/reports/pitest/fastermutationtestingoutput']
+    threads = 15
+    testSourceSets = [sourceSets.test]
+    mainSourceSets = [sourceSets.main]
+    fileExtensionsToFilter.addAll('xml', 'json')
+    outputFormats = ['XML', 'HTML', 'CSV']
+    mutationThreshold = 0
+    coverageThreshold = 0
+    maxMutationsPerClass = 15
+    jvmArgs = ['-Xms1G', '-Xmx3G']
+    timestampedReports = false
+    failWhenNoMutations = false
+    detectInlinedCode = true
 }
