@@ -19,6 +19,7 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class DefinitionDataItem {
+
     private final String sheetName;
     private final List<Pair<String, Object>> attributes;
 
@@ -186,4 +187,18 @@ public class DefinitionDataItem {
     public String getSheetName() {
         return sheetName;
     }
+
+    public String getDisplayContextParameter() {
+        return getString(ColumnName.DISPLAY_CONTEXT_PARAMETER);
+    }
+
+    public String getCaseFieldId() {
+        return getString(ColumnName.CASE_FIELD_ID) != null ? getString(ColumnName.CASE_FIELD_ID) :
+            new StringBuilder()
+                .append(getString(ColumnName.ID))
+                .append(".")
+                .append(getString(ColumnName.LIST_ELEMENT_CODE))
+                .toString();
+    }
+
 }

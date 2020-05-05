@@ -43,8 +43,7 @@
 		<cve>CVE-2019-7611</cve>
 		<cve>CVE-2019-7614</cve>
 	</suppress>
-
-
+  
 	<!-- THIS WILL BE FIX IN RDM-8003-->
 	<suppress>
 		<notes><![CDATA[
@@ -64,6 +63,8 @@
 		<cve>CVE-2018-17244</cve>
         <cve>CVE-2020-10673</cve>
         <cve>CVE-2020-10672</cve>
+		<cve>CVE-2020-11619</cve>
+		<cve>CVE-2020-11620</cve>
 	</suppress>
 
 
