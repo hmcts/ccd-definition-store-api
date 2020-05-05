@@ -1,20 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import javax.validation.constraints.NotNull;
-import java.util.Map;
 
 @Component
 public class DefinitionModelMapper {
-
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final TypeReference<Map<String, JsonNode>> stringJsonMapType = new TypeReference<Map<String, JsonNode>>() {};
 
     /**
      * Maps a Definition model object to its corresponding entity class. Note: The Jurisdiction object within a
@@ -23,7 +18,7 @@ public class DefinitionModelMapper {
      *
      * @param definition The Definition to be mapped
      * @return A DefinitionEntity with the mappings. Note: The JurisdictionEntity will be null and needs to be set post
-     *         mapping with the proper, retrieved entity
+     * mapping with the proper, retrieved entity
      */
     public DefinitionEntity toEntity(@NotNull final Definition definition) {
         final DefinitionEntity definitionEntity = new DefinitionEntity();
@@ -32,9 +27,9 @@ public class DefinitionModelMapper {
         definitionEntity.setVersion(definition.getVersion());
         definitionEntity.setStatus(definition.getStatus());
         if (definition.getData() == null) {
-            definitionEntity.setData(mapper.createObjectNode());
+            definitionEntity.setData(new ObjectMapper().createObjectNode());
         } else {
-            definitionEntity.setData(mapper.convertValue(definition.getData(), JsonNode.class));
+            definitionEntity.setData(JacksonUtils.convertValueJsonNode(definition.getData()));
         }
         definitionEntity.setAuthor(definition.getAuthor());
         definitionEntity.setLastModified(definition.getLastModified());
@@ -45,7 +40,8 @@ public class DefinitionModelMapper {
 
     /**
      * Maps a Definition model object to an existent entity class.
-     * @param definition definition to be mapped
+     *
+     * @param definition       definition to be mapped
      * @param definitionEntity existent definition entity
      */
     public void toEntity(@NotNull final Definition definition,
@@ -54,9 +50,9 @@ public class DefinitionModelMapper {
         definitionEntity.setDescription(definition.getDescription());
         definitionEntity.setStatus(definition.getStatus());
         if (definition.getData() == null) {
-            definitionEntity.setData(mapper.createObjectNode());
+            definitionEntity.setData(new ObjectMapper().createObjectNode());
         } else {
-            definitionEntity.setData(mapper.convertValue(definition.getData(), JsonNode.class));
+            definitionEntity.setData(JacksonUtils.convertValueJsonNode(definition.getData()));
         }
         definitionEntity.setAuthor(definition.getAuthor());
         definitionEntity.setDeleted(definition.isDeleted());
@@ -85,7 +81,7 @@ public class DefinitionModelMapper {
         definition.setDescription(definitionEntity.getDescription());
         definition.setVersion(definitionEntity.getVersion());
         definition.setStatus(definitionEntity.getStatus());
-        definition.setData(mapper.convertValue(definitionEntity.getData(), stringJsonMapType));
+        definition.setData(JacksonUtils.convertValue(definitionEntity.getData()));
         definition.setAuthor(definitionEntity.getAuthor());
         definition.setCreatedAt(definitionEntity.getCreatedAt());
         definition.setLastModified(definitionEntity.getLastModified());

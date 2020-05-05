@@ -136,7 +136,7 @@ allprojects {
 
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        compile "com.fasterxml.jackson.core:jackson-databind:2.10.0"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.10.3"
     }
 
     checkstyle {
