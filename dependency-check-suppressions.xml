@@ -49,7 +49,16 @@
 		<cve>CVE-2020-11620</cve>
 	</suppress>
 
-
+	<suppress>
+		<notes><![CDATA[
+        file name: jackson-databind-2.9.10.3.jar
+        ]]></notes>
+		<packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$
+		</packageUrl>
+		<cve>CVE-2020-9546</cve>
+		<cve>CVE-2020-9547</cve>
+		<cve>CVE-2020-9548</cve>
+	</suppress>
 
 	<suppress>
 		<notes> NEW CVE og4j-to-slf4j-2.11.1.jar :2.3:a:apache:log4j</notes>
