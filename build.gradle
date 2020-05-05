@@ -149,6 +149,9 @@ allprojects {
     test.shouldRunAfter(checkstyleTest)
 
     configurations.all {
+        collect { configuration ->
+            configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+        }
         resolutionStrategy {
             dependencySubstitution {
                 substitute module('org.elasticsearch:elasticsearch') with module("org.elasticsearch:elasticsearch:${elasticSearchVersion}")
@@ -160,6 +163,9 @@ allprojects {
                 }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.7.0'
+                }
+                if (details.requested.group == 'org.apache.logging.log4j' && details.requested.name == 'log4j-api') {
+                    details.useVersion '2.13.2'
                 }
             }
         }
