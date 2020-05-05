@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.4.RELEASE'
+        springBootVersion = '2.2.5.RELEASE'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -235,6 +235,13 @@ subprojects { subproject ->
             exclude group: 'org.hibernate', module: 'hibernate-core'
             exclude group: 'org.hibernate', module: 'hibernate-entitymanager'
         }
+
+        // Force to use the latest org.springframework.security
+        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.0.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.0.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.0.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.0.RELEASE'
+
         compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"

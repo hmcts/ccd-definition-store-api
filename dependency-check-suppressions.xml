@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions
-	xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+		xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
 	<!-- THIS CVEs should not be removed until the elastic search client is updated to 7.
     Before updating the elastic client make sure that the server has been updated to 7 -->
@@ -37,7 +37,6 @@
 	</suppress>
 
 
-
 	<!-- THIS WILL BE FIX IN RDM-8002-->
 	<suppress>
 		<notes>Temporary suppression for on-going developments</notes>
@@ -49,8 +48,6 @@
 		<cve>CVE-2020-11619</cve>
 		<cve>CVE-2020-11620</cve>
 	</suppress>
-
-
 
 	<suppress>
 		<notes><![CDATA[
