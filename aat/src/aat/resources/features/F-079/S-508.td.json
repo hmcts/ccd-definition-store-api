@@ -18,7 +18,7 @@
       "id" : "FT_DateTimeFormats",
       "description" : "CaseType for testing DateTime formats",
       "version" : {
-        "number" : 2,
+        "number" : "[[ANY_INTEGER_NOT_NULLABLE]]",
         "live_from" : "2017-01-01T00:00:00.000+0000",
         "live_until" : null
       },
