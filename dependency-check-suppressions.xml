@@ -35,7 +35,7 @@
 		<cve>CVE-2019-7611</cve>
 		<cve>CVE-2019-7614</cve>
 	</suppress>
-	<!--Liquibase bundles bootstrap and jquery in order to provide an admin 
+	<!--Liquibase bundles bootstrap and jquery in order to provide an admin
 		UI Suppressing on the basis that we do not expose this UI. -->
 	<suppress>
 		<notes><![CDATA[ file name: liquibase-core-3.6.3.jar: bootstrap.js ]]></notes>
@@ -78,6 +78,8 @@
 		<cve>CVE-2018-17244</cve>
         <cve>CVE-2020-10673</cve>
         <cve>CVE-2020-10672</cve>
+		<cve>CVE-2020-11619</cve>
+		<cve>CVE-2020-11620</cve>
 	</suppress>
 	<suppress>
 		<notes><![CDATA[
