@@ -33,7 +33,7 @@ class DisplayApiTest extends BaseTest {
                 "/api/display/search-input-definition/{ctid}")
             .then()
             .statusCode(200);
-     }
+    }
 
     @Test
     @DisplayName("Should return the UI definition for the search result fields for a given Case Type")

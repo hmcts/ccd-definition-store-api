@@ -9,7 +9,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 import java.util.List;
 
 public class WebhookParser {
+
     public static final String WEBHOOK_RETRIES_SEPARATOR = ",";
+
+    private WebhookParser() {
+        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor (squid:S1118)
+    }
 
     public static WebhookEntity parseWebhook(DefinitionDataItem eventDefinition, ColumnName urlColumn,
                                     ColumnName retriesColumn) {

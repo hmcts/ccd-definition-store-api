@@ -45,10 +45,10 @@ public class DataSetupExtension implements BeforeAllCallback {
         RestAssured.given()
             .header("Authorization", "Bearer " + caseworker.getAccessToken())
             .header("ServiceAuthorization", s2sToken)
-            .body("{\n" +
-                "\"role\": \"caseworker-autotest1\",\n" +
-                " \"security_classification\": \"PUBLIC\"\n" +
-                "}")
+            .body("{\n"
+                + "\"role\": \"caseworker-autotest1\",\n"
+                + " \"security_classification\": \"PUBLIC\"\n"
+                + "}")
             .contentType(ContentType.JSON)
             .when()
             .put("/api/user-role")

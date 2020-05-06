@@ -66,8 +66,8 @@ public class ImportController {
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes));
 
             if (azureStorageConfiguration != null && azureStorageConfiguration.isAzureUploadEnabled() && fileStorageService != null) {
-                    LOG.info("Uploading Definition file to Azure Storage...");
-                    fileStorageService.uploadFile(file, metadata);
+                LOG.info("Uploading Definition file to Azure Storage...");
+                fileStorageService.uploadFile(file, metadata);
             }
 
             final String responseBody = "Case Definition data successfully imported";

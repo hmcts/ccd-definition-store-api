@@ -28,7 +28,7 @@ public class CaseTabCollection {
     }
 
     /**
-     * The channels this tab is targetted at
+     * The channels this tab is targetted at.
      **/
     @ApiModelProperty(value = "The channels this tab is targetted at")
     @JsonProperty("channels")
@@ -41,6 +41,7 @@ public class CaseTabCollection {
     }
 
     /**
+     * returns a lists of tabs.
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("tabs")

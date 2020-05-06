@@ -133,7 +133,6 @@ class GenericLayoutEntityElementPathValidatorImplTest {
         @ParameterizedTest
         @ArgumentsSource(ValidateGoodComplexEntityArgProvider.class)
         void shouldValidateGoodComplexEntity(String path, GenericLayoutEntity entity) {
-//            System.out.println("testing... " + path + "   " + entity.getClass().getSimpleName());
             CaseFieldEntity complexCaseField = complexCaseField();
             entity.setCaseField(complexCaseField);
             entity.setCaseType(caseType);

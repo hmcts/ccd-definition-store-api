@@ -32,11 +32,6 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
 
     }
 
-    private boolean isOrderNotWithinSize(ComplexFieldEntity complexFieldEntity) {
-        int sizeOfComplexType = complexFieldEntity.getComplexFieldType().getComplexFields().size();
-        return complexFieldEntity.getOrder() != null && complexFieldEntity.getOrder() > sizeOfComplexType;
-    }
-
     private List<ValidationError> validate(ComplexFieldEntity complexField) {
         List<ValidationError> validationErrors = newArrayList();
 
@@ -52,6 +47,11 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
             validateComplexField(complexField, children).ifPresent(validationErrors::add);
         }
         return validationErrors;
+    }
+
+    private boolean isOrderNotWithinSize(ComplexFieldEntity complexFieldEntity) {
+        int sizeOfComplexType = complexFieldEntity.getComplexFieldType().getComplexFields().size();
+        return complexFieldEntity.getOrder() != null && complexFieldEntity.getOrder() > sizeOfComplexType;
     }
 
     private Optional<ValidationError> validateComplexField(ComplexFieldEntity complexFieldEntity, List<ComplexFieldEntity> children) {

@@ -59,7 +59,7 @@ class AdminWebAuthorizationControllerTest {
             () -> assertTrue(result.getCanImportDefinition()),
             () -> assertTrue(result.getCanManageDefinition()),
             () -> assertTrue(result.getCanManageUserRole())
-            );
+        );
     }
 
     @DisplayName("Should get no admin web authorization")

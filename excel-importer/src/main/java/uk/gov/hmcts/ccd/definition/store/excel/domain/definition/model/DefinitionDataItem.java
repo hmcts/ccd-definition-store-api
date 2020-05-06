@@ -41,15 +41,16 @@ public class DefinitionDataItem {
     }
 
     /**
-     * Find the attribute with the given name withing the item
+     * Find the attribute with the given name withing the item.
      *
      * @param name - name of attribute to find
      * @return attribute with the matching name (or null if it wasn't found)
      */
     public Object findAttribute(String name) {
         for (Pair<String, Object> attribute : attributes) {
-            if (attribute.getKey().equals(name))
+            if (attribute.getKey().equals(name)) {
                 return attribute.getValue();
+            }
         }
         return null;
     }

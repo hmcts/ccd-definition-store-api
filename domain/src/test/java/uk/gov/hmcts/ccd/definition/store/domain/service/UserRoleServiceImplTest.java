@@ -63,7 +63,7 @@ class UserRoleServiceImplTest {
 
         @Test
         @DisplayName("should throw NotFoundException when role is not found")
-        void NotFound() {
+        void notFound() {
 
             final String role = "roleX";
 
@@ -193,10 +193,10 @@ class UserRoleServiceImplTest {
         @DisplayName("should return userRoles if defined")
         void getRoles() {
             String[] roleNames = {"role1", "role2", "role3"};
-            UserRoleEntity entity2 = mock(UserRoleEntity.class);
             givenUserRole(roleNames[0], PUBLIC);
             givenEntityWithRole(roleNames[0], RESTRICTED, entity);
             givenUserRole(roleNames[2], PUBLIC);
+            UserRoleEntity entity2 = mock(UserRoleEntity.class);
             givenEntityWithRole(roleNames[2], PUBLIC, entity2);
 
             doReturn(Arrays.asList(entity, entity2)).when(repository).findByReferenceIn(Arrays.asList(roleNames));
@@ -232,10 +232,10 @@ class UserRoleServiceImplTest {
         @DisplayName("should return all userRoles")
         void getRoles() {
             String[] roleNames = {"role1", "role2", "role3"};
-            UserRoleEntity entity2 = mock(UserRoleEntity.class);
             givenUserRole(roleNames[0], PUBLIC);
             givenEntityWithRole(roleNames[0], RESTRICTED, entity);
             givenUserRole(roleNames[2], PUBLIC);
+            UserRoleEntity entity2 = mock(UserRoleEntity.class);
             givenEntityWithRole(roleNames[2], PUBLIC, entity2);
 
             doReturn(Arrays.asList(entity, entity2)).when(repository).findAll();

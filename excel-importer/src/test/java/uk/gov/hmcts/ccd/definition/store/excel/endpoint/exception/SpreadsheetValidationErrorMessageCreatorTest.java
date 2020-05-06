@@ -419,8 +419,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid case role '[CASE_ROLE]' in AuthorisationCaseType tab for case type 'case type'." +
-                " Please make sure it is defined in the CaseRoles sheet.",
+            "Invalid case role '[CASE_ROLE]' in AuthorisationCaseType tab for case type 'case type'."
+                + " Please make sure it is defined in the CaseRoles sheet.",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -503,8 +503,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid case role '[SOME_CASE_ROLE]' in AuthorisationCaseField tab, case type 'case type', case field 'case field'." +
-                " Please make sure it is defined in the CaseRoles sheet.",
+            "Invalid case role '[SOME_CASE_ROLE]' in AuthorisationCaseField tab, "
+                + "case type 'case type', case field 'case field'."
+                + " Please make sure it is defined in the CaseRoles sheet.",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -588,7 +589,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', case field 'case field', list element code 'list element code', user role 'user role'",
+            "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', "
+                + "case field 'case field', list element code 'list element code', user role 'user role'",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -710,8 +712,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid case role '[CASE_ROLE]' in AuthorisationCaseEvent tab, case type 'case type', event 'event'." +
-                " Please make sure it is defined in the CaseRoles sheet.",
+            "Invalid case role '[CASE_ROLE]' in AuthorisationCaseEvent tab, case type 'case type', event 'event'."
+                + " Please make sure it is defined in the CaseRoles sheet.",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -829,7 +831,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             .thenReturn(Optional.of(definitionDataItem));
 
         assertEquals(
-            "Unknown field 'SHOW CONDITION FIELD' for event 'EVENT ID' and element 'REFERENCE' in show condition: 'SHOW CONDITION' on tab 'EventToComplexTypes'",
+            "Unknown field 'SHOW CONDITION FIELD' for event 'EVENT ID' and element "
+                + "'REFERENCE' in show condition: 'SHOW CONDITION' on tab 'EventToComplexTypes'",
             classUnderTest.createErrorMessage(
                 new EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError("SHOW CONDITION FIELD",
                     context,

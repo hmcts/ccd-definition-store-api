@@ -65,7 +65,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(value = { ValidationException.class })
     public ResponseEntity<Object> handleValidationException(ValidationException validationException, WebRequest request) {
 
-        String errorMessage = getValidationErrorMessage("Validation errors occurred importing the spreadsheet.\n\n", validationException.getValidationResult().getValidationErrors());
+        String errorMessage = getValidationErrorMessage("Validation errors occurred importing the spreadsheet.\n\n",
+            validationException.getValidationResult().getValidationErrors());
 
         return handleExceptionInternal(validationException, errorMessage, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
@@ -92,8 +93,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
         Throwable inner = ex;
         while ((inner = inner.getCause()) != null && 0 < --remaining) {
             log.debug("Remaining '{}' out of '{}'", remaining, MAX_DEPTH);
-            sb.append("\n")
-              .append(inner.getMessage());
+            sb.append("\n").append(inner.getMessage());
         }
 
         return sb.toString();

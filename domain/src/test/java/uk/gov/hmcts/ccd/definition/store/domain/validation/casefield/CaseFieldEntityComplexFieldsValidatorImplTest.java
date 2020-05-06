@@ -183,14 +183,17 @@ public class CaseFieldEntityComplexFieldsValidatorImplTest {
                             && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getParentSecurityClassification() == securityClassification
                                 && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getPreDefinedComplexTypes().size() == 3
                                     && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getPreDefinedComplexTypes().contains(predefinedComplexType1)
-                                        && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getPreDefinedComplexTypes().contains(predefinedComplexType2)
-                                            && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getPreDefinedComplexTypes().contains(predefinedComplexType3);
+                                        && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o)
+                    .getPreDefinedComplexTypes().contains(predefinedComplexType2)
+                                            && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o)
+                    .getPreDefinedComplexTypes().contains(predefinedComplexType3);
             }
 
             @Override
             public void describeTo(Description description) {
                 description.appendText(
-                    " a ComplexFieldEntityValidationContext containing the reference to the Case Type Name, Case Field reference and SecurityClassification of the CaseField");
+                    " a ComplexFieldEntityValidationContext containing the reference to the Case Type Name, "
+                        + "Case Field reference and SecurityClassification of the CaseField");
             }
         };
     }

@@ -28,11 +28,12 @@ public class FieldTypeParser {
         final String min = element.getString(ColumnName.MIN);
         final String max = element.getString(ColumnName.MAX);
 
-        final String actualTypeReference = FieldTypeUtils.isList(baseTypeReference) ?
-            ReferenceUtils.listReference(baseTypeReference, fieldTypeParameter) : baseTypeReference;
+        final String actualTypeReference = FieldTypeUtils.isList(baseTypeReference)
+            ? ReferenceUtils.listReference(baseTypeReference, fieldTypeParameter) : baseTypeReference;
 
         final Optional<FieldTypeEntity> baseFieldTypeOptional = parseContext.getType(actualTypeReference);
-        final FieldTypeEntity baseFieldType = baseFieldTypeOptional.orElseThrow(() -> new SpreadsheetParsingException("Missing field type: " + actualTypeReference));
+        final FieldTypeEntity baseFieldType = baseFieldTypeOptional.orElseThrow(() ->
+            new SpreadsheetParsingException("Missing field type: " + actualTypeReference));
 
         final FieldTypeEntity fieldType;
         if (anyDefined(regularExpression, min, max)
@@ -50,7 +51,8 @@ public class FieldTypeParser {
             fieldType.setMaximum(max);
 
             if ("Collection".equals(baseTypeReference)) {
-                final FieldTypeEntity collectionFieldType = parseContext.getType(fieldTypeParameter).orElseThrow(() -> new SpreadsheetParsingException("No type found for collection of: " + fieldTypeParameter));
+                final FieldTypeEntity collectionFieldType = parseContext.getType(fieldTypeParameter).orElseThrow(() ->
+                    new SpreadsheetParsingException("No type found for collection of: " + fieldTypeParameter));
                 fieldType.setCollectionFieldType(collectionFieldType);
             }
 

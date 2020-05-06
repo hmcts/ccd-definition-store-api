@@ -31,7 +31,8 @@ public class CaseTypeEntityMissingSecurityClassificationValidationErrorTest {
 
     @Test
     public void testDefaultMessage() {
-        assertEquals("Case Type with name 'Charley says Dont talk to strangers' must have a Security Classification defined", classUnderTest.getDefaultMessage());
+        assertEquals("Case Type with name 'Charley says Dont talk to strangers' "
+            + "must have a Security Classification defined", classUnderTest.getDefaultMessage());
     }
 
     @Test

@@ -60,7 +60,10 @@ class AuthorisationComplexTypeParser implements AuthorisationParser {
                     final CaseFieldEntity caseFieldEntity = caseType.findCaseField(caseFieldReference)
                         .orElseThrow(() -> new MapperException(String.format("Unknown CaseField '%s' in worksheet '%s'", caseFieldReference, getSheetName())));
                     if (!allPaths.contains(caseFieldReference + "." + listElementCode)) {
-                        throw new MapperException(String.format("Unknown List Element Code '%s' for CaseField '%s' in worksheet '%s'", listElementCode, caseFieldReference, getSheetName()));
+                        throw new MapperException(String.format("Unknown List Element Code '%s' for CaseField '%s' in worksheet '%s'",
+                            listElementCode,
+                            caseFieldReference,
+                            getSheetName()));
                     }
                     final ComplexFieldACLEntity complexFieldACLEntity = new ComplexFieldACLEntity();
                     parseUserRole(complexFieldACLEntity, definition, parseContext);

@@ -57,13 +57,12 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
         when(validator2.validate(anyObject())).thenReturn(new ValidationResult(ve2));
 
         ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
-
+        assertThat(result.getValidationErrors(), hasSize(2));
+        assertThat(result.getValidationErrors(), hasItems(ve1, ve2));
         verify(validator1).validate(e1);
         verify(validator1).validate(e2);
         verify(validator2).validate(e1);
         verify(validator2).validate(e2);
-        assertThat(result.getValidationErrors(), hasSize(2));
-        assertThat(result.getValidationErrors(), hasItems(ve1, ve2));
     }
 
     @Test
