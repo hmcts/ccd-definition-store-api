@@ -30,6 +30,7 @@ class ApplicationConfiguration {
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
+        executor.setQueueCapacity(5);
         executor.setThreadNamePrefix(prefix);
         executor.setThreadNamePrefix(prefix);
         executor.setThreadNamePrefix(prefix);
