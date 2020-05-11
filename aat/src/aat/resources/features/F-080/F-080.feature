@@ -1,11 +1,11 @@
 @F-080
-Feature: F-080: Get Case details by Jurisdiction
+Feature: F-080: Get Case Type details by Jurisdiction
 
   Background:
     Given an appropriate test context as detailed in the test data source
 
   @S-080.1
-  Scenario: must return 200
+  Scenario: must return case type details for the request
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a valid jurisdiction id]
