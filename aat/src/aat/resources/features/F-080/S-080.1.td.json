@@ -395,7 +395,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2020-05-11",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
 
@@ -1632,7 +1632,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2020-05-04",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
 
@@ -1666,7 +1666,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2020-05-04",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
 
@@ -1700,7 +1700,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2020-05-04",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
 
@@ -1734,7 +1734,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2020-05-04",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
 
@@ -1768,7 +1768,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2020-05-04",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
 
@@ -1802,7 +1802,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2020-05-04",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
 
@@ -1836,7 +1836,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2020-05-04",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
 
