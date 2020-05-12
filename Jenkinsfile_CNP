@@ -46,6 +46,7 @@ env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
 env.OAUTH2_CLIENT_ID = "ccd_gateway"
 env.OAUTH2_REDIRECT_URI = "https://www-ccd.aat.platform.hmcts.net/oauth2redirect"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
+env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
 
 
 withPipeline(type, product, app) {
