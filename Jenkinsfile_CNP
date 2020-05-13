@@ -1,6 +1,6 @@
 #!groovy
 
-@Library("Infrastructure@alexmc-test")
+@Library("Infrastructure@analyze-cves")
 
 def type = "java"
 
