@@ -108,5 +108,12 @@
 		<cve>CVE-2020-9547</cve>
 		<cve>CVE-2020-9548</cve>
 	</suppress>
+		<suppress>
+		<notes><![CDATA[
+        file name: dom4j-2.1.1.jar
+        ]]></notes>
+		<cve>CVE-2020-10683</cve>
+	</suppress>
+
 
 </suppressions>
