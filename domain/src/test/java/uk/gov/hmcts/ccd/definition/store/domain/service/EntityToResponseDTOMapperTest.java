@@ -99,7 +99,7 @@ class EntityToResponseDTOMapperTest {
             eventComplexTypeEntity2.setDisplayContext(DisplayContext.OPTIONAL);
             eventComplexTypeEntity2.setHint("Hint text2");
             eventComplexTypeEntity2.setLabel("Label text2");
-            eventComplexTypeEntity2.setDefaultValue("DefaultValue2");
+            eventComplexTypeEntity2.setDefaultValue("Ref2DefaultValue");
 
             EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
             eventCaseFieldEntity.setShowSummaryChangeOption(true);
