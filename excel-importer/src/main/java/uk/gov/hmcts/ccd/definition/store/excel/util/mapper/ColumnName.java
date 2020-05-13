@@ -76,7 +76,8 @@ public enum ColumnName {
     BANNER_ENABLED("BannerEnabled"),
     BANNER_DESCRIPTION("BannerDescription"),
     BANNER_URL_TEXT("BannerURLText"),
-    BANNER_URL("BannerURL");
+    BANNER_URL("BannerURL"),
+    DEFAULT_VALUE("DefaultValue");
 
     private final String name;
 

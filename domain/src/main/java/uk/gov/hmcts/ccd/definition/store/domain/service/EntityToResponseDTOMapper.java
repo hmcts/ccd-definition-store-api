@@ -214,7 +214,9 @@ public interface EntityToResponseDTOMapper {
                                                                                              complexTypeEntity.getLabel(),
                                                                                              complexTypeEntity.getOrder(),
                                                                                              complexTypeEntity.getDisplayContext(),
-                                                                                             complexTypeEntity.getShowCondition()))
+                                                                                             complexTypeEntity.getShowCondition(),
+                                                                                             complexTypeEntity.getDefaultValue()
+                                         ))
                                          .collect(Collectors.toList());
         }
     }

@@ -89,6 +89,7 @@ class EntityToResponseDTOMapperTest {
             eventComplexTypeEntity1.setDisplayContext(DisplayContext.MANDATORY);
             eventComplexTypeEntity1.setHint("Hint text");
             eventComplexTypeEntity1.setLabel("Label text");
+            eventComplexTypeEntity1.setDefaultValue("DefaultValue1");
 
             EventComplexTypeEntity eventComplexTypeEntity2 = new EventComplexTypeEntity();
             String ref2 = "Some ref2";
@@ -98,6 +99,7 @@ class EntityToResponseDTOMapperTest {
             eventComplexTypeEntity2.setDisplayContext(DisplayContext.OPTIONAL);
             eventComplexTypeEntity2.setHint("Hint text2");
             eventComplexTypeEntity2.setLabel("Label text2");
+            eventComplexTypeEntity2.setDefaultValue("DefaultValue2");
 
             EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
             eventCaseFieldEntity.setShowSummaryChangeOption(true);
@@ -121,6 +123,11 @@ class EntityToResponseDTOMapperTest {
                 () -> assertEquals("displayContext",
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDisplayContext(),
                     findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContext()),
+
+                () -> assertEquals("DefaultValue1",
+                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDefaultValue(),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDefaultValue()),
+
                 () -> assertEquals("order",
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getOrder(),
                     findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder())

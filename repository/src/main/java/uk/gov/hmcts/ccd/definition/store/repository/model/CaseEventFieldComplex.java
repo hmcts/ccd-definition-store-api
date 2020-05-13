@@ -16,6 +16,8 @@ public class CaseEventFieldComplex {
 
     private String showCondition;
 
+    private String defaultValue;
+
     public CaseEventFieldComplex() {
     }
 
@@ -24,13 +26,15 @@ public class CaseEventFieldComplex {
                                  String label,
                                  Integer order,
                                  DisplayContext displayContext,
-                                 String showCondition) {
+                                 String showCondition,
+                                 String defaultValue) {
         this.reference = reference;
         this.hint = hint;
         this.label = label;
         this.order = order;
         this.displayContext = displayContext;
         this.showCondition = showCondition;
+        this.defaultValue = defaultValue;
     }
 
     public String getReference() {
@@ -79,5 +83,9 @@ public class CaseEventFieldComplex {
 
     public void setShowCondition(String showCondition) {
         this.showCondition = showCondition;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
     }
 }
