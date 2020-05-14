@@ -11,7 +11,7 @@ Feature: F-078: Get Version of Case Type
     And the request [contains a valid case type id]
     And it is submitted to call the [Gets The Current Version Of A Case Type Schema] operation of [CCD Definition Store]
     And the response [has the 200 OK code]
-    And the response [returns the version number for case type id BEFTA_CASETYPE_2_1]
+    And the response [returns the version number for case type id FT_MasterCaseType]
     And the response has all the details as expected
 
   @S-332 @Ignore
