@@ -19,6 +19,8 @@ public class FieldTypeUtils {
     public static final String BASE_PHONE_UK = "PhoneUK";
     public static final String BASE_TEXT_AREA = "TextArea";
     public static final String BASE_DOCUMENT = "Document";
+    public static final String BASE_ORGANISATION = "Organisation";
+    public static final String BASE_ORGANISATION_POLICY = "OrganisationPolicy";
     public static final String BASE_LABEL = "Label";
     public static final String BASE_CASE_PAYMENT_HISTORY_VIEWER = "CasePaymentHistoryViewer";
     public static final String BASE_CASE_HISTORY_VIEWER = "CaseHistoryViewer";
