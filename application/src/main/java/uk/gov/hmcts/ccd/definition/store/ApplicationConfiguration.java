@@ -46,6 +46,7 @@ class ApplicationConfiguration {
         executor.setThreadNamePrefix(prefix);
         executor.setThreadNamePrefix(prefix);
         executor.setThreadNamePrefix(prefix);
+        executor.setThreadNamePrefix(prefix);
         executor.initialize();
         executor.initialize();
         return executor;
