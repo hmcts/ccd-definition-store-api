@@ -34,8 +34,8 @@
         </insert>
 
         <insert tableName="complex_field">
-            <column name="reference" value="OrgPolicyCaseAssignedUser" />
-            <column name="label" value="Case Assigned User" />
+            <column name="reference" value="OrgPolicyCaseAssignedRole" />
+            <column name="label" value="Case Assigned Role" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id"
                     valueComputed="(select id from field_type
