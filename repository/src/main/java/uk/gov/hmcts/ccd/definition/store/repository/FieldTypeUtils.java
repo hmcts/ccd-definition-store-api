@@ -19,8 +19,6 @@ public class FieldTypeUtils {
     public static final String BASE_PHONE_UK = "PhoneUK";
     public static final String BASE_TEXT_AREA = "TextArea";
     public static final String BASE_DOCUMENT = "Document";
-    public static final String BASE_ORGANISATION = "Organisation";
-    public static final String BASE_ORGANISATION_POLICY = "OrganisationPolicy";
     public static final String BASE_LABEL = "Label";
     public static final String BASE_CASE_PAYMENT_HISTORY_VIEWER = "CasePaymentHistoryViewer";
     public static final String BASE_CASE_HISTORY_VIEWER = "CaseHistoryViewer";
@@ -29,6 +27,8 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_ADDRESS_UK = "AddressUK";
     public static final String PREDEFINED_COMPLEX_ORDER_SUMMARY = "OrderSummary";
     public static final String PREDEFINED_COMPLEX_CASELINK = "CaseLink";
+    public static final String PREDEFINED_COMPLEX_ORGANISATION = "Organisation";
+    public static final String PREDEFINED_COMPLEX_ORGANISATION_POLICY = "OrganisationPolicy";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference) || BASE_MULTI_SELECT_LIST.equals(baseTypeReference) || BASE_RADIO_FIXED_LIST.equals(baseTypeReference);

@@ -24,8 +24,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_L
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MONEY_GBP;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MULTI_SELECT_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_NUMBER;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_ORGANISATION;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_ORGANISATION_POLICY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_PHONE_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_POST_CODE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
@@ -203,8 +203,8 @@ public class ImportServiceImplTest {
         textAreaBaseType = buildBaseType(BASE_TEXT_AREA);
         collectionBaseType = buildBaseType(BASE_COLLECTION);
         documentBaseType = buildBaseType(BASE_DOCUMENT);
-        organisationBaseType = buildBaseType(BASE_ORGANISATION);
-        organisationPolicyBaseType = buildBaseType(BASE_ORGANISATION_POLICY);
+        organisationBaseType = buildBaseType(PREDEFINED_COMPLEX_ORGANISATION);
+        organisationPolicyBaseType = buildBaseType(PREDEFINED_COMPLEX_ORGANISATION_POLICY);
         labelBaseType = buildBaseType(BASE_LABEL);
         casePaymentHistoryViewerBaseType = buildBaseType(BASE_CASE_PAYMENT_HISTORY_VIEWER);
         caseHistoryViewerBaseType = buildBaseType(BASE_CASE_HISTORY_VIEWER);
