@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-378",
-  "_extends_": "F-087_Test_Base_Data",
+  "_guid_": "S-080.3",
+  "_extends_": "F-080_Test_Base_Data",
   "title": "must return 403 when request provides authentic credentials without authorised access to the operation",
   "specs": [
     "an active profile in CCD, and insufficient privilege to the case type",
@@ -8,7 +8,7 @@
   ],
   "request": {
     "pathVariables": {
-      "id": "BEFTA_CASETYPE_3_2"
+      "jid": "AUTOTEST1"
     }
   },
   "expectedResponse": {

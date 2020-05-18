@@ -4,8 +4,11 @@
   "operationName": "Get Jurisdiction Details",
   "method": "GET",
   "uri": "/api/data/jurisdictions",
-  "user": {
-    "_extends_": "Common_User_For_Request"
+  "users": {
+    "invokingUser": {
+      "username": "master.caseworker@gmail.com",
+      "password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
+    }
   },
   "request": {
     "headers": {
@@ -14,7 +17,7 @@
       "Content-Type": "application/json"
     },
     "queryParams": {
-      "ids": "BEFTA_JURISDICTION_2"
+      "ids": "BEFTA_MASTER"
     }
   }
 }
