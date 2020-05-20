@@ -132,6 +132,9 @@ public enum ColumnName {
             case WORK_BASKET_RESULT_FIELDS:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
                     || columnName.equals(ColumnName.CASE_FIELD_ID);
+            case SEARCH_CASES_RESULT_FIELDS:
+                return columnName.equals(ColumnName.CASE_TYPE_ID)
+                    || columnName.equals(ColumnName.CASE_FIELD_ID);
             case CASE_TYPE_TAB:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
                     || columnName.equals(ColumnName.TAB_ID)

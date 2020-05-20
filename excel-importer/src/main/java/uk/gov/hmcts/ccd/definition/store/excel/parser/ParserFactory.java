@@ -74,7 +74,8 @@ public class ParserFactory {
             new SearchInputLayoutParser(parseContext, entityToDefinitionDataItemRegistry, showConditionParser),
             new SearchResultLayoutParser(parseContext, entityToDefinitionDataItemRegistry, showConditionParser),
             new CaseTypeTabParser(parseContext, showConditionParser, entityToDefinitionDataItemRegistry),
-            new WizardPageParser(parseContext, showConditionParser, entityToDefinitionDataItemRegistry));
+            new WizardPageParser(parseContext, showConditionParser, entityToDefinitionDataItemRegistry),
+            new SearchCasesResultLayoutParser(parseContext, entityToDefinitionDataItemRegistry, showConditionParser));
     }
 
     public UserProfilesParser createUserProfileParser() {

@@ -1374,6 +1374,59 @@ class EntityToResponseDTOMapperTest {
     }
 
     @Nested
+    @DisplayName("Should create a SearchCasesResultFields matching SearchCasesResultFieldsEntity fields")
+    class SearchCasesResultFieldsEntityTests {
+
+        @Test
+        void testMapSearchCasesResultFieldEntity() {
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setReference("role1");
+            SearchCasesResultFieldEntity searchCasesResultFieldEntity = new SearchCasesResultFieldEntity();
+            CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+            caseFieldEntity.setReference("CaseFieldReference");
+            searchCasesResultFieldEntity.setCaseField(caseFieldEntity);
+            searchCasesResultFieldEntity.setCaseFieldElementPath("SomePath");
+            searchCasesResultFieldEntity.setLabel("Label");
+            searchCasesResultFieldEntity.setOrder(69);
+            searchCasesResultFieldEntity.setUserRole(userRoleEntity);
+            SortOrder sortOrder = new SortOrder(2, "ASC");
+            searchCasesResultFieldEntity.setSortOrder(sortOrder);
+            searchCasesResultFieldEntity.setDisplayContextParameter("DisplayContextParameter");
+            searchCasesResultFieldEntity.setUseCase("orgCase");
+
+            SearchCasesResultField searchCasesResultField = spyOnClassUnderTest.map(searchCasesResultFieldEntity);
+
+            assertEquals(searchCasesResultFieldEntity.getOrder(), searchCasesResultField.getOrder());
+            assertEquals(searchCasesResultFieldEntity.getCaseFieldElementPath(), searchCasesResultField.getCaseFieldElementPath());
+            assertEquals(searchCasesResultFieldEntity.getLabel(), searchCasesResultField.getLabel());
+            assertEquals(searchCasesResultFieldEntity.getCaseField().getReference(), searchCasesResultField.getCaseFieldId());
+            assertEquals(searchCasesResultFieldEntity.getDisplayContextParameter(), searchCasesResultField.getDisplayContextParameter());
+            assertEquals(searchCasesResultFieldEntity.getUseCase(), searchCasesResultField.getUseCase());
+            assertEquals(userRoleEntity.getReference(), searchCasesResultField.getRole());
+
+            assertEquals(sortOrder.getDirection(), searchCasesResultField.getSortOrder().getDirection());
+            assertEquals(sortOrder.getPriority(), searchCasesResultField.getSortOrder().getPriority());
+
+        }
+
+        @Test
+        void shouldSetMetadataFlagOnDto() {
+            SearchCasesResultFieldEntity searchCasesResultFieldEntity = new SearchCasesResultFieldEntity();
+            CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+            caseFieldEntity.setReference("CaseFieldReference");
+            caseFieldEntity.setDataFieldType(DataFieldType.METADATA);
+            searchCasesResultFieldEntity.setCaseField(caseFieldEntity);
+            searchCasesResultFieldEntity.setLabel("Label");
+            searchCasesResultFieldEntity.setOrder(69);
+
+            SearchCasesResultField searchCasesResultField = spyOnClassUnderTest.map(searchCasesResultFieldEntity);
+
+            assertThat(searchCasesResultField.isMetadata(), is(true));
+        }
+
+    }
+
+    @Nested
     @DisplayName("Should return a CaseTypeLite model object whose fields match those in the CaseTypeLiteEntity")
     class MapCaseTypeEntitySubsetTests {
 

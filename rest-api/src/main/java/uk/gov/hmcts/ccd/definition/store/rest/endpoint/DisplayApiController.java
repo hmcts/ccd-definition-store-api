@@ -18,16 +18,7 @@ import io.swagger.annotations.ApiResponses;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
-import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
-import uk.gov.hmcts.ccd.definition.store.repository.model.BannersResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
-import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
-import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfigResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputDefinition;
-import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultDefinition;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
 @Api(value = "/api/display")
 @RequestMapping(value = "/api")
@@ -116,6 +107,17 @@ public class DisplayApiController {
     public WorkBasketResult displayWorkBasketDefinitionIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
         return this.displayService.findWorkBasketDefinitionForCaseType(id);
+    }
+
+    @RequestMapping(value = "/display/search-cases-result-fields/{id}", method = RequestMethod.GET, produces = {"application/json"})
+    @ApiOperation(value = "Fetch the UI definition for the search cases result for a given Case Type", notes = "", response = SearchCasesResult.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Work Basket Result"),
+        @ApiResponse(code = 200, message = "Unexpected error")
+    })
+    public SearchCasesResult displaySearchCasesResultIdGet(
+        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
+        return this.displayService.findSearchCasesResultDefinitionForCaseType(id);
     }
 
     @RequestMapping(value = "/display/banners", method = RequestMethod.GET, produces = {"application/json"})

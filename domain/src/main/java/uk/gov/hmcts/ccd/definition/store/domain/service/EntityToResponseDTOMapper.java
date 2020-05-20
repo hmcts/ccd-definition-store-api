@@ -201,6 +201,12 @@ public interface EntityToResponseDTOMapper {
     @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 
+    @Mapping(source = "searchCasesResultFieldEntity.caseField.reference", target = "caseFieldId")
+    @Mapping(source = "searchCasesResultFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
+    @Mapping(source = "searchCasesResultFieldEntity.userRole.reference", target = "role")
+    @Mapping(expression = "java(searchCasesResultFieldEntity.getCaseField().isMetadataField())", target = "metadata")
+    SearchCasesResultField map(SearchCasesResultFieldEntity searchCasesResultFieldEntity);
+
     class EventComplexTypeEntityToCaseEventFieldComplexListMapper {
 
         private EventComplexTypeEntityToCaseEventFieldComplexListMapper() {
