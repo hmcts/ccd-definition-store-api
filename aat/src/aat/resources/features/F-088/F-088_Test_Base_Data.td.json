@@ -4,6 +4,12 @@
   "operationName": "Fetch UI definition Work Basket results by CaseType",
   "method": "GET",
   "uri": "/api/display/work-basket-definition/{id}",
+  "users": {
+    "invokingUser": {
+      "username": "master.caseworker@gmail.com",
+      "password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
+    }
+  },
   "request": {
     "headers": {
       "Authorization": "[[DEFAULT_AUTO_VALUE]]",
@@ -11,7 +17,7 @@
       "Content-Type": "application/json"
     },
     "pathVariables": {
-      "id": "BEFTA_CASETYPE_3_4"
+      "id": "FT_DateTimeFormats"
     }
   }
 }

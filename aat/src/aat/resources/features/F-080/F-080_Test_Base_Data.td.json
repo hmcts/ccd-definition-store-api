@@ -1,9 +1,9 @@
 {
-  "_guid_": "F-078_Test_Base_Data",
+  "_guid_": "F-080_Test_Base_Data",
   "productName": "CCD Definition Store",
-  "operationName": "Gets The Current Version Of A Case Type Schema",
+  "operationName": "Get Case Type Details",
   "method": "GET",
-  "uri": "/api/data/case-type/{ctid}/version",
+  "uri": "/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}",
   "users": {
     "invokingUser": {
       "username": "master.caseworker@gmail.com",
@@ -17,6 +17,8 @@
       "Content-Type": "application/json"
     },
     "pathVariables": {
+      "uid": "[[DEFAULT_AUTO_VALUE]]",
+      "jid": "BEFTA_MASTER",
       "ctid": "FT_MasterCaseType"
     }
   }
