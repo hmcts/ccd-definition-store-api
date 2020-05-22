@@ -5,18 +5,18 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessag
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 
-public class EventComplexTypeEntityInvalidShowConditionError extends ValidationError {
+public class EventComplexTypeEntityDefaultValueError extends ValidationError {
 
     private final EventCaseFieldEntityValidationContext validationContext;
     private EventComplexTypeEntity eventComplexTypeEntity;
 
-    public EventComplexTypeEntityInvalidShowConditionError(EventComplexTypeEntity eventComplexTypeEntity,
-                                                           EventCaseFieldEntityValidationContext validationContext) {
+    public EventComplexTypeEntityDefaultValueError(EventComplexTypeEntity eventComplexTypeEntity,
+                                                   EventCaseFieldEntityValidationContext validationContext) {
         super(
             String.format(
-                "Show condition '%s' invalid for event '%s'",
-                eventComplexTypeEntity.getShowCondition(),
-                validationContext.getEventId()
+                "DefaultValue '%s' is not a valid role for '%s' ",
+                eventComplexTypeEntity.getDefaultValue(),
+                    eventComplexTypeEntity.getReference()
             )
         );
         this.eventComplexTypeEntity = eventComplexTypeEntity;

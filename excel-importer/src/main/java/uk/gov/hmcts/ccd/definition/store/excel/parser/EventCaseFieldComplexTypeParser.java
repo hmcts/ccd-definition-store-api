@@ -43,10 +43,10 @@ public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser
 
     private void setDefaultValue(final EventComplexTypeEntity eventComplexTypeEntity,
                                  final DefinitionDataItem definitionDataItem) {
-
-        final Optional<String> defaultValue = Optional.ofNullable(definitionDataItem.getString(ColumnName.DEFAULT_VALUE));
-        defaultValue.ifPresent(value -> eventComplexTypeEntity.setDefaultValue(value));
-
+        if (!eventComplexTypeEntity.getReference().contains(".")) {
+            final Optional<String> defaultValue = Optional.ofNullable(definitionDataItem.getString(ColumnName.DEFAULT_VALUE));
+            defaultValue.ifPresent(value -> eventComplexTypeEntity.setDefaultValue(value));
+        }
     }
 
     @Override

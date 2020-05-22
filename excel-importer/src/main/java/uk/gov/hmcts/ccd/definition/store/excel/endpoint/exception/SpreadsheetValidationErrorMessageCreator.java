@@ -34,6 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexF
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityDefaultValueError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityInvalidShowConditionError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
@@ -374,6 +375,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                 def.getString(ColumnName.FIELD_SHOW_CONDITION),
                 error.getValidationContext().getEventId(),
                 def.getSheetName()));
+    }
+
+    @Override
+    public String createErrorMessage(EventComplexTypeEntityDefaultValueError error) {
+        return error.toString();
     }
 
     @Override
