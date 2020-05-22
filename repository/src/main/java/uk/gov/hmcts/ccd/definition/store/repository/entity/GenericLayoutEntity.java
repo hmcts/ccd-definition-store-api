@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -42,6 +43,11 @@ public abstract class GenericLayoutEntity implements Serializable {
     @ManyToOne(cascade = ALL)
     @JoinColumn(name = "role_id", nullable = false)
     private UserRoleEntity userRole;
+
+    @Column(name = "display_context_parameter")
+    private String displayContextParameter;
+
+    public abstract String getSheetName();
 
     public Integer getId() {
         return id;
@@ -109,5 +115,17 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     public void setUserRole(UserRoleEntity userRole) {
         this.userRole = userRole;
+    }
+
+    public Optional<String> showCondition() {
+        return Optional.empty();
+    }
+
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }

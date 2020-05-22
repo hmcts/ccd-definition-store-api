@@ -1,26 +1,27 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.*;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
 
 @Component
 public class SpreadsheetValidator {
 
+    private DisplayContextParameterValidator displayContextParameterValidator = new DisplayContextParameterValidator();
+
     public void validate(String sheetName, DefinitionSheet definitionSheet, List<String> headings) {
         if (definitionSheet.getName() == null) {
             throw new InvalidImportException("Error processing sheet \"" + sheetName +
-                    "\": Invalid Case Definition sheet - no Definition name found in Cell A1");
+                "\": Invalid Case Definition sheet - no Definition name found in Cell A1");
 
         }
         if (headings.isEmpty()) {
             throw new InvalidImportException("Error processing sheet \"" + sheetName +
-                    "\": Invalid Case Definition sheet - no Definition data attribute headers found");
+                "\": Invalid Case Definition sheet - no Definition data attribute headers found");
         }
     }
 
@@ -42,6 +43,7 @@ public class SpreadsheetValidator {
         validateCaseFieldWorkSheetIsPresent(definitionSheets);
         validateComplexTypesWorkSheetIsPresent(definitionSheets);
         validateFixedListWorkSheetIsPresent(definitionSheets);
+        displayContextParameterValidator.validate(definitionSheets);
     }
 
     private void validateOnlyOneJurisdictionPresent(Map<String, DefinitionSheet> sheets) {
@@ -74,23 +76,22 @@ public class SpreadsheetValidator {
             throw new MapperException("A definition must contain a Fixed List worksheet");
     }
 
-
     private void validate(String sheetName, String columnName, SpreadSheetValidationMappingEnum columnNameEnum,
                           String cellValue, String rowNumberInfo) {
         if (columnNameEnum != null) {
             Integer columnMaxLength = columnNameEnum.getMaxLength();
             if (columnMaxLength != null && cellValue.length() > columnMaxLength) {
                 String invalidImportMessage = getImportValidationFailureMessage(sheetName, columnName,
-                                                                                columnMaxLength, rowNumberInfo);
+                    columnMaxLength, rowNumberInfo);
                 throw new InvalidImportException(invalidImportMessage);
             }
         }
     }
 
     public String getImportValidationFailureMessage(String sheetName, String columnName, Integer columnMaxLength,
-                                     String rowNumberInfo) {
+                                                    String rowNumberInfo) {
         return String.format("Invalid Case Definition sheet - In sheet '%s' the column '%s' value should not" +
-                                      " be more than '%s' characters length %s", sheetName,
-                                      columnName, columnMaxLength, rowNumberInfo);
+                " be more than '%s' characters length %s", sheetName,
+            columnName, columnMaxLength, rowNumberInfo);
     }
 }

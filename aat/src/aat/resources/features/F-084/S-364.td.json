@@ -34,7 +34,8 @@
         "sort_order" : {
           "direction" : "DESC",
           "priority" : 1
-        }
+        },
+        "display_context_parameter" : null
       }, {
         "metadata" : false,
         "case_field_id" : "TextField",
@@ -42,7 +43,8 @@
         "label" : "`Text` field",
         "order" : 2,
         "role" : null,
-        "sort_order" : null
+        "sort_order" : null,
+        "display_context_parameter" : null
       }, {
         "metadata" : false,
         "case_field_id" : "NumberField",
@@ -50,7 +52,8 @@
         "label" : "`Number` field",
         "order" : 3,
         "role" : null,
-        "sort_order" : null
+        "sort_order" : null,
+        "display_context_parameter" : null
       }, {
         "metadata" : false,
         "case_field_id" : "YesOrNoField",
@@ -58,7 +61,8 @@
         "label" : "`YesOrNo` field",
         "order" : 4,
         "role" : null,
-        "sort_order" : null
+        "sort_order" : null,
+        "display_context_parameter" : null
       } ]
     }
   }

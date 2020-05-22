@@ -9,16 +9,23 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.jupiter.api.Assertions.*;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_RESULT_FIELD;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_RESULT_FIELDS;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -34,13 +41,19 @@ public class GenericLayoutParserTest {
     private static final String CASE_FIELD_ID_1 = "Field 1";
     private static final String CASE_FIELD_ID_2 = "Field 2";
     private static final String LIST_ELEMENT_CODE_1 = "Code1";
+    private static final String PARSED_SHOW_CONDITION = "Parsed Show Condition";
+    private static final String DISPLAY_CONTEXT_PARAMETER = "Display Context Parameter";
     private GenericLayoutParser classUnderTest;
     private Map<String, DefinitionSheet> definitionSheets;
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     private final ParseContext context = new ParseContext();
 
+    @Mock
+    private ShowConditionParser showConditionParser;
+
     @BeforeEach
     public void setup() {
+        MockitoAnnotations.initMocks(this);
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference(CASE_TYPE_ID);
         CaseTypeEntity caseTypeEntity2 = new CaseTypeEntity();
@@ -59,7 +72,7 @@ public class GenericLayoutParserTest {
         definitionSheets = new HashMap<>();
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
-        classUnderTest = new WorkbasketLayoutParser(context, entityToDefinitionDataItemRegistry);
+        classUnderTest = new WorkbasketLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
     }
 
     @Test
@@ -427,7 +440,7 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item2);
         definitionSheets.put(SEARCH_RESULT_FIELD.getName(), sheet);
 
-        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry);
+        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
         ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
 
         assertEquals(parseResult.getAllResults().size(), 2);
@@ -435,6 +448,148 @@ public class GenericLayoutParserTest {
             hasProperty("direction", equalTo("DESC")))));
         assertThat(parseResult.getAllResults(), hasItem(hasProperty("sortOrder",
             hasProperty("priority", equalTo(1)))));
+    }
+
+    @Test
+    @DisplayName("Should set show condition value for search input")
+    public void shouldSetShowConditionForSearchInputs() throws InvalidShowConditionException {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(SEARCH_INPUT_FIELD.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "some show condition");
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(SEARCH_INPUT_FIELD.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        sheet.addDataItem(item2);
+
+        definitionSheets.put(SEARCH_INPUT_FIELD.getName(), sheet);
+
+        when(showConditionParser.parseShowCondition(any())).thenReturn(
+            new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build()
+        );
+
+        classUnderTest = new SearchInputLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
+        ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
+
+        assertEquals(parseResult.getAllResults().size(), 2);
+        assertThat(parseResult.getAllResults(), hasItem(hasProperty("showCondition", equalTo(PARSED_SHOW_CONDITION))));
+    }
+
+    @Test
+    @DisplayName("Should set show condition value for workbasket input")
+    public void shouldSetShowConditionForWorkbasketInputs() throws InvalidShowConditionException {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_INPUT_FIELD.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "some show condition");
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_INPUT_FIELD.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        sheet.addDataItem(item2);
+
+        definitionSheets.put(WORK_BASKET_INPUT_FIELD.getName(), sheet);
+
+        when(showConditionParser.parseShowCondition(any())).thenReturn(
+            new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build()
+        );
+
+        classUnderTest = new WorkbasketInputLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
+        ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
+
+        assertEquals(parseResult.getAllResults().size(), 2);
+        assertThat(parseResult.getAllResults(), hasItem(hasProperty("showCondition", equalTo(PARSED_SHOW_CONDITION))));
+    }
+
+    @DisplayName("Should fail when show condition appears in search results")
+    @Test
+    public void shouldThrowExceptionIfShowConditionExistsInSearchResults() throws InvalidShowConditionException {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(SEARCH_RESULT_FIELD.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "some show condition");
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(SEARCH_RESULT_FIELD.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        sheet.addDataItem(item2);
+        definitionSheets.put(SEARCH_RESULT_FIELD.getName(), sheet);
+
+        when(showConditionParser.parseShowCondition(any())).thenReturn(
+            new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build()
+        );
+
+        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
+
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        assertEquals(String.format("showCondition is not supported in worksheet '%s' for caseType '%s'",
+            SheetName.SEARCH_RESULT_FIELD.getName(), CASE_TYPE_ID), thrown.getMessage());
+
+    }
+
+    @DisplayName("Should fail when show condition appears in workbasket results")
+    @Test
+    public void shouldThrowExceptionIfShowConditionExistsInWorkbasketResults() throws InvalidShowConditionException {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "some show condition");
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        sheet.addDataItem(item2);
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+
+        when(showConditionParser.parseShowCondition(any())).thenReturn(
+            new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build()
+        );
+
+        classUnderTest = new WorkbasketLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
+
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        assertEquals(String.format("showCondition is not supported in worksheet '%s' for caseType '%s'",
+            SheetName.WORK_BASKET_RESULT_FIELDS.getName(), CASE_TYPE_ID), thrown.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Should create a generic layout entity")
+    public void shouldCreateGenericLayoutEntity() {
+        ParseContext context = new ParseContext();
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference(CASE_TYPE_ID);
+        CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+        caseFieldEntity1.setReference(CASE_FIELD_ID_1);
+        context.registerCaseType(caseTypeEntity);
+        context.registerCaseFieldForCaseType(CASE_TYPE_ID, caseFieldEntity1);
+
+        final String label = "LABEL";
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(SEARCH_RESULT_FIELD.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        item.addAttribute(ColumnName.RESULTS_ORDERING, "1:DESC");
+        item.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, DISPLAY_CONTEXT_PARAMETER);
+        item.addAttribute(ColumnName.LABEL, label);
+        sheet.addDataItem(item);
+        definitionSheets.put(SEARCH_RESULT_FIELD.getName(), sheet);
+
+        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
+        ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
+
+        GenericLayoutEntity entity = parseResult.getAllResults().get(0);
+        assertEquals(CASE_TYPE_ID, entity.getCaseType().getReference());
+        assertEquals(CASE_FIELD_ID_1, entity.getCaseField().getReference());
+        assertEquals((Integer) 3, entity.getOrder());
+        assertEquals(label, entity.getLabel());
+        assertEquals(DISPLAY_CONTEXT_PARAMETER, entity.getDisplayContextParameter());
     }
 
     private void addCaseType2Field(DefinitionSheet sheet) {

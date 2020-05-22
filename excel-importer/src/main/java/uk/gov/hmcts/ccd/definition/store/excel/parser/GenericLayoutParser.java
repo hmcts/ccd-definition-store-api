@@ -10,13 +10,16 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CAS
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIST_ELEMENT_CODE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.RESULTS_ORDERING;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.FIELD_SHOW_CONDITION;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
 import liquibase.util.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -25,7 +28,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
-public abstract class GenericLayoutParser {
+public abstract class GenericLayoutParser implements FieldShowConditionParser {
     private static final Logger logger = LoggerFactory.getLogger(GenericLayoutParser.class);
 
     public static final Pattern SORT_ORDER_PATTERN = Pattern.compile("^(1|2):(ASC|DESC)$");
@@ -34,11 +37,14 @@ public abstract class GenericLayoutParser {
 
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     protected final ParseContext parseContext;
+    private final ShowConditionParser showConditionParser;
 
     public GenericLayoutParser(final ParseContext parseContext,
-                               final EntityToDefinitionDataItemRegistry registry) {
+                               final EntityToDefinitionDataItemRegistry registry,
+                               final ShowConditionParser showConditionParser) {
         this.parseContext = parseContext;
         this.entityToDefinitionDataItemRegistry = registry;
+        this.showConditionParser = showConditionParser;
     }
 
     public ParseResult<GenericLayoutEntity> parseAll(Map<String, DefinitionSheet> definitionSheets) {
@@ -133,6 +139,7 @@ public abstract class GenericLayoutParser {
         layoutEntity.setCaseFieldElementPath(definition.getString(LIST_ELEMENT_CODE));
         layoutEntity.setLabel(definition.getString(ColumnName.LABEL));
         layoutEntity.setOrder(definition.getInteger(ColumnName.DISPLAY_ORDER));
+        layoutEntity.setDisplayContextParameter(definition.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
         final String userRole = definition.getString(USER_ROLE);
         if (StringUtils.isNotEmpty(userRole)) {
             layoutEntity.setUserRole(getRoleEntity(layoutEntity, definition.getSheetName(), userRole));
@@ -140,6 +147,10 @@ public abstract class GenericLayoutParser {
         final String sortOrder = definition.getString(RESULTS_ORDERING);
         if (StringUtils.isNotEmpty(sortOrder)) {
             populateSortOrder(layoutEntity, sortOrder);
+        }
+        final String showCondition = definition.getString(FIELD_SHOW_CONDITION);
+        if (StringUtils.isNotEmpty(showCondition)) {
+            populateShowCondition(layoutEntity, this.parseShowCondition(showCondition));
         }
         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(layoutEntity, definition);
         return ParseResult.Entry.createNew(layoutEntity);
@@ -219,6 +230,10 @@ public abstract class GenericLayoutParser {
         return logger;
     }
 
+    public ShowConditionParser getShowConditionParser() {
+        return showConditionParser;
+    }
+
     protected abstract void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrde);
 
     protected abstract DefinitionSheet getDefinitionSheet(Map<String, DefinitionSheet> definitionSheets);
@@ -226,4 +241,6 @@ public abstract class GenericLayoutParser {
     protected abstract String getLayoutName();
 
     protected abstract GenericLayoutEntity createLayoutCaseFieldEntity();
+
+    protected abstract void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition);
 }

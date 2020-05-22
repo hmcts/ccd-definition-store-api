@@ -1223,13 +1223,17 @@ class EntityToResponseDTOMapperTest {
             searchInputCaseFieldEntity.setOrder(69);
             searchInputCaseFieldEntity.setUserRole(userRoleEntity);
             searchInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
+            searchInputCaseFieldEntity.setShowCondition("aShowCondition");
+            searchInputCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             SearchInputField searchInputField = spyOnClassUnderTest.map(searchInputCaseFieldEntity);
 
             assertEquals(searchInputCaseFieldEntity.getOrder(), searchInputField.getOrder());
             assertEquals(searchInputCaseFieldEntity.getLabel(), searchInputField.getLabel());
             assertEquals(searchInputCaseFieldEntity.getCaseFieldElementPath(), searchInputField.getCaseFieldElementPath());
+            assertEquals(searchInputCaseFieldEntity.getShowCondition(), searchInputField.getShowCondition());
             assertEquals(searchInputCaseFieldEntity.getCaseField().getReference(), searchInputField.getCaseFieldId());
+            assertEquals(searchInputCaseFieldEntity.getDisplayContextParameter(), searchInputField.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), searchInputField.getRole());
         }
 
@@ -1253,6 +1257,7 @@ class EntityToResponseDTOMapperTest {
             searchResultCaseFieldEntity.setOrder(69);
             searchResultCaseFieldEntity.setUserRole(userRoleEntity);
             searchResultCaseFieldEntity.setSortOrder(sortOrder);
+            searchResultCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             SearchResultsField searchResultsField = spyOnClassUnderTest.map(searchResultCaseFieldEntity);
 
@@ -1261,6 +1266,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(searchResultCaseFieldEntity.getLabel(), searchResultsField.getLabel());
             assertEquals(searchResultCaseFieldEntity.getCaseField().getReference(),
                          searchResultsField.getCaseFieldId());
+            assertEquals(searchResultCaseFieldEntity.getDisplayContextParameter(), searchResultsField.getDisplayContextParameter());
             assertThat(searchResultsField.isMetadata(), is(false));
             assertEquals(userRoleEntity.getReference(), searchResultsField.getRole());
 
@@ -1301,13 +1307,17 @@ class EntityToResponseDTOMapperTest {
             workBasketInputCaseFieldEntity.setOrder(69);
             workBasketInputCaseFieldEntity.setUserRole(userRoleEntity);
             workBasketInputCaseFieldEntity.setCaseFieldElementPath("Field1.Field2");
+            workBasketInputCaseFieldEntity.setShowCondition("aShowCondition");
+            workBasketInputCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             WorkbasketInputField workbasketInputField = spyOnClassUnderTest.map(workBasketInputCaseFieldEntity);
 
+            assertEquals(workBasketInputCaseFieldEntity.getShowCondition(), workbasketInputField.getShowCondition());
             assertEquals(workBasketInputCaseFieldEntity.getOrder(), workbasketInputField.getOrder());
             assertEquals(workBasketInputCaseFieldEntity.getLabel(), workbasketInputField.getLabel());
             assertEquals(workBasketInputCaseFieldEntity.getCaseFieldElementPath(), workbasketInputField.getCaseFieldElementPath());
             assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(), workbasketInputField.getCaseFieldId());
+            assertEquals(workBasketInputCaseFieldEntity.getDisplayContextParameter(), workbasketInputField.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), workbasketInputField.getRole());
         }
 
@@ -1331,6 +1341,7 @@ class EntityToResponseDTOMapperTest {
             workBasketCaseFieldEntity.setOrder(69);
             workBasketCaseFieldEntity.setUserRole(userRoleEntity);
             workBasketCaseFieldEntity.setSortOrder(sortOrder);
+            workBasketCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
 
             WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
 
@@ -1338,6 +1349,7 @@ class EntityToResponseDTOMapperTest {
             assertEquals(workBasketCaseFieldEntity.getCaseFieldElementPath(), workBasketResult.getCaseFieldElementPath());
             assertEquals(workBasketCaseFieldEntity.getLabel(), workBasketResult.getLabel());
             assertEquals(workBasketCaseFieldEntity.getCaseField().getReference(), workBasketResult.getCaseFieldId());
+            assertEquals(workBasketCaseFieldEntity.getDisplayContextParameter(), workBasketResult.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), workBasketResult.getRole());
 
             assertEquals(sortOrder.getDirection(), workBasketResult.getSortOrder().getDirection());
@@ -1410,7 +1422,7 @@ class EntityToResponseDTOMapperTest {
         	JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
         	jurisdictionEntity.setReference("Reference");
         	jurisdictionEntity.setName("Name");
-            
+
         	JurisdictionUiConfigEntity jurisdictionUiConfigEntity = new JurisdictionUiConfigEntity();
         	jurisdictionUiConfigEntity.setShuttered(true);
         	jurisdictionUiConfigEntity.setJurisdiction(jurisdictionEntity);

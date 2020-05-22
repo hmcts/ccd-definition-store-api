@@ -13,6 +13,7 @@ public class WorkBasketResultField {
     private boolean metadata;
     private String role;
     private SortOrder sortOrder;
+    private String displayContextParameter;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -74,5 +75,14 @@ public class WorkBasketResultField {
 
     public void setSortOrder(SortOrder sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    @JsonProperty("display_context_parameter")
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }

@@ -199,6 +199,24 @@ public class DefinitionDataItemTest {
         assertEquals("NotValid", displayContextColumn.getColumnValue());
     }
 
+    @Test
+    public void shouldGetCaseFiledId() {
+        String caseFieldId = "a_field_id";
+        item.addAttribute(ColumnName.CASE_FIELD_ID, caseFieldId);
+
+        assertThat(item.getCaseFieldId(), is(caseFieldId));
+    }
+
+    @Test
+    public void shouldGetCaseFiledIdFromID() {
+        String id = "ID";
+        String listElementCode = "listECode";
+        item.addAttribute(ColumnName.ID, id);
+        item.addAttribute(ColumnName.LIST_ELEMENT_CODE, listElementCode);
+
+        assertThat(item.getCaseFieldId(), is(id + "." + listElementCode));
+    }
+
     private void assertBooleanValue(String field, boolean booleanValue) {
         DefinitionDataItem dataItem = new DefinitionDataItem(SheetName.CASE_EVENT.toString());
         dataItem.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), field);

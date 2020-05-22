@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -16,8 +17,9 @@ public class WorkbasketInputLayoutParser extends GenericLayoutParser {
     private static final Logger logger = LoggerFactory.getLogger(WorkbasketInputLayoutParser.class);
 
     public WorkbasketInputLayoutParser(final ParseContext parseContext,
-                                       final EntityToDefinitionDataItemRegistry registry) {
-        super(parseContext, registry);
+                                       final EntityToDefinitionDataItemRegistry registry,
+                                       final ShowConditionParser showConditionParser) {
+        super(parseContext, registry, showConditionParser);
     }
 
     @Override
@@ -50,5 +52,11 @@ public class WorkbasketInputLayoutParser extends GenericLayoutParser {
     protected void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrder) {
         throw new MapperException(String.format("Results ordering is not supported in worksheet '%s' for "
             + "caseType '%s'", SheetName.WORK_BASKET_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()));
+    }
+
+    @Override
+    protected void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition) {
+        WorkBasketInputCaseFieldEntity entity = ((WorkBasketInputCaseFieldEntity)layoutEntity);
+        entity.setShowCondition(showCondition);
     }
 }
