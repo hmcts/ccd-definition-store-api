@@ -165,4 +165,88 @@
    <packageUrl regex="true">^pkg:maven/commons-beanutils/commons-beanutils@.*$</packageUrl>
    <cve>CVE-2019-10086</cve>
 </suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-oauth2-client-5.2.2.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-oauth2-client@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-oauth2-resource-server-5.2.2.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-oauth2-resource-server@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-web-5.2.2.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-web@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-config-5.2.2.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-config@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-oauth2-jose-5.2.2.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-oauth2-jose@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-oauth2-core-5.2.2.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-oauth2-core@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-core-5.2.2.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-core@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-crypto-5.2.2.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-crypto@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-web-5.3.0.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-web@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-config-5.3.0.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-config@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-core-5.3.0.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-core@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: spring-security-crypto-5.3.0.RELEASE.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-crypto@.*$</packageUrl>
+   <cve>CVE-2020-5408</cve>
+</suppress>
 </suppressions>
