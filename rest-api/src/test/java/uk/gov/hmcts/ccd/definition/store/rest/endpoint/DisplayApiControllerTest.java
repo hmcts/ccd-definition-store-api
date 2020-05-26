@@ -81,9 +81,9 @@ public class DisplayApiControllerTest {
     @Test
     public void getSearchCasesResultDisplay() {
         SearchCasesResult searchCasesResult = new SearchCasesResult();
-        when(displayService.findSearchCasesResultDefinitionForCaseType("XXX")).thenReturn(searchCasesResult);
-        subject.displaySearchCasesResultIdGet("XXX");
-        verify(displayService, times(1)).findSearchCasesResultDefinitionForCaseType("XXX");
+        when(displayService.findSearchCasesResultDefinitionForCaseType("XXX", "useCase")).thenReturn(searchCasesResult);
+        subject.displaySearchCasesResultIdGet("XXX", "useCase");
+        verify(displayService, times(1)).findSearchCasesResultDefinitionForCaseType("XXX", "useCase");
     }
 
     @Test
@@ -92,6 +92,17 @@ public class DisplayApiControllerTest {
         when(displayService.findWizardPageForCaseType(any(), any())).thenReturn(wizardPageCollection);
         subject.displayWizardPageStructureIdGet("TestAddressBookCase", "createCase");
         verify(displayService).findWizardPageForCaseType("TestAddressBookCase", "createCase");
+    }
+
+    @Test
+    public void getBannerResults() {
+        List<String> references = Collections.singletonList("AUTOTEST1");
+        Banner banner = new Banner();
+        List<Banner> banners = Collections.singletonList(banner);
+        BannersResult bannersResult = new BannersResult(banners);
+        when(bannerService.getAll(references)).thenReturn(banners);
+        subject.getBanners(Optional.of(references));
+        verify(bannerService).getAll(references);
     }
 
     @Test

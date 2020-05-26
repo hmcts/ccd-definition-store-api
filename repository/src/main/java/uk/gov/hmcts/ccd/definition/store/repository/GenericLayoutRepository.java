@@ -22,7 +22,10 @@ public interface GenericLayoutRepository extends DefinitionRepository<GenericLay
     @Query("select srcf from SearchResultCaseFieldEntity srcf where srcf.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
     List<SearchResultCaseFieldEntity> findSearchResultsByCaseTypeReference(@Param("caseTypeReference") String caseTypeReference);
 
-    @Query("select srcf from SearchCasesResultFieldEntity srcf where srcf.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
+    @Query("select scrf from SearchCasesResultFieldEntity scrf where scrf.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ") and scrf.use_case = useCase")
+    List<SearchCasesResultFieldEntity> findSearchCasesResultsByCaseTypeReference(@Param("caseTypeReference") String caseTypeReference, @Param("useCase") String useCase);
+
+    @Query("select scrf from SearchCasesResultFieldEntity scrf where scrf.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
     List<SearchCasesResultFieldEntity> findSearchCasesResultsByCaseTypeReference(@Param("caseTypeReference") String caseTypeReference);
 
 }

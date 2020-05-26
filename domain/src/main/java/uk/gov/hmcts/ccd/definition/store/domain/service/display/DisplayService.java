@@ -54,6 +54,10 @@ public class DisplayService {
         return mapToSearchCasesResult(this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
+    public SearchCasesResult findSearchCasesResultDefinitionForCaseType(String caseTypeId, String useCase) {
+        return mapToSearchCasesResult(this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId, useCase), caseTypeId);
+    }
+
 
     public WizardPageCollection findWizardPageForCaseType(String caseTypeId, String eventReference) {
         return displayGroupAdapterService.findWizardPagesByCaseTypeId(caseTypeId, eventReference);

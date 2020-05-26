@@ -192,6 +192,10 @@ public class DefinitionDataItem {
         return getString(ColumnName.DISPLAY_CONTEXT_PARAMETER);
     }
 
+    public String getUseCase() {
+        return getString(ColumnName.USE_CASE);
+    }
+
     public String getCaseFieldId() {
         return getString(ColumnName.CASE_FIELD_ID) != null ? getString(ColumnName.CASE_FIELD_ID) :
             new StringBuilder()

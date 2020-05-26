@@ -112,12 +112,14 @@ public class DisplayApiController {
     @RequestMapping(value = "/display/search-cases-result-fields/{id}", method = RequestMethod.GET, produces = {"application/json"})
     @ApiOperation(value = "Fetch the UI definition for the search cases result for a given Case Type", notes = "", response = SearchCasesResult.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Work Basket Result"),
+        @ApiResponse(code = 200, message = "Search Case Result Fields"),
         @ApiResponse(code = 200, message = "Unexpected error")
     })
     public SearchCasesResult displaySearchCasesResultIdGet(
-        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
-        return this.displayService.findSearchCasesResultDefinitionForCaseType(id);
+        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id, @RequestParam(value = "useCase", required = false) String useCase) {
+        SearchCasesResult response = (useCase == null || useCase.isEmpty()) ? this.displayService.findSearchCasesResultDefinitionForCaseType(id)
+            : this.displayService.findSearchCasesResultDefinitionForCaseType(id, useCase);
+        return response;
     }
 
     @RequestMapping(value = "/display/banners", method = RequestMethod.GET, produces = {"application/json"})

@@ -26,11 +26,11 @@ public class SearchCasesResultLayoutParser extends GenericLayoutParser {
     @Override
     protected DefinitionSheet getDefinitionSheet(Map<String, DefinitionSheet> definitionSheets) {
         DefinitionSheet definitionSheet = definitionSheets.get(SheetName.SEARCH_CASES_RESULT_FIELDS.getName());
-//        if (definitionSheet == null) {
-//            throw new MapperException(
-//                String.format("A definition must contain a %s sheet", SheetName.SEARCH_CASE_RESULT_FIELDS.getName())
-//            );
-//        }
+        if (definitionSheet == null) {
+            throw new MapperException(
+                String.format("A definition must contain a %s sheet", SheetName.SEARCH_CASES_RESULT_FIELDS.getName())
+            );
+        }
         return definitionSheet;
     }
 
