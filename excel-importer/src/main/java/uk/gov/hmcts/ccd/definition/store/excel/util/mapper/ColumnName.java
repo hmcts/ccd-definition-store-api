@@ -136,7 +136,7 @@ public enum ColumnName {
             case SEARCH_CASES_RESULT_FIELDS:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
                     || columnName.equals(ColumnName.CASE_FIELD_ID)
-                    ||columnName.equals(ColumnName.USE_CASE);
+                    || columnName.equals(ColumnName.USE_CASE);
             case CASE_TYPE_TAB:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
                     || columnName.equals(ColumnName.TAB_ID)

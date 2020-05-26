@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.usecase;
 
 public enum UseCaseType {
-    ORGCASES ("ORGCASES"),
-    WORKBASKET ("WORKBASKET"),
-    SEARCH ("SEARCH");
+    ORGCASES("ORGCASES"),
+    WORKBASKET("WORKBASKET"),
+    SEARCH("SEARCH");
 
     private String value;
 
