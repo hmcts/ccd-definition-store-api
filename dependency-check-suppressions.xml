@@ -116,4 +116,166 @@
 	</suppress>
 
 
+
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-oauth2-client-5.2.2.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-oauth2-client@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-oauth2-resource-server-5.2.2.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-oauth2-resource-server@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-web-5.2.2.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-web@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-config-5.2.2.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-config@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-oauth2-jose-5.2.2.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-oauth2-jose@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-oauth2-core-5.2.2.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-oauth2-core@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-core-5.2.2.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-core@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-crypto-5.2.2.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-crypto@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-web-5.3.0.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-web@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-config-5.3.0.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-config@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-core-5.3.0.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-core@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: spring-security-crypto-5.3.0.RELEASE.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-crypto@.*$</packageUrl>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: tomcat-embed-core-9.0.31.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
+		<cve>CVE-2020-9484</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.31.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-websocket@.*$</packageUrl>
+		<cve>CVE-2020-9484</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.30.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-websocket@.*$</packageUrl>
+		<cve>CVE-2019-17569</cve>
+		<cve>CVE-2020-1745</cve>
+		<cve>CVE-2020-1935</cve>
+		<cve>CVE-2020-1935</cve>
+		<cve>CVE-2020-1938</cve>
+		<cve>CVE-2020-9484</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
+   file name: tomcat-embed-core-9.0.30.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
+		<cve>CVE-2019-17569</cve>
+		<cve>CVE-2020-1745</cve>
+		<cve>CVE-2020-1935</cve>
+		<cve>CVE-2020-1935</cve>
+		<cve>CVE-2020-1938</cve>
+		<cve>CVE-2020-9484</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
+   file name: guava-20.0.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
+		<cve>CVE-2018-10237</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: commons-beanutils-1.9.3.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/commons-beanutils/commons-beanutils@.*$</packageUrl>
+		<cve>CVE-2019-10086</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
+   file name: liquibase-core-3.6.3.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:javascript/bootstrap@3.1.1</packageUrl>
+		<cve>CVE-2018-14040</cve>
+		<cve>CVE-2018-14041</cve>
+		<cve>CVE-2018-14042</cve>
+		<cve>CVE-2019-8331</cve>
+	</suppress>
 </suppressions>
