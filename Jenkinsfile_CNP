@@ -75,7 +75,6 @@ withPipeline(type, product, app) {
     enableAksStagingDeployment()
     disableLegacyDeploymentOnAAT()
     disableLegacyDeployment()
-    installCharts()
 
     after('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
