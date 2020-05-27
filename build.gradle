@@ -158,9 +158,6 @@ allprojects {
             }
 
             eachDependency { details ->
-                if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
-                    details.useVersion '3.9.0'
-                }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.7.0'
                 }
@@ -229,6 +226,7 @@ subprojects { subproject ->
         compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
         compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '7.9'
         implementation "io.github.openfeign:feign-httpclient:10.7.0"
+        compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.3'
 
         compile('org.springframework.boot:spring-boot-starter-web')
         compile('org.springframework.boot:spring-boot-starter-data-jpa') {
@@ -237,10 +235,10 @@ subprojects { subproject ->
         }
 
         // Force to use the latest org.springframework.security
-        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.0.RELEASE'
-        compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.0.RELEASE'
-        compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.0.RELEASE'
-        compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.0.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.2.RELEASE'
 
         compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
