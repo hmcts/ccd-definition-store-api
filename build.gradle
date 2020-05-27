@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.4.RELEASE'
+        springBootVersion = '2.2.5.RELEASE'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -23,6 +23,7 @@ plugins {
     id 'io.franzbecker.gradle-lombok' version '2.0'
     id 'net.ltgt.apt' version '0.21'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
+    id "info.solidsoft.pitest" version '1.4.0' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
 }
 
@@ -99,7 +100,7 @@ dependencyManagement {
         dependency 'com.google.guava:guava:24.1.1-jre'
 
         // CVE-2019-0232, CVE-2019-0199  - Java and Command Line injections in Windows
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.31') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.35') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -135,7 +136,7 @@ allprojects {
 
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        compile "com.fasterxml.jackson.core:jackson-databind:2.10.0"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.10.3"
     }
 
     checkstyle {
@@ -148,17 +149,20 @@ allprojects {
     test.shouldRunAfter(checkstyleTest)
 
     configurations.all {
+        collect { configuration ->
+            configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+        }
         resolutionStrategy {
             dependencySubstitution {
                 substitute module('org.elasticsearch:elasticsearch') with module("org.elasticsearch:elasticsearch:${elasticSearchVersion}")
             }
 
             eachDependency { details ->
-                if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
-                    details.useVersion '3.6.3'
-                }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.7.0'
+                }
+                if (details.requested.group == 'org.apache.logging.log4j' && details.requested.name == 'log4j-api') {
+                    details.useVersion '2.13.2'
                 }
             }
         }
@@ -222,12 +226,20 @@ subprojects { subproject ->
         compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
         compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '7.9'
         implementation "io.github.openfeign:feign-httpclient:10.7.0"
+        compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.3'
 
         compile('org.springframework.boot:spring-boot-starter-web')
         compile('org.springframework.boot:spring-boot-starter-data-jpa') {
             exclude group: 'org.hibernate', module: 'hibernate-core'
             exclude group: 'org.hibernate', module: 'hibernate-entitymanager'
         }
+
+        // Force to use the latest org.springframework.security
+        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.2.RELEASE'
+
         compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
@@ -377,7 +389,7 @@ sonarqube {
         property "sonar.exclusions", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/AdminWebAuthorizationProperties.java"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
         property "sonar.jacoco.excludes", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java"
-        property "sonar.coverage.exclusions", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/CaseTypeItem.java,**/ApplicationParams.java,**/CaseTypePresentationControllerService.java,**/DisplayService.java,**/DisplayItemAdapterService.java,**/DisplayApiPresentationControllerService.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java"
+        property "sonar.coverage.exclusions", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/CaseTypeItem.java,**/ApplicationParams.java,**/CaseTypePresentationControllerService.java,**/DisplayService.java,**/DisplayItemAdapterService.java,**/DisplayApiPresentationControllerService.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/JacksonUtils.java,**/SwaggerConfiguration.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
     }

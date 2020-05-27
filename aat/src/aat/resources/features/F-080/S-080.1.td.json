@@ -429,7 +429,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -469,7 +469,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -509,7 +509,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -563,7 +563,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -603,7 +603,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -643,7 +643,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -683,7 +683,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -723,7 +723,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -763,7 +763,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -822,7 +822,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -1085,7 +1085,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-02-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -1138,7 +1138,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -1191,7 +1191,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
 
@@ -1225,7 +1225,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -1265,7 +1265,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -1305,7 +1305,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -1472,7 +1472,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -1512,7 +1512,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -1552,7 +1552,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
@@ -1592,7 +1592,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2017-01-01",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
             {
