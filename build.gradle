@@ -151,8 +151,6 @@ allprojects {
     configurations.all {
         collect { configuration ->
             configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
-            configuration.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
-            configuration.exclude group: 'org.apache.tomcat.embed', module: 'tomcat-embed-el'
         }
         resolutionStrategy {
             dependencySubstitution {
