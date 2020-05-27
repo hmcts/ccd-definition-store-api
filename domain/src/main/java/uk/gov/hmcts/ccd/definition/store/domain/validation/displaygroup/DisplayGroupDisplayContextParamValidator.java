@@ -1,9 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
@@ -31,9 +29,7 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
         if (StringUtils.isNotBlank(entity.getDisplayContextParameter())) {
 
             if (isFieldTypeNotTableOrList(entity)) {
-                validationResult.addError(
-                    new ValidationError("DisplayContextParameter text should "
-                        + "begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY("){});
+                validationResult.addError(new ValidationError("DisplayContextParameter text should begin with #LIST( or #TABLE("){});
             } else {
                 String removeBeginingSection = entity.getDisplayContextParameter().indexOf(LIST_PREFIX) > -1
                     ? entity.getDisplayContextParameter().replace(LIST_PREFIX, "") :

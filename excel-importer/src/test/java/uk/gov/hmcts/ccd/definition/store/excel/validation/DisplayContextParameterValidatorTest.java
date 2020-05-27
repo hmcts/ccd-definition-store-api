@@ -41,8 +41,7 @@ public class DisplayContextParameterValidatorTest {
         try {
             validator.validate(definitionSheets);
         } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("Display context parameter #TABLE() has been "
-                + "incorrectly configured or is invalid for field fieldId on tab ComplexTypes"));
+            assertThat(ex.getMessage(), is("Display context parameter #TABLE() has been incorrectly configured or is invalid for field fieldId on tab ComplexTypes"));
             throw ex;
         }
     }
@@ -92,8 +91,7 @@ public class DisplayContextParameterValidatorTest {
         try {
             validator.validate(definitionSheets);
         } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is("Display context parameter #LIST() "
-                + "has been incorrectly configured or is invalid for field fieldId on tab ComplexTypes"));
+            assertThat(ex.getMessage(), is("Display context parameter #LIST() has been incorrectly configured or is invalid for field fieldId on tab ComplexTypes"));
             throw ex;
         }
     }
