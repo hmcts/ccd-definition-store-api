@@ -5,7 +5,7 @@
   "specs": [
     "an active profile in CCD",
     "contains a valid jurisdiction id",
-    "contains a valid caseType id",
+    "contains id of a case type with Organisation and OrganisationPolicy fields",
     "has the 200 OK code",
     "contains case type details"
   ],
@@ -37,9 +37,7 @@
       },
       "events": [
         {
-          "__operator__": "equivalent",
-          "__ordering__": "unordered",
-          "__elementId__": "id"
+          "__ordering__": "unordered"
         },
         {
           "id": "updateOrganisation",
@@ -250,9 +248,7 @@
       ],
       "states": [
         {
-          "__operator__": "equivalent",
-          "__ordering__": "unordered",
-          "__elementId__": "id"
+          "__ordering__": "unordered"
         },
         {
           "id": "CaseUpdated",
@@ -299,9 +295,7 @@
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
       "case_fields": [
         {
-          "__operator__": "equivalent",
-          "__ordering__": "unordered",
-          "__elementId__": "id"
+          "__ordering__": "unordered"
         },
         {
           "metadata": true,
