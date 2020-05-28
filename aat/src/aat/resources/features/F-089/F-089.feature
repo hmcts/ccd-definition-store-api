@@ -9,7 +9,7 @@ Feature: F-089: Get Case Type with Organisation and OrganisationPolicy fields
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a valid jurisdiction id]
-    And the request [contains a valid caseType id]
+    And the request [contains id of a case type with Organisation and OrganisationPolicy fields]
     And it is submitted to call the [Get Case Type Details] operation of [CCD Definition Store]
     And the response [has the 200 OK code]
     And the response [contains case type details]
