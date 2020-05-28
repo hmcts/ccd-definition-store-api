@@ -1,3 +1,4 @@
+apply plugin: 'info.solidsoft.pitest'
 jar {
     enabled = true
     manifest {
@@ -18,6 +19,7 @@ ext {
 }
 
 dependencies {
+    compile project(':commons')
     compile("org.springframework.boot:spring-boot-starter-data-jpa") {
         exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
@@ -31,5 +33,28 @@ dependencies {
     compile "org.glassfish:javax.el:3.0.0"
     compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.3'
     testCompile "org.assertj:assertj-core"
+    testCompile project(":commons").sourceSets.main.output
     compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.3.2'
+}
+
+pitest {
+    targetClasses = ['uk.gov.hmcts.ccd.definition.store.repository.*']
+    targetTests = ['uk.gov.hmcts.ccd.definition.store.repository.*',
+                   'uk.gov.hmcts.ccd.definition.store.utils.*'
+    ]
+    enableDefaultIncrementalAnalysis = true
+    historyInputLocation = ['build/reports/pitest/fastermutationtesting']
+    historyOutputLocation = ['build/reports/pitest/fastermutationtestingoutput']
+    threads = 15
+    testSourceSets = [sourceSets.test]
+    mainSourceSets = [sourceSets.main]
+    fileExtensionsToFilter.addAll('xml', 'json')
+    outputFormats = ['XML', 'HTML', 'CSV']
+    mutationThreshold = 0
+    coverageThreshold = 0
+    maxMutationsPerClass = 15
+    jvmArgs = ['-Xms1G', '-Xmx3G']
+    timestampedReports = false
+    failWhenNoMutations = false
+    detectInlinedCode = true
 }
