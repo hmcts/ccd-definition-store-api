@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
+package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype;
 
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -24,7 +24,6 @@ public class EventComplexTypeEntityDefaultValueValidatorImpl implements EventCom
                     ));
 
             }
-
         }
         return validationResult;
     }
