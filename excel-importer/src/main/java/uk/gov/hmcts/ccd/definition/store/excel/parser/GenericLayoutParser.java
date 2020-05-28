@@ -11,6 +11,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIS
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.RESULTS_ORDERING;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.FIELD_SHOW_CONDITION;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USE_CASE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
 import liquibase.util.StringUtils;
@@ -155,6 +156,10 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         if (StringUtils.isNotEmpty(showCondition)) {
             populateShowCondition(layoutEntity, this.parseShowCondition(showCondition));
         }
+        final String useCase = definition.getString(USE_CASE);
+        if (StringUtils.isNotEmpty(useCase)) {
+            populateUseCase(layoutEntity, useCase);
+        }
         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(layoutEntity, definition);
         return ParseResult.Entry.createNew(layoutEntity);
     }
@@ -246,4 +251,6 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     protected abstract GenericLayoutEntity createLayoutCaseFieldEntity();
 
     protected abstract void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition);
+
+    protected abstract void populateUseCase(GenericLayoutEntity layoutEntity, String showCondition);
 }

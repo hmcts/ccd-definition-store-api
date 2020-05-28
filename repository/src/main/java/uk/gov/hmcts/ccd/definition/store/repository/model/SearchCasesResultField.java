@@ -71,7 +71,7 @@ public class SearchCasesResultField {
         this.role = role;
     }
 
-    @JsonProperty("useCase")
+    @JsonProperty("use_case")
     public String getUseCase() {
         return useCase;
     }

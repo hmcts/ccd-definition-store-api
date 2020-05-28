@@ -5,6 +5,8 @@ import org.mockito.*;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.*;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.*;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.*;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.*;
 
@@ -44,5 +46,15 @@ public class SearchCasesResultLayoutParserTest {
     public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
         assertEquals("A definition must contain a SearchCasesResultFields sheet", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should fail when populateShowConditon is invoked")
+    public void shouldThrowExceptionWhenPopulateShowConditionIsInvoked() {
+        GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
+        layoutEntity.setCaseType(new CaseTypeEntity());
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateShowCondition(layoutEntity, "WORKBASKET"));
+        assertEquals(String.format("showCondition is not supported in worksheet '%s' for caseType '%s'",
+            SheetName.SEARCH_CASES_RESULT_FIELDS.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }
 }
