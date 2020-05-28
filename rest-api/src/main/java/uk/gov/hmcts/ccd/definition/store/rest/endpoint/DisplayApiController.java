@@ -116,9 +116,9 @@ public class DisplayApiController {
         @ApiResponse(code = 200, message = "Unexpected error")
     })
     public SearchCasesResult displaySearchCasesResultIdGet(
-        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id, @RequestParam(value = "useCase", required = false) String useCase) {
-        SearchCasesResult response = (useCase == null || useCase.isEmpty()) ? this.displayService.findSearchCasesResultDefinitionForCaseType(id)
-            : this.displayService.findSearchCasesResultDefinitionForCaseType(id, useCase);
+        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id, @RequestParam(value = "usecase", required = false) String usecase) {
+        SearchCasesResult response = (usecase == null || usecase.isEmpty()) ? this.displayService.findSearchCasesResultDefinitionForCaseType(id)
+            : this.displayService.findSearchCasesResultDefinitionForCaseType(id, usecase);
         return response;
     }
 
