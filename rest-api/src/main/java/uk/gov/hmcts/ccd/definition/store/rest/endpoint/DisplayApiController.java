@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -73,8 +69,7 @@ public class DisplayApiController {
         return this.displayService.findTabStructureForCaseType(id);
     }
 
-    @RequestMapping(value = "/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}",
-        method = RequestMethod.GET, produces = {"application/json"})
+    @GetMapping(path = "/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}")
     @ApiOperation(value = "Fetch a Case Wizard Page Collection for a given Case Type",
         notes = "Returns the schema of a single case type.\n", response = CaseTabCollection.class)
     @ApiResponses(value = {
@@ -109,7 +104,7 @@ public class DisplayApiController {
         return this.displayService.findWorkBasketDefinitionForCaseType(id);
     }
 
-    @RequestMapping(value = "/display/search-cases-result-fields/{id}", method = RequestMethod.GET, produces = {"application/json"})
+    @GetMapping(path = "/display/search-cases-result-fields/{id}")
     @ApiOperation(value = "Fetch the UI definition for the search cases result for a given Case Type", notes = "", response = SearchCasesResult.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Search Case Result Fields"),
