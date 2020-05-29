@@ -54,7 +54,7 @@ public class WorkbasketLayoutParserTest {
 
     @Test
     @DisplayName("Should fail when populateUseCase is invoked")
-    public void shouldThrowExceptionWhenPopulateUseCaserIsInvoked() {
+    void shouldThrowExceptionWhenPopulateUseCaserIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));

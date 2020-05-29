@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("SearchCasesResultLayoutParser Tests")
-public class SearchCasesResultLayoutParserTest {
+class SearchCasesResultLayoutParserTest {
 
     @Mock
     private ParseContext parseContext;
@@ -37,20 +37,20 @@ public class SearchCasesResultLayoutParserTest {
 
     @Test
     @DisplayName("Should return name")
-    public void shouldReturnNameWhenAsked() {
+    void shouldReturnNameWhenAsked() {
         assertThat(classUnderTest.getLayoutName(), is("searchCase"));
     }
 
     @Test
     @DisplayName("Should Fail when no worksheet provided")
-    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
+    void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
         assertEquals("A definition must contain a SearchCasesResultFields sheet", thrown.getMessage());
     }
 
     @Test
     @DisplayName("Should fail when populateShowConditon is invoked")
-    public void shouldThrowExceptionWhenPopulateShowConditionIsInvoked() {
+    void shouldThrowExceptionWhenPopulateShowConditionIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateShowCondition(layoutEntity, "WORKBASKET"));

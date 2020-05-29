@@ -134,7 +134,7 @@ public class DisplayService {
         searchCasesResult.setCaseTypeId(caseTypeId);
         searchCasesResult.setFields(
             searchCasesResultFieldEntities.stream()
-            .map(SearchCasesResultFieldEntity -> entityToResponseDTOMapper.map(SearchCasesResultFieldEntity))
+            .map(searchCasesResultFieldEntity -> entityToResponseDTOMapper.map(searchCasesResultFieldEntity))
             .collect(Collectors.toList())
         );
         return searchCasesResult;

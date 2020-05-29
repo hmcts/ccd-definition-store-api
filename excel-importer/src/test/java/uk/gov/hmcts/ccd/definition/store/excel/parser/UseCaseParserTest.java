@@ -14,7 +14,7 @@ import static org.hamcrest.core.Is.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("SearchCasesResultLayoutParser Tests")
-public class UseCaseParserTest {
+class UseCaseParserTest {
 
     @Mock
     private ParseContext parseContext;
@@ -31,29 +31,8 @@ public class UseCaseParserTest {
     }
 
     @Test
-    @DisplayName("Should Pass when all data in definition is correct")
-    public void shouldReturnWithNoErrors() {
-        final DefinitionSheet sheetSCRF = addDefinitionSheet(SheetName.SEARCH_CASES_RESULT_FIELDS);
-        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.SEARCH_CASES_RESULT_FIELDS.getName());
-        definitionDataItem.addAttribute(ColumnName.USE_CASE, "ORGCASES");
-        definitionDataItem.addAttribute(ColumnName.CASE_TYPE_ID, "caseTypeId");
-        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
-        sheetSCRF.addDataItem(definitionDataItem);
-
-        classUnderTest.parse(definitionSheets);
-    }
-
-    @Test
-    @DisplayName("Should Pass when no data items provided")
-    public void shouldReturnWithNoerrorsAndNoDataItems() {
-        final DefinitionSheet sheetSCRF = addDefinitionSheet(SheetName.SEARCH_CASES_RESULT_FIELDS);
-
-        classUnderTest.parse(definitionSheets);
-    }
-
-    @Test
     @DisplayName("Should Fail when incorrect useCase provided")
-    public void shouldThrowExceptionWhenNoWorksheetIsNotProvided() {
+    void shouldThrowExceptionWhenNoWorksheetIsNotProvided() {
         final DefinitionSheet sheetSCRF = addDefinitionSheet(SheetName.SEARCH_CASES_RESULT_FIELDS);
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.SEARCH_CASES_RESULT_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.USE_CASE, "WORKBASKET");

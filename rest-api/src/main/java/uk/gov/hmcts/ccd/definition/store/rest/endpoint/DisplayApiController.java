@@ -117,9 +117,8 @@ public class DisplayApiController {
     })
     public SearchCasesResult displaySearchCasesResultIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id, @RequestParam(value = "usecase", required = false) String usecase) {
-        SearchCasesResult response = (usecase == null || usecase.isEmpty()) ? this.displayService.findSearchCasesResultDefinitionForCaseType(id)
+        return (usecase == null || usecase.isEmpty()) ? this.displayService.findSearchCasesResultDefinitionForCaseType(id)
             : this.displayService.findSearchCasesResultDefinitionForCaseType(id, usecase);
-        return response;
     }
 
     @RequestMapping(value = "/display/banners", method = RequestMethod.GET, produces = {"application/json"})

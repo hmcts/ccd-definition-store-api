@@ -54,7 +54,7 @@ public class SearchResultLayoutParserTest {
 
     @Test
     @DisplayName("Should fail when populateShowConditon is invoked")
-    public void shouldThrowExceptionWhenPopulateShowConditionIsInvoked() {
+    void shouldThrowExceptionWhenPopulateShowConditionIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateShowCondition(layoutEntity, "WORKBASKET"));
@@ -64,7 +64,7 @@ public class SearchResultLayoutParserTest {
 
     @Test
     @DisplayName("Should fail when populateUseCase is invoked")
-    public void shouldThrowExceptionWhenPopulateUseCaseIsInvoked() {
+    void shouldThrowExceptionWhenPopulateUseCaseIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));

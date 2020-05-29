@@ -315,7 +315,7 @@ public class DisplayServiceTest {
     class FindSearchCasesResultDefinitionForCaseType {
 
         @Test
-        public void shouldReturnEquivalentSearchCasesResult_whenSearchCasesFieldEntitiesExist() {
+        void shouldReturnEquivalentSearchCasesResult_whenSearchCasesFieldEntitiesExist() {
 
             String caseTypeId = "CaseTypeId";
 
@@ -346,7 +346,7 @@ public class DisplayServiceTest {
         }
 
         @Test
-        public void shouldReturnSearchCasesResultWithEmptySearchResultFieldList_whenNoSearchCasesResultFieldEntitiesForCaseType() {
+        void shouldReturnSearchCasesResultWithEmptySearchResultFieldList_whenNoSearchCasesResultFieldEntitiesForCaseType() {
 
             String caseTypeId = "CaseTypeId";
 
