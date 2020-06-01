@@ -1,4 +1,5 @@
 // Create JAR with test fixtures
+apply plugin: 'info.solidsoft.pitest'
 task testJar(type: Jar, dependsOn: testClasses) {
     baseName = 'test-' + project.archivesBaseName
     classifier = 'tests'
@@ -52,3 +53,27 @@ idea {
         generatedSourceDirs += file('${mapstructGenSourceDir}')
     }
 }
+
+pitest {
+    targetClasses = ['uk.gov.hmcts.ccd.definition.store.*']
+    targetTests = ['uk.gov.hmcts.ccd.definition.store.domain.*',
+                   'uk.gov.hmcts.ccd.definition.store.domain.service.*',
+                   'uk.gov.hmcts.ccd.definition.store.domain.showcondition.*',
+                   'uk.gov.hmcts.ccd.definition.store.domain.validation.*']
+    enableDefaultIncrementalAnalysis = true
+    historyInputLocation = ['build/reports/pitest/fastermutationtesting']
+    historyOutputLocation = ['build/reports/pitest/fastermutationtestingoutput']
+    threads = 15
+    testSourceSets = [sourceSets.test]
+    mainSourceSets = [sourceSets.main]
+    fileExtensionsToFilter.addAll('xml', 'json')
+    outputFormats = ['XML', 'HTML', 'CSV']
+    mutationThreshold = 0
+    coverageThreshold = 0
+    maxMutationsPerClass = 15
+    jvmArgs = ['-Xms1G', '-Xmx3G']
+    timestampedReports = false
+    failWhenNoMutations = false
+    detectInlinedCode = true
+}
+

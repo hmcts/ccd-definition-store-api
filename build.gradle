@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.4.RELEASE'
+        springBootVersion = '2.2.5.RELEASE'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -23,6 +23,7 @@ plugins {
     id 'io.franzbecker.gradle-lombok' version '2.0'
     id 'net.ltgt.apt' version '0.21'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
+    id "info.solidsoft.pitest" version '1.4.0' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
 }
 
@@ -99,7 +100,7 @@ dependencyManagement {
         dependency 'com.google.guava:guava:24.1.1-jre'
 
         // CVE-2019-0232, CVE-2019-0199  - Java and Command Line injections in Windows
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.31') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.35') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -135,9 +136,7 @@ allprojects {
 
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        compile "com.fasterxml.jackson.core:jackson-databind:2.10.0"
-        compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
-
+        compile "com.fasterxml.jackson.core:jackson-databind:2.10.3"
     }
 
     checkstyle {
@@ -150,6 +149,9 @@ allprojects {
     test.shouldRunAfter(checkstyleTest)
 
     configurations.all {
+        collect { configuration ->
+            configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+        }
         resolutionStrategy {
             dependencySubstitution {
                 substitute module('org.elasticsearch:elasticsearch') with module("org.elasticsearch:elasticsearch:${elasticSearchVersion}")
@@ -161,6 +163,9 @@ allprojects {
                 }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.7.0'
+                }
+                if (details.requested.group == 'org.apache.logging.log4j' && details.requested.name == 'log4j-api') {
+                    details.useVersion '2.13.2'
                 }
             }
         }
@@ -230,6 +235,13 @@ subprojects { subproject ->
             exclude group: 'org.hibernate', module: 'hibernate-core'
             exclude group: 'org.hibernate', module: 'hibernate-entitymanager'
         }
+
+        // Force to use the latest org.springframework.security
+        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.2.RELEASE'
+
         compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
@@ -240,7 +252,6 @@ subprojects { subproject ->
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
 
         compile group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
-        compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
@@ -272,7 +283,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:3.1.0"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.8.0'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.11.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024

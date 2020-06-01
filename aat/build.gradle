@@ -1,4 +1,5 @@
 apply plugin: 'com.github.spacialcircumstances.gradle-cucumber-reporting'
+//apply plugin: 'info.solidsoft.pitest'
 dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
     compile group: 'org.awaitility', name: 'awaitility', version: '3.1.6'
@@ -56,7 +57,7 @@ task functional(type: Test) {
     setClasspath(sourceSets.aat.runtimeClasspath)
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
     useJUnitPlatform()
-    
+
     generateCucumberReports.enabled = false
 
     doFirst {
@@ -80,3 +81,27 @@ bootJar {
 jar {
     enabled = false
 }
+
+/*pitest {
+    targetClasses = ['uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreTestAutomationAdapter']
+    excludedClasses = [
+            'uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain',
+            'uk.gov.hmcts.ccd.definitionstore.befta.TestDataLoaderMain'
+    ]
+    enableDefaultIncrementalAnalysis = true
+    historyInputLocation = ['build/reports/pitest/fastermutationtesting']
+    historyOutputLocation = ['build/reports/pitest/fastermutationtestingoutput']
+    threads = 15
+    testSourceSets = [sourceSets.test]
+    mainSourceSets = [sourceSets.main]
+    fileExtensionsToFilter.addAll('xml','json')
+    outputFormats = ['XML', 'HTML','CSV']
+    mutationThreshold = 0
+    coverageThreshold = 0
+    maxMutationsPerClass = 15
+    jvmArgs = ['-Xms1G','-Xmx3G']
+    timestampedReports = false
+    failWhenNoMutations = false
+    detectInlinedCode = true
+}*/
+

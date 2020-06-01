@@ -1,0 +1,16 @@
+jar {
+    enabled = true
+    manifest {
+        attributes 'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+    }
+    
+}
+
+bootJar {
+    enabled = false
+}
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:2.10.3"
+}

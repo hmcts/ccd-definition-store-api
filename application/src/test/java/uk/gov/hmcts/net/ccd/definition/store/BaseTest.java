@@ -1,8 +1,6 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,6 +27,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
+import uk.gov.hmcts.ccd.definition.store.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
@@ -139,8 +138,7 @@ public abstract class BaseTest {
         try {
             displayItemsData.setDisplayObject(mapper.convertValue(
                 mapper.readTree(resultSet.getString("display_object")),
-                new TypeReference<Map<String, JsonNode>>() {
-                }
+                JacksonUtils.getHashMapTypeReference()
             ));
         } catch (IOException e) {
             Assert.fail("Incorrect JSON structure: " + resultSet.getString("display_object"));
@@ -162,7 +160,7 @@ public abstract class BaseTest {
 
     protected void setSecurityAuthorities(Authentication authenticationMock, String... authorities) {
 
-        Jwt jwt =   Jwt.withTokenValue("Bearer a jwt token")
+        Jwt jwt = Jwt.withTokenValue("Bearer a jwt token")
             .claim("aClaim", "aClaim")
             .header("aHeader", "aHeader")
             .build();
