@@ -59,6 +59,6 @@ public class SearchCasesResultLayoutParser extends GenericLayoutParser {
     @Override
     protected void populateUseCase(GenericLayoutEntity layoutEntity, String useCase) {
         SearchCasesResultFieldEntity resultCaseFieldEntity = ((SearchCasesResultFieldEntity)layoutEntity);
-        resultCaseFieldEntity.setUseCase(useCase);
+        resultCaseFieldEntity.setUseCase(useCase.toUpperCase());
     }
 }

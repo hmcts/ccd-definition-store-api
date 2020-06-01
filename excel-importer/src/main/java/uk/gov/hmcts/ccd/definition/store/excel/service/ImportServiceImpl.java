@@ -196,10 +196,8 @@ public class ImportServiceImpl implements ImportService {
         if (definitionSheets.get(SheetName.SEARCH_CASES_RESULT_FIELDS.getName()) != null) {
             final ParseResult<GenericLayoutEntity> searchCasesResultLayoutResult = layoutParser.parseSearchCasesResultsLayout(definitionSheets);
             layoutService.createGenerics(searchCasesResultLayoutResult.getNewResults());
-
-            final UseCaseParser useCaseParser = parserFactory.createUseCaseParser(parseContext);
-            useCaseParser.parse(definitionSheets);
         }
+
         final ParseResult<DisplayGroupEntity> displayGroupsResult = layoutParser.parseAllDisplayGroups(definitionSheets);
         layoutService.createDisplayGroups(displayGroupsResult.getNewResults());
 
