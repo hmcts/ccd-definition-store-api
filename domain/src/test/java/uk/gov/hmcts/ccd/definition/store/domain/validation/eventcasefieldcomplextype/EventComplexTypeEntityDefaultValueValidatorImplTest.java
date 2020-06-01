@@ -18,10 +18,10 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
 
     private EventComplexTypeEntityDefaultValueValidatorImpl classUnderTest = new EventComplexTypeEntityDefaultValueValidatorImpl();
     final List<String> caseRoles = new ArrayList<>();
-    final EventComplexTypeEntity eventCaseFieldEntity= new EventComplexTypeEntity();
+    final EventComplexTypeEntity eventCaseFieldEntity = new EventComplexTypeEntity();
     final List<EventCaseFieldEntity> allEventCaseFieldEntitiesForEventCase = new ArrayList();
-    final static String ROLE1 ="ROLE1";
-    final static String ROLE2 ="ROLE2";
+    private static final String ROLE1 = "ROLE1";
+    private static final String ROLE2 = "ROLE2";
     final String eventId = "eventId";
 
     final EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
@@ -38,7 +38,7 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     public void should_pass_validation() {
 
         eventCaseFieldEntity.setDefaultValue(ROLE2);
-        final ValidationResult validationResult =classUnderTest.validate(eventCaseFieldEntity,eventCaseFieldEntityValidationContext);
+        final ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity,eventCaseFieldEntityValidationContext);
 
         assertTrue(validationResult.isValid());
         assertEquals(0, validationResult.getValidationErrors().size());
@@ -49,7 +49,7 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     public void should_not_pass_validation_due_to_incorrect_role() {
 
         eventCaseFieldEntity.setDefaultValue("xxx");
-        final ValidationResult validationResult =classUnderTest.validate(eventCaseFieldEntity,eventCaseFieldEntityValidationContext);
+        final ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity,eventCaseFieldEntityValidationContext);
 
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
