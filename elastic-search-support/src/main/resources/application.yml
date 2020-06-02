@@ -37,7 +37,7 @@ elasticsearch:
     - Label
     - CasePaymentHistoryViewer
     - CaseHistoryViewer
-  # Any changes to typeMappings need to be reflected in the data-store elasticsearch.type-mappings.* properties
+  # typeMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.type-mappings.defaultText property
   typeMappings:
     Text: ${elasticsearch.elasticMappings.defaultText}
     TextArea: ${elasticsearch.elasticMappings.defaultText}
@@ -58,7 +58,7 @@ elasticsearch:
     DynamicList: ${elasticsearch.elasticMappings.defaultText}
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_cases}
   casesIndexType: _doc
-  # Any changes to casePredefinedMappings need to be reflected in the data-store elasticsearch.case-predefined-mappings.* properties
+  # casePredefinedMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.case-predefined-mappings.defaultText property
   casePredefinedMappings:
     reference: ${elasticsearch.elasticMappings.defaultText}
     jurisdiction: ${elasticsearch.elasticMappings.defaultText}
