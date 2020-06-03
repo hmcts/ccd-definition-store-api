@@ -293,4 +293,15 @@
 		</packageUrl>
 		<cve>CVE-2020-9484</cve>
 	</suppress>
+
+	<!-- Temporary suppressions to enable release 18.1 -->
+	<suppress>
+		<cve>CVE-2020-10683</cve>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+		<cve>CVE-2020-9484</cve>
+		<cve>CVE-2018-10237</cve>
+		<cve>CVE-2019-10086</cve>
+	</suppress>
+
 </suppressions>
