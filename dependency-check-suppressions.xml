@@ -117,7 +117,19 @@
 		<cve>CVE-2020-5407</cve>
 		<cve>CVE-2020-5408</cve>
 		<cve>CVE-2020-9484</cve>
+		<cve>CVE-2015-3337</cve>
+		<cve>CVE-2019-7611</cve>
+		<cve>CVE-2015-5377</cve>
+		<cve>CVE-2015-5531</cve>
+		<cve>CVE-2014-6439</cve>
+		<cve>CVE-2019-7614</cve>
+		<cve>CVE-2015-1427</cve>
+		<cve>CVE-2018-17244</cve>
+		<cve>CVE-2018-10237</cve>
+		<cve>CVE-2020-9488</cve>
+		<cve>CVE-2019-10086</cve>
 	</suppress>
+
 	<suppress>
 		<notes><![CDATA[file name: jackson-databind-2.9.10.3.jar]]></notes>
 		<packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$
