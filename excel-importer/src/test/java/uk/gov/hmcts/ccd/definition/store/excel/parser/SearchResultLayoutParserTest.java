@@ -16,6 +16,8 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 @DisplayName("SearchResultLayoutParser Tests")
 public class SearchResultLayoutParserTest {
@@ -47,5 +49,26 @@ public class SearchResultLayoutParserTest {
     @DisplayName("Should return name")
     public void shouldReturnNameWhenAsked() {
         assertThat(classUnderTest.getLayoutName(), is("Search Results"));
+    }
+
+
+    @Test
+    @DisplayName("Should fail when populateShowConditon is invoked")
+    void shouldThrowExceptionWhenPopulateShowConditionIsInvoked() {
+        GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
+        layoutEntity.setCaseType(new CaseTypeEntity());
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateShowCondition(layoutEntity, "WORKBASKET"));
+        assertEquals(String.format("showCondition is not supported in worksheet '%s' for caseType '%s'",
+            SheetName.SEARCH_RESULT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should fail when populateUseCase is invoked")
+    void shouldThrowExceptionWhenPopulateUseCaseIsInvoked() {
+        GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
+        layoutEntity.setCaseType(new CaseTypeEntity());
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
+        assertEquals(String.format("useCase is not supported in worksheet '%s' for caseType '%s'",
+            SheetName.SEARCH_RESULT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }
 }

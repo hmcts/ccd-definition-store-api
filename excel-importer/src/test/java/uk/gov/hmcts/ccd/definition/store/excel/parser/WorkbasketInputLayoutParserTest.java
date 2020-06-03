@@ -18,9 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParse
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 @DisplayName("WorkbasketInputLayoutParser Tests")
 public class WorkbasketInputLayoutParserTest {
@@ -69,6 +67,16 @@ public class WorkbasketInputLayoutParserTest {
         layoutEntity.setCaseType(new CaseTypeEntity());
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateSortOrder(layoutEntity, "1:ASC"));
         assertEquals(String.format("Results ordering is not supported in worksheet '%s' for caseType '%s'",
+            SheetName.WORK_BASKET_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should fail when populateUseCase is invoked")
+    void shouldThrowExceptionWhenPopulateUseCaserIsInvoked() {
+        GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
+        layoutEntity.setCaseType(new CaseTypeEntity());
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
+        assertEquals(String.format("useCase is not supported in worksheet '%s' for caseType '%s'",
             SheetName.WORK_BASKET_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }
 }

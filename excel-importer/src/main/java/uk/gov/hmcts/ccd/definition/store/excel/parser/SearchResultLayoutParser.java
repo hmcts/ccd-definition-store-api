@@ -58,4 +58,10 @@ public class SearchResultLayoutParser extends GenericLayoutParser {
             + "caseType '%s'", SheetName.SEARCH_RESULT_FIELD.getName(), layoutEntity.getCaseType().getReference()));
     }
 
+    @Override
+    protected void populateUseCase(GenericLayoutEntity layoutEntity, String useCase) {
+        throw new MapperException(String.format("useCase is not supported in worksheet '%s' for "
+            + "caseType '%s'", SheetName.SEARCH_RESULT_FIELD.getName(), layoutEntity.getCaseType().getReference()));
+    }
+
 }
