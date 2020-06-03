@@ -16,6 +16,8 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 @DisplayName("WorkbasketLayoutParser Tests")
 public class WorkbasketLayoutParserTest {
@@ -48,5 +50,15 @@ public class WorkbasketLayoutParserTest {
     @DisplayName("Should return name")
     public void shouldReturnNameWhenAsked() {
         assertThat(classUnderTest.getLayoutName(), is("Workbasket"));
+    }
+
+    @Test
+    @DisplayName("Should fail when populateUseCase is invoked")
+    void shouldThrowExceptionWhenPopulateUseCaserIsInvoked() {
+        GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
+        layoutEntity.setCaseType(new CaseTypeEntity());
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
+        assertEquals(String.format("useCase is not supported in worksheet '%s' for caseType '%s'",
+            SheetName.WORK_BASKET_RESULT_FIELDS.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }
 }

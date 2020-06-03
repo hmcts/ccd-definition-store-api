@@ -11,6 +11,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIS
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.RESULTS_ORDERING;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.FIELD_SHOW_CONDITION;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USE_CASE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
 import liquibase.util.StringUtils;
@@ -74,6 +75,40 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
                 throw new MapperException(String.format(
                     "At least one layout case field must be defined for case type %s and layout %s",
                     caseTypeId, getLayoutName()));
+            } else {
+                addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
+            }
+        }
+
+        getLogger().info("Layout parsing: OK");
+
+        return result;
+    }
+
+    public ParseResult<GenericLayoutEntity> parseAllSearchCases(Map<String, DefinitionSheet> definitionSheets) {
+        getLogger().debug("Layout parsing...");
+
+        final ParseResult<GenericLayoutEntity> result = new ParseResult<>();
+
+        final Map<String, List<DefinitionDataItem>> layoutItemsByCaseTypes = getDefinitionSheet(definitionSheets)
+            .groupDataItemsByCaseType();
+        final List<DefinitionDataItem> unknownDefinition = getUnknownDataDefinitionItems(definitionSheets);
+        if (null != unknownDefinition && !unknownDefinition.isEmpty()) {
+            List<String> message = unknownDefinition.stream()
+                .map(definitionDataItem -> String.format("Unknown Case Type '%s' for layout '%s'",
+                    definitionDataItem.findAttribute(ColumnName.CASE_TYPE_ID), getLayoutName()))
+                .collect(Collectors.toList());
+            throw new MapperException(message.stream().collect(Collectors.joining(",")));
+        }
+
+        getLogger().debug("Layout parsing: {} case types detected", layoutItemsByCaseTypes.size());
+
+        for (CaseTypeEntity caseType : parseContext.getCaseTypes()) {
+            final String caseTypeId = caseType.getReference();
+            final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
+
+            if (CollectionUtils.isEmpty(layoutItems) && !WORK_BASKET_INPUT_FIELD.getName()
+                .equalsIgnoreCase(this.getLayoutName())) {
             } else {
                 addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
             }
@@ -154,6 +189,10 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         final String showCondition = definition.getString(FIELD_SHOW_CONDITION);
         if (StringUtils.isNotEmpty(showCondition)) {
             populateShowCondition(layoutEntity, this.parseShowCondition(showCondition));
+        }
+        final String useCase = definition.getString(USE_CASE);
+        if (StringUtils.isNotEmpty(useCase)) {
+            populateUseCase(layoutEntity, useCase);
         }
         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(layoutEntity, definition);
         return ParseResult.Entry.createNew(layoutEntity);
@@ -246,4 +285,6 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     protected abstract GenericLayoutEntity createLayoutCaseFieldEntity();
 
     protected abstract void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition);
+
+    protected abstract void populateUseCase(GenericLayoutEntity layoutEntity, String showCondition);
 }

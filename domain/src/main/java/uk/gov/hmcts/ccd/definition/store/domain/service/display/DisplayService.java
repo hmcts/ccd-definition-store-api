@@ -50,6 +50,15 @@ public class DisplayService {
         return mapToWorkBasketResult(this.genericLayoutRepository.findWorkbasketByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
+    public SearchCasesResult findSearchCasesResultDefinitionForCaseType(String caseTypeId) {
+        return mapToSearchCasesResult(this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId), caseTypeId);
+    }
+
+    public SearchCasesResult findSearchCasesResultDefinitionForCaseType(String caseTypeId, String useCase) {
+        return mapToSearchCasesResult(this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId, useCase), caseTypeId);
+    }
+
+
     public WizardPageCollection findWizardPageForCaseType(String caseTypeId, String eventReference) {
         return displayGroupAdapterService.findWizardPagesByCaseTypeId(caseTypeId, eventReference);
     }
@@ -117,6 +126,18 @@ public class DisplayService {
                 .collect(Collectors.toList())
         );
         return workBasketResult;
+    }
+
+    private SearchCasesResult mapToSearchCasesResult(List<SearchCasesResultFieldEntity> searchCasesResultFieldEntities,
+                                                   String caseTypeId) {
+        SearchCasesResult searchCasesResult = new SearchCasesResult();
+        searchCasesResult.setCaseTypeId(caseTypeId);
+        searchCasesResult.setFields(
+            searchCasesResultFieldEntities.stream()
+            .map(searchCasesResultFieldEntity -> entityToResponseDTOMapper.map(searchCasesResultFieldEntity))
+            .collect(Collectors.toList())
+        );
+        return searchCasesResult;
     }
 
 

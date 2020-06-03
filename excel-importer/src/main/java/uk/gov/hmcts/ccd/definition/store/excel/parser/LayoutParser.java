@@ -10,6 +10,7 @@ public class LayoutParser {
 
     private final WorkbasketInputLayoutParser workbasketInputLayoutParser;
     private final WorkbasketLayoutParser workbasketLayoutParser;
+    private final SearchCasesResultLayoutParser searchCasesResultLayoutParser;
     private final SearchInputLayoutParser searchInputLayoutParser;
     private final SearchResultLayoutParser searchResultLayoutParser;
     private final CaseTypeTabParser caseTypeTabParser;
@@ -20,13 +21,15 @@ public class LayoutParser {
                         SearchInputLayoutParser searchInputLayoutParser,
                         SearchResultLayoutParser searchResultLayoutParser,
                         CaseTypeTabParser caseTypeTabParser,
-                        WizardPageParser wizardPageParser) {
+                        WizardPageParser wizardPageParser,
+                        SearchCasesResultLayoutParser searchCasesResultLayoutParser) {
         this.workbasketInputLayoutParser = workbasketInputLayoutParser;
         this.workbasketLayoutParser = workbasketLayoutParser;
         this.searchInputLayoutParser = searchInputLayoutParser;
         this.searchResultLayoutParser = searchResultLayoutParser;
         this.caseTypeTabParser = caseTypeTabParser;
         this.wizardPageParser = wizardPageParser;
+        this.searchCasesResultLayoutParser = searchCasesResultLayoutParser;
     }
 
     public ParseResult<GenericLayoutEntity> parseWorkbasketInputLayout(Map<String, DefinitionSheet> definitionSheets) {
@@ -35,6 +38,10 @@ public class LayoutParser {
 
     public ParseResult<GenericLayoutEntity> parseWorkbasketLayout(Map<String, DefinitionSheet> definitionSheets) {
         return workbasketLayoutParser.parseAll(definitionSheets);
+    }
+
+    public ParseResult<GenericLayoutEntity> parseSearchCasesResultsLayout(Map<String, DefinitionSheet> definitionSheets) {
+        return searchCasesResultLayoutParser.parseAllSearchCases(definitionSheets);
     }
 
     public ParseResult<GenericLayoutEntity> parseSearchInputLayout(Map<String, DefinitionSheet> definitionSheets) {
