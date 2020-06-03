@@ -3,12 +3,15 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomple
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityDefaultValueError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
+
+import java.util.List;
 
 @Component
 public class EventComplexTypeEntityDefaultValueValidatorImpl implements EventComplexTypeEntityValidator {
+
+    private static final String GLOBAL_ROLE_CREATOR = "[CREATOR]";
+    private static final String GLOBAL_ROLE_COLLABORATOR = "[COLLABORATOR]";
 
     @Override
     public ValidationResult validate(EventComplexTypeEntity eventCaseFieldEntity, EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
@@ -16,15 +19,21 @@ public class EventComplexTypeEntityDefaultValueValidatorImpl implements EventCom
         final ValidationResult validationResult = new ValidationResult();
 
         if (eventCaseFieldEntity.getReference().equals("OrgPolicyCaseAssignedRole")) {
-            if (!eventCaseFieldEntityValidationContext.getCaseRoles().contains(eventCaseFieldEntity.getDefaultValue())) {
+            if (!getAllRolesForValidation(eventCaseFieldEntityValidationContext.getCaseRoles()).contains(eventCaseFieldEntity.getDefaultValue())) {
                 validationResult.addError(
-                    new EventComplexTypeEntityDefaultValueError(
-                        eventCaseFieldEntity,
-                        eventCaseFieldEntityValidationContext
-                    ));
+                        new EventComplexTypeEntityDefaultValueError(
+                                eventCaseFieldEntity,
+                                eventCaseFieldEntityValidationContext
+                        ));
 
             }
         }
         return validationResult;
+    }
+
+    private List<String> getAllRolesForValidation(List<String> caseRoles) {
+        caseRoles.add(GLOBAL_ROLE_CREATOR);
+        caseRoles.add(GLOBAL_ROLE_COLLABORATOR);
+        return caseRoles;
     }
 }
