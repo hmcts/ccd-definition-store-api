@@ -37,6 +37,7 @@ elasticsearch:
     - Label
     - CasePaymentHistoryViewer
     - CaseHistoryViewer
+  # typeMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.type-mappings.defaultText property
   typeMappings:
     Text: ${elasticsearch.elasticMappings.defaultText}
     TextArea: ${elasticsearch.elasticMappings.defaultText}
@@ -57,6 +58,7 @@ elasticsearch:
     DynamicList: ${elasticsearch.elasticMappings.defaultText}
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_cases}
   casesIndexType: _doc
+  # casePredefinedMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.case-predefined-mappings.defaultText property
   casePredefinedMappings:
     reference: ${elasticsearch.elasticMappings.defaultText}
     jurisdiction: ${elasticsearch.elasticMappings.defaultText}
@@ -66,6 +68,7 @@ elasticsearch:
     last_modified: ${elasticsearch.elasticMappings.defaultDate}
     security_classification: ${elasticsearch.elasticMappings.defaultKeyword}
     case_type_id: ${elasticsearch.elasticMappings.defaultText}
+    last_state_modified_date: ${elasticsearch.elasticMappings.defaultDate}
 #    '[@timestamp]' brackets added for getting along with spring boot 2
     '[@timestamp]': ${elasticsearch.elasticMappings.disabled}
     '[@version]': ${elasticsearch.elasticMappings.disabled}

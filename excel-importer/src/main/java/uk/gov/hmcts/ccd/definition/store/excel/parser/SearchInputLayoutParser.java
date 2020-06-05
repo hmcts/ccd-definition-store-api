@@ -57,4 +57,10 @@ public class SearchInputLayoutParser extends GenericLayoutParser {
         SearchInputCaseFieldEntity entity = ((SearchInputCaseFieldEntity)layoutEntity);
         entity.setShowCondition(showCondition);
     }
+
+    @Override
+    protected void populateUseCase(GenericLayoutEntity layoutEntity, String useCase) {
+        throw new MapperException(String.format("useCase is not supported in worksheet '%s' for "
+            + "caseType '%s'", SheetName.SEARCH_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()));
+    }
 }
