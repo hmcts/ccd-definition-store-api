@@ -61,7 +61,8 @@
                   "label": null,
                   "order": 1,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 },
                 {
                   "reference": "OrganisationName",
@@ -69,7 +70,8 @@
                   "label": null,
                   "order": 2,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 }
               ]
             },
@@ -89,7 +91,8 @@
                   "label": null,
                   "order": 3,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 },
                 {
                   "reference": "Organisation.OrganisationName",
@@ -97,7 +100,8 @@
                   "label": null,
                   "order": 4,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 },
                 {
                   "reference": "OrgPolicyCaseAssignedRole",
@@ -105,7 +109,8 @@
                   "label": null,
                   "order": 5,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : "[Defendant]"
                 },
                 {
                   "reference": "OrgPolicyReference",
@@ -113,7 +118,8 @@
                   "label": null,
                   "order": 6,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 }
               ]
             }
@@ -165,7 +171,8 @@
                   "label": "Updated OrganisationID Label",
                   "order": 1,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 },
                 {
                   "reference": "OrganisationName",
@@ -173,7 +180,8 @@
                   "label": "Updated Organisation Name",
                   "order": 2,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 }
               ]
             },
@@ -193,7 +201,8 @@
                   "label": null,
                   "order": 3,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 },
                 {
                   "reference": "Organisation.OrganisationName",
@@ -201,7 +210,8 @@
                   "label": null,
                   "order": 4,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 },
                 {
                   "reference": "OrgPolicyCaseAssignedRole",
@@ -209,7 +219,8 @@
                   "label": null,
                   "order": 5,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : "[Claimant]"
                 },
                 {
                   "reference": "OrgPolicyReference",
@@ -217,7 +228,8 @@
                   "label": null,
                   "order": 6,
                   "displayContext": "OPTIONAL",
-                  "showCondition": null
+                  "showCondition": null,
+                  "defaultValue" : null
                 }
               ]
             }
