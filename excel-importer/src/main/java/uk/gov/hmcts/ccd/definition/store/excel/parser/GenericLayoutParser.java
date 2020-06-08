@@ -23,7 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperExceptio
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
@@ -110,13 +110,36 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             if (CollectionUtils.isEmpty(layoutItems) && !WORK_BASKET_INPUT_FIELD.getName()
                 .equalsIgnoreCase(this.getLayoutName())) {
             } else {
-                addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
+                addParseLayoutCaseFieldForSearchCases(result, caseType, caseTypeId, layoutItems);
             }
         }
 
         getLogger().info("Layout parsing: OK");
 
         return result;
+    }
+
+    private void addParseLayoutCaseFieldForSearchCases(final ParseResult<GenericLayoutEntity> result,
+                                         final CaseTypeEntity caseType,
+                                         final String caseTypeId,
+                                         final List<DefinitionDataItem> layoutItems) {
+        if (null != layoutItems) {
+            getLogger().debug("Layout parsing: Case type {}: {} fields detected", caseTypeId, layoutItems.size());
+
+            if (hasDuplicateRowsForSearchCases(layoutItems)) {
+                throw new MapperException(
+                    String.format("Please make sure each row in worksheet %s is unique for case type %s",
+                        layoutItems.get(0).getSheetName(), caseType.getReference()));
+            }
+
+            validateSortOrders(layoutItems, caseType);
+
+            for (DefinitionDataItem layoutCaseFieldDefinition : layoutItems) {
+                result.add(parseLayoutCaseField(caseType, layoutCaseFieldDefinition));
+            }
+
+            getLogger().info("Layout parsing: Case type {}: OK", caseTypeId, layoutItems.size());
+        }
     }
 
     private void addParseLayoutCaseField(final ParseResult<GenericLayoutEntity> result,
@@ -154,6 +177,21 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
                     ? ddi.getString(LIST_ELEMENT_CODE)
                     .equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE)) : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
                     .count() > 1);
+    }
+
+    private boolean hasDuplicateRowsForSearchCases(List<DefinitionDataItem> layoutItems) {
+        return layoutItems
+            .stream()
+            .anyMatch(ddi -> ddi.getSheetName().equals(SheetName.SEARCH_CASES_RESULT_FIELDS) ?
+                layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
+                    ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
+                    && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
+                    && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
+                    && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE))
+                    && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
+                    ? ddi.getString(LIST_ELEMENT_CODE)
+                    .equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE)) : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE)))).count() > 1
+                    : hasDuplicateRows(layoutItems));
     }
 
     private List<DefinitionDataItem> getUnknownDataDefinitionItems(Map<String, DefinitionSheet> definitionSheets) {
