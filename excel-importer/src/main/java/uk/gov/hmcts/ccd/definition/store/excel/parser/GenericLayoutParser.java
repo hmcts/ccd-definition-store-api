@@ -107,8 +107,8 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             final String caseTypeId = caseType.getReference();
             final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
 
-            if (!CollectionUtils.isEmpty(layoutItems) && WORK_BASKET_INPUT_FIELD.getName()
-                .equalsIgnoreCase(this.getLayoutName())) {
+            if (CollectionUtils.isNotEmpty(layoutItems)
+                && WORK_BASKET_INPUT_FIELD.getName() != (this.getLayoutName())) {
                 addParseLayoutCaseFieldForSearchCases(result, caseType, caseTypeId, layoutItems);
             }
         }
