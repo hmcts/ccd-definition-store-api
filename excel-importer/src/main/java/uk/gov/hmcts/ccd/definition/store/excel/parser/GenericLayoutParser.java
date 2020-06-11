@@ -107,9 +107,8 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             final String caseTypeId = caseType.getReference();
             final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
 
-            if (CollectionUtils.isEmpty(layoutItems) && !WORK_BASKET_INPUT_FIELD.getName()
+            if (!CollectionUtils.isEmpty(layoutItems) && WORK_BASKET_INPUT_FIELD.getName()
                 .equalsIgnoreCase(this.getLayoutName())) {
-            } else {
                 addParseLayoutCaseFieldForSearchCases(result, caseType, caseTypeId, layoutItems);
             }
         }
@@ -120,9 +119,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     }
 
     private void addParseLayoutCaseFieldForSearchCases(final ParseResult<GenericLayoutEntity> result,
-                                         final CaseTypeEntity caseType,
-                                         final String caseTypeId,
-                                         final List<DefinitionDataItem> layoutItems) {
+                                                       final CaseTypeEntity caseType,
+                                                       final String caseTypeId,
+                                                       final List<DefinitionDataItem> layoutItems) {
         if (null != layoutItems) {
             getLogger().debug("Layout parsing: Case type {}: {} fields detected", caseTypeId, layoutItems.size());
 
@@ -182,8 +181,8 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     private boolean hasDuplicateRowsForSearchCases(List<DefinitionDataItem> layoutItems) {
         return layoutItems
             .stream()
-            .anyMatch(ddi -> ddi.getSheetName().equals(SheetName.SEARCH_CASES_RESULT_FIELDS.getName()) ?
-                layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
+            .anyMatch(ddi -> ddi.getSheetName().equals(SheetName.SEARCH_CASES_RESULT_FIELDS.getName())
+                ? layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
                     ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
                     && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
                     && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
@@ -191,7 +190,7 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
                     && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
                     ? ddi.getString(LIST_ELEMENT_CODE)
                     .equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE)) : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE)))).count() > 1
-                    : hasDuplicateRows(layoutItems));
+                : hasDuplicateRows(layoutItems));
     }
 
     private List<DefinitionDataItem> getUnknownDataDefinitionItems(Map<String, DefinitionSheet> definitionSheets) {
@@ -263,7 +262,7 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     }
 
     private void validateDuplicateAndGaps(CaseTypeEntity caseType, String sheetName, List<DefinitionDataItem> sortDataItems) {
-        if (sheetName == SheetName.SEARCH_CASES_RESULT_FIELDS.getName()){
+        if (sheetName == SheetName.SEARCH_CASES_RESULT_FIELDS.getName()) {
             Map<String, List<Integer>> sortPrioritiesByUserRole = getSortPrioritiesByRoleForSearchCases(sortDataItems);
             sortPrioritiesByUserRole.values().forEach(items -> {
                 checkDuplicateSortOrders(items, sheetName, caseType.getReference());
