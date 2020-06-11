@@ -263,11 +263,20 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     }
 
     private void validateDuplicateAndGaps(CaseTypeEntity caseType, String sheetName, List<DefinitionDataItem> sortDataItems) {
-        Map<String, List<Integer>> sortPrioritiesByUserRole = getSortPrioritiesByRole(sortDataItems);
-        sortPrioritiesByUserRole.values().forEach(items -> {
-            checkDuplicateSortOrders(items, sheetName, caseType.getReference());
-            checkGapsInSortPriority(items, sheetName, caseType.getReference());
-        });
+        if (sheetName == SheetName.SEARCH_CASES_RESULT_FIELDS.getName()){
+            Map<String, List<Integer>> sortPrioritiesByUserRole = getSortPrioritiesByRoleForSearchCases(sortDataItems);
+            sortPrioritiesByUserRole.values().forEach(items -> {
+                checkDuplicateSortOrders(items, sheetName, caseType.getReference());
+                checkGapsInSortPriority(items, sheetName, caseType.getReference());
+            });
+
+        } else {
+            Map<String, List<Integer>> sortPrioritiesByUserRole = getSortPrioritiesByRole(sortDataItems);
+            sortPrioritiesByUserRole.values().forEach(items -> {
+                checkDuplicateSortOrders(items, sheetName, caseType.getReference());
+                checkGapsInSortPriority(items, sheetName, caseType.getReference());
+            });
+        }
     }
 
     private void checkGapsInSortPriority(List<Integer> items, String sheetName, String caseType) {
@@ -289,6 +298,24 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
         sortDataItems.stream().forEach(ddi -> {
             String key = StringUtils.isNotEmpty(ddi.getString(USER_ROLE)) ? ddi.getString(USER_ROLE) : ALL_ROLES;
+            List<Integer> priorities = sortPrioritiesByUserRole.getOrDefault(key, new ArrayList<>());
+            priorities.add(Integer.valueOf(ddi.getString(RESULTS_ORDERING).split(SORT_STRING_DELIMITER)[0]));
+            sortPrioritiesByUserRole.put(key, priorities);
+        });
+        sortPrioritiesByUserRole.keySet().forEach(key -> {
+            if (!key.equalsIgnoreCase(ALL_ROLES) && sortPrioritiesByUserRole.get(ALL_ROLES) != null) {
+                sortPrioritiesByUserRole.get(key).addAll(sortPrioritiesByUserRole.get(ALL_ROLES));
+            }
+        });
+        return sortPrioritiesByUserRole;
+    }
+
+    private Map<String, List<Integer>> getSortPrioritiesByRoleForSearchCases(List<DefinitionDataItem> sortDataItems) {
+        Map<String, List<Integer>> sortPrioritiesByUserRole = new HashMap<>();
+
+        sortDataItems.stream().forEach(ddi -> {
+            String role = StringUtils.isNotEmpty(ddi.getString(USER_ROLE)) ? ddi.getString(USER_ROLE) : ALL_ROLES;
+            String key = role + " " + ddi.getUseCase();
             List<Integer> priorities = sortPrioritiesByUserRole.getOrDefault(key, new ArrayList<>());
             priorities.add(Integer.valueOf(ddi.getString(RESULTS_ORDERING).split(SORT_STRING_DELIMITER)[0]));
             sortPrioritiesByUserRole.put(key, priorities);
