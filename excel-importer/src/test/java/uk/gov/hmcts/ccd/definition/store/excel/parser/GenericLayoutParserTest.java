@@ -594,7 +594,7 @@ public class GenericLayoutParserTest {
 
     @Test
     @DisplayName("Should create a generic layout entity")
-    public void shouldCreateGenericLayoutEntityParseAllSearchCases() {
+    void shouldCreateGenericLayoutEntityParseAllSearchCases() {
         ParseContext context = new ParseContext();
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference(CASE_TYPE_ID);
@@ -628,7 +628,8 @@ public class GenericLayoutParserTest {
 
     @Test
     @DisplayName("duplicate sort order priority per user role should generate error")
-    public void shouldFailForDuplicateSortOrderPriorityPerUserRoleParseAllsearchCases() {
+
+    void shouldFailForDuplicateSortOrderPriorityPerUserRoleParseAllsearchCases() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
@@ -652,7 +653,7 @@ public class GenericLayoutParserTest {
 
     @Test
     @DisplayName("Unknown definitions should generate error")
-    public void shouldFailIfUnknownCaseTypeParseAllSearchCases() {
+    void shouldFailIfUnknownCaseTypeParseAllSearchCases() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);

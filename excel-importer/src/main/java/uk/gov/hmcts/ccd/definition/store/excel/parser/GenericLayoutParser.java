@@ -72,9 +72,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
             if (CollectionUtils.isEmpty(layoutItems) && !WORK_BASKET_INPUT_FIELD.getName()
                 .equalsIgnoreCase(this.getLayoutName())) {
-                throw new MapperException(String.format(
-                    "At least one layout case field must be defined for case type %s and layout %s",
-                    caseTypeId, getLayoutName()));
+                    throw new MapperException(String.format(
+                        "At least one layout case field must be defined for case type %s and layout %s",
+                        caseTypeId, getLayoutName()));
             } else {
                 addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
             }
@@ -108,7 +108,7 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
 
             if (CollectionUtils.isNotEmpty(layoutItems)
-                && WORK_BASKET_INPUT_FIELD.getName() != (this.getLayoutName())) {
+                && !WORK_BASKET_INPUT_FIELD.getName().equals (this.getLayoutName())) {
                 addParseLayoutCaseFieldForSearchCases(result, caseType, caseTypeId, layoutItems);
             }
         }
@@ -160,7 +160,7 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
                 result.add(parseLayoutCaseField(caseType, layoutCaseFieldDefinition));
             }
 
-            getLogger().info("Layout parsing: Case type {}: OK", caseTypeId, layoutItems.size());
+            getLogger().info("Layout parsing: Case type {}: OK", caseTypeId);
         }
     }
 
@@ -262,7 +262,7 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     }
 
     private void validateDuplicateAndGaps(CaseTypeEntity caseType, String sheetName, List<DefinitionDataItem> sortDataItems) {
-        if (sheetName == SheetName.SEARCH_CASES_RESULT_FIELDS.getName()) {
+        if (sheetName.equals(SheetName.SEARCH_CASES_RESULT_FIELDS.getName())) {
             Map<String, List<Integer>> sortPrioritiesByUserRole = getSortPrioritiesByRoleForSearchCases(sortDataItems);
             sortPrioritiesByUserRole.values().forEach(items -> {
                 checkDuplicateSortOrders(items, sheetName, caseType.getReference());
