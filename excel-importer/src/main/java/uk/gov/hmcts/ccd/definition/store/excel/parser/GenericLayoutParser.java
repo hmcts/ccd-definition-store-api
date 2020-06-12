@@ -71,7 +71,7 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             final String caseTypeId = caseType.getReference();
             final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
 
-            if (SEARCH_CASES_RESULT_FIELDS.getName().equals(this.getLayoutName())){
+            if (SEARCH_CASES_RESULT_FIELDS.getName().equals(this.getLayoutName())) {
                 addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
             } else {
                 if ((CollectionUtils.isEmpty(layoutItems)
@@ -143,11 +143,7 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
             && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
             && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
-            && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE)))
-//            && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
-//            ? ddi.getString(LIST_ELEMENT_CODE).equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE))
-//            : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
-            .count() > 1;
+            && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE))).count() > 1;
     }
 
 
