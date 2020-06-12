@@ -95,6 +95,8 @@ dependencyManagement {
     }
 
     dependencies {
+        // force to use '42.2.13' CVE-2020-13692
+        dependency group: 'org.postgresql', name: 'postgresql', version: '42.2.13'
 
         // Versions prior to 24.1.1 vulnerable to CVE-2018-10237
         dependency 'com.google.guava:guava:24.1.1-jre'
@@ -136,7 +138,8 @@ allprojects {
 
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        compile "com.fasterxml.jackson.core:jackson-databind:2.10.3"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.10.0"
+        compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
     }
 
     checkstyle {
@@ -212,6 +215,7 @@ subprojects { subproject ->
     }
 
     dependencies {
+        compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
         compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
         compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
         compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
