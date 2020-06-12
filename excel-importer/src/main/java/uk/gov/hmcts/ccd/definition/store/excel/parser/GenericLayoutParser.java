@@ -71,9 +71,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             final String caseTypeId = caseType.getReference();
             final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
 
-            if (CollectionUtils.isEmpty(layoutItems) && !WORK_BASKET_INPUT_FIELD.getName()
-                .equalsIgnoreCase(this.getLayoutName()) && !SEARCH_CASES_RESULT_FIELDS.getName()
-                .equalsIgnoreCase(this.getLayoutName())) {
+            if (CollectionUtils.isEmpty(layoutItems) && (!WORK_BASKET_INPUT_FIELD.getName()
+                .equalsIgnoreCase(this.getLayoutName()) || !SEARCH_CASES_RESULT_FIELDS.getName()
+                .equalsIgnoreCase(this.getLayoutName()))) {
                 throw new MapperException(String.format(
                     "At least one layout case field must be defined for case type %s and layout %s",
                     caseTypeId, getLayoutName()));
