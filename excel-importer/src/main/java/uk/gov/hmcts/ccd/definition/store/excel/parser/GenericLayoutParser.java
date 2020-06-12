@@ -144,15 +144,14 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     private boolean hasDuplicateRows(List<DefinitionDataItem> layoutItems) {
         return layoutItems
             .stream()
-            .anyMatch(ddi ->{
-                if (ddi.getSheetName().equals(SheetName.SEARCH_CASES_RESULT_FIELDS.getName())){
+            .anyMatch(ddi -> {
+                if (ddi.getSheetName().equals(SheetName.SEARCH_CASES_RESULT_FIELDS.getName())) {
                     return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
                         ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
                         && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
                         && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
                         && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE))).count() > 1;
-                }
-                else {
+                } else {
                     return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
                         ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
                         && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
