@@ -35,13 +35,13 @@ task smoke(type: Test) {
     useJUnitPlatform {
         includeTags 'smoke'
     }
-
-    doFirst {
+    doLast {
+        generateCucumberReports.enabled = true
         javaexec {
-            main = "uk.gov.hmcts.ccd.definitionstore.befta.TestDataLoaderMain"
-            classpath += sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-            args = ['']
-        }
+            main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
+            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
+                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
     }
 }
 
