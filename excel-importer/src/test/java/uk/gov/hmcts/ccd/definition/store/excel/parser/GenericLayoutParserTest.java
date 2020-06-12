@@ -671,66 +671,69 @@ public class GenericLayoutParserTest {
             INVALID_CASE_TYPE_ID, classUnderTest.getLayoutName()), thrown.getMessage());
     }
 
-//    @Test
-//    @DisplayName("Duplicate user role and list element code definitions should generate error")
-//    public void shouldFailForDuplicateDefinitionItemsForSearchCases() {
-//
-//        final DefinitionSheet sheet = new DefinitionSheet();
-//        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
-//        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
-//        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
-//        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
-//        sheet.addDataItem(item);
-//        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
-//        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
-//        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
-//        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
-//        item2.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
-//        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
-//        sheet.addDataItem(item2);
-//
-//        final DefinitionSheet sheet1 = new DefinitionSheet();
-//        final DefinitionDataItem item4 = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
-//        item4.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
-//        item4.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
-//        item4.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
-//        item4.addAttribute(ColumnName.USE_CASE, "String");
-//        sheet1.addDataItem(item4);
-//        final DefinitionDataItem item5 = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
-//        item5.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
-//        item5.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
-//        item5.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
-//        item5.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
-//        item5.addAttribute(ColumnName.USER_ROLE, ROLE1);
-//        item5.addAttribute(ColumnName.USE_CASE, "useCase");
-//        sheet1.addDataItem(item5);
-//        final DefinitionDataItem item6 = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
-//        item6.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
-//        item6.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
-//        item6.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
-//        item6.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
-//        item6.addAttribute(ColumnName.USER_ROLE, ROLE1);
-//        item6.addAttribute(ColumnName.USE_CASE, "useCase");
-//        sheet1.addDataItem(item6);
-//
-//
-//        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-//        definitionSheets.put(SEARCH_CASES_RESULT_FIELDS.getName(), sheet1);
-//        UserRoleEntity userRoleEntity = new UserRoleEntity();
-//        userRoleEntity.setReference(ROLE1);
-//        context.registerUserRoles(Arrays.asList(userRoleEntity));
-//        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllSearchCases(definitionSheets));
-//        assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
-//            item6.getSheetName(), item6.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
-//
-//        context.registerUserRoles(Arrays.asList(new UserRoleEntity()));
-//    }
+    @Test
+    @DisplayName("Duplicate user role and list element code definitions should generate error")
+    public void shouldFailForDuplicateDefinitionItemsForSearchCases() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item2 = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item2.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        item2.addAttribute(ColumnName.USE_CASE, "ORGCASES");
+        sheet.addDataItem(item2);
+        final DefinitionDataItem item3 = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
+        item3.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item3.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item3.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item3.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
+        item3.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        item3.addAttribute(ColumnName.USE_CASE, "ORGCASES");
+        sheet.addDataItem(item3);
+
+        definitionSheets.put(SEARCH_CASES_RESULT_FIELDS.getName(), sheet);
+
+        final DefinitionSheet sheet1 = new DefinitionSheet();
+        final DefinitionDataItem item1 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item1.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item1.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item1.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        sheet1.addDataItem(item1);
+        final DefinitionDataItem item4 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item4.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item4.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item4.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item4.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
+        item4.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        sheet1.addDataItem(item4);
+
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+
+        UserRoleEntity userRoleEntity = new UserRoleEntity();
+        userRoleEntity.setReference(ROLE1);
+        context.registerUserRoles(Arrays.asList(userRoleEntity));
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllSearchCases(definitionSheets));
+        assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
+            item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
+
+        context.registerUserRoles(Arrays.asList(new UserRoleEntity()));
+    }
 
     private void addCaseType2Field(DefinitionSheet sheet) {
         final DefinitionDataItem item3 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item3.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
         item3.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item3.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        sheet.addDataItem(item3);
+    }
+
+    private void addCaseType2FieldSearchCases(DefinitionSheet sheet) {
+        final DefinitionDataItem item3 = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
+        item3.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item3.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item3.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item3.addAttribute(ColumnName.USE_CASE, "useCase");
         sheet.addDataItem(item3);
     }
 
