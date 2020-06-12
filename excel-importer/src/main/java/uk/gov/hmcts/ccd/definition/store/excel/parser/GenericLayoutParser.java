@@ -71,15 +71,19 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             final String caseTypeId = caseType.getReference();
             final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
 
-            if ((CollectionUtils.isEmpty(layoutItems)
-                && !WORK_BASKET_INPUT_FIELD.getName().equalsIgnoreCase(this.getLayoutName()))
-                || SEARCH_CASES_RESULT_FIELDS.getName().equals(this.getLayoutName())) {
-                throw new MapperException(String.format(
-                    "At least one layout case field must be defined for case type %s and layout %s",
-                    caseTypeId, getLayoutName()));
-            } else {
+            if (SEARCH_CASES_RESULT_FIELDS.getName().equals(this.getLayoutName())){
                 addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
+            } else {
+                if ((CollectionUtils.isEmpty(layoutItems)
+                    && !WORK_BASKET_INPUT_FIELD.getName().equalsIgnoreCase(this.getLayoutName()))) {
+                    throw new MapperException(String.format(
+                        "At least one layout case field must be defined for case type %s and layout %s",
+                        caseTypeId, getLayoutName()));
+                } else {
+                    addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
+                }
             }
+
         }
 
         getLogger().info("Layout parsing: OK");
@@ -139,10 +143,10 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
             && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
             && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
-            && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE))
-            && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
-            ? ddi.getString(LIST_ELEMENT_CODE).equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE))
-            : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
+            && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE)))
+//            && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
+//            ? ddi.getString(LIST_ELEMENT_CODE).equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE))
+//            : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
             .count() > 1;
     }
 
