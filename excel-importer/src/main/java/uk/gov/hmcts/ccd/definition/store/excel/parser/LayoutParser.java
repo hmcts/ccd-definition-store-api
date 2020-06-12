@@ -41,7 +41,7 @@ public class LayoutParser {
     }
 
     public ParseResult<GenericLayoutEntity> parseSearchCasesResultsLayout(Map<String, DefinitionSheet> definitionSheets) {
-        return searchCasesResultLayoutParser.parseAll(definitionSheets);
+        return searchCasesResultLayoutParser.parseAllForSearchCases(definitionSheets);
     }
 
     public ParseResult<GenericLayoutEntity> parseSearchInputLayout(Map<String, DefinitionSheet> definitionSheets) {
