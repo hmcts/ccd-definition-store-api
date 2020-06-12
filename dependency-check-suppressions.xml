@@ -8,8 +8,8 @@
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
-	<!-- THIS CVEs should not be removed until the elastic search client is 
-		updated to 7. Before updating the elastic client make sure that the server 
+	<!-- THIS CVEs should not be removed until the elastic search client is
+		updated to 7. Before updating the elastic client make sure that the server
 		has been updated to 7 -->
 
 	<suppress>
@@ -175,5 +175,33 @@
 		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-crypto@.*$
 		</packageUrl>
 		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: postgresql-42.2.10.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
+		<cpe>cpe:/a:postgresql:postgresql</cpe>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: postgresql-42.2.10.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
+		<cpe>cpe:/a:postgresql:postgresql_jdbc_driver</cpe>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: postgresql-42.2.5.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
+		<cpe>cpe:/a:postgresql:postgresql</cpe>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: postgresql-42.2.5.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
+		<cpe>cpe:/a:postgresql:postgresql_jdbc_driver</cpe>
 	</suppress>
 </suppressions>
