@@ -12,6 +12,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USE
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.RESULTS_ORDERING;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.FIELD_SHOW_CONDITION;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USE_CASE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_CASES_RESULT_FIELDS;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
 import liquibase.util.StringUtils;
@@ -71,44 +72,12 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
 
             if (CollectionUtils.isEmpty(layoutItems) && !WORK_BASKET_INPUT_FIELD.getName()
+                .equalsIgnoreCase(this.getLayoutName()) && !SEARCH_CASES_RESULT_FIELDS.getName()
                 .equalsIgnoreCase(this.getLayoutName())) {
                 throw new MapperException(String.format(
                     "At least one layout case field must be defined for case type %s and layout %s",
                     caseTypeId, getLayoutName()));
             } else {
-                addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
-            }
-        }
-
-        getLogger().info("Layout parsing: OK");
-
-        return result;
-    }
-
-    public ParseResult<GenericLayoutEntity> parseAllSearchCases(Map<String, DefinitionSheet> definitionSheets) {
-        getLogger().debug("Layout parsing...");
-
-        final ParseResult<GenericLayoutEntity> result = new ParseResult<>();
-
-        final Map<String, List<DefinitionDataItem>> layoutItemsByCaseTypes = getDefinitionSheet(definitionSheets)
-            .groupDataItemsByCaseType();
-        final List<DefinitionDataItem> unknownDefinition = getUnknownDataDefinitionItems(definitionSheets);
-        if (null != unknownDefinition && !unknownDefinition.isEmpty()) {
-            List<String> message = unknownDefinition.stream()
-                .map(definitionDataItem -> String.format("Unknown Case Type '%s' for layout '%s'",
-                    definitionDataItem.findAttribute(ColumnName.CASE_TYPE_ID), getLayoutName()))
-                .collect(Collectors.toList());
-            throw new MapperException(message.stream().collect(Collectors.joining(",")));
-        }
-
-        getLogger().debug("Layout parsing: {} case types detected", layoutItemsByCaseTypes.size());
-
-        for (CaseTypeEntity caseType : parseContext.getCaseTypes()) {
-            final String caseTypeId = caseType.getReference();
-            final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
-
-            if (CollectionUtils.isNotEmpty(layoutItems)
-                && !WORK_BASKET_INPUT_FIELD.getName().equals(this.getLayoutName())) {
                 addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
             }
         }
@@ -146,28 +115,37 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             .stream()
             .anyMatch(ddi -> {
                 if (ddi.getSheetName().equals(SheetName.SEARCH_CASES_RESULT_FIELDS.getName())) {
-                    return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
-                        ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
-                        && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
-                        && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
-                        && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE))
-                        && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
-                        ? ddi.getString(LIST_ELEMENT_CODE).equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE))
-                        : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
-                        .count() > 1;
+                    return hasDuplicateRowsForSearchCases(layoutItems, ddi);
                 } else {
-                    return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
-                        ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
-                        && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
-                        && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
-                        && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
-                        ? ddi.getString(LIST_ELEMENT_CODE)
-                        .equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE)) : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
-                        .count() > 1;
+                    return hasDuplicateRows(layoutItems, ddi);
                 }
             });
 
     }
+
+    private boolean hasDuplicateRows(List<DefinitionDataItem> layoutItems, DefinitionDataItem ddi) {
+        return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
+            ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
+            && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
+            && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
+            && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
+            ? ddi.getString(LIST_ELEMENT_CODE)
+            .equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE)) : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
+            .count() > 1;
+    }
+
+    private boolean hasDuplicateRowsForSearchCases(List<DefinitionDataItem> layoutItems, DefinitionDataItem ddi) {
+        return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
+            ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
+            && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
+            && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
+            && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE))
+            && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
+            ? ddi.getString(LIST_ELEMENT_CODE).equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE))
+            : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
+            .count() > 1;
+    }
+
 
     private List<DefinitionDataItem> getUnknownDataDefinitionItems(Map<String, DefinitionSheet> definitionSheets) {
         return getDefinitionSheet(definitionSheets).getDataItems()

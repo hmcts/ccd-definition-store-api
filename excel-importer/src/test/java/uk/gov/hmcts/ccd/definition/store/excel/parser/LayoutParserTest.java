@@ -112,7 +112,7 @@ class LayoutParserTest {
     void parseSearchCasesResultsLayout() {
         underTest.parseSearchCasesResultsLayout(definitionSheets);
 
-        verify(searchCasesResultLayoutParser).parseAllSearchCases(definitionSheets);
+        verify(searchCasesResultLayoutParser).parseAll(definitionSheets);
     }
 
     @Test

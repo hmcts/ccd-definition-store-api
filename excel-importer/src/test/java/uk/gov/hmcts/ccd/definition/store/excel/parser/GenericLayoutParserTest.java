@@ -616,7 +616,7 @@ public class GenericLayoutParserTest {
         definitionSheets.put(SEARCH_RESULT_FIELD.getName(), sheet);
 
         classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
-        ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAllSearchCases(definitionSheets);
+        ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
 
         GenericLayoutEntity entity = parseResult.getAllResults().get(0);
         assertEquals(CASE_TYPE_ID, entity.getCaseType().getReference());
@@ -646,7 +646,7 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item2);
         addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllSearchCases(definitionSheets));
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
     }
@@ -666,14 +666,14 @@ public class GenericLayoutParserTest {
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         sheet.addDataItem(item2);
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllSearchCases(definitionSheets));
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Unknown Case Type '%s' for layout '%s'",
             INVALID_CASE_TYPE_ID, classUnderTest.getLayoutName()), thrown.getMessage());
     }
 
     @Test
     @DisplayName("Duplicate user role and list element code definitions should generate error")
-    public void shouldFailForDuplicateDefinitionItemsForSearchCases() {
+    void shouldFailForDuplicateDefinitionItemsForSearchCases() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
@@ -721,7 +721,7 @@ public class GenericLayoutParserTest {
         UserRoleEntity userRoleEntity = new UserRoleEntity();
         userRoleEntity.setReference(ROLE1);
         context.registerUserRoles(Arrays.asList(userRoleEntity));
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllSearchCases(definitionSheets));
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
