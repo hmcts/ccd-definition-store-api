@@ -675,6 +675,14 @@ public class GenericLayoutParserTest {
     @DisplayName("Duplicate user role and list element code definitions should generate error")
     public void shouldFailForDuplicateDefinitionItemsForSearchCases() {
         final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
+        item.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        item.addAttribute(ColumnName.USE_CASE, "WORKBASKET");
+        sheet.addDataItem(item);
         final DefinitionDataItem item2 = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
         item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
