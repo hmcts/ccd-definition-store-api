@@ -160,6 +160,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
             && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
             && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
+            && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
+            ? ddi.getString(LIST_ELEMENT_CODE)
+            .equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE)) : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE)))
             && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE))).count() > 1;
     }
 
