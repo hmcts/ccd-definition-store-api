@@ -176,4 +176,10 @@
 		</packageUrl>
 		<cve>CVE-2020-5407</cve>
 	</suppress>
+
+	<suppress>
+		<notes>The jenkis DB needs to be updated  with the lates CVEs fixed, once it is done this suppression can be removed</notes>
+		<cve>CVE-2020-13692</cve>
+	</suppress>
+
 </suppressions>
