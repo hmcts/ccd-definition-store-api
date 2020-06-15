@@ -50,20 +50,10 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
     public ParseResult<GenericLayoutEntity> parseAll(Map<String, DefinitionSheet> definitionSheets) {
         getLogger().debug("Layout parsing...");
-
         final ParseResult<GenericLayoutEntity> result = new ParseResult<>();
-
         final Map<String, List<DefinitionDataItem>> layoutItemsByCaseTypes = getDefinitionSheet(definitionSheets)
             .groupDataItemsByCaseType();
-        final List<DefinitionDataItem> unknownDefinition = getUnknownDataDefinitionItems(definitionSheets);
-        if (null != unknownDefinition && !unknownDefinition.isEmpty()) {
-            List<String> message = unknownDefinition.stream()
-                .map(definitionDataItem -> String.format("Unknown Case Type '%s' for layout '%s'",
-                    definitionDataItem.findAttribute(ColumnName.CASE_TYPE_ID), getLayoutName()))
-                .collect(Collectors.toList());
-            throw new MapperException(message.stream().collect(Collectors.joining(",")));
-        }
-
+        checkForUnknownDefinitions(definitionSheets);
         getLogger().debug("Layout parsing: {} case types detected", layoutItemsByCaseTypes.size());
 
         for (CaseTypeEntity caseType : parseContext.getCaseTypes()) {
@@ -86,13 +76,7 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         return result;
     }
 
-    public ParseResult<GenericLayoutEntity> parseAllForSearchCases(Map<String, DefinitionSheet> definitionSheets) {
-        getLogger().debug("Layout parsing...");
-
-        final ParseResult<GenericLayoutEntity> result = new ParseResult<>();
-
-        final Map<String, List<DefinitionDataItem>> layoutItemsByCaseTypes = getDefinitionSheet(definitionSheets)
-            .groupDataItemsByCaseType();
+    private void checkForUnknownDefinitions(Map<String, DefinitionSheet> definitionSheets) {
         final List<DefinitionDataItem> unknownDefinition = getUnknownDataDefinitionItems(definitionSheets);
         if (null != unknownDefinition && !unknownDefinition.isEmpty()) {
             List<String> message = unknownDefinition.stream()
@@ -101,7 +85,15 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
                 .collect(Collectors.toList());
             throw new MapperException(message.stream().collect(Collectors.joining(",")));
         }
+    }
 
+    public ParseResult<GenericLayoutEntity> parseAllForSearchCases(Map<String, DefinitionSheet> definitionSheets) {
+
+        getLogger().debug("Layout parsing...");
+        final ParseResult<GenericLayoutEntity> result = new ParseResult<>();
+        final Map<String, List<DefinitionDataItem>> layoutItemsByCaseTypes = getDefinitionSheet(definitionSheets)
+            .groupDataItemsByCaseType();
+        checkForUnknownDefinitions(definitionSheets);
         getLogger().debug("Layout parsing: {} case types detected", layoutItemsByCaseTypes.size());
 
         for (CaseTypeEntity caseType : parseContext.getCaseTypes()) {
