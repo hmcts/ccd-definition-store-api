@@ -1,15 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser {
 
@@ -43,10 +42,8 @@ public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser
 
     private void setDefaultValue(final EventComplexTypeEntity eventComplexTypeEntity,
                                  final DefinitionDataItem definitionDataItem) {
-        if (!eventComplexTypeEntity.getReference().contains(".")) {
-            final Optional<String> defaultValue = Optional.ofNullable(definitionDataItem.getString(ColumnName.DEFAULT_VALUE));
-            defaultValue.ifPresent(value -> eventComplexTypeEntity.setDefaultValue(value));
-        }
+        final Optional<String> defaultValue = Optional.ofNullable(definitionDataItem.getString(ColumnName.DEFAULT_VALUE));
+        defaultValue.ifPresent(value -> eventComplexTypeEntity.setDefaultValue(value));
     }
 
     @Override
