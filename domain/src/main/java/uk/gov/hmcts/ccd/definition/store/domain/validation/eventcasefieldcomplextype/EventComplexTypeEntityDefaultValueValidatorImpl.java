@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.GlobalCaseRole;
 public class EventComplexTypeEntityDefaultValueValidatorImpl implements EventComplexTypeEntityValidator {
 
     public static final String ORGANISATION_POLICY_ROLE = "OrgPolicyCaseAssignedRole";
+
     @Override
     public ValidationResult validate(EventComplexTypeEntity eventCaseFieldEntity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
@@ -30,6 +31,6 @@ public class EventComplexTypeEntityDefaultValueValidatorImpl implements EventCom
 
     private boolean isOrgPolicyCaseAssignedRole(String reference) {
         String[] referenceArray = reference.split(Pattern.quote("."));
-        return ORGANISATION_POLICY_ROLE.equals(referenceArray[referenceArray.length -1]);
+        return ORGANISATION_POLICY_ROLE.equals(referenceArray[referenceArray.length - 1]);
     }
 }
