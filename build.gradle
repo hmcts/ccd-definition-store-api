@@ -80,12 +80,12 @@ ext {
     powermockVersion = '2.0.0-beta.5'
     reformLogging= '5.1.1-BETA'
     limits = [
-        'instruction': 99,
-        'branch'     : 99,
-        'line'       : 99,
-        'complexity' : 89,
-        'method'     : 99,
-        'class'      : 90
+            'instruction': 99,
+            'branch'     : 99,
+            'line'       : 99,
+            'complexity' : 89,
+            'method'     : 99,
+            'class'      : 90
     ]
 }
 
@@ -138,7 +138,8 @@ allprojects {
 
     dependencies {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        compile "com.fasterxml.jackson.core:jackson-databind:2.10.3"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.10.0"
+        compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
     }
 
     checkstyle {
@@ -214,6 +215,7 @@ subprojects { subproject ->
     }
 
     dependencies {
+        compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
         compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
         compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
         compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
@@ -285,7 +287,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:3.1.0"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.11.0'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.19.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024

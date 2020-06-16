@@ -10,6 +10,7 @@ public class WizardPageComplexFieldOverride {
     private String label;
     private String hintText;
     private String showCondition;
+    private String defaultValue;
 
     @JsonProperty("complex_field_element_id")
     public String getComplexFieldElementId() {
@@ -54,5 +55,14 @@ public class WizardPageComplexFieldOverride {
 
     public void setShowCondition(String showCondition) {
         this.showCondition = showCondition;
+    }
+
+    @JsonProperty("default_value")
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 }

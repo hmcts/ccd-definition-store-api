@@ -46,6 +46,9 @@ public class EventComplexTypeEntity implements Serializable {
     @Column(name = "label", nullable = false)
     private String label;
 
+    @Column(name = "default_value", nullable = true)
+    private String defaultValue;
+
     @Column(name = "display_order")
     private Integer order;
 
@@ -130,6 +133,14 @@ public class EventComplexTypeEntity implements Serializable {
 
     public void setComplexFieldType(EventCaseFieldEntity complexFieldType) {
         this.complexFieldType = complexFieldType;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
 }
