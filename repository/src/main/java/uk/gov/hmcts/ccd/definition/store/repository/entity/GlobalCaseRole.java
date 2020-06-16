@@ -19,6 +19,7 @@ public enum GlobalCaseRole {
                 .map(GlobalCaseRole::getRole)
                 .collect(Collectors.toList());
     }
+
     public String getRole() {
         return role;
     }
