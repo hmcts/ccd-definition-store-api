@@ -178,7 +178,7 @@
 	</suppress>
 
 	<suppress>
-		<notes>The test DB needs to be updated  with the lates CVEs fixed, once it is done this suppression can be removed</notes>
+		<notes>Suppress false-positive flag about PostgreSQL JDBC Driver - resolved already with the version upgrade.</notes>
 		<cve>CVE-2020-13692</cve>
 	</suppress>
 
