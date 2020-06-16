@@ -95,6 +95,8 @@ dependencyManagement {
     }
 
     dependencies {
+        // force to use '42.2.13' CVE-2020-13692
+        dependency group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
         // Versions prior to 24.1.1 vulnerable to CVE-2018-10237
         dependency 'com.google.guava:guava:24.1.1-jre'

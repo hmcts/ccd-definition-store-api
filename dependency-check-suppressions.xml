@@ -177,31 +177,7 @@
 		<cve>CVE-2020-5407</cve>
 	</suppress>
 	<suppress>
-		<notes><![CDATA[
-   file name: postgresql-42.2.10.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
-		<cpe>cpe:/a:postgresql:postgresql</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: postgresql-42.2.10.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
-		<cpe>cpe:/a:postgresql:postgresql_jdbc_driver</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: postgresql-42.2.5.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
-		<cpe>cpe:/a:postgresql:postgresql</cpe>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: postgresql-42.2.5.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
-		<cpe>cpe:/a:postgresql:postgresql_jdbc_driver</cpe>
+		<notes>Suppress false-positive flag about PostgreSQL JDBC Driver - resolved already with the version upgrade.</notes>
+		<cve>CVE-2020-13692</cve>
 	</suppress>
 </suppressions>
