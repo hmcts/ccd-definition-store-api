@@ -8,8 +8,8 @@
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
-	<!-- THIS CVEs should not be removed until the elastic search client is 
-		updated to 7. Before updating the elastic client make sure that the server 
+	<!-- THIS CVEs should not be removed until the elastic search client is
+		updated to 7. Before updating the elastic client make sure that the server
 		has been updated to 7 -->
 
 	<suppress>
@@ -175,5 +175,9 @@
 		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-crypto@.*$
 		</packageUrl>
 		<cve>CVE-2020-5407</cve>
+	</suppress>
+	<suppress>
+		<notes>Suppress false-positive flag about PostgreSQL JDBC Driver - resolved already with the version upgrade.</notes>
+		<cve>CVE-2020-13692</cve>
 	</suppress>
 </suppressions>

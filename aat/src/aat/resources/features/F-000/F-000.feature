@@ -1,4 +1,4 @@
-@F-000
+@F-000 @Smoke
 Feature: [SAMPLE] Get health endpoint check
 
   Background:
