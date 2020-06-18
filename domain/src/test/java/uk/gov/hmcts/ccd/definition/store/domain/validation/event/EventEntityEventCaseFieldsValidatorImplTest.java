@@ -18,6 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +40,9 @@ public class EventEntityEventCaseFieldsValidatorImplTest {
     @Mock
     private EventCaseFieldEntityValidator eventCaseFieldValidator2;
 
+    @Mock
+    private EventEntityValidationContext eventEntityValidationContext;
+
     @Captor
     private ArgumentCaptor<Collection<CaseFieldEntity>> captor;
 
@@ -56,6 +60,7 @@ public class EventEntityEventCaseFieldsValidatorImplTest {
 
         when(eventCaseFieldValidator1.validate(any(), any())).thenReturn(new ValidationResult());
         when(eventCaseFieldValidator2.validate(any(), any())).thenReturn(new ValidationResult());
+        when(eventEntityValidationContext.getCaseRoles()).thenReturn(new ArrayList<>());
 
         classUnderTest = new EventEntityEventCaseFieldsValidatorImpl(
             Arrays.asList(eventCaseFieldValidator1, eventCaseFieldValidator2)
@@ -70,7 +75,7 @@ public class EventEntityEventCaseFieldsValidatorImplTest {
             event(
                 Arrays.asList(eventCaseFieldEntity1, eventCaseFieldEntity2, eventCaseFieldEntity3)
             ),
-            null
+            eventEntityValidationContext
         );
 
         assertTrue(validationResult.isValid());
@@ -92,7 +97,7 @@ public class EventEntityEventCaseFieldsValidatorImplTest {
             event(
                 Arrays.asList(eventCaseFieldEntity1, eventCaseFieldEntity2, eventCaseFieldEntity3)
             ),
-            null
+            eventEntityValidationContext
         );
 
         assertFalse(validationResult.isValid());

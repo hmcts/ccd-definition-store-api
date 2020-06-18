@@ -80,12 +80,12 @@ ext {
     powermockVersion = '2.0.0-beta.5'
     reformLogging= '5.1.1-BETA'
     limits = [
-        'instruction': 99,
-        'branch'     : 99,
-        'line'       : 99,
-        'complexity' : 89,
-        'method'     : 99,
-        'class'      : 90
+            'instruction': 99,
+            'branch'     : 99,
+            'line'       : 99,
+            'complexity' : 89,
+            'method'     : 99,
+            'class'      : 90
     ]
 }
 

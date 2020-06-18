@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 
 public class EventCaseFieldComplexTypeParserTest {
     private static final String PARSED_SHOW_CONDITION = "Parsed Show Condition";
+    private static final String REFERENCE_ID = "test.test";
     private static final LocalDate LIVE_FROM = LocalDate.of(2019, 1, 1);
     private static final LocalDate LIVE_TO = LocalDate.of(2099, 1, 1);
 
@@ -91,7 +92,7 @@ public class EventCaseFieldComplexTypeParserTest {
         when(definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER)).thenReturn(displayContextParameter);
         when(definitionDataItem.getLocalDate(ColumnName.LIVE_FROM)).thenReturn(LIVE_FROM);
         when(definitionDataItem.getLocalDate(ColumnName.LIVE_TO)).thenReturn(LIVE_TO);
-
+        when(definitionDataItem.getString(ColumnName.LIST_ELEMENT_CODE)).thenReturn(REFERENCE_ID);
         return definitionDataItem;
     }
 }
