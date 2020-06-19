@@ -6,7 +6,7 @@ elasticsearch:
   indexShards: ${ELASTIC_SEARCH_INDEX_SHARDS:2}
   indexShardsReplicas: ${ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS:0}
   failImportIfError: ${ELASTIC_SEARCH_FAIL_ON_IMPORT:false}
-  dynamic: ${ELASTIC_SEARCH_DYNAMIC:strict}
+  dynamic: ${ELASTIC_SEARCH_DYNAMIC:true}
   elasticMappings:
     disabled: '{"enabled": false}'
     defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
