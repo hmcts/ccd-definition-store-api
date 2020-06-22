@@ -25,7 +25,7 @@ task smoke(type: Test) {
     useJUnitPlatform {
         includeTags 'smoke'
     }
-    doLast {
+    doFirst {
         generateCucumberReports.enabled = true
         javaexec {
             main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
