@@ -136,6 +136,7 @@ public class DisplayGroupAdapterService {
         override.setLabel(eventComplexTypeEntity.getLabel());
         override.setHintText(eventComplexTypeEntity.getHint());
         override.setShowCondition(eventComplexTypeEntity.getShowCondition());
+        override.setDefaultValue(eventComplexTypeEntity.getDefaultValue());
         return override;
     }
 

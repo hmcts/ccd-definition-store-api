@@ -22,7 +22,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
-    runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+    runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
     runtime "org.liquibase:liquibase-core:3.6.3"
     testCompile project(":app-insights").sourceSets.main.output
     testCompile project(":commons").sourceSets.main.output
