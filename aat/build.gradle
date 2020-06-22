@@ -21,11 +21,11 @@ sourceSets {
 task smoke(type: Test) {
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
     setClasspath(sourceSets.aat.runtimeClasspath)
-    include "/aat/src/aat/java/uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
+    include "/aat/src/aat/java/uk/gov/hmcts/ccd/definitionstore/befta/functional/**"
     useJUnitPlatform {
         includeTags 'smoke'
     }
-    doFirst {
+    doLast {
         generateCucumberReports.enabled = true
         javaexec {
             main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
