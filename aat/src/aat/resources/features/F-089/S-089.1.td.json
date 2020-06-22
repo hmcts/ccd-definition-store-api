@@ -1,13 +1,12 @@
 {
 	"_guid_": "S-089.1",
 	"_extends_": "F-089_Test_Complex_Organisation",
-	"title": "must return 200 for case type details request",
+	"title": "must return all details successfully for a case type containing some Organisation and OrganisationPolicy fields",
 	"specs": [
 		"an active profile in CCD",
 		"contains a valid jurisdiction id",
-		"contains id of a case type with Organisation and OrganisationPolicy fields",
-		"has the 200 OK code",
-		"contains case type details"
+		"contains id of a case type with some Organisation and OrganisationPolicy fields",
+		"contains all details of the case type requested"
 	],
 	"expectedResponse": {
 		"_extends_": "Common_200_Response",
