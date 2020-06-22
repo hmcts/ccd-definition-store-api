@@ -21,7 +21,7 @@ sourceSets {
 task smoke(type: Test) {
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
     setClasspath(sourceSets.aat.runtimeClasspath)
-    include "/aat/src/aat/java/uk/gov/hmcts/ccd/definitionstore/befta/functional/**"
+    include "uk/gov/hmcts/ccd/definitionstore/befta/**"
     useJUnitPlatform {
         includeTags 'smoke'
     }
