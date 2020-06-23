@@ -1067,8 +1067,6 @@ class EntityToResponseDTOMapperTest {
             assertEquals(fieldType.getFixedListItems().get(3).getLabel(), fixedListItem4.getLabel());
             assertEquals(fieldType.getFixedListItems().get(4).getLabel(), fixedListItem5.getLabel());
 
-            assertEquals(fieldTypeEntity.getCollectionFieldType(), fieldType.getCollectionFieldType());
-
             return fieldType;
 
         }
@@ -1109,8 +1107,6 @@ class EntityToResponseDTOMapperTest {
             assertEquals(fieldType.getComplexFields().get(0).getLabel(), complexField1.getLabel());
             assertEquals(fieldType.getComplexFields().get(1).getLabel(), complexField2.getLabel());
             assertEquals(fieldType.getComplexFields().get(2).getLabel(), complexField3.getLabel());
-
-            assertEquals(fieldTypeEntity.getCollectionFieldType(), fieldType.getCollectionFieldType());
 
             return fieldType;
 
