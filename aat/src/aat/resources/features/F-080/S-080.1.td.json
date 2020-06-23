@@ -14,7 +14,7 @@
     "headers": {
       "Content-Encoding": "gzip",
       "Content-Type": "[[ANYTHING_PRESENT]]",
-      "Transfer-Encoding" : "[[ANYTHING_PRESENT]]",
+      "Transfer-Encoding": "[[ANYTHING_PRESENT]]",
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
@@ -33,7 +33,6 @@
         "live_from": "[[ANY_STRING_NOT_NULLABLE]]",
         "live_until": "[[ANY_STRING_NULLABLE]]",
         "case_types": [
-
         ]
       },
       "events": [
@@ -63,7 +62,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -76,7 +74,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -89,7 +86,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -102,7 +98,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -115,7 +110,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -128,7 +122,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -141,7 +134,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -154,7 +146,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -167,7 +158,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -180,7 +170,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -193,7 +182,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -206,7 +194,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -219,7 +206,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -232,7 +218,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -245,7 +230,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -258,25 +242,116 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
+              ]
+            },
+            {
+              "case_field_id": "OrganisationPolicyField1",
+              "display_context": "COMPLEX",
+              "display_context_parameter": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+                {
+                  "reference": "Organisation.OrganisationID",
+                  "hint": null,
+                  "label": null,
+                  "order": 3,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                },
+                {
+                  "reference": "Organisation.OrganisationName",
+                  "hint": null,
+                  "label": null,
+                  "order": 4,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                },
+                {
+                  "reference": "OrgPolicyCaseAssignedRole",
+                  "hint": null,
+                  "label": null,
+                  "order": 5,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": "[Claimant]"
+                },
+                {
+                  "reference": "OrgPolicyReference",
+                  "hint": null,
+                  "label": null,
+                  "order": 6,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "case_field_id": "OrganisationPolicyField2",
+              "display_context": "COMPLEX",
+              "display_context_parameter": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+                {
+                  "reference": "Organisation.OrganisationID",
+                  "hint": null,
+                  "label": null,
+                  "order": 7,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                },
+                {
+                  "reference": "Organisation.OrganisationName",
+                  "hint": null,
+                  "label": null,
+                  "order": 8,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                },
+                {
+                  "reference": "OrgPolicyCaseAssignedRole",
+                  "hint": null,
+                  "label": null,
+                  "order": 9,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": "[Defendant]"
+                },
+                {
+                  "reference": "OrgPolicyReference",
+                  "hint": null,
+                  "label": null,
+                  "order": 10,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                }
               ]
             }
           ],
           "pre_states": [
-
           ],
           "post_state": "CaseCreated",
           "callback_url_about_to_start_event": "http://ccd-test-stubs-service-aat.service.core-compute-aat.internal/case_type/fe-functional-test/mid_event_dynamic_list",
           "retries_timeout_about_to_start_event": [
-
           ],
           "callback_url_about_to_submit_event": null,
           "retries_timeout_url_about_to_submit_event": [
-
           ],
           "callback_url_submitted_event": null,
           "retries_timeout_url_submitted_event": [
-
           ],
           "security_classification": "PUBLIC",
           "acls": [
@@ -293,7 +368,159 @@
               "delete": true
             },
             {
+              "role": "caseworker-caa",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
               "role": "[DEFENDANTSOLICITOR]",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            }
+          ],
+          "show_summary": true,
+          "show_event_notes": null,
+          "can_save_draft": false,
+          "end_button_label": null
+        },
+        {
+          "id": "updateCase",
+          "name": "Update a case",
+          "description": "Update a case",
+          "order": 1,
+          "case_fields": [
+            {
+              "__operator__": "equivalent",
+              "__ordering__": "unordered",
+              "__elementId__": "case_field_id"
+            },
+            {
+              "case_field_id": "OrganisationPolicyField1",
+              "display_context": "COMPLEX",
+              "display_context_parameter": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+                {
+                  "reference": "Organisation.OrganisationID",
+                  "hint": null,
+                  "label": null,
+                  "order": 3,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                },
+                {
+                  "reference": "Organisation.OrganisationName",
+                  "hint": null,
+                  "label": null,
+                  "order": 4,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                },
+                {
+                  "reference": "OrgPolicyCaseAssignedRole",
+                  "hint": null,
+                  "label": null,
+                  "order": 5,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": "[Defendant]"
+                },
+                {
+                  "reference": "OrgPolicyReference",
+                  "hint": null,
+                  "label": null,
+                  "order": 6,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "case_field_id": "OrganisationPolicyField2",
+              "display_context": "COMPLEX",
+              "display_context_parameter": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+                {
+                  "reference": "Organisation.OrganisationID",
+                  "hint": null,
+                  "label": null,
+                  "order": 7,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                },
+                {
+                  "reference": "Organisation.OrganisationName",
+                  "hint": null,
+                  "label": null,
+                  "order": 8,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                },
+                {
+                  "reference": "OrgPolicyCaseAssignedRole",
+                  "hint": null,
+                  "label": null,
+                  "order": 9,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": "[Claimant]"
+                },
+                {
+                  "reference": "OrgPolicyReference",
+                  "hint": null,
+                  "label": null,
+                  "order": 10,
+                  "displayContext": "OPTIONAL",
+                  "showCondition": null,
+                  "defaultValue": null
+                }
+              ]
+            }
+          ],
+          "pre_states": [
+            "CaseCreated"
+          ],
+          "post_state": "CaseUpdated",
+          "callback_url_about_to_start_event": null,
+          "retries_timeout_about_to_start_event": [],
+          "callback_url_about_to_submit_event": null,
+          "retries_timeout_url_about_to_submit_event": [],
+          "callback_url_submitted_event": null,
+          "retries_timeout_url_submitted_event": [],
+          "security_classification": "PUBLIC",
+          "acls": [
+            {
+              "__operator__": "equivalent",
+              "__ordering__": "unordered",
+              "__elementId__": "role"
+            },
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
+              "role": "caseworker-caa",
               "create": true,
               "read": true,
               "update": true,
@@ -332,11 +559,41 @@
               "delete": true
             },
             {
+              "role": "caseworker-caa",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
               "role": "[CLAIMANTSOLICITOR]",
               "create": false,
               "read": true,
               "update": false,
               "delete": false
+            }
+          ]
+        },
+        {
+          "id": "CaseUpdated",
+          "name": "Updated case",
+          "description": null,
+          "order": 2,
+          "title_display": null,
+          "acls": [
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
+              "role": "caseworker-caa",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ]
         }
@@ -349,6 +606,13 @@
         },
         {
           "role": "caseworker-befta_master",
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true
+        },
+        {
+          "role": "caseworker-caa",
           "create": true,
           "read": true,
           "update": true,
@@ -383,13 +647,17 @@
             "regular_expression": null,
             "fixed_list_items": [
               {
+                "code": "CaseUpdated",
+                "label": "Updated case",
+                "order": null
+              },
+              {
                 "code": "CaseCreated",
                 "label": "Create case",
                 "order": null
               }
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -398,10 +666,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -420,10 +686,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -441,8 +705,353 @@
             }
           ],
           "complexACLs": [
-
           ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null
+        },
+        {
+          "metadata": false,
+          "id": "OrganisationPolicyField2",
+          "case_type_id": "FT_MasterCaseType",
+          "label": "Organisation Policy Field 2",
+          "hint_text": null,
+          "field_type": {
+            "id": "OrganisationPolicy",
+            "type": "Complex",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [
+              {
+                "metadata": false,
+                "id": "Organisation",
+                "case_type_id": null,
+                "label": "Organisation",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Organisation",
+                  "type": "Complex",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [
+                    {
+                      "metadata": false,
+                      "id": "OrganisationID",
+                      "case_type_id": null,
+                      "label": "Organisation ID",
+                      "hint_text": null,
+                      "field_type": {
+                        "id": "Text",
+                        "type": "Text",
+                        "min": null,
+                        "max": null,
+                        "regular_expression": null,
+                        "fixed_list_items": [],
+                        "complex_fields": [],
+                        "collection_field_type": null
+                      },
+                      "hidden": null,
+                      "security_classification": "PUBLIC",
+                      "live_from": null,
+                      "live_until": null,
+                      "acls": null,
+                      "complexACLs": [],
+                      "order": null,
+                      "show_condition": null,
+                      "display_context_parameter": null
+                    },
+                    {
+                      "metadata": false,
+                      "id": "OrganisationName",
+                      "case_type_id": null,
+                      "label": "Name",
+                      "hint_text": null,
+                      "field_type": {
+                        "id": "Text",
+                        "type": "Text",
+                        "min": null,
+                        "max": null,
+                        "regular_expression": null,
+                        "fixed_list_items": [],
+                        "complex_fields": [],
+                        "collection_field_type": null
+                      },
+                      "hidden": null,
+                      "security_classification": "PUBLIC",
+                      "live_from": null,
+                      "live_until": null,
+                      "acls": null,
+                      "complexACLs": [],
+                      "order": null,
+                      "show_condition": null,
+                      "display_context_parameter": null
+                    }
+                  ],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null
+              },
+              {
+                "metadata": false,
+                "id": "OrgPolicyCaseAssignedRole",
+                "case_type_id": null,
+                "label": "Case Assigned Role",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Text",
+                  "type": "Text",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null
+              },
+              {
+                "metadata": false,
+                "id": "OrgPolicyReference",
+                "case_type_id": null,
+                "label": "Reference",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Text",
+                  "type": "Text",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null
+              }
+            ],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "2017-01-01",
+          "live_until": null,
+          "acls": [
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
+              "role": "caseworker-caa",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            }
+          ],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null
+        },
+        {
+          "metadata": false,
+          "id": "OrganisationPolicyField1",
+          "case_type_id": "FT_MasterCaseType",
+          "label": "Organisation Policy Field 1",
+          "hint_text": null,
+          "field_type": {
+            "id": "OrganisationPolicy",
+            "type": "Complex",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [
+              {
+                "metadata": false,
+                "id": "Organisation",
+                "case_type_id": null,
+                "label": "Organisation",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Organisation",
+                  "type": "Complex",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [
+                    {
+                      "metadata": false,
+                      "id": "OrganisationID",
+                      "case_type_id": null,
+                      "label": "Organisation ID",
+                      "hint_text": null,
+                      "field_type": {
+                        "id": "Text",
+                        "type": "Text",
+                        "min": null,
+                        "max": null,
+                        "regular_expression": null,
+                        "fixed_list_items": [],
+                        "complex_fields": [],
+                        "collection_field_type": null
+                      },
+                      "hidden": null,
+                      "security_classification": "PUBLIC",
+                      "live_from": null,
+                      "live_until": null,
+                      "acls": null,
+                      "complexACLs": [],
+                      "order": null,
+                      "show_condition": null,
+                      "display_context_parameter": null
+                    },
+                    {
+                      "metadata": false,
+                      "id": "OrganisationName",
+                      "case_type_id": null,
+                      "label": "Name",
+                      "hint_text": null,
+                      "field_type": {
+                        "id": "Text",
+                        "type": "Text",
+                        "min": null,
+                        "max": null,
+                        "regular_expression": null,
+                        "fixed_list_items": [],
+                        "complex_fields": [],
+                        "collection_field_type": null
+                      },
+                      "hidden": null,
+                      "security_classification": "PUBLIC",
+                      "live_from": null,
+                      "live_until": null,
+                      "acls": null,
+                      "complexACLs": [],
+                      "order": null,
+                      "show_condition": null,
+                      "display_context_parameter": null
+                    }
+                  ],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null
+              },
+              {
+                "metadata": false,
+                "id": "OrgPolicyCaseAssignedRole",
+                "case_type_id": null,
+                "label": "Case Assigned Role",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Text",
+                  "type": "Text",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null
+              },
+              {
+                "metadata": false,
+                "id": "OrgPolicyReference",
+                "case_type_id": null,
+                "label": "Reference",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Text",
+                  "type": "Text",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null
+              }
+            ],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "2017-01-01",
+          "live_until": null,
+          "acls": [
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
+              "role": "caseworker-caa",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            }
+          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
           "display_context_parameter": null
@@ -460,10 +1069,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -481,7 +1088,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -500,10 +1106,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -521,7 +1125,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -557,7 +1160,6 @@
               }
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -575,7 +1177,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -594,10 +1195,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -615,7 +1214,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -634,10 +1232,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -655,7 +1251,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -674,10 +1269,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -695,7 +1288,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -714,10 +1306,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -735,7 +1325,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -754,10 +1343,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -775,7 +1362,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -816,7 +1402,6 @@
               }
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -834,7 +1419,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -853,7 +1437,6 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
               {
@@ -869,10 +1452,8 @@
                   "max": "150",
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -882,7 +1463,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -901,10 +1481,8 @@
                   "max": "50",
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -914,7 +1492,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -933,10 +1510,8 @@
                   "max": "50",
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -946,7 +1521,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -965,10 +1539,8 @@
                   "max": "50",
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -978,7 +1550,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -997,10 +1568,8 @@
                   "max": "50",
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1010,7 +1579,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1029,10 +1597,8 @@
                   "max": "14",
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1042,7 +1608,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1061,10 +1626,8 @@
                   "max": "50",
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1074,7 +1637,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1097,7 +1659,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1116,10 +1677,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": {
               "id": "Text",
@@ -1128,10 +1687,8 @@
               "max": null,
               "regular_expression": null,
               "fixed_list_items": [
-
               ],
               "complex_fields": [
-
               ],
               "collection_field_type": null
             }
@@ -1150,7 +1707,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1169,10 +1725,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": {
               "id": "Text",
@@ -1181,10 +1735,8 @@
               "max": null,
               "regular_expression": null,
               "fixed_list_items": [
-
               ],
               "complex_fields": [
-
               ],
               "collection_field_type": null
             }
@@ -1194,10 +1746,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1216,10 +1766,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1237,7 +1785,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1256,10 +1803,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1277,7 +1822,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1296,10 +1840,8 @@
             "max": null,
             "regular_expression": "^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$",
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1317,7 +1859,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1336,7 +1877,6 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
               {
@@ -1352,10 +1892,8 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1365,7 +1903,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1384,10 +1921,8 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1397,7 +1932,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1416,10 +1950,8 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1429,7 +1961,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1448,10 +1979,8 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1461,7 +1990,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1484,7 +2012,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1503,10 +2030,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1524,7 +2049,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1543,10 +2067,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1564,7 +2086,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1583,10 +2104,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1604,7 +2123,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1623,10 +2141,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1635,10 +2151,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1657,10 +2171,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1669,10 +2181,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1691,10 +2201,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1703,10 +2211,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1725,10 +2231,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1737,10 +2241,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1759,10 +2261,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1771,10 +2271,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1793,10 +2291,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1805,10 +2301,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1827,10 +2321,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1839,18 +2331,16 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
           "display_context_parameter": null
         }
       ],
-      "printable_document_url" : "[[ANY_NOT_NULLABLE]]",
-      "security_classification" : "PUBLIC"
+      "printable_document_url": "[[ANY_NOT_NULLABLE]]",
+      "security_classification": "PUBLIC"
     }
   }
 }
