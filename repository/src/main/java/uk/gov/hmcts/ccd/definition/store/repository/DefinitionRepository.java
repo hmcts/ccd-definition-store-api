@@ -6,6 +6,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import java.io.Serializable;
 
 @NoRepositoryBean
+@SuppressWarnings("checkstyle:InterfaceTypeParameterName")
 public interface DefinitionRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 
 }
