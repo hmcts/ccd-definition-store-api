@@ -255,6 +255,11 @@
               "hint_text": null,
               "case_fields_complex": [
                 {
+                  "__operator__": "equivalent",
+                  "__ordering__": "unordered",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "Organisation.OrganisationID",
                   "hint": null,
                   "label": null,
@@ -302,6 +307,11 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
+                {
+                  "__operator__": "equivalent",
+                  "__ordering__": "unordered",
+                  "__elementId__": "reference"
+                },
                 {
                   "reference": "Organisation.OrganisationID",
                   "hint": null,
@@ -409,6 +419,11 @@
               "hint_text": null,
               "case_fields_complex": [
                 {
+                  "__operator__": "equivalent",
+                  "__ordering__": "unordered",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "Organisation.OrganisationID",
                   "hint": null,
                   "label": null,
@@ -456,6 +471,11 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
+                {
+                  "__operator__": "equivalent",
+                  "__ordering__": "unordered",
+                  "__elementId__": "reference"
+                },
                 {
                   "reference": "Organisation.OrganisationID",
                   "hint": null,
