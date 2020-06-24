@@ -202,7 +202,7 @@ class DisplayGroupAdapterServiceTest {
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getDisplayContext(), is("READONLY"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(), is("Bailiff Name"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getDefaultValue(), is("DefaultValue1"));
-            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(), is("Hint text override"));
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getOrder(), is(3));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.bailiffName").getShowCondition(), is("fieldName1.subField2=\"potato\""));
 
@@ -212,6 +212,7 @@ class DisplayGroupAdapterServiceTest {
                 "finalReturn.addressAttended.AddressLine1").getDisplayContext(), is("MANDATORY"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                     "finalReturn.addressAttended.AddressLine1").getDefaultValue(), is("DefaultValue2"));
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.addressAttended.AddressLine1").getOrder(), is(1));
 
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.AddressLine2").getDisplayContext(), is("HIDDEN"));
@@ -226,6 +227,7 @@ class DisplayGroupAdapterServiceTest {
 
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                     "finalReturn.addressAttended.Postcode").getDefaultValue(), is("DefaultValue3"));
+            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.addressAttended.Postcode").getOrder(), is(2));
 
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.Country").getDisplayContext(), is("HIDDEN"));
