@@ -287,7 +287,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:3.1.0"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.19.0'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '3.1.0-RDM-8667.1'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
