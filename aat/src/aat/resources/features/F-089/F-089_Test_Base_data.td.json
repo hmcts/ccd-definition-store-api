@@ -12,8 +12,8 @@
 
   "users": {
     "invokingUser": {
-      "username": "auto.test.cnp@gmail.com",
-      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+      "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
+      "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
     }
   },
 
