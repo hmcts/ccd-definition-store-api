@@ -32,3 +32,4 @@ Feature: F-089: 'Organisation' and 'OrganisationPolicy' Base Complex Types
     And it is submitted to call the [POST Case Definition File] operation of [CCD Definition Store]
     Then a negative response is received
     And the response has all other details as expected
+
