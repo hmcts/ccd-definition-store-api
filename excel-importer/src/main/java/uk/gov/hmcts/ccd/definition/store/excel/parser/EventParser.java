@@ -121,9 +121,15 @@ public class EventParser {
         }
 
         // Webhooks
-        event.setWebhookStart(parseWebhook(eventDefinition, ColumnName.CALLBACK_URL_ABOUT_TO_START_EVENT, ColumnName.RETRIES_TIMEOUT_ABOUT_TO_START_EVENT));
-        event.setWebhookPreSubmit(parseWebhook(eventDefinition, ColumnName.CALLBACK_URL_ABOUT_TO_SUBMIT_EVENT, ColumnName.RETRIES_TIMEOUT_URL_ABOUT_TO_SUBMIT_EVENT));
-        event.setWebhookPostSubmit(parseWebhook(eventDefinition, ColumnName.CALLBACK_URL_SUBMITTED_EVENT, ColumnName.RETRIES_TIMEOUT_URL_SUBMITTED_EVENT));
+        event.setWebhookStart(parseWebhook(eventDefinition,
+            ColumnName.CALLBACK_URL_ABOUT_TO_START_EVENT,
+            ColumnName.RETRIES_TIMEOUT_ABOUT_TO_START_EVENT));
+        event.setWebhookPreSubmit(parseWebhook(eventDefinition,
+            ColumnName.CALLBACK_URL_ABOUT_TO_SUBMIT_EVENT,
+            ColumnName.RETRIES_TIMEOUT_URL_ABOUT_TO_SUBMIT_EVENT));
+        event.setWebhookPostSubmit(parseWebhook(eventDefinition,
+            ColumnName.CALLBACK_URL_SUBMITTED_EVENT,
+            ColumnName.RETRIES_TIMEOUT_URL_SUBMITTED_EVENT));
 
         return event;
     }
@@ -142,8 +148,8 @@ public class EventParser {
         }
 
         final Map<String, List<DefinitionDataItem>> eventCaseFieldItemsByEvents = eventCaseFieldItemsByCaseTypes.get(caseTypeId)
-                                                                                                                .stream()
-                                                                                                                .collect(groupingBy(definitionDataItem -> definitionDataItem.getString(ColumnName.CASE_EVENT_ID)));
+            .stream()
+            .collect(groupingBy(definitionDataItem -> definitionDataItem.getString(ColumnName.CASE_EVENT_ID)));
         for (EventEntity event : events) {
             logger.debug("Parsing event case fields for case type {} and event {}...", caseTypeId, event.getReference());
 
@@ -157,7 +163,8 @@ public class EventParser {
                 event.addEventCaseField(eventCaseFieldParser.parseEventCaseField(caseTypeId, eventCaseFieldDefinition));
             }
 
-            logger.info("Parsing event case fields for case type {} and event {}: OK: {} case fields parsed", caseTypeId, event.getReference(), event.getEventCaseFields().size());
+            logger.info("Parsing event case fields for case type {} and event {}: OK: {} case fields parsed",
+                caseTypeId, event.getReference(), event.getEventCaseFields().size());
         }
 
 

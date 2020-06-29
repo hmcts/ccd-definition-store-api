@@ -41,13 +41,19 @@ public class ClassUserType implements UserType {
     }
 
     @Override
-    public Object nullSafeGet(ResultSet resultSet, String[] names, SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet resultSet,
+                              String[] names,
+                              SharedSessionContractImplementor sharedSessionContractImplementor,
+                              Object o) throws HibernateException, SQLException {
         final String className = resultSet.getString(names[0]);
         return getClass(className);
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index, SharedSessionContractImplementor sharedSessionContractImplementor) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement preparedStatement,
+                            Object value,
+                            int index,
+                            SharedSessionContractImplementor sharedSessionContractImplementor) throws HibernateException, SQLException {
         if (value == null) {
             preparedStatement.setNull(index, Types.OTHER);
             return;
@@ -65,7 +71,7 @@ public class ClassUserType implements UserType {
 
     @Override
     public Object deepCopy(final Object value) {
-        return JSONUtils.clone(value);
+        return JsonUtils.clone(value);
     }
 
     @Override
@@ -76,7 +82,7 @@ public class ClassUserType implements UserType {
     }
 
     /**
-     * For Immutable Object this is simple
+     * For Immutable Object this is simple.
      */
     @Override
     public Serializable disassemble(Object value) {
@@ -84,7 +90,7 @@ public class ClassUserType implements UserType {
     }
 
     /**
-     * For Immutable Object this is simple
+     * For Immutable Object this is simple.
      */
     @Override
     public Object assemble(Serializable cached, Object owner) {
@@ -92,7 +98,7 @@ public class ClassUserType implements UserType {
     }
 
     /**
-     * For Immutable Object this is simple
+     * For Immutable Object this is simple.
      */
     @Override
     public Object replace(Object original, Object target, Object owner) {

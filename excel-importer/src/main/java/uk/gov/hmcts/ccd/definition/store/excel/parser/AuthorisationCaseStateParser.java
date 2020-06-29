@@ -97,7 +97,10 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
             .filter(typeName -> !stateItemsForThisCaseType.contains(typeName))
             .findFirst();
         if (unknownStateType.isPresent()) {
-            throw new MapperException(String.format("Unknown State '%s' for CaseType '%s' in worksheet '%s'", unknownStateType.get(), caseTypeReference, getSheetName()));
+            throw new MapperException(String.format("Unknown State '%s' for CaseType '%s' in worksheet '%s'",
+                unknownStateType.get(),
+                caseTypeReference,
+                getSheetName()));
         }
     }
 

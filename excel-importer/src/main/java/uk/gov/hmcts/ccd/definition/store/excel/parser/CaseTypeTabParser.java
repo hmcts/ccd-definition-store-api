@@ -10,7 +10,9 @@ import java.util.Optional;
 
 public class CaseTypeTabParser extends AbstractDisplayGroupParser {
 
-    public CaseTypeTabParser(ParseContext parseContext, ShowConditionParser showConditionParser, EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+    public CaseTypeTabParser(ParseContext parseContext,
+                             ShowConditionParser showConditionParser,
+                             EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
         super(parseContext, showConditionParser, entityToDefinitionDataItemRegistry);
         this.displayGroupId = ColumnName.TAB_ID;
         this.displayGroupLabel = ColumnName.TAB_LABEL;

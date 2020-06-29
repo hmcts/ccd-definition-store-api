@@ -20,6 +20,7 @@ public class Jurisdiction {
     private List<CaseTypeLite> caseTypes = new ArrayList<>();
 
     /**
+     * id of a particular Jurisdiction.
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("id")
@@ -32,6 +33,7 @@ public class Jurisdiction {
     }
 
     /**
+     * name of Jurisdiction.
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("name")
@@ -44,6 +46,7 @@ public class Jurisdiction {
     }
 
     /**
+     * description of a particular Jurisdiction.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("description")
@@ -56,6 +59,7 @@ public class Jurisdiction {
     }
 
     /**
+     * date a Jurisdiction went live.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("live_from")
@@ -68,6 +72,7 @@ public class Jurisdiction {
     }
 
     /**
+     * date upon which a Jurisdiction should no longer be active.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("live_until")
@@ -80,6 +85,7 @@ public class Jurisdiction {
     }
 
     /**
+     * return a list of case types associated with a given Jurisdiction.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("case_types")

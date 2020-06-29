@@ -148,12 +148,12 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestAddressBookCase";
-        final String EVENT_TYPE = "enterCaseIntoLegacy";
-        final String URL = String.format(WIZARD_PAGE_STRUCTURE_URL_1, CASE_TYPE, EVENT_TYPE);
+        final String eventType = "enterCaseIntoLegacy";
+        final String URL = String.format(WIZARD_PAGE_STRUCTURE_URL_1, CASE_TYPE, eventType);
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
-            .andExpect(jsonPath("$.event_id").value(EVENT_TYPE))
+            .andExpect(jsonPath("$.event_id").value(eventType))
             .andExpect(jsonPath("$.wizard_pages").isArray())
             .andReturn();
 
@@ -180,12 +180,12 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestComplexAddressBookCase";
-        final String EVENT_TYPE = "createCase";
-        final String URL = String.format(WIZARD_PAGE_STRUCTURE_URL_1, CASE_TYPE, EVENT_TYPE);
+        final String eventType = "createCase";
+        final String URL = String.format(WIZARD_PAGE_STRUCTURE_URL_1, CASE_TYPE, eventType);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
-            .andExpect(jsonPath("$.event_id").value(EVENT_TYPE))
+            .andExpect(jsonPath("$.event_id").value(eventType))
             .andExpect(jsonPath("$.wizard_pages").isArray())
             .andReturn();
         final WizardPageCollection wizardPageCollection = mapper.readValue(result.getResponse().getContentAsString(),

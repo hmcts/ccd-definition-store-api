@@ -26,8 +26,12 @@ public abstract class ValidationError implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ValidationError)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ValidationError)) {
+            return false;
+        }
         ValidationError that = (ValidationError) o;
         return Objects.equals(defaultMessage, that.defaultMessage);
     }

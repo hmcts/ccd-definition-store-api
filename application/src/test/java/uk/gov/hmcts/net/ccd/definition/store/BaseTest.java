@@ -151,8 +151,8 @@ public abstract class BaseTest {
 
     protected void assertResponseCode(MvcResult mvcResult, int httpResponseCode) throws UnsupportedEncodingException {
         MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals("Expected [" + httpResponseCode + "] but was [" + response.getStatus() + "]" +
-                " Body was [\n" + response.getContentAsString() + "\n]",
+        assertEquals("Expected [" + httpResponseCode + "] but was [" + response.getStatus() + "]"
+                + " Body was [\n" + response.getContentAsString() + "\n]",
             httpResponseCode,
             mvcResult.getResponse().getStatus()
         );

@@ -4,8 +4,11 @@
   "operationName": "Gets The Current Version Of A Case Type Schema",
   "method": "GET",
   "uri": "/api/data/case-type/{ctid}/version",
-  "user": {
-    "_extends_": "Common_User_For_Request"
+  "users": {
+    "invokingUser": {
+      "username": "master.caseworker@gmail.com",
+      "password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
+    }
   },
   "request": {
     "headers": {
@@ -14,7 +17,7 @@
       "Content-Type": "application/json"
     },
     "pathVariables": {
-      "ctid": "BEFTA_CASETYPE_2_1"
+      "ctid": "FT_MasterCaseType"
     }
   }
 }

@@ -20,8 +20,8 @@ public class CaseTypeVersionInformationTest {
         final CaseTypeVersionInformation version = new CaseTypeVersionInformation(679);
         assertThat(version.getVersion(), is(679));
         assertThat(version.toString(),
-                   matchesPattern("^uk.gov.hmcts.ccd.definition.store.domain.service.casetype" +
-                                      ".CaseTypeVersionInformation@\\S+\\[version=679\\]$"));
+                   matchesPattern("^uk.gov.hmcts.ccd.definition.store.domain.service.casetype"
+                       + ".CaseTypeVersionInformation@\\S+\\[version=679\\]$"));
     }
 
 }

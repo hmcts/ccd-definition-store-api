@@ -27,9 +27,14 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_ADDRESS_UK = "AddressUK";
     public static final String PREDEFINED_COMPLEX_ORDER_SUMMARY = "OrderSummary";
     public static final String PREDEFINED_COMPLEX_CASELINK = "CaseLink";
+    public static final String PREDEFINED_COMPLEX_ORGANISATION = "Organisation";
+    public static final String PREDEFINED_COMPLEX_ORGANISATION_POLICY = "OrganisationPolicy";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference) || BASE_MULTI_SELECT_LIST.equals(baseTypeReference) || BASE_RADIO_FIXED_LIST.equals(baseTypeReference);
     }
 
+    private FieldTypeUtils() {
+        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor (squid:S1118)
+    }
 }

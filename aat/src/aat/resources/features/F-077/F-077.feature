@@ -1,5 +1,6 @@
 @F-077
 Feature: F-077: Fetch All Base Types
+
   Background:
     Given an appropriate test context as detailed in the test data source
 

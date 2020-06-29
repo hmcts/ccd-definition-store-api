@@ -10,7 +10,7 @@ public class DocumentTypeRegularExpressionValidator extends AbstractDocumentType
 
     @Override
     public ValidationResult validate(FieldTypeValidationContext context, FieldTypeEntity fieldType) {
-            ValidationResult validationResult = new ValidationResult();
+        ValidationResult validationResult = new ValidationResult();
 
         validateDocumentType(fieldType, validationResult);
 

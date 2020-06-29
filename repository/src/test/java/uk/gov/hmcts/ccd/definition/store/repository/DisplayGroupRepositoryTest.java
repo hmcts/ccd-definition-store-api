@@ -44,9 +44,9 @@ public class DisplayGroupRepositoryTest {
     @Autowired
     private TestHelper helper;
 
-    private CaseTypeEntity caseType_v1;
-    private CaseTypeEntity caseType_v2;
-    private CaseTypeEntity caseType_v3;
+    private CaseTypeEntity caseTypeV1;
+    private CaseTypeEntity caseTypeV2;
+    private CaseTypeEntity caseTypeV3;
 
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
 
@@ -54,17 +54,17 @@ public class DisplayGroupRepositoryTest {
     public void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
 
-        caseType_v1 = versionedCaseTypeRepository.save(caseTypeEntity());
-        caseType_v2 = versionedCaseTypeRepository.save(caseTypeEntity());
-        caseType_v3 = versionedCaseTypeRepository.save(caseTypeEntity());
+        caseTypeV1 = versionedCaseTypeRepository.save(caseTypeEntity());
+        caseTypeV2 = versionedCaseTypeRepository.save(caseTypeEntity());
+        caseTypeV3 = versionedCaseTypeRepository.save(caseTypeEntity());
     }
 
     @Test
     public void shouldReturnDisplayGroupEntityForLatestCaseTypeVersion_whenDisplayGroupEntitesExistAcrossMultipleVersionsOfCaseType() {
 
-        createDisplayGroupsForCase(caseType_v1);
-        createDisplayGroupsForCase(caseType_v2);
-        createDisplayGroupsForCase(caseType_v3);
+        createDisplayGroupsForCase(caseTypeV1);
+        createDisplayGroupsForCase(caseTypeV2);
+        createDisplayGroupsForCase(caseTypeV3);
 
         final List<DisplayGroupEntity> fetched = displayGroupRepository.findTabsByCaseTypeReference(CASE_TYPE_REFERENCE);
 
@@ -79,7 +79,7 @@ public class DisplayGroupRepositoryTest {
             hasProperty("type", equalTo(TAB)),
             hasProperty("purpose", equalTo(VIEW)),
             hasProperty("showCondition", equalTo(SHOW_CONDITION)),
-            hasProperty("caseType", is(caseType_v3))
+            hasProperty("caseType", is(caseTypeV3))
         ));
 
 

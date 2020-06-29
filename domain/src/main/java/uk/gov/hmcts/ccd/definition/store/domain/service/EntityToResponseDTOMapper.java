@@ -299,7 +299,7 @@ public interface EntityToResponseDTOMapper {
         }
 
         private static boolean isComplexField(String reference) {
-            return "Complex" .equalsIgnoreCase(reference);
+            return "Complex".equalsIgnoreCase(reference);
         }
     }
 }

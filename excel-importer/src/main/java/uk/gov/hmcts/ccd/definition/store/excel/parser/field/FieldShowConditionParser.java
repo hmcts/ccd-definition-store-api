@@ -12,8 +12,7 @@ public interface FieldShowConditionParser {
         try {
             // Try to parse from 'spreadsheet format'...
             parsedShowCondition = getShowConditionParser().parseShowCondition(showCondition).getShowConditionExpression();
-        }
-        catch (InvalidShowConditionException e) {
+        } catch (InvalidShowConditionException e) {
             // ...and if we fail leave as the 'spreadsheet format' to let validation fall over
         }
         return parsedShowCondition;

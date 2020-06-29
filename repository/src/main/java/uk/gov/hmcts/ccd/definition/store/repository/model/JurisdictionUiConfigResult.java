@@ -10,13 +10,14 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "")
 public class JurisdictionUiConfigResult {
 
-	private List<JurisdictionUiConfig> configs;
+    private List<JurisdictionUiConfig> configs;
 
     public JurisdictionUiConfigResult(List<JurisdictionUiConfig> configs) {
         this.configs = configs;
     }
 
     /**
+     * returns a list of Jurisdiction UI config.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("configs")

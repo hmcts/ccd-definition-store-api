@@ -13,17 +13,13 @@ public class FieldTypeListItemMapper {
     public List<FixedListItem> entityToModel(final List<FieldTypeListItemEntity>
                                                  fieldTypeListItemEntities) {
         return fieldTypeListItemEntities.stream()
-                                 .map(fieldTypeListItemEntity ->
-                                      {
-                                          FixedListItem fixedListItem = new FixedListItem();
-                                          fixedListItem
-                                              .setCode(fieldTypeListItemEntity.getValue());
-                                          fixedListItem
-                                              .setLabel(fieldTypeListItemEntity.getLabel());
-                                          fixedListItem
-                                              .setOrder(fieldTypeListItemEntity.getOrder());
-                                          return fixedListItem;
-                                      })
+                                 .map(fieldTypeListItemEntity -> {
+                                     FixedListItem fixedListItem = new FixedListItem();
+                                     fixedListItem.setCode(fieldTypeListItemEntity.getValue());
+                                     fixedListItem.setLabel(fieldTypeListItemEntity.getLabel());
+                                     fixedListItem.setOrder(fieldTypeListItemEntity.getOrder());
+                                     return fixedListItem;
+                                 })
                                  .sorted(NULLS_LAST_ORDER_COMPARATOR)
                                  .collect(Collectors.toList());
     }

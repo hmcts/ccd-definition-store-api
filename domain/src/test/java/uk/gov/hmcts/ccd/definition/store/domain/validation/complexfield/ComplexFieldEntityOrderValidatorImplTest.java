@@ -28,31 +28,31 @@ class ComplexFieldEntityOrderValidatorImplTest {
     void shouldPassIfNoElementsHaveDisplayOrderValues() {
         ComplexFieldEntity caseField = newComplexField("field1")
             .withFieldType(newType("fieldType1")
-                               .withBaseFieldType(newType(BASE_COMPLEX).build())
-                               .withComplexField(newComplexField("nested1")
-                                                     .withFieldType(newType("nested1FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .build())
-                               .withComplexField(newComplexField("nested2")
-                                                     .withFieldType(newType("nested2FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .build())
-                               .build())
+                .withBaseFieldType(newType(BASE_COMPLEX).build())
+                .withComplexField(newComplexField("nested1")
+                    .withFieldType(newType("nested1FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .build())
+                .withComplexField(newComplexField("nested2")
+                    .withFieldType(newType("nested2FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .build())
+                .build())
             .withComplexFieldType(newType("parentType")
-                                      .withBaseFieldType(newType(BASE_COMPLEX).build())
-                                      .withComplexField(newComplexField("field1")
-                                                            .withFieldType(newType("nested1FieldType1")
-                                                                               .withReference(BASE_TEXT)
-                                                                               .build())
-                                                            .build())
-                                      .withComplexField(newComplexField("nested2")
-                                                            .withFieldType(newType("nested2FieldType1")
-                                                                               .withReference(BASE_TEXT)
-                                                                               .build())
-                                                            .build())
-                                      .build())
+                .withBaseFieldType(newType(BASE_COMPLEX).build())
+                .withComplexField(newComplexField("field1")
+                    .withFieldType(newType("nested1FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .build())
+                .withComplexField(newComplexField("nested2")
+                    .withFieldType(newType("nested2FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .build())
+                .build())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -64,9 +64,9 @@ class ComplexFieldEntityOrderValidatorImplTest {
     void shouldFailIfSingleTopLevelElementHasDisplayOrderNotStartingWithOne() {
         ComplexFieldEntity caseField = newComplexField("field1")
             .withFieldType(newType("fieldType1")
-                               .withBaseFieldType(newType(BASE_DOCUMENT).build())
-                               .build())
-            .withComplexFieldType(aParentType())
+                .withBaseFieldType(newType(BASE_DOCUMENT).build())
+                .build())
+            .withComplexFieldType(AParentType())
             .withOrder(2)
             .build();
 
@@ -74,57 +74,58 @@ class ComplexFieldEntityOrderValidatorImplTest {
 
         assertThat(validate.getValidationErrors(), hasSize(1));
         assertThat(validate.getValidationErrors(),
-                   hasItem(hasProperty("defaultMessage",
-                                       is("ComplexField with reference=field1 has incorrect order for nested fields. Order has to be incremental and start from 1"))));
+            hasItem(hasProperty("defaultMessage",
+                is("ComplexField with reference=field1 has incorrect order for nested fields. "
+                    + "Order has to be incremental and start from 1"))));
     }
 
     @Test
     void shouldFailIfSomeButNotAllElementsHaveDisplayOrderValues() {
         ComplexFieldEntity caseField = newComplexField("field1")
             .withFieldType(newType("fieldType1")
-                               .withBaseFieldType(newType(BASE_COMPLEX).build())
-                               .withComplexField(newComplexField("nested1")
-                                                     .withFieldType(newType("nested1FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(2)
-                                                     .build())
-                               .withComplexField(newComplexField("nested2")
-                                                     .withFieldType(newType("nested2FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .build())
-                               .build())
-            .withComplexFieldType(aParentType())
+                .withBaseFieldType(newType(BASE_COMPLEX).build())
+                .withComplexField(newComplexField("nested1")
+                    .withFieldType(newType("nested1FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(2)
+                    .build())
+                .withComplexField(newComplexField("nested2")
+                    .withFieldType(newType("nested2FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .build())
+                .build())
+            .withComplexFieldType(AParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
 
         assertThat(validate.getValidationErrors(), hasSize(1));
         assertThat(validate.getValidationErrors(),
-                   hasItem(hasProperty("defaultMessage",
-                                       is("ComplexField with reference=field1 must have ordering for all children defined"))));
+            hasItem(hasProperty("defaultMessage",
+                is("ComplexField with reference=field1 must have ordering for all children defined"))));
     }
 
     @Test
     void shouldPassIfAllElementsHaveDisplayOrderValues() {
         ComplexFieldEntity caseField = newComplexField("field1")
             .withFieldType(newType("fieldType1")
-                               .withBaseFieldType(newType(BASE_COMPLEX).build())
-                               .withComplexField(newComplexField("nested1")
-                                                     .withFieldType(newType("nested1FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(2)
-                                                     .build())
-                               .withComplexField(newComplexField("nested2")
-                                                     .withFieldType(newType("nested2FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(1)
-                                                     .build())
-                               .build())
-            .withComplexFieldType(aParentType())
+                .withBaseFieldType(newType(BASE_COMPLEX).build())
+                .withComplexField(newComplexField("nested1")
+                    .withFieldType(newType("nested1FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(2)
+                    .build())
+                .withComplexField(newComplexField("nested2")
+                    .withFieldType(newType("nested2FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(1)
+                    .build())
+                .build())
+            .withComplexFieldType(AParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
@@ -136,21 +137,21 @@ class ComplexFieldEntityOrderValidatorImplTest {
     void shouldFailIfOrderOfParentElementNotWithinSizeOfComplexFieldType() {
         ComplexFieldEntity caseField = newComplexField("field1")
             .withFieldType(newType("fieldType1")
-                               .withBaseFieldType(newType(BASE_COMPLEX).build())
-                               .withComplexField(newComplexField("nested1")
-                                                     .withFieldType(newType("nested1FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(2)
-                                                     .build())
-                               .withComplexField(newComplexField("nested2")
-                                                     .withFieldType(newType("nested2FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(1)
-                                                     .build())
-                               .build())
-            .withComplexFieldType(aParentType())
+                .withBaseFieldType(newType(BASE_COMPLEX).build())
+                .withComplexField(newComplexField("nested1")
+                    .withFieldType(newType("nested1FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(2)
+                    .build())
+                .withComplexField(newComplexField("nested2")
+                    .withFieldType(newType("nested2FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(1)
+                    .build())
+                .build())
+            .withComplexFieldType(AParentType())
             .withOrder(2)
             .build();
 
@@ -158,95 +159,99 @@ class ComplexFieldEntityOrderValidatorImplTest {
 
         assertThat(validate.getValidationErrors(), hasSize(1));
         assertThat(validate.getValidationErrors(),
-                   hasItem(hasProperty("defaultMessage",
-                                       is("ComplexField with reference=field1 has incorrect order for nested fields. Order has to be incremental and start from 1"))));
+            hasItem(hasProperty("defaultMessage",
+                is("ComplexField with reference=field1 has incorrect order for nested fields. "
+                    + "Order has to be incremental and start from 1"))));
     }
 
     @Test
     void shouldFailIfElementsAreNotInIncrementalOrder() {
         ComplexFieldEntity caseField = newComplexField("field1")
             .withFieldType(newType("fieldType1")
-                               .withBaseFieldType(newType(BASE_COMPLEX).build())
-                               .withComplexField(newComplexField("nested1")
-                                                     .withFieldType(newType("nested1FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(5)
-                                                     .build())
-                               .withComplexField(newComplexField("nested2")
-                                                     .withFieldType(newType("nested2FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(1)
-                                                     .build())
-                               .withComplexField(newComplexField("nested3")
-                                                     .withFieldType(newType("nested3FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(3)
-                                                     .build())
-                               .build())
-            .withComplexFieldType(aParentType())
+                .withBaseFieldType(newType(BASE_COMPLEX).build())
+                .withComplexField(newComplexField("nested1")
+                    .withFieldType(newType("nested1FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(5)
+                    .build())
+                .withComplexField(newComplexField("nested2")
+                    .withFieldType(newType("nested2FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(1)
+                    .build())
+                .withComplexField(newComplexField("nested3")
+                    .withFieldType(newType("nested3FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(3)
+                    .build())
+                .build())
+            .withComplexFieldType(AParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
 
         assertThat(validate.getValidationErrors(), hasSize(1));
         assertThat(validate.getValidationErrors(),
-                   hasItem(hasProperty("defaultMessage",
-                                       is("ComplexField with reference=field1 has incorrect order for nested fields. Order has to be incremental and start from 1"))));
+            hasItem(hasProperty("defaultMessage",
+                is("ComplexField with reference=field1 has incorrect order for nested fields. "
+                    + "Order has to be incremental and start from 1"))));
     }
 
     @Test
     void shouldFailIfElementsOrderDoesNotStartWithOne() {
         ComplexFieldEntity caseField = newComplexField("field1")
             .withFieldType(newType("fieldType1")
-                               .withBaseFieldType(newType(BASE_COMPLEX).build())
-                               .withComplexField(newComplexField("nested1")
-                                                     .withFieldType(newType("nested1FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(3)
-                                                     .build())
-                               .withComplexField(newComplexField("nested2")
-                                                     .withFieldType(newType("nested2FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(2)
-                                                     .build())
-                               .build())
-            .withComplexFieldType(aParentType())
+                .withBaseFieldType(newType(BASE_COMPLEX).build())
+                .withComplexField(newComplexField("nested1")
+                    .withFieldType(newType("nested1FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(3)
+                    .build())
+                .withComplexField(newComplexField("nested2")
+                    .withFieldType(newType("nested2FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(2)
+                    .build())
+                .build())
+            .withComplexFieldType(AParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
 
         assertThat(validate.getValidationErrors(), hasSize(1));
         assertThat(validate.getValidationErrors(),
-                   hasItem(hasProperty("defaultMessage",
-                                       is("ComplexField with reference=field1 has incorrect order for nested fields. Order has to be incremental and start from 1"))));
+            hasItem(hasProperty("defaultMessage",
+                is("ComplexField with reference=field1 has incorrect order for nested fields. "
+                    + "Order has to be incremental and start from 1"))));
     }
 
     @Test
     void shouldFailIfSingleElementOrderDoesNotStartWithOne() {
         ComplexFieldEntity caseField = newComplexField("field1")
             .withFieldType(newType("fieldType1")
-                               .withBaseFieldType(newType(BASE_COMPLEX).build())
-                               .withComplexField(newComplexField("nested2")
-                                                     .withFieldType(newType("nested2FieldType1")
-                                                                        .withReference(BASE_TEXT)
-                                                                        .build())
-                                                     .withOrder(2)
-                                                     .build())
-                               .build())
-            .withComplexFieldType(aParentType())
+                .withBaseFieldType(newType(BASE_COMPLEX).build())
+                .withComplexField(newComplexField("nested2")
+                    .withFieldType(newType("nested2FieldType1")
+                        .withReference(BASE_TEXT)
+                        .build())
+                    .withOrder(2)
+                    .build())
+                .build())
+            .withComplexFieldType(AParentType())
             .build();
 
         ValidationResult validate = complexFieldEntityOrderValidator.validate(caseField, validationContext);
 
         assertThat(validate.getValidationErrors(), hasSize(1));
         assertThat(validate.getValidationErrors(),
-                   hasItem(hasProperty("defaultMessage",
-                                       is("ComplexField with reference=field1 has incorrect order for nested fields. Order has to be incremental and start from 1"))));
+            hasItem(hasProperty("defaultMessage",
+                is("ComplexField with reference=field1 has incorrect order for nested fields. "
+                    + "Order has to be incremental and start from 1"))));
     }
 
     @Test
@@ -254,70 +259,72 @@ class ComplexFieldEntityOrderValidatorImplTest {
 
         ComplexFieldEntity caseField = newComplexField("field1")
             .withFieldType(newType("type")
-                               .withBaseFieldType(newType(BASE_COMPLEX).build())
-                               .withComplexField(newComplexField("nested1")
-                                                     .withFieldType(newType("typeNested1")
-                                                                        .withBaseFieldType(newType("typeNested1BaseType")
-                                                                                               .withReference(BASE_COMPLEX)
-                                                                                               .build())
-                                                                        .withComplexField(newComplexField("nested1Field1")
-                                                                                              .withFieldType(newType("typeNested1FieldType1")
-                                                                                                                 .withReference(BASE_TEXT)
-                                                                                                                 .build())
-                                                                                              .withOrder(2)
-                                                                                              .build())
-                                                                        .withComplexField(newComplexField("nested1Field2")
-                                                                                              .withFieldType(newType("typeNested1FieldType2")
-                                                                                                                 .withReference(BASE_TEXT)
-                                                                                                                 .build())
-                                                                                              .withOrder(3)
-                                                                                              .build())
-                                                                        .build())
-                                                     .withOrder(3)
-                                                     .build())
-                               .withComplexField(newComplexField("nested2")
-                                                     .withFieldType(newType("typeNested2")
-                                                                        .withBaseFieldType(newType("typeNested2BaseType")
-                                                                                               .withReference(BASE_COMPLEX)
-                                                                                               .build())
-                                                                        .withComplexField(newComplexField("nested2Field1")
-                                                                                              .withFieldType(newType("typeNested2FieldType1")
-                                                                                                                 .withReference(BASE_TEXT)
-                                                                                                                 .build())
-                                                                                              .build())
-                                                                        .withComplexField(newComplexField("nested2Field2")
-                                                                                              .withFieldType(newType("typeNested2FieldType2")
-                                                                                                                 .withReference(BASE_TEXT)
-                                                                                                                 .build())
-                                                                                              .withOrder(3)
-                                                                                              .build())
-                                                                        .build())
-                                                     .withOrder(1)
-                                                     .build())
-                               .build())
-            .withComplexFieldType(aParentType())
+                .withBaseFieldType(newType(BASE_COMPLEX).build())
+                .withComplexField(newComplexField("nested1")
+                    .withFieldType(newType("typeNested1")
+                        .withBaseFieldType(newType("typeNested1BaseType")
+                            .withReference(BASE_COMPLEX)
+                            .build())
+                        .withComplexField(newComplexField("nested1Field1")
+                            .withFieldType(newType("typeNested1FieldType1")
+                                .withReference(BASE_TEXT)
+                                .build())
+                            .withOrder(2)
+                            .build())
+                        .withComplexField(newComplexField("nested1Field2")
+                            .withFieldType(newType("typeNested1FieldType2")
+                                .withReference(BASE_TEXT)
+                                .build())
+                            .withOrder(3)
+                            .build())
+                        .build())
+                    .withOrder(3)
+                    .build())
+                .withComplexField(newComplexField("nested2")
+                    .withFieldType(newType("typeNested2")
+                        .withBaseFieldType(newType("typeNested2BaseType")
+                            .withReference(BASE_COMPLEX)
+                            .build())
+                        .withComplexField(newComplexField("nested2Field1")
+                            .withFieldType(newType("typeNested2FieldType1")
+                                .withReference(BASE_TEXT)
+                                .build())
+                            .build())
+                        .withComplexField(newComplexField("nested2Field2")
+                            .withFieldType(newType("typeNested2FieldType2")
+                                .withReference(BASE_TEXT)
+                                .build())
+                            .withOrder(3)
+                            .build())
+                        .build())
+                    .withOrder(1)
+                    .build())
+                .build())
+            .withComplexFieldType(AParentType())
             .build();
 
         ValidationResult result = complexFieldEntityOrderValidator.validate(caseField, validationContext);
 
         assertThat(result.getValidationErrors(), hasSize(3));
         assertThat(result.getValidationErrors(),
-                   containsInAnyOrder(hasProperty("defaultMessage",
-                                                  is("ComplexField with reference=field1 has incorrect order for nested fields. Order has to be incremental and start from 1")),
-                                      hasProperty("defaultMessage",
-                                                  is("ComplexField with reference=nested1 has incorrect order for nested fields. Order has to be incremental and start from 1")),
-                                      hasProperty("defaultMessage",
-                                                  is("ComplexField with reference=nested2 must have ordering for all children defined"))));
+            containsInAnyOrder(hasProperty("defaultMessage",
+                is("ComplexField with reference=field1 has incorrect order for nested fields. "
+                    + "Order has to be incremental and start from 1")),
+                hasProperty("defaultMessage",
+                    is("ComplexField with reference=nested1 has incorrect order for nested fields. "
+                        + "Order has to be incremental and start from 1")),
+                hasProperty("defaultMessage",
+                    is("ComplexField with reference=nested2 must have ordering for all children defined"))));
     }
 
-    private FieldTypeEntity aParentType() {
+    private FieldTypeEntity AParentType() {
         return newType("parentType")
             .withBaseFieldType(newType(BASE_COMPLEX).build())
             .withComplexField(newComplexField("field1")
-                                  .withFieldType(newType("nested1FieldType1")
-                                                     .withReference(BASE_TEXT)
-                                                     .build())
-                                  .build())
+                .withFieldType(newType("nested1FieldType1")
+                    .withReference(BASE_TEXT)
+                    .build())
+                .build())
             .build();
     }
 

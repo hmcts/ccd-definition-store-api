@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 /**
- * Enum to map column validation (maxLength) for a Case Definition import
+ * Enum to map column validation (maxLength) for a Case Definition import.
  */
 public enum SpreadSheetValidationMappingEnum {
     JURISDICTION_ID("Jurisdiction", "ID", 70),
@@ -71,8 +71,8 @@ public enum SpreadSheetValidationMappingEnum {
 
     public static SpreadSheetValidationMappingEnum fromSheetColumnName(String sheetName, String sheetColumnName) {
         for (SpreadSheetValidationMappingEnum sheetColumnEnum : SpreadSheetValidationMappingEnum.values()) {
-            if (sheetColumnEnum.sheetName.equals(sheetName) &&
-                sheetColumnEnum.sheetColumnName.equals(sheetColumnName)) {
+            if (sheetColumnEnum.sheetName.equals(sheetName)
+                && sheetColumnEnum.sheetColumnName.equals(sheetColumnName)) {
                 return sheetColumnEnum;
             }
         }

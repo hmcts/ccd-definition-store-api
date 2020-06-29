@@ -44,7 +44,7 @@ public class UserProfilesParser {
         }
 
         WorkBasketUserDefault workBasketUserDefault = new WorkBasketUserDefault();
-        workBasketUserDefault.setUserIDAMId(id);
+        workBasketUserDefault.setUserIdamId(id);
         workBasketUserDefault.setWorkBasketDefaultCaseType(workBasketDefaultCaseType);
         workBasketUserDefault.setWorkBasketDefaultJurisdiction(workBasketDefaultJurisdiction);
         workBasketUserDefault.setWorkBasketDefaultState(workBasketDefaultState);

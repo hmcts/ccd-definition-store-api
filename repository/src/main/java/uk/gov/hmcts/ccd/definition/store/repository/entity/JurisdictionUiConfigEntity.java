@@ -32,14 +32,14 @@ public class JurisdictionUiConfigEntity implements Serializable {
     public Integer getId() {
         return id;
     }
-    
-    public Boolean getShuttered() {
-		return shuttered;
-	}
 
-	public void setShuttered(Boolean shuttered) {
-		this.shuttered = shuttered;
-	}
+    public Boolean getShuttered() {
+        return shuttered;
+    }
+
+    public void setShuttered(Boolean shuttered) {
+        this.shuttered = shuttered;
+    }
 
     public JurisdictionEntity getJurisdiction() {
         return jurisdiction;
@@ -48,17 +48,17 @@ public class JurisdictionUiConfigEntity implements Serializable {
     public void setJurisdiction(JurisdictionEntity jurisdiction) {
         this.jurisdiction = jurisdiction;
     }
-    
+
     public void copy(JurisdictionUiConfigEntity entity) {
         this.setShuttered(entity.getShuttered());
     }
 
     @Override
     public String toString() {
-        return "JurisdictionUiConfigEntity{" +
-                "id=" + id +
-                ", shuttered=" + shuttered +
-                ", jurisdiction='" + jurisdiction + '\'' +
-                '}';
+        return "JurisdictionUiConfigEntity{"
+            + "id=" + id
+            + ", shuttered=" + shuttered
+            + ", jurisdiction='" + jurisdiction + '\''
+            + '}';
     }
 }

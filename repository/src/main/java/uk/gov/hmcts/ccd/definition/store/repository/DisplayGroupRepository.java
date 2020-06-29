@@ -12,8 +12,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT
 
 public interface DisplayGroupRepository extends DefinitionRepository<DisplayGroupEntity, Integer> {
 
-    @Query("select dg from DisplayGroupEntity dg where dg.type = 'TAB' AND dg.purpose = 'VIEW' " +
-                "AND dg.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
+    @Query("select dg from DisplayGroupEntity dg where dg.type = 'TAB' AND dg.purpose = 'VIEW' "
+        + "AND dg.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
     List<DisplayGroupEntity> findTabsByCaseTypeReference(@Param("caseTypeReference") String caseTypeReference);
 
     List<DisplayGroupEntity> findByTypeAndCaseTypeIdAndEventOrderByOrder(@Param("type")DisplayGroupType type,

@@ -38,9 +38,12 @@ public class ListFieldTypeParser {
 
     public ListFieldTypeParser(ParseContext parseContext, final SpreadsheetValidator spreadsheetValidator) {
         this.parseContext = parseContext;
-        fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_LIST_TYPE));
-        fixedRadioListBaseType = parseContext.getBaseType(FIXED_RADIO_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_RADIO_LIST_TYPE));
-        multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() -> new InvalidImportException(NO_BASE_TYPE_FOUND + MULTI_LIST_TYPE));
+        fixedListBaseType = parseContext.getBaseType(FIXED_LIST_TYPE).orElseThrow(() ->
+            new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_LIST_TYPE));
+        fixedRadioListBaseType = parseContext.getBaseType(FIXED_RADIO_LIST_TYPE).orElseThrow(() ->
+            new InvalidImportException(NO_BASE_TYPE_FOUND + FIXED_RADIO_LIST_TYPE));
+        multiListBaseType = parseContext.getBaseType(MULTI_LIST_TYPE).orElseThrow(() ->
+            new InvalidImportException(NO_BASE_TYPE_FOUND + MULTI_LIST_TYPE));
         this.spreadsheetValidator = spreadsheetValidator;
 
     }
@@ -49,7 +52,7 @@ public class ListFieldTypeParser {
      * Extract list types from `FixedLists` tab.
      * Because the intent of the list is currently unknown, each list is extracted once as `FixedList` , once as 'FixedRadioList' and once as `MultiSelectList`.
      *
-     * @param definitionSheets
+     * @param definitionSheets - definition sheet
      */
     public ParseResult<FieldTypeEntity> parse(Map<String, DefinitionSheet> definitionSheets) {
         logger.debug("List types parsing...");
@@ -59,7 +62,11 @@ public class ListFieldTypeParser {
         logger.debug("List types parsing: {} list types detected", fixedListsDataItems.size());
 
         // TODO Check for already existing types with same identity
-        ParseResult<FieldTypeEntity> result = fixedListsDataItems.entrySet().stream().map(this::parseListType).reduce(new ParseResult(), (res, listTypeParseResult) -> res.add(listTypeParseResult));
+        ParseResult<FieldTypeEntity> result = fixedListsDataItems
+            .entrySet()
+            .stream()
+            .map(this::parseListType)
+            .reduce(new ParseResult(), (res, listTypeParseResult) -> res.add(listTypeParseResult));
 
         logger.info("List types parsing: OK: {} types parsed", result.getAllResults().size());
 

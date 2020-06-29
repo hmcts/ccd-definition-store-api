@@ -20,8 +20,6 @@ public class FixedListItem implements Orderable {
         this.order = order;
     }
 
-    /**
-     **/
     @ApiModelProperty(value = "")
     @JsonProperty("code")
     public String getCode() {

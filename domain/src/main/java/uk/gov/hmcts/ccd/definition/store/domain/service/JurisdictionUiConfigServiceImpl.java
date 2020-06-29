@@ -20,12 +20,12 @@ public class JurisdictionUiConfigServiceImpl implements JurisdictionUiConfigServ
     private static final Logger LOG = LoggerFactory.getLogger(JurisdictionUiConfigServiceImpl.class);
 
     private final JurisdictionUiConfigRepository repository;
-    
+
     private final EntityToResponseDTOMapper dtoMapper;
 
     @Autowired
     public JurisdictionUiConfigServiceImpl(JurisdictionUiConfigRepository repository,
-                             EntityToResponseDTOMapper dtoMapper) {
+                                           EntityToResponseDTOMapper dtoMapper) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
     }
@@ -37,8 +37,8 @@ public class JurisdictionUiConfigServiceImpl implements JurisdictionUiConfigServ
         Optional<JurisdictionUiConfigEntity> entityObj = Optional.ofNullable(repository.findByJurisdictionId(reference));
         JurisdictionUiConfigEntity entityDB = jurisdictionUiConfigEntity;
         if (entityObj.isPresent()) {
-        	entityDB = entityObj.get();
-        	entityDB.copy(jurisdictionUiConfigEntity);
+            entityDB = entityObj.get();
+            entityDB.copy(jurisdictionUiConfigEntity);
         }
         this.repository.save(entityDB);
     }

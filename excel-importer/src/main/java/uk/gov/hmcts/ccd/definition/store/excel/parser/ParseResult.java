@@ -33,14 +33,14 @@ public class ParseResult<T> {
      * Register a result entry.
      * This entry is NOT marked as `new` and can only be retrieved with {@link #getAllResults()}.
      *
-     * @param result
+     * @param result - result
      */
     public void addExisting(T result) {
         allResults.add(result);
     }
 
     /**
-     *
+     * Retrieve all results irrespective of whether they are "new" or not.
      * @return all registered result entries, marked as `new` or not.
      */
     public List<T> getAllResults() {
@@ -48,7 +48,7 @@ public class ParseResult<T> {
     }
 
     /**
-     *
+     * Return all results marked as "new".
      * @return all registered result entries marked as `new`.
      */
     public List<T> getNewResults() {

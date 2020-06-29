@@ -27,8 +27,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
 
         for (ComplexFieldACLEntity entity : caseField.getComplexFieldACLEntities()) {
             validateUserRole(caseField, caseFieldEntityValidationContext, validationResult, entity);
-            validateCRUDAgainstCaseFieldParent(caseField, caseFieldEntityValidationContext, validationResult, entity);
-            validateCRUDComplexParent(caseField, caseFieldEntityValidationContext, validationResult, entity);
+            validateCrudAgainstCaseFieldParent(caseField, caseFieldEntityValidationContext, validationResult, entity);
+            validateCrudComplexParent(caseField, caseFieldEntityValidationContext, validationResult, entity);
             validatePredefinedComplexTypes(caseField, caseFieldEntityValidationContext, validationResult, entity);
         }
         return validationResult;
@@ -64,7 +64,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
         }
     }
 
-    private void validateCRUDComplexParent(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
+    private void validateCrudComplexParent(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                            ValidationResult validationResult, ComplexFieldACLEntity parentComplexFieldACLEntity) {
         String parentUserRole = parentComplexFieldACLEntity.getUserRole() != null ? parentComplexFieldACLEntity.getUserRole().getReference() : "";
         caseField.getComplexFieldACLEntities()
@@ -75,9 +75,11 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
                     && parentComplexFieldACLEntity.hasLowerAccessThan(child);
                 if (match) {
                     validationResult.addError(new CaseFieldEntityComplexACLValidationError(
-                        String.format("List element code '%s' has higher access than its parent '%s'", child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode()),
+                        String.format("List element code '%s' has higher access than its parent '%s'",
+                            child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode()),
                         child, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
-                    LOG.info("List element code '{}' has higher access than its parent '{}'", child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode());
+                    LOG.info("List element code '{}' has higher access than its parent '{}'",
+                        child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode());
                 }
                 return match;
             });
@@ -105,7 +107,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
             );
     }
 
-    private void validateCRUDAgainstCaseFieldParent(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
+    private void validateCrudAgainstCaseFieldParent(CaseFieldEntity caseField, CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                                     ValidationResult validationResult, ComplexFieldACLEntity entity) {
         String userRole = entity.getUserRole() != null ? entity.getUserRole().getReference() : "";
         final Optional<CaseFieldACLEntity> caseFieldACLByRole = caseField.getCaseFieldACLByRole(userRole);
@@ -118,7 +120,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
             }
         } else {
             validationResult.addError(new CaseFieldEntityComplexACLValidationError(
-                String.format("Parent case field '%s' doesn't have any ACL defined for List element code '%s'", entity.getListElementCode(), caseField.getReference()),
+                String.format("Parent case field '%s' doesn't have any ACL defined for List element code '%s'",
+                    entity.getListElementCode(), caseField.getReference()),
                 entity, new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
             LOG.info("Parent case field '{}' doesn't have any ACL defined for List element code '{}'", entity.getListElementCode(), caseField.getReference());
         }

@@ -17,7 +17,8 @@ import static org.mockito.Mockito.when;
 
 public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
 
-    private CaseFieldComplexFieldEntityValidator.ValidationContext complexFieldEntityValidationContext = mock(CaseFieldComplexFieldEntityValidator.ValidationContext.class);
+    private CaseFieldComplexFieldEntityValidator.ValidationContext complexFieldEntityValidationContext =
+        mock(CaseFieldComplexFieldEntityValidator.ValidationContext.class);
     private static final String PREDEFINED_COMPLEX_TYPE = "PredefinedComplexType";
 
     private ComplexFieldEntitySecurityClassificationValidatorImpl classUnderTest;
@@ -31,35 +32,54 @@ public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
     @Test
     public void securityClassificationIsSet_relevantValidationResultReturned() {
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.PUBLIC, null, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.PUBLIC, null, true);
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.PUBLIC, SecurityClassification.PUBLIC, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.PRIVATE, SecurityClassification.PUBLIC, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.RESTRICTED, SecurityClassification.PUBLIC, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.PUBLIC, SecurityClassification.PUBLIC, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.PRIVATE, SecurityClassification.PUBLIC, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.RESTRICTED, SecurityClassification.PUBLIC, true);
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.PUBLIC, SecurityClassification.PRIVATE, false);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.PRIVATE, SecurityClassification.PRIVATE, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.RESTRICTED, SecurityClassification.PRIVATE, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.PUBLIC, SecurityClassification.PRIVATE, false);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.PRIVATE, SecurityClassification.PRIVATE, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.RESTRICTED, SecurityClassification.PRIVATE, true);
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.PUBLIC, SecurityClassification.RESTRICTED, false);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.PRIVATE, SecurityClassification.RESTRICTED, false);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(), SecurityClassification.RESTRICTED, SecurityClassification.RESTRICTED, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.PUBLIC, SecurityClassification.RESTRICTED, false);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.PRIVATE, SecurityClassification.RESTRICTED, false);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(new ComplexFieldEntity(),
+            SecurityClassification.RESTRICTED, SecurityClassification.RESTRICTED, true);
     }
 
     @Test
     public void securityClassificationIsSetOnPredefinedComplexType_alwaysValid() {
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)), SecurityClassification.PUBLIC, SecurityClassification.PUBLIC, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)), SecurityClassification.PRIVATE, SecurityClassification.PUBLIC, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)), SecurityClassification.RESTRICTED, SecurityClassification.PUBLIC, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+            SecurityClassification.PUBLIC, SecurityClassification.PUBLIC, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+            SecurityClassification.PRIVATE, SecurityClassification.PUBLIC, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+            SecurityClassification.RESTRICTED, SecurityClassification.PUBLIC, true);
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)), SecurityClassification.PUBLIC, SecurityClassification.PRIVATE, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)), SecurityClassification.PRIVATE, SecurityClassification.PRIVATE, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)), SecurityClassification.RESTRICTED, SecurityClassification.PRIVATE, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+            SecurityClassification.PUBLIC, SecurityClassification.PRIVATE, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+            SecurityClassification.PRIVATE, SecurityClassification.PRIVATE, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+            SecurityClassification.RESTRICTED, SecurityClassification.PRIVATE, true);
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),SecurityClassification.PUBLIC, SecurityClassification.RESTRICTED, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),SecurityClassification.PRIVATE, SecurityClassification.RESTRICTED, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),SecurityClassification.RESTRICTED, SecurityClassification.RESTRICTED, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+            SecurityClassification.PUBLIC, SecurityClassification.RESTRICTED, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+            SecurityClassification.PRIVATE, SecurityClassification.RESTRICTED, true);
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+            SecurityClassification.RESTRICTED, SecurityClassification.RESTRICTED, true);
 
     }
 
@@ -96,8 +116,8 @@ public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
         assertEquals(isValid ? 0 : 1, validationResult.getValidationErrors().size());
 
         if (!isValid) {
-            assertTrue(validationResult.getValidationErrors().get(0) instanceof
-                ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError);
+            assertTrue(validationResult.getValidationErrors().get(0)
+                instanceof ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError);
 
             assertEquals(
                 complexFieldEntity,
@@ -113,7 +133,8 @@ public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
 
     }
 
-    private void assertValidationResultContainsComplexFieldEntityMissingSecurityClassificationValidationError(ValidationResult validationResult, ComplexFieldEntity complexFieldEntity) {
+    private void assertValidationResultContainsComplexFieldEntityMissingSecurityClassificationValidationError(ValidationResult validationResult,
+                                                                                                              ComplexFieldEntity complexFieldEntity) {
 
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());

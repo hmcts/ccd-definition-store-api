@@ -159,8 +159,7 @@ class CaseTypeServiceImplTest {
                     validationErrorWithDefaultMessage("caseTypeEntityValidator2 failed for caseTypeEntity3")));
 
             ValidationException validationException
-                = assertThrows(ValidationException.class,
-                               () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
+                = assertThrows(ValidationException.class, () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
 
             ValidationResult validationResult = validationException.getValidationResult();
             assertFalse(validationResult.isValid());
@@ -200,18 +199,17 @@ class CaseTypeServiceImplTest {
         @DisplayName("Should throw a ValidationException if any of the Case Type IDs do not match their definitive "
             + "spellings")
         void shouldThrowValidationExceptionIfCaseTypeIdDoesNotMatchDefinitiveSpelling() {
-            final String CASE_TYPE_REFERENCE = "TESTAddressBookCase2";
+            final String caseTypeReference = "TESTAddressBookCase2";
             final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(CASE_TYPE_REFERENCE);
+            caseTypeEntity.setReference(caseTypeReference);
             when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_2))
                 .thenReturn(Optional.of(caseTypeEntity));
             final CaseType caseType = new CaseType();
-            caseType.setId(CASE_TYPE_REFERENCE);
+            caseType.setId(caseTypeReference);
             when(dtoMapper.map(same(caseTypeEntity))).thenReturn(caseType);
 
             ValidationException validationException
-                = assertThrows(ValidationException.class,
-                () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
+                = assertThrows(ValidationException.class, () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
             verify(caseTypeRepository).findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_2);
 
             ValidationResult validationResult = validationException.getValidationResult();
@@ -337,8 +335,6 @@ class CaseTypeServiceImplTest {
         @DisplayName("Should map each CaseTypeEntity to a CaseType and return a list of mapped CaseTypes")
         void shouldOrderEventsBeforeCallingMapperForEachCaseTypeAndReturnListOfMappedCaseTypes_whenRepositoryReturnsCaseTypeEntitiesWithDisorderedEvents() {
 
-            String jurisdiction = "Jurisdiction";
-
             EventEntity eventEntity1 = eventEntity(1);
             EventEntity eventEntity2 = eventEntity(2);
             EventEntity eventEntity3 = eventEntity(3);
@@ -347,12 +343,11 @@ class CaseTypeServiceImplTest {
             CaseTypeEntity caseTypeEntity1 = caseTypeEntity(eventEntity2, eventEntity1, eventEntity4, eventEntity3);
             CaseTypeEntity caseTypeEntity2 = caseTypeEntity(eventEntity3, eventEntity4, eventEntity2, eventEntity1);
 
-            CaseType caseType1 = new CaseType();
-            CaseType caseType2 = new CaseType();
-
             CaseField metadataField = new CaseField();
             metadataField.setFieldType(new FieldType());
 
+            CaseType caseType1 = new CaseType();
+            CaseType caseType2 = new CaseType();
             when(caseTypeRepository.findByJurisdictionId(any())).thenReturn(
                 Arrays.asList(caseTypeEntity1, caseTypeEntity2)
             );
@@ -362,10 +357,20 @@ class CaseTypeServiceImplTest {
 
             ArgumentCaptor<CaseTypeEntity> caseTypeCaptor = ArgumentCaptor.forClass(CaseTypeEntity.class);
 
+            String jurisdiction = "Jurisdiction";
             List<CaseType> caseTypes = classUnderTest.findByJurisdictionId(jurisdiction);
 
             verify(caseTypeRepository).findByJurisdictionId(same(jurisdiction));
             verify(dtoMapper, times(2)).map(caseTypeCaptor.capture());
+
+            assertEquals(2, caseTypes.size());
+            assertThat(caseTypes, allOf(
+                hasItem(caseType1),
+                hasItem(caseType2)
+                )
+            );
+            assertThat(caseTypes.get(0).getCaseFields(), hasItem(metadataField));
+            assertThat(caseTypes.get(1).getCaseFields(), hasItem(metadataField));
 
             CaseTypeEntity firstCallToMapper = caseTypeCaptor.getAllValues().get(0);
             assertTrue(firstCallToMapper == caseTypeEntity1);
@@ -381,14 +386,6 @@ class CaseTypeServiceImplTest {
             assertThat(secondCallToMapper.getEvents(), hasItem(eventEntity3));
             assertThat(secondCallToMapper.getEvents(), hasItem(eventEntity4));
 
-            assertEquals(2, caseTypes.size());
-            assertThat(caseTypes, allOf(
-                hasItem(caseType1),
-                hasItem(caseType2)
-                       )
-            );
-            assertThat(caseTypes.get(0).getCaseFields(), hasItem(metadataField));
-            assertThat(caseTypes.get(1).getCaseFields(), hasItem(metadataField));
         }
 
         @Test

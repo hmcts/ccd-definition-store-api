@@ -73,7 +73,9 @@ public class CaseDefinitionController {
     }
 
     @RequestMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Get case types", notes = "Get the case types as a list with optional jurisdiction filter", response = CaseType.class, responseContainer = "List")
+    @ApiOperation(value = "Get case types",
+        notes = "Get the case types as a list with optional jurisdiction filter",
+        response = CaseType.class, responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of Case Types")
     })

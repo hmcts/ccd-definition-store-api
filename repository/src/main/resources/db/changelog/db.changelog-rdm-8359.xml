@@ -1,0 +1,68 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-8159" author="Rafal Kalita">
+
+        <!-- Organisation Policy -->
+        <insert tableName="field_type">
+            <column name="created_at" value="${now}"/>
+            <column name="reference" value="OrganisationPolicy"/>
+            <column name="version" value="1" />
+            <column name="base_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'Complex'
+                        and jurisdiction_id is null
+                        and version = (select max(version) from field_type
+                        where reference = 'Complex'
+                        and jurisdiction_id is null
+                        and base_field_type_id is null))" />
+        </insert>
+
+        <insert tableName="complex_field">
+            <column name="reference" value="Organisation" />
+            <column name="label" value="Organisation" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type
+                        where reference = 'Organisation'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrganisationPolicy'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+
+        <insert tableName="complex_field">
+            <column name="reference" value="OrgPolicyCaseAssignedRole" />
+            <column name="label" value="Case Assigned Role" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type
+                        where reference = 'Text'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrganisationPolicy'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+
+        <insert tableName="complex_field">
+            <column name="reference" value="OrgPolicyReference" />
+            <column name="label" value="Reference" />
+            <column name="security_classification" value="PUBLIC" />
+            <column name="field_type_id"
+                    valueComputed="(select id from field_type
+                        where reference = 'Text'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+            <column name="complex_field_type_id"
+                    valueComputed="(select id from field_type where reference = 'OrganisationPolicy'
+                        and version = 1
+                        and jurisdiction_id is null)" />
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
