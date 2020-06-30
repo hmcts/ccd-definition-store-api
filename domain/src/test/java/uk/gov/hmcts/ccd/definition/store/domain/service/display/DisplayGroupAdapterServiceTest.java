@@ -142,7 +142,9 @@ class DisplayGroupAdapterServiceTest {
 
             EventEntity eventEntityMock = mock(EventEntity.class);
 
-            CaseFieldEntity finalReturnOther = caseFieldEntity("finalReturnOther", "Final return other", null, fieldTypeEntity("Text", textFieldTypeEntity(), emptyList()));
+            CaseFieldEntity finalReturnOther = caseFieldEntity("finalReturnOther",
+                "Final return other",
+                null, fieldTypeEntity("Text", textFieldTypeEntity(), emptyList()));
             EventCaseFieldEntity eventFinalReturnOther = eventCaseFieldEntity(DisplayContext.OPTIONAL, finalReturnOther, emptyList());
 
             given(eventEntityMock.getEventCaseFields()).willReturn(

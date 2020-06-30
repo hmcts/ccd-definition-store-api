@@ -54,7 +54,7 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
     private <T> void mapCaseTypeVsSwitchValueWith(List<String> caseTypesConfigured, Map<String, T> map, T value) {
         caseTypesConfigured.forEach(caseType -> {
             if (!StringUtils.isEmpty(caseType)) {
-                    map.put(caseType.toUpperCase(), value);
+                map.put(caseType.toUpperCase(), value);
             }
         });
     }

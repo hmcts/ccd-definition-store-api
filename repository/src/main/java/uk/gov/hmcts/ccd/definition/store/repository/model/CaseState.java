@@ -18,6 +18,7 @@ public class CaseState {
     private List<AccessControlList> acls = new ArrayList<>();
 
     /**
+     * id of the a particular state.
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("id")
@@ -43,6 +44,7 @@ public class CaseState {
     }
 
     /**
+     * description associated with a state.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("description")

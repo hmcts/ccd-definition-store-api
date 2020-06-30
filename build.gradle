@@ -100,7 +100,7 @@ dependencyManagement {
         dependency 'com.google.guava:guava:24.1.1-jre'
 
         // CVE-2019-0232, CVE-2019-0199  - Java and Command Line injections in Windows
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.31') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.35') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -140,7 +140,7 @@ allprojects {
     }
 
     checkstyle {
-        maxWarnings = 156  // In the Ideal world this should be 0
+        maxWarnings = 0
         toolVersion = '8.18'
         configDir = new File(rootDir, 'config/checkstyle')
     }
@@ -215,7 +215,7 @@ subprojects { subproject ->
         compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
         compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
         compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
-        compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.3'
+        compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.5'
         compile "org.hibernate:hibernate-core:${hibernateVersion}"
         compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
 
@@ -237,10 +237,10 @@ subprojects { subproject ->
         }
 
         // Force to use the latest org.springframework.security
-        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.0.RELEASE'
-        compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.0.RELEASE'
-        compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.0.RELEASE'
-        compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.0.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.2.RELEASE'
+        compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.2.RELEASE'
 
         compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
@@ -283,7 +283,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:3.1.0"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.2.0'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.11.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024

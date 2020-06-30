@@ -29,7 +29,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when both C is false")
-    void shouldReturnFalseCREATEWhenBothAreFalse() {
+    void shouldReturnFalseCreateWhenBothAreFalse() {
         classUnderTest.setCreate(false);
         other.setCreate(false);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -37,7 +37,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when other C is false and class under test C is true")
-    void shouldReturnFalseCREATEWhenOtherIsFalseAndClassUnderTestIsTrue() {
+    void shouldReturnFalseCreateWhenOtherIsFalseAndClassUnderTestIsTrue() {
         classUnderTest.setCreate(true);
         other.setCreate(false);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -45,7 +45,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when other C is true and class under test is C true")
-    void shouldReturnFalseCREATEWhenOtherIsTrueAndClassUnderTestIsTrue() {
+    void shouldReturnFalseCreateWhenOtherIsTrueAndClassUnderTestIsTrue() {
         classUnderTest.setCreate(true);
         other.setCreate(true);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -53,7 +53,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return true when other C is true and class under test C is false")
-    void shouldReturnTrueCREATEWhenOtherIsTrueAndClassUnderTestIsFalse() {
+    void shouldReturnTrueCreateWhenOtherIsTrueAndClassUnderTestIsFalse() {
         classUnderTest.setCreate(false);
         other.setCreate(true);
         assertTrue(classUnderTest.hasLowerAccessThan(other));
@@ -61,7 +61,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when both R is false")
-    void shouldReturnFalseREADWhenBothAreFalse() {
+    void shouldReturnFalseReadWhenBothAreFalse() {
         classUnderTest.setRead(false);
         other.setRead(false);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -69,7 +69,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when other R is false and class under test R is true")
-    void shouldReturnFalseREADWhenOtherIsFalseAndClassUnderTestIsTrue() {
+    void shouldReturnFalseReadWhenOtherIsFalseAndClassUnderTestIsTrue() {
         classUnderTest.setRead(true);
         other.setRead(false);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -77,7 +77,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when other R is true and class under test is R true")
-    void shouldReturnFalseREADWhenOtherIsTrueAndClassUnderTestIsTrue() {
+    void shouldReturnFalseReadWhenOtherIsTrueAndClassUnderTestIsTrue() {
         classUnderTest.setRead(true);
         other.setRead(true);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -85,7 +85,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return true when other R is true and class under test R is false")
-    void shouldReturnTrueREADWhenOtherIsTrueAndClassUnderTestIsFalse() {
+    void shouldReturnTrueReadWhenOtherIsTrueAndClassUnderTestIsFalse() {
         classUnderTest.setRead(false);
         other.setRead(true);
         assertTrue(classUnderTest.hasLowerAccessThan(other));
@@ -93,7 +93,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when both U is false")
-    void shouldReturnFalseUPDATEWhenBothAreFalse() {
+    void shouldReturnFalseUpdateWhenBothAreFalse() {
         classUnderTest.setUpdate(false);
         other.setUpdate(false);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -101,7 +101,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when other U is false and class under test U is true")
-    void shouldReturnFalseUPDATEWhenOtherIsFalseAndClassUnderTestIsTrue() {
+    void shouldReturnFalseUpdateWhenOtherIsFalseAndClassUnderTestIsTrue() {
         classUnderTest.setUpdate(true);
         other.setUpdate(false);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -109,7 +109,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when other U is true and class under test is U true")
-    void shouldReturnFalseUPDATEWhenOtherIsTrueAndClassUnderTestIsTrue() {
+    void shouldReturnFalseUpdateWhenOtherIsTrueAndClassUnderTestIsTrue() {
         classUnderTest.setUpdate(true);
         other.setUpdate(true);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -117,7 +117,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return true when other U is true and class under test U is false")
-    void shouldReturnTrueUPDATEWhenOtherIsTrueAndClassUnderTestIsFalse() {
+    void shouldReturnTrueUpdateWhenOtherIsTrueAndClassUnderTestIsFalse() {
         classUnderTest.setUpdate(false);
         other.setUpdate(true);
         assertTrue(classUnderTest.hasLowerAccessThan(other));
@@ -125,7 +125,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when both D is false")
-    void shouldReturnFalseDELETEWhenBothAreFalse() {
+    void shouldReturnFalseDeleteWhenBothAreFalse() {
         classUnderTest.setDelete(false);
         other.setDelete(false);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -133,7 +133,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when other D is false and class under test D is true")
-    void shouldReturnFalseDELETEWhenOtherIsFalseAndClassUnderTestIsTrue() {
+    void shouldReturnFalseDeleteWhenOtherIsFalseAndClassUnderTestIsTrue() {
         classUnderTest.setDelete(true);
         other.setDelete(false);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -141,7 +141,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return false when other D is true and class under test is D true")
-    void shouldReturnFalseDELETEWhenOtherIsTrueAndClassUnderTestIsTrue() {
+    void shouldReturnFalseDeleteWhenOtherIsTrueAndClassUnderTestIsTrue() {
         classUnderTest.setDelete(true);
         other.setDelete(true);
         assertFalse(classUnderTest.hasLowerAccessThan(other));
@@ -149,7 +149,7 @@ class AuthorisationTest {
 
     @Test
     @DisplayName("should return true when other D is true and class under test D is false")
-    void shouldReturnTrueDELETEWhenOtherIsTrueAndClassUnderTestIsFalse() {
+    void shouldReturnTrueDeleteWhenOtherIsTrueAndClassUnderTestIsFalse() {
         classUnderTest.setDelete(false);
         other.setDelete(true);
         assertTrue(classUnderTest.hasLowerAccessThan(other));

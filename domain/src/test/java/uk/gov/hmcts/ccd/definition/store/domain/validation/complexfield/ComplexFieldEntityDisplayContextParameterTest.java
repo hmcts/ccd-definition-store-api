@@ -156,7 +156,8 @@ public class ComplexFieldEntityDisplayContextParameterTest {
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(2)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD' on tab 'ComplexTypes'"))
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD' on tab 'ComplexTypes'"))
         );
     }
 

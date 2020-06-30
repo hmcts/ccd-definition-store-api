@@ -14,7 +14,7 @@ public class Version {
     private Date liveUntil = null;
 
     /**
-     * Sequantial version number
+     * Sequantial version number.
      **/
     @ApiModelProperty(required = true, value = "Sequantial version number")
     @JsonProperty("number")
@@ -27,7 +27,7 @@ public class Version {
     }
 
     /**
-     * Date and time from when this version is valid from
+     * Date and time from when this version is valid from.
      **/
     @ApiModelProperty(required = true, value = "Date and time from when this version is valid from")
     @JsonProperty("live_from")
@@ -40,7 +40,7 @@ public class Version {
     }
 
     /**
-     * Date and time this version is to be retired
+     * Date and time this version is to be retired.
      **/
     @ApiModelProperty(value = "Date and time this version is to be retired")
     @JsonProperty("live_until")

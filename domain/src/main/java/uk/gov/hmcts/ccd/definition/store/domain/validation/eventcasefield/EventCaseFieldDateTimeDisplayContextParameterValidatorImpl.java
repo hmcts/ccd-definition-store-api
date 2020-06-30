@@ -15,7 +15,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import java.util.*;
 
 @Component
-public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<EventCaseFieldEntity> implements EventCaseFieldEntityValidator {
+public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl
+    extends AbstractDisplayContextParameterValidator<EventCaseFieldEntity>
+    implements EventCaseFieldEntityValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };

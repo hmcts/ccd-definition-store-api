@@ -20,8 +20,8 @@ public class EventCaseFieldDisplayContextValidatorImplTest {
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
 
-        assertTrue(validationResult.getValidationErrors().get(0) instanceof
-                       EventCaseFieldDisplayContextValidatorImpl.ValidationError);
+        assertTrue(validationResult.getValidationErrors().get(0)
+            instanceof EventCaseFieldDisplayContextValidatorImpl.ValidationError);
 
         assertEquals(
             eventCaseFieldEntity,

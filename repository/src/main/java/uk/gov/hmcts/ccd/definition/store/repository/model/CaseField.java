@@ -27,7 +27,7 @@ public class CaseField implements HasAcls, Orderable {
     private String displayContextParameter;
 
     /**
-     * The id of the case field
+     * The id of the case field.
      **/
     @ApiModelProperty(required = true, value = "The id of the case field")
     @JsonProperty("id")
@@ -40,7 +40,7 @@ public class CaseField implements HasAcls, Orderable {
     }
 
     /**
-     * Foriegn key to the case type as fields should not work across
+     * Foriegn key to the case type as fields should not work across.
      **/
     @ApiModelProperty(value = "Foriegn key to the case type as fields should not work across")
     @JsonProperty("case_type_id")
@@ -53,6 +53,7 @@ public class CaseField implements HasAcls, Orderable {
     }
 
     /**
+     * label associated with the field.
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("label")
@@ -65,6 +66,7 @@ public class CaseField implements HasAcls, Orderable {
     }
 
     /**
+     * hint text associated with the field.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("hint_text")
@@ -77,6 +79,7 @@ public class CaseField implements HasAcls, Orderable {
     }
 
     /**
+     * return the type of the field i.e. YesOrNo, text, date etc.
      **/
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("field_type")
@@ -89,6 +92,7 @@ public class CaseField implements HasAcls, Orderable {
     }
 
     /**
+     * should the field be hidden.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("hidden")
@@ -101,7 +105,7 @@ public class CaseField implements HasAcls, Orderable {
     }
 
     /**
-     * Gov security level of the data (official, top secret etc)
+     * Gov security level of the data (official, top secret etc).
      **/
     @ApiModelProperty(value = "Gov security level of the data (official, top secret etc)")
     @JsonProperty("security_classification")
@@ -114,6 +118,7 @@ public class CaseField implements HasAcls, Orderable {
     }
 
     /**
+     * date the field went live.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("live_from")
@@ -126,6 +131,7 @@ public class CaseField implements HasAcls, Orderable {
     }
 
     /**
+     * date the field should be active until.
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("live_until")

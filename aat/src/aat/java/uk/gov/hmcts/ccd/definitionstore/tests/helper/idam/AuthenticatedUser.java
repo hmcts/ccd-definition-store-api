@@ -34,11 +34,11 @@ public class AuthenticatedUser {
 
     @Override
     public String toString() {
-        return "AuthenticatedUser{" +
-            "id='" + id + '\'' +
-            ", email='" + email + '\'' +
-            ", accessToken='" + accessToken + '\'' +
-            ", roles=" + roles +
-            '}';
+        return "AuthenticatedUser{"
+            + "id='" + id + '\''
+            + ", email='" + email + '\''
+            + ", accessToken='" + accessToken + '\''
+            + ", roles=" + roles
+            + '}';
     }
 }

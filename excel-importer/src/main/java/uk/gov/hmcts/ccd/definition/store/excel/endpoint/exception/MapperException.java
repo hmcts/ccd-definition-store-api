@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
 /**
- * Exception thrown when the mapping of a Case Definition fails
+ * Exception thrown when the mapping of a Case Definition fails.
  */
 public class MapperException extends RuntimeException {
     public MapperException(String message) {

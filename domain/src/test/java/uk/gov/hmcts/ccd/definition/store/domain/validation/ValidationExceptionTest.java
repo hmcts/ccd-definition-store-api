@@ -9,10 +9,8 @@ public class ValidationExceptionTest {
 
     @Test
     public void getMessage_shouldContainValidationResult() {
-       final ValidationResult validationResult = new ValidationResult();
-
+        final ValidationResult validationResult = new ValidationResult();
         final ValidationException exception = new ValidationException(validationResult);
-
         assertEquals(validationResult, exception.getValidationResult());
     }
 

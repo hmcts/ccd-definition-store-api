@@ -18,8 +18,8 @@ public class ShowConditionParser {
     private static final String OR_CONDITION_REGEX = "\\sOR\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String OR_OPERATOR = " OR ";
     private static final Pattern EQUALITY_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\")\\s*?");
-    private static final Pattern NOT_EQUAL_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(!=|CONTAINS)\\s*?(\"" +
-                                                                               ".*\")\\s*?");
+    private static final Pattern NOT_EQUAL_CONDITION_PATTERN = Pattern.compile("\\s*?(.*)\\s*?(!=|CONTAINS)\\s*?(\""
+        + ".*\")\\s*?");
     private Pattern orConditionPattern = Pattern.compile(OR_CONDITION_REGEX);
 
     public ShowCondition parseShowCondition(String rawShowConditionString) throws InvalidShowConditionException {

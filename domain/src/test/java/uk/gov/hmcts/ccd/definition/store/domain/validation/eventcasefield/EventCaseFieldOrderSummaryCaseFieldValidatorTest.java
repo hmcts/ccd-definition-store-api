@@ -51,28 +51,35 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
     @Test
     public void shouldReturnValidationErrorIfFieldTypeOptional() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY), event("Event Reference"), DisplayContext.OPTIONAL), null);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY),
+            event("Event Reference"), DisplayContext.OPTIONAL), null);
 
         assertAll(
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
                              hasItem(
-                                 hasProperty("defaultMessage", equalTo("'OrderSummary' is OrderSummary type and has to be mandatory (not editable but has to be added to a form in UI) for event with reference 'Event Reference'"))))
+                                 hasProperty("defaultMessage",
+                                     equalTo("'OrderSummary' is OrderSummary type and "
+                                         + "has to be mandatory (not editable but has to be added to a form in UI) "
+                                         + "for event with reference 'Event Reference'"))))
         );
     }
 
     @Test
     public void shouldReturnValidationErrorIfFieldTypeReadOnly() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY), event("Event Reference"), DisplayContext.READONLY), null);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY),
+            event("Event Reference"), DisplayContext.READONLY), null);
 
         assertAll(
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
                              hasItem(
-                                 hasProperty("defaultMessage", equalTo("'OrderSummary' is OrderSummary type and has to be mandatory (not editable but has to be added to a form in UI) for event with reference 'Event Reference'"))))
+                                 hasProperty("defaultMessage",
+                                     equalTo("'OrderSummary' is OrderSummary type and has to be mandatory "
+                                         + "(not editable but has to be added to a form in UI) for event with reference 'Event Reference'"))))
         );
     }
 

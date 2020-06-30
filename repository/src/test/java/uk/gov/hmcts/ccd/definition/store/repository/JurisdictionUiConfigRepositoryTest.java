@@ -37,25 +37,25 @@ public class JurisdictionUiConfigRepositoryTest {
 
     @Autowired
     private TestHelper testHelper;
-    
+
     List<JurisdictionEntity> jurisdictions;
 
     @Before
     public void setup() {
-    	jurisdictions = new ArrayList<>();
-    	jurisdictions.add(testHelper.createJurisdiction("ref1", "name1", "desc1"));
-    	jurisdictions.add(testHelper.createJurisdiction("ref2", "name2", "desc2"));
-    	jurisdictions.add(testHelper.createJurisdiction("ref3", "name3", "desc3"));
-    	createJurisdictionUiConfig(true, jurisdictions.get(0));
-    	createJurisdictionUiConfig(false, jurisdictions.get(1));
-    	createJurisdictionUiConfig(false, jurisdictions.get(2));
+        jurisdictions = new ArrayList<>();
+        jurisdictions.add(testHelper.createJurisdiction("ref1", "name1", "desc1"));
+        jurisdictions.add(testHelper.createJurisdiction("ref2", "name2", "desc2"));
+        jurisdictions.add(testHelper.createJurisdiction("ref3", "name3", "desc3"));
+        createJurisdictionUiConfig(true, jurisdictions.get(0));
+        createJurisdictionUiConfig(false, jurisdictions.get(1));
+        createJurisdictionUiConfig(false, jurisdictions.get(2));
     }
 
     @Test
     public void getSpecificJurisdictionUiConfig() {
 
         JurisdictionUiConfigEntity result = jurisdictionUiConfigRepository.findByJurisdictionId("ref1");
-        
+
         assertAll(
             () -> assertEquals(true, result.getShuttered()),
             () -> assertThat(result.getJurisdiction(), hasProperty("reference", is("ref1")))
@@ -64,21 +64,21 @@ public class JurisdictionUiConfigRepositoryTest {
 
     @Test
     public void getJurisdictionUiConfigsByReferences() {
-    	List<String> references = new ArrayList<>();
-    	references.add("ref1");
-    	references.add("ref3");
-    	
-    	List<JurisdictionUiConfigEntity> result = jurisdictionUiConfigRepository.findAllByReference(references);
+        List<String> references = new ArrayList<>();
+        references.add("ref1");
+        references.add("ref3");
+
+        List<JurisdictionUiConfigEntity> result = jurisdictionUiConfigRepository.findAllByReference(references);
 
         assertAll(
-                () -> assertThat(result, hasSize(2)),
-                () -> assertThat(result, hasItem(hasProperty("jurisdiction", hasProperty("reference", is("ref1"))))),
-                () -> assertThat(result, hasItem(hasProperty("jurisdiction", hasProperty("reference", is("ref3"))))),
-                () -> assertThat(result, hasItem(hasProperty("shuttered", is(true)))),
-                () -> assertThat(result, hasItem(hasProperty("shuttered", is(false))))
+            () -> assertThat(result, hasSize(2)),
+            () -> assertThat(result, hasItem(hasProperty("jurisdiction", hasProperty("reference", is("ref1"))))),
+            () -> assertThat(result, hasItem(hasProperty("jurisdiction", hasProperty("reference", is("ref3"))))),
+            () -> assertThat(result, hasItem(hasProperty("shuttered", is(true)))),
+            () -> assertThat(result, hasItem(hasProperty("shuttered", is(false))))
         );
     }
-    
+
     private JurisdictionUiConfigEntity createJurisdictionUiConfig(Boolean shuttered, JurisdictionEntity jurisdiction) {
         final JurisdictionUiConfigEntity jurisdictionUiConfig = new JurisdictionUiConfigEntity();
         jurisdictionUiConfig.setShuttered(shuttered);

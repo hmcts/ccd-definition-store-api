@@ -11,12 +11,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigE
 
 public class JurisdictionUiConfigParser {
 
-	private final ParseContext parseContext;
+    private final ParseContext parseContext;
 
     public JurisdictionUiConfigParser(ParseContext parseContext) {
         this.parseContext = parseContext;
     }
-    
+
     public JurisdictionUiConfigEntity parse(Map<String, DefinitionSheet> definitionSheets) {
         final DefinitionDataItem jurisdictionItem = definitionSheets.get(SheetName.JURISDICTION.getName()).getDataItems().get(0);
 
@@ -28,6 +28,6 @@ public class JurisdictionUiConfigParser {
     }
 
     private Boolean defaultFalse(Boolean value) {
-    	return Optional.ofNullable(value).orElse(false);
+        return Optional.ofNullable(value).orElse(false);
     }
 }

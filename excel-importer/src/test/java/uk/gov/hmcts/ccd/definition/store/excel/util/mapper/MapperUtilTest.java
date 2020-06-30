@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-    public class MapperUtilTest {
+public class MapperUtilTest {
 
     private DefinitionDataItem item;
 
@@ -195,7 +195,7 @@ import static org.junit.Assert.*;
         item.addAttribute(ColumnName.DISPLAY_CONTEXT, 0.0);
         sheet.addDataItem(item);
         assertThat(MapperUtil.getBigDecimal(item, SheetName.CASE_TYPE, ColumnName.DISPLAY_CONTEXT),
-                   is(BigDecimal.valueOf(0.0)));
+            is(BigDecimal.valueOf(0.0)));
     }
 
     @Test

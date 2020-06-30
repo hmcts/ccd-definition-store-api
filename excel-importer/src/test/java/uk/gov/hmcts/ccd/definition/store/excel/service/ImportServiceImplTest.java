@@ -24,6 +24,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_L
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MONEY_GBP;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MULTI_SELECT_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_NUMBER;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_PHONE_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_POST_CODE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
@@ -133,7 +135,7 @@ public class ImportServiceImplTest {
 
     @Mock
     private BannerService bannerService;
-    
+
     @Mock
     private JurisdictionUiConfigService jurisdictionUiConfigService;
 
@@ -152,6 +154,8 @@ public class ImportServiceImplTest {
     private FieldTypeEntity textAreaBaseType;
     private FieldTypeEntity collectionBaseType;
     private FieldTypeEntity documentBaseType;
+    private FieldTypeEntity organisationBaseType;
+    private FieldTypeEntity organisationPolicyBaseType;
     private FieldTypeEntity labelBaseType;
     private FieldTypeEntity casePaymentHistoryViewerBaseType;
     private FieldTypeEntity caseHistoryViewerBaseType;
@@ -199,6 +203,8 @@ public class ImportServiceImplTest {
         textAreaBaseType = buildBaseType(BASE_TEXT_AREA);
         collectionBaseType = buildBaseType(BASE_COLLECTION);
         documentBaseType = buildBaseType(BASE_DOCUMENT);
+        organisationBaseType = buildBaseType(PREDEFINED_COMPLEX_ORGANISATION);
+        organisationPolicyBaseType = buildBaseType(PREDEFINED_COMPLEX_ORGANISATION_POLICY);
         labelBaseType = buildBaseType(BASE_LABEL);
         casePaymentHistoryViewerBaseType = buildBaseType(BASE_CASE_PAYMENT_HISTORY_VIEWER);
         caseHistoryViewerBaseType = buildBaseType(BASE_CASE_HISTORY_VIEWER);
@@ -246,6 +252,8 @@ public class ImportServiceImplTest {
             textAreaBaseType,
             collectionBaseType,
             documentBaseType,
+            organisationBaseType,
+            organisationPolicyBaseType,
             labelBaseType,
             casePaymentHistoryViewerBaseType,
             caseHistoryViewerBaseType,
@@ -287,6 +295,8 @@ public class ImportServiceImplTest {
             textAreaBaseType,
             collectionBaseType,
             documentBaseType,
+            organisationBaseType,
+            organisationPolicyBaseType,
             labelBaseType,
             casePaymentHistoryViewerBaseType,
             caseHistoryViewerBaseType,
@@ -350,7 +360,7 @@ public class ImportServiceImplTest {
         assertThat(warnings.size(), equalTo(2));
         assertThat(importWarnings, containsInAnyOrder("Warning1", "Warning2"));
         verify(spreadsheetParser).getImportWarnings();
-   }
+    }
 
     private FieldTypeEntity buildBaseType(final String reference) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

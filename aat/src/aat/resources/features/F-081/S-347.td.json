@@ -19,11 +19,11 @@
     "body": {
       "arrayInMap": [
         {
-          "id": "BEFTA_JURISDICTION_2",
-          "name": "BEFTA JURISDICTION 2",
-          "description": "Content for the BEFTA Jurisdiction 2.",
-          "live_from": "2017-01-01T00:00:00.000+0000",
-          "live_until": null,
+          "id" : "BEFTA_MASTER",
+          "name" : "BEFTA Master",
+          "description" : "Content for the BEFTA Master Jurisdiction.",
+          "live_from" : "2017-01-01T00:00:00.000+0000",
+          "live_until" : null,
           "case_types": "[[ANYTHING_PRESENT]]"
         }
       ]

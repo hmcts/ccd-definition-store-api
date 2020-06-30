@@ -40,7 +40,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
         assertEquals("Display context parameter is not of type collection",validationResult.getValidationErrors().get(0).getDefaultMessage());
-        assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",validationResult.getValidationErrors().get(1).getDefaultMessage());
+        assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
+            validationResult.getValidationErrors().get(1).getDefaultMessage());
 
         eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#LIST(firstname)");
         eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);
@@ -50,7 +51,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
         assertEquals("Display context parameter is not of type collection",validationResult.getValidationErrors().get(0).getDefaultMessage());
-        assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",validationResult.getValidationErrors().get(1).getDefaultMessage());
+        assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
+            validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
 
     @Test
@@ -68,18 +70,18 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
     private EventCaseFieldEntity eventCaseFieldEntity() {
 
-        EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
         caseFieldEntity.setReference("Case1");
-        FieldTypeEntity fieldType = new FieldTypeEntity();
         FieldTypeEntity collectionFieldType = new FieldTypeEntity();
         List<ComplexFieldEntity> complexFields = new ArrayList<>();
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
         complexFieldEntity.setReference("title");
         complexFields.add(complexFieldEntity);
         collectionFieldType.addComplexFields(complexFields);
+        FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setCollectionFieldType(collectionFieldType);
         caseFieldEntity.setFieldType(fieldType);
+        EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setCaseField(caseFieldEntity);
         EventEntity eventEntity = new EventEntity();
         eventEntity.setReference("Event1");
@@ -93,13 +95,13 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
         eventCaseFieldEntity.setDisplayContextParameter(displayContextParameter);
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
         caseFieldEntity.setReference("Case1");
-        FieldTypeEntity fieldType = new FieldTypeEntity();
         FieldTypeEntity collectionFieldType = new FieldTypeEntity();
         List<ComplexFieldEntity> complexFields = new ArrayList<>();
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
         complexFieldEntity.setReference("title");
         complexFields.add(complexFieldEntity);
         collectionFieldType.addComplexFields(complexFields);
+        FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setCollectionFieldType(collectionFieldType);
         caseFieldEntity.setFieldType(fieldType);
         eventCaseFieldEntity.setCaseField(caseFieldEntity);

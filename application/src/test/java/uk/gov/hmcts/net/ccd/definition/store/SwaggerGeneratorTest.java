@@ -23,7 +23,6 @@ public class SwaggerGeneratorTest extends BaseTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsByteArray();
-
         try (OutputStream outputStream = Files.newOutputStream(Paths.get("/tmp/ccd-definition-store-api.json"))) {
                 outputStream.write(specs);
         }

@@ -40,28 +40,28 @@ public class GenericLayoutRepositoryTest {
     @Autowired
     private TestHelper helper;
 
-    private CaseTypeEntity caseType_v1;
-    private CaseTypeEntity caseType_v2;
-    private CaseTypeEntity caseType_v3;
+    private CaseTypeEntity caseTypeV1;
+    private CaseTypeEntity caseTypeV2;
+    private CaseTypeEntity caseTypeV3;
 
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
 
     @Before
     public void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
-        caseType_v1 = versionedCaseTypeRepository.save(caseTypeEntity());
-        caseType_v2 = versionedCaseTypeRepository.save(caseTypeEntity());
-        caseType_v3 = versionedCaseTypeRepository.save(caseTypeEntity());
+        caseTypeV1 = versionedCaseTypeRepository.save(caseTypeEntity());
+        caseTypeV2 = versionedCaseTypeRepository.save(caseTypeEntity());
+        caseTypeV3 = versionedCaseTypeRepository.save(caseTypeEntity());
     }
 
     @Test
     public void shouldReturnWorkbasketLayoutsForLatestCaseType_whenWorkbasketLayoutsExistForThreeCaseVersions() {
 
-        genericLayoutRepository.save(createWorkBasketCaseField(caseType_v1, getCaseField(caseType_v1, "cf1"), "label dg", 4));
-        genericLayoutRepository.save(createWorkBasketCaseField(caseType_v2, getCaseField(caseType_v2, "cf1"), "label dg", 4));
-        genericLayoutRepository.save(createWorkBasketCaseField(caseType_v3, getCaseField(caseType_v3, "cf1"), "label dg", 4));
+        genericLayoutRepository.save(createWorkBasketCaseField(caseTypeV1, getCaseField(caseTypeV1, "cf1"), "label dg", 4));
+        genericLayoutRepository.save(createWorkBasketCaseField(caseTypeV2, getCaseField(caseTypeV2, "cf1"), "label dg", 4));
+        genericLayoutRepository.save(createWorkBasketCaseField(caseTypeV3, getCaseField(caseTypeV3, "cf1"), "label dg", 4));
 
-        final List<WorkBasketCaseFieldEntity> fetched = genericLayoutRepository.findWorkbasketByCaseTypeReference(caseType_v3.getReference());
+        final List<WorkBasketCaseFieldEntity> fetched = genericLayoutRepository.findWorkbasketByCaseTypeReference(caseTypeV3.getReference());
 
         assertThat(fetched, hasSize(1));
 
@@ -72,7 +72,7 @@ public class GenericLayoutRepositoryTest {
         ));
 
         assertThat(fetchedField.getCaseField(), hasProperty("reference", is("cf1")));
-        assertThat(fetchedField.getCaseType(), is(caseType_v3));
+        assertThat(fetchedField.getCaseType(), is(caseTypeV3));
     }
 
     private WorkBasketCaseFieldEntity createWorkBasketCaseField(final CaseTypeEntity caseType,
@@ -90,11 +90,11 @@ public class GenericLayoutRepositoryTest {
     @Test
     public void shouldSearchInputLayoutsForLatestCaseType_whenSearchInputLayoutsExistForThreeCaseVersions() {
 
-        genericLayoutRepository.save(createSearchInputCaseField(caseType_v1, getCaseField(caseType_v1, "cf2"), "qwerty", 6));
-        genericLayoutRepository.save(createSearchInputCaseField(caseType_v2, getCaseField(caseType_v2, "cf2"), "qwerty", 6));
-        genericLayoutRepository.save(createSearchInputCaseField(caseType_v3, getCaseField(caseType_v3, "cf2"), "qwerty", 6));
+        genericLayoutRepository.save(createSearchInputCaseField(caseTypeV1, getCaseField(caseTypeV1, "cf2"), "qwerty", 6));
+        genericLayoutRepository.save(createSearchInputCaseField(caseTypeV2, getCaseField(caseTypeV2, "cf2"), "qwerty", 6));
+        genericLayoutRepository.save(createSearchInputCaseField(caseTypeV3, getCaseField(caseTypeV3, "cf2"), "qwerty", 6));
 
-        final List<SearchInputCaseFieldEntity> fetched = genericLayoutRepository.findSearchInputsByCaseTypeReference(caseType_v3.getReference());
+        final List<SearchInputCaseFieldEntity> fetched = genericLayoutRepository.findSearchInputsByCaseTypeReference(caseTypeV3.getReference());
 
         assertThat(fetched, hasSize(1));
 
@@ -123,11 +123,11 @@ public class GenericLayoutRepositoryTest {
     @Test
     public void shouldSearchResultLayoutsForLatestCaseType_whenSearchResultLayoutsExistForThreeCaseVersions() {
 
-        genericLayoutRepository.save(createSearchResultCaseField(caseType_v1, getCaseField(caseType_v1, "cf3"), "v vhjf vh", 12));
-        genericLayoutRepository.save(createSearchResultCaseField(caseType_v2, getCaseField(caseType_v2, "cf3"), "v vhjf vh", 12));
-        genericLayoutRepository.save(createSearchResultCaseField(caseType_v3, getCaseField(caseType_v3, "cf3"), "v vhjf vh", 12));
+        genericLayoutRepository.save(createSearchResultCaseField(caseTypeV1, getCaseField(caseTypeV1, "cf3"), "v vhjf vh", 12));
+        genericLayoutRepository.save(createSearchResultCaseField(caseTypeV2, getCaseField(caseTypeV2, "cf3"), "v vhjf vh", 12));
+        genericLayoutRepository.save(createSearchResultCaseField(caseTypeV3, getCaseField(caseTypeV3, "cf3"), "v vhjf vh", 12));
 
-        final List<SearchResultCaseFieldEntity> fetched = genericLayoutRepository.findSearchResultsByCaseTypeReference(caseType_v3.getReference());
+        final List<SearchResultCaseFieldEntity> fetched = genericLayoutRepository.findSearchResultsByCaseTypeReference(caseTypeV3.getReference());
 
         assertThat(fetched, hasSize(1));
 

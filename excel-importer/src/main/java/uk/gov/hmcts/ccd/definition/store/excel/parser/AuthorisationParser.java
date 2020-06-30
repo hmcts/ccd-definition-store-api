@@ -84,7 +84,8 @@ interface AuthorisationParser {
             .filter(typeName -> !caseFieldItemsForThisCaseType.contains(typeName))
             .findFirst();
         if (unknownCaseFieldId.isPresent()) {
-            throw new MapperException(String.format("Unknown CaseField '%s' for CaseType '%s' in worksheet '%s'", unknownCaseFieldId.get(), caseTypeReference, getSheetName()));
+            throw new MapperException(String.format("Unknown CaseField '%s' for CaseType '%s' in worksheet '%s'",
+                unknownCaseFieldId.get(), caseTypeReference, getSheetName()));
         }
     }
 

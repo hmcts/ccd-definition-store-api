@@ -65,7 +65,8 @@ public class DisplayGroupColumnNumberValidatorTest {
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors(), hasItem(instanceOf(DisplayGroupColumnNumberValidator.ValidationError.class)));
-        DisplayGroupColumnNumberValidator.ValidationError validationError = (DisplayGroupColumnNumberValidator.ValidationError) result.getValidationErrors().get(0);
+        DisplayGroupColumnNumberValidator.ValidationError validationError =
+            (DisplayGroupColumnNumberValidator.ValidationError) result.getValidationErrors().get(0);
         assertThat(validationError.getEntity(), is(entity));
         assertThat(validationError.getDefaultMessage(), is("Invalid page column number '3' for case field 'cf'"));
     }

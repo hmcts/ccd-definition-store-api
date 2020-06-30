@@ -21,8 +21,7 @@ public class EnumUtilTest {
 
         try {
             EnumUtil.getEnumFromString(SecurityClassification.class, "XXXX");
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("No enum constant uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.XXXX",
                 e.getMessage()
             );
@@ -36,8 +35,7 @@ public class EnumUtilTest {
 
         try {
             EnumUtil.getEnumFromString(SecurityClassification.class, "   ");
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("No enum constant uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.   ",
                 e.getMessage()
             );
@@ -51,8 +49,7 @@ public class EnumUtilTest {
 
         try {
             EnumUtil.getEnumFromString(SecurityClassification.class, null);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("Enum constant argument cannot be null",
                 e.getMessage()
             );
@@ -66,8 +63,7 @@ public class EnumUtilTest {
 
         try {
             EnumUtil.getEnumFromString(null, "AValue");
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("Class argument cannot be null",
                 e.getMessage()
             );

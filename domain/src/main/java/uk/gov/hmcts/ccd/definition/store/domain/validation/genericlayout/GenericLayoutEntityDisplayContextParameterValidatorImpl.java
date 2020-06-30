@@ -15,7 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class GenericLayoutEntityDisplayContextParameterValidatorImpl extends AbstractDisplayContextParameterValidator<GenericLayoutEntity> implements GenericLayoutValidator {
+public class GenericLayoutEntityDisplayContextParameterValidatorImpl
+    extends AbstractDisplayContextParameterValidator<GenericLayoutEntity>
+    implements GenericLayoutValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         {DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY};
@@ -59,7 +61,7 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImpl extends Abs
 
     private boolean isUnsupportedForGenericLayoutEntity(final DisplayContextParameter displayContextParameter,
                                                         final GenericLayoutEntity entity) {
-        return (getSheetName(entity).contains("Input") && displayContextParameter.getType() == DisplayContextParameterType.DATETIMEDISPLAY) ||
-            (getSheetName(entity).contains("Result") && displayContextParameter.getType() == DisplayContextParameterType.DATETIMEENTRY);
+        return (getSheetName(entity).contains("Input") && displayContextParameter.getType() == DisplayContextParameterType.DATETIMEDISPLAY)
+            || (getSheetName(entity).contains("Result") && displayContextParameter.getType() == DisplayContextParameterType.DATETIMEENTRY);
     }
 }
