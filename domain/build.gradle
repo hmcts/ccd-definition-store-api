@@ -29,7 +29,7 @@ bootJar {
 
 ext {
     mapstructGenSourceDir = 'build/classes/java/main'
-    orgMapstructVersion='1.3.0.Final'
+    orgMapstructVersion='1.3.1.Final'
 }
 
 dependencies {

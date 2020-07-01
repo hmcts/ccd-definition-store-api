@@ -17,8 +17,8 @@ dependencies {
     testCompile project(":domain").sourceSets.main.output
 
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.apache.commons:commons-collections4:4.1"
-    compile "org.apache.poi:poi-ooxml:4.1.1"
+    compile "org.apache.commons:commons-collections4:4.4"
+    compile "org.apache.poi:poi-ooxml:4.1.2"
 }
 
 bootJar {
