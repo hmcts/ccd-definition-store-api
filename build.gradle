@@ -276,7 +276,7 @@ subprojects { subproject ->
         testCompile 'org.mockito:mockito-junit-jupiter:2.24.0'
         testCompile 'com.github.npathai:hamcrest-optional:2.0.0'
         testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-        testCompile 'io.github.openfeign:feign-jackson:10.7.0'
+        testCompile 'io.github.openfeign:feign-jackson:11.0'
         testCompile 'io.github.openfeign.form:feign-form:3.8.0'
         testCompile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
         testCompile "org.exparity:hamcrest-date:2.0.4"
