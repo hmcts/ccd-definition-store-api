@@ -3,7 +3,7 @@ buildscript {
         springBootVersion = '2.2.5.RELEASE'
     }
     dependencies {
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
