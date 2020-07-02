@@ -127,6 +127,7 @@ public class ImportServiceImpl implements ImportService {
 
         logger.info("Importing spreadsheet: Jurisdiction {} : OK ", jurisdiction.getReference());
 
+        bannerService.deleteJurisdictionBanners(jurisdiction.getReference());
         if (definitionSheets.get(SheetName.BANNER.getName()) != null) {
             logger.debug("Importing spreadsheet: Banner...");
             final BannerParser bannerParser = parserFactory.createBannerParser(parseContext);
