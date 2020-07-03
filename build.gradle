@@ -280,7 +280,7 @@ subprojects { subproject ->
         testCompile 'io.github.openfeign.form:feign-form:3.8.0'
         testCompile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
         testCompile "org.exparity:hamcrest-date:2.0.4"
-        testCompile "io.rest-assured:rest-assured:3.1.0"
+        testCompile "io.rest-assured:rest-assured:4.3.1"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
         testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.11.0'
