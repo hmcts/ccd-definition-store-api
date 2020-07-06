@@ -81,6 +81,7 @@ ext {
     reformLogging= '5.1.1-BETA'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
+    tomcatVersion = '9.0.36!!'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -94,36 +95,6 @@ ext {
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-
-    dependencies {
-        // force to use '42.2.13' CVE-2020-13692
-        dependency group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
-
-        // Versions prior to 24.1.1 vulnerable to CVE-2018-10237
-        dependency 'com.google.guava:guava:24.1.1-jre'
-
-        // CVE-2019-0232, CVE-2019-0199  - Java and Command Line injections in Windows
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.36') {
-            entry 'tomcat-embed-core'
-            entry 'tomcat-embed-el'
-            entry 'tomcat-embed-websocket'
-        }
-        // CVE-2019-10086
-        dependencySet(group: 'commons-beanutils', version: '1.9.4') {
-            entry 'commons-beanutils'
-        }
-
-        // Remove once BEFTA rest-assured is updated
-        dependencySet(group: 'io.rest-assured', version: '4.3.0') {
-            entry 'json-path'
-            entry 'xml-path'
-        }
-        dependencySet(group: 'org.codehaus.groovy', version: '3.0.2') {
-            entry 'groovy'
-            entry 'groovy-xml'
-            entry 'groovy-json'
-        }
     }
 }
 
@@ -151,6 +122,18 @@ allprojects {
         testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         compile "com.fasterxml.jackson.core:jackson-databind:2.10.0"
         compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+    }
+
+    // Global constraints
+    dependencies {
+        compile "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"    
+        compile "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
+        compile "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
+        testCompile "io.rest-assured:xml-path:${restAssuredVersion}"
+        testCompile "io.rest-assured:json-path:${restAssuredVersion}"
+        testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
+        testCompile "org.codehaus.groovy:groovy-xml:${groovyVersion}"
+        testCompile "org.codehaus.groovy:groovy-json:${groovyVersion}"
     }
 
     checkstyle {
@@ -291,11 +274,6 @@ subprojects { subproject ->
         testCompile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
-        testCompile "io.rest-assured:xml-path:${restAssuredVersion}"
-        testCompile "io.rest-assured:json-path:${restAssuredVersion}"
-        testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
-        testCompile "org.codehaus.groovy:groovy-xml:${groovyVersion}"
-        testCompile "org.codehaus.groovy:groovy-json:${groovyVersion}"        
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
         testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '3.3.0'
@@ -394,10 +372,6 @@ subprojects { subproject ->
     }
 }
 // end::subprojects[]
-
-
-sourceCompatibility = 11
-targetCompatibility = 11
 
 sonarqube {
     properties {
