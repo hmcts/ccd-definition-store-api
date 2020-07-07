@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.repository.NoRepositoryBean;
 
+@SuppressWarnings("checkstyle:InterfaceTypeParameterName")
 @NoRepositoryBean
 public interface VersionedDefinitionRepository<T, ID extends Serializable> extends DefinitionRepository<T, ID> {
 

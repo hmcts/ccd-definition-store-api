@@ -28,7 +28,9 @@ public class EventEntityEventCaseFieldsValidatorImpl implements EventEntityValid
             for (EventCaseFieldEntityValidator eventCaseFieldValidator : eventCaseFieldValidators) {
                 validationResult.merge(eventCaseFieldValidator.validate(
                         eventCaseField,
-                        new EventCaseFieldEntityValidationContext(caseEvent.getReference(), allEventCaseFieldsForEvent, eventEntityValidationContext.getCaseRoles())
+                        new EventCaseFieldEntityValidationContext(caseEvent.getReference(),
+                            allEventCaseFieldsForEvent,
+                            eventEntityValidationContext.getCaseRoles())
                         )
                 );
             }

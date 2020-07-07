@@ -13,6 +13,7 @@ import java.util.List;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityDefaultValueValidatorImpl.ORGANISATION_POLICY_ROLE;
 
 public class EventComplexTypeEntityDefaultValueValidatorImplTest {
 
@@ -30,7 +31,7 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
 
     @Before
     public void setUp() {
-        eventCaseFieldEntity.setReference("OrgPolicyCaseAssignedRole");
+        eventCaseFieldEntity.setReference(ORGANISATION_POLICY_ROLE);
         caseRoles.add(ROLE1);
         caseRoles.add(ROLE2);
     }
@@ -38,6 +39,16 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     @Test
     public void should_pass_validation() {
 
+        eventCaseFieldEntity.setDefaultValue(ROLE2);
+        final ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
+
+        assertTrue(validationResult.isValid());
+        assertEquals(0, validationResult.getValidationErrors().size());
+    }
+
+    @Test
+    public void should_pass_validation_complex_field_reference() {
+        eventCaseFieldEntity.setReference("TestComplexField." + ORGANISATION_POLICY_ROLE);
         eventCaseFieldEntity.setDefaultValue(ROLE2);
         final ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
 

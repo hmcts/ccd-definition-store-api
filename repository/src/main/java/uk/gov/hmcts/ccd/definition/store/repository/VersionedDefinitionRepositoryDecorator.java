@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
 
+@SuppressWarnings("checkstyle:InterfaceTypeParameterName")
 public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID extends Serializable>
     extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
 

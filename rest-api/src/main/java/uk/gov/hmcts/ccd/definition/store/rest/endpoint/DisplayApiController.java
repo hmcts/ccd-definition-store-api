@@ -1,6 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +19,17 @@ import io.swagger.annotations.ApiResponses;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
-import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
+import uk.gov.hmcts.ccd.definition.store.repository.model.BannersResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
+import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfigResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
 
 @Api(value = "/api/display")
 @RequestMapping(value = "/api")
