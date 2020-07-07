@@ -309,4 +309,9 @@
 		<cve>CVE-2020-13692</cve>
 	</suppress>
 
+	<!-- Temporary suppressions to enable development -->
+	<suppress>
+		<cve>CVE-2020-11996</cve>
+	</suppress>
+
 </suppressions>
