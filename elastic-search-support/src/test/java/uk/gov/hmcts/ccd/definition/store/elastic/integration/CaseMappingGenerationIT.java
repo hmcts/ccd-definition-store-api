@@ -94,11 +94,13 @@ public class CaseMappingGenerationIT implements TestUtils {
         CaseFieldEntity complexOfComplex = newComplexFieldOfComplex();
         CaseFieldEntity complexOfCollection = newComplexFieldOfCollection();
         CaseFieldEntity collectionOfBaseType = newCollectionFieldOfBaseType();
+        CaseFieldEntity dynamicField = newField("dynamicList", "DynamicList").build();
 
         return caseTypeBuilder.addField(baseTypeField)
                 .addField(complexOfComplex)
                 .addField(complexOfCollection)
-                .addField(collectionOfBaseType).build();
+                .addField(collectionOfBaseType)
+                .addField(dynamicField).build();
     }
 
     private CaseFieldEntity newComplexFieldOfComplex() {
