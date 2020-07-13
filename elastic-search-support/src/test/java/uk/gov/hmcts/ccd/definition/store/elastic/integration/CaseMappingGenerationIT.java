@@ -33,6 +33,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import uk.gov.hmcts.ccd.definition.store.elastic.config.ElasticSearchConfiguration;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -94,7 +95,7 @@ public class CaseMappingGenerationIT implements TestUtils {
         CaseFieldEntity complexOfComplex = newComplexFieldOfComplex();
         CaseFieldEntity complexOfCollection = newComplexFieldOfCollection();
         CaseFieldEntity collectionOfBaseType = newCollectionFieldOfBaseType();
-        CaseFieldEntity dynamicField = newField("dynamicList", "DynamicList").build();
+        CaseFieldEntity dynamicField = newField("dynamicList", FieldTypeUtils.BASE_DYNAMIC_LIST).build();
 
         return caseTypeBuilder.addField(baseTypeField)
                 .addField(complexOfComplex)
