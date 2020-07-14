@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -126,11 +127,12 @@ public class ImportServiceImpl implements ImportService {
 
         logger.info("Importing spreadsheet: Jurisdiction {} : OK ", jurisdiction.getReference());
 
+        bannerService.deleteJurisdictionBanners(jurisdiction.getReference());
         if (definitionSheets.get(SheetName.BANNER.getName()) != null) {
             logger.debug("Importing spreadsheet: Banner...");
             final BannerParser bannerParser = parserFactory.createBannerParser(parseContext);
-            BannerEntity bannerEntity = bannerParser.parse(definitionSheets);
-            importBanner(bannerEntity);
+            Optional<BannerEntity> bannerEntity = bannerParser.parse(definitionSheets);
+            bannerEntity.ifPresent(this::importBanner);
             logger.debug("Importing spreadsheet: Banner...: OK");
         }
         final JurisdictionUiConfigParser jurisdictionUiConfigParser = parserFactory.createJurisdictionUiConfigParser(parseContext);
