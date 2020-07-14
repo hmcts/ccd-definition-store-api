@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.stream.Collectors.toList;
 
 @Component
@@ -48,5 +49,14 @@ public class BannerServiceImpl implements BannerService {
         return bannerEntities.stream()
             .map(dtoMapper::map)
             .collect(toList());
+    }
+
+    @Override
+    public void deleteJurisdictionBanners(String jurisdictionReference) {
+        if (isNullOrEmpty(jurisdictionReference)) {
+            return;
+        }
+        int deletedBannersCount = bannerRepository.deleteByJurisdictionReference(jurisdictionReference);
+        LOG.debug("Deleted {} existing banner entities for jurisdiction {}.", deletedBannersCount, jurisdictionReference);
     }
 }
