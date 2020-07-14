@@ -52,4 +52,9 @@ public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
         }
     }
 
+    @Override
+    public int[] sqlTypes() {
+        return new int[] { Types.OTHER };
+    }
+
 }
