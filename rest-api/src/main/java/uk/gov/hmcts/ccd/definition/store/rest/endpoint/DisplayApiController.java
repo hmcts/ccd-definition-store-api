@@ -126,7 +126,7 @@ public class DisplayApiController {
         @ApiResponse(code = 200, message = "Unexpected error")
     })
     public SearchCasesResult displaySearchCasesResultIdGet(
-        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id, @RequestParam(value = "usecase", required = false) String usecase) {
+        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id, @RequestParam(value = "use_case", required = false) String usecase) {
         return (usecase == null || usecase.isEmpty()) ? this.displayService.findSearchCasesResultDefinitionForCaseType(id)
             : this.displayService.findSearchCasesResultDefinitionForCaseType(id, usecase);
     }
