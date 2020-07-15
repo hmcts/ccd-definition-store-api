@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store;
 import com.microsoft.applicationinsights.TelemetryClient;
 import com.microsoft.applicationinsights.telemetry.Duration;
 import com.microsoft.applicationinsights.telemetry.RequestTelemetry;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 
