@@ -32,10 +32,12 @@
       }
     },
     "created_date": {
-      "type": "date"
+      "type": "date",
+      "ignore_malformed": true
     },
     "last_modified": {
-      "type": "date"
+      "type": "date",
+      "ignore_malformed": true
     },
     "security_classification": {
       "type": "keyword"
@@ -48,6 +50,10 @@
           "ignore_above":256
         }
       }
+    },
+    "last_state_modified_date": {
+      "type": "date",
+      "ignore_malformed": true
     },
     "@timestamp": {
       "enabled": false
@@ -83,7 +89,8 @@
                   }
                 },
                 "dob": {
-                  "type": "date"
+                  "type": "date",
+                  "ignore_malformed": true
                 }
               }
             }
@@ -122,6 +129,36 @@
                   "ignore_above": 256
                 }
               }
+            }
+          }
+        },
+        "dynamicList": {
+          "properties": {
+            "value": {
+              "properties": {
+                "code": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    }
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    }
+                  }
+                }
+              }
+            },
+            "list_items": {
+              "type": "object",
+              "enabled": false
             }
           }
         }
@@ -204,6 +241,9 @@
               }
             }
           }
+        },
+        "dynamicList": {
+          "type": "keyword"
         }
       }
     }
