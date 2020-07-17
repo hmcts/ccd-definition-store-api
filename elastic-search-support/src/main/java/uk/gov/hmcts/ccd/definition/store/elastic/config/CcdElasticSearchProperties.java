@@ -13,10 +13,10 @@ public class CcdElasticSearchProperties {
     private String scheme;
     private int indexShards;
     private int indexShardsReplicas;
-    private int indexMappingFieldsLimit;
     private String dynamic;
     private String casesIndexType;
     private String casesIndexNameFormat;
+    private int casesIndexMappingFieldsLimit;
     private Map<String, String> elasticMappings;
     private Map<String, String> typeMappings;
     private Map<String, String> casePredefinedMappings;
@@ -54,6 +54,14 @@ public class CcdElasticSearchProperties {
 
     public void setCasesIndexNameFormat(String casesIndexNameFormat) {
         this.casesIndexNameFormat = casesIndexNameFormat;
+    }
+
+    public int getCasesIndexMappingFieldsLimit() {
+        return casesIndexMappingFieldsLimit;
+    }
+
+    public void setCasesIndexMappingFieldsLimit(int casesIndexMappingFieldsLimit) {
+        this.casesIndexMappingFieldsLimit = casesIndexMappingFieldsLimit;
     }
 
     public Map<String, String> getTypeMappings() {
@@ -102,14 +110,6 @@ public class CcdElasticSearchProperties {
 
     public void setIndexShardsReplicas(int indexShardsReplicas) {
         this.indexShardsReplicas = indexShardsReplicas;
-    }
-
-    public int getIndexMappingFieldsLimit() {
-        return indexMappingFieldsLimit;
-    }
-
-    public void setIndexMappingFieldsLimit(int indexMappingFieldsLimit) {
-        this.indexMappingFieldsLimit = indexMappingFieldsLimit;
     }
 
     public String getScheme() {

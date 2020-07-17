@@ -5,7 +5,6 @@ elasticsearch:
   enabled: ${ELASTIC_SEARCH_ENABLED:false}
   indexShards: ${ELASTIC_SEARCH_INDEX_SHARDS:2}
   indexShardsReplicas: ${ELASTIC_SEARCH_INDEX_SHARDS_REPLICAS:0}
-  indexMappingFieldsLimit: ${ELASTIC_SEARCH_INDEX_MAPPING_FIELDS_LIMIT:8000}
   failImportIfError: ${ELASTIC_SEARCH_FAIL_ON_IMPORT:false}
   dynamic: ${ELASTIC_SEARCH_DYNAMIC:true}
   elasticMappings:
@@ -76,6 +75,7 @@ elasticsearch:
     FixedRadioList: ${elasticsearch.elasticMappings.defaultText}
     DynamicList: ${elasticsearch.elasticMappings.ccdDynamicList}
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_cases}
+  casesIndexMappingFieldsLimit: ${ELASTIC_SEARCH_CASE_INDEX_MAPPING_FIELDS_LIMIT:8000}
   casesIndexType: _doc
   # casePredefinedMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.case-predefined-mappings.defaultText property
   casePredefinedMappings:
