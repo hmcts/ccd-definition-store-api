@@ -13,6 +13,7 @@ public class CcdElasticSearchProperties {
     private String scheme;
     private int indexShards;
     private int indexShardsReplicas;
+    private int indexMappingFieldsLimit;
     private String dynamic;
     private String casesIndexType;
     private String casesIndexNameFormat;
@@ -101,6 +102,14 @@ public class CcdElasticSearchProperties {
 
     public void setIndexShardsReplicas(int indexShardsReplicas) {
         this.indexShardsReplicas = indexShardsReplicas;
+    }
+
+    public int getIndexMappingFieldsLimit() {
+        return indexMappingFieldsLimit;
+    }
+
+    public void setIndexMappingFieldsLimit(int indexMappingFieldsLimit) {
+        this.indexMappingFieldsLimit = indexMappingFieldsLimit;
     }
 
     public String getScheme() {
