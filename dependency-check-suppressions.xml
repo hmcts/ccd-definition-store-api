@@ -303,7 +303,7 @@
 		<cve>CVE-2018-10237</cve>
 		<cve>CVE-2019-10086</cve>
 	</suppress>
-	
+
 	<!-- Temporary suppressions to enable RDM-8581 release -->
 	<suppress>
 		<cve>CVE-2020-13692</cve>
@@ -313,5 +313,4 @@
 	<suppress>
 		<cve>CVE-2020-11996</cve>
 	</suppress>
-
 </suppressions>
