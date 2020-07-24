@@ -1,16 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
-import static org.apache.commons.lang3.StringUtils.capitalize;
-import static org.apache.commons.lang3.StringUtils.defaultString;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
-
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.util.Optional;
-import java.util.function.Function;
-
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
@@ -68,6 +59,14 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItem
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+
+import java.util.Optional;
+import java.util.function.Function;
+
+import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 
 @Component
 public class SpreadsheetValidationErrorMessageCreator implements ValidationErrorMessageCreator {
@@ -220,10 +219,10 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
-                    "Invalid case role '%s' in %s tab for case type '%s'. Please make sure it is defined in the CaseRoles sheet.",
-                    def.getString(ColumnName.USER_ROLE),
-                    def.getSheetName(),
-                    error.getAuthorisationValidationContext().getCaseReference()) :
+                "Invalid case role '%s' in %s tab for case type '%s'. Please make sure it is defined in the CaseRoles sheet.",
+                def.getString(ColumnName.USER_ROLE),
+                def.getSheetName(),
+                error.getAuthorisationValidationContext().getCaseReference()) :
                 String.format(
                     "Invalid idam role '%s' in %s tab for case type '%s'",
                     def.getString(ColumnName.USER_ROLE),
@@ -295,11 +294,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             error.getCaseFieldACLEntity(),
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
-                    "Invalid case role '%s' in %s tab, case type '%s', case field '%s'. Please make sure it is defined in the CaseRoles sheet.",
-                    defaultString(def.getString(ColumnName.USER_ROLE)),
-                    def.getSheetName(),
-                    def.getString(ColumnName.CASE_TYPE_ID),
-                    def.getString(ColumnName.CASE_FIELD_ID)) :
+                "Invalid case role '%s' in %s tab, case type '%s', case field '%s'. Please make sure it is defined in the CaseRoles sheet.",
+                defaultString(def.getString(ColumnName.USER_ROLE)),
+                def.getSheetName(),
+                def.getString(ColumnName.CASE_TYPE_ID),
+                def.getString(ColumnName.CASE_FIELD_ID)) :
                 String.format(
                     "Invalid idam role '%s' in %s tab, case type '%s', case field '%s', crud '%s'",
                     defaultString(def.getString(ColumnName.USER_ROLE)),
@@ -329,11 +328,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             error.getEventACLEntity(),
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
-                    "Invalid case role '%s' in %s tab, case type '%s', event '%s'. Please make sure it is defined in the CaseRoles sheet.",
-                    defaultString(def.getString(ColumnName.USER_ROLE)),
-                    def.getSheetName(),
-                    error.getAuthorisationEventValidationContext().getCaseReference(),
-                    error.getAuthorisationEventValidationContext().getEventReference()) :
+                "Invalid case role '%s' in %s tab, case type '%s', event '%s'. Please make sure it is defined in the CaseRoles sheet.",
+                defaultString(def.getString(ColumnName.USER_ROLE)),
+                def.getSheetName(),
+                error.getAuthorisationEventValidationContext().getCaseReference(),
+                error.getAuthorisationEventValidationContext().getEventReference()) :
                 String.format(
                     "Invalid idam role '%s' in %s tab, case type '%s', event '%s', crud '%s'",
                     defaultString(def.getString(ColumnName.USER_ROLE)),
@@ -448,11 +447,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             error.getDisplayGroup(),
             error.getShowConditionField() != null
                 ? def -> String.format("Invalid show condition '%s' for tab '%s' on spreadsheet tab '%s': "
-                        + "unknown field '%s'",
-                    def.getString(ColumnName.TAB_SHOW_CONDITION),
-                    error.getDisplayGroup().getReference(),
-                    def.getSheetName(),
-                    error.getShowConditionField()) : def -> error.getDefaultMessage());
+                    + "unknown field '%s'",
+                def.getString(ColumnName.TAB_SHOW_CONDITION),
+                error.getDisplayGroup().getReference(),
+                def.getSheetName(),
+                error.getShowConditionField()) : def -> error.getDefaultMessage());
     }
 
     @Override

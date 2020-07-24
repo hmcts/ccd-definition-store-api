@@ -14,7 +14,8 @@ public class FieldTypeBuilder {
     private List<ComplexFieldEntity> fieldsForComplex = newArrayList();
     private FieldTypeEntity fieldForCollection;
 
-    private FieldTypeBuilder() {}
+    private FieldTypeBuilder() {
+    }
 
     public FieldTypeBuilder withReference(String reference) {
         this.reference = reference;

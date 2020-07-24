@@ -14,7 +14,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 
@@ -53,18 +54,18 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
     public void shouldReturnValidationErrorIfFieldTypeOptional() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER),
-                                                                                         event("Event Reference"),
-                                                                                         DisplayContext.OPTIONAL), null);
+            event("Event Reference"),
+            DisplayContext.OPTIONAL), null);
 
         assertAll(
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
-                         hasItem(
-                             hasProperty("defaultMessage",
-                                         equalTo(
-                                             "'" + CASE_PAYMENT_HISTORY_VIEWER
-                                                 + "' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                hasItem(
+                    hasProperty("defaultMessage",
+                        equalTo(
+                            "'" + CASE_PAYMENT_HISTORY_VIEWER
+                                + "' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
         );
     }
 
@@ -72,17 +73,17 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
     public void shouldReturnValidationErrorIfFieldTypeMandatory() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER),
-                                                                                         event("Event Reference"),
-                                                                                         DisplayContext.MANDATORY), null);
+            event("Event Reference"),
+            DisplayContext.MANDATORY), null);
 
         assertAll(
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
-                             hasItem(
-                                 hasProperty("defaultMessage",
-                                     equalTo("'" + CASE_PAYMENT_HISTORY_VIEWER
-                                                 + "' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                hasItem(
+                    hasProperty("defaultMessage",
+                        equalTo("'" + CASE_PAYMENT_HISTORY_VIEWER
+                            + "' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
         );
     }
 

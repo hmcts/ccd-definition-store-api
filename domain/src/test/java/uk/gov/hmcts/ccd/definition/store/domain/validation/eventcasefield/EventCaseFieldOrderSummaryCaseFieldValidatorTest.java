@@ -58,11 +58,11 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
-                             hasItem(
-                                 hasProperty("defaultMessage",
-                                     equalTo("'OrderSummary' is OrderSummary type and "
-                                         + "has to be mandatory (not editable but has to be added to a form in UI) "
-                                         + "for event with reference 'Event Reference'"))))
+                hasItem(
+                    hasProperty("defaultMessage",
+                        equalTo("'OrderSummary' is OrderSummary type and "
+                            + "has to be mandatory (not editable but has to be added to a form in UI) "
+                            + "for event with reference 'Event Reference'"))))
         );
     }
 
@@ -76,10 +76,10 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
-                             hasItem(
-                                 hasProperty("defaultMessage",
-                                     equalTo("'OrderSummary' is OrderSummary type and has to be mandatory "
-                                         + "(not editable but has to be added to a form in UI) for event with reference 'Event Reference'"))))
+                hasItem(
+                    hasProperty("defaultMessage",
+                        equalTo("'OrderSummary' is OrderSummary type and has to be mandatory "
+                            + "(not editable but has to be added to a form in UI) for event with reference 'Event Reference'"))))
         );
     }
 

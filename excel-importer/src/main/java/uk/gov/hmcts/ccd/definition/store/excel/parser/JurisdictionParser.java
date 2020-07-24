@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Map;
-
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+
+import java.util.Map;
 
 public class JurisdictionParser {
 

@@ -17,7 +17,7 @@ public class WebhookParser {
     }
 
     public static WebhookEntity parseWebhook(DefinitionDataItem eventDefinition, ColumnName urlColumn,
-                                    ColumnName retriesColumn) {
+                                             ColumnName retriesColumn) {
         WebhookEntity webhook = null;
 
         final String url = eventDefinition.getString(urlColumn);

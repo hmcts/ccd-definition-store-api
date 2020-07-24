@@ -1,16 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 
 class CaseFieldEntityMetadataFieldValidatorImplTest {
 
@@ -29,7 +29,7 @@ class CaseFieldEntityMetadataFieldValidatorImplTest {
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidMetadataFieldValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                   is("Metadata field syntax cannot be used for a case field. Found '[FIELD]'"));
+            is("Metadata field syntax cannot be used for a case field. Found '[FIELD]'"));
     }
 
     @Test

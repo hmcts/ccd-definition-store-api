@@ -222,13 +222,13 @@ public class FieldTypeRepositoryTest {
         assertEquals(8, predefinedComplexTypes.size());
 
         assertThat(predefinedComplexTypes, hasItems(
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_UK),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ORDER_SUMMARY),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION_POLICY),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST)
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_UK),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ORDER_SUMMARY),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION_POLICY),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST)
             )
         );
     }

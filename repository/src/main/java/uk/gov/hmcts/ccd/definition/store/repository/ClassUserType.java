@@ -22,7 +22,7 @@ public class ClassUserType implements UserType {
 
     @Override
     public int[] sqlTypes() {
-        return new int[]{Types.JAVA_OBJECT};
+        return new int[] {Types.JAVA_OBJECT};
     }
 
     @Override

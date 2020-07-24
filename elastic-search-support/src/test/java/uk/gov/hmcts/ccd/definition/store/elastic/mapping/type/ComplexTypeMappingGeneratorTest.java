@@ -35,9 +35,9 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         super.setup();
 
         when(config.getSecurityClassificationMapping()).thenReturn("securityClassificationMapping");
-        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
+        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping", "dataClassificationMapping"));
         addMappingGenerator(new StubTypeMappingGenerator("Complex", "dataMappingForComplexType",
-                "dataClassificationMappingForComplexType"));
+            "dataClassificationMappingForComplexType"));
         complexTypeMapper.inject(stubTypeMappersManager);
     }
 
@@ -48,7 +48,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         String result = complexTypeMapper.doDataMapping(complexField);
 
         assertThat(result, equalToJSONInFile(
-                readFileFromClasspath("json/type_mapping_complex_type.json")));
+            readFileFromClasspath("json/type_mapping_complex_type.json")));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         String result = complexTypeMapper.doDataClassificationMapping(complexField);
 
         assertThat(result, equalToJSONInFile(
-                readFileFromClasspath("json/type_mapping_classification_complex_type.json")));
+            readFileFromClasspath("json/type_mapping_classification_complex_type.json")));
     }
 
     @Test

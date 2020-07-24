@@ -27,7 +27,7 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     private static final String GLOBAL_ROLE_COLLABORATOR = "[COLLABORATOR]";
 
     final EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext(eventId, allEventCaseFieldEntitiesForEventCase, caseRoles);
+        new EventCaseFieldEntityValidationContext(eventId, allEventCaseFieldEntitiesForEventCase, caseRoles);
 
     @Before
     public void setUp() {

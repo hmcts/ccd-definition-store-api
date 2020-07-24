@@ -45,8 +45,8 @@ public class WorkBasketUserDefaultService {
                                            final List<CaseTypeEntity> caseTypes,
                                            final String actionedBy) {
         final ValidationResult userDefaultsValidationResults = userProfileValidator.validate(workBasketUserDefaults,
-                                                                                             jurisdiction,
-                                                                                             caseTypes);
+            jurisdiction,
+            caseTypes);
         if (userDefaultsValidationResults.isValid()) {
             putUserProfiles(workBasketUserDefaults, actionedBy);
         } else {
@@ -59,15 +59,15 @@ public class WorkBasketUserDefaultService {
             final HttpHeaders headers = securityUtils.authorizationHeaders();
             headers.add("actionedBy", actionedBy);
             final HttpEntity<List<WorkBasketUserDefault>> requestEntity = new HttpEntity<>(workBasketUserDefaults,
-                                                                                           headers);
+                headers);
             LOG.info("Updating user profile- URL {}", applicationParams.userProfilePutURL());
             restTemplate.exchange(applicationParams.userProfilePutURL(), HttpMethod.PUT, requestEntity, String.class);
 
         } catch (Exception e) {
             LOG.error("Problem updating user profile: {} because of ", workBasketUserDefaults, e);
             throw new ServiceException(String.format("Problem updating user profile: '%s' because of '%s'",
-                                                     workBasketUserDefaults,
-                                                     e.getMessage()), e);
+                workBasketUserDefaults,
+                e.getMessage()), e);
         }
     }
 }

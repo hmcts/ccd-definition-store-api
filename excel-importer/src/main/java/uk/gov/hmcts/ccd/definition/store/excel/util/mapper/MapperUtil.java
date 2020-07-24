@@ -11,7 +11,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -151,14 +159,14 @@ public class MapperUtil {
      * @param columnName         - name of the column the attribute is in
      * @return The Boolean attribute found, "Yes" represents a true response and false otherwise.
      * @throws MapperException - thrown if the field is required, but the attribute wasn't found
-     *                           or if the field value cannot be interpreted
+     *                         or if the field value cannot be interpreted
      */
     static Boolean getBoolean(DefinitionDataItem definitionDataItem, SheetName sheetName, ColumnName columnName) {
         final Object obj = definitionDataItem.findAttribute(columnName.toString());
         if (obj instanceof Boolean) {
-            return (Boolean)obj;
+            return (Boolean) obj;
         }
-        final String attribute = (String)obj;
+        final String attribute = (String) obj;
         if (isBlank(attribute)) {
             if (ColumnName.isRequired(sheetName, columnName)) {
                 throw new MapperException(String.format(INVALID_OR_BLANK_COLUMN, columnName, sheetName));
@@ -176,23 +184,33 @@ public class MapperUtil {
         // Case Insensitive T = true
         // Case Insensitive F = false
         switch (attribute.toLowerCase()) {
-            case "yes" : return true;
-            case "y" : return true;
-            case "t" : return true;
-            case "true" : return true;
-            case "no": return false;
-            case "n" : return false;
-            case "false" : return false;
-            case "f" : return false;
-            default : throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
+            case "yes":
+                return true;
+            case "y":
+                return true;
+            case "t":
+                return true;
+            case "true":
+                return true;
+            case "no":
+                return false;
+            case "n":
+                return false;
+            case "false":
+                return false;
+            case "f":
+                return false;
+            default:
+                throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
         }
     }
 
     /**
      * Find the Integer list attribute in the given item.  If there is an error in the attribute, then we return an empty list.
-     * @param definitionDataItem    - definition data item
-     * @param sheetName             - sheetName
-     * @param columnName            - columnName
+     *
+     * @param definitionDataItem - definition data item
+     * @param sheetName          - sheetName
+     * @param columnName         - columnName
      * @return integer list
      * @throws MapperException - thrown if the field is required, but the attribute wasn't found or numbers in the list cannot be parsed
      */
@@ -222,16 +240,17 @@ public class MapperUtil {
 
     /**
      * Create a FieldType object for the given DefinitionDataItem in the given Sheet.
-     * @param sheetName - name of the given Sheet
-     * @param dataItem - given DefinitionDataItem
+     *
+     * @param sheetName        - name of the given Sheet
+     * @param dataItem         - given DefinitionDataItem
      * @param fixedListsByCode - all Fixed List Item's mapped by their Id
-     * @param complexTypeIds - all ComplexTypeId's in the current Case Definition
+     * @param complexTypeIds   - all ComplexTypeId's in the current Case Definition
      * @return created FieldType
      */
     static FieldType createFieldType(SheetName sheetName,
-                                             DefinitionDataItem dataItem,
-                                             Map<String, List<FixedListItem>> fixedListsByCode,
-                                             Set<String> complexTypeIds) {
+                                     DefinitionDataItem dataItem,
+                                     Map<String, List<FixedListItem>> fixedListsByCode,
+                                     Set<String> complexTypeIds) {
         FieldType fieldType = new FieldType();
         String id = getString(dataItem, sheetName, ColumnName.FIELD_TYPE);
         fieldType.setId(id);
@@ -255,7 +274,7 @@ public class MapperUtil {
         final String fieldTypeParameter = getString(dataItem, sheetName, ColumnName.FIELD_TYPE_PARAMETER);
 
         if ((FIXED_LIST.equals(id) || MULTI_SELECT_LIST.equals(id))
-                && fixedListsByCode.get(fieldTypeParameter) != null) {
+            && fixedListsByCode.get(fieldTypeParameter) != null) {
             fieldType.setFixedListItems(fixedListsByCode.get(fieldTypeParameter));
         } else if (COLLECTION.equals(id)) {
             fieldType.setId(fieldTypeParameter);
@@ -313,7 +332,8 @@ public class MapperUtil {
 
     /**
      * Recursive function to populate the tree of Complex Case Fields.
-     * @param fieldTypeId - Id of FieldType being populated
+     *
+     * @param fieldTypeId      - Id of FieldType being populated
      * @param complexTypesById - All Complex Case Fields by their Case Type Id
      */
     static void populateComplexCaseFields(String fieldTypeId, Map<String, List<CaseField>> complexTypesById) {
@@ -348,6 +368,7 @@ public class MapperUtil {
 
     /**
      * Create a List of FixedListItem entries mapped by Fixed List Code.
+     *
      * @param sheets Case Definition sheets
      * @return Map of FixedListItem's
      */
@@ -375,6 +396,7 @@ public class MapperUtil {
 
     /**
      * Create a Set of all names of all Complex Field Types.
+     *
      * @param sheets Case Definition Sheets
      * @return Set containing names of all Complex Types
      */

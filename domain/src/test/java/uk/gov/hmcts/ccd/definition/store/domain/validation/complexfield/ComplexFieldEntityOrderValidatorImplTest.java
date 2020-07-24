@@ -317,6 +317,7 @@ class ComplexFieldEntityOrderValidatorImplTest {
                     is("ComplexField with reference=nested2 must have ordering for all children defined"))));
     }
 
+    @SuppressWarnings("checkstyle:MethodName")
     private FieldTypeEntity AParentType() {
         return newType("parentType")
             .withBaseFieldType(newType(BASE_COMPLEX).build())

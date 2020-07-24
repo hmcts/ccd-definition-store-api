@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.groupingBy;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.STATE_ID;
@@ -31,7 +32,7 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     AuthorisationCaseStateParser(ParseContext parseContext,
-                                        EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+                                 EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
         this.parseContext = parseContext;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
     }

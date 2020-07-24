@@ -11,9 +11,9 @@ public class ComplexFieldInvalidShowConditionError extends ValidationError {
     public ComplexFieldInvalidShowConditionError(ComplexFieldEntity complexField) {
         super(
             String.format(
-                    "Show condition '%s' invalid for complex field element '%s'",
-                    complexField.getShowCondition(),
-                    complexField.getReference()
+                "Show condition '%s' invalid for complex field element '%s'",
+                complexField.getShowCondition(),
+                complexField.getReference()
             )
         );
         this.complexField = complexField;

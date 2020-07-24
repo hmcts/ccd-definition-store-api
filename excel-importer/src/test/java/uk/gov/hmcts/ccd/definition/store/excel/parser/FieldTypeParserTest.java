@@ -57,7 +57,7 @@ public class FieldTypeParserTest {
 
         assertTrue(
             String.format("Should be a reference matching %s-<SOME_GUID> but was %s", fieldId, parsedEntity.getReference()),
-            Pattern.compile(String.format("(%s)-[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}",fieldId))
+            Pattern.compile(String.format("(%s)-[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}", fieldId))
                 .matcher(parsedEntity.getReference()).matches()
         );
         assertEquals(parsedEntity.getBaseFieldType(), collectionBaseType);

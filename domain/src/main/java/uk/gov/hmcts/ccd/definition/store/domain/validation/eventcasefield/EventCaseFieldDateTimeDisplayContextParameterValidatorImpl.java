@@ -12,7 +12,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl
@@ -20,7 +25,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl
     implements EventCaseFieldEntityValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
-        { DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY };
+        {DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY};
     private static final List<String> ALLOWED_FIELD_TYPES =
         Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
     private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP = new EnumMap<>(DisplayContext.class);
@@ -85,7 +90,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl
     }
 
     private boolean isSupportedForEventCaseField(final DisplayContextParameter displayContextParameter,
-                                                   final EventCaseFieldEntity entity) {
+                                                 final EventCaseFieldEntity entity) {
         return DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.containsKey(entity.getDisplayContext())
             && DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.get(entity.getDisplayContext()) == displayContextParameter.getType();
     }

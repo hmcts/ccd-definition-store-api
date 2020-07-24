@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toList;
-
 import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
@@ -14,6 +8,12 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerat
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 @Slf4j
@@ -109,7 +109,7 @@ public class CaseMappingGenerator extends MappingGenerator {
         if (config.getElasticMappings().get(DEFAULT_TEXT).equalsIgnoreCase(fieldType)) {
             jw.name(searchAliasField.getReference() + ALIAS_TEXT_SORT_SUFFIX);
             String aliasMapping = config.getElasticMappings().get(ALIAS_TEXT_SORT).replace(ALIAS_CASE_FIELD_PATH_PLACE_HOLDER,
-                                                                                           searchAliasField.getCaseFieldPath());
+                searchAliasField.getCaseFieldPath());
             jw.jsonValue(aliasMapping);
             log.info("property: {}, sort alias mapping: {}", searchAliasField.getReference(), aliasMapping);
         }

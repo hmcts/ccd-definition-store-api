@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -9,8 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Component
 public class GenericLayoutEntityElementPathValidatorImpl implements GenericLayoutValidator {

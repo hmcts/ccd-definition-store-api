@@ -171,7 +171,7 @@ public class ImportServiceImpl implements ImportService {
         fieldTypeService.saveTypes(jurisdiction, parsedFieldTypes.getNewResults());
 
         logger.info("Importing spreadsheet: Field types: OK: {} field types imported",
-                    parsedFieldTypes.getNewResults().size());
+            parsedFieldTypes.getNewResults().size());
 
         /*
             3 - metadata fields
@@ -230,9 +230,9 @@ public class ImportServiceImpl implements ImportService {
         final List<WorkBasketUserDefault> workBasketUserDefaults = userProfilesParser.parse(definitionSheets);
         final IdamProperties userDetails = getUserDetails();
         workBasketUserDefaultService.saveWorkBasketUserDefaults(workBasketUserDefaults,
-                                                                jurisdiction,
-                                                                parsedCaseTypes.getAllResults(),
-                                                                userDetails.getEmail());
+            jurisdiction,
+            parsedCaseTypes.getAllResults(),
+            userDetails.getEmail());
         logger.info("Importing spreadsheet: User profiles: OK");
 
         applicationEventPublisher.publishEvent(new DefinitionImportedEvent(caseTypes));

@@ -62,7 +62,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
         return handleExceptionInternal(ex, missingUserRoles + validationErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(value = { ValidationException.class })
+    @ExceptionHandler(value = {ValidationException.class})
     public ResponseEntity<Object> handleValidationException(ValidationException validationException, WebRequest request) {
 
         String errorMessage = getValidationErrorMessage("Validation errors occurred importing the spreadsheet.\n\n",

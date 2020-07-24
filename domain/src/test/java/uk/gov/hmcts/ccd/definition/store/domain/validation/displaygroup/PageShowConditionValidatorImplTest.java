@@ -97,7 +97,7 @@ public class PageShowConditionValidatorImplTest {
         displayGroup.setEvent(event);
         ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("field").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
-                .thenReturn(validParsedShowCondition);
+            .thenReturn(validParsedShowCondition);
 
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("SimpleType");
@@ -170,7 +170,7 @@ public class PageShowConditionValidatorImplTest {
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.PAGE);
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
-                .thenThrow(new InvalidShowConditionException("someShowCondition"));
+            .thenThrow(new InvalidShowConditionException("someShowCondition"));
 
         ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
@@ -210,7 +210,7 @@ public class PageShowConditionValidatorImplTest {
         displayGroup.setEvent(event);
         ShowCondition sc = new ShowCondition.Builder().showConditionExpression("parsedSC").field("field").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
-                .thenReturn(sc);
+            .thenReturn(sc);
 
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("SimpleType");
@@ -246,9 +246,9 @@ public class PageShowConditionValidatorImplTest {
                                     complexFieldEntity("AddressGlobalUKCode", addressGlobalUKFieldTypeEntity()),
                                     complexFieldEntity("OrderSummaryCode", orderSummaryFieldTypeEntity()),
                                     complexFieldEntity("SecondSurname", fieldTypeEntity("Text", emptyList()))
-                                      )))
-                          ))))
-                              );
+                                )))
+                    ))))
+        );
     }
 
     private static FieldTypeEntity orderSummaryFieldTypeEntity() {
@@ -257,7 +257,7 @@ public class PageShowConditionValidatorImplTest {
                 complexFieldEntity("PaymentReference", fieldTypeEntity("Text", emptyList())),
                 complexFieldEntity("PaymentTotal", fieldTypeEntity("MoneyGBP", emptyList())),
                 complexFieldEntity("Fees", fieldTypeEntity("FeesList", emptyList()))
-                  ));
+            ));
     }
 
     private static FieldTypeEntity addressUKFieldTypeEntity() {
@@ -282,7 +282,7 @@ public class PageShowConditionValidatorImplTest {
                 complexFieldEntity("County", fieldTypeEntity("TextMax50", emptyList())),
                 complexFieldEntity("PostCode", fieldTypeEntity("TextMax14", emptyList())),
                 complexFieldEntity("Country", fieldTypeEntity("TextMax50", emptyList()))
-                  ));
+            ));
     }
 
     private static CaseFieldEntity caseFieldEntity(String reference, FieldTypeEntity fieldTypeEntity) {

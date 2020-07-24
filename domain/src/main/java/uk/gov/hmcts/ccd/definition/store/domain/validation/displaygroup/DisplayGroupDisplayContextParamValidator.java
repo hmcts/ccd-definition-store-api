@@ -33,7 +33,8 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
             if (isFieldTypeNotTableOrList(entity)) {
                 validationResult.addError(
                     new ValidationError("DisplayContextParameter text should "
-                        + "begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY("){});
+                        + "begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(") {
+                    });
             } else {
                 String removeBeginingSection = entity.getDisplayContextParameter().indexOf(LIST_PREFIX) > -1
                     ? entity.getDisplayContextParameter().replace(LIST_PREFIX, "") :

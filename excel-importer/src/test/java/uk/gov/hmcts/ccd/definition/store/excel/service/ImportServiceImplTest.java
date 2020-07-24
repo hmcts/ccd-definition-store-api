@@ -181,20 +181,20 @@ public class ImportServiceImplTest {
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
         service = new ImportServiceImpl(spreadsheetValidator,
-                                        spreadsheetParser,
-                                        parserFactory,
-                                        fieldTypeService,
-                                        jurisdictionService,
-                                        caseTypeService,
-                                        layoutService,
-                                        userRoleRepository,
-                                        workBasketUserDefaultService,
-                                        caseFieldRepository,
-                                        applicationEventPublisher,
-                                        idamProfileClient,
-                                        bannerService,
-                                        jurisdictionUiConfigService,
-                                        noCConfigService);
+            spreadsheetParser,
+            parserFactory,
+            fieldTypeService,
+            jurisdictionService,
+            caseTypeService,
+            layoutService,
+            userRoleRepository,
+            workBasketUserDefaultService,
+            caseFieldRepository,
+            applicationEventPublisher,
+            idamProfileClient,
+            bannerService,
+            jurisdictionUiConfigService,
+            noCConfigService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);

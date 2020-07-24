@@ -1,26 +1,25 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional.elasticsearch;
 
-import static java.util.Optional.ofNullable;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.hasKey;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static uk.gov.hmcts.ccd.definitionstore.tests.util.TestUtils.withRetries;
-
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
+import uk.gov.hmcts.befta.util.BeftaUtils;
+import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 
 import java.io.File;
 import java.util.stream.Stream;
 
-import io.restassured.response.ValidatableResponse;
-import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
-import uk.gov.hmcts.befta.util.BeftaUtils;
-import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
+import static java.util.Optional.ofNullable;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.hasKey;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static uk.gov.hmcts.ccd.definitionstore.tests.util.TestUtils.withRetries;
 
 class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
 
@@ -55,15 +54,15 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     void shouldImportValidDefinitionMultipleTimes() throws Exception {
         // invoke definition import
         File file = BeftaUtils.getClassPathResourceIntoTemporaryFile(
-                TestDataLoaderToDefinitionStore.DEFAULT_DEFINITIONS_PATH + "CCD_CNP_27.xlsx");
+            TestDataLoaderToDefinitionStore.DEFAULT_DEFINITIONS_PATH + "CCD_CNP_27.xlsx");
         try {
             asAutoTestImporter().get()
-            .given()
+                .given()
                 .multiPart(file)
-            .expect()
-            .statusCode(201)
-            .when()
-            .post("/import");
+                .expect()
+                .statusCode(201)
+                .when()
+                .post("/import");
         } finally {
             file.delete();
         }

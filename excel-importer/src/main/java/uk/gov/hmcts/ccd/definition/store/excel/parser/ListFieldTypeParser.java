@@ -102,7 +102,7 @@ public class ListFieldTypeParser {
         fixedRadioListType.setBaseFieldType(fixedRadioListBaseType);
         String fixedRadioListReference = ReferenceUtils.listReference(FIXED_RADIO_LIST_TYPE, listDataItems.getKey());
         spreadsheetValidator.validate(SheetName.FIXED_LISTS.getName(), "ID",
-                                      fixedRadioListReference, FIXED_RADIO_LIST_TYPE);
+            fixedRadioListReference, FIXED_RADIO_LIST_TYPE);
         fixedRadioListType.setReference(fixedRadioListReference);
         fixedRadioListType.setJurisdiction(parseContext.getJurisdiction());
         fixedRadioListType.addListItems(fixedRadioListItems);
@@ -118,7 +118,7 @@ public class ListFieldTypeParser {
         multiListType.setBaseFieldType(multiListBaseType);
         String multiListTypeReference = ReferenceUtils.listReference(MULTI_LIST_TYPE, listDataItems.getKey());
         spreadsheetValidator.validate(SheetName.FIXED_LISTS.getName(), "ID",
-                                      multiListTypeReference, MULTI_LIST_TYPE);
+            multiListTypeReference, MULTI_LIST_TYPE);
         multiListType.setReference(multiListTypeReference);
         multiListType.setJurisdiction(parseContext.getJurisdiction());
         multiListType.addListItems(multiListItems);

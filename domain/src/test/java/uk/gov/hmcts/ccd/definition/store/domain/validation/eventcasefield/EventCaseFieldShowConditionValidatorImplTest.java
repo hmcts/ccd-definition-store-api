@@ -1,5 +1,25 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
+
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertTrue;
@@ -18,27 +38,6 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
-
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
-
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 public class EventCaseFieldShowConditionValidatorImplTest {
 
@@ -89,7 +88,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
                 eventCaseFieldEntity(
                     caseFieldEntity("NonMatchingCaseFieldId2"),
                     null)
-                ));
+            ));
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
             .isValid());
@@ -119,7 +118,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
                     caseFieldEntity(matchingCaseFieldId,
                         exampleFieldTypeEntityWithComplexFields()),
                     null)
-                  ));
+            ));
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
             .isValid());
@@ -159,7 +158,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
                 eventCaseFieldEntity(
                     caseFieldEntity("NonMatchingCaseFieldId2"),
                     null)
-                  ));
+            ));
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntityWithShowCondition,
             eventCaseFieldEntityValidationContext);
@@ -210,7 +209,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         );
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
-                       .isValid());
+            .isValid());
 
         verify(showConditionExtractor).parseShowCondition(eq(showCondition));
     }
@@ -275,7 +274,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         );
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntityWithNullShowCondition, eventCaseFieldEntityValidationContext)
-                       .isValid());
+            .isValid());
 
         verifyZeroInteractions(showConditionExtractor);
     }
@@ -294,7 +293,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         );
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntityWithBlankShowCondition, eventCaseFieldEntityValidationContext)
-                       .isValid());
+            .isValid());
 
         verifyZeroInteractions(showConditionExtractor);
 
@@ -420,9 +419,9 @@ public class EventCaseFieldShowConditionValidatorImplTest {
                                     complexFieldEntity("AddressGlobalUKCode", addressGlobalUKFieldTypeEntity()),
                                     complexFieldEntity("OrderSummaryCode", orderSummaryFieldTypeEntity()),
                                     complexFieldEntity("SecondSurname", fieldTypeEntity("Text", emptyList()))
-                                      )))
-                          ))))
-                              );
+                                )))
+                    ))))
+        );
     }
 
     private static FieldTypeEntity orderSummaryFieldTypeEntity() {
@@ -431,7 +430,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
                 complexFieldEntity("PaymentReference", fieldTypeEntity("Text", emptyList())),
                 complexFieldEntity("PaymentTotal", fieldTypeEntity("MoneyGBP", emptyList())),
                 complexFieldEntity("Fees", fieldTypeEntity("FeesList", emptyList()))
-                  ));
+            ));
     }
 
     private static FieldTypeEntity addressUKFieldTypeEntity() {
@@ -456,7 +455,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
                 complexFieldEntity("County", fieldTypeEntity("TextMax50", emptyList())),
                 complexFieldEntity("PostCode", fieldTypeEntity("TextMax14", emptyList())),
                 complexFieldEntity("Country", fieldTypeEntity("TextMax50", emptyList()))
-                  ));
+            ));
     }
 
     private static EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseFieldEntity, String showCondition) {
@@ -482,7 +481,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     private static FieldTypeEntity fieldTypeEntity(String reference,
-                                            List<ComplexFieldEntity> complexFieldEntityList) {
+                                                   List<ComplexFieldEntity> complexFieldEntityList) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(reference);
         fieldTypeEntity.addComplexFields(complexFieldEntityList);
@@ -497,7 +496,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     private static FieldTypeEntity fixedListFieldTypeEntity(String reference,
-                                                     List<FieldTypeListItemEntity> listItemEntities) {
+                                                            List<FieldTypeListItemEntity> listItemEntities) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(reference);
         fieldTypeEntity.addListItems(listItemEntities);

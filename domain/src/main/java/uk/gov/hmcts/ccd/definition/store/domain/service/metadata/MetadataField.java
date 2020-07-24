@@ -17,7 +17,8 @@ public enum MetadataField {
     private boolean dynamic;
     private String label;
 
-    MetadataField() {}
+    MetadataField() {
+    }
 
     MetadataField(boolean dynamic, String label) {
         this.dynamic = dynamic;

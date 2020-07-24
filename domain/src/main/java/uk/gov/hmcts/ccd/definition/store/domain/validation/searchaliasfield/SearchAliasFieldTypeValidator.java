@@ -1,16 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.util.Optional.ofNullable;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Optional.ofNullable;
 
 @Component
 @RequestScope
@@ -32,11 +32,11 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
 
         if (searchAliasField.getFieldType() == null) {
             validationResult.addError(new ValidationError(String.format("Invalid case field '%s' for search alias ID '%s' and case type '%s'. Case field should"
-                                                                            + " point to a concrete field with full object notation in case of a complex type.",
-                                                                        searchAliasField.getCaseFieldPath(),
-                                                                        searchAliasField.getReference(),
-                                                                        searchAliasField.getCaseType().getReference()),
-                                                          searchAliasField));
+                    + " point to a concrete field with full object notation in case of a complex type.",
+                searchAliasField.getCaseFieldPath(),
+                searchAliasField.getReference(),
+                searchAliasField.getCaseType().getReference()),
+                searchAliasField));
         } else {
             validateFieldTypeAgainstExistingAliases(searchAliasField, validationResult);
             validateFieldTypeAgainstNewAliases(searchAliasField, validationResult);
@@ -53,15 +53,15 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
             .filter(aliasField -> areFieldTypesDifferent(aliasField, searchAliasField))
             .findFirst()
             .ifPresent(aliasField ->
-                           validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case field '%s'. This search alias ID "
-                                                                                           + "has already been registered for case type '%s', case field '%s'. "
-                                                                                           + "This search alias ID must be of type '%s'.",
-                                                                                       searchAliasField.getReference(),
-                                                                                       searchAliasField.getCaseFieldPath(),
-                                                                                       aliasField.getCaseType().getReference(),
-                                                                                       aliasField.getCaseFieldPath(),
-                                                                                       aliasField.getFieldType().getReference()),
-                                                                         searchAliasField))
+                validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case field '%s'. This search alias ID "
+                        + "has already been registered for case type '%s', case field '%s'. "
+                        + "This search alias ID must be of type '%s'.",
+                    searchAliasField.getReference(),
+                    searchAliasField.getCaseFieldPath(),
+                    aliasField.getCaseType().getReference(),
+                    aliasField.getCaseFieldPath(),
+                    aliasField.getFieldType().getReference()),
+                    searchAliasField))
             );
     }
 
@@ -69,14 +69,14 @@ public class SearchAliasFieldTypeValidator implements SearchAliasFieldValidator 
         ofNullable(searchFieldAliasReferenceMap.get(searchAliasField.getReference()))
             .filter(aliasField -> areFieldTypesDifferent(aliasField, searchAliasField))
             .ifPresent(aliasField ->
-                           validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case field '%s'. This search alias ID "
-                                                                                           + "has already been defined for case type '%s', case field '%s'. "
-                                                                                           + "This search alias ID must point to case fields with same type.",
-                                                                                       searchAliasField.getReference(),
-                                                                                       searchAliasField.getCaseFieldPath(),
-                                                                                       aliasField.getCaseType().getReference(),
-                                                                                       aliasField.getCaseFieldPath()),
-                                                                         searchAliasField))
+                validationResult.addError(new ValidationError(String.format("Invalid search alias ID '%s' for case field '%s'. This search alias ID "
+                        + "has already been defined for case type '%s', case field '%s'. "
+                        + "This search alias ID must point to case fields with same type.",
+                    searchAliasField.getReference(),
+                    searchAliasField.getCaseFieldPath(),
+                    aliasField.getCaseType().getReference(),
+                    aliasField.getCaseFieldPath()),
+                    searchAliasField))
             );
     }
 

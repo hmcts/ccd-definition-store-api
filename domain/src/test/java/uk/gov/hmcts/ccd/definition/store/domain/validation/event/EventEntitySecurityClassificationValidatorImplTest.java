@@ -41,8 +41,8 @@ public class EventEntitySecurityClassificationValidatorImplTest {
 
         ValidationResult validationResult
             = new EventEntitySecurityClassificationValidatorImpl().validate(
-                eventEntity,
-                eventEntityValidationContext
+            eventEntity,
+            eventEntityValidationContext
         );
 
         assertFalse(validationResult.isValid());
@@ -62,7 +62,7 @@ public class EventEntitySecurityClassificationValidatorImplTest {
         EventEntity eventEntity = new EventEntity();
         eventEntity.setSecurityClassification(caseFieldSecurityClassification);
         EventEntityValidationContext eventEntityValidationContext
-            = eventEntityValidationContext("",parentSecurityClassification);
+            = eventEntityValidationContext("", parentSecurityClassification);
 
         ValidationResult validationResult
             = new EventEntitySecurityClassificationValidatorImpl().validate(eventEntity, eventEntityValidationContext);

@@ -114,7 +114,7 @@ public interface ValidationErrorMessageCreator {
                                   eventComplexTypeEntityInvalidShowConditionError);
 
     String createErrorMessage(EventComplexTypeEntityDefaultValueError
-                                      eventComplexTypeEntityDefaultValueError);
+                                  eventComplexTypeEntityDefaultValueError);
 
     String createErrorMessage(EventEntityMissingForPageTypeDisplayGroupError
                                   eventEntityMissingForPageTypeDisplayGroupError);

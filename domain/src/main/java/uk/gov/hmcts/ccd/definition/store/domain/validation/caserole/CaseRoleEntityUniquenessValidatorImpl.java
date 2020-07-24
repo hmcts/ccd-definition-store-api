@@ -1,13 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.caserole;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CaseRoleEntityUniquenessValidatorImpl implements CaseRoleEntityValidator {

@@ -1,15 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -21,6 +11,16 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParse
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ComplexFieldEntityShowConditionValidatorImplTest {
 
@@ -70,7 +70,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
         complexField.setComplexFieldType(complexFieldType);
         ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("field").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
-                .thenReturn(validParsedShowCondition);
+            .thenReturn(validParsedShowCondition);
 
         ValidationResult result = testObj.validate(complexField, mockValidationContext);
 
@@ -82,7 +82,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
 
         complexField.setShowCondition("someShowCondition");
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
-                .thenThrow(new InvalidShowConditionException("someShowCondition"));
+            .thenThrow(new InvalidShowConditionException("someShowCondition"));
 
         ValidationResult result = testObj.validate(complexField, mockValidationContext);
 
@@ -100,7 +100,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
         complexField.setComplexFieldType(complexFieldType);
         ShowCondition sc = new ShowCondition.Builder().showConditionExpression("parsedSC").field("field").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
-                .thenReturn(sc);
+            .thenReturn(sc);
 
         ValidationResult result = testObj.validate(complexField, mockValidationContext);
 

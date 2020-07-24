@@ -10,7 +10,8 @@ public class ValidationResult implements Serializable {
 
     private List<ValidationError> validationErrors = new ArrayList<>();
 
-    public ValidationResult() {}
+    public ValidationResult() {
+    }
 
     public ValidationResult(ValidationError error) {
         addError(error);

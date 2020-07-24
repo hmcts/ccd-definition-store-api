@@ -6,7 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.datetime.DateTimeFormatParser;
 import uk.gov.hmcts.ccd.definition.store.domain.datetime.InvalidDateTimeFormatException;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 
-import java.util.regex.*;
+import java.util.regex.Pattern;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE;
 
