@@ -292,6 +292,39 @@
 	<suppress>
 		<cve>CVE-2020-11996</cve>
 	</suppress>
-
-
+	<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.36.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-websocket@.*$</packageUrl>
+   <cve>CVE-2020-13934</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.36.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-websocket@.*$</packageUrl>
+   <cve>CVE-2020-13935</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-core-9.0.36.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
+   <cve>CVE-2020-13934</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-core-9.0.36.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
+   <cve>CVE-2020-13935</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: hibernate-core-5.4.12.Final.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.hibernate/hibernate-core@.*$</packageUrl>
+   <cve>CVE-2019-14900</cve>
+</suppress>
 </suppressions>
