@@ -54,7 +54,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         PutMappingRequest request = new PutMappingRequest(currentIndex);
         request.type(config.getCasesIndexType());
         request.source(caseTypeMapping, XContentType.JSON);
-          AcknowledgedResponse putMappingResponse = restHighLevelClient.indices().putMapping(request, RequestOptions.DEFAULT);
+        AcknowledgedResponse putMappingResponse = restHighLevelClient.indices().putMapping(request, RequestOptions.DEFAULT);
         log.info("mapping upserted: {}", putMappingResponse.isAcknowledged());
         return putMappingResponse.isAcknowledged();
     }
