@@ -48,7 +48,7 @@ public class WorkbasketLayoutParser extends GenericLayoutParser {
 
     @Override
     protected void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrderString) {
-        WorkBasketCaseFieldEntity resultCaseFieldEntity = ((WorkBasketCaseFieldEntity)layoutEntity);
+        WorkBasketCaseFieldEntity resultCaseFieldEntity = ((WorkBasketCaseFieldEntity) layoutEntity);
         resultCaseFieldEntity.setSortOrder(getSortOrder(sortOrderString));
     }
 

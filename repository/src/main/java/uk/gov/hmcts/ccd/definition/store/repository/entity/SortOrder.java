@@ -12,7 +12,8 @@ public class SortOrder {
     @Column(name = "sort_order_priority")
     private Integer priority;
 
-    public SortOrder() { }
+    public SortOrder() {
+    }
 
     public SortOrder(Integer priority, String direction) {
         this.direction = direction;

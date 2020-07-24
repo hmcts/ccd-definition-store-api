@@ -203,7 +203,7 @@ public class EventParserTest extends ParserTestBase {
 
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
 
-        verify(eventCaseFieldParser).parseEventCaseField(eq(CASE_TYPE_UNDER_TEST),eq(caseEventToFieldsDataItem));
+        verify(eventCaseFieldParser).parseEventCaseField(eq(CASE_TYPE_UNDER_TEST), eq(caseEventToFieldsDataItem));
 
         assertThat(eventEntities.size(), is(1));
         entity = new ArrayList<>(eventEntities).get(0);

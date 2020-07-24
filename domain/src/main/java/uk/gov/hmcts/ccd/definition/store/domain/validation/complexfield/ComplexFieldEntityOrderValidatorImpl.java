@@ -1,13 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Comparator.comparingInt;
@@ -77,9 +77,9 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
 
     private List<ComplexFieldEntity> getSortedComplexFieldEntities(List<ComplexFieldEntity> children) {
         return children.stream()
-                       .filter(field -> field.getOrder() != null)
-                       .sorted(comparingInt(ComplexFieldEntity::getOrder))
-                       .collect(Collectors.toList());
+            .filter(field -> field.getOrder() != null)
+            .sorted(comparingInt(ComplexFieldEntity::getOrder))
+            .collect(Collectors.toList());
     }
 
 }

@@ -24,7 +24,7 @@ public class CaseFieldEntitySecurityClassificationValidatorImpl implements CaseF
 
         SecurityClassification parentSecurityClassification = caseFieldEntityValidationContext.getParentSecurityClassification();
         if (parentSecurityClassification != null
-                && parentSecurityClassification.isMoreRestrictiveThan(caseField.getSecurityClassification())) {
+            && parentSecurityClassification.isMoreRestrictiveThan(caseField.getSecurityClassification())) {
             validationResult.addError(
                 new CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(caseField, caseFieldEntityValidationContext)
             );

@@ -1,13 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import java.util.Arrays;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +11,14 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+
+import java.util.Arrays;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 @DisplayName("Case Role Validator Tests")
 class CaseTypeEntityCaseRoleValidatorImplTest {

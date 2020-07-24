@@ -60,18 +60,19 @@ public class DefinitionServiceImpl implements DefinitionService {
     @Override
     public List<Definition> findByJurisdictionId(String jurisdiction) {
         return decoratedRepository.findByJurisdictionId(jurisdiction)
-                                  .stream()
-                                  .map(mapper::toModel)
-                                  .collect(toList());
+            .stream()
+            .map(mapper::toModel)
+            .collect(toList());
     }
 
-    @Override public ServiceResponse<Definition> saveDraftDefinition(final Definition definition) {
+    @Override
+    public ServiceResponse<Definition> saveDraftDefinition(final Definition definition) {
         preConditionCheck(definition);
 
         final DefinitionEntity
             definitionEntity =
             decoratedRepository.findByJurisdictionIdAndVersion(definition.getJurisdiction().getId(),
-                                                               definition.getVersion());
+                definition.getVersion());
 
         if (null == definitionEntity) {
             return createDraftDefinition(definition);
@@ -91,7 +92,8 @@ public class DefinitionServiceImpl implements DefinitionService {
             decoratedRepository.simpleSave(definitionEntity)), UPDATE);
     }
 
-    @Override public void deleteDraftDefinition(final String jurisdiction, final Integer version) {
+    @Override
+    public void deleteDraftDefinition(final String jurisdiction, final Integer version) {
         final DefinitionEntity
             definitionEntity =
             decoratedRepository.findByJurisdictionIdAndVersion(jurisdiction, version);

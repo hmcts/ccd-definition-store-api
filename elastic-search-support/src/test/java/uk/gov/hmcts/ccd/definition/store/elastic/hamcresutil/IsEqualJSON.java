@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Description;
@@ -14,6 +8,12 @@ import org.hamcrest.Factory;
 import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.JSONCompareResult;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * A Matcher for comparing JSON. From:
@@ -35,6 +35,7 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
 
     /**
      * Changes this matcher's JSON compare mode to lenient.
+     *
      * @return this matcher
      */
     public IsEqualJSON leniently() {
@@ -53,8 +54,8 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
         try {
             final String actualJSON = toJsonString(actual);
             final JSONCompareResult result = JSONCompare.compareJSON(expectedJSON,
-                    actualJSON,
-                    jsonCompareMode);
+                actualJSON,
+                jsonCompareMode);
             if (!result.passed()) {
                 mismatchDescription.appendText(result.getMessage());
             }
@@ -66,6 +67,7 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
 
     /**
      * Converts the specified object into a JSON string.
+     *
      * @param o the object to convert
      * @return the JSON string
      */
@@ -79,6 +81,7 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
 
     /**
      * Reads the specified file into a string.
+     *
      * @param path the path to read
      * @return the contents of the file
      */
@@ -119,6 +122,7 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
      * @param expectedPath the path containing the expected JSON
      * @return the JSON matcher
      */
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     @Factory
     public static IsEqualJSON equalToJSONInFile(final Path expectedPath) {
         return equalToJSON(getFileContents(expectedPath));
@@ -136,6 +140,7 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
      * @param expectedFileName the name of the file containing the expected JSON
      * @return the JSON matcher
      */
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     @Factory
     public static IsEqualJSON equalToJSONInFile(final String expectedFileName) {
         return equalToJSONInFile(Paths.get(expectedFileName));

@@ -9,7 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
 
 import java.util.List;
 
@@ -109,9 +116,9 @@ public class GenericLayoutRepositoryTest {
     }
 
     private SearchCasesResultFieldEntity createSearchCasesResultField(final CaseTypeEntity caseType,
-                                                                final CaseFieldEntity caseFieldEntity,
-                                                                final String label,
-                                                                final int order) {
+                                                                      final CaseFieldEntity caseFieldEntity,
+                                                                      final String label,
+                                                                      final int order) {
         final SearchCasesResultFieldEntity f = new SearchCasesResultFieldEntity();
         f.setCaseType(caseType);
         f.setCaseField(caseFieldEntity);

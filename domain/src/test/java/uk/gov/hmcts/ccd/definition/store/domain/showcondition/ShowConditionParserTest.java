@@ -27,7 +27,7 @@ class ShowConditionParserTest {
     @Test
     void shouldParseComplexFieldCorrectly() throws InvalidShowConditionException {
         ShowCondition sc = classUnderTest.parseShowCondition(
-                "field1.subType1.subType2= \"ABC AND XYZ\"  AND field2=\"some value\" ");
+            "field1.subType1.subType2= \"ABC AND XYZ\"  AND field2=\"some value\" ");
 
         assertThat(sc.getShowConditionExpression(),
             is("field1.subType1.subType2=\"ABC AND XYZ\" AND field2=\"some value\""));
@@ -118,10 +118,10 @@ class ShowConditionParserTest {
     @Test
     void shouldParseComplexFieldCorrectlyWithORCondition() throws InvalidShowConditionException {
         ShowCondition sc = classUnderTest.parseShowCondition(
-                "field1.subType1.subType2= \"ABC OR XYZ\"  OR field2=\"some value\" ");
+            "field1.subType1.subType2= \"ABC OR XYZ\"  OR field2=\"some value\" ");
 
         assertThat(sc.getShowConditionExpression(),
-                   is("field1.subType1.subType2=\"ABC OR XYZ\" OR field2=\"some value\""));
+            is("field1.subType1.subType2=\"ABC OR XYZ\" OR field2=\"some value\""));
         assertThat(sc.getFields(), hasItems("field1", "field2"));
         assertThat(sc.getFieldsWithSubtypes(), hasItems("field1.subType1.subType2"));
     }

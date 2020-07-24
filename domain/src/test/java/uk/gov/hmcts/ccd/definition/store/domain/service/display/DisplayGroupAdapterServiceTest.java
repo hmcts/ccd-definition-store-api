@@ -1,19 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
-
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
@@ -38,11 +30,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageField;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
 class DisplayGroupAdapterServiceTest {
 
@@ -211,7 +210,7 @@ class DisplayGroupAdapterServiceTest {
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.AddressLine1").getDisplayContext(), is("MANDATORY"));
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
-                    "finalReturn.addressAttended.AddressLine1").getDefaultValue(), is("DefaultValue2"));
+                "finalReturn.addressAttended.AddressLine1").getDefaultValue(), is("DefaultValue2"));
 
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.AddressLine2").getDisplayContext(), is("HIDDEN"));
@@ -225,7 +224,7 @@ class DisplayGroupAdapterServiceTest {
                 "finalReturn.addressAttended.Postcode").getDisplayContext(), is("OPTIONAL"));
 
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
-                    "finalReturn.addressAttended.Postcode").getDefaultValue(), is("DefaultValue3"));
+                "finalReturn.addressAttended.Postcode").getDefaultValue(), is("DefaultValue3"));
 
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
                 "finalReturn.addressAttended.Country").getDisplayContext(), is("HIDDEN"));

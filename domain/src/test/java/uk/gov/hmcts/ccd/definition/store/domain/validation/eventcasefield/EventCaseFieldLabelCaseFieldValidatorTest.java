@@ -50,8 +50,8 @@ public class EventCaseFieldLabelCaseFieldValidatorTest {
         assertEquals(1, validationResult.getValidationErrors().size());
         ValidationError validationError = validationResult.getValidationErrors().get(0);
         assertThat(validationResult.getValidationErrors(),
-                   hasItem(
-                       hasProperty("defaultMessage", equalTo("'Label' is Label type and cannot be editable for event with reference 'Event Reference'"))));
+            hasItem(
+                hasProperty("defaultMessage", equalTo("'Label' is Label type and cannot be editable for event with reference 'Event Reference'"))));
 
     }
 

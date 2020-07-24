@@ -15,9 +15,15 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparameter.DisplayContextParameterValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparameter.DisplayContextParameterValidatorFactory;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
 
-import java.util.*;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.hamcrest.core.Is.is;
@@ -62,7 +68,7 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(HHmmss)");
         entity.setCaseField(caseFieldEntity());
 
-        final ValidationResult result = validator.validate(entity,  Collections.emptyList());
+        final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
         assertAll(
             () -> assertThat(result.isValid(), is(true))
@@ -74,7 +80,7 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     void shouldValidateInputEntityWithDateTimeEntryDisplayContextParameter(GenericLayoutEntity entity) {
         entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
         entity.setCaseField(caseFieldEntity());
-        final ValidationResult result = validator.validate(entity,  Collections.emptyList());
+        final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
         assertAll(
             () -> assertThat(result.isValid(), is(true))
@@ -87,7 +93,7 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(HHmmss)");
         entity.setCaseField(caseFieldEntity(fieldTypeEntity(FieldTypeUtils.BASE_DATE)));
 
-        final ValidationResult result = validator.validate(entity,  Collections.emptyList());
+        final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
         assertAll(
             () -> assertThat(result.isValid(), is(true))
@@ -100,13 +106,13 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(HHmmss)");
         entity.setCaseField(caseFieldEntity());
 
-        final ValidationResult result = validator.validate(entity,  Collections.emptyList());
+        final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Unsupported display context parameter type '#DATETIMEDISPLAY(HHmmss)' for field 'CASE_FIELD' on tab '"  + tab + "'"))
+                is("Unsupported display context parameter type '#DATETIMEDISPLAY(HHmmss)' for field 'CASE_FIELD' on tab '" + tab + "'"))
         );
     }
 
@@ -116,13 +122,13 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter("#DATETIMEENTRY(HHmmss)");
         entity.setCaseField(caseFieldEntity());
 
-        final ValidationResult result = validator.validate(entity,  Collections.emptyList());
+        final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' on tab '"  + tab + "'"))
+                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' on tab '" + tab + "'"))
         );
     }
 
@@ -133,14 +139,14 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
         entity.setCaseField(caseFieldEntity());
         doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
 
-        final ValidationResult result = validator.validate(entity,  Collections.emptyList());
+        final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
                 is("Display context parameter '#DATETIMEENTRY(0123456789)' "
-                    + "has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab '"  + tab + "'"))
+                    + "has been incorrectly configured or is invalid for field 'CASE_FIELD' on tab '" + tab + "'"))
         );
     }
 
@@ -150,7 +156,7 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter("#INVALIDPARAMETER(hhmmss)");
         entity.setCaseField(caseFieldEntity());
 
-        final ValidationResult result = validator.validate(entity,  Collections.emptyList());
+        final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
@@ -167,13 +173,13 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter("#TABLE(FieldId)");
         entity.setCaseField(caseFieldEntity());
 
-        final ValidationResult result = validator.validate(entity,  Collections.emptyList());
+        final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
         assertAll(
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD' on tab '"  + tab + "'"))
+                is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD' on tab '" + tab + "'"))
         );
     }
 
@@ -183,7 +189,7 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss)");
         entity.setCaseField(caseFieldEntity(fieldTypeEntity(FieldTypeUtils.BASE_TEXT)));
 
-        final ValidationResult result = validator.validate(entity,  Collections.emptyList());
+        final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
         assertAll(
             () -> assertThat(result.isValid(), is(false)),

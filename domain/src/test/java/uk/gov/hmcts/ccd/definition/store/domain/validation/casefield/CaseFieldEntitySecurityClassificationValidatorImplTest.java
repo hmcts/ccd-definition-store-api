@@ -41,8 +41,8 @@ public class CaseFieldEntitySecurityClassificationValidatorImplTest {
 
         ValidationResult validationResult
             = new CaseFieldEntitySecurityClassificationValidatorImpl().validate(
-                caseFieldEntity,
-                caseFieldEntityValidationContext
+            caseFieldEntity,
+            caseFieldEntityValidationContext
         );
 
         assertFalse(validationResult.isValid());
@@ -67,7 +67,7 @@ public class CaseFieldEntitySecurityClassificationValidatorImplTest {
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
         caseFieldEntity.setSecurityClassification(caseFieldSecurityClassification);
         CaseFieldEntityValidationContext caseFieldEntityValidationContext
-            = caseFieldEntityValidationContext("",parentSecurityClassification);
+            = caseFieldEntityValidationContext("", parentSecurityClassification);
         ValidationResult validationResult
             = new CaseFieldEntitySecurityClassificationValidatorImpl().validate(caseFieldEntity, caseFieldEntityValidationContext);
 

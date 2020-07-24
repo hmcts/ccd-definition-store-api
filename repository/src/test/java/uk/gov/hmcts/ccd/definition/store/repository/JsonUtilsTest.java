@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+
 import java.time.LocalDate;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
-
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
 
 public class JsonUtilsTest {
 

@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import static uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator.*;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+
+import static uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator.ValidationContext;
 
 public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError extends ValidationError {
 

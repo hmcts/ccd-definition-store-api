@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import java.util.Arrays;
-
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -18,6 +16,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
+import java.util.Arrays;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -73,7 +73,7 @@ public class CaseFieldEntityComplexFieldsValidatorImplTest {
         when(complexFieldEntityValidator2.validate(any(), any())).thenReturn(new ValidationResult());
 
         when(fieldTypeService.getPredefinedComplexTypes()).thenReturn(Arrays.asList(
-                predefinedComplexType1, predefinedComplexType2, predefinedComplexType3
+            predefinedComplexType1, predefinedComplexType2, predefinedComplexType3
             )
         );
 
@@ -83,6 +83,7 @@ public class CaseFieldEntityComplexFieldsValidatorImplTest {
         );
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void complexFieldsAllValid_allValidatorsCalledWithContextBuiltFromCaseFieldEntityAndCaseFieldEntityValidationContext_EmptyValidationResultReturned() {
 
@@ -98,6 +99,7 @@ public class CaseFieldEntityComplexFieldsValidatorImplTest {
 
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void complexFields1And3AreInvalid_allValidatorsCalledWithContextBuiltFromCaseFieldEntityAndCaseFieldEntityValidationContext_ValidationResultWithErrorsForComplexFieldEntity1And3Returned() {
 
@@ -125,7 +127,7 @@ public class CaseFieldEntityComplexFieldsValidatorImplTest {
     }
 
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext(String parentCaseName,
-                                                                                    SecurityClassification parentCaseFieldSecurityClassification) {
+                                                                              SecurityClassification parentCaseFieldSecurityClassification) {
         CaseFieldEntityValidationContext caseFieldEntityValidationContext = mock(CaseFieldEntityValidationContext.class);
         when(caseFieldEntityValidationContext.getCaseName()).thenReturn(parentCaseName);
         when(caseFieldEntityValidationContext.getParentSecurityClassification()).thenReturn(parentCaseFieldSecurityClassification);
@@ -179,13 +181,13 @@ public class CaseFieldEntityComplexFieldsValidatorImplTest {
             public boolean matches(Object o) {
                 return o instanceof CaseFieldComplexFieldEntityValidator.ValidationContext
                     && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getCaseName() == caseTypeName
-                        && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getCaseFieldReference() == caseFieldReference
-                            && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getParentSecurityClassification() == securityClassification
-                                && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getPreDefinedComplexTypes().size() == 3
-                                    && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getPreDefinedComplexTypes().contains(predefinedComplexType1)
-                                        && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o)
+                    && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getCaseFieldReference() == caseFieldReference
+                    && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getParentSecurityClassification() == securityClassification
+                    && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getPreDefinedComplexTypes().size() == 3
+                    && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o).getPreDefinedComplexTypes().contains(predefinedComplexType1)
+                    && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o)
                     .getPreDefinedComplexTypes().contains(predefinedComplexType2)
-                                            && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o)
+                    && ((CaseFieldComplexFieldEntityValidator.ValidationContext) o)
                     .getPreDefinedComplexTypes().contains(predefinedComplexType3);
             }
 

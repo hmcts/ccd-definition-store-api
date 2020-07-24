@@ -2,7 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter;
 
 import com.google.common.base.Strings;
 
-import java.util.*;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

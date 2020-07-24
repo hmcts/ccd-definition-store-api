@@ -46,7 +46,7 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
         } catch (InvalidShowConditionException e) {
             validationResult.addError(
                 new ValidationError(String.format(ERROR_MESSAGE_SHOW_CONDITION, showConditionString,
-                        entity.getCaseType().getReference(), entity.getCaseField().getReference()), entity));
+                    entity.getCaseType().getReference(), entity.getCaseField().getReference()), entity));
             return validationResult;
         }
 
@@ -70,9 +70,9 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
 
     private List<String> getAllSubTypePossibilities(List<GenericLayoutEntity> layoutEntities) {
         return caseFieldEntityUtil.buildDottedComplexFieldPossibilities(
-                layoutEntities.stream()
-                    .map(GenericLayoutEntity::getCaseField)
-                    .collect(Collectors.toList()));
+            layoutEntities.stream()
+                .map(GenericLayoutEntity::getCaseField)
+                .collect(Collectors.toList()));
     }
 
     private boolean showConditionFieldExistsInAtLeastOneLayOutEntity(

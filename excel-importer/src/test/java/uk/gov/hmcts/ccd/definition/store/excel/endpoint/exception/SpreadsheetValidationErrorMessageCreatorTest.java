@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
@@ -85,13 +85,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SpreadsheetValidationErrorMessageCreatorTest {
 
@@ -1350,7 +1349,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     @Test
     public void shouldHaveValidationMessageForUserProfileValidationError() {
         assertEquals("Invalid CaseType in workbasket user default; user: 'null', jurisdiction: 'null', "
-            + "case type: 'null', state: 'null'",
+                + "case type: 'null', state: 'null'",
             classUnderTest.createErrorMessage(
                 new UserProfileValidatorImpl.ValidationError("CaseType", new WorkBasketUserDefault()))
         );
@@ -1359,12 +1358,12 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     @Test
     public void shouldHaveValidationMessageForPlaceholderLeafNotASimpleTypeValidationError() {
         assertEquals("Label of caseField 'FieldId' has placeholder 'OtherFieldId.CollectionId.ComplexId' "
-                         + "that points to case field 'ComplexId' of non simple type",
+                + "that points to case field 'ComplexId' of non simple type",
             classUnderTest.createErrorMessage(
                 new CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError("FieldId",
-                                                                                                  "OtherFieldId.CollectionId.ComplexId",
-                                                                                                  "ComplexId",
-                                                                                                  new CaseFieldEntity()))
+                    "OtherFieldId.CollectionId.ComplexId",
+                    "ComplexId",
+                    new CaseFieldEntity()))
         );
     }
 
@@ -1373,8 +1372,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals("Label of caseField 'FieldId' has placeholder 'OtherFieldId.CollectionId.ComplexId' that points to unknown case field",
             classUnderTest.createErrorMessage(
                 new CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError("FieldId",
-                                                                                                  "OtherFieldId.CollectionId.ComplexId",
-                                                                                                  new CaseFieldEntity()))
+                    "OtherFieldId.CollectionId.ComplexId",
+                    new CaseFieldEntity()))
         );
     }
 

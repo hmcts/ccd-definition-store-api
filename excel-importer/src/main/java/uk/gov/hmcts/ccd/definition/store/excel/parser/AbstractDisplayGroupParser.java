@@ -11,7 +11,12 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -146,7 +151,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
 
     private void parseUserRole(CaseTypeEntity caseType,
                                final DisplayGroupEntity group,
-                               final  List<DefinitionDataItem> groupDefinition) {
+                               final List<DefinitionDataItem> groupDefinition) {
         if (hasMultipleUserRoleRowsPerTab(groupDefinition)) {
             throw new MapperException(
                 String.format("Please provide one user role row per tab in worksheet %s on column USER_ROLE for the tab %s",
@@ -173,7 +178,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         if (groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).count() > 1) {
             throw new MapperException(
                 String.format("Please provide single condition in %s column in %s for the tab %s", column, groupDefinition.get(0).getSheetName(),
-                              group.getReference()));
+                    group.getReference()));
         }
         Optional<DefinitionDataItem> definitionDataItemOpt = groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).findFirst();
         definitionDataItemOpt.ifPresent(ddi -> group.setShowCondition(parseShowCondition(ddi.getString(column))));

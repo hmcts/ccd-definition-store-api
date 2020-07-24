@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.showcondition;
 
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class ShowConditionParser {
@@ -78,8 +78,8 @@ public class ShowConditionParser {
     private String buildShowCondition(final String conditionalOperator, final ShowCondition.Builder showConditionBuilder,
                                       String operator, final Matcher equalityMatcher) {
         showConditionBuilder
-                .showConditionExpression(operator + parseEqualityCondition(equalityMatcher))
-                .field(getLeftHandSideOfEquals(equalityMatcher));
+            .showConditionExpression(operator + parseEqualityCondition(equalityMatcher))
+            .field(getLeftHandSideOfEquals(equalityMatcher));
         operator = conditionalOperator;
         return operator;
     }

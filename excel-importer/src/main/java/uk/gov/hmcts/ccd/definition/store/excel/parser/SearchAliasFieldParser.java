@@ -1,14 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.util.Optional.ofNullable;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
@@ -20,6 +11,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 @Slf4j
 public class SearchAliasFieldParser {
@@ -93,7 +93,7 @@ public class SearchAliasFieldParser {
             fieldsInPath.remove(0);
         } else {
             throw new MapperException(String.format("%s: A collection case field ID must be suffixed with '.%s'",
-                                                    SheetName.SEARCH_ALIAS.getName(), COLLECTION_FIELD_VALUE));
+                SheetName.SEARCH_ALIAS.getName(), COLLECTION_FIELD_VALUE));
         }
     }
 

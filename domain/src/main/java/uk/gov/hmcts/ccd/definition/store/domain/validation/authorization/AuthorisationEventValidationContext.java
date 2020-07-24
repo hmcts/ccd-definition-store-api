@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.authorization;
 
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationContext;
 
 public class AuthorisationEventValidationContext implements ValidationContext {
 

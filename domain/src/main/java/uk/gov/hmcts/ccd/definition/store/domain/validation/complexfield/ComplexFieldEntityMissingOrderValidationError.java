@@ -8,7 +8,7 @@ public class ComplexFieldEntityMissingOrderValidationError extends SimpleValidat
 
     public ComplexFieldEntityMissingOrderValidationError(ComplexFieldEntity complexFieldEntity) {
         super(String.format("ComplexField with reference=%s must have ordering for all children defined", complexFieldEntity.getReference()),
-              complexFieldEntity);
+            complexFieldEntity);
     }
 
     @Override

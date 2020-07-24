@@ -17,7 +17,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
 
     /**
      * Validate event case field entity to contain display context as per #List/TABLE(DisplayContextParameter,DisplayContextParameter) format.
-     * @param eventCaseFieldEntity object
+     *
+     * @param eventCaseFieldEntity                  object
      * @param eventCaseFieldEntityValidationContext object
      * @return ValidationResult object
      */
@@ -38,7 +39,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
         if (StringUtils.isNotBlank(eventCaseFieldEntity.getDisplayContextParameter())) {
 
             if (isFieldTypeNotTableOrList(eventCaseFieldEntity)) {
-                validationResult.addError(new ValidationError("DisplayContextParameter text should begin with #LIST( or #TABLE("){});
+                validationResult.addError(new ValidationError("DisplayContextParameter text should begin with #LIST( or #TABLE(") {
+                });
             } else {
                 String removeBeginingSection = eventCaseFieldEntity.getDisplayContextParameter().indexOf(LIST_PREFIX) > -1
                     ? eventCaseFieldEntity.getDisplayContextParameter().replace(LIST_PREFIX, "") :

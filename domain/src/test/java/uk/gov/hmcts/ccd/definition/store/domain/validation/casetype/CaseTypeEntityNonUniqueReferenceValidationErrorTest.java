@@ -32,8 +32,8 @@ public class CaseTypeEntityNonUniqueReferenceValidationErrorTest {
     @Test
     public void testDefaultMessage() {
         assertEquals("Case Type with reference 'Charley says Dont talk to strangers' already exists. "
-                         + "Case types must be unique across all existing jurisdictions.",
-                     classUnderTest.getDefaultMessage());
+                + "Case types must be unique across all existing jurisdictions.",
+            classUnderTest.getDefaultMessage());
     }
 
     @Test

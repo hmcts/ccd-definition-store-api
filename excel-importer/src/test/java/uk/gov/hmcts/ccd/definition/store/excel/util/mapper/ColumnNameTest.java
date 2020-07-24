@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
 
 public class ColumnNameTest {
 

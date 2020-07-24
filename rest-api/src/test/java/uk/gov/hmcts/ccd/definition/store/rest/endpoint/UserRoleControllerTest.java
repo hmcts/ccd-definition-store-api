@@ -127,7 +127,7 @@ class UserRoleControllerTest {
             final UserRole mockUserRole = buildUserRole(ROLE1, 1);
             final UserRole mockUserRole2 = buildUserRole(ROLE2, 2);
             List<UserRole> roles = Arrays.asList(mockUserRole, mockUserRole2);
-            List<String> roleNames = Arrays.asList("role1","role2");
+            List<String> roleNames = Arrays.asList("role1", "role2");
             when(userRoleService.getRoles(roleNames)).thenReturn(roles);
 
             final MvcResult mvcResult = mockMvc.perform(
@@ -136,7 +136,8 @@ class UserRoleControllerTest {
                 .andReturn();
 
             final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
-                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+                }));
 
             assertAll(
                 () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
@@ -152,7 +153,7 @@ class UserRoleControllerTest {
 
         @Test
         void shouldGetEmptyRoles_whenNoRolesExists() throws Exception {
-            List<String> roleNames = Arrays.asList("role1","role2");
+            List<String> roleNames = Arrays.asList("role1", "role2");
             when(userRoleService.getRoles(roleNames)).thenReturn(Collections.EMPTY_LIST);
 
             final MvcResult mvcResult = mockMvc.perform(
@@ -161,7 +162,8 @@ class UserRoleControllerTest {
                 .andReturn();
 
             final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
-                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+                }));
 
             assertAll(
                 () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
@@ -182,7 +184,8 @@ class UserRoleControllerTest {
                 .andReturn();
 
             final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
-                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+                }));
 
             assertAll(
                 () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),

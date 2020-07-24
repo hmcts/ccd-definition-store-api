@@ -50,7 +50,7 @@ public class EventParser {
         final List<EventEntity> events = Lists.newArrayList();
 
         final Map<String, List<DefinitionDataItem>> eventItemsByCaseTypes = definitionSheets.get(SheetName.CASE_EVENT.getName())
-                                                                                            .groupDataItemsByCaseType();
+            .groupDataItemsByCaseType();
 
         if (!eventItemsByCaseTypes.containsKey(caseTypeId)) {
             throw new SpreadsheetParsingException("At least one event must be defined for case type: " + caseTypeId);
@@ -140,7 +140,7 @@ public class EventParser {
         logger.debug("Parsing event case fields for case type {}...", caseTypeId);
 
         final Map<String, List<DefinitionDataItem>> eventCaseFieldItemsByCaseTypes = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName())
-                                                                                                     .groupDataItemsByCaseType();
+            .groupDataItemsByCaseType();
 
         if (!eventCaseFieldItemsByCaseTypes.containsKey(caseTypeId)) {
             logger.info("Parsing event case fields for case type {}: No event case fields found", caseTypeId);

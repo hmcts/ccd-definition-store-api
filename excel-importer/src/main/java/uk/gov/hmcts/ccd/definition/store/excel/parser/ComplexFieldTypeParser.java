@@ -80,8 +80,8 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         final List<DefinitionDataItem> items = complexTypeItems.getValue();
 
         final List<ComplexFieldEntity> complexFields = items.stream()
-                                                               .map(item -> parseComplexField(item, items.size(), result))
-                                                               .collect(toList());
+            .map(item -> parseComplexField(item, items.size(), result))
+            .collect(toList());
 
         final FieldTypeEntity complexType = new FieldTypeEntity();
         complexType.setReference(complexTypeItems.getKey());

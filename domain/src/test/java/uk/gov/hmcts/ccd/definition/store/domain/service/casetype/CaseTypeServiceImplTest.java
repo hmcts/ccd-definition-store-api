@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -98,7 +99,7 @@ class CaseTypeServiceImplTest {
     private final CaseTypeEntity caseTypeEntity3 = new CaseTypeEntity();
 
     private final Collection<CaseTypeEntity> caseTypeEntities = Arrays.asList(caseTypeEntity1, caseTypeEntity2,
-                                                                              caseTypeEntity3);
+        caseTypeEntity3);
 
     private CaseTypeServiceImpl classUnderTest;
 
@@ -169,7 +170,7 @@ class CaseTypeServiceImplTest {
                 hasItem(
                     matchesValidationErrorWithDefaultMessage("caseTypeEntityValidator1 failed for caseTypeEntity1")),
                 hasItem(matchesValidationErrorWithDefaultMessage("caseTypeEntityValidator2 failed for caseTypeEntity3"))
-                       )
+                )
             );
 
             assertComponentsCalled(false, null);
@@ -317,7 +318,7 @@ class CaseTypeServiceImplTest {
                 for (CaseTypeEntity caseTypeEntity : caseTypeEntities) {
                     assertThat(savedCaseTypeEntities, hasItem(
                         matchesCaseTypeEntityWithJurisdictionAndVersionAdded(caseTypeEntity, jurisdiction,
-                                                                             DEFAULT_VERSION + 1)));
+                            DEFAULT_VERSION + 1)));
                 }
 
             }

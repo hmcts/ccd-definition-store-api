@@ -1,18 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
-import java.io.IOException;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
-
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -40,6 +27,19 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
+
+import java.io.IOException;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
 @RunWith(SpringRunner.class)
 @BootstrapWith(SpringBootTestContextBootstrapper.class)
@@ -86,7 +86,7 @@ public class CaseMappingGenerationIT implements TestUtils {
         String mapping = mappingGenerator.generateMapping(caseType);
 
         assertThat(mapping, equalToJSONInFile(
-                readFileFromClasspath("integration/case_type_mapping.json")));
+            readFileFromClasspath("integration/case_type_mapping.json")));
     }
 
     private CaseTypeEntity createCaseType() {
@@ -98,10 +98,10 @@ public class CaseMappingGenerationIT implements TestUtils {
         CaseFieldEntity dynamicField = newField("dynamicList", FieldTypeUtils.BASE_DYNAMIC_LIST).build();
 
         return caseTypeBuilder.addField(baseTypeField)
-                .addField(complexOfComplex)
-                .addField(complexOfCollection)
-                .addField(collectionOfBaseType)
-                .addField(dynamicField).build();
+            .addField(complexOfComplex)
+            .addField(complexOfCollection)
+            .addField(collectionOfBaseType)
+            .addField(dynamicField).build();
     }
 
     private CaseFieldEntity newComplexFieldOfComplex() {
@@ -121,7 +121,7 @@ public class CaseMappingGenerationIT implements TestUtils {
         CaseFieldBuilder complexField = newField("appealReasons", "appealReasons");
 
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .addFieldToCollection(textFieldType()).buildCollection();
+            .addFieldToCollection(textFieldType()).buildCollection();
 
         complexField.addFieldToComplex("reasons", collectionFieldType);
         return complexField.buildComplex();
@@ -129,7 +129,7 @@ public class CaseMappingGenerationIT implements TestUtils {
 
     private CaseFieldEntity newCollectionFieldOfBaseType() {
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .addFieldToCollection(textFieldType()).buildCollection();
+            .addFieldToCollection(textFieldType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");

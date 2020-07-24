@@ -8,8 +8,9 @@ public class EnumUtil {
 
     /**
      * A common method for all enums since they can't have another base class.
-     * @param <T> Enum type
-     * @param c enum type. All enums must be all caps.
+     *
+     * @param <T>          Enum type
+     * @param c            enum type. All enums must be all caps.
      * @param enumConstant case insensitive representation of Enum
      * @return corresponding enum, or null
      * @link https://stackoverflow.com/questions/604424/lookup-enum-by-string-value

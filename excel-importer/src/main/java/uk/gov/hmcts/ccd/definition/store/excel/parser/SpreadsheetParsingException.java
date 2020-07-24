@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * validation done in domain layer.
+ *
  * @deprecated Validation is to be done in the domain layer
  */
 @Deprecated

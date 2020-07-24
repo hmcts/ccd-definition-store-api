@@ -1,14 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+
 import java.util.List;
 import java.util.Optional;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE;
 import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_MAX_CASE_TYPE_VERSION_NUMBER;
-
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 public interface CaseTypeRepository extends VersionedDefinitionRepository<CaseTypeEntity, Integer> {
 

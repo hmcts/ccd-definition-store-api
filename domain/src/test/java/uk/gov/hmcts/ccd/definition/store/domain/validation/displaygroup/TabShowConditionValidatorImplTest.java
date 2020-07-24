@@ -232,7 +232,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabFieldShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromSameTab() throws InvalidShowConditionException {
+    public void tabFieldShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromSameTab()
+        throws InvalidShowConditionException {
         displayGroup.setType(DisplayGroupType.TAB);
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("SimpleType");
@@ -278,7 +279,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabFieldShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromOtherTab() throws InvalidShowConditionException {
+    public void tabFieldShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromOtherTab()
+        throws InvalidShowConditionException {
         displayGroup.setType(DisplayGroupType.TAB);
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("SimpleType");
@@ -467,7 +469,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromSameTab() throws InvalidShowConditionException {
+    public void tabShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromSameTab()
+        throws InvalidShowConditionException {
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.TAB);
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
@@ -490,7 +493,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromOtherTab() throws InvalidShowConditionException {
+    public void tabShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromOtherTab()
+        throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.TAB);
@@ -564,9 +568,9 @@ public class TabShowConditionValidatorImplTest {
                                     complexFieldEntity("AddressGlobalUKCode", addressGlobalUKFieldTypeEntity()),
                                     complexFieldEntity("OrderSummaryCode", orderSummaryFieldTypeEntity()),
                                     complexFieldEntity("SecondSurname", fieldTypeEntity("Text", emptyList()))
-                                      )))
-                          ))))
-                              );
+                                )))
+                    ))))
+        );
     }
 
     private static FieldTypeEntity orderSummaryFieldTypeEntity() {
@@ -575,7 +579,7 @@ public class TabShowConditionValidatorImplTest {
                 complexFieldEntity("PaymentReference", fieldTypeEntity("Text", emptyList())),
                 complexFieldEntity("PaymentTotal", fieldTypeEntity("MoneyGBP", emptyList())),
                 complexFieldEntity("Fees", fieldTypeEntity("FeesList", emptyList()))
-                  ));
+            ));
     }
 
     private static FieldTypeEntity addressUKFieldTypeEntity() {
@@ -600,7 +604,7 @@ public class TabShowConditionValidatorImplTest {
                 complexFieldEntity("County", fieldTypeEntity("TextMax50", emptyList())),
                 complexFieldEntity("PostCode", fieldTypeEntity("TextMax14", emptyList())),
                 complexFieldEntity("Country", fieldTypeEntity("TextMax50", emptyList()))
-                  ));
+            ));
     }
 
     private static CaseFieldEntity caseFieldEntity(String reference, FieldTypeEntity fieldTypeEntity) {

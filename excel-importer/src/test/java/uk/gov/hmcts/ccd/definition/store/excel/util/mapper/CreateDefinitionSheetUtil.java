@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
+
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.Map;
-
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
 
 /**
  * Util class to assist with creating mock Case Definitions in tests.
@@ -92,18 +92,18 @@ class CreateDefinitionSheetUtil {
     /**
      * Creates a Case Event.
      *
-     * @param id                                    - case event id
-     * @param name                                  - case event name
-     * @param desc                                  - case event description
-     * @param preState                              - pre state the case event should expect
-     * @param postState                             - the state in which the case event should transition to
-     * @param caseTypeId                            - case type id associated to the case event
-     * @param callBackURLAboutToStartEvent          - call back url for about to start
-     * @param retriesTimeoutAboutToStartEvent       - number of retries to attempt
-     * @param callBackURLAboutToSubmitEvent         - call back url for about to submit
-     * @param retriesTimeoutURLAboutToSubmitEvent   - number of retries to attempt
-     * @param callBackURLSubmittedEvent             - call back url for submitted
-     * @param retriesTimeoutURLSubmittedEvent       - number of retries to attempt
+     * @param id                                  - case event id
+     * @param name                                - case event name
+     * @param desc                                - case event description
+     * @param preState                            - pre state the case event should expect
+     * @param postState                           - the state in which the case event should transition to
+     * @param caseTypeId                          - case type id associated to the case event
+     * @param callBackURLAboutToStartEvent        - call back url for about to start
+     * @param retriesTimeoutAboutToStartEvent     - number of retries to attempt
+     * @param callBackURLAboutToSubmitEvent       - call back url for about to submit
+     * @param retriesTimeoutURLAboutToSubmitEvent - number of retries to attempt
+     * @param callBackURLSubmittedEvent           - call back url for submitted
+     * @param retriesTimeoutURLSubmittedEvent     - number of retries to attempt
      * @return the created CaseEvent
      */
     static DefinitionDataItem createCaseEventItem(final String id,

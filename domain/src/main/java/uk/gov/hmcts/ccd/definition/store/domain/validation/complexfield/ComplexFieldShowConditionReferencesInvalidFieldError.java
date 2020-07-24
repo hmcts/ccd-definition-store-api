@@ -11,12 +11,12 @@ public class ComplexFieldShowConditionReferencesInvalidFieldError extends Valida
 
     public ComplexFieldShowConditionReferencesInvalidFieldError(String showConditionField, ComplexFieldEntity complexField) {
         super(
-                String.format(
-                        "Unknown field '%s' of complex field '%s' in show condition: '%s'",
-                        showConditionField,
-                        complexField.getComplexFieldType().getReference(),
-                        complexField.getShowCondition()
-                )
+            String.format(
+                "Unknown field '%s' of complex field '%s' in show condition: '%s'",
+                showConditionField,
+                complexField.getComplexFieldType().getReference(),
+                complexField.getShowCondition()
+            )
         );
         this.showConditionField = showConditionField;
         this.complexField = complexField;

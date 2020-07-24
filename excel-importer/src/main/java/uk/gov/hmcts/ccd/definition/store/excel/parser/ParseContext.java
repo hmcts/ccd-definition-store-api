@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -266,8 +267,8 @@ public class ParseContext {
     public ParseContext registerUserRoles(final List<UserRoleEntity> userRoleList) {
         userRoles.clear();
         userRoles.putAll(userRoleList
-                             .stream()
-                             .collect(toMap(UserRoleEntity::getReference, u -> u)));
+            .stream()
+            .collect(toMap(UserRoleEntity::getReference, u -> u)));
         return this;
     }
 
@@ -298,8 +299,8 @@ public class ParseContext {
 
     public void registerMetadataFields(List<CaseFieldEntity> fields) {
         metadataFields.putAll(fields.stream()
-                                  .filter(Objects::nonNull)
-                                  .collect(toMap(CaseFieldEntity::getReference, Function.identity())));
+            .filter(Objects::nonNull)
+            .collect(toMap(CaseFieldEntity::getReference, Function.identity())));
     }
 
     public Set<String> getMissingUserRoles() {

@@ -98,9 +98,9 @@ public class CaseTypeEntityFieldLabelValidatorTest {
             () -> assertFalse(validate.isValid()),
             () -> assertTrue(validate.getValidationErrors().get(0) instanceof CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError),
             () -> assertThat(validate.getValidationErrors(), hasItems(hasProperty("defaultMessage",
-                                                                                  is("Label of caseField 'case field' has placeholder "
-                                                                                         + "'complex.collection.nested.nested2' that points to "
-                                                                                         + "case field 'nested2' of non simple type"))))
+                is("Label of caseField 'case field' has placeholder "
+                    + "'complex.collection.nested.nested2' that points to "
+                    + "case field 'nested2' of non simple type"))))
         );
     }
 
@@ -116,8 +116,8 @@ public class CaseTypeEntityFieldLabelValidatorTest {
             () -> assertTrue(!validate.isValid()),
             () -> assertTrue(validate.getValidationErrors().get(0) instanceof CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError),
             () -> assertThat(validate.getValidationErrors(), hasItems(hasProperty("defaultMessage",
-                                                                                  is("Label of caseField 'case field' has placeholder 'complex.collection' "
-                                                                                         + "that points to case field 'collection' of non simple type"))))
+                is("Label of caseField 'case field' has placeholder 'complex.collection' "
+                    + "that points to case field 'collection' of non simple type"))))
         );
     }
 
@@ -132,8 +132,8 @@ public class CaseTypeEntityFieldLabelValidatorTest {
             () -> assertTrue(!validate.isValid()),
             () -> assertTrue(validate.getValidationErrors().get(0) instanceof CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError),
             () -> assertThat(validate.getValidationErrors(), hasItems(hasProperty("defaultMessage",
-                                                                                  is("Label of caseField 'case field' has placeholder 'complex.fieldNotFound' "
-                                                                                         + "that points to unknown case field"))))
+                is("Label of caseField 'case field' has placeholder 'complex.fieldNotFound' "
+                    + "that points to unknown case field"))))
         );
     }
 
@@ -144,15 +144,15 @@ public class CaseTypeEntityFieldLabelValidatorTest {
         complexField.addFieldToComplex("field3", labelFieldType());
         complexField.addFieldToComplex("collection", newType("nested")
             .addFieldToCollection(newType("someCollectionReference")
-                                      .addFieldToComplex("nested", newType("nested")
-                                          .addFieldToComplex("nested2", newType("nested2")
-                                              .addFieldToComplex("textField", newType("textField")
-                                                  .build())
-                                              .buildComplex())
-                                          .buildComplex())
-                                      .addFieldToComplex("nested22", newType("nested22").build())
-                                      .addFieldToComplex("nested23", newType("nested23").build())
-                                      .buildComplex())
+                .addFieldToComplex("nested", newType("nested")
+                    .addFieldToComplex("nested2", newType("nested2")
+                        .addFieldToComplex("textField", newType("textField")
+                            .build())
+                        .buildComplex())
+                    .buildComplex())
+                .addFieldToComplex("nested22", newType("nested22").build())
+                .addFieldToComplex("nested23", newType("nested23").build())
+                .buildComplex())
             .buildCollection());
 
         return complexField.buildComplex();

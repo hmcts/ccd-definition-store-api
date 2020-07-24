@@ -90,8 +90,8 @@ public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
 
         ValidationResult validationResult
             = classUnderTest.validate(
-                complexFieldEntity,
-                complexFieldEntityValidationContext
+            complexFieldEntity,
+            complexFieldEntityValidationContext
         );
 
         assertValidationResultContainsComplexFieldEntityMissingSecurityClassificationValidationError(validationResult, complexFieldEntity);
