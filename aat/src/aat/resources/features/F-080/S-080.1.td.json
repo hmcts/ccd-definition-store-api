@@ -390,7 +390,14 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            },
+            {
+        		"role" : "caseworker-befta_master-solicitor",
+        		"create" : true,
+        		"read" : true,
+        		"update" : true,
+        		"delete" : true
+     		 } 
           ],
           "show_summary": true,
           "show_event_notes": null,
@@ -545,7 +552,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "show_summary": true,
           "show_event_notes": null,
@@ -591,7 +604,13 @@
               "read": true,
               "update": false,
               "delete": false
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ]
         },
         {
@@ -644,7 +663,13 @@
           "read": true,
           "update": true,
           "delete": true
-        }
+        }, {
+      "role" : "caseworker-befta_master-solicitor",
+      "create" : true,
+      "read" : true,
+      "update" : true,
+      "delete" : true
+    }
       ],
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
       "case_fields": [
@@ -896,7 +921,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [],
           "order": null,
@@ -1069,7 +1100,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [],
           "order": null,
@@ -1105,7 +1142,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1142,7 +1185,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1194,7 +1243,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1231,7 +1286,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1268,7 +1329,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1305,7 +1372,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1342,7 +1415,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1379,7 +1458,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1436,7 +1521,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1676,7 +1767,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1724,7 +1821,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1802,7 +1905,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1839,7 +1948,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -1876,7 +1991,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -2029,7 +2150,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -2066,7 +2193,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -2103,7 +2236,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
@@ -2140,7 +2279,13 @@
               "read": true,
               "update": true,
               "delete": true
-            }
+            }, {
+        "role" : "caseworker-befta_master-solicitor",
+        "create" : true,
+        "read" : true,
+        "update" : true,
+        "delete" : true
+      }
           ],
           "complexACLs": [
           ],
