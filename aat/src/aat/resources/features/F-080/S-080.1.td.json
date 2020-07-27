@@ -724,6 +724,13 @@
 							"read": true,
 							"update": true,
 							"delete": true
+						},
+						{
+							"role": "caseworker-befta_master-solicitor",
+							"create": true,
+							"read": true,
+							"update": true,
+							"delete": true
 						}
 					],
 					"complexACLs": [],
@@ -2180,13 +2187,6 @@
 					"acls": [
 						{
 							"role": "caseworker-befta_master",
-							"create": true,
-							"read": true,
-							"update": true,
-							"delete": true
-						},
-						{
-							"role": "caseworker-befta_master-solicitor",
 							"create": true,
 							"read": true,
 							"update": true,
