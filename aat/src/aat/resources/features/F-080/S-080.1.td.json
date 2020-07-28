@@ -892,6 +892,10 @@
 					"live_until": null,
 					"acls": [
 						{
+							"__ordering__": "unordered",
+							"__elementId__": "role"
+						},
+						{
 							"role": "caseworker-befta_master",
 							"create": true,
 							"read": true,
@@ -1071,6 +1075,10 @@
 					"live_from": "2017-01-01",
 					"live_until": null,
 					"acls": [
+						{
+							"__ordering__": "unordered",
+							"__elementId__": "role"
+						},
 						{
 							"role": "caseworker-befta_master",
 							"create": true,
