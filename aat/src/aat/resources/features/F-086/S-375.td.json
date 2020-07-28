@@ -146,7 +146,12 @@
           "case_field_id" : "OrganisationPolicyField2",
           "order" : 1,
           "page_column_no" : null,
-          "complex_field_overrides" : [ {
+          "complex_field_overrides" : [
+          {
+            "__ordering__": "unordered",
+            "__elementId__": "complex_field_element_id"
+          
+          }, {
             "complex_field_element_id" : "OrganisationPolicyField2.Organisation.OrganisationID",
             "display_context" : "OPTIONAL",
             "label" : null,
