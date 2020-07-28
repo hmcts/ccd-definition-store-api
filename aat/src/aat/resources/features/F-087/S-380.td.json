@@ -96,7 +96,7 @@
 					"show_condition": null
 				},
 				{
-					"case_field_id": "ComplexDateTime",
+					"case_field_id": "ComplexDate",
 					"case_field_element_path": "DateField",
 					"label": "Complex Date",
 					"order": 9,
