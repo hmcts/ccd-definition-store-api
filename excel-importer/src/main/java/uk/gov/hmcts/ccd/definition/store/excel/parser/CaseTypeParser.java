@@ -99,10 +99,7 @@ public class CaseTypeParser {
             Collection<CaseTypeACLEntity> caseTypeACLEntities = authorisationCaseTypeParser.parseAll(definitionSheets, caseType);
             caseType.addCaseTypeACLEntities(caseTypeACLEntities);
 
-            for (CaseFieldEntity caseField : caseType.getCaseFields()) {
-                Collection<CaseFieldACLEntity> caseFieldACLEntities = authorisationCaseFieldParser.parseAll(definitionSheets, caseType, caseField);
-                caseField.addCaseACLEntities(caseFieldACLEntities);
-            }
+            authorisationCaseFieldParser.addACLEntities(definitionSheets, caseType, caseType.getCaseFields());
 
             authorisationComplexTypeParser.parseAll(definitionSheets, caseType);
 
