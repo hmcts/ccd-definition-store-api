@@ -39,7 +39,7 @@
 	</suppress>
 
 	<suppress>
-		<notes>Temporary suppression for on-going developments</notes>
+		<notes>Temporary suppression for on-going developments and master builds</notes>
 		<cve>CVE-2018-17244</cve>
 		<cve>CVE-2018-1258</cve>
 		<cve>CVE-2020-9484</cve>
@@ -50,6 +50,9 @@
 		<cve>CVE-2018-14042</cve>
 		<cve>CVE-2019-8331</cve>
 		<cve>CVE-2020-13692</cve>
+		<cve>CVE-2020-8022</cve>
+		<cve>CVE-2020-13934</cve>
+		<cve>CVE-2020-13935</cve>
 	</suppress>
 
 	<suppress>
