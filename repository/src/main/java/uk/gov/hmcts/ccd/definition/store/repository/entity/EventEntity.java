@@ -31,7 +31,8 @@ public class EventEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_generator")
+    @SequenceGenerator(name="event_generator", sequenceName = "event_id_seq", allocationSize=50)
     private Integer id;
 
     @Column(name = "reference", nullable = false)

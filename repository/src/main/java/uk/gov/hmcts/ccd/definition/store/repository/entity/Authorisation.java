@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,7 +18,8 @@ public abstract class Authorisation implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "acl_generator")
+    @SequenceGenerator(name="acl_generator", sequenceName = "case_field_acl_id_seq", allocationSize=50)
     private Integer id;
 
     @NotNull
