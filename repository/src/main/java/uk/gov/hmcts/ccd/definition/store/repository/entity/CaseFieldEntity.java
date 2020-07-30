@@ -1,29 +1,22 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.*;
+import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Table(name = "case_field")
@@ -79,9 +72,8 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "caseField")
     @Fetch(value = FetchMode.SUBSELECT)
-    @JoinColumn(name = "case_field_id")
     private final List<CaseFieldACLEntity> caseFieldACLEntities = new ArrayList<>();
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
