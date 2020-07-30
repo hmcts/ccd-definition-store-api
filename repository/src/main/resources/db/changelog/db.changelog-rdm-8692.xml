@@ -13,6 +13,10 @@
             ALTER SEQUENCE event_id_seq increment by 50;
             ALTER SEQUENCE field_type_id_seq increment by 50;
             ALTER SEQUENCE field_type_list_item_id_seq increment by 50;
+            ALTER SEQUENCE display_group_id_seq increment by 50;
+            ALTER SEQUENCE webhook_id_seq increment by 50;
+            ALTER SEQUENCE event_webhook_id_seq increment by 50;
+
 
         </sql>
     </changeSet>
