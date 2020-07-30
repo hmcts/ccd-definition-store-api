@@ -8,13 +8,9 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificationColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
@@ -104,10 +100,7 @@ public class CaseTypeParser {
             authorisationComplexTypeParser.parseAll(definitionSheets, caseType);
 
 
-            for (EventEntity event : caseType.getEvents()) {
-                Collection<EventACLEntity> eventACLEntities = authorisationCaseEventParser.parseAll(definitionSheets, caseType, event);
-                event.addEventACLEntities(eventACLEntities);
-            }
+            authorisationCaseEventParser.parseAndSetEventACLEntities(definitionSheets, caseType, caseType.getEvents());
 
             for (StateEntity stateEntity : caseType.getStates()) {
                 Collection<StateACLEntity> stateACLEntities = authorisationCaseStateParser.parseAll(definitionSheets, caseType, stateEntity);
