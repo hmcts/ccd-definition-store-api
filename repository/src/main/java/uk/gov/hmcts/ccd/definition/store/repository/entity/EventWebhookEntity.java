@@ -25,8 +25,8 @@ public class EventWebhookEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_webhook_generator")
-    @SequenceGenerator(name="event_webhook_generator", sequenceName = "event_webhook_id_seq", allocationSize=50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_webhook_id_seq")
+    @SequenceGenerator(name = "event_webhook_id_seq")
     private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)

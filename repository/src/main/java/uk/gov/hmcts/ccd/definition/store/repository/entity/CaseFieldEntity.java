@@ -38,8 +38,8 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = SEQUENCE, generator = "case_field_generator")
-    @SequenceGenerator(name="case_field_generator", sequenceName = "case_field_id_seq", allocationSize = 50)
+    @GeneratedValue(strategy = SEQUENCE, generator = "case_field_id_seq")
+    @SequenceGenerator(name = "case_field_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)

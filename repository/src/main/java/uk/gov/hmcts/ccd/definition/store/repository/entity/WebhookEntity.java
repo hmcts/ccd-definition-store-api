@@ -23,8 +23,8 @@ public class WebhookEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "webhook_generator")
-    @SequenceGenerator(name="webhook_generator", sequenceName = "webhook_id_seq", allocationSize=50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "webhook_id_seq")
+    @SequenceGenerator(name = "webhook_id_seq")
     private Integer id;
 
     @Column(name = "url")

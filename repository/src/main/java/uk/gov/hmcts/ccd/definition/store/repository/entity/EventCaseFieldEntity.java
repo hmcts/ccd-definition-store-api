@@ -25,8 +25,8 @@ import static javax.persistence.FetchType.EAGER;
 public class EventCaseFieldEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_case_field_generator")
-    @SequenceGenerator(name="event_case_field_generator", sequenceName = "event_case_field_id_seq", allocationSize=50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_case_field_id_seq")
+    @SequenceGenerator(name = "event_case_field_id_seq")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)

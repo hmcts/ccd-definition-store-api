@@ -22,8 +22,8 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = SEQUENCE, generator = "complex_field_generator")
-    @SequenceGenerator(name = "complex_field_generator", sequenceName = "complex_field_id_seq")
+    @GeneratedValue(strategy = SEQUENCE, generator = "complex_field_id_seq")
+    @SequenceGenerator(name = "complex_field_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)

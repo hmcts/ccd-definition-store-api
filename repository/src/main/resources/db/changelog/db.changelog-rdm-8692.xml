@@ -16,8 +16,6 @@
             ALTER SEQUENCE display_group_id_seq increment by 50;
             ALTER SEQUENCE webhook_id_seq increment by 50;
             ALTER SEQUENCE event_webhook_id_seq increment by 50;
-
-
         </sql>
     </changeSet>
 </databaseChangeLog>
