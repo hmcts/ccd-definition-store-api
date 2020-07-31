@@ -75,7 +75,7 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        subject.addACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
         Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 
@@ -102,7 +102,7 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        subject.addACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
         final Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 
@@ -129,7 +129,7 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        subject.addACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
         Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 
@@ -152,7 +152,7 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        subject.addACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
         Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 
@@ -175,7 +175,7 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        subject.addACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
         final Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 

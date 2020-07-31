@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -10,6 +8,8 @@ import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @MappedSuperclass
 public abstract class Authorisation implements Serializable {

@@ -28,9 +28,9 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
         this.entityToDefinitionDataItemRegistry = registry;
     }
 
-    void addACLEntities(final Map<String, DefinitionSheet> definitionSheets,
-                                                              final CaseTypeEntity caseType,
-                                                              final Collection<CaseFieldEntity> caseFields) {
+    void parseAndSetACLEntities(final Map<String, DefinitionSheet> definitionSheets,
+                                final CaseTypeEntity caseType,
+                                final Collection<CaseFieldEntity> caseFields) {
         DefinitionSheet definitionSheet = getDefinitionSheet(definitionSheets);
         final Map<String, List<DefinitionDataItem>> dataItemMap = definitionSheet.groupDataItemsByCaseType();
         validateCaseTypes(definitionSheets, dataItemMap);
@@ -38,16 +38,15 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
         validateCaseFields(definitionSheets, definitionSheet, caseTypeReference);
 
         final List<DefinitionDataItem> dataItems = dataItemMap.get(caseTypeReference);
-        final Map<String, List<DefinitionDataItem>> collect = dataItems
-            .stream()
-            .collect(groupingBy(d -> d.getString(ColumnName.CASE_FIELD_ID)));
+        final Map<String, List<DefinitionDataItem>> collect = dataItems == null
+            ? null
+            : dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_FIELD_ID)));
 
         for (CaseFieldEntity caseField : caseFields) {
             final List<CaseFieldACLEntity> parseResults = Lists.newArrayList();
             final String caseFieldReference = caseField.getReference();
             LOG.debug("Parsing AuthorisationCaseField for case type {}, caseField {}...",
                 caseTypeReference, caseFieldReference);
-
 
             if (null == dataItems) {
                 LOG.warn("No data is found for case type '{} in AuthorisationCaseFields tab", caseTypeReference);

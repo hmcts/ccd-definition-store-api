@@ -43,7 +43,9 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
         validateCaseEvents(definitionSheets, definitionSheet, caseTypeReference);
 
         final List<DefinitionDataItem> dataItems = dataItemMap.get(caseTypeReference);
-        final Map<String, List<DefinitionDataItem>> collect = dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_EVENT_ID)));
+        final Map<String, List<DefinitionDataItem>> collect = dataItems == null
+            ? null
+            : dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_EVENT_ID)));
 
         for (EventEntity event : events) {
             final List<EventACLEntity> parseResults = Lists.newArrayList();
