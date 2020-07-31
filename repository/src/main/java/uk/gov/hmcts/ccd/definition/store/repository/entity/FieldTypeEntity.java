@@ -30,8 +30,8 @@ public class FieldTypeEntity implements Serializable, Versionable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = SEQUENCE, generator = "field_type_generator")
-    @SequenceGenerator(name = "field_type_generator", sequenceName = "field_type_id_seq")
+    @GeneratedValue(strategy = SEQUENCE, generator = "field_type_id_seq")
+    @SequenceGenerator(name = "field_type_id_seq")
     private Integer id;
 
     @Column(name = "created_at")

@@ -20,8 +20,8 @@ public class DisplayGroupEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "display_group_generator")
-    @SequenceGenerator(name="display_group_generator", sequenceName = "display_group_id_seq", allocationSize=50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "display_group_id_seq")
+    @SequenceGenerator(name = "display_group_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)
