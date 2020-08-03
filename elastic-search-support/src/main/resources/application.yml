@@ -15,13 +15,13 @@ elasticsearch:
     defaultBoolean: '{"type" : "boolean"}'
     defaultLong: '{"type" : "long"}'
     defaultDouble: '{"type" : "double"}'
-    ccdPhoneUK: '{"type" : "text", "analyzer": "standard", "search_analyzer": "phone_number_analyzer"}'
+    ccdPhoneUK: '{"type" : "text", "analyzer": "phone_number_analyzer"}'
     ccdDocument: '{
                     "properties":{
-                       "document_binary_url":{
+                        "document_binary_url":{
                           "type":"text",
                           "index":false
-                       },
+                        },
                        "document_filename":{
                           "type":"text"
                        },
