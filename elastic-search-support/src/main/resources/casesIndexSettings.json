@@ -5,13 +5,13 @@
               "type": "custom",
               "tokenizer": "keyword",
               "filter": [
-                  "shingle_filter",
+                  "custom_shingle",
                   "whitespace_remove"
               ]
           }
       },
       "filter": {
-          "shingle_filter": {
+          "custom_shingle": {
               "type": "shingle",
               "min_shingle_size": 2,
               "max_shingle_size": 3,
@@ -22,24 +22,11 @@
               "pattern": " ",
               "replacement": ""
           }
-      },
-      "normalizer": {
-          "lowercase_normalizer": {
-              "type": "custom",
-              "char_filter": [],
-              "filter": [
-                  "lowercase",
-                  "asciifolding"
-              ]
-          }
       }
-    },
-    "filter":{
-      "whitespace_remove":{
-        "type":"pattern_replace",
-        "pattern":" ",
-        "replacement":""
-      }
+  },
+  "mapping" : {
+    "total_fields" : {
+      "limit" : "8000"
     }
   }
 }
