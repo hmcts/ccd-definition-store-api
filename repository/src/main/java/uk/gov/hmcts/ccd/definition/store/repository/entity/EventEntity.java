@@ -32,7 +32,6 @@ public class EventEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_seq")
-    @SequenceGenerator(name = "event_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)

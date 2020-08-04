@@ -16,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ public class EventCaseFieldEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_case_field_id_seq")
-    @SequenceGenerator(name = "event_case_field_id_seq")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)

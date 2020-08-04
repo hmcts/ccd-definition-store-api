@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -42,7 +41,6 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = SEQUENCE, generator = "field_type_id_seq")
-    @SequenceGenerator(name = "field_type_id_seq")
     private Integer id;
 
     @Column(name = "created_at")

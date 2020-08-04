@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -54,7 +53,6 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = SEQUENCE, generator = "case_field_id_seq")
-    @SequenceGenerator(name = "case_field_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)
