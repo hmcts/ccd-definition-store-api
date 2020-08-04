@@ -14,7 +14,6 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "display_group_case_field_id_seq")
-    @SequenceGenerator(name = "display_group_case_field_id_seq")
     private Integer id;
 
     @Column(name = "live_from")

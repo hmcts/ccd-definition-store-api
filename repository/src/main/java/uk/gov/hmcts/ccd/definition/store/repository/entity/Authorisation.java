@@ -17,7 +17,6 @@ public abstract class Authorisation implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "case_field_acl_id_seq")
-    @SequenceGenerator(name = "case_field_acl_id_seq")
     private Integer id;
 
     @NotNull

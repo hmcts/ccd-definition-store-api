@@ -12,7 +12,6 @@ public class FieldTypeListItemEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = SEQUENCE, generator = "field_type_list_item_id_seq")
-    @SequenceGenerator(name = "field_type_list_item_id_seq")
     private Integer id;
 
     @Column(name = "value", nullable = false)
