@@ -20,8 +20,8 @@ java:
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
 
     # enable whenever required and provide host url to match with corresponding data-store-api
-    ELASTIC_SEARCH_ENABLED: false
-    #ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-1000-es-master
+    ELASTIC_SEARCH_ENABLED: true
+    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-601-es-master
 
     USER_PROFILE_HOST: http://ccd-user-profile-api-pr-224.service.core-compute-preview.internal
 

@@ -54,6 +54,10 @@
 							"hint_text": null,
 							"case_fields_complex": [
 								{
+									"__ordering__": "unordered",
+									"__elementId__": "reference,order"
+								},
+								{
 									"reference": "OrganisationID",
 									"hint": null,
 									"label": null,
@@ -83,6 +87,10 @@
 							"label": null,
 							"hint_text": null,
 							"case_fields_complex": [
+								{
+									"__ordering__": "unordered",
+									"__elementId__": "reference,order"
+								},
 								{
 									"reference": "Organisation.OrganisationID",
 									"hint": null,
@@ -164,6 +172,10 @@
 							"hint_text": null,
 							"case_fields_complex": [
 								{
+									"__ordering__": "unordered",
+									"__elementId__": "reference,order"
+								},
+								{
 									"reference": "OrganisationID",
 									"hint": null,
 									"label": "Updated OrganisationID Label",
@@ -193,6 +205,10 @@
 							"label": null,
 							"hint_text": null,
 							"case_fields_complex": [
+								{
+									"__ordering__": "unordered",
+									"__elementId__": "reference,order"
+								},
 								{
 									"reference": "Organisation.OrganisationID",
 									"hint": null,
