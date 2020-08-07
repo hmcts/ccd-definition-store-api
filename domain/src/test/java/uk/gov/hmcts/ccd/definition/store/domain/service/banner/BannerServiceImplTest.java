@@ -17,10 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class BannerServiceImplTest {
 
@@ -87,6 +84,23 @@ class BannerServiceImplTest {
         classUnderTest.save(bannerEntity);
         verify(bannerEntityDB, times(1)).copy(eq(bannerEntity));
         verify(bannerRepository, times(1)).save(eq(bannerEntityDB));
+    }
+
+    @Test
+    void shouldAttemptToDeleteBannersWhenJurisdictionReferenceIsProvided() {
+        String reference = "PROBATE";
+
+        classUnderTest.deleteJurisdictionBanners(reference);
+
+        verify(bannerRepository, times(1)).deleteByJurisdictionReference(eq(reference));
+    }
+
+    @Test
+    void shouldNotAttemptToDeleteBannersWhenNoJurisdictionReferenceIsProvided() {
+        classUnderTest.deleteJurisdictionBanners(null);
+        classUnderTest.deleteJurisdictionBanners("");
+
+        verifyNoMoreInteractions(bannerRepository);
     }
 
     private BannerEntity createBanner(String description, boolean enabled) {
