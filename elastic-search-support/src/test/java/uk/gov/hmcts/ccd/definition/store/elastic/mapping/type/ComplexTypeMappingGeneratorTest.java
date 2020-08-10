@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
@@ -17,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.StubTypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
@@ -58,6 +59,38 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
 
         assertThat(result, equalToJSONInFile(
                 readFileFromClasspath("json/type_mapping_classification_complex_type.json")));
+    }
+
+    @Test
+    public void shouldGenerateDataMappingForNonSearchableComplexType() {
+        CaseFieldEntity complexField = newComplexField();
+        complexField.setSearchable(false);
+
+        String result = complexTypeMapper.dataMapping(complexField);
+
+        assertThat(result, is(disabledMapping));
+    }
+
+    @Test
+    public void shouldGenerateDataMappingForComplexTypeWithNonSearchableNestedField() {
+        CaseFieldEntity complexField = newComplexField();
+        complexField.getFieldType().getComplexFields().get(1).setSearchable(false);
+
+        String result = complexTypeMapper.dataMapping(complexField);
+
+        assertThat(result, equalToJSONInFile(
+            readFileFromClasspath("json/type_mapping_complex_type_disabled.json")));
+    }
+
+
+    @Test
+    public void shouldGenerateDataClassificationMappingForNonSearchableComplexType() {
+        CaseFieldEntity complexField = newComplexField();
+        complexField.setSearchable(false);
+
+        String result = complexTypeMapper.dataClassificationMapping(complexField);
+
+        assertThat(result, is(disabledMapping));
     }
 
     private CaseFieldEntity newComplexField() {

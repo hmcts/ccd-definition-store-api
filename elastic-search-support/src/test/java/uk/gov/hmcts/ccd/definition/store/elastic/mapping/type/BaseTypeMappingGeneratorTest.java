@@ -19,6 +19,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
 
+    private static final String TEXT_MAPPING = "textMapping";
+
     @InjectMocks
     private BaseTypeMappingGenerator typeMappingGenerator;
 
@@ -28,14 +30,14 @@ public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
     public void setUp() {
         super.setup();
 
-        typeMappings.put("Text", "textMapping");
+        typeMappings.put("Text", TEXT_MAPPING);
     }
 
     @Test
     public void shouldReturnConfiguredMapping() {
         String result = typeMappingGenerator.dataMapping(field);
 
-        assertThat(result, equalTo("textMapping"));
+        assertThat(result, equalTo(TEXT_MAPPING));
     }
 
     @Test
@@ -45,5 +47,32 @@ public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
         String result = typeMappingGenerator.dataClassificationMapping(field);
 
         assertThat(result, equalTo("someMapping"));
+    }
+
+    @Test
+    public void shouldReturnTypeMappingWhenFieldIsSearchable() {
+        field.setSearchable(true);
+
+        String result = typeMappingGenerator.dataMapping(field);
+
+        assertThat(result, equalTo(TEXT_MAPPING));
+    }
+
+    @Test
+    public void shouldReturnDisabledDataMappingWhenFieldIsNonSearchable() {
+        field.setSearchable(false);
+
+        String result = typeMappingGenerator.dataMapping(field);
+
+        assertThat(result, equalTo(disabledMapping));
+    }
+
+    @Test
+    public void shouldReturnDisabledDataClassificationMappingWhenFieldIsNonSearchable() {
+        field.setSearchable(false);
+
+        String result = typeMappingGenerator.dataClassificationMapping(field);
+
+        assertThat(result, equalTo(disabledMapping));
     }
 }

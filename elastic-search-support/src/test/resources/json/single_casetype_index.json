@@ -1,0 +1,135 @@
+{
+    "casetypea_cases-000001": {
+        "aliases": {
+            "casetypea_cases": {}
+        },
+        "mappings": {
+            "_doc": {
+                "dynamic": "true",
+                "properties": {
+                    "@timestamp": {
+                        "type": "object",
+                        "enabled": false
+                    },
+                    "@version": {
+                        "type": "object",
+                        "enabled": false
+                    },
+                    "case_type_id": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "created_date": {
+                        "type": "date",
+                        "ignore_malformed": true
+                    },
+                    "data": {
+                        "properties": {
+                            "TestReference": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "data_classification": {
+                        "properties": {
+                            "TestReference": {
+                                "type": "keyword"
+                            }
+                        }
+                    },
+                    "id": {
+                        "type": "long"
+                    },
+                    "index_id": {
+                        "type": "object",
+                        "enabled": false
+                    },
+                    "jurisdiction": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "last_modified": {
+                        "type": "date",
+                        "ignore_malformed": true
+                    },
+                    "last_state_modified_date": {
+                        "type": "date",
+                        "ignore_malformed": true
+                    },
+                    "reference": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "security_classification": {
+                        "type": "keyword"
+                    },
+                    "state": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "settings": {
+            "index": {
+                "mapping": {
+                    "total_fields": {
+                        "limit": "6000"
+                    }
+                },
+                "number_of_shards": "8",
+                "provided_name": "casetypea_cases-000001",
+                "creation_date": "This field is dynamic - ignore during comparisons",
+                "analysis": {
+                    "filter": {
+                        "whitespace_remove": {
+                            "pattern": " ",
+                            "type": "pattern_replace",
+                            "replacement": ""
+                        }
+                    },
+                    "analyzer": {
+                        "phone_number_analyzer": {
+                            "filter": [
+                                "whitespace_remove"
+                            ],
+                            "type": "custom",
+                            "tokenizer": "keyword"
+                        }
+                    }
+                },
+                "number_of_replicas": "3",
+                "uuid": "This field is dynamic - ignore during comparisons",
+                "version": {
+                    "created": "This field is dynamic - ignore during comparisons"
+                }
+            }
+        }
+    }
+}

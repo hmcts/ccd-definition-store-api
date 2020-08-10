@@ -12,13 +12,10 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Parameter;
@@ -72,6 +69,9 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
 
     @Column(name = "hidden")
     private Boolean hidden;
+
+    @Column(name = "searchable")
+    private boolean searchable = true;
 
     @Column(name = "security_classification")
     @Type(type = "pgsql_securityclassification_enum")
@@ -156,6 +156,15 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         this.hidden = hidden;
     }
 
+    @Override
+    public boolean isSearchable() {
+        return searchable;
+    }
+
+    public void setSearchable(boolean searchable) {
+        this.searchable = searchable;
+    }
+
     public SecurityClassification getSecurityClassification() {
         return securityClassification;
     }
@@ -218,41 +227,6 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     public CaseFieldEntity addComplexFieldACLEntities(final Collection<ComplexFieldACLEntity> entities) {
         entities.forEach(e -> addComplexFieldACL(e));
         return this;
-    }
-
-    @Transient
-    public Optional<FieldEntity> findNestedElementByPath(String path) {
-        if (StringUtils.isBlank(path)) {
-            return Optional.of(this);
-        }
-        if (this.getFieldType().getChildren().isEmpty()) {
-            Optional.empty();
-        }
-        List<String> pathElements = Arrays.stream(path.trim().split("\\.")).collect(Collectors.toList());
-
-        return reduce(this.getFieldType().getChildren(), pathElements);
-    }
-
-    private Optional<FieldEntity> reduce(List<ComplexFieldEntity> caseFields, List<String> pathElements) {
-        String firstPathElement = pathElements.get(0);
-
-        Optional<FieldEntity> caseField = caseFields.stream()
-                                                    .filter(e -> e.getReference().equals(firstPathElement))
-                                                    .map(e -> (FieldEntity)e)
-                                                    .findFirst();
-
-        if (!caseField.isPresent()) {
-            return Optional.empty();
-        }
-
-        if (pathElements.size() == 1) {
-            return caseField;
-        } else {
-            List<ComplexFieldEntity> complexFieldEntities = caseField.get().getFieldType().getChildren();
-            List<String> tail = pathElements.subList(1, pathElements.size());
-
-            return reduce(complexFieldEntities, tail);
-        }
     }
 
     @Override

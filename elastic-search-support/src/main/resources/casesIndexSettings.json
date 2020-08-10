@@ -19,7 +19,7 @@
   },
   "mapping" : {
     "total_fields" : {
-      "limit" : "8000"
+      "limit" : "6000"
     }
   }
 }

@@ -18,7 +18,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public String dataMapping(FieldEntity field) {
-        return dataMapping(complexFields(field));
+        return conditionalMapping(field, () -> dataMapping(complexFields(field)));
     }
 
     public String dataMapping(List<ComplexFieldEntity> complexFields) {
@@ -30,8 +30,10 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
             for (FieldEntity field : fields) {
                 String property = field.getReference();
                 jw.name(property);
-                TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
-                String mapping = typeMapper.dataMapping(field);
+                String mapping = conditionalMapping(field, () -> {
+                    TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
+                    return typeMapper.dataMapping(field);
+                });
                 jw.jsonValue(mapping);
                 log.info("property: {}, mapping: {}", property, mapping);
             }
@@ -41,7 +43,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public String dataClassificationMapping(FieldEntity field) {
-        return dataClassificationMapping(complexFields(field));
+        return conditionalMapping(field, () -> dataClassificationMapping(complexFields(field)));
     }
 
     public String dataClassificationMapping(List<ComplexFieldEntity> complexFields) {
@@ -59,8 +61,10 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
             for (FieldEntity field : fields) {
                 String property = field.getReference();
                 jw.name(property);
-                TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
-                String mapping = typeMapper.dataClassificationMapping(field);
+                String mapping = conditionalMapping(field, () -> {
+                        TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
+                        return typeMapper.dataClassificationMapping(field);
+                });
                 jw.jsonValue(mapping);
                 log.info("property: {}, mapping: {}", property, mapping);
             }

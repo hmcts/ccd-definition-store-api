@@ -9,6 +9,7 @@ elasticsearch:
   dynamic: ${ELASTIC_SEARCH_DYNAMIC:true}
   elasticMappings:
     disabled: '{"enabled": false}'
+    disabledWithType: '{"enabled": false, "type": "%s"}'
     defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
     defaultKeyword: '{"type" : "keyword"}'
     defaultDate: '{"type" : "date", "ignore_malformed": true}'

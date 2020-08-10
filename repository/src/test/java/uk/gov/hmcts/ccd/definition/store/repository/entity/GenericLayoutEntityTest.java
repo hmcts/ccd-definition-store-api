@@ -1,11 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import java.util.Optional;
-
+import com.sun.jna.platform.win32.DBT;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.ccd.definition.store.utils.ComplexFieldBuilder;
+
+import java.util.Collections;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.nullValue;
@@ -19,83 +22,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.ComplexFieldBuilder.newComplexField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
-class CaseFieldEntityTest {
+class GenericLayoutEntityTest {
 
     private static final String COMPLEX = "Complex";
     private static final String PERSON = "Person";
-    private static final String DEBTOR_DETAILS = "Debtor details";
+    private static final String DEBTOR_DETAILS = "DebtorDetails";
     private static final String NAME = "Name";
     private static final String SURNAME = "Surname";
 
     private CaseFieldEntity debtorDetails;
 
     @Nested
-    @DisplayName("find by path tests")
-    class FindNestedElementsTest {
-
-        @BeforeEach
-        void setUp() {
-            debtorDetails = newField(DEBTOR_DETAILS, "Complex")
-                .addFieldToComplex(PERSON, newType(PERSON)
-                    .withBaseFieldType(newType(COMPLEX).build())
-                    .addFieldToComplex(NAME, newType(NAME).build())
-                    .addFieldToComplex(SURNAME, newType(SURNAME).build())
-                    .buildComplex())
-                .buildComplex();
-        }
-
-        @Test
-        void shouldFindNestedElementByPath() {
-            String path = PERSON + "." + NAME;
-            Optional<FieldEntity> nestedElementByPath = debtorDetails.findNestedElementByPath(path);
-
-            assertAll(
-                () -> assertTrue(nestedElementByPath.isPresent()),
-                () -> assertThat(nestedElementByPath.get().getReference(), is(NAME)),
-                () -> assertThat(nestedElementByPath.get().getFieldType().getBaseFieldType(), is(nullValue())),
-                () -> assertThat(nestedElementByPath.get().getFieldType().getReference(), is(NAME)),
-                () -> assertThat(nestedElementByPath.get().getFieldType().getChildren().size(), is(0)));
-        }
-
-        @Test
-        void shouldFindNestedElementForCaseFieldWithEmptyPath() {
-            Optional<FieldEntity> nestedElementByPath = debtorDetails.findNestedElementByPath("");
-            assertEquals(debtorDetails, nestedElementByPath.get());
-        }
-
-        @Test
-        void shouldFindNestedElementForCaseFieldWithNullPath() {
-            Optional<FieldEntity> nestedElementByPath = debtorDetails.findNestedElementByPath(null);
-            assertEquals(debtorDetails, nestedElementByPath.get());
-        }
-
-        @Test
-        void shouldFailToFindNestedElementForCaseFieldWithNoNestedElements() {
-            String path = "Field1";
-            CaseFieldEntity nameField = newField(NAME, "Text").build();
-            Optional<FieldEntity> nestedElementByPath = nameField.findNestedElementByPath(path);
-            assertFalse(nestedElementByPath.isPresent(), "CaseField Name has no nested elements.");
-        }
-
-        @Test
-        void shouldFailToFindNestedElementForCaseFieldWithNonMatchingPathElement() {
-            String path = "Case";
-            Optional<FieldEntity> nestedElementByPath = debtorDetails.findNestedElementByPath(path);
-            assertFalse(nestedElementByPath.isPresent(), "Nested element not found for " + path);
-        }
-
-        @Test
-        void shouldFailToFindNestedElementForCaseFieldWithNonMatchingPathElements() {
-            String path = PERSON + "." + "Address";
-            Optional<FieldEntity> nestedElementByPath = debtorDetails.findNestedElementByPath(path);
-            assertFalse(nestedElementByPath.isPresent(), "Nested element not found for " + path);
-        }
-
-    }
-
-    @Nested
-    class IsNestedFieldSearchableTest {
+    class IsSearchableTest {
 
         @BeforeEach
         void setUp() {
@@ -104,63 +44,70 @@ class CaseFieldEntityTest {
 
         @Test
         void shouldReturnTrueWhenSimpleFieldIsSearchable() {
+            GenericLayoutEntity entity = layoutEntity(debtorDetails, null);
             debtorDetails.setSearchable(true);
 
-            boolean result = debtorDetails.isNestedFieldSearchable(null);
+            boolean result = entity.isSearchable();
 
             assertTrue(result);
         }
 
         @Test
         void shouldReturnFalseWhenSimpleFieldIsNotSearchable() {
+            GenericLayoutEntity entity = layoutEntity(debtorDetails, "");
             debtorDetails.setSearchable(false);
 
-            boolean result = debtorDetails.isNestedFieldSearchable("");
+            boolean result = entity.isSearchable();
 
             assertFalse(result);
         }
 
         @Test
         void shouldReturnTrueWhenNestedFieldPathIsAllSearchable() {
+            GenericLayoutEntity entity = layoutEntity(debtorDetails, "Person.Surname");
             setUpComplex(true, true, true);
 
-            boolean result = debtorDetails.isNestedFieldSearchable("Person.Surname");
+            boolean result = entity.isSearchable();
 
             assertTrue(result);
         }
 
         @Test
         void shouldReturnFalseWhenTopLevelFieldIsNotSearchable() {
+            GenericLayoutEntity entity = layoutEntity(debtorDetails, "Person.Surname");
             setUpComplex(false, true, true);
 
-            boolean result = debtorDetails.isNestedFieldSearchable("Person.Surname");
+            boolean result = entity.isSearchable();
 
             assertFalse(result);
         }
 
         @Test
         void shouldReturnFalseWhenFirstLevelNestedFieldIsNotSearchable() {
+            GenericLayoutEntity entity = layoutEntity(debtorDetails, "Person.Surname");
             setUpComplex(true, false, true);
 
-            boolean result = debtorDetails.isNestedFieldSearchable("Person.Surname");
+            boolean result = entity.isSearchable();
 
             assertFalse(result);
         }
 
         @Test
         void shouldReturnFalseWhenSecondLevelNestedFieldIsNotSearchable() {
+            GenericLayoutEntity entity = layoutEntity(debtorDetails, "Person.Surname");
             setUpComplex(true, true, false);
 
-            boolean result = debtorDetails.isNestedFieldSearchable("Person.Surname");
+            boolean result = entity.isSearchable();
 
             assertFalse(result);
         }
 
         @Test
         void shouldErrorWhenUnknownFieldIsInPath() {
+            GenericLayoutEntity entity = layoutEntity(debtorDetails, "Person.UnknownField");
             setUpComplex(true, true, true);
 
-            NullPointerException exception = assertThrows(NullPointerException.class, () -> debtorDetails.isNestedFieldSearchable("Person.UnknownField"));
+            NullPointerException exception = assertThrows(NullPointerException.class, () -> entity.isSearchable());
 
             assertEquals("Unable to find nested field 'UnknownField' within field 'Person'.", exception.getMessage());
         }
@@ -185,6 +132,44 @@ class CaseFieldEntityTest {
             entity.setCaseField(caseFieldEntity);
             entity.setCaseFieldElementPath(fieldElementPath);
             return entity;
+        }
+    }
+
+    @Nested
+    class BuildFieldPathTest {
+
+        @Test
+        void shouldBuildFieldPathWithCaseFieldElementPath() {
+            GenericLayoutEntity layoutEntity = layoutEntity(DEBTOR_DETAILS, "Person.Name");
+
+            String result = layoutEntity.buildFieldPath();
+
+            assertEquals("DebtorDetails.Person.Name", result);
+        }
+
+        @Test
+        void shouldBuildFieldPathWithEmptyCaseFieldElementPath() {
+            GenericLayoutEntity layoutEntity = layoutEntity(DEBTOR_DETAILS, "");
+
+            String result = layoutEntity.buildFieldPath();
+
+            assertEquals("DebtorDetails", result);
+        }
+
+        @Test
+        void shouldBuildFieldPathWithNullCaseFieldElementPath() {
+            GenericLayoutEntity layoutEntity = layoutEntity(DEBTOR_DETAILS, null);
+
+            String result = layoutEntity.buildFieldPath();
+
+            assertEquals("DebtorDetails", result);
+        }
+
+        private GenericLayoutEntity layoutEntity(String topLevelFieldId, String caseFieldElementPath) {
+            GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
+            layoutEntity.setCaseFieldElementPath(caseFieldElementPath);
+            layoutEntity.setCaseField(newField(topLevelFieldId).build());
+            return layoutEntity;
         }
     }
 }

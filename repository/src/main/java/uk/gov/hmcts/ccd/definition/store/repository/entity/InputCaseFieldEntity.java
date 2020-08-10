@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.util.Optional;
@@ -21,5 +23,10 @@ public abstract class InputCaseFieldEntity extends GenericLayoutEntity {
     @Override
     public Optional<String> showCondition() {
         return Optional.ofNullable(showCondition);
+    }
+
+    @Override
+    public LayoutSheetType getLayoutSheetType() {
+        return LayoutSheetType.INPUT;
     }
 }

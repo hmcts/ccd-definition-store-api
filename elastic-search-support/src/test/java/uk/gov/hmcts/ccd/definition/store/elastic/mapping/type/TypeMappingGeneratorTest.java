@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.StubTypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @ExtendWith(MockitoExtension.class)

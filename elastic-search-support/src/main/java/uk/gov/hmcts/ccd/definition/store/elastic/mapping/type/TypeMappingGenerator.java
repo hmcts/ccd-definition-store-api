@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator;
@@ -24,6 +25,10 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
         return config.getElasticMappings().get("disabled");
     }
 
+    protected String disabledWithType() {
+        return config.getElasticMappings().get("disabledWithType");
+    }
+
     protected String getConfiguredMapping(String ccdType) {
         return Optional.ofNullable(configuredTypeMappings().get(ccdType))
             .orElseThrow(() -> new ElasticSearchInitialisationException(String.format("no configured mapping for ccd type %s", ccdType)));
@@ -31,5 +36,10 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
 
     protected String securityClassificationMapping() {
         return config.getSecurityClassificationMapping();
+    }
+
+    protected String conditionalMapping(FieldEntity field, Supplier<String> mappingSupplier) {
+        return field.isSearchable() ? mappingSupplier.get() : disabled();
+//        return field.isSearchable() ? mappingSupplier.get() : String.format(disabledWithType(), field.getBaseTypeString());
     }
 }

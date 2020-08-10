@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
+package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import java.util.List;
 
