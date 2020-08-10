@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;

@@ -14,7 +14,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class CaseFieldParser {
     private static final Logger logger = LoggerFactory.getLogger(CaseFieldParser.class);

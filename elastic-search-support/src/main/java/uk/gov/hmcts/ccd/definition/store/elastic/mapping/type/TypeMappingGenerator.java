@@ -25,10 +25,6 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
         return config.getElasticMappings().get("disabled");
     }
 
-    protected String disabledWithType() {
-        return config.getElasticMappings().get("disabledWithType");
-    }
-
     protected String getConfiguredMapping(String ccdType) {
         return Optional.ofNullable(configuredTypeMappings().get(ccdType))
             .orElseThrow(() -> new ElasticSearchInitialisationException(String.format("no configured mapping for ccd type %s", ccdType)));
@@ -40,6 +36,5 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
 
     protected String conditionalMapping(FieldEntity field, Supplier<String> mappingSupplier) {
         return field.isSearchable() ? mappingSupplier.get() : disabled();
-//        return field.isSearchable() ? mappingSupplier.get() : String.format(disabledWithType(), field.getBaseTypeString());
     }
 }

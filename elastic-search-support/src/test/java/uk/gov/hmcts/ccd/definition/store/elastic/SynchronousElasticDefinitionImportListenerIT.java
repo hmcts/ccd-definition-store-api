@@ -30,7 +30,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
     @BeforeEach
     void setUp() {
-//        mappingGenerator = new CaseMappingGenerator();
+        // TODO: Clear any existing indexes
     }
 
     @Test

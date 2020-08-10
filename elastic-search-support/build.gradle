@@ -22,7 +22,6 @@ dependencies {
     testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
     testCompile "org.testcontainers:elasticsearch:1.14.3"
     testCompile "org.testcontainers:junit-jupiter:1.14.3"
-//    testCompile "com.playtika.testcontainers:embedded-elasticsearch:1.80"
 }
 
 pitest {

@@ -62,8 +62,8 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
                 String property = field.getReference();
                 jw.name(property);
                 String mapping = conditionalMapping(field, () -> {
-                        TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
-                        return typeMapper.dataClassificationMapping(field);
+                    TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
+                    return typeMapper.dataClassificationMapping(field);
                 });
                 jw.jsonValue(mapping);
                 log.info("property: {}, mapping: {}", property, mapping);
