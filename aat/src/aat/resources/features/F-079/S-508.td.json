@@ -1,35 +1,35 @@
 {
-	"_guid_": "S-508",
-	"_extends_": "F-079_Test_Base_Data",
-	"title": "must return the case type for an appropriate request",
-	"specs": [
-		"an active profile in CCD",
-		"contains a valid case type id",
-		"has the 200 OK code"
-	],
-	"expectedResponse": {
-		"_extends_": "Common_200_Response",
-		"headers": {
-			"Content-Encoding": "gzip",
-			"Content-Type": "application/json",
-			"Transfer-Encoding": "chunked"
-		},
-		"body": {
-      "id" : "FT_DateTimeFormats",
-      "description" : "CaseType for testing DateTime formats",
-      "version" : {
-        "number" : "[[ANY_INTEGER_NOT_NULLABLE]]",
-        "live_from" : "2017-01-01T00:00:00.000+0000",
-        "live_until" : null
+  "_guid_": "S-508",
+  "_extends_": "F-079_Test_Base_Data",
+  "title": "must return the case type for an appropriate request",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid case type id",
+    "has the 200 OK code"
+  ],
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Encoding": "gzip",
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked"
+    },
+    "body": {
+      "id": "FT_DateTimeFormats",
+      "description": "CaseType for testing DateTime formats",
+      "version": {
+        "number": "[[ANY_INTEGER_NOT_NULLABLE]]",
+        "live_from": "2017-01-01T00:00:00.000+0000",
+        "live_until": null
       },
-      "name" : "FT-DateTime Fomratting",
-      "jurisdiction" : {
-        "id" : "BEFTA_MASTER",
-        "name" : "BEFTA Master",
-        "description" : "Content for the BEFTA Master Jurisdiction.",
-        "live_from" : "2017-01-01T00:00:00.000+0000",
-        "live_until" : null,
-        "case_types" : [ ]
+      "name": "FT-DateTime Fomratting",
+      "jurisdiction": {
+        "id": "BEFTA_MASTER",
+        "name": "BEFTA Master",
+        "description": "Content for the BEFTA Master Jurisdiction.",
+        "live_from": "2017-01-01T00:00:00.000+0000",
+        "live_until": null,
+        "case_types": []
       },
       "events": [
         {
@@ -53,7 +53,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -66,7 +65,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             }
           ],
@@ -76,15 +74,12 @@
           "post_state": "DONE",
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [
-
           ],
           "callback_url_about_to_submit_event": null,
           "retries_timeout_url_about_to_submit_event": [
-
           ],
           "callback_url_submitted_event": null,
           "retries_timeout_url_submitted_event": [
-
           ],
           "security_classification": "PUBLIC",
           "acls": [
@@ -117,7 +112,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -130,7 +124,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -143,7 +136,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -156,7 +148,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -169,7 +160,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -182,7 +172,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -195,7 +184,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -208,7 +196,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -221,7 +208,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             }
           ],
@@ -231,15 +217,12 @@
           "post_state": "IN_PROGRESS",
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [
-
           ],
           "callback_url_about_to_submit_event": null,
           "retries_timeout_url_about_to_submit_event": [
-
           ],
           "callback_url_submitted_event": null,
           "retries_timeout_url_submitted_event": [
-
           ],
           "security_classification": "PUBLIC",
           "acls": [
@@ -272,7 +255,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -285,7 +267,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -298,7 +279,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -311,7 +291,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -324,7 +303,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -337,7 +315,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -350,7 +327,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -363,7 +339,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -376,7 +351,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             }
           ],
@@ -386,15 +360,12 @@
           "post_state": "TODO",
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [
-
           ],
           "callback_url_about_to_submit_event": null,
           "retries_timeout_url_about_to_submit_event": [
-
           ],
           "callback_url_submitted_event": null,
           "retries_timeout_url_submitted_event": [
-
           ],
           "security_classification": "PUBLIC",
           "acls": [
@@ -427,7 +398,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -440,7 +410,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -453,7 +422,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -466,7 +434,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -479,7 +446,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -492,7 +458,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -505,7 +470,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -518,7 +482,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -531,25 +494,20 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             }
           ],
           "pre_states": [
-
           ],
           "post_state": "TODO",
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [
-
           ],
           "callback_url_about_to_submit_event": null,
           "retries_timeout_url_about_to_submit_event": [
-
           ],
           "callback_url_submitted_event": null,
           "retries_timeout_url_submitted_event": [
-
           ],
           "security_classification": "PUBLIC",
           "acls": [
@@ -631,7 +589,7 @@
           "delete": true
         }
       ],
-      "searchAliasFields" : "[[ANYTHING_PRESENT]]",
+      "searchAliasFields": "[[ANYTHING_PRESENT]]",
       "case_fields": [
         {
           "__operator__": "equivalent",
@@ -668,7 +626,6 @@
               }
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -677,10 +634,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -699,10 +654,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -720,7 +673,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -739,10 +691,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": {
               "id": "FormatComplex",
@@ -751,7 +701,6 @@
               "max": null,
               "regular_expression": null,
               "fixed_list_items": [
-
               ],
               "complex_fields": [
                 {
@@ -767,10 +716,8 @@
                     "max": null,
                     "regular_expression": null,
                     "fixed_list_items": [
-
                     ],
                     "complex_fields": [
-
                     ],
                     "collection_field_type": null
                   },
@@ -780,7 +727,6 @@
                   "live_until": null,
                   "acls": null,
                   "complexACLs": [
-
                   ],
                   "order": null,
                   "show_condition": null,
@@ -799,10 +745,8 @@
                     "max": null,
                     "regular_expression": null,
                     "fixed_list_items": [
-
                     ],
                     "complex_fields": [
-
                     ],
                     "collection_field_type": null
                   },
@@ -812,7 +756,6 @@
                   "live_until": null,
                   "acls": null,
                   "complexACLs": [
-
                   ],
                   "order": null,
                   "show_condition": null,
@@ -831,10 +774,8 @@
                     "max": null,
                     "regular_expression": null,
                     "fixed_list_items": [
-
                     ],
                     "complex_fields": [
-
                     ],
                     "collection_field_type": null
                   },
@@ -844,7 +785,6 @@
                   "live_until": null,
                   "acls": null,
                   "complexACLs": [
-
                   ],
                   "order": null,
                   "show_condition": null,
@@ -863,10 +803,8 @@
                     "max": null,
                     "regular_expression": null,
                     "fixed_list_items": [
-
                     ],
                     "complex_fields": [
-
                     ],
                     "collection_field_type": null
                   },
@@ -876,7 +814,6 @@
                   "live_until": null,
                   "acls": null,
                   "complexACLs": [
-
                   ],
                   "order": null,
                   "show_condition": null,
@@ -895,10 +832,8 @@
                     "max": null,
                     "regular_expression": null,
                     "fixed_list_items": [
-
                     ],
                     "complex_fields": [
-
                     ],
                     "collection_field_type": null
                   },
@@ -908,7 +843,6 @@
                   "live_until": null,
                   "acls": null,
                   "complexACLs": [
-
                   ],
                   "order": null,
                   "show_condition": null,
@@ -927,7 +861,6 @@
                     "max": null,
                     "regular_expression": null,
                     "fixed_list_items": [
-
                     ],
                     "complex_fields": [
                       {
@@ -943,10 +876,8 @@
                           "max": null,
                           "regular_expression": null,
                           "fixed_list_items": [
-
                           ],
                           "complex_fields": [
-
                           ],
                           "collection_field_type": null
                         },
@@ -956,7 +887,6 @@
                         "live_until": null,
                         "acls": null,
                         "complexACLs": [
-
                         ],
                         "order": null,
                         "show_condition": null,
@@ -975,10 +905,8 @@
                           "max": null,
                           "regular_expression": null,
                           "fixed_list_items": [
-
                           ],
                           "complex_fields": [
-
                           ],
                           "collection_field_type": null
                         },
@@ -988,7 +916,6 @@
                         "live_until": null,
                         "acls": null,
                         "complexACLs": [
-
                         ],
                         "order": null,
                         "show_condition": null,
@@ -1007,10 +934,8 @@
                           "max": null,
                           "regular_expression": null,
                           "fixed_list_items": [
-
                           ],
                           "complex_fields": [
-
                           ],
                           "collection_field_type": null
                         },
@@ -1020,7 +945,6 @@
                         "live_until": null,
                         "acls": null,
                         "complexACLs": [
-
                         ],
                         "order": null,
                         "show_condition": null,
@@ -1039,10 +963,8 @@
                           "max": null,
                           "regular_expression": null,
                           "fixed_list_items": [
-
                           ],
                           "complex_fields": [
-
                           ],
                           "collection_field_type": null
                         },
@@ -1052,7 +974,6 @@
                         "live_until": null,
                         "acls": null,
                         "complexACLs": [
-
                         ],
                         "order": null,
                         "show_condition": null,
@@ -1067,7 +988,6 @@
                   "live_until": null,
                   "acls": null,
                   "complexACLs": [
-
                   ],
                   "order": null,
                   "show_condition": null,
@@ -1091,7 +1011,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1110,7 +1029,6 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
               {
@@ -1126,10 +1044,8 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1139,7 +1055,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1158,10 +1073,8 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1171,7 +1084,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1190,10 +1102,8 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1203,7 +1113,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1222,10 +1131,8 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1235,7 +1142,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1254,10 +1160,8 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
-
                   ],
                   "collection_field_type": null
                 },
@@ -1267,7 +1171,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1286,7 +1189,6 @@
                   "max": null,
                   "regular_expression": null,
                   "fixed_list_items": [
-
                   ],
                   "complex_fields": [
                     {
@@ -1302,10 +1204,8 @@
                         "max": null,
                         "regular_expression": null,
                         "fixed_list_items": [
-
                         ],
                         "complex_fields": [
-
                         ],
                         "collection_field_type": null
                       },
@@ -1315,7 +1215,6 @@
                       "live_until": null,
                       "acls": null,
                       "complexACLs": [
-
                       ],
                       "order": null,
                       "show_condition": null,
@@ -1334,10 +1233,8 @@
                         "max": null,
                         "regular_expression": null,
                         "fixed_list_items": [
-
                         ],
                         "complex_fields": [
-
                         ],
                         "collection_field_type": null
                       },
@@ -1347,7 +1244,6 @@
                       "live_until": null,
                       "acls": null,
                       "complexACLs": [
-
                       ],
                       "order": null,
                       "show_condition": null,
@@ -1366,10 +1262,8 @@
                         "max": null,
                         "regular_expression": null,
                         "fixed_list_items": [
-
                         ],
                         "complex_fields": [
-
                         ],
                         "collection_field_type": null
                       },
@@ -1379,7 +1273,6 @@
                       "live_until": null,
                       "acls": null,
                       "complexACLs": [
-
                       ],
                       "order": null,
                       "show_condition": null,
@@ -1398,10 +1291,8 @@
                         "max": null,
                         "regular_expression": null,
                         "fixed_list_items": [
-
                         ],
                         "complex_fields": [
-
                         ],
                         "collection_field_type": null
                       },
@@ -1411,7 +1302,6 @@
                       "live_until": null,
                       "acls": null,
                       "complexACLs": [
-
                       ],
                       "order": null,
                       "show_condition": null,
@@ -1426,7 +1316,6 @@
                 "live_until": null,
                 "acls": null,
                 "complexACLs": [
-
                 ],
                 "order": null,
                 "show_condition": null,
@@ -1449,7 +1338,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1468,10 +1356,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": {
               "id": "DateTime",
@@ -1480,10 +1366,8 @@
               "max": null,
               "regular_expression": null,
               "fixed_list_items": [
-
               ],
               "complex_fields": [
-
               ],
               "collection_field_type": null
             }
@@ -1502,7 +1386,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1521,10 +1404,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": {
               "id": "Date",
@@ -1533,10 +1414,8 @@
               "max": null,
               "regular_expression": null,
               "fixed_list_items": [
-
               ],
               "complex_fields": [
-
               ],
               "collection_field_type": null
             }
@@ -1555,7 +1434,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1574,10 +1452,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1595,7 +1471,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1614,10 +1489,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1635,7 +1508,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1654,10 +1526,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1675,7 +1545,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1694,10 +1563,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1715,7 +1582,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1734,10 +1600,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1755,7 +1619,6 @@
             }
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1774,10 +1637,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1786,10 +1647,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1808,10 +1667,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1820,10 +1677,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1842,10 +1697,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1854,10 +1707,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1876,10 +1727,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1888,10 +1737,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1910,10 +1757,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1922,10 +1767,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1944,10 +1787,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1956,10 +1797,8 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
@@ -1978,10 +1817,8 @@
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [
-
             ],
             "complex_fields": [
-
             ],
             "collection_field_type": null
           },
@@ -1990,18 +1827,16 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
           "acls": [
-
           ],
           "complexACLs": [
-
           ],
           "order": null,
           "show_condition": null,
           "display_context_parameter": null
         }
       ],
-      "printable_document_url" : "[[ANYTHING_PRESENT]]",
-      "security_classification" : "PUBLIC"
-		}
-	}
+      "printable_document_url": "[[ANYTHING_PRESENT]]",
+      "security_classification": "PUBLIC"
+    }
+  }
 }

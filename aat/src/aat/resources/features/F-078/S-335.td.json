@@ -9,15 +9,15 @@
     "returns the version number for case type id FT_MasterCaseType"
   ],
   "expectedResponse": {
-    "_extends_" : "Common_200_Response",
+    "_extends_": "Common_200_Response",
     "headers": {
-      "Content-Encoding" : "gzip",
-      "Content-Length" : "[[ANYTHING_PRESENT]]",
-      "Content-Type" : "application/json",
+      "Content-Encoding": "gzip",
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
-    "body" : {
-      "version" : "[[ANY_NUMBER_NOT_NULLABLE]]"
+    "body": {
+      "version": "[[ANY_NUMBER_NOT_NULLABLE]]"
     }
   }
 }

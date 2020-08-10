@@ -24,7 +24,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- validationError: DefaultValue '[INVALID]' is not a valid role for 'OrgPolicyCaseAssignedRole' "
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- validationError: DefaultValue '[INVALID]' is not a valid role for 'OrgPolicyCaseAssignedRole' "
     }
   }
 }

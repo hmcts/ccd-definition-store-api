@@ -24,58 +24,58 @@
     }
   },
   "expectedResponse": {
-      "responseCode" : 200,
-      "responseMessage" : "OK",
-      "headers" : {
-        "Content-Encoding" : "gzip",
-        "Content-Length" : "[[ANYTHING_PRESENT]]",
-        "Content-Type" : "application/vnd.spring-boot.actuator.v3+json",
-        "Date" : "[[ANYTHING_PRESENT]]",
-        "Vary" : "Accept-Encoding",
-        "Request-Context": "[[ANY_NULLABLE]]"
-      },
-      "body" : {
-        "status" : "UP",
-        "components" : {
-          "db" : {
-            "status" : "UP",
-            "details" : {
-              "database" : "PostgreSQL",
-              "result" : 1,
-              "validationQuery" : "SELECT 1"
-            }
-          },
-          "discoveryComposite": {
-            "description": "Discovery Client not initialized",
-            "status": "UNKNOWN",
-            "components": {
-              "discoveryClient": {
-                "description": "Discovery Client not initialized",
-                "status": "UNKNOWN"
-              }
-            }
-          },
-          "diskSpace" : {
-            "status" : "UP",
-            "details" : {
-              "total" : "[[ANYTHING_PRESENT]]",
-              "free" : "[[ANYTHING_PRESENT]]",
-              "threshold" : "[[ANYTHING_PRESENT]]"
-            }
-          },
-          "liveness" : {
-            "status" : "UP"
-          },
-          "ping": {
-            "status": "UP"
-          },
-          "refreshScope" : {
-            "status" : "UP"
-          },
-          "serviceAuth" : {
-            "status" : "UP"
+    "responseCode": 200,
+    "responseMessage": "OK",
+    "headers": {
+      "Content-Encoding": "gzip",
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/vnd.spring-boot.actuator.v3+json",
+      "Date": "[[ANYTHING_PRESENT]]",
+      "Vary": "Accept-Encoding",
+      "Request-Context": "[[ANY_NULLABLE]]"
+    },
+    "body": {
+      "status": "UP",
+      "components": {
+        "db": {
+          "status": "UP",
+          "details": {
+            "database": "PostgreSQL",
+            "result": 1,
+            "validationQuery": "SELECT 1"
           }
+        },
+        "discoveryComposite": {
+          "description": "Discovery Client not initialized",
+          "status": "UNKNOWN",
+          "components": {
+            "discoveryClient": {
+              "description": "Discovery Client not initialized",
+              "status": "UNKNOWN"
+            }
+          }
+        },
+        "diskSpace": {
+          "status": "UP",
+          "details": {
+            "total": "[[ANYTHING_PRESENT]]",
+            "free": "[[ANYTHING_PRESENT]]",
+            "threshold": "[[ANYTHING_PRESENT]]"
+          }
+        },
+        "liveness": {
+          "status": "UP"
+        },
+        "ping": {
+          "status": "UP"
+        },
+        "refreshScope": {
+          "status": "UP"
+        },
+        "serviceAuth": {
+          "status": "UP"
         }
       }
+    }
   }
 }

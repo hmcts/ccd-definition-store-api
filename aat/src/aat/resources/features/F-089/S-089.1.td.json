@@ -23,7 +23,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "Case Definition data successfully imported"
+      "__plainTextValue__": "Case Definition data successfully imported"
     }
   }
 }

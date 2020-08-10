@@ -17,9 +17,12 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "case_type_id" : "FT_DateTimeFormats",
-      "channels" : [ "CaseWorker", "CaseWorker" ],
-      "tabs" : "[[ANYTHING_PRESENT]]"
+      "case_type_id": "FT_DateTimeFormats",
+      "channels": [
+        "CaseWorker",
+        "CaseWorker"
+      ],
+      "tabs": "[[ANYTHING_PRESENT]]"
     }
   }
 }

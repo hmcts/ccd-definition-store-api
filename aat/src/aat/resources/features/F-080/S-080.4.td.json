@@ -19,9 +19,9 @@
     }
   },
   "expectedResponse": {
-    "_extends_" : "Common_404_Response",
-    "body" : {
-      "message" : "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+    "_extends_": "Common_404_Response",
+    "body": {
+      "message": "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
     }
   }
 }

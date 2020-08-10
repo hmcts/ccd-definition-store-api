@@ -14,10 +14,10 @@
   },
   "expectedResponse": {
     "_extends_": "Common_404_Response_Headers",
-    "responseCode" : 404,
-    "responseMessage" : "Not Found",
-    "body" : {
-      "message" : "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+    "responseCode": 404,
+    "responseMessage": "Not Found",
+    "body": {
+      "message": "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
     }
   }
 }
