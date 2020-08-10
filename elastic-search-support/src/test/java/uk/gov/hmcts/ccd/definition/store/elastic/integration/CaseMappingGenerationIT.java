@@ -1,5 +1,26 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
+import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
+import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
+import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
+
 import java.io.IOException;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -12,35 +33,6 @@ import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
-
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
-import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.test.context.BootstrapWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
-import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
-import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
-import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.ElasticSearchConfiguration;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
-import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
-import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 class CaseMappingGenerationIT extends ElasticsearchBaseTest {
 

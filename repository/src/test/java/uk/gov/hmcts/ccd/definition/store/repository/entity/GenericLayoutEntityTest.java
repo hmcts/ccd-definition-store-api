@@ -1,20 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import com.sun.jna.platform.win32.DBT;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import uk.gov.hmcts.ccd.definition.store.utils.ComplexFieldBuilder;
-
-import java.util.Collections;
-import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -22,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.ComplexFieldBuilder.newComplexField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
 class GenericLayoutEntityTest {
 
