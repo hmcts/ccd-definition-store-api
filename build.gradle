@@ -64,7 +64,7 @@ dependencyCheck {
 
 //spring boot dependency override
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
-ext['elasticsearch.version'] = '6.4.2'
+ext['elasticsearch.version'] = '7.7.0'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.10.Final'
 //overriding log4j2 default version 2.7 because of vulnerability issues
@@ -115,7 +115,7 @@ allprojects {
     apply plugin: 'java'
 
     ext {
-        elasticSearchVersion = '6.4.2'
+        elasticSearchVersion = '7.7.0'
     }
 
     dependencies {
