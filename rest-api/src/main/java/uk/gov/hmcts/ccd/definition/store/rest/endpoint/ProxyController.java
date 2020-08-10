@@ -33,6 +33,7 @@ public class ProxyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProxyController.class);
 
+    @SuppressWarnings("squid:S5144")
     @RequestMapping(value = "/proxy", method = RequestMethod.POST, produces = {"application/json"})
     public String proxyRequest(@RequestBody String url) throws IOException {
         HttpGet request = new HttpGet(url);
@@ -47,7 +48,7 @@ public class ProxyController {
         }
     }
 
-    @SuppressWarnings({"squid:S1313", "squid:S5144"})
+    @SuppressWarnings("squid:S1313")
     private HttpClientConnectionManager createHttpClientConnectionManager() {
 
         Map<String,String> hostToIp = new HashMap<>();
