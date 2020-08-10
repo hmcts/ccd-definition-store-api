@@ -27,6 +27,7 @@ import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -41,10 +42,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
-@RunWith(SpringRunner.class)
-@BootstrapWith(SpringBootTestContextBootstrapper.class)
-@ContextConfiguration(classes = ElasticSearchConfiguration.class, initializers = ConfigFileApplicationContextInitializer.class)
-public class CaseMappingGenerationIT implements TestUtils {
+class CaseMappingGenerationIT extends ElasticsearchBaseTest {
 
     @Autowired
     private ElasticDefinitionImportListener listener;
@@ -65,12 +63,12 @@ public class CaseMappingGenerationIT implements TestUtils {
     private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         when(clientObjectFactory.getObject()).thenReturn(client);
     }
 
     @Test
-    public void testListeningToDefinitionImportedEvent() throws IOException {
+    void testListeningToDefinitionImportedEvent() throws IOException {
         CaseTypeEntity caseType = createCaseType();
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
@@ -80,7 +78,7 @@ public class CaseMappingGenerationIT implements TestUtils {
     }
 
     @Test
-    public void testMappingGeneration() {
+    void testMappingGeneration() {
         CaseTypeEntity caseType = createCaseType();
 
         String mapping = mappingGenerator.generateMapping(caseType);
