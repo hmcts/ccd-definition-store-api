@@ -19,40 +19,27 @@ sourceSets {
 }
 
 task smoke(type: Test) {
-    systemProperty "http.proxyHost", System.getProperty('http.proxyHost')
-    systemProperty "http.proxyPort", System.getProperty('http.proxyPort')
-    systemProperty "https.proxyHost", System.getProperty('https.proxyHost')
-    systemProperty "https.proxyPort", System.getProperty('https.proxyPort')
-
-    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-
-    group = 'Delivery pipeline'
-    description = 'Executes smoke tests against an AAT CCD Data Store instance'
+    description = 'Executes smoke tests against the CCD Definition Store Instance just deployed'
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
     setClasspath(sourceSets.aat.runtimeClasspath)
-    include "/aat/src/aat/java/uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
-
+    include "uk/gov/hmcts/ccd/definitionstore/befta/**"
     useJUnitPlatform {
         includeTags 'smoke'
     }
-
-    doFirst {
+    doLast {
+        generateCucumberReports.enabled = true
         javaexec {
-            main = "uk.gov.hmcts.ccd.definitionstore.befta.TestDataLoaderMain"
-            classpath += sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-            args = ['']
+            main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
+            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
+                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+            jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
         }
     }
 }
 
 task functional(type: Test) {
-    systemProperty "http.proxyHost", System.getProperty('http.proxyHost')
-    systemProperty "http.proxyPort", System.getProperty('http.proxyPort')
-    systemProperty "https.proxyHost", System.getProperty('https.proxyHost')
-    systemProperty "https.proxyPort", System.getProperty('https.proxyPort')
-
-    group = 'Delivery pipeline'
-    description = 'Executes functional tests against an AAT CCD Definition Store Instance'
+    description = 'Executes functional tests against the CCD Definition Store Instance just deployed'
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
     setClasspath(sourceSets.aat.runtimeClasspath)
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
@@ -67,6 +54,7 @@ task functional(type: Test) {
             classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
             args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
                     'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+            jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
         }
     }
 }

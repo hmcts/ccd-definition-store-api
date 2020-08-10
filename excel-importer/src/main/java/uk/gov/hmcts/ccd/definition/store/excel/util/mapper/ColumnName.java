@@ -69,6 +69,7 @@ public enum ColumnName {
     TITLE_DISPLAY("TitleDisplay"),
     USER_IDAM_ID("UserIDAMId"),
     USER_ROLE("UserRole"),
+    USE_CASE("UseCase"),
     RESULTS_ORDERING("ResultsOrdering"),
     WORK_BASKET_DEFAULT_JURISDICTION("WorkBasketDefaultJurisdiction"),
     WORK_BASKET_DEFAULT_CASETYPE("WorkBasketDefaultCaseType"),
@@ -76,7 +77,8 @@ public enum ColumnName {
     BANNER_ENABLED("BannerEnabled"),
     BANNER_DESCRIPTION("BannerDescription"),
     BANNER_URL_TEXT("BannerURLText"),
-    BANNER_URL("BannerURL");
+    BANNER_URL("BannerURL"),
+    DEFAULT_VALUE("DefaultValue");
 
     private final String name;
 
@@ -132,6 +134,10 @@ public enum ColumnName {
             case WORK_BASKET_RESULT_FIELDS:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
                     || columnName.equals(ColumnName.CASE_FIELD_ID);
+            case SEARCH_CASES_RESULT_FIELDS:
+                return columnName.equals(ColumnName.CASE_TYPE_ID)
+                    || columnName.equals(ColumnName.CASE_FIELD_ID)
+                    || columnName.equals(ColumnName.USE_CASE);
             case CASE_TYPE_TAB:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
                     || columnName.equals(ColumnName.TAB_ID)

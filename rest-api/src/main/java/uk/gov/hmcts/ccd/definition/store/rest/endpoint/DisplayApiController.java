@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.BannersResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfigResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputDefinition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultDefinition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
@@ -82,8 +84,7 @@ public class DisplayApiController {
         return this.displayService.findTabStructureForCaseType(id);
     }
 
-    @RequestMapping(value = "/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}",
-        method = RequestMethod.GET, produces = {"application/json"})
+    @GetMapping(path = "/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}")
     @ApiOperation(value = "Fetch a Case Wizard Page Collection for a given Case Type",
         notes = "Returns the schema of a single case type.\n", response = CaseTabCollection.class)
     @ApiResponses(value = {
@@ -116,6 +117,18 @@ public class DisplayApiController {
     public WorkBasketResult displayWorkBasketDefinitionIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
         return this.displayService.findWorkBasketDefinitionForCaseType(id);
+    }
+
+    @GetMapping(path = "/display/search-cases-result-fields/{id}")
+    @ApiOperation(value = "Fetch the UI definition for the search cases result for a given Case Type", notes = "", response = SearchCasesResult.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Search Case Result Fields"),
+        @ApiResponse(code = 200, message = "Unexpected error")
+    })
+    public SearchCasesResult displaySearchCasesResultIdGet(
+        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id, @RequestParam(value = "usecase", required = false) String usecase) {
+        return (usecase == null || usecase.isEmpty()) ? this.displayService.findSearchCasesResultDefinitionForCaseType(id)
+            : this.displayService.findSearchCasesResultDefinitionForCaseType(id, usecase);
     }
 
     @RequestMapping(value = "/display/banners", method = RequestMethod.GET, produces = {"application/json"})

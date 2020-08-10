@@ -56,6 +56,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEnti
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
@@ -84,6 +85,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
@@ -144,6 +146,7 @@ class EntityToResponseDTOMapperTest {
             eventComplexTypeEntity1.setDisplayContext(DisplayContext.MANDATORY);
             eventComplexTypeEntity1.setHint("Hint text");
             eventComplexTypeEntity1.setLabel("Label text");
+            eventComplexTypeEntity1.setDefaultValue("DefaultValue1");
 
             EventComplexTypeEntity eventComplexTypeEntity2 = new EventComplexTypeEntity();
             String ref2 = "Some ref2";
@@ -153,6 +156,7 @@ class EntityToResponseDTOMapperTest {
             eventComplexTypeEntity2.setDisplayContext(DisplayContext.OPTIONAL);
             eventComplexTypeEntity2.setHint("Hint text2");
             eventComplexTypeEntity2.setLabel("Label text2");
+            eventComplexTypeEntity2.setDefaultValue("Ref2DefaultValue");
 
             EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
             eventCaseFieldEntity.setShowSummaryChangeOption(true);
@@ -176,6 +180,11 @@ class EntityToResponseDTOMapperTest {
                 () -> assertEquals("displayContext",
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDisplayContext(),
                     findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContext()),
+
+                () -> assertEquals("DefaultValue1",
+                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDefaultValue(),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDefaultValue()),
+
                 () -> assertEquals("order",
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getOrder(),
                     findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder())
@@ -1420,6 +1429,59 @@ class EntityToResponseDTOMapperTest {
             WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
 
             assertThat(workBasketResult.isMetadata(), is(true));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Should create a SearchCasesResultFields matching SearchCasesResultFieldsEntity fields")
+    class SearchCasesResultFieldsEntityTests {
+
+        @Test
+        void testMapSearchCasesResultFieldEntity() {
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setReference("role1");
+            SearchCasesResultFieldEntity searchCasesResultFieldEntity = new SearchCasesResultFieldEntity();
+            CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+            caseFieldEntity.setReference("CaseFieldReference");
+            searchCasesResultFieldEntity.setCaseField(caseFieldEntity);
+            searchCasesResultFieldEntity.setCaseFieldElementPath("SomePath");
+            searchCasesResultFieldEntity.setLabel("Label");
+            searchCasesResultFieldEntity.setOrder(69);
+            searchCasesResultFieldEntity.setUserRole(userRoleEntity);
+            SortOrder sortOrder = new SortOrder(2, "ASC");
+            searchCasesResultFieldEntity.setSortOrder(sortOrder);
+            searchCasesResultFieldEntity.setDisplayContextParameter("DisplayContextParameter");
+            searchCasesResultFieldEntity.setUseCase("orgCase");
+
+            SearchCasesResultField searchCasesResultField = spyOnClassUnderTest.map(searchCasesResultFieldEntity);
+
+            assertEquals(searchCasesResultFieldEntity.getOrder(), searchCasesResultField.getOrder());
+            assertEquals(searchCasesResultFieldEntity.getCaseFieldElementPath(), searchCasesResultField.getCaseFieldElementPath());
+            assertEquals(searchCasesResultFieldEntity.getLabel(), searchCasesResultField.getLabel());
+            assertEquals(searchCasesResultFieldEntity.getCaseField().getReference(), searchCasesResultField.getCaseFieldId());
+            assertEquals(searchCasesResultFieldEntity.getDisplayContextParameter(), searchCasesResultField.getDisplayContextParameter());
+            assertEquals(searchCasesResultFieldEntity.getUseCase(), searchCasesResultField.getUseCase());
+            assertEquals(userRoleEntity.getReference(), searchCasesResultField.getRole());
+
+            assertEquals(sortOrder.getDirection(), searchCasesResultField.getSortOrder().getDirection());
+            assertEquals(sortOrder.getPriority(), searchCasesResultField.getSortOrder().getPriority());
+
+        }
+
+        @Test
+        void shouldSetMetadataFlagOnDto() {
+            SearchCasesResultFieldEntity searchCasesResultFieldEntity = new SearchCasesResultFieldEntity();
+            CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+            caseFieldEntity.setReference("CaseFieldReference");
+            caseFieldEntity.setDataFieldType(DataFieldType.METADATA);
+            searchCasesResultFieldEntity.setCaseField(caseFieldEntity);
+            searchCasesResultFieldEntity.setLabel("Label");
+            searchCasesResultFieldEntity.setOrder(69);
+
+            SearchCasesResultField searchCasesResultField = spyOnClassUnderTest.map(searchCasesResultFieldEntity);
+
+            assertThat(searchCasesResultField.isMetadata(), is(true));
         }
 
     }

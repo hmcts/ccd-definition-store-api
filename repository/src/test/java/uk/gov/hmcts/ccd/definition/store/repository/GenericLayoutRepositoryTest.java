@@ -88,6 +88,39 @@ public class GenericLayoutRepositoryTest {
     }
 
     @Test
+    public void shouldReturnSearchCasesResultLayoutsForLatestCaseType_whenSearchCasesResultLayoutsExistForThreeCaseVersions() {
+
+        genericLayoutRepository.save(createSearchCasesResultField(caseTypeV1, getCaseField(caseTypeV1, "cf1"), "label dg", 4));
+        genericLayoutRepository.save(createSearchCasesResultField(caseTypeV2, getCaseField(caseTypeV2, "cf1"), "label dg", 4));
+        genericLayoutRepository.save(createSearchCasesResultField(caseTypeV3, getCaseField(caseTypeV3, "cf1"), "label dg", 4));
+
+        final List<SearchCasesResultFieldEntity> fetched = genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeV3.getReference());
+
+        assertThat(fetched, hasSize(1));
+
+        SearchCasesResultFieldEntity fetchedField = fetched.get(0);
+        assertThat(fetchedField, allOf(
+            hasProperty("label", equalTo("label dg")),
+            hasProperty("order", equalTo(4))
+        ));
+
+        assertThat(fetchedField.getCaseField(), hasProperty("reference", is("cf1")));
+        assertThat(fetchedField.getCaseType(), is(caseTypeV3));
+    }
+
+    private SearchCasesResultFieldEntity createSearchCasesResultField(final CaseTypeEntity caseType,
+                                                                final CaseFieldEntity caseFieldEntity,
+                                                                final String label,
+                                                                final int order) {
+        final SearchCasesResultFieldEntity f = new SearchCasesResultFieldEntity();
+        f.setCaseType(caseType);
+        f.setCaseField(caseFieldEntity);
+        f.setLabel(label);
+        f.setOrder(order);
+        return f;
+    }
+
+    @Test
     public void shouldSearchInputLayoutsForLatestCaseType_whenSearchInputLayoutsExistForThreeCaseVersions() {
 
         genericLayoutRepository.save(createSearchInputCaseField(caseTypeV1, getCaseField(caseTypeV1, "cf2"), "qwerty", 6));

@@ -312,6 +312,57 @@ public class DisplayServiceTest {
     }
 
     @Nested
+    class FindSearchCasesResultDefinitionForCaseType {
+
+        @Test
+        void shouldReturnEquivalentSearchCasesResult_whenSearchCasesFieldEntitiesExist() {
+
+            String caseTypeId = "CaseTypeId";
+
+            SearchCasesResultFieldEntity searchCasesResultFieldEntity = new SearchCasesResultFieldEntity();
+            SearchCasesResultFieldEntity searchCasesResultFieldEntity1 = new SearchCasesResultFieldEntity();
+            SearchCasesResultFieldEntity searchCasesResultFieldEntity2 = new SearchCasesResultFieldEntity();
+
+            when(genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(any())).thenReturn(
+                Arrays.asList(
+                    searchCasesResultFieldEntity, searchCasesResultFieldEntity1, searchCasesResultFieldEntity2
+                )
+            );
+
+            SearchCasesResultField searchCasesResultField1 = new SearchCasesResultField();
+            SearchCasesResultField searchCasesResultField2 = new SearchCasesResultField();
+            SearchCasesResultField searchCasesResultField3 = new SearchCasesResultField();
+
+            when(entityToResponseDTOMapper.map(searchCasesResultFieldEntity)).thenReturn(searchCasesResultField1);
+            when(entityToResponseDTOMapper.map(searchCasesResultFieldEntity1)).thenReturn(searchCasesResultField2);
+            when(entityToResponseDTOMapper.map(searchCasesResultFieldEntity2)).thenReturn(searchCasesResultField3);
+
+            SearchCasesResult searchCasesResult = classUnderTest.findSearchCasesResultDefinitionForCaseType(caseTypeId);
+
+            assertEquals(caseTypeId, searchCasesResult.getCaseTypeId());
+            assertEquals(3, searchCasesResult.getFields().size());
+            assertThat(searchCasesResult.getFields(), hasItems(searchCasesResultField1, searchCasesResultField2, searchCasesResultField3));
+
+        }
+
+        @Test
+        void shouldReturnSearchCasesResultWithEmptySearchResultFieldList_whenNoSearchCasesResultFieldEntitiesForCaseType() {
+
+            String caseTypeId = "CaseTypeId";
+
+            when(genericLayoutRepository.findSearchResultsByCaseTypeReference(any())).thenReturn(
+                Collections.emptyList()
+            );
+
+            SearchCasesResult searchCasesResult = classUnderTest.findSearchCasesResultDefinitionForCaseType(caseTypeId);
+
+            assertTrue(searchCasesResult.getFields().isEmpty());
+
+        }
+
+    }
+
+    @Nested
     class FindWizardPageForCaseType {
 
         @Test

@@ -592,6 +592,84 @@ public class GenericLayoutParserTest {
         assertEquals(DISPLAY_CONTEXT_PARAMETER, entity.getDisplayContextParameter());
     }
 
+    @Test
+    @DisplayName("Should create a generic layout entity")
+    public void shouldCreateGenericLayoutEntityParseAllSearchCases() {
+        ParseContext context = new ParseContext();
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference(CASE_TYPE_ID);
+        CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+        caseFieldEntity1.setReference(CASE_FIELD_ID_1);
+        context.registerCaseType(caseTypeEntity);
+        context.registerCaseFieldForCaseType(CASE_TYPE_ID, caseFieldEntity1);
+
+        final String label = "LABEL";
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(SEARCH_RESULT_FIELD.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        item.addAttribute(ColumnName.RESULTS_ORDERING, "1:DESC");
+        item.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, DISPLAY_CONTEXT_PARAMETER);
+        item.addAttribute(ColumnName.LABEL, label);
+        sheet.addDataItem(item);
+        definitionSheets.put(SEARCH_RESULT_FIELD.getName(), sheet);
+
+        classUnderTest = new SearchResultLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
+        ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAllSearchCases(definitionSheets);
+
+        GenericLayoutEntity entity = parseResult.getAllResults().get(0);
+        assertEquals(CASE_TYPE_ID, entity.getCaseType().getReference());
+        assertEquals(CASE_FIELD_ID_1, entity.getCaseField().getReference());
+        assertEquals((Integer) 3, entity.getOrder());
+        assertEquals(label, entity.getLabel());
+        assertEquals(DISPLAY_CONTEXT_PARAMETER, entity.getDisplayContextParameter());
+    }
+
+    @Test
+    @DisplayName("duplicate sort order priority per user role should generate error")
+    public void shouldFailForDuplicateSortOrderPriorityPerUserRoleParseAllsearchCases() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        item.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
+        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        item2.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
+        sheet.addDataItem(item2);
+        addCaseType2Field(sheet); // CASE_TYPE_ID2
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllSearchCases(definitionSheets));
+        assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
+            item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Unknown definitions should generate error")
+    public void shouldFailIfUnknownCaseTypeParseAllSearchCases() {
+        final DefinitionSheet sheet = new DefinitionSheet();
+        final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
+        sheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID, INVALID_CASE_TYPE_ID);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
+        item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
+        sheet.addDataItem(item2);
+        definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
+        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllSearchCases(definitionSheets));
+        assertEquals(String.format("Unknown Case Type '%s' for layout '%s'",
+            INVALID_CASE_TYPE_ID, classUnderTest.getLayoutName()), thrown.getMessage());
+    }
+
     private void addCaseType2Field(DefinitionSheet sheet) {
         final DefinitionDataItem item3 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item3.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);

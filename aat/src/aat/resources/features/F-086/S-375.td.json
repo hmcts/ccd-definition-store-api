@@ -103,6 +103,78 @@
           "order" : 1,
           "page_column_no" : null,
           "complex_field_overrides" : [ ]
+        },
+        {
+          "case_field_id" : "OrganisationPolicyField1",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [
+          {
+            "__ordering__": "unordered",
+            "__elementId__": "complex_field_element_id"
+          
+          }, {
+            "complex_field_element_id" : "OrganisationPolicyField1.Organisation.OrganisationID",
+            "display_context" : "OPTIONAL",
+            "label" : null,
+            "hint_text" : null,
+            "show_condition" : null,
+            "default_value" : null
+          }, {
+            "complex_field_element_id" : "OrganisationPolicyField1.Organisation.OrganisationName",
+            "display_context" : "OPTIONAL",
+            "label" : null,
+            "hint_text" : null,
+            "show_condition" : null,
+            "default_value" : null
+          }, {
+            "complex_field_element_id" : "OrganisationPolicyField1.OrgPolicyCaseAssignedRole",
+            "display_context" : "OPTIONAL",
+            "label" : null,
+            "hint_text" : null,
+            "show_condition" : null,
+            "default_value" : "[Claimant]"
+          }, {
+            "complex_field_element_id" : "OrganisationPolicyField1.OrgPolicyReference",
+            "display_context" : "OPTIONAL",
+            "label" : null,
+            "hint_text" : null,
+            "show_condition" : null,
+            "default_value" : null
+          } ]
+        }, {
+          "case_field_id" : "OrganisationPolicyField2",
+          "order" : 1,
+          "page_column_no" : null,
+          "complex_field_overrides" : [ {
+            "complex_field_element_id" : "OrganisationPolicyField2.Organisation.OrganisationID",
+            "display_context" : "OPTIONAL",
+            "label" : null,
+            "hint_text" : null,
+            "show_condition" : null,
+            "default_value" : null
+          }, {
+            "complex_field_element_id" : "OrganisationPolicyField2.Organisation.OrganisationName",
+            "display_context" : "OPTIONAL",
+            "label" : null,
+            "hint_text" : null,
+            "show_condition" : null,
+            "default_value" : null
+          }, {
+            "complex_field_element_id" : "OrganisationPolicyField2.OrgPolicyCaseAssignedRole",
+            "display_context" : "OPTIONAL",
+            "label" : null,
+            "hint_text" : null,
+            "show_condition" : null,
+            "default_value" : "[Defendant]"
+          }, {
+            "complex_field_element_id" : "OrganisationPolicyField2.OrgPolicyReference",
+            "display_context" : "OPTIONAL",
+            "label" : null,
+            "hint_text" : null,
+            "show_condition" : null,
+            "default_value" : null
+          } ]
         } ],
         "show_condition" : null,
         "callback_url_mid_event" : null,

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -23,17 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionUiConfigParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.LayoutParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
@@ -136,11 +127,12 @@ public class ImportServiceImpl implements ImportService {
 
         logger.info("Importing spreadsheet: Jurisdiction {} : OK ", jurisdiction.getReference());
 
+        bannerService.deleteJurisdictionBanners(jurisdiction.getReference());
         if (definitionSheets.get(SheetName.BANNER.getName()) != null) {
             logger.debug("Importing spreadsheet: Banner...");
             final BannerParser bannerParser = parserFactory.createBannerParser(parseContext);
-            BannerEntity bannerEntity = bannerParser.parse(definitionSheets);
-            importBanner(bannerEntity);
+            Optional<BannerEntity> bannerEntity = bannerParser.parse(definitionSheets);
+            bannerEntity.ifPresent(this::importBanner);
             logger.debug("Importing spreadsheet: Banner...: OK");
         }
         final JurisdictionUiConfigParser jurisdictionUiConfigParser = parserFactory.createJurisdictionUiConfigParser(parseContext);
@@ -203,6 +195,11 @@ public class ImportServiceImpl implements ImportService {
         layoutService.createGenerics(workbasketInputResult.getNewResults());
         layoutService.createGenerics(workbasketLayoutResult.getNewResults());
 
+        if (definitionSheets.get(SheetName.SEARCH_CASES_RESULT_FIELDS.getName()) != null) {
+            final ParseResult<GenericLayoutEntity> searchCasesResultLayoutResult = layoutParser.parseSearchCasesResultsLayout(definitionSheets);
+            layoutService.createGenerics(searchCasesResultLayoutResult.getNewResults());
+        }
+
         final ParseResult<DisplayGroupEntity> displayGroupsResult = layoutParser.parseAllDisplayGroups(definitionSheets);
         layoutService.createDisplayGroups(displayGroupsResult.getNewResults());
 
@@ -264,7 +261,7 @@ public class ImportServiceImpl implements ImportService {
     private void importBanner(BannerEntity bannerEntity) {
         bannerService.save(bannerEntity);
     }
-    
+
     private void importJurisdictionUiConfig(JurisdictionUiConfigEntity jurisdictionUiConfigEntity) {
         jurisdictionUiConfigService.save(jurisdictionUiConfigEntity);
     }

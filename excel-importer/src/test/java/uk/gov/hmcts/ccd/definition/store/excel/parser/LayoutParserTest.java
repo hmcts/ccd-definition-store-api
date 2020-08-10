@@ -45,6 +45,8 @@ class LayoutParserTest {
     private SearchInputLayoutParser searchInputLayoutParser;
     @Mock
     private SearchResultLayoutParser searchResultLayoutParser;
+    @Mock
+    private SearchCasesResultLayoutParser searchCasesResultLayoutParser;
 
     private LayoutParser underTest;
     private Map<String, DefinitionSheet> definitionSheets;
@@ -77,7 +79,8 @@ class LayoutParserTest {
                 entityToDefinitionDataItemRegistry),
             new WizardPageParser(context,
                 showConditionParser,
-                entityToDefinitionDataItemRegistry));
+                entityToDefinitionDataItemRegistry),
+            searchCasesResultLayoutParser);
 
         definitionSheets = new HashMap<>();
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), buildSheetForGenerics(WORK_BASKET_RESULT_FIELDS));
@@ -102,6 +105,14 @@ class LayoutParserTest {
         underTest.parseWorkbasketLayout(definitionSheets);
 
         verify(workbasketLayoutParser).parseAll(definitionSheets);
+    }
+
+    @Test
+    @DisplayName("parseSearchCasesResultsLayout() - delegates to searchCasesResultLayoutParser")
+    void parseSearchCasesResultsLayout() {
+        underTest.parseSearchCasesResultsLayout(definitionSheets);
+
+        verify(searchCasesResultLayoutParser).parseAllSearchCases(definitionSheets);
     }
 
     @Test
