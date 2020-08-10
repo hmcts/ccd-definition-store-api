@@ -47,7 +47,7 @@ public class ProxyController {
         }
     }
 
-    @SuppressWarnings("squid:S1313")
+    @SuppressWarnings({"squid:S1313", "squid:S5144"})
     private HttpClientConnectionManager createHttpClientConnectionManager() {
 
         Map<String,String> hostToIp = new HashMap<>();
