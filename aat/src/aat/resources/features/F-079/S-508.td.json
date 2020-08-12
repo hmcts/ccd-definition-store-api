@@ -44,6 +44,11 @@
           "order": 4,
           "case_fields": [
             {
+              "__operator__": "equivalent",
+              "__ordering__": "unordered",
+              "__elementId__": "case_field_id"
+            },
+            {
               "case_field_id": "DateField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
@@ -53,7 +58,6 @@
               "label": null,
               "hint_text": null,
               "case_fields_complex": [
-
               ]
             },
             {
@@ -107,6 +111,11 @@
           "description": null,
           "order": 3,
           "case_fields": [
+            {
+              "__operator__": "equivalent",
+              "__ordering__": "unordered",
+              "__elementId__": "case_field_id"
+            },
             {
               "case_field_id": "MetaLabelField",
               "display_context": "READONLY",
@@ -263,6 +272,11 @@
           "order": 2,
           "case_fields": [
             {
+              "__operator__": "equivalent",
+              "__ordering__": "unordered",
+              "__elementId__": "case_field_id"
+            },
+            {
               "case_field_id": "MetaLabelField",
               "display_context": "READONLY",
               "display_context_parameter": null,
@@ -417,6 +431,11 @@
           "description": null,
           "order": 1,
           "case_fields": [
+            {
+              "__operator__": "equivalent",
+              "__ordering__": "unordered",
+              "__elementId__": "case_field_id"
+            },
             {
               "case_field_id": "MetaLabelField",
               "display_context": "READONLY",
