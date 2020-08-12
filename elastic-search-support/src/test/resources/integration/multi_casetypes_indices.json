@@ -1,0 +1,268 @@
+{
+    "casetypea_cases-000001": {
+        "aliases": {
+            "casetypea_cases": {}
+        },
+        "mappings": {
+            "_doc": {
+                "dynamic": "true",
+                "properties": {
+                    "@timestamp": {
+                        "type": "object",
+                        "enabled": false
+                    },
+                    "@version": {
+                        "type": "object",
+                        "enabled": false
+                    },
+                    "case_type_id": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "created_date": {
+                        "type": "date",
+                        "ignore_malformed": true
+                    },
+                    "data": {
+                        "properties": {
+                            "TextField1": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "data_classification": {
+                        "properties": {
+                            "TextField1": {
+                                "type": "keyword"
+                            }
+                        }
+                    },
+                    "id": {
+                        "type": "long"
+                    },
+                    "index_id": {
+                        "type": "object",
+                        "enabled": false
+                    },
+                    "jurisdiction": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "last_modified": {
+                        "type": "date",
+                        "ignore_malformed": true
+                    },
+                    "last_state_modified_date": {
+                        "type": "date",
+                        "ignore_malformed": true
+                    },
+                    "reference": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "security_classification": {
+                        "type": "keyword"
+                    },
+                    "state": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "settings": {
+            "index": {
+                "mapping": {
+                    "total_fields": {
+                        "limit": "8000"
+                    }
+                },
+                "number_of_shards": "8",
+                "provided_name": "casetypea_cases-000001",
+                "creation_date": "1597243707039",
+                "analysis": {
+                    "filter": {
+                        "whitespace_remove": {
+                            "pattern": " ",
+                            "type": "pattern_replace",
+                            "replacement": ""
+                        }
+                    },
+                    "analyzer": {
+                        "phone_number_analyzer": {
+                            "filter": [
+                                "whitespace_remove"
+                            ],
+                            "type": "custom",
+                            "tokenizer": "keyword"
+                        }
+                    }
+                },
+                "number_of_replicas": "3",
+                "uuid": "TRTl0PvSS_iDklw3sLo8Tw",
+                "version": {
+                    "created": "6040299"
+                }
+            }
+        }
+    },
+    "casetypeb_cases-000001": {
+        "aliases": {
+            "casetypeb_cases": {}
+        },
+        "mappings": {
+            "_doc": {
+                "dynamic": "true",
+                "properties": {
+                    "@timestamp": {
+                        "type": "object",
+                        "enabled": false
+                    },
+                    "@version": {
+                        "type": "object",
+                        "enabled": false
+                    },
+                    "case_type_id": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "created_date": {
+                        "type": "date",
+                        "ignore_malformed": true
+                    },
+                    "data": {
+                        "properties": {
+                            "TextField2": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "data_classification": {
+                        "properties": {
+                            "TextField2": {
+                                "type": "keyword"
+                            }
+                        }
+                    },
+                    "id": {
+                        "type": "long"
+                    },
+                    "index_id": {
+                        "type": "object",
+                        "enabled": false
+                    },
+                    "jurisdiction": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "last_modified": {
+                        "type": "date",
+                        "ignore_malformed": true
+                    },
+                    "last_state_modified_date": {
+                        "type": "date",
+                        "ignore_malformed": true
+                    },
+                    "reference": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "security_classification": {
+                        "type": "keyword"
+                    },
+                    "state": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "settings": {
+            "index": {
+                "mapping": {
+                    "total_fields": {
+                        "limit": "8000"
+                    }
+                },
+                "number_of_shards": "8",
+                "provided_name": "casetypeb_cases-000001",
+                "creation_date": "1597243708413",
+                "analysis": {
+                    "filter": {
+                        "whitespace_remove": {
+                            "pattern": " ",
+                            "type": "pattern_replace",
+                            "replacement": ""
+                        }
+                    },
+                    "analyzer": {
+                        "phone_number_analyzer": {
+                            "filter": [
+                                "whitespace_remove"
+                            ],
+                            "type": "custom",
+                            "tokenizer": "keyword"
+                        }
+                    }
+                },
+                "number_of_replicas": "3",
+                "uuid": "4GtroooxRmaqYNlkWLwzDg",
+                "version": {
+                    "created": "6040299"
+                }
+            }
+        }
+    }
+}

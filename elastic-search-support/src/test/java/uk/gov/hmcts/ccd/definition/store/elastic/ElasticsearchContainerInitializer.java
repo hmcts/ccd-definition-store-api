@@ -18,7 +18,8 @@ public class ElasticsearchContainerInitializer implements ApplicationContextInit
     public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
         elasticsearchContainer = CcdElasticsearchContainer.getInstance();
         TestPropertyValues
-            .of("elasticsearch.port=" + elasticsearchContainer.getMappedPort(9200))
+            .of("elasticsearch.port=" + elasticsearchContainer.getMappedPort(9200),
+                "elasticsearch.host=" + elasticsearchContainer.getHost())
             .applyTo(configurableApplicationContext.getEnvironment());
     }
 }

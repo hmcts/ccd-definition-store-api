@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 public abstract class ElasticsearchBaseTest implements TestUtils {
 
     private static final String GET = "GET";
+    private static final String DELETE = "DELETE";
+    protected static final String WILDCARD = "*";
 
     @Autowired
     private RestHighLevelClient elasticClient;
@@ -30,11 +32,13 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
             .toArray(Customization[]::new));
     }
 
-    protected String getElasticsearchIndexes(String... caseTypes) throws IOException {
-        return elasticResponseAs(GET, String.format("/%s",
-            Arrays.stream(caseTypes)
-                .map(caseType -> caseType.toLowerCase() + "_cases")
-                .collect(Collectors.joining(","))));
+    protected String getElasticsearchIndices(String... caseTypes) throws IOException {
+        return elasticResponseAs(GET, String.format("/%s", getIndicesFromCaseTypes(caseTypes)));
+    }
+
+    protected String deleteElasticsearchIndices(String... caseTypes) throws IOException {
+        String indices = caseTypes[0].equals(WILDCARD) ? WILDCARD : String.format("/%s", getIndicesFromCaseTypes(caseTypes));
+        return elasticResponseAs(DELETE, indices);
     }
 
     private String elasticResponseAs(String method, String endpoint) throws IOException {
@@ -42,5 +46,11 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
             .getLowLevelClient()
             .performRequest(method, endpoint)
             .getEntity());
+    }
+
+    private String getIndicesFromCaseTypes(String... caseTypes) {
+        return Arrays.stream(caseTypes)
+            .map(caseType -> caseType.toLowerCase() + "_cases")
+            .collect(Collectors.joining(","));
     }
 }
