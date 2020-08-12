@@ -108,14 +108,12 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     private String[] getDynamicIndexResponseFields(String... indexNames) {
         return Arrays.stream(indexNames)
             .map(String::toLowerCase)
-            .map(index -> {
-                return new String[] {
+            .map(index -> new String[] {
                     // Paths of fields which may have a different value each time an index is created
                     index + "_cases-000001.settings.index.creation_date",
                     index + "_cases-000001.settings.index.uuid",
-                    index + "_cases-000001.settings.index.version.created"
-                };
-            }).flatMap(Arrays::stream)
+                    index + "_cases-000001.settings.index.version.created"})
+            .flatMap(Arrays::stream)
             .toArray(String[]::new);
     }
 

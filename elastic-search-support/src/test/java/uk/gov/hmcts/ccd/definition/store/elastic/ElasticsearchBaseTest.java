@@ -33,15 +33,15 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
     }
 
     protected String getElasticsearchIndices(String... caseTypes) throws IOException {
-        return elasticResponseAs(GET, String.format("/%s", getIndicesFromCaseTypes(caseTypes)));
+        return elasticResponseAsString(GET, String.format("/%s", getIndicesFromCaseTypes(caseTypes)));
     }
 
     protected String deleteElasticsearchIndices(String... caseTypes) throws IOException {
         String indices = caseTypes[0].equals(WILDCARD) ? WILDCARD : String.format("/%s", getIndicesFromCaseTypes(caseTypes));
-        return elasticResponseAs(DELETE, indices);
+        return elasticResponseAsString(DELETE, indices);
     }
 
-    private String elasticResponseAs(String method, String endpoint) throws IOException {
+    private String elasticResponseAsString(String method, String endpoint) throws IOException {
         return EntityUtils.toString(elasticClient
             .getLowLevelClient()
             .performRequest(method, endpoint)

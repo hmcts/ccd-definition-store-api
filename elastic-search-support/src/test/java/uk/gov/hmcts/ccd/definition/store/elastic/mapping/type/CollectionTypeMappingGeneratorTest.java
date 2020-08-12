@@ -114,14 +114,13 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
     }
 
     @Test
-    void shouldReClassificationMappingForCollectionOfComplexType() {
+    void shouldReturnClassificationMappingForCollectionOfComplexType() {
         CaseFieldEntity collectionField = newCollectionOfComplexField();
 
         String result = collectionTypeMapper.dataClassificationMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
             readFileFromClasspath("json/type_mapping_classification_collection_complex_type.json")));
-
     }
 
     private CaseFieldEntity newCollectionField() {
