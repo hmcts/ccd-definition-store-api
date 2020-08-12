@@ -43,11 +43,11 @@
 					"description": "Update organisation information",
 					"order": 1,
 					"case_fields": [
-            {
-              "__ordering__": "unordered",
-              "__elementId__": "case_field_id"
-            },
-            {
+						{
+							"__ordering__": "unordered",
+							"__elementId__": "case_field_id"
+						},
+						{
 							"case_field_id": "OrganisationField",
 							"display_context": "COMPLEX",
 							"display_context_parameter": null,
