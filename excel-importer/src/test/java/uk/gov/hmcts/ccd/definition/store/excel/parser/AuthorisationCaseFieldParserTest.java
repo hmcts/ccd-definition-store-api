@@ -75,7 +75,8 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        final Collection<CaseFieldACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseField);
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);
@@ -101,7 +102,8 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        final Collection<CaseFieldACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseField);
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        final Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);
@@ -127,7 +129,8 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        final Collection<CaseFieldACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseField);
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);
@@ -149,7 +152,8 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        final Collection<CaseFieldACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseField);
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);
@@ -171,7 +175,8 @@ public class AuthorisationCaseFieldParserTest {
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
         definitionSheet.addDataItem(item1);
-        final Collection<CaseFieldACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseField);
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        final Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
         assertThat(entities.size(), is(1));
 
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);

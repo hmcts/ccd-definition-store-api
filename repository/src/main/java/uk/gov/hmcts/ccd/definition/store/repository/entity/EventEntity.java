@@ -31,7 +31,7 @@ public class EventEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -92,9 +92,8 @@ public class EventEntity implements Serializable {
     @Fetch(value = SUBSELECT)
     private final List<EventCaseFieldEntity> eventCaseFields = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "event")
     @Fetch(value = FetchMode.SUBSELECT)
-    @JoinColumn(name = "event_id")
     private final List<EventACLEntity> eventACLEntities = new ArrayList<>();
 
     @Column(name = "show_event_notes")
