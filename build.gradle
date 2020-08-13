@@ -82,6 +82,7 @@ ext {
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
     tomcatVersion = '9.0.36!!'
+    hibernateVersion = '5.4.18.Final!!'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -129,6 +130,7 @@ allprojects {
         compile "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"    
         compile "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
         compile "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
+        compile "org.hibernate:hibernate-core:${hibernateVersion}"
         testCompile "io.rest-assured:xml-path:${restAssuredVersion}"
         testCompile "io.rest-assured:json-path:${restAssuredVersion}"
         testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
