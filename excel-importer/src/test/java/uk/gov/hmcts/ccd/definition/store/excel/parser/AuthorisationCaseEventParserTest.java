@@ -80,7 +80,8 @@ class AuthorisationCaseEventParserTest {
         item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
-        final Collection<EventACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseEvent);
+        subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
+        Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
@@ -106,7 +107,8 @@ class AuthorisationCaseEventParserTest {
         item1.addAttribute(ColumnName.USER_ROLE.toString(), caseRole);
         item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
-        final Collection<EventACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseEvent);
+        subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
+        Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
@@ -133,7 +135,8 @@ class AuthorisationCaseEventParserTest {
         item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
-        final Collection<EventACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseEvent);
+        subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
+        Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
@@ -156,7 +159,9 @@ class AuthorisationCaseEventParserTest {
         item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(ColumnName.CRUD.toString(), " X y  ");
         definitionSheet.addDataItem(item1);
-        final Collection<EventACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseEvent);
+        subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
+        Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
+
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
@@ -178,7 +183,9 @@ class AuthorisationCaseEventParserTest {
         item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(ColumnName.CRUD.toString(), " X y  ");
         definitionSheet.addDataItem(item1);
-        final Collection<EventACLEntity> entities = subject.parseAll(definitionSheets, caseType, caseEvent);
+        subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
+        Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
+
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
