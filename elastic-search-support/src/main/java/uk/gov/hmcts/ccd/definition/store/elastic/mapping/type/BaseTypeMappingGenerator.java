@@ -12,12 +12,13 @@ public class BaseTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public String dataMapping(FieldEntity field) {
-        return conditionalMapping(field, () -> getConfiguredMapping(field.getBaseTypeString()));
+        String ccdType = field.getBaseTypeString();
+        return getConfiguredMapping(ccdType);
     }
 
     @Override
     public String dataClassificationMapping(FieldEntity field) {
-        return conditionalMapping(field, this::securityClassificationMapping);
+        return securityClassificationMapping();
     }
 
     @Override

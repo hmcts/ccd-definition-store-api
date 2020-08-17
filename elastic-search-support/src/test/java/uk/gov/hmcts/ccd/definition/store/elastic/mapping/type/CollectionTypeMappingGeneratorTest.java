@@ -55,7 +55,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
     void shouldGenerateMappingForCollectionType() {
         CaseFieldEntity collectionField = newCollectionField();
 
-        String result = collectionTypeMapper.dataMapping(collectionField);
+        String result = collectionTypeMapper.doDataMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
                 readFileFromClasspath("json/type_mapping_collection_type.json")));
@@ -65,7 +65,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
     void shouldGenerateClassificationMappingForCollectionType() {
         CaseFieldEntity collectionField = newCollectionField();
 
-        String result = collectionTypeMapper.dataClassificationMapping(collectionField);
+        String result = collectionTypeMapper.doDataClassificationMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
                 readFileFromClasspath("json/type_mapping_classification_collection_type.json")));
@@ -76,7 +76,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
     void shouldGenerateMappingForCollectionOfComplexType() {
         CaseFieldEntity collectionField = newCollectionOfComplexField();
 
-        String result = collectionTypeMapper.dataMapping(collectionField);
+        String result = collectionTypeMapper.doDataMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
                 readFileFromClasspath("json/type_mapping_collection_complex_type.json")));
@@ -86,7 +86,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
     void shouldGenerateClassificationMappingForCollectionOfComplexType() {
         CaseFieldEntity collectionField = newCollectionOfComplexField();
 
-        String result = collectionTypeMapper.dataClassificationMapping(collectionField);
+        String result = collectionTypeMapper.doDataClassificationMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
                 readFileFromClasspath("json/type_mapping_classification_collection_complex_type.json")));
@@ -98,7 +98,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
         CaseFieldEntity collectionField = newCollectionField();
         collectionField.setSearchable(false);
 
-        String result = collectionTypeMapper.dataMapping(collectionField);
+        String result = collectionTypeMapper.doDataMapping(collectionField);
 
         assertThat(result, is("disabledMapping"));
     }
@@ -108,7 +108,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
         CaseFieldEntity collectionField = newCollectionField();
         collectionField.setSearchable(false);
 
-        String result = collectionTypeMapper.dataClassificationMapping(collectionField);
+        String result = collectionTypeMapper.doDataClassificationMapping(collectionField);
 
         assertThat(result, is("disabledMapping"));
     }
@@ -117,7 +117,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
     void shouldReturnClassificationMappingForCollectionOfComplexType() {
         CaseFieldEntity collectionField = newCollectionOfComplexField();
 
-        String result = collectionTypeMapper.dataClassificationMapping(collectionField);
+        String result = collectionTypeMapper.doDataClassificationMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
             readFileFromClasspath("json/type_mapping_classification_collection_complex_type.json")));

@@ -35,7 +35,7 @@ public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
 
     @Test
     public void shouldReturnConfiguredMapping() {
-        String result = typeMappingGenerator.dataMapping(field);
+        String result = typeMappingGenerator.doDataMapping(field);
 
         assertThat(result, equalTo(TEXT_MAPPING));
     }
@@ -44,7 +44,7 @@ public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
     public void shouldReturnSecurityClassificationMapping() {
         when(config.getSecurityClassificationMapping()).thenReturn("someMapping");
 
-        String result = typeMappingGenerator.dataClassificationMapping(field);
+        String result = typeMappingGenerator.doDataClassificationMapping(field);
 
         assertThat(result, equalTo("someMapping"));
     }
@@ -53,7 +53,7 @@ public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
     public void shouldReturnTypeMappingWhenFieldIsSearchable() {
         field.setSearchable(true);
 
-        String result = typeMappingGenerator.dataMapping(field);
+        String result = typeMappingGenerator.doDataMapping(field);
 
         assertThat(result, equalTo(TEXT_MAPPING));
     }
@@ -62,7 +62,7 @@ public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
     public void shouldReturnDisabledDataMappingWhenFieldIsNonSearchable() {
         field.setSearchable(false);
 
-        String result = typeMappingGenerator.dataMapping(field);
+        String result = typeMappingGenerator.doDataMapping(field);
 
         assertThat(result, equalTo(disabledMapping));
     }
@@ -71,7 +71,7 @@ public class BaseTypeMappingGeneratorTest extends AbstractMapperTest {
     public void shouldReturnDisabledDataClassificationMappingWhenFieldIsNonSearchable() {
         field.setSearchable(false);
 
-        String result = typeMappingGenerator.dataClassificationMapping(field);
+        String result = typeMappingGenerator.doDataClassificationMapping(field);
 
         assertThat(result, equalTo(disabledMapping));
     }

@@ -17,58 +17,54 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
 
     @Override
     public String dataMapping(FieldEntity collectionField) {
-        return conditionalMapping(collectionField, () ->
-            newJson(Unchecked.consumer((JsonWriter jw) -> {
-                jw.name(PROPERTIES);
-                jw.beginObject();
-                jw.name(ID);
-                jw.jsonValue(disabled());
-                jw.name(VALUE);
-                jw.jsonValue(collectionTypeDataMapping(collectionField));
-                jw.endObject();
-            }))
-        );
+        return newJson(Unchecked.consumer((JsonWriter jw) -> {
+            jw.name(PROPERTIES);
+            jw.beginObject();
+            jw.name(ID);
+            jw.jsonValue(disabled());
+            jw.name(VALUE);
+            jw.jsonValue(collectionTypeDataMapping(collectionField));
+            jw.endObject();
+        }));
     }
 
     @Override
     public String dataClassificationMapping(FieldEntity collectionField) {
-        return conditionalMapping(collectionField, () ->
-            newJson(Unchecked.consumer((JsonWriter jw) -> {
-                jw.name(PROPERTIES);
-                jw.beginObject();
+        return newJson(Unchecked.consumer((JsonWriter jw) -> {
+            jw.name(PROPERTIES);
+            jw.beginObject();
+            jw.name(CLASSIFICATION);
+            jw.jsonValue(securityClassificationMapping());
+            jw.name(VALUE);
+            jw.beginObject();
+            jw.name(PROPERTIES);
+            jw.beginObject();
+            jw.name(ID);
+            jw.jsonValue(disabled());
+            if (!collectionField.isCollectionOfComplex()) {
                 jw.name(CLASSIFICATION);
                 jw.jsonValue(securityClassificationMapping());
+            } else {
                 jw.name(VALUE);
                 jw.beginObject();
                 jw.name(PROPERTIES);
                 jw.beginObject();
-                jw.name(ID);
-                jw.jsonValue(disabled());
-                if (!collectionField.isCollectionOfComplex()) {
-                    jw.name(CLASSIFICATION);
-                    jw.jsonValue(securityClassificationMapping());
-                } else {
-                    jw.name(VALUE);
-                    jw.beginObject();
-                    jw.name(PROPERTIES);
-                    jw.beginObject();
-                    List<ComplexFieldEntity> complexFields = collectionField.getFieldType().getCollectionFieldType().getComplexFields();
-                    List<ComplexFieldEntity> notIgnoredFields = complexFields.stream().filter(f -> !shouldIgnore(f)).collect(toList());
+                List<ComplexFieldEntity> complexFields = collectionField.getFieldType().getCollectionFieldType().getComplexFields();
+                List<ComplexFieldEntity> notIgnoredFields = complexFields.stream().filter(f -> !shouldIgnore(f)).collect(toList());
 
-                    for (ComplexFieldEntity complexField : notIgnoredFields) {
-                        TypeMappingGenerator typeMapper = getTypeMapper(complexField.getBaseTypeString());
-                        String mapping = typeMapper.dataClassificationMapping(complexField);
-                        jw.name(complexField.getReference());
-                        jw.jsonValue(mapping);
-                    }
-                    jw.endObject();
-                    jw.endObject();
+                for (ComplexFieldEntity complexField : notIgnoredFields) {
+                    TypeMappingGenerator typeMapper = getTypeMapper(complexField.getBaseTypeString());
+                    String mapping = typeMapper.doDataClassificationMapping(complexField);
+                    jw.name(complexField.getReference());
+                    jw.jsonValue(mapping);
                 }
                 jw.endObject();
                 jw.endObject();
-                jw.endObject();
-            }))
-        );
+            }
+            jw.endObject();
+            jw.endObject();
+            jw.endObject();
+        }));
     }
 
     @Override

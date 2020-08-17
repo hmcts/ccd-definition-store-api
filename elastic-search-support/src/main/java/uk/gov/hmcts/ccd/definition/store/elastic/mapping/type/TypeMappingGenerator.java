@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator;
@@ -11,9 +10,17 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 public abstract class TypeMappingGenerator extends MappingGenerator {
 
-    public abstract String dataMapping(FieldEntity field);
+    public String doDataMapping(FieldEntity field) {
+        return field.isSearchable() ? dataMapping(field) : disabled();
+    }
 
-    public abstract String dataClassificationMapping(FieldEntity field);
+    public String doDataClassificationMapping(FieldEntity field) {
+        return field.isSearchable() ? dataClassificationMapping(field) : disabled();
+    }
+
+    protected abstract String dataMapping(FieldEntity field);
+
+    protected abstract String dataClassificationMapping(FieldEntity field);
 
     public abstract List<String> getMappedTypes();
 
@@ -32,9 +39,5 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
 
     protected String securityClassificationMapping() {
         return config.getSecurityClassificationMapping();
-    }
-
-    protected String conditionalMapping(FieldEntity field, Supplier<String> mappingSupplier) {
-        return field.isSearchable() ? mappingSupplier.get() : disabled();
     }
 }

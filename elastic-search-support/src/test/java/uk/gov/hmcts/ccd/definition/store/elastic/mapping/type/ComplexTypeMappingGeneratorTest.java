@@ -45,7 +45,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     public void shouldGenerateMappingForAllComplexTypeFields() {
         CaseFieldEntity complexField = newComplexField();
 
-        String result = complexTypeMapper.dataMapping(complexField);
+        String result = complexTypeMapper.doDataMapping(complexField);
 
         assertThat(result, equalToJSONInFile(
                 readFileFromClasspath("json/type_mapping_complex_type.json")));
@@ -55,7 +55,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     public void shouldGenerateClassificationMappingForAllComplexTypeFields() {
         CaseFieldEntity complexField = newComplexField();
 
-        String result = complexTypeMapper.dataClassificationMapping(complexField);
+        String result = complexTypeMapper.doDataClassificationMapping(complexField);
 
         assertThat(result, equalToJSONInFile(
                 readFileFromClasspath("json/type_mapping_classification_complex_type.json")));
@@ -66,7 +66,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         CaseFieldEntity complexField = newComplexField();
         complexField.setSearchable(false);
 
-        String result = complexTypeMapper.dataMapping(complexField);
+        String result = complexTypeMapper.doDataMapping(complexField);
 
         assertThat(result, is(disabledMapping));
     }
@@ -76,7 +76,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         CaseFieldEntity complexField = newComplexField();
         complexField.getFieldType().getComplexFields().get(1).setSearchable(false);
 
-        String result = complexTypeMapper.dataMapping(complexField);
+        String result = complexTypeMapper.doDataMapping(complexField);
 
         assertThat(result, equalToJSONInFile(
             readFileFromClasspath("json/type_mapping_complex_type_disabled.json")));
@@ -88,7 +88,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         CaseFieldEntity complexField = newComplexField();
         complexField.setSearchable(false);
 
-        String result = complexTypeMapper.dataClassificationMapping(complexField);
+        String result = complexTypeMapper.doDataClassificationMapping(complexField);
 
         assertThat(result, is(disabledMapping));
     }
