@@ -10,4 +10,4 @@ Feature: [SAMPLE] Get health endpoint check
     And it is submitted to call the [Health Endpoint] operation of [CCD Definition Store]
     Then a positive response is received
     And the response [has the 200 OK code]
-    And the response has all other details as expected
+    And the response has all other details as expected.
