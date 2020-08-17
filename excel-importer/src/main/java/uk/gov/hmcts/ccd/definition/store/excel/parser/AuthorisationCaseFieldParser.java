@@ -28,57 +28,56 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
         this.entityToDefinitionDataItemRegistry = registry;
     }
 
-    Collection<CaseFieldACLEntity> parseAll(final Map<String, DefinitionSheet> definitionSheets,
-                                            final CaseTypeEntity caseType,
-                                            final CaseFieldEntity caseField) {
-        final List<CaseFieldACLEntity> parseResults = Lists.newArrayList();
-
-        final String caseTypeReference = caseType.getReference();
-        final String caseFieldReference = caseField.getReference();
-        LOG.debug("Parsing AuthorisationCaseField for case type {}, caseField {}...",
-            caseTypeReference, caseFieldReference);
-
+    void parseAndSetACLEntities(final Map<String, DefinitionSheet> definitionSheets,
+                                final CaseTypeEntity caseType,
+                                final Collection<CaseFieldEntity> caseFields) {
         DefinitionSheet definitionSheet = getDefinitionSheet(definitionSheets);
-
         final Map<String, List<DefinitionDataItem>> dataItemMap = definitionSheet.groupDataItemsByCaseType();
         validateCaseTypes(definitionSheets, dataItemMap);
+        final String caseTypeReference = caseType.getReference();
         validateCaseFields(definitionSheets, definitionSheet, caseTypeReference);
 
         final List<DefinitionDataItem> dataItems = dataItemMap.get(caseTypeReference);
+        final Map<String, List<DefinitionDataItem>> collect = dataItems == null
+            ? null
+            : dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_FIELD_ID)));
 
-        if (null == dataItems) {
-            LOG.warn("No data is found for case type '{} in AuthorisationCaseFields tab", caseTypeReference);
-        } else {
-            LOG.debug("Parsing user roles for case type '{}': '{}' AuthorisationCaseFields detected",
-                caseTypeReference, dataItems.size());
+        for (CaseFieldEntity caseField : caseFields) {
+            final List<CaseFieldACLEntity> parseResults = Lists.newArrayList();
+            final String caseFieldReference = caseField.getReference();
+            LOG.debug("Parsing AuthorisationCaseField for case type {}, caseField {}...",
+                caseTypeReference, caseFieldReference);
 
-            final Map<String, List<DefinitionDataItem>> collect = dataItems
-                .stream()
-                .collect(groupingBy(d -> d.getString(ColumnName.CASE_FIELD_ID)));
-
-            if (null == collect.get(caseFieldReference)) {
-                LOG.warn("No row is defined for case type '{}', case field '{}'", caseTypeReference, caseFieldReference);
-                // and let validation handles this Exception
+            if (null == dataItems) {
+                LOG.warn("No data is found for case type '{} in AuthorisationCaseFields tab", caseTypeReference);
             } else {
-                for (DefinitionDataItem definition : collect.get(caseFieldReference)) {
+                LOG.debug("Parsing user roles for case type '{}': '{}' AuthorisationCaseFields detected",
+                    caseTypeReference, dataItems.size());
 
-                    final CaseFieldACLEntity entity = new CaseFieldACLEntity();
+                if (null == collect.get(caseFieldReference)) {
+                    LOG.warn("No row is defined for case type '{}', case field '{}'", caseTypeReference, caseFieldReference);
+                    // and let validation handles this Exception
+                } else {
+                    for (DefinitionDataItem definition : collect.get(caseFieldReference)) {
 
-                    parseUserRole(entity, definition, parseContext);
-                    parseCrud(entity, definition);
-                    parseResults.add(entity);
-                    entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
+                        final CaseFieldACLEntity entity = new CaseFieldACLEntity();
 
-                    LOG.info("Parsing user role for case type '{}', case field '{}', user role '{}', crud '{}': OK",
-                        caseTypeReference,
-                        definition.getString(ColumnName.CASE_FIELD_ID),
-                        definition.getString(ColumnName.USER_ROLE),
-                        definition.getString(ColumnName.CRUD));
+                        parseUserRole(entity, definition, parseContext);
+                        parseCrud(entity, definition);
+                        parseResults.add(entity);
+                        entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
+
+                        LOG.info("Parsing user role for case type '{}', case field '{}', user role '{}', crud '{}': OK",
+                            caseTypeReference,
+                            definition.getString(ColumnName.CASE_FIELD_ID),
+                            definition.getString(ColumnName.USER_ROLE),
+                            definition.getString(ColumnName.CRUD));
+                    }
                 }
             }
-        }
 
-        return parseResults;
+            caseField.addCaseACLEntities(parseResults);
+        }
     }
 
     @Override

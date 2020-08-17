@@ -2,8 +2,12 @@ configurations {
     liquibase
 }
 
+ext.hibernateVersion = '5.4.18.Final!!'
+
 dependencies {
     liquibase group: 'org.liquibase.ext', name: 'liquibase-hibernate5', version: 3.6
+    liquibase "org.hibernate:hibernate-core:${hibernateVersion}"
+    liquibase "org.hibernate:hibernate-envers:${hibernateVersion}"
 }
 
 //loading properties file.

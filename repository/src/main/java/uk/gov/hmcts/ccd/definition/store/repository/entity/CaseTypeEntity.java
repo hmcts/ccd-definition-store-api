@@ -80,9 +80,8 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
     @Fetch(value = FetchMode.SUBSELECT)
-    @JoinColumn(name = "case_type_id")
     private final List<EventEntity> events = new ArrayList<>();
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
@@ -90,9 +89,8 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "case_type_id")
     private final List<StateEntity> states = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
     @Fetch(value = FetchMode.SUBSELECT)
-    @JoinColumn(name = "case_type_id")
     private final List<CaseFieldEntity> caseFields = new ArrayList<>();
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
