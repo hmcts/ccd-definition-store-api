@@ -52,12 +52,12 @@ class ElasticsearchIndexControllerTest {
         assertAll(
             () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypes),
             () -> assertThat(result.getTotal(), is(3)),
-            () -> assertThat(result.getGroupedCaseTypes().keySet().size(), is(2)),
-            () -> assertThat(result.getGroupedCaseTypes().get("J1").size(), is(2)),
-            () -> assertThat(result.getGroupedCaseTypes().get("J2").size(), is(1)),
-            () -> assertThat(result.getGroupedCaseTypes().get("J1"), hasItem("CT1")),
-            () -> assertThat(result.getGroupedCaseTypes().get("J1"), hasItem("CT2")),
-            () -> assertThat(result.getGroupedCaseTypes().get("J2"), hasItem("CT3"))
+            () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(2)),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J1").size(), is(2)),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J2").size(), is(1)),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J1"), hasItem("CT1")),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J1"), hasItem("CT2")),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J2"), hasItem("CT3"))
         );
     }
 

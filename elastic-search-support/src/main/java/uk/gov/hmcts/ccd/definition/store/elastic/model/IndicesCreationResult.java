@@ -20,17 +20,16 @@ public class IndicesCreationResult {
 
     @JsonProperty("case_types")
     @ApiModelProperty("Case types for which indices have been created for, grouped by jurisdiction")
-    private Map<String, Set<String>> groupedCaseTypes;
+    private Map<String, Set<String>> caseTypesByJurisdiction;
 
     private int total;
 
     public IndicesCreationResult(List<CaseTypeEntity> caseTypes) {
-        this.groupedCaseTypes = getGroupedCaseTypes(caseTypes);
+        this.caseTypesByJurisdiction = getCaseTypesGroupedByJurisdiction(caseTypes);
         this.total = caseTypes.size();
     }
 
-    // Group the case types by jurisdiction, with both keys and values sorted
-    private Map<String, Set<String>> getGroupedCaseTypes(List<CaseTypeEntity> caseTypes) {
+    private Map<String, Set<String>> getCaseTypesGroupedByJurisdiction(List<CaseTypeEntity> caseTypes) {
         return caseTypes.stream()
             .collect(groupingBy(ct -> ct.getJurisdiction().getReference(),
                 TreeMap::new,

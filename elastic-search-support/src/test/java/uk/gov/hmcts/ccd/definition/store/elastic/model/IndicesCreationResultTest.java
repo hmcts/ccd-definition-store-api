@@ -29,16 +29,16 @@ class IndicesCreationResultTest {
 
         assertAll(
             () -> assertThat(result.getTotal(), is(6)),
-            () -> assertThat(result.getGroupedCaseTypes().keySet().size(), is(3)),
-            () -> assertThat(result.getGroupedCaseTypes().get("J1").size(), is(2)),
-            () -> assertThat(result.getGroupedCaseTypes().get("J2").size(), is(3)),
-            () -> assertThat(result.getGroupedCaseTypes().get("J3").size(), is(1)),
-            () -> assertThat(result.getGroupedCaseTypes().get("J1"), hasItem("CT1")),
-            () -> assertThat(result.getGroupedCaseTypes().get("J1"), hasItem("CT2")),
-            () -> assertThat(result.getGroupedCaseTypes().get("J2"), hasItem("CT3")),
-            () -> assertThat(result.getGroupedCaseTypes().get("J2"), hasItem("CT4")),
-            () -> assertThat(result.getGroupedCaseTypes().get("J2"), hasItem("CT5")),
-            () -> assertThat(result.getGroupedCaseTypes().get("J3"), hasItem("CT6"))
+            () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(3)),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J1").size(), is(2)),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J2").size(), is(3)),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J3").size(), is(1)),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J1"), hasItem("CT1")),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J1"), hasItem("CT2")),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J2"), hasItem("CT3")),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J2"), hasItem("CT4")),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J2"), hasItem("CT5")),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("J3"), hasItem("CT6"))
         );
     }
 
