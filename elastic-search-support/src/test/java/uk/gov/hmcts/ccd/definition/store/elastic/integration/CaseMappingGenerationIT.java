@@ -27,10 +27,10 @@ import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchConfigurationIT;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.ElasticSearchConfiguration;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
@@ -43,7 +43,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 @RunWith(SpringRunner.class)
 @BootstrapWith(SpringBootTestContextBootstrapper.class)
-@ContextConfiguration(classes = ElasticSearchConfiguration.class, initializers = ConfigFileApplicationContextInitializer.class)
+@ContextConfiguration(classes = ElasticsearchConfigurationIT.class, initializers = ConfigFileApplicationContextInitializer.class)
 public class CaseMappingGenerationIT implements TestUtils {
 
     @Autowired

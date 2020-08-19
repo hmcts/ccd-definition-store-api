@@ -23,7 +23,7 @@ import static uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIn
 @RestController
 @Api(ELASTIC_INDEX_URI)
 @Slf4j
-@ConditionalOnExpression("'${elasticsearch.enableAutomaticIndicesCreation}'=='true' && '${elasticsearch.enabled}'=='true'")
+@ConditionalOnExpression("'${elasticsearch.enabled}'=='true'")
 public class ElasticsearchIndexController {
 
     public static final String ELASTIC_INDEX_URI = "/elastic-support/index";

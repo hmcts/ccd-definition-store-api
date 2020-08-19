@@ -7,4 +7,3 @@ elasticsearch:
   indexShardsReplicas: 3
   failImportIfError: true
   dynamic: strict
-  enableAutomaticIndicesCreation: false

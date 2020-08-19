@@ -38,7 +38,6 @@ java:
     ELASTIC_SEARCH_DYNAMIC: true
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT: '%s_cases'
     ELASTIC_SEARCH_CASE_INDEX_MAPPING_FIELDS_LIMIT: 8000
-    ELASTIC_SEARCH_AUTOMATIC_INDICES_CREATION_ENABLED: true
 
     # Role-based authorization for CCD Admin Web
     ADMIN_WEB_AUTHORIZATION_ENABLED: false # Needs enabling once the appropriate roles are created in IdAM
