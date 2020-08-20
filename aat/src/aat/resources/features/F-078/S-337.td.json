@@ -2,15 +2,18 @@
   "_guid_": "S-337",
   "_extends_": "F-078_Test_Base_Data",
   "title": "must return 403 when request provides authentic credentials without authorised access to the operation",
+
   "specs": [
     "an active profile in CCD, and insufficient privilege to the case type",
     "contains 403 forbidden code"
   ],
+
   "request": {
     "pathVariables": {
       "ctid": "BEFTA_CASETYPE_2_1"
     }
   },
+
   "expectedResponse": {
     "_extends_": "Common_403_Response",
     "headers": {

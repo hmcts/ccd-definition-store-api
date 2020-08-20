@@ -1,14 +1,15 @@
 {
   "_guid_": "F-089_Test_Base_data",
+
   "productName": "CCD Definition Store",
   "operationName": "POST Case Definition File",
+
+  "method": "POST",
+  "uri": "/import",
 
   "specs": [
     "an active profile in CCD"
   ],
-
-  "method": "POST",
-  "uri": "/import",
 
   "users": {
     "invokingUser": {
@@ -16,7 +17,7 @@
       "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
     }
   },
-
+  
   "request": {
     "headers": {
       "Authorization": "[[DEFAULT_AUTO_VALUE]]",

@@ -2,12 +2,14 @@
   "_guid_": "S-369",
   "_extends_": "F-085_Test_Base_Data",
   "title": "must return the Tab Structure for a given case type",
+
   "specs": [
     "an active profile in CCD",
     "contains a valid case type id",
     "has the 200 OK code",
     "has Tab details"
   ],
+
   "expectedResponse": {
     "_extends_": "Common_200_Response",
     "headers": {
@@ -17,9 +19,12 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "case_type_id" : "FT_DateTimeFormats",
-      "channels" : [ "CaseWorker", "CaseWorker" ],
-      "tabs" : "[[ANYTHING_PRESENT]]"
+      "case_type_id": "FT_DateTimeFormats",
+      "channels": [
+        "CaseWorker",
+        "CaseWorker"
+      ],
+      "tabs": "[[ANYTHING_PRESENT]]"
     }
   }
 }

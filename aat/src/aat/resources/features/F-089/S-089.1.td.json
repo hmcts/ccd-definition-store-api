@@ -2,9 +2,11 @@
   "_guid_": "S-089.1",
   "_extends_": "F-089_Test_Base_data",
   "title": "must successfully import definition file",
+
   "specs": [
     "contains correctly configured DefaultValue in EventToComplexTypes tab"
   ],
+
   "request": {
     "body": {
       "arrayInMap": [
@@ -15,6 +17,7 @@
       ]
     }
   },
+
   "expectedResponse": {
     "_extends_": "Common_201_Response",
     "headers": {
@@ -23,7 +26,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "Case Definition data successfully imported"
+      "__plainTextValue__": "Case Definition data successfully imported"
     }
   }
 }

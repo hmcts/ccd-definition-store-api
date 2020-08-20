@@ -2,10 +2,12 @@
   "_guid_": "S-330",
   "_extends_": "F-077_Test_Base_Data",
   "title": "must return 403 when request provides authentic credentials without authorised access to the operation",
+
   "specs": [
     "an active profile in CCD, and insufficient privilege to the operation",
     "contains 403 forbidden code"
   ],
+
   "expectedResponse": {
     "_extends_": "Common_403_Response",
     "headers": {
