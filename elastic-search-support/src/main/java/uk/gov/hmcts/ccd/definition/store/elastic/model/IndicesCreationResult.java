@@ -19,9 +19,23 @@ import static java.util.stream.Collectors.toCollection;
 public class IndicesCreationResult {
 
     @JsonProperty("case_types")
-    @ApiModelProperty("Case types for which indices have been created for, grouped by jurisdiction")
+    @ApiModelProperty(
+        value = "Case types for which indices have been created for, grouped by jurisdiction",
+        example = "{\n"
+            + "    \"AUTOTEST1\": [\n"
+            + "        \"AAT\",\n"
+            + "        \"MAPPER\",\n"
+            + "        \"MultiplePages\"\n"
+            + "    ],\n"
+            + "    \"PUBLICLAW\": [\n"
+            + "        \"CARE_SUPERVISION_EPO\",\n"
+            + "        \"Shared_Storage_DRAFTType\"\n"
+            + "    ]\n"
+            + "}"
+    )
     private Map<String, Set<String>> caseTypesByJurisdiction;
 
+    @ApiModelProperty(value = "Number of case types", example = "5")
     private int total;
 
     public IndicesCreationResult(List<CaseTypeEntity> caseTypes) {
