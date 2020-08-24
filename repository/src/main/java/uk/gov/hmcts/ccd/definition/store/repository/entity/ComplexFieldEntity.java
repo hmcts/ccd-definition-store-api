@@ -58,6 +58,9 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     @Column(name = "display_context_parameter")
     private String displayContextParameter;
 
+    @Column(name = "retain_hidden_value")
+    private Boolean retainHiddenValue;
+
     @Override
     public String getReference() {
         return reference;
@@ -145,4 +148,11 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
     }
+
+    public Boolean getRetainHiddenValue() { return retainHiddenValue; }
+
+    public void setRetainHiddenValue(Boolean retainHiddenValue) {
+        this.retainHiddenValue = retainHiddenValue;
+    }
+
 }
