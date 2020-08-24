@@ -35,7 +35,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseHiddenFields(definitionDataItem);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("retainHiddenValue can only be configured for a field that uses a showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
+            assertThat(ex.getMessage(), is("retainHiddenValue can only be configured for a field that uses a "
+                + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
             throw ex;
         }
     }
@@ -82,7 +83,7 @@ public class HiddenFieldsValidatorTest {
 
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        assertTrue( validator.parseHiddenFields(definitionDataItem, definitionSheets));
+        assertTrue(validator.parseHiddenFields(definitionDataItem, definitionSheets));
 
     }
 
@@ -122,7 +123,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['fieldId'] on ['CaseEventToFields']"));
+            assertThat(ex.getMessage(), is("retainHiddenValue' has been incorrectly configured or is invalid "
+                + "for fieldID ['fieldId'] on ['CaseEventToFields']"));
             throw ex;
         }
     }
@@ -161,7 +163,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseHiddenFields(definitionDataItem,definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("retainHiddenValue can only be configured for a field that uses a showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
+            assertThat(ex.getMessage(), is("retainHiddenValue can only be configured for a field that uses a "
+                + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
             throw ex;
         }
     }
