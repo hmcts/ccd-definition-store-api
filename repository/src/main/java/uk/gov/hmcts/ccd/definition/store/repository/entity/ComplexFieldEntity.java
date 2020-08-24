@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -22,7 +22,7 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE, generator = "complex_field_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)

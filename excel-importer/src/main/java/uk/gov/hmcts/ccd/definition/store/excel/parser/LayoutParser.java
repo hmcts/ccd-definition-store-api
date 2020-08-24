@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.Map;
+
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-
-import java.util.Map;
 
 public class LayoutParser {
 

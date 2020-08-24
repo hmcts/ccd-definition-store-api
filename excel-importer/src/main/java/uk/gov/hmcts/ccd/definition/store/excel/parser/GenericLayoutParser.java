@@ -108,6 +108,40 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         return result;
     }
 
+    public ParseResult<GenericLayoutEntity> parseAllSearchCases(Map<String, DefinitionSheet> definitionSheets) {
+        getLogger().debug("Layout parsing...");
+
+        final ParseResult<GenericLayoutEntity> result = new ParseResult<>();
+
+        final Map<String, List<DefinitionDataItem>> layoutItemsByCaseTypes = getDefinitionSheet(definitionSheets)
+            .groupDataItemsByCaseType();
+        final List<DefinitionDataItem> unknownDefinition = getUnknownDataDefinitionItems(definitionSheets);
+        if (null != unknownDefinition && !unknownDefinition.isEmpty()) {
+            List<String> message = unknownDefinition.stream()
+                .map(definitionDataItem -> String.format("Unknown Case Type '%s' for layout '%s'",
+                    definitionDataItem.findAttribute(ColumnName.CASE_TYPE_ID), getLayoutName()))
+                .collect(Collectors.toList());
+            throw new MapperException(message.stream().collect(Collectors.joining(",")));
+        }
+
+        getLogger().debug("Layout parsing: {} case types detected", layoutItemsByCaseTypes.size());
+
+        for (CaseTypeEntity caseType : parseContext.getCaseTypes()) {
+            final String caseTypeId = caseType.getReference();
+            final List<DefinitionDataItem> layoutItems = layoutItemsByCaseTypes.get(caseTypeId);
+
+            if (CollectionUtils.isEmpty(layoutItems) && !WORK_BASKET_INPUT_FIELD.getName()
+                .equalsIgnoreCase(this.getLayoutName())) {
+            } else {
+                addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
+            }
+        }
+
+        getLogger().info("Layout parsing: OK");
+
+        return result;
+    }
+
     private void addParseLayoutCaseField(final ParseResult<GenericLayoutEntity> result,
                                          final CaseTypeEntity caseType,
                                          final String caseTypeId,
