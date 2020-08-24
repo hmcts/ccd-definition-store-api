@@ -8,21 +8,21 @@
   "uri": "/import",
 
   "specs": [
-    "an active profile in CCD"
+	 "an active profile in CCD"
   ],
 
   "users": {
-    "invokingUser": {
-      "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
-      "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
-    }
+	 "invokingUser": {
+		"username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
+		"password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
+	 }
   },
-  
+
   "request": {
-    "headers": {
-      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
-      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-      "Content-Type": "multipart/form-data"
-    }
+	 "headers": {
+		"Authorization": "[[DEFAULT_AUTO_VALUE]]",
+		"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+		"Content-Type": "multipart/form-data"
+	 }
   }
 }
