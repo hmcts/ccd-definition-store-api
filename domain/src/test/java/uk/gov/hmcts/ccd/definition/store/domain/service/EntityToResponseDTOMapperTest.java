@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.mockito.Mock;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
