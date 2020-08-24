@@ -13,6 +13,7 @@ public class CaseEventField {
     private String caseFieldId = null;
     private String displayContext = null;
     private String displayContextParameter;
+    private Boolean retainHiddenValue;
     private String showCondition;
     private Boolean showSummaryChangeOption = null;
     private Integer showSummaryContentOption = null;
@@ -122,6 +123,19 @@ public class CaseEventField {
 
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
+    }
+
+    /**
+     * whether this field is optional, mandatory or read only for this event.
+     **/
+    @ApiModelProperty(value = "whether this field is optional, mandatory or read only for this event")
+    @JsonProperty("retain_hidden_value")
+    public Boolean getRetainHiddenValue() {
+        return retainHiddenValue;
+    }
+
+    public void setRetainHiddenValue(Boolean retainHiddenValue) {
+        this.retainHiddenValue = retainHiddenValue;
     }
 
     @ApiModelProperty(value = "")

@@ -5,6 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionPa
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 public class EventCaseFieldParser implements FieldShowConditionParser {
@@ -14,6 +15,7 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
     private final ShowConditionParser showConditionParser;
 
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
+    private HiddenFieldsValidator hiddenFieldsValidator = new HiddenFieldsValidator();
 
     public EventCaseFieldParser(ParseContext parseContext,
                                 ShowConditionParser showConditionParser,
@@ -37,6 +39,8 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
         eventCaseField.setShowSummaryContentOption(eventCaseFieldDefinition.getInteger(ColumnName.SHOW_SUMMARY_CONTENT_OPTION));
         eventCaseField.setLabel(eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_FIELD_LABEL));
         eventCaseField.setHintText(eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_FIELD_HINT));
+        eventCaseField.setRetainHiddenValue(hiddenFieldsValidator.parseHiddenFields(eventCaseFieldDefinition));
+
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(eventCaseField, eventCaseFieldDefinition);
 
         return eventCaseField;
