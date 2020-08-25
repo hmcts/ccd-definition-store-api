@@ -11,7 +11,7 @@ Background:
 Scenario: must return a successful response from the Healthcheck Operation
 
      When a request is prepared with appropriate values
-      And it is submitted to call the [Healthcheck] operation of [CCD Definition Store]
+      And it is submitted to call the [Healthcheck Operation] operation of [CCD Definition Store]
 
      Then a positive response is received
       And the response [has the 200 OK code]
