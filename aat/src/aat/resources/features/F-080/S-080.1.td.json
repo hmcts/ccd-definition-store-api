@@ -1067,6 +1067,10 @@
           "live_until": null,
           "acls": [
             {
+              "__ordering__": "unordered",
+              "__elementId__": "role"
+            },
+            {
               "role": "caseworker-befta_master",
               "create": true,
               "read": true,
