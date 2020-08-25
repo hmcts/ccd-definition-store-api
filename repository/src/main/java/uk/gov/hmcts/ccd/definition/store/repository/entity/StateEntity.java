@@ -44,9 +44,8 @@ public class StateEntity implements Serializable, Referencable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "stateEntity")
     @Fetch(value = FetchMode.SUBSELECT)
-    @JoinColumn(name = "state_id")
     private final List<StateACLEntity> stateACLEntities = new ArrayList<>();
 
     @Column(name = "title_display")
