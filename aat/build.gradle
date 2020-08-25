@@ -83,6 +83,11 @@ task functional() {
     outputs.upToDateWhen { false }
 }
 
+cucumberReports {
+    outputDir = file("${rootDir}/target/cucumber")
+    reports = files("${rootDir}/target/cucumber.json")
+}
+
 bootJar {
     enabled = false
 }
