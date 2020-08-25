@@ -3,7 +3,7 @@
 	"title": "must return a successful response when hitting user profile Healthcheck Operation",
 
 	"productName": "CCD Definition Store",
-	"operationName": "Healthcheck Operation",
+	"operationName": "Healthcheck",
 
 	"method": "GET",
 	"uri": "/health",
