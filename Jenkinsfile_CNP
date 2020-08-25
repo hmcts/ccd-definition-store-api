@@ -79,15 +79,19 @@ withPipeline(type, product, app) {
     disableLegacyDeploymentOnAAT()
     disableLegacyDeployment()
 
-    after('functionalTest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
+    after('smoketest:preview') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/smoke/**/*'
     }
 
-    after('smokeTest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
+    after('smoketest:aat') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/smoke/**/*'
+    }
+
+    after('functionalTest:preview') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/functional/**/*'
     }
 
     after('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/functional/**/*'
     }
 }
