@@ -32,6 +32,7 @@ public interface FieldTypeRepository extends VersionedDefinitionRepository<Field
         + "', '" + PREDEFINED_COMPLEX_CASELINK
         + "', '" + PREDEFINED_COMPLEX_ORGANISATION
         + "', '" + PREDEFINED_COMPLEX_ORGANISATION_POLICY
+        + "', '" + PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST
         + "')")
     List<FieldTypeEntity> findPredefinedComplexTypes();
 }
