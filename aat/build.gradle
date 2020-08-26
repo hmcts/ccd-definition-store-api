@@ -18,7 +18,7 @@ sourceSets {
     }
 }
 
-task smoke() {
+task smoke(type: Test) {
     description = 'Executes smoke tests against the CCD Definition Store Instance just deployed'
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
     setClasspath(sourceSets.aat.runtimeClasspath)
@@ -26,6 +26,7 @@ task smoke() {
     useJUnitPlatform {
         includeTags 'smoke'
     }
+
     dependsOn aatClasses
 
     new File("$buildDir/test-results/test").mkdirs()
@@ -57,7 +58,7 @@ task smoke() {
     outputs.upToDateWhen { false }
 }
 
-task functional() {
+task functional(type: Test) {
     description = 'Executes functional tests against the CCD Definition Store Instance just deployed'
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
     setClasspath(sourceSets.aat.runtimeClasspath)
@@ -69,6 +70,8 @@ task functional() {
         from "src/aat/resources/DummyTest.xml"
         into "$buildDir/test-results/test"
     }
+
+    generateCucumberReports.enabled = false
 
     doFirst {
         generateCucumberReports.enabled = true
@@ -92,7 +95,6 @@ task functional() {
 
     outputs.upToDateWhen { false }
 }
-
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
     reports = files("${rootDir}/target/cucumber.json")
