@@ -15,7 +15,8 @@ Scenario: must return the Case Wizard Page Collection for a given case type
      When a request is prepared with appropriate values
       And the request [contains a valid case type id]
       And it is submitted to call the [Case Wizard page collection By CaseType] operation of [CCD Definition Store]
-      And the response [has the 200 OK code]
+
+     Then the response [has the 200 OK code]
       And the response [has Case Wizard Collection details]
       And the response has all other details as expected
 
