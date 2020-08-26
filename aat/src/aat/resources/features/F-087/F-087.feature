@@ -36,7 +36,6 @@ Scenario: must return 401 when request does not provide valid authentication cre
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 @S-378 @Ignore  @RDM-7618
 Scenario: must return 403 when request provides authentic credentials without authorised access to the operation 
-
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
 
      When a request is prepared with appropriate values
