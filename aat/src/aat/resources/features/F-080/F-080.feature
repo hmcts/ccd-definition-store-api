@@ -1,6 +1,6 @@
 #====================================================
 @F-080
-Feature: F-080: Get Case Type details by Jurisdiction
+Feature: F-080: Get Case Type Details by Jurisdiction
 #====================================================
 
 Background:
@@ -16,7 +16,8 @@ Scenario: must return case type details for the request
       And the request [contains a valid jurisdiction id]
       And the request [contains a valid caseType id]
       And it is submitted to call the [Get Case Type Details] operation of [CCD Definition Store]
-      And the response [has the 200 OK code]
+
+     Then the response [has the 200 OK code]
       And the response [contains case type details]
       And the response has all other details as expected
 

@@ -14,7 +14,8 @@ Scenario: Should return all valid base types
 
      When a request is prepared with appropriate values
       And it is submitted to call the [Fetch All Base Types] operation of [CCD Definition Store]
-      And the response [has the 200 OK code]
+
+     Then the response [has the 200 OK code]
       And the response [contains a list of all the base type data structures]
       And the response has all other details as expected
 

@@ -1,6 +1,6 @@
 #================================================================
 @F-083
-Feature: F-083: Fetch UI definition for Search Inputs by CaseType
+Feature: F-083: Fetch UI Definition for Search Inputs by CaseType
 #================================================================
 
 Background:
@@ -15,7 +15,8 @@ Scenario: must return the UI definition of search inputs for a given case type
      When a request is prepared with appropriate values
       And the request [contains a valid case type id]
       And it is submitted to call the [Fetch UI definition for Search Inputs by CaseType] operation of [CCD Definition Store]
-      And the response [has the 200 OK code]
+
+     Then the response [has the 200 OK code]
       And the response [has Search Input definition details]
       And the response has all other details as expected
 

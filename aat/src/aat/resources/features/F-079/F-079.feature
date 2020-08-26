@@ -1,5 +1,5 @@
 #=======================================
-@F-079 
+@F-079
 Feature: F-079: Fetch a Case Type Schema
 #=======================================
 
@@ -15,7 +15,8 @@ Scenario: must return the case type for an appropriate request
      When a request is prepared with appropriate values
       And the request [contains a valid case type id]
       And it is submitted to call the [fetch a Case Type Schema] operation of [CCD Definition Store]
-      And the response [has the 200 OK code]
+
+     Then the response [has the 200 OK code]
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

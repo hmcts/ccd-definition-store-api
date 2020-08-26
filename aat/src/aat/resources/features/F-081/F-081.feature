@@ -15,7 +15,8 @@ Scenario: must return 200 with List of jurisdictions
      When a request is prepared with appropriate values
       And the request [contains a valid jurisdiction id]
       And it is submitted to call the [Get Jurisdiction Details] operation of [CCD Definition Store]
-      And the response [has the 200 OK code]
+
+     Then the response [has the 200 OK code]
       And the response [contains the jurisdiction details for the jurisdiction id provided to the request]
       And the response has all other details as expected
 

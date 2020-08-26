@@ -15,7 +15,8 @@ Scenario: must return 200 and Gets the current version of a Case Type Schema
      When a request is prepared with appropriate values
       And the request [contains a valid case type id]
       And it is submitted to call the [Gets The Current Version Of A Case Type Schema] operation of [CCD Definition Store]
-      And the response [has the 200 OK code]
+
+     Then the response [has the 200 OK code]
       And the response [returns the version number for case type id FT_MasterCaseType]
       And the response has all the details as expected
 
