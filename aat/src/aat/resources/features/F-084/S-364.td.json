@@ -1,23 +1,23 @@
 {
-  "_guid_": "S-364",
-  "_extends_": "F-084_Test_Base_Data",
-  "title": "must return the UI definition of search results for a given case type",
+	"_guid_": "S-364",
+	"_extends_": "F-084_Test_Base_Data",
+	"title": "must return the UI definition of search results for a given case type",
 
-  "specs": [
+	"specs": [
 	 "an active profile in CCD",
 	 "contains a valid case type id",
 	 "has the 200 OK code",
 	 "has Search Results definition details"
-  ],
+	],
 
-  "users": {
+	"users": {
 	 "invokingUser": {
 		"username": "befta.caseworker.3@gmail.com",
 		"password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
 	 }
-  },
+	},
 
-  "expectedResponse": {
+	"expectedResponse": {
 	 "_extends_": "Common_200_Response",
 	 "headers": {
 		"Content-Encoding": "[[ANYTHING_PRESENT]]",
@@ -28,7 +28,7 @@
 	 "body": {
 		"case_type_id": "FT_DateTimeFormats",
 		"fields": [
-		  {
+			{
 			 "metadata": true,
 			 "case_field_id": "[CASE_REFERENCE]",
 			 "case_field_element_path": null,
@@ -37,8 +37,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": true,
 			 "case_field_id": "[LAST_STATE_MODIFIED_DATE]",
 			 "case_field_element_path": null,
@@ -50,8 +50,8 @@
 				"priority": 1
 			 },
 			 "display_context_parameter": "#DATETIMEDISPLAY(yyyyMMdd)"
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "case_field_id": "DateField",
 			 "case_field_element_path": null,
@@ -60,8 +60,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": "#DATETIMEDISPLAY(dd-MM-yy)"
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "case_field_id": "DateTimeField",
 			 "case_field_element_path": null,
@@ -70,8 +70,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm:ss.SSS)"
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "case_field_id": "StandardDate",
 			 "case_field_element_path": null,
@@ -80,8 +80,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "case_field_id": "StandardDateTime",
 			 "case_field_element_path": null,
@@ -90,8 +90,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "case_field_id": "CollectionDate",
 			 "case_field_element_path": null,
@@ -100,8 +100,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": "#DATETIMEDISPLAY(yy-MM-dd)"
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "case_field_id": "CollectionDateTime",
 			 "case_field_element_path": null,
@@ -110,8 +110,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd)"
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "case_field_id": "ComplexDateTime",
 			 "case_field_element_path": "DateTimeField",
@@ -120,8 +120,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "case_field_id": "CollectionComplexDateTime",
 			 "case_field_element_path": null,
@@ -130,8 +130,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "case_field_id": "ComplexDateTime",
 			 "case_field_element_path": "DateField",
@@ -140,8 +140,8 @@
 			 "role": null,
 			 "sort_order": null,
 			 "display_context_parameter": null
-		  }
+			}
 		]
 	 }
-  }
+	}
 }

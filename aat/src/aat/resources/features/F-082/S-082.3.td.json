@@ -1,28 +1,28 @@
 {
-  "_guid_": "S-082.3",
-  "_extends_": "F-082_Test_Base_Data",
-  "title": "must return 403 when request provides authentic credentials without authorised access to the operation",
+	"_guid_": "S-082.3",
+	"_extends_": "F-082_Test_Base_Data",
+	"title": "must return 403 when request provides authentic credentials without authorised access to the operation",
 
-  "specs": [
+	"specs": [
 	 "an active profile in CCD, and insufficient privilege to the case type",
 	 "contains 403 forbidden code"
-  ],
+	],
 
-  "request": {
+	"request": {
 	 "pathVariables": {
 		"jid": "BEFTA_JURISDICTION_2",
 		"uid": "[[DEFAULT_AUTO_VALUE]]"
 	 }
-  },
+	},
 
-  "users": {
+	"users": {
 	 "invokingUser": {
 		"username": "befta.caseworker.3@gmail.com",
 		"password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
 	 }
-  },
+	},
 
-  "expectedResponse": {
+	"expectedResponse": {
 	 "_extends_": "Common_403_Response",
 	 "headers": {
 		"Connection": "keep-alive",
@@ -31,5 +31,5 @@
 		"Keep-Alive": "timeout=60",
 		"Transfer-Encoding": "chunked"
 	 }
-  }
+	}
 }

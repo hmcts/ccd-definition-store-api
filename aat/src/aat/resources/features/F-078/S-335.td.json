@@ -1,16 +1,16 @@
 {
-  "_guid_": "S-335",
-  "_extends_": "F-078_Test_Base_Data",
-  "title": "must return 200 and Gets the current version of a Case Type Schema",
+	"_guid_": "S-335",
+	"_extends_": "F-078_Test_Base_Data",
+	"title": "must return 200 and Gets the current version of a Case Type Schema",
 
-  "specs": [
+	"specs": [
 	 "an active profile in CCD",
 	 "contains a valid case type id",
 	 "has the 200 OK code",
 	 "returns the version number for case type id FT_MasterCaseType"
-  ],
+	],
 
-  "expectedResponse": {
+	"expectedResponse": {
 	 "_extends_": "Common_200_Response",
 	 "headers": {
 		"Content-Encoding": "gzip",
@@ -21,5 +21,5 @@
 	 "body": {
 		"version": "[[ANY_NUMBER_NOT_NULLABLE]]"
 	 }
-  }
+	}
 }

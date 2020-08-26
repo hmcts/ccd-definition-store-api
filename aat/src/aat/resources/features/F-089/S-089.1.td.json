@@ -1,24 +1,24 @@
 {
-  "_guid_": "S-089.1",
-  "_extends_": "F-089_Test_Base_data",
-  "title": "must successfully import definition file",
+	"_guid_": "S-089.1",
+	"_extends_": "F-089_Test_Base_data",
+	"title": "must successfully import definition file",
 
-  "specs": [
+	"specs": [
 	 "contains correctly configured DefaultValue in EventToComplexTypes tab"
-  ],
+	],
 
-  "request": {
+	"request": {
 	 "body": {
 		"arrayInMap": [
-		  {
+			{
 			 "key": "file",
 			 "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/excel/BEFTA_Master_Definition.xlsx"
-		  }
+			}
 		]
 	 }
-  },
+	},
 
-  "expectedResponse": {
+	"expectedResponse": {
 	 "_extends_": "Common_201_Response",
 	 "headers": {
 		"Content-Encoding": "[[ANYTHING_PRESENT]]",
@@ -28,6 +28,6 @@
 	 "body": {
 		"__plainTextValue__": "Case Definition data successfully imported"
 	 }
-  }
+	}
 }
 

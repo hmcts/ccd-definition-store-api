@@ -1,21 +1,21 @@
 {
-  "_guid_": "S-338",
-  "_extends_": "F-078_Test_Base_Data",
-  "title": "must return 404 when user provide non-existing Case Type ID within the request",
+	"_guid_": "S-338",
+	"_extends_": "F-078_Test_Base_Data",
+	"title": "must return 404 when user provide non-existing Case Type ID within the request",
 
-  "specs": [
+	"specs": [
 	 "an active profile in CCD",
 	 "contains non existing case type id",
 	 "contains 404 not found"
-  ],
+	],
 
-  "request": {
+	"request": {
 	 "pathVariables": {
 		"ctid": "NON_EXISTING_BEFTA_CASETYPE"
 	 }
-  },
+	},
 
-  "expectedResponse": {
+	"expectedResponse": {
 	 "_extends_": "Common_404_Response",
 	 "headers": {
 		"Content-Encoding": "gzip",
@@ -30,5 +30,5 @@
 		"timestamp": "[[ANY_STRING_NULLABLE]]",
 		"path": "[[ANY_STRING_NULLABLE]]"
 	 }
-  }
+	}
 }

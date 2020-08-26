@@ -1,16 +1,16 @@
 {
-  "_guid_": "S-089.2",
-  "_extends_": "F-089_Test_Complex_Organisation",
-  "title": "must return all details successfully for a case type containing some Organisation and OrganisationPolicy fields",
+	"_guid_": "S-089.2",
+	"_extends_": "F-089_Test_Complex_Organisation",
+	"title": "must return all details successfully for a case type containing some Organisation and OrganisationPolicy fields",
 
-  "specs": [
+	"specs": [
 	 "an active profile in CCD",
 	 "contains a valid jurisdiction id",
 	 "contains id of a case type with some Organisation and OrganisationPolicy fields",
 	 "contains all details of the case type requested"
-  ],
+	],
 
-  "expectedResponse": {
+	"expectedResponse": {
 	 "_extends_": "Common_200_Response",
 	 "headers": {
 		"Content-Encoding": "gzip",
@@ -22,43 +22,43 @@
 		"id": "FT_ComplexOrganisation",
 		"description": "[[ANY_STRING_NOT_NULLABLE]]",
 		"version": {
-		  "number": "[[ANY_INTEGER_NOT_NULLABLE]]",
-		  "live_from": "[[ANY_STRING_NOT_NULLABLE]]",
-		  "live_until": "[[ANY_STRING_NULLABLE]]"
+			"number": "[[ANY_INTEGER_NOT_NULLABLE]]",
+			"live_from": "[[ANY_STRING_NOT_NULLABLE]]",
+			"live_until": "[[ANY_STRING_NULLABLE]]"
 		},
 		"name": "FT-Complex Organisation",
 		"jurisdiction": {
-		  "id": "BEFTA_MASTER",
-		  "name": "BEFTA Master",
-		  "description": "[[ANY_STRING_NOT_NULLABLE]]",
-		  "live_from": "[[ANY_STRING_NOT_NULLABLE]]",
-		  "live_until": "[[ANY_STRING_NULLABLE]]",
-		  "case_types": []
+			"id": "BEFTA_MASTER",
+			"name": "BEFTA Master",
+			"description": "[[ANY_STRING_NOT_NULLABLE]]",
+			"live_from": "[[ANY_STRING_NOT_NULLABLE]]",
+			"live_until": "[[ANY_STRING_NULLABLE]]",
+			"case_types": []
 		},
 		"events": [
-		  {
+			{
 			 "__ordering__": "unordered"
-		  },
-		  {
+			},
+			{
 			 "id": "updateOrganisation",
 			 "name": "Update organisation",
 			 "description": "Update organisation information",
 			 "order": 1,
 			 "case_fields": [
 				{
-				  "__ordering__": "unordered",
-				  "__elementId__": "case_field_id"
+					"__ordering__": "unordered",
+					"__elementId__": "case_field_id"
 				},
 				{
-				  "case_field_id": "OrganisationField",
-				  "display_context": "COMPLEX",
-				  "display_context_parameter": null,
-				  "show_condition": null,
-				  "show_summary_change_option": true,
-				  "show_summary_content_option": null,
-				  "label": null,
-				  "hint_text": null,
-				  "case_fields_complex": [
+					"case_field_id": "OrganisationField",
+					"display_context": "COMPLEX",
+					"display_context_parameter": null,
+					"show_condition": null,
+					"show_summary_change_option": true,
+					"show_summary_content_option": null,
+					"label": null,
+					"hint_text": null,
+					"case_fields_complex": [
 					 {
 						"__ordering__": "unordered",
 						"__elementId__": "reference,order"
@@ -81,18 +81,18 @@
 						"showCondition": null,
 						"defaultValue": null
 					 }
-				  ]
+					]
 				},
 				{
-				  "case_field_id": "OrganisationPolicyField",
-				  "display_context": "COMPLEX",
-				  "display_context_parameter": null,
-				  "show_condition": null,
-				  "show_summary_change_option": true,
-				  "show_summary_content_option": null,
-				  "label": null,
-				  "hint_text": null,
-				  "case_fields_complex": [
+					"case_field_id": "OrganisationPolicyField",
+					"display_context": "COMPLEX",
+					"display_context_parameter": null,
+					"show_condition": null,
+					"show_summary_change_option": true,
+					"show_summary_content_option": null,
+					"label": null,
+					"hint_text": null,
+					"case_fields_complex": [
 					 {
 						"__ordering__": "unordered",
 						"__elementId__": "reference,order"
@@ -133,7 +133,7 @@
 						"showCondition": null,
 						"defaultValue": null
 					 }
-				  ]
+					]
 				}
 			 ],
 			 "pre_states": [
@@ -149,38 +149,38 @@
 			 "security_classification": "PUBLIC",
 			 "acls": [
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true
 				}
 			 ],
 			 "show_summary": true,
 			 "show_event_notes": null,
 			 "can_save_draft": null,
 			 "end_button_label": null
-		  },
-		  {
+			},
+			{
 			 "id": "createOrganisation",
 			 "name": "Create organisation",
 			 "description": "Create organisation information",
 			 "order": 1,
 			 "case_fields": [
 				{
-				  "__ordering__": "unordered",
-				  "__elementId__": "case_field_id"
+					"__ordering__": "unordered",
+					"__elementId__": "case_field_id"
 				},
 				{
-				  "case_field_id": "OrganisationField",
-				  "display_context": "COMPLEX",
-				  "display_context_parameter": null,
-				  "show_condition": null,
-				  "show_summary_change_option": true,
-				  "show_summary_content_option": null,
-				  "label": null,
-				  "hint_text": null,
-				  "case_fields_complex": [
+					"case_field_id": "OrganisationField",
+					"display_context": "COMPLEX",
+					"display_context_parameter": null,
+					"show_condition": null,
+					"show_summary_change_option": true,
+					"show_summary_content_option": null,
+					"label": null,
+					"hint_text": null,
+					"case_fields_complex": [
 					 {
 						"__ordering__": "unordered",
 						"__elementId__": "reference,order"
@@ -203,18 +203,18 @@
 						"showCondition": null,
 						"defaultValue": null
 					 }
-				  ]
+					]
 				},
 				{
-				  "case_field_id": "OrganisationPolicyField",
-				  "display_context": "COMPLEX",
-				  "display_context_parameter": null,
-				  "show_condition": null,
-				  "show_summary_change_option": true,
-				  "show_summary_content_option": null,
-				  "label": null,
-				  "hint_text": null,
-				  "case_fields_complex": [
+					"case_field_id": "OrganisationPolicyField",
+					"display_context": "COMPLEX",
+					"display_context_parameter": null,
+					"show_condition": null,
+					"show_summary_change_option": true,
+					"show_summary_content_option": null,
+					"label": null,
+					"hint_text": null,
+					"case_fields_complex": [
 					 {
 						"__ordering__": "unordered",
 						"__elementId__": "reference,order"
@@ -255,7 +255,7 @@
 						"showCondition": null,
 						"defaultValue": null
 					 }
-				  ]
+					]
 				}
 			 ],
 			 "pre_states": [],
@@ -269,24 +269,24 @@
 			 "security_classification": "PUBLIC",
 			 "acls": [
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true
 				}
 			 ],
 			 "show_summary": true,
 			 "show_event_notes": null,
 			 "can_save_draft": null,
 			 "end_button_label": null
-		  }
+			}
 		],
 		"states": [
-		  {
+			{
 			 "__ordering__": "unordered"
-		  },
-		  {
+			},
+			{
 			 "id": "CaseUpdated",
 			 "name": "Updated case",
 			 "description": null,
@@ -294,15 +294,15 @@
 			 "title_display": null,
 			 "acls": [
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true
 				}
 			 ]
-		  },
-		  {
+			},
+			{
 			 "id": "CaseCreated",
 			 "name": "Create case",
 			 "description": null,
@@ -310,30 +310,30 @@
 			 "title_display": null,
 			 "acls": [
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true
 				}
 			 ]
-		  }
+			}
 		],
 		"acls": [
-		  {
+			{
 			 "role": "caseworker-befta_master",
 			 "create": true,
 			 "read": true,
 			 "update": true,
 			 "delete": true
-		  }
+			}
 		],
 		"searchAliasFields": "[[ANYTHING_PRESENT]]",
 		"case_fields": [
-		  {
+			{
 			 "__ordering__": "unordered"
-		  },
-		  {
+			},
+			{
 			 "metadata": true,
 			 "id": "[STATE]",
 			 "case_type_id": "FT_ComplexOrganisation",
@@ -346,16 +346,16 @@
 				"max": null,
 				"regular_expression": null,
 				"fixed_list_items": [
-				  {
+					{
 					 "code": "CaseCreated",
 					 "label": "Create case",
 					 "order": null
-				  },
-				  {
+					},
+					{
 					 "code": "CaseUpdated",
 					 "label": "Updated case",
 					 "order": null
-				  }
+					}
 				],
 				"complex_fields": [],
 				"collection_field_type": null
@@ -369,8 +369,8 @@
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "id": "OrganisationPolicyField",
 			 "case_type_id": "FT_ComplexOrganisation",
@@ -384,7 +384,7 @@
 				"regular_expression": null,
 				"fixed_list_items": [],
 				"complex_fields": [
-				  {
+					{
 					 "metadata": false,
 					 "id": "Organisation",
 					 "case_type_id": null,
@@ -398,7 +398,7 @@
 						"regular_expression": null,
 						"fixed_list_items": [],
 						"complex_fields": [
-						  {
+							{
 							 "metadata": false,
 							 "id": "OrganisationID",
 							 "case_type_id": null,
@@ -423,8 +423,8 @@
 							 "order": null,
 							 "show_condition": null,
 							 "display_context_parameter": null
-						  },
-						  {
+							},
+							{
 							 "metadata": false,
 							 "id": "OrganisationName",
 							 "case_type_id": null,
@@ -449,7 +449,7 @@
 							 "order": null,
 							 "show_condition": null,
 							 "display_context_parameter": null
-						  }
+							}
 						],
 						"collection_field_type": null
 					 },
@@ -462,8 +462,8 @@
 					 "order": null,
 					 "show_condition": null,
 					 "display_context_parameter": null
-				  },
-				  {
+					},
+					{
 					 "metadata": false,
 					 "id": "OrgPolicyCaseAssignedRole",
 					 "case_type_id": null,
@@ -488,8 +488,8 @@
 					 "order": null,
 					 "show_condition": null,
 					 "display_context_parameter": null
-				  },
-				  {
+					},
+					{
 					 "metadata": false,
 					 "id": "OrgPolicyReference",
 					 "case_type_id": null,
@@ -514,7 +514,7 @@
 					 "order": null,
 					 "show_condition": null,
 					 "display_context_parameter": null
-				  }
+					}
 				],
 				"collection_field_type": null
 			 },
@@ -524,64 +524,64 @@
 			 "live_until": null,
 			 "acls": [
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true
 				}
 			 ],
 			 "complexACLs": [
 				{
-				  "__ordering__": "UNORDERED",
-				  "__elementId__": "listElementCode"
+					"__ordering__": "UNORDERED",
+					"__elementId__": "listElementCode"
 				},
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true,
-				  "listElementCode": "OrgPolicyCaseAssignedRole"
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true,
+					"listElementCode": "OrgPolicyCaseAssignedRole"
 				},
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true,
-				  "listElementCode": "OrgPolicyReference"
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true,
+					"listElementCode": "OrgPolicyReference"
 				},
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true,
-				  "listElementCode": "Organisation"
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true,
+					"listElementCode": "Organisation"
 				},
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true,
-				  "listElementCode": "Organisation.OrganisationID"
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true,
+					"listElementCode": "Organisation.OrganisationID"
 				},
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true,
-				  "listElementCode": "Organisation.OrganisationName"
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true,
+					"listElementCode": "Organisation.OrganisationName"
 				}
 			 ],
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": false,
 			 "id": "OrganisationField",
 			 "case_type_id": "FT_ComplexOrganisation",
@@ -595,7 +595,7 @@
 				"regular_expression": null,
 				"fixed_list_items": [],
 				"complex_fields": [
-				  {
+					{
 					 "metadata": false,
 					 "id": "OrganisationID",
 					 "case_type_id": null,
@@ -620,8 +620,8 @@
 					 "order": null,
 					 "show_condition": null,
 					 "display_context_parameter": null
-				  },
-				  {
+					},
+					{
 					 "metadata": false,
 					 "id": "OrganisationName",
 					 "case_type_id": null,
@@ -646,7 +646,7 @@
 					 "order": null,
 					 "show_condition": null,
 					 "display_context_parameter": null
-				  }
+					}
 				],
 				"collection_field_type": null
 			 },
@@ -656,19 +656,19 @@
 			 "live_until": null,
 			 "acls": [
 				{
-				  "role": "caseworker-befta_master",
-				  "create": true,
-				  "read": true,
-				  "update": true,
-				  "delete": true
+					"role": "caseworker-befta_master",
+					"create": true,
+					"read": true,
+					"update": true,
+					"delete": true
 				}
 			 ],
 			 "complexACLs": [],
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": true,
 			 "id": "[LAST_STATE_MODIFIED_DATE]",
 			 "case_type_id": null,
@@ -693,8 +693,8 @@
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": true,
 			 "id": "[LAST_MODIFIED_DATE]",
 			 "case_type_id": null,
@@ -719,8 +719,8 @@
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": true,
 			 "id": "[CREATED_DATE]",
 			 "case_type_id": null,
@@ -745,8 +745,8 @@
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": true,
 			 "id": "[JURISDICTION]",
 			 "case_type_id": null,
@@ -771,8 +771,8 @@
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": true,
 			 "id": "[CASE_TYPE]",
 			 "case_type_id": null,
@@ -797,8 +797,8 @@
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": true,
 			 "id": "[SECURITY_CLASSIFICATION]",
 			 "case_type_id": null,
@@ -823,8 +823,8 @@
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  },
-		  {
+			},
+			{
 			 "metadata": true,
 			 "id": "[CASE_REFERENCE]",
 			 "case_type_id": null,
@@ -849,10 +849,10 @@
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-		  }
+			}
 		],
 		"printable_document_url": null,
 		"security_classification": "PUBLIC"
 	 }
-  }
+	}
 }

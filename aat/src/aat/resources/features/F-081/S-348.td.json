@@ -1,21 +1,21 @@
 {
-  "_guid_": "S-348",
-  "_extends_": "F-081_Test_Base_Data",
-  "title": "must return 401 when request does not provide valid authentication credentials",
+	"_guid_": "S-348",
+	"_extends_": "F-081_Test_Base_Data",
+	"title": "must return 401 when request does not provide valid authentication credentials",
 
-  "specs": [
+	"specs": [
 	 "an active profile in CCD",
 	 "contains an invalid authentication credentials",
 	 "contains 401 unauthorised code"
-  ],
+	],
 
-  "request": {
+	"request": {
 	 "headers": {
 		"Authorization": "dummyToken"
 	 }
-  },
+	},
 
-  "expectedResponse": {
+	"expectedResponse": {
 	 "_extends_": "Common_401_Response",
 	 "headers": {
 		"Connection": "keep-alive",
@@ -24,5 +24,5 @@
 		"Keep-Alive": "timeout=60",
 		"Transfer-Encoding": "chunked"
 	 }
-  }
+	}
 }

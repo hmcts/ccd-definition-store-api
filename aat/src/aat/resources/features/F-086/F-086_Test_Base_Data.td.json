@@ -1,20 +1,20 @@
 {
-  "_guid_": "F-086_Test_Base_Data",
+	"_guid_": "F-086_Test_Base_Data",
 
-  "productName": "CCD Definition Store",
-  "operationName": "Case Wizard page collection By CaseType",
+	"productName": "CCD Definition Store",
+	"operationName": "Case Wizard page collection By CaseType",
 
-  "method": "GET",
-  "uri": "/api/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}",
+	"method": "GET",
+	"uri": "/api/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}",
 
-  "users": {
+	"users": {
 	 "invokingUser": {
 		"username": "master.caseworker@gmail.com",
 		"password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
 	 }
-  },
+	},
 
-  "request": {
+	"request": {
 	 "headers": {
 		"Authorization": "[[DEFAULT_AUTO_VALUE]]",
 		"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
@@ -24,5 +24,5 @@
 		"ctid": "FT_MasterCaseType",
 		"etid": "createCase"
 	 }
-  }
+	}
 }
