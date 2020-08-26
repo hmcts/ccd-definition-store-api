@@ -10,7 +10,7 @@ Background:
 @S-000 @Smoke
 Scenario: must return a successful response from the Healthcheck Operation
 
-    Given a request is prepared with appropriate values
+     When a request is prepared with appropriate values
       And it is submitted to call the [Healthcheck] operation of [CCD Definition Store]
 
      Then a positive response is received
