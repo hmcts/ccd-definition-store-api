@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-089.1
+@S-089.1 @Ignore # ES existing index has the old type for dynamic lists - reenable after 19.1.1 Release
 Scenario: must successfully import a definition file containing some Organisation and OrganisationPolicy fields
 
     Given a user with [an active profile in CCD]
