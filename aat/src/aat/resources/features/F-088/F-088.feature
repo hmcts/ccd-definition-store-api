@@ -1,6 +1,6 @@
 #==================================================================
 @F-088
-Feature: F-088: Fetch UI definition Work Basket results by CaseType
+Feature: F-088: Fetch UI definition Work Basket Results by CaseType
 #==================================================================
 
 Background:

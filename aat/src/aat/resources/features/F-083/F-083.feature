@@ -1,6 +1,6 @@
 #================================================================
 @F-083
-Feature: F-083: Fetch UI definition for Search Inputs by CaseType
+Feature: F-083: Fetch UI Definition for Search Inputs by CaseType
 #================================================================
 
 Background:

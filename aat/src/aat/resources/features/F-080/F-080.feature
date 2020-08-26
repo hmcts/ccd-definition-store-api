@@ -1,6 +1,6 @@
 #====================================================
 @F-080
-Feature: F-080: Get Case Type details by Jurisdiction
+Feature: F-080: Get Case Type Details by Jurisdiction
 #====================================================
 
 Background:

@@ -1,6 +1,6 @@
 #==============================================
 @F-085
-Feature: F-085: Fetch Tab Structure By CaseType
+Feature: F-085: Fetch Tab Structure by CaseType
 #==============================================
 
 Background:

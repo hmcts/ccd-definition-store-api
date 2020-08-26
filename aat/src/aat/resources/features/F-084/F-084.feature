@@ -1,6 +1,6 @@
 #=================================================================
 @F-084
-Feature: F-084: Fetch UI definition for Search Results By CaseType
+Feature: F-084: Fetch UI Definition for Search Results by CaseType
 #=================================================================
 
 Background:

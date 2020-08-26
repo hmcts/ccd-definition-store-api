@@ -1,6 +1,6 @@
 #======================================================================
 @F-086
-Feature: F-086: Fetch Case Wizard Page Collection for a given Case Type
+Feature: F-086: Fetch Case Wizard Page Collection for a Given Case Type
 #======================================================================
 
 Background:
