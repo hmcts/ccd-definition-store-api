@@ -20,6 +20,12 @@ sourceSets {
 
 task smoke() {
     description = 'Executes smoke tests against the CCD Definition Store Instance just deployed'
+    setTestClassesDirs(sourceSets.aat.output.classesDirs)
+    setClasspath(sourceSets.aat.runtimeClasspath)
+    include "uk/gov/hmcts/ccd/definitionstore/befta/**"
+    useJUnitPlatform {
+        includeTags 'smoke'
+    }
     dependsOn aatClasses
 
     new File("$buildDir/test-results/test").mkdirs()
@@ -32,7 +38,7 @@ task smoke() {
         generateCucumberReports.enabled = true
         javaexec {
             main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
-            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
+            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
             args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
                     'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
@@ -53,6 +59,10 @@ task smoke() {
 
 task functional() {
     description = 'Executes functional tests against the CCD Definition Store Instance just deployed'
+    setTestClassesDirs(sourceSets.aat.output.classesDirs)
+    setClasspath(sourceSets.aat.runtimeClasspath)
+    include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
+    useJUnitPlatform()
 
     new File("$buildDir/test-results/test").mkdirs()
     copy {
