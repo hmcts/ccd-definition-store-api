@@ -1,27 +1,31 @@
 {
-  "_guid_": "S-080.4",
-  "_extends_": "F-080_Test_Base_Data",
-  "title": "must return 404 when user provide non-existing JID {jurisdiction references} within the request",
-  "specs": [
-    "an active profile in CCD",
-    "contains a non-existing jurisdiction id",
-    "contains 404 not found code"
-  ],
-  "request": {
-    "pathVariables": {
-      "jid": "BEFTA_3_sdfhdj"
-    }
-  },
-  "users": {
-    "invokingUser": {
-      "username": "befta.caseworker.3@gmail.com",
-      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
-    }
-  },
-  "expectedResponse": {
-    "_extends_" : "Common_404_Response",
-    "body" : {
-      "message" : "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
-    }
-  }
+	"_guid_": "S-080.4",
+	"_extends_": "F-080_Test_Base_Data",
+	"title": "must return 404 when user provide non-existing JID {jurisdiction references} within the request",
+
+	"specs": [
+	 "an active profile in CCD",
+	 "contains a non-existing jurisdiction id",
+	 "contains 404 not found code"
+	],
+
+	"request": {
+	 "pathVariables": {
+		"jid": "BEFTA_3_sdfhdj"
+	 }
+	},
+
+	"users": {
+	 "invokingUser": {
+		"username": "befta.caseworker.3@gmail.com",
+		"password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
+	 }
+	},
+
+	"expectedResponse": {
+	 "_extends_": "Common_404_Response",
+	 "body": {
+		"message": "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+	 }
+	}
 }
