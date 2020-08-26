@@ -20,6 +20,7 @@ import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -42,6 +43,9 @@ public class ElasticDefinitionImportListenerTest {
 
     @Mock
     private CaseMappingGenerator caseMappingGenerator;
+
+    @Mock
+    private ElasticsearchErrorHandler elasticsearchErrorHandler;
 
     private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseTypeA").build();
     private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
@@ -122,8 +126,9 @@ public class ElasticDefinitionImportListenerTest {
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {
 
         public TestDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
-                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
-            super(config, mappingGenerator, clientFactory);
+                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
+                                            ElasticsearchErrorHandler elasticsearchErrorHandler) {
+            super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler);
         }
 
         @Override
