@@ -24,6 +24,7 @@ class ElasticsearchErrorTest {
         assertAll(
             () -> assertThat(result.getCaseType(), is(caseType)),
             () -> assertThat(result.getReason(), is("REASON")),
+            () -> assertThat(result.getErrorType(), is("TYPE")),
             () -> assertThat(result.getCaseTypeReference(), is("CaseTypeId")),
             () -> assertThat(result.getException(), is(exception)),
             () -> assertThat(result.getMessage(), is("Elasticsearch exception [type=TYPE, reason=REASON]")),
@@ -42,6 +43,7 @@ class ElasticsearchErrorTest {
         assertAll(
             () -> assertThat(result.getCaseType(), is(caseType)),
             () -> assertThat(result.getReason(), is(nullValue())),
+            () -> assertThat(result.getErrorType(), is(nullValue())),
             () -> assertThat(result.getCaseTypeReference(), is("CaseTypeId")),
             () -> assertThat(result.getException(), is(exception)),
             () -> assertThat(result.getMessage(), is("Unsupported message pattern")),

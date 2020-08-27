@@ -16,6 +16,7 @@ public class ElasticsearchError {
     private ElasticsearchStatusException exception;
     private CaseTypeEntity caseType;
     private String message;
+    private String errorType;
     private String reason;
 
     private ElasticsearchError() { }
@@ -38,6 +39,7 @@ public class ElasticsearchError {
         this.message = exception.getMessage();
         Matcher matcher = MESSAGE_PATTERN.matcher(message);
         if (matcher.matches()) {
+            this.errorType = matcher.group(1);
             this.reason = matcher.group(2);
         }
     }
