@@ -1,23 +1,27 @@
 {
-  "_guid_": "F-082_Test_Base_Data",
-  "productName": "CCD Definition Store",
-  "operationName": "Get Case Type Details",
-  "method": "GET",
-  "uri": "/api/data/jurisdictions/{jurisdiction_id}/case-type",
-  "users": {
-    "invokingUser": {
-      "username": "master.caseworker@gmail.com",
-      "password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
-    }
-  },
-  "request": {
-    "headers": {
-      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
-      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-      "Content-Type": "application/json"
-    },
-    "pathVariables": {
-      "jurisdiction_id": "BEFTA_MASTER"
-    }
-  }
+	"_guid_": "F-082_Test_Base_Data",
+
+	"productName": "CCD Definition Store",
+	"operationName": "Get Case Type Details",
+
+	"method": "GET",
+	"uri": "/api/data/jurisdictions/{jurisdiction_id}/case-type",
+
+	"users": {
+	 "invokingUser": {
+		"username": "master.caseworker@gmail.com",
+		"password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
+	 }
+	},
+
+	"request": {
+	 "headers": {
+		"Authorization": "[[DEFAULT_AUTO_VALUE]]",
+		"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+		"Content-Type": "application/json"
+	 },
+	 "pathVariables": {
+		"jurisdiction_id": "BEFTA_MASTER"
+	 }
+	}
 }

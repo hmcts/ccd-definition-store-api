@@ -1,23 +1,25 @@
 {
-  "_guid_": "S-335",
-  "_extends_": "F-078_Test_Base_Data",
-  "title": "must return 200 and Gets the current version of a Case Type Schema",
-  "specs": [
-    "an active profile in CCD",
-    "contains a valid case type id",
-    "has the 200 OK code",
-    "returns the version number for case type id FT_MasterCaseType"
-  ],
-  "expectedResponse": {
-    "_extends_" : "Common_200_Response",
-    "headers": {
-      "Content-Encoding" : "gzip",
-      "Content-Length" : "[[ANYTHING_PRESENT]]",
-      "Content-Type" : "application/json",
-      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
-    },
-    "body" : {
-      "version" : "[[ANY_NUMBER_NOT_NULLABLE]]"
-    }
-  }
+	"_guid_": "S-335",
+	"_extends_": "F-078_Test_Base_Data",
+	"title": "must return 200 and Gets the current version of a Case Type Schema",
+
+	"specs": [
+	 "an active profile in CCD",
+	 "contains a valid case type id",
+	 "has the 200 OK code",
+	 "returns the version number for case type id FT_MasterCaseType"
+	],
+
+	"expectedResponse": {
+	 "_extends_": "Common_200_Response",
+	 "headers": {
+		"Content-Encoding": "gzip",
+		"Content-Length": "[[ANYTHING_PRESENT]]",
+		"Content-Type": "application/json",
+		"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+	 },
+	 "body": {
+		"version": "[[ANY_NUMBER_NOT_NULLABLE]]"
+	 }
+	}
 }

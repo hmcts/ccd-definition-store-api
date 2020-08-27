@@ -1,23 +1,25 @@
 {
-  "_guid_": "S-082.1",
-  "_extends_": "F-082_Test_Base_Data",
-  "title": "must return 200",
-  "specs": [
-    "an active profile in CCD",
-    "contains a valid jurisdiction id",
-    "has the 200 OK code",
-    "contains case type details"
-  ],
-  "expectedResponse": {
-    "_extends_": "Common_200_Response",
-    "headers": {
-      "Content-Encoding": "gzip",
-      "Content-Type": "[[ANYTHING_PRESENT]]",
-      "Transfer-Encoding" : "[[ANYTHING_PRESENT]]",
-      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
-    },
-    "body": {
-      "arrayInMap": "[[ANYTHING_PRESENT]]"
-    }
-  }
+	"_guid_": "S-082.1",
+	"_extends_": "F-082_Test_Base_Data",
+	"title": "must return 200",
+
+	"specs": [
+	 "an active profile in CCD",
+	 "contains a valid jurisdiction id",
+	 "has the 200 OK code",
+	 "contains case type details"
+	],
+
+	"expectedResponse": {
+	 "_extends_": "Common_200_Response",
+	 "headers": {
+		"Content-Encoding": "gzip",
+		"Content-Type": "[[ANYTHING_PRESENT]]",
+		"Transfer-Encoding": "[[ANYTHING_PRESENT]]",
+		"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+	 },
+	 "body": {
+		"arrayInMap": "[[ANYTHING_PRESENT]]"
+	 }
+	}
 }
