@@ -853,7 +853,8 @@
                 "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
