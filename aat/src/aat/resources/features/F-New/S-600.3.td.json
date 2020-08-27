@@ -4,7 +4,7 @@
   "title": "must fail to import definition file",
   "specs": [
     "contains configuration on the 'retainHiddenValue' column for a field that does not contain a showCondition",
-    "provides a clear validation message describing why the definition import has failed, for example, \"'retainHiddenValue  can only be configured for a field that uses a showCondition. Field [FieldID] on [TabName] does not use a showCondition"
+    "provides a clear validation message describing why the definition import has failed, for example, retainHiddenValue  can only be configured for a field that uses a showCondition. Field [FieldID] on [TabName] does not use a showCondition"
   ],
   "request": {
     "body": {
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- validationError: DefaultValue '[INVALID]' is not a valid role for 'OrgPolicyCaseAssignedRole' "
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- validationError: retainHiddenValue can only be configured for a field that uses a showCondition. Field ['AddressField'] on ['CaseEventToFields'] does not use a showCondition"
     }
   }
 }

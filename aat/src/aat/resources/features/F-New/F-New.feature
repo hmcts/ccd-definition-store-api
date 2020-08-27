@@ -21,7 +21,7 @@ Feature: F-New: 'Retain hidden field'
     And it is submitted to call the [POST Case Definition File] operation of [CCD Definition Store Api]
     Then a negative response is received
     And the response has all other details as expected
-    And the response [provides a clear validation message describing why the definition import has failed, for example, "'retainHiddenValue' has been incorrectly configured or is invalid for fieldID [FieldID] on [TabName]"
+    And the response [provides a clear validation message describing why the definition import has failed, for example, retainHiddenValue has been incorrectly configured or is invalid for fieldID [FieldID] on [TabName]]
 
   @S-600.3
   Scenario: Import must fail when definition file contains configuration for 'retainHiddenValue' on a field that does not use a showCondition
@@ -31,4 +31,4 @@ Feature: F-New: 'Retain hidden field'
     And it is submitted to call the [POST Case Definition File] operation of [CCD Definition Store Api]
     Then a negative response is received
     And the response has all other details as expected
-    And the response [provides a clear validation message describing why the definition import has failed, for example, "'retainHiddenValue  can only be configured for a field that uses a showCondition. Field [FieldID] on [TabName] does not use a showCondition"
+    And the response [provides a clear validation message describing why the definition import has failed, for example, retainHiddenValue  can only be configured for a field that uses a showCondition. Field [FieldID] on [TabName] does not use a showCondition]
