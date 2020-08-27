@@ -118,6 +118,13 @@ public class DefinitionDataItemTest {
         assertBooleanValue("f", FALSE);
     }
 
+    @Test
+    public void shouldGetBooleanOrDefault() {
+        assertBooleanValueWithDefault("yes", false, TRUE);
+        assertBooleanValueWithDefault("no", true, FALSE);
+        assertBooleanValueWithDefault(null, true, TRUE);
+    }
+
     @Test(expected = MapperException.class)
     public void shouldFail_whenInvalidBoolean() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN, "k");
@@ -221,6 +228,12 @@ public class DefinitionDataItemTest {
         DefinitionDataItem dataItem = new DefinitionDataItem(SheetName.CASE_EVENT.toString());
         dataItem.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), field);
         assertThat("asserting " + field, dataItem.getBoolean(ColumnName.DEFAULT_HIDDEN), is(booleanValue));
+    }
+
+    private void assertBooleanValueWithDefault(String field, boolean defaultValue, boolean expectedValue) {
+        DefinitionDataItem dataItem = new DefinitionDataItem(SheetName.CASE_EVENT.toString());
+        dataItem.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), field);
+        assertThat("asserting " + field, dataItem.getBooleanOrDefault(ColumnName.DEFAULT_HIDDEN, defaultValue), is(expectedValue));
     }
 
     private DefinitionDataItem definitionDataItemWithSecurityClassificationColumnValue(String securityClassificationColumn) {
