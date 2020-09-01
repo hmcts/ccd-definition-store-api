@@ -28,7 +28,7 @@ public class HiddenFieldsValidator {
                     //caseEventToField FieldShowCondition is null and complexType ListElementCode retainHiddenValue is true
                     throw new MapperException(String.format("retainHiddenValue can only be configured "
                             + "for a field that uses a "
-                        + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
+                            + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
                         caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
                 } else if (Boolean.FALSE.equals(caseFieldRetainHiddenValue)
                     && Boolean.TRUE.equals(definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE))) {
@@ -36,7 +36,7 @@ public class HiddenFieldsValidator {
                     throw new MapperException(String.format("retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['%s'] on ['%s']",
                         caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
                 } else if (Boolean.TRUE.equals(caseFieldRetainHiddenValue)
-                    && definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE) == null ) {
+                    && definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE) == null) {
                     //caseEventToField retainHiddenValue is true and complexType ListElementCode retainHiddenValue null so set to true
                     retainHiddenValue = Boolean.TRUE;
                 } else {
