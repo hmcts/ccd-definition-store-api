@@ -87,6 +87,42 @@ public class HiddenFieldsValidatorTest {
 
     }
 
+    @Test(expected = Test.None.class)
+    public void shouldValidate_ForComplexTypeDefaultValueForSubFields() {
+
+        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
+        addDataItem(sheetJ);
+
+        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
+        addDataItem(sheetCT);
+
+        final DefinitionSheet sheetComplexTypes = addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
+        definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, null);
+        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "ComplexTypeFieldId");
+        definitionDataItem.addAttribute(ColumnName.LIST_ELEMENT_CODE, "");
+        definitionDataItem.addAttribute(ColumnName.ID, "ComplexType");
+        sheetComplexTypes.addDataItem(definitionDataItem);
+
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
+        DefinitionDataItem definitionDataItem1 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        definitionDataItem1.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
+        definitionDataItem1.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.TRUE);
+        definitionDataItem1.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "x=yes");
+        sheetCETF.addDataItem(definitionDataItem1);
+
+        final DefinitionSheet sheetCF = addDefinitionSheet(SheetName.CASE_FIELD);
+        DefinitionDataItem definitionDataItem2 = new DefinitionDataItem(SheetName.CASE_FIELD.getName());
+        definitionDataItem2.addAttribute(ColumnName.ID, "fieldId");
+        definitionDataItem2.addAttribute(ColumnName.FIELD_TYPE, "ComplexType");
+        sheetCF.addDataItem(definitionDataItem2);
+
+        addDefinitionSheet(SheetName.FIXED_LISTS);
+
+        assertTrue(validator.parseHiddenFields(definitionDataItem, definitionSheets));
+
+    }
+
 
     @Test(expected = MapperException.class)
     public void shouldFail_whenRetainHiddenValueIsFalseInCaseEventToFieldsButTrueForComplexTypes() {

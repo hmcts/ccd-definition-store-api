@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class HiddenFieldsValidator {
+    Boolean retainHiddenValue;
 
     public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem, Map<String, DefinitionSheet> definitionSheets) {
         final DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
@@ -34,10 +35,17 @@ public class HiddenFieldsValidator {
                     //caseEventToField retainHiddenValue is false and complexType ListElementCode retainHiddenValue true
                     throw new MapperException(String.format("retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['%s'] on ['%s']",
                         caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
+                } else if (Boolean.TRUE.equals(caseFieldRetainHiddenValue)
+                    && definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE) == null ) {
+                    //caseEventToField retainHiddenValue is true and complexType ListElementCode retainHiddenValue null so set to true
+                    retainHiddenValue = Boolean.TRUE;
+                } else {
+                    retainHiddenValue = definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
                 }
+
             });
         });
-        return definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
+        return retainHiddenValue;
     }
 
     public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem) {
