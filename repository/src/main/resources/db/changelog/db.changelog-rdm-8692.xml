@@ -1,0 +1,21 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="rdm-8692-improve-import-perf" author="alex.mcausland@hmcts.net">
+<!--        An increment of 50 allows hibernate to preallocate identifiers for use in creating-->
+<!--        new entities, rather than having to do a database round trip each time.-->
+        <sql>
+            ALTER SEQUENCE case_field_acl_id_seq increment by 50;
+            ALTER SEQUENCE case_field_id_seq increment by 50;
+            ALTER SEQUENCE complex_field_id_seq increment by 50;
+            ALTER SEQUENCE display_group_case_field_id_seq increment by 50;
+            ALTER SEQUENCE event_case_field_id_seq increment by 50;
+            ALTER SEQUENCE event_id_seq increment by 50;
+            ALTER SEQUENCE field_type_id_seq increment by 50;
+            ALTER SEQUENCE field_type_list_item_id_seq increment by 50;
+            ALTER SEQUENCE display_group_id_seq increment by 50;
+            ALTER SEQUENCE webhook_id_seq increment by 50;
+            ALTER SEQUENCE event_webhook_id_seq increment by 50;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

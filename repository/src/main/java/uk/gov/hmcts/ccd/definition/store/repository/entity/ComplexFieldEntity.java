@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -22,7 +22,7 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE, generator = "complex_field_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -36,6 +36,9 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     @Column(name = "hidden")
     private Boolean hidden;
+
+    @Column(name = "searchable")
+    private boolean searchable = true;
 
     @Column(name = "security_classification")
     @Type(type = "pgsql_securityclassification_enum")
@@ -89,6 +92,15 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     public void setHidden(final Boolean hidden) {
         this.hidden = hidden;
+    }
+
+    @Override
+    public boolean isSearchable() {
+        return searchable;
+    }
+
+    public void setSearchable(boolean searchable) {
+        this.searchable = searchable;
     }
 
     public SecurityClassification getSecurityClassification() {
