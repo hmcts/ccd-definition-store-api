@@ -15,14 +15,16 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
     private final ShowConditionParser showConditionParser;
 
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
-    private HiddenFieldsValidator hiddenFieldsValidator = new HiddenFieldsValidator();
+    private final HiddenFieldsValidator hiddenFieldsValidator;
 
     public EventCaseFieldParser(ParseContext parseContext,
                                 ShowConditionParser showConditionParser,
-                                EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+                                EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
+                                HiddenFieldsValidator hiddenFieldsValidator) {
         this.parseContext = parseContext;
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
+        this.hiddenFieldsValidator = hiddenFieldsValidator;
     }
 
     public EventCaseFieldEntity parseEventCaseField(String caseTypeId, DefinitionDataItem eventCaseFieldDefinition) {
