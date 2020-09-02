@@ -20,6 +20,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParse
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
@@ -31,6 +32,9 @@ public class EventCaseFieldParserTest {
 
     @Mock
     private ShowConditionParser showConditionParser;
+
+    @Mock
+    private HiddenFieldsValidator hiddenFieldsValidator;
 
     @Mock
     private ParseContext parseContext;
@@ -59,11 +63,10 @@ public class EventCaseFieldParserTest {
         String originalShowCondition = "Original Show Condition";
         String label = "label";
         String hint = "hint";
-        Boolean retainHiddenValue = Boolean.FALSE;
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
-        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, label, hint, retainHiddenValue);
-
+        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, label, hint, false);
+        when(hiddenFieldsValidator.parseHiddenFields(definitionDataItem)).thenReturn(Boolean.FALSE);
         EventCaseFieldEntity eventCaseFieldEntity = classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem);
 
         assertEquals(CASE_FIELD, eventCaseFieldEntity.getCaseField());
@@ -86,7 +89,6 @@ public class EventCaseFieldParserTest {
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
         String originalShowCondition = "Original Show Condition";
-        Boolean retainHiddenValue = Boolean.TRUE;
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, null, null, true);
@@ -94,7 +96,7 @@ public class EventCaseFieldParserTest {
         when(showConditionParser.parseShowCondition(any())).thenThrow(
             new InvalidShowConditionException("")
         );
-
+        when(hiddenFieldsValidator.parseHiddenFields(definitionDataItem)).thenReturn(Boolean.TRUE);
         EventCaseFieldEntity eventCaseFieldEntity = classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem);
 
         assertEquals(CASE_FIELD, eventCaseFieldEntity.getCaseField());
