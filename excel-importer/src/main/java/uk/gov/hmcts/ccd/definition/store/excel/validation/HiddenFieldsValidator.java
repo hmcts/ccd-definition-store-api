@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -9,10 +10,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import java.util.Map;
 import java.util.Optional;
 
+@Component
 public class HiddenFieldsValidator {
     Boolean retainHiddenValue;
 
-    public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem, Map<String, DefinitionSheet> definitionSheets) {
+    public Boolean parseComplexTypesHiddenFields(DefinitionDataItem definitionDataItem, Map<String, DefinitionSheet> definitionSheets) {
         final DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
         final DefinitionSheet caseFields = definitionSheets.get(SheetName.CASE_FIELD.getName());
         Optional<DefinitionDataItem> caseField =
@@ -23,38 +25,45 @@ public class HiddenFieldsValidator {
                 .stream().filter(definitionDataItem1 -> ddi.getId().equals(definitionDataItem1.getCaseFieldId())).findFirst();
             caseEventToField.ifPresent(caseEventToFieldDataItem -> {
                 String fieldShowCondition = caseEventToFieldDataItem.getString(ColumnName.FIELD_SHOW_CONDITION);
-                Boolean caseFieldRetainHiddenValue = caseEventToFieldDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
-                if (fieldShowCondition == null && Boolean.TRUE.equals(definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE))) {
-                    //caseEventToField FieldShowCondition is null and complexType ListElementCode retainHiddenValue is true
+                Boolean caseFieldRetainHiddenValue = caseEventToFieldDataItem.getRetainHiddenValue();
+                if (isShowConditionPopulated(fieldShowCondition, definitionDataItem)) {
                     throw new MapperException(String.format("retainHiddenValue can only be configured "
                             + "for a field that uses a "
                             + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
                         caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
-                } else if (Boolean.FALSE.equals(caseFieldRetainHiddenValue)
-                    && Boolean.TRUE.equals(definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE))) {
-                    //caseEventToField retainHiddenValue is false and complexType ListElementCode retainHiddenValue true
+                } else if (isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem)) {
                     throw new MapperException(String.format("retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['%s'] on ['%s']",
                         caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
-                } else if (Boolean.TRUE.equals(caseFieldRetainHiddenValue)
-                    && definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE) == null) {
-                    //caseEventToField retainHiddenValue is true and complexType ListElementCode retainHiddenValue null so set to true
+                } else if (isSubfieldsToBeDefaultedToTrue(caseFieldRetainHiddenValue, definitionDataItem)) {
                     retainHiddenValue = Boolean.TRUE;
                 } else {
-                    retainHiddenValue = definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
+                    retainHiddenValue = definitionDataItem.getRetainHiddenValue();
                 }
-
             });
         });
         return retainHiddenValue;
     }
 
+    private Boolean isShowConditionPopulated(String fieldShowCondition, DefinitionDataItem definitionDataItem) {
+        return (fieldShowCondition == null && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
+    }
+
+    private Boolean isSubFieldsIncorrectlyConfigured(Boolean caseFieldRetainHiddenValue, DefinitionDataItem definitionDataItem) {
+        return (Boolean.FALSE.equals(caseFieldRetainHiddenValue)
+            && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
+    }
+
+    private Boolean isSubfieldsToBeDefaultedToTrue(Boolean caseFieldRetainHiddenValue, DefinitionDataItem definitionDataItem) {
+        return (Boolean.TRUE.equals(caseFieldRetainHiddenValue)
+            && definitionDataItem.getRetainHiddenValue() == null);
+    }
+
     public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem) {
-        if (definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION) == null
-            && Boolean.TRUE.equals(definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE))) {
+        if (isShowConditionPopulated(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION), definitionDataItem)) {
             throw new MapperException(String.format("retainHiddenValue can only be configured for a field that uses a "
                     + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
                 definitionDataItem.getString(ColumnName.CASE_FIELD_ID), SheetName.CASE_EVENT_TO_FIELDS.getName()));
         }
-        return definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
+        return definitionDataItem.getRetainHiddenValue();
     }
 }

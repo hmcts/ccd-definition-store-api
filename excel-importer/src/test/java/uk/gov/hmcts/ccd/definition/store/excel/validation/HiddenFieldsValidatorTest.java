@@ -83,7 +83,7 @@ public class HiddenFieldsValidatorTest {
 
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        assertTrue(validator.parseHiddenFields(definitionDataItem, definitionSheets));
+        assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
 
     }
 
@@ -119,7 +119,7 @@ public class HiddenFieldsValidatorTest {
 
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        assertTrue(validator.parseHiddenFields(definitionDataItem, definitionSheets));
+        assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
 
     }
 
@@ -157,7 +157,7 @@ public class HiddenFieldsValidatorTest {
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
         try {
-            validator.parseHiddenFields(definitionDataItem, definitionSheets);
+            validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
             assertThat(ex.getMessage(), is("retainHiddenValue' has been incorrectly configured or is invalid "
                 + "for fieldID ['fieldId'] on ['CaseEventToFields']"));
@@ -197,7 +197,7 @@ public class HiddenFieldsValidatorTest {
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
         try {
-            validator.parseHiddenFields(definitionDataItem,definitionSheets);
+            validator.parseComplexTypesHiddenFields(definitionDataItem,definitionSheets);
         } catch (MapperException ex) {
             assertThat(ex.getMessage(), is("retainHiddenValue can only be configured for a field that uses a "
                 + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
