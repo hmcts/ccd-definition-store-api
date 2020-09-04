@@ -2,8 +2,8 @@
 <suppressions
 	xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
-	<!-- !!!!!!! cTHIS CVEs should not be removed until the elastic search client 
-		is updated to 7. Before updating the elastic client make sure that the server 
+	<!-- !!!!!!! cTHIS CVEs should not be removed until the elastic search client
+		is updated to 7. Before updating the elastic client make sure that the server
 		has been updated to 7 !!!!! -->
 	<suppress>
 		<notes><![CDATA[
@@ -40,6 +40,10 @@
 		<notes>Temporary suppression for on-going developments and master builds</notes>
 		<cve>CVE-2018-17244</cve>
 		<cve>CVE-2018-1258</cve>
+		<cve>CVE-2020-10517</cve>
+		<cve>CVE-2020-10518</cve>
+		<cve>CVE-2020-7019</cve>
+		<cve>CVE-2017-18640</cve>
 	</suppress>
 
 	<suppress>
