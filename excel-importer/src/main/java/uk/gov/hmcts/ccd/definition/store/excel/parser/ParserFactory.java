@@ -90,4 +90,8 @@ public class ParserFactory {
         return new JurisdictionUiConfigParser(context);
     }
 
+    public NoCConfigParser createNoCConfigParser(ParseContext context) {
+        return new NoCConfigParser(context);
+    }
+
 }

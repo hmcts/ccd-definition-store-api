@@ -79,7 +79,9 @@ public enum ColumnName {
     BANNER_DESCRIPTION("BannerDescription"),
     BANNER_URL_TEXT("BannerURLText"),
     BANNER_URL("BannerURL"),
-    DEFAULT_VALUE("DefaultValue");
+    DEFAULT_VALUE("DefaultValue"),
+    REASON_REQUIRED("ReasonRequired"),
+    NOC_ACTION_INTERPRETATION_REQUIRED("NoCActionInterpretationRequired");
 
     private final String name;
 
