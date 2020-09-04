@@ -51,6 +51,21 @@ public class HiddenFieldsValidatorTest {
         assertTrue(validator.parseHiddenFields(definitionDataItem));
     }
 
+    @Test(expected = MapperException.class)
+    public void shouldFail_whenInvalidBoolean() {
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
+        definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, "blah");
+        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
+
+        try {
+            validator.parseHiddenFields(definitionDataItem);
+        } catch (MapperException ex) {
+            assertThat(ex.getMessage(), is("Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'CaseEventToFields'"));
+            throw ex;
+        }
+    }
+
     @Test(expected = Test.None.class)
     public void shouldValidate_ForComplexType() {
 
@@ -204,6 +219,47 @@ public class HiddenFieldsValidatorTest {
             throw ex;
         }
     }
+
+    @Test(expected = MapperException.class)
+    public void shouldFail_whenRetainHiddenValueIsNotABooleanForSubFieldsOfComplexType() {
+
+        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
+        addDataItem(sheetJ);
+
+        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
+        addDataItem(sheetCT);
+
+        final DefinitionSheet sheetComplexTypes = addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
+        definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, "blah");
+        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "ComplexTypeFieldId");
+        definitionDataItem.addAttribute(ColumnName.LIST_ELEMENT_CODE, "");
+        definitionDataItem.addAttribute(ColumnName.ID, "ComplexType");
+        sheetComplexTypes.addDataItem(definitionDataItem);
+
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
+        DefinitionDataItem definitionDataItem1 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        definitionDataItem1.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
+        definitionDataItem1.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.FALSE);
+        definitionDataItem1.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "x=yes");
+        sheetCETF.addDataItem(definitionDataItem1);
+
+        final DefinitionSheet sheetCF = addDefinitionSheet(SheetName.CASE_FIELD);
+        DefinitionDataItem definitionDataItem2 = new DefinitionDataItem(SheetName.CASE_FIELD.getName());
+        definitionDataItem2.addAttribute(ColumnName.ID, "fieldId");
+        definitionDataItem2.addAttribute(ColumnName.FIELD_TYPE, "ComplexType");
+        sheetCF.addDataItem(definitionDataItem2);
+
+        addDefinitionSheet(SheetName.FIXED_LISTS);
+
+        try {
+            validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
+        } catch (MapperException ex) {
+            assertThat(ex.getMessage(), is("Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'ComplexTypes'"));
+            throw ex;
+        }
+    }
+
 
     private DefinitionSheet addDefinitionSheet(SheetName sheetName) {
         final DefinitionSheet sheet = new DefinitionSheet();
