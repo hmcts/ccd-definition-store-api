@@ -134,7 +134,98 @@
 						"defaultValue": null
 					 }
 					]
-				}
+				},
+         {
+           "case_field_id" : "ChangeOrganisationRequestField",
+           "display_context" : "COMPLEX",
+           "display_context_parameter" : null,
+           "show_condition" : null,
+           "show_summary_change_option" : true,
+           "show_summary_content_option" : null,
+           "label" : null,
+           "hint_text" : null,
+           "case_fields_complex" : [ {
+             "reference" : "OrganisationToAdd.OrganisationID",
+             "hint" : null,
+             "label" : null,
+             "order" : 7,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "OrganisationToAdd.OrganisationName",
+             "hint" : null,
+             "label" : null,
+             "order" : 8,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "OrganisationToRemove.OrganisationID",
+             "hint" : null,
+             "label" : null,
+             "order" : 9,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "OrganisationToRemove.OrganisationName",
+             "hint" : null,
+             "label" : null,
+             "order" : 10,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "CaseRoleId",
+             "hint" : null,
+             "label" : null,
+             "order" : 11,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "Reason",
+             "hint" : null,
+             "label" : null,
+             "order" : 12,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "RequestTimestamp",
+             "hint" : null,
+             "label" : null,
+             "order" : 13,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "ApprovalStatus",
+             "hint" : null,
+             "label" : null,
+             "order" : 14,
+             "displayContext" : "MANDATORY",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "ApprovalRejectionTimestamp",
+             "hint" : null,
+             "label" : null,
+             "order" : 15,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "NotesReason",
+             "hint" : null,
+             "label" : null,
+             "order" : 16,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           } ]
+         }
 			 ],
 			 "pre_states": [
 				"CaseCreated"
@@ -256,7 +347,98 @@
 						"defaultValue": null
 					 }
 					]
-				}
+				},
+         {
+           "case_field_id" : "ChangeOrganisationRequestField",
+           "display_context" : "COMPLEX",
+           "display_context_parameter" : null,
+           "show_condition" : null,
+           "show_summary_change_option" : true,
+           "show_summary_content_option" : null,
+           "label" : null,
+           "hint_text" : null,
+           "case_fields_complex" : [ {
+             "reference" : "OrganisationToAdd.OrganisationID",
+             "hint" : null,
+             "label" : null,
+             "order" : 7,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "OrganisationToAdd.OrganisationName",
+             "hint" : null,
+             "label" : null,
+             "order" : 8,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "OrganisationToRemove.OrganisationID",
+             "hint" : null,
+             "label" : null,
+             "order" : 9,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "OrganisationToRemove.OrganisationName",
+             "hint" : null,
+             "label" : null,
+             "order" : 10,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "CaseRoleId",
+             "hint" : null,
+             "label" : null,
+             "order" : 11,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "Reason",
+             "hint" : null,
+             "label" : null,
+             "order" : 12,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "RequestTimestamp",
+             "hint" : null,
+             "label" : null,
+             "order" : 13,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "ApprovalStatus",
+             "hint" : null,
+             "label" : null,
+             "order" : 14,
+             "displayContext" : "MANDATORY",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "ApprovalRejectionTimestamp",
+             "hint" : null,
+             "label" : null,
+             "order" : 15,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           }, {
+             "reference" : "NotesReason",
+             "hint" : null,
+             "label" : null,
+             "order" : 16,
+             "displayContext" : "OPTIONAL",
+             "showCondition" : null,
+             "defaultValue" : null
+           } ]
+         }
 			 ],
 			 "pre_states": [],
 			 "post_state": "CaseCreated",
@@ -370,6 +552,338 @@
 			 "show_condition": null,
 			 "display_context_parameter": null
 			},
+      {
+        "metadata" : false,
+        "id" : "ChangeOrganisationRequestField",
+        "case_type_id" : "FT_ComplexOrganisation",
+        "label" : "Change Organisation Request",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "ChangeOrganisationRequest",
+          "type" : "Complex",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ {
+            "metadata" : false,
+            "id" : "OrganisationToAdd",
+            "case_type_id" : null,
+            "label" : "Organisation To Add",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Organisation",
+              "type" : "Complex",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ {
+                "metadata" : false,
+                "id" : "OrganisationID",
+                "case_type_id" : null,
+                "label" : "Organisation ID",
+                "hint_text" : null,
+                "field_type" : {
+                  "id" : "Text",
+                  "type" : "Text",
+                  "min" : null,
+                  "max" : null,
+                  "regular_expression" : null,
+                  "fixed_list_items" : [ ],
+                  "complex_fields" : [ ],
+                  "collection_field_type" : null
+                },
+                "hidden" : null,
+                "security_classification" : "PUBLIC",
+                "live_from" : null,
+                "live_until" : null,
+                "acls" : null,
+                "complexACLs" : [ ],
+                "order" : null,
+                "show_condition" : null,
+                "display_context_parameter" : null
+              }, {
+                "metadata" : false,
+                "id" : "OrganisationName",
+                "case_type_id" : null,
+                "label" : "Name",
+                "hint_text" : null,
+                "field_type" : {
+                  "id" : "Text",
+                  "type" : "Text",
+                  "min" : null,
+                  "max" : null,
+                  "regular_expression" : null,
+                  "fixed_list_items" : [ ],
+                  "complex_fields" : [ ],
+                  "collection_field_type" : null
+                },
+                "hidden" : null,
+                "security_classification" : "PUBLIC",
+                "live_from" : null,
+                "live_until" : null,
+                "acls" : null,
+                "complexACLs" : [ ],
+                "order" : null,
+                "show_condition" : null,
+                "display_context_parameter" : null
+              } ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          }, {
+            "metadata" : false,
+            "id" : "OrganisationToRemove",
+            "case_type_id" : null,
+            "label" : "Organisation To Remove",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Organisation",
+              "type" : "Complex",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ {
+                "metadata" : false,
+                "id" : "OrganisationID",
+                "case_type_id" : null,
+                "label" : "Organisation ID",
+                "hint_text" : null,
+                "field_type" : {
+                  "id" : "Text",
+                  "type" : "Text",
+                  "min" : null,
+                  "max" : null,
+                  "regular_expression" : null,
+                  "fixed_list_items" : [ ],
+                  "complex_fields" : [ ],
+                  "collection_field_type" : null
+                },
+                "hidden" : null,
+                "security_classification" : "PUBLIC",
+                "live_from" : null,
+                "live_until" : null,
+                "acls" : null,
+                "complexACLs" : [ ],
+                "order" : null,
+                "show_condition" : null,
+                "display_context_parameter" : null
+              }, {
+                "metadata" : false,
+                "id" : "OrganisationName",
+                "case_type_id" : null,
+                "label" : "Name",
+                "hint_text" : null,
+                "field_type" : {
+                  "id" : "Text",
+                  "type" : "Text",
+                  "min" : null,
+                  "max" : null,
+                  "regular_expression" : null,
+                  "fixed_list_items" : [ ],
+                  "complex_fields" : [ ],
+                  "collection_field_type" : null
+                },
+                "hidden" : null,
+                "security_classification" : "PUBLIC",
+                "live_from" : null,
+                "live_until" : null,
+                "acls" : null,
+                "complexACLs" : [ ],
+                "order" : null,
+                "show_condition" : null,
+                "display_context_parameter" : null
+              } ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          }, {
+            "metadata" : false,
+            "id" : "CaseRoleId",
+            "case_type_id" : null,
+            "label" : "Case Role Id",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          }, {
+            "metadata" : false,
+            "id" : "Reason",
+            "case_type_id" : null,
+            "label" : "Reason",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          }, {
+            "metadata" : false,
+            "id" : "RequestTimestamp",
+            "case_type_id" : null,
+            "label" : "Request Timestamp",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "DateTime",
+              "type" : "DateTime",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          }, {
+            "metadata" : false,
+            "id" : "ApprovalStatus",
+            "case_type_id" : null,
+            "label" : "Approval Status",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Number",
+              "type" : "Number",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          }, {
+            "metadata" : false,
+            "id" : "ApprovalRejectionTimestamp",
+            "case_type_id" : null,
+            "label" : "Approval Rejection Timestamp",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "DateTime",
+              "type" : "DateTime",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          }, {
+            "metadata" : false,
+            "id" : "NotesReason",
+            "case_type_id" : null,
+            "label" : "Notes Reason",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          } ],
+          "collection_field_type" : null
+        },
+        "hidden" : false,
+        "security_classification" : "PUBLIC",
+        "live_from": "[[ANY_STRING_NOT_NULLABLE]]",
+        "live_until" : null,
+        "acls" : [ {
+          "role" : "caseworker-befta_master",
+          "create" : true,
+          "read" : true,
+          "update" : true,
+          "delete" : true
+        } ],
+        "complexACLs" : [ ],
+        "order" : null,
+        "show_condition" : null,
+        "display_context_parameter" : null
+      },
 			{
 			 "metadata": false,
 			 "id": "OrganisationPolicyField",
@@ -520,7 +1034,7 @@
 			 },
 			 "hidden": false,
 			 "security_classification": "PUBLIC",
-			 "live_from": "2017-01-01",
+        "live_from": "[[ANY_STRING_NOT_NULLABLE]]",
 			 "live_until": null,
 			 "acls": [
 				{
@@ -652,7 +1166,7 @@
 			 },
 			 "hidden": false,
 			 "security_classification": "PUBLIC",
-			 "live_from": "2017-01-01",
+        "live_from": "[[ANY_STRING_NOT_NULLABLE]]",
 			 "live_until": null,
 			 "acls": [
 				{
