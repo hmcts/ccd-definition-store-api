@@ -9,6 +9,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMappe
 import uk.gov.hmcts.ccd.definition.store.repository.NoCConfigRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.NoCConfigEntity;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 @Component
 @Slf4j
 public class NoCConfigServiceImpl implements NoCConfigService {
@@ -44,6 +46,9 @@ public class NoCConfigServiceImpl implements NoCConfigService {
 
     @Override
     public void deleteCaseTypeNocConfig(String caseTypeReference) {
+        if (isNullOrEmpty(caseTypeReference)) {
+            return;
+        }
         this.noCConfigRepository.deleteByCaseTypeReference(caseTypeReference);
     }
 }

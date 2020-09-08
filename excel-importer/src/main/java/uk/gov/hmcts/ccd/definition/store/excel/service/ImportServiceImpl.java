@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,20 +255,25 @@ public class ImportServiceImpl implements ImportService {
     private void importNoCConfigDefinition(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
         String nocConfigSheetName = SheetName.NOC_CONFIG.getName();
         if (definitionSheets.get(nocConfigSheetName) != null) {
-            logger.debug("Importing spreadsheet: " + nocConfigSheetName + " ...");
+            logger.debug("Importing tab: " + nocConfigSheetName + " ...");
             final NoCConfigParser noCConfigParser = parserFactory.createNoCConfigParser(parseContext);
             Map<String, List<NoCConfigEntity>> caseTypeNoCConfigEntities = noCConfigParser.parse(definitionSheets);
+            Set<String> caseTypesWithMultipleEntries = caseTypeNoCConfigEntities
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().size() > 1)
+                .map(strEntry -> strEntry.getKey())
+                .collect(Collectors.toSet());
+
+            if (caseTypesWithMultipleEntries.size() > 0) {
+                throw new InvalidImportException("Only one noc config is allowed per case type(s) "
+                    + caseTypesWithMultipleEntries.stream().sorted().collect(Collectors.joining(",")));
+            }
             caseTypeNoCConfigEntities
                 .entrySet()
                 .stream()
-                .forEach(entry -> {
-                    List<NoCConfigEntity> configEntities = entry.getValue();
-                    if (configEntities.size() > 1) {
-                        throw new InvalidImportException("Only one noc config is allowed per case type");
-                    }
-                    configEntities.forEach(entity -> noCConfigService.save(entity));
-                });
-            logger.debug("Importing spreadsheet: " + nocConfigSheetName + " ...: OK");
+                .forEach(entry -> entry.getValue().forEach(entity -> noCConfigService.save(entity)));
+            logger.debug("Importing tab: " + nocConfigSheetName + " ...: OK");
         }
     }
 

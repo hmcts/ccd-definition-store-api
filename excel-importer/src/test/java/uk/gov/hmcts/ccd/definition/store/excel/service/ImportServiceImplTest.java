@@ -61,6 +61,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
+import uk.gov.hmcts.ccd.definition.store.domain.service.nocconfig.NoCConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
@@ -69,6 +70,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.Definitio
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.NoCConfigParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
@@ -139,6 +141,9 @@ public class ImportServiceImplTest {
     @Mock
     private JurisdictionUiConfigService jurisdictionUiConfigService;
 
+    @Mock
+    private NoCConfigService noCConfigService;
+
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -185,7 +190,8 @@ public class ImportServiceImplTest {
                                         applicationEventPublisher,
                                         idamProfileClient,
                                         bannerService,
-                                        jurisdictionUiConfigService);
+                                        jurisdictionUiConfigService,
+                                        noCConfigService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -350,7 +356,8 @@ public class ImportServiceImplTest {
             applicationEventPublisher,
             idamProfileClient,
             bannerService,
-            jurisdictionUiConfigService);
+            jurisdictionUiConfigService,
+            noCConfigService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

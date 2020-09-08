@@ -33,7 +33,7 @@ public class NoCConfigEntity implements Serializable {
     @Column(name = "noc_action_interpretation_required")
     private boolean nocActionInterpretationRequired;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
@@ -70,7 +70,6 @@ public class NoCConfigEntity implements Serializable {
     }
 
     public void copy(NoCConfigEntity configEntity) {
-        this.setCaseType(configEntity.getCaseType());
         this.setNocActionInterpretationRequired(configEntity.isNocActionInterpretationRequired());
         this.setReasonsRequired(configEntity.isReasonsRequired());
     }
