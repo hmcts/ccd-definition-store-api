@@ -334,8 +334,19 @@
 						"defaultValue": null
 					 }
 					]
-				}
-			 ],
+				},
+         {
+           "case_field_id": "CaseLinkField",
+           "display_context": "OPTIONAL",
+           "display_context_parameter": null,
+           "show_condition": null,
+           "show_summary_change_option": true,
+           "show_summary_content_option": null,
+           "label": null,
+           "hint_text": null,
+           "case_fields_complex": []
+         }
+       ],
 			 "pre_states": [],
 			 "post_state": "CaseCreated",
 			 "callback_url_about_to_start_event": "http://ccd-test-stubs-service-aat.service.core-compute-aat.internal/case_type/fe-functional-test/mid_event_dynamic_list",
@@ -2389,7 +2400,64 @@
 			 "order": null,
 			 "show_condition": null,
 			 "display_context_parameter": null
-			}
+			},
+      {
+        "metadata" : false,
+        "id" : "CaseLinkField",
+        "case_type_id" : "FT_MasterCaseType",
+        "label" : "Case Link Field",
+        "hint_text" : null,
+        "field_type" : {
+          "id" : "CaseLink",
+          "type" : "Complex",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ {
+            "metadata" : false,
+            "id" : "CaseReference",
+            "case_type_id" : null,
+            "label" : "Case Reference",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "TextCaseReference",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : "(?:^[0-9]{16}$|^\\d{4}-\\d{4}-\\d{4}-\\d{4}$)",
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
+            "hidden" : null,
+            "security_classification" : "PUBLIC",
+            "live_from" : null,
+            "live_until" : null,
+            "acls" : null,
+            "complexACLs" : [ ],
+            "order" : null,
+            "show_condition" : null,
+            "display_context_parameter" : null
+          } ],
+          "collection_field_type" : null
+        },
+        "hidden" : false,
+        "security_classification" : "PUBLIC",
+        "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+        "live_until" : null,
+        "acls" : [ {
+          "role" : "caseworker-befta_master",
+          "create" : true,
+          "read" : true,
+          "update" : true,
+          "delete" : true
+        } ],
+        "complexACLs" : [ ],
+        "order" : null,
+        "show_condition" : null,
+        "display_context_parameter" : null
+      }
 		],
 		"printable_document_url": "[[ANY_NOT_NULLABLE]]",
 		"security_classification": "PUBLIC"
