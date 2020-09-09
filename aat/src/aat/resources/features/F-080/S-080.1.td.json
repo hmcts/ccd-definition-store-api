@@ -349,7 +349,7 @@
        ],
 			 "pre_states": [],
 			 "post_state": "CaseCreated",
-			 "callback_url_about_to_start_event": "http://ccd-test-stubs-service-aat.service.core-compute-aat.internal/case_type/fe-functional-test/mid_event_dynamic_list",
+			 "callback_url_about_to_start_event": "http://{{CCD_STUB_SERVICE_URI_BASE}}/case_type/fe-functional-test/mid_event_dynamic_list",
 			 "retries_timeout_about_to_start_event": [],
 			 "callback_url_about_to_submit_event": null,
 			 "retries_timeout_url_about_to_submit_event": [],
