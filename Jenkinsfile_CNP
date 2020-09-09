@@ -50,7 +50,7 @@ env.OAUTH2_CLIENT_ID = "ccd_gateway"
 env.OAUTH2_REDIRECT_URI = "https://www-ccd.aat.platform.hmcts.net/oauth2redirect"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
-
+env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.service.core-compute-aat.internal"
 
 withPipeline(type, product, app) {
     // Vars needed for functional and smoke tests run against AKS
