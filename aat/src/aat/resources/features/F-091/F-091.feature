@@ -5,21 +5,28 @@ Feature: F-091: 'ChangeOranisationRequest' Base Complex Type
     Given an appropriate test context as detailed in the test data source
 
   @S-091.1
-  Scenario: Must successfully import a definition file contain ChangeOrganisationRequest fields
+  Scenario: Must successfully import a definition file containing the NoticeofChange config tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
-    And the request [contains correctly configured ChangeOrganisationRequest Fields]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    And the response [contains valid noc config entries]
     Then a positive response is received
     And the response has all other details as expected
 
   @S-091.2
-  Scenario: Must return all details successfully for a case type containing ChangeOrganisationRequest fields
+  Scenario: Must return a negative response in an attempt to import a definition file containing a NoticeofChange config tab with invalid case type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
-    And the request [contains id of a case type with ChangeOrganisationRequest fields]
-    And it  is submitted to call the [Get Case Type Details] operation of [CCD Definition Store]
-    Then a positive response is received
-    And the response [contains all details of the case type requested]
-    And the response has all other details as expected
+    And the request [contains case type not defined]
+    And it is submitted to call the  [POST Case Definition File]operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all the other details expected
+
+  @S-091.2
+  Scenario: Must return a negative response in an attempt to import a definition file containing a NoticeofChange config tab with multiple entries per case type
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains multiple noc config entries per config type]
+    And it is submitted to call the  [POST Case Definition File]operation of [CCD Definition Store]
+    Then a negative response is received
 
