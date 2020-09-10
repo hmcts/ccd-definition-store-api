@@ -44,6 +44,7 @@ public class TestHelper {
         jurisdiction.setDescription(desc);
         return versionedJurisdictionRepository.save(jurisdiction);
     }
+
     public CaseTypeEntity createCaseType(String reference, String name) {
         JurisdictionEntity jurisdictionEntity = createJurisdiction();
         final CaseTypeEntity caseType = new CaseTypeEntity();
