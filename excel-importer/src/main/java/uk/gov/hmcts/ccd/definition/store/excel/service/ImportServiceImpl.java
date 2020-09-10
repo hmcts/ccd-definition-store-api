@@ -266,7 +266,7 @@ public class ImportServiceImpl implements ImportService {
                 .collect(Collectors.toSet());
 
             if (caseTypesWithMultipleEntries.size() > 0) {
-                throw new InvalidImportException("Only one noc config is allowed per case type(s) "
+                throw new InvalidImportException("Only one NoC config is allowed per case type(s) "
                     + caseTypesWithMultipleEntries.stream().sorted().collect(Collectors.joining(",")));
             }
             caseTypeNoCConfigEntities

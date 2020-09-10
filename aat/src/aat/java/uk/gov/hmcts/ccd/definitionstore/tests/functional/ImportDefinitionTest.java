@@ -55,7 +55,7 @@ class ImportDefinitionTest extends BaseTest {
             .when()
             .post("/import");
         assert (response.getBody().jsonPath().get("message").toString()
-            .contains("Only one noc config is allowed per case type(s) "
+            .contains("Only one NoC config is allowed per case type(s) "
                 + "TestAddressBookCase,TestComplexAddressBookCase"));
     }
 

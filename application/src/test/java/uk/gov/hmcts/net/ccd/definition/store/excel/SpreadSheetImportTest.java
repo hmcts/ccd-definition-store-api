@@ -260,7 +260,7 @@ public class SpreadSheetImportTest extends BaseTest {
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
             result.getResponse().getContentAsString(),
-            containsString("Only one noc config is allowed per case type(s) "
+            containsString("Only one NoC config is allowed per case type(s) "
                 + "TestAddressBookCase,TestComplexAddressBookCase"));
     }
 

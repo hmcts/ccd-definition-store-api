@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Only one noc config is allowed per case type(s) FT_ComplexOrganisation"
+      "__plainTextValue__": "Only one NoC config is allowed per case type(s) FT_ComplexOrganisation"
     }
   }
 }
