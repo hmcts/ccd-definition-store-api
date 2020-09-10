@@ -22,6 +22,16 @@
               "pattern": " ",
               "replacement": ""
           }
+      },
+      "normalizer": {
+          "sort_normalizer": {
+              "type": "custom",
+              "char_filter": [],
+              "filter": [
+                  "lowercase",
+                  "asciifolding"
+              ]
+          }
       }
   }
 }

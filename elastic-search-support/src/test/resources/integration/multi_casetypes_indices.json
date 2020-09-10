@@ -20,7 +20,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "sort_normalizer"
                             }
                         }
                     },
@@ -35,7 +36,8 @@
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
-                                        "ignore_above": 256
+                                        "ignore_above": 256,
+                                        "normalizer": "sort_normalizer"
                                     }
                                 }
                             }
@@ -60,7 +62,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "sort_normalizer"
                             }
                         }
                     },
@@ -77,19 +80,22 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "sort_normalizer"
                             }
                         }
                     },
                     "security_classification": {
-                        "type": "keyword"
+                        "type": "keyword",
+                        "normalizer": "sort_normalizer"
                     },
                     "state": {
                         "type": "text",
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "sort_normalizer"
                             }
                         }
                     }
@@ -123,6 +129,16 @@
                             "type": "custom",
                             "tokenizer": "keyword"
                         }
+                    },
+                    "normalizer": {
+                        "sort_normalizer": {
+                            "type": "custom",
+                            "char_filter": [],
+                            "filter": [
+                                "lowercase",
+                                "asciifolding"
+                            ]
+                        }
                     }
                 },
                 "number_of_replicas": "3",
@@ -154,7 +170,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "sort_normalizer"
                             }
                         }
                     },
@@ -169,7 +186,8 @@
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
-                                        "ignore_above": 256
+                                        "ignore_above": 256,
+                                        "normalizer": "sort_normalizer"
                                     }
                                 }
                             }
@@ -194,7 +212,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "sort_normalizer"
                             }
                         }
                     },
@@ -211,7 +230,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "sort_normalizer"
                             }
                         }
                     },
@@ -223,7 +243,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "sort_normalizer"
                             }
                         }
                     }
@@ -256,6 +277,16 @@
                             ],
                             "type": "custom",
                             "tokenizer": "keyword"
+                        }
+                    },
+                    "normalizer": {
+                        "sort_normalizer": {
+                            "type": "custom",
+                            "char_filter": [],
+                            "filter": [
+                                "lowercase",
+                                "asciifolding"
+                            ]
                         }
                     }
                 },
