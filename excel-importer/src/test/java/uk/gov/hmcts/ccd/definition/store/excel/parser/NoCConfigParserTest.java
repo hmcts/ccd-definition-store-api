@@ -10,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -18,6 +20,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.NoCConfigEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -89,8 +92,25 @@ class NoCConfigParserTest extends ParserTestBase {
         assertEquals("Unknown Case Type(s) 'FT_MasterCaseType_3,FT_MasterCaseType_4' in worksheet 'NoCConfig'", thrown.getMessage());
     }
 
+    @Test
+    @DisplayName("Should throw exception when noc config tab has single unknown case type")
+    public void shouldThrow_Exception_For_Invalid_Noc_ConfigValues() {
+        definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_2,
+            "invalidReason",
+            "invalidNocAction"));
+        ValidationException thrown = assertThrows(ValidationException.class, () -> configParser.parse(definitionSheets));
+        assertNotNull(thrown);
+        assertNotNull(thrown.getValidationResult());
+        List<ValidationError> validationErrors = thrown.getValidationResult().getValidationErrors();
+        assertEquals(2, validationErrors.size());
+    }
+
     private DefinitionDataItem buildDefinitionDataItem(String caseTypeId, boolean reasonsRequired, boolean nocActionInterpretationRequired) {
-        final DefinitionDataItem item = new DefinitionDataItem(SheetName.BANNER.toString());
+        return buildDefinitionDataItem(caseTypeId, String.valueOf(reasonsRequired), String.valueOf(nocActionInterpretationRequired));
+    }
+
+    private DefinitionDataItem buildDefinitionDataItem(String caseTypeId, String reasonsRequired, String nocActionInterpretationRequired) {
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.NOC_CONFIG.toString());
         item.addAttribute(ColumnName.REASON_REQUIRED.toString(), reasonsRequired);
         item.addAttribute(ColumnName.NOC_ACTION_INTERPRETATION_REQUIRED.toString(), nocActionInterpretationRequired);
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), caseTypeId);
