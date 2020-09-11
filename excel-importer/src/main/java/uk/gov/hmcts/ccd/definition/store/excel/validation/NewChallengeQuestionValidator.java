@@ -59,16 +59,16 @@ public class NewChallengeQuestionValidator {
 
         if (answersRules.length > 0 && answersRules.length != 1) {
             Arrays.asList(answersRules).stream().forEach(currentAnswerExpression -> {
-                    evaluateEachCommaSeparatedExpression(definitionDataItem, newChallengeQuestionTabEntity, invalidImportException, currentAnswerExpression);
+                    validateAnswerExpression(definitionDataItem, newChallengeQuestionTabEntity, invalidImportException, currentAnswerExpression);
                 }
             );
         } else {
-            evaluateEachCommaSeparatedExpression(definitionDataItem, newChallengeQuestionTabEntity, invalidImportException, answers);
+            validateAnswerExpression(definitionDataItem, newChallengeQuestionTabEntity, invalidImportException, answers);
         }
         newChallengeQuestionTabEntity.setAnswerField(answers);
     }
 
-    private void evaluateEachCommaSeparatedExpression(DefinitionDataItem definitionDataItem, NewChallengeQuestionTabEntity newChallengeQuestionTabEntity, InvalidImportException invalidImportException, String currentAnswerExpression) {
+    private void validateAnswerExpression(DefinitionDataItem definitionDataItem, NewChallengeQuestionTabEntity newChallengeQuestionTabEntity, InvalidImportException invalidImportException, String currentAnswerExpression) {
 
         final String[] answersFields = currentAnswerExpression.split(Pattern.quote(ANSWER_FIELD_SEPARATOR));
         Arrays.asList(answersFields).stream().forEach(answersField -> {
