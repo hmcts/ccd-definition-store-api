@@ -61,17 +61,14 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
+import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -139,6 +136,11 @@ public class ImportServiceImplTest {
     @Mock
     private JurisdictionUiConfigService jurisdictionUiConfigService;
 
+    @Mock
+    private NewChallengeQuestionParser newChallengeQuestionParser;
+    @Mock
+    private ChallengeQuestionTabService challengeQuestionTabService;
+
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -162,13 +164,14 @@ public class ImportServiceImplTest {
     private FieldTypeEntity fixedListRadioTypeBaseType;
     private FieldTypeEntity dynamicListBaseType;
 
+
     @Before
     public void setup() {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
-            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator);
+            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, newChallengeQuestionParser);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -185,7 +188,8 @@ public class ImportServiceImplTest {
                                         applicationEventPublisher,
                                         idamProfileClient,
                                         bannerService,
-                                        jurisdictionUiConfigService);
+                                        jurisdictionUiConfigService,
+                                        challengeQuestionTabService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -333,7 +337,7 @@ public class ImportServiceImplTest {
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
-            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator);
+            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, newChallengeQuestionParser);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -350,7 +354,7 @@ public class ImportServiceImplTest {
             applicationEventPublisher,
             idamProfileClient,
             bannerService,
-            jurisdictionUiConfigService);
+            jurisdictionUiConfigService,challengeQuestionTabService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

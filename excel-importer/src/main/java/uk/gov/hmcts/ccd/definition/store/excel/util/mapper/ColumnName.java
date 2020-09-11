@@ -79,7 +79,12 @@ public enum ColumnName {
     BANNER_DESCRIPTION("BannerDescription"),
     BANNER_URL_TEXT("BannerURLText"),
     BANNER_URL("BannerURL"),
-    DEFAULT_VALUE("DefaultValue");
+    DEFAULT_VALUE("DefaultValue"),
+    NEW_CHALLENGE_QUESTION_DISPLAY_ORDER("DisplayOrder"),
+    NEW_CHALLENGE_QUESTION_TEXT("QuestionText"),
+    NEW_CHALLENGE_QUESTION_ANSWER_FIELD_TYPE("AnswerFieldType"),
+    NEW_CHALLENGE_QUESTION_CASE_ROLE_ID("CaseRoleId"),
+    NEW_CHALLENGE_QUESTION_ANSWER_FIELD("Answer");
 
     private final String name;
 

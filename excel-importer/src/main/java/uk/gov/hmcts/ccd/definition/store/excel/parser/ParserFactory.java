@@ -2,12 +2,11 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
+
+import java.util.Map;
 
 @Component
 public class ParserFactory {
@@ -16,16 +15,19 @@ public class ParserFactory {
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     private final Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry;
     private final SpreadsheetValidator spreadsheetValidator;
+    private final NewChallengeQuestionParser newChallengeQuestionParser;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
                          EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
-                         SpreadsheetValidator spreadsheetValidator) {
+                         SpreadsheetValidator spreadsheetValidator,
+                         NewChallengeQuestionParser newChallengeQuestionParser) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
         this.spreadsheetValidator = spreadsheetValidator;
+        this.newChallengeQuestionParser = newChallengeQuestionParser;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -88,6 +90,10 @@ public class ParserFactory {
 
     public JurisdictionUiConfigParser createJurisdictionUiConfigParser(ParseContext context) {
         return new JurisdictionUiConfigParser(context);
+    }
+
+    public NewChallengeQuestionParser createNewChallengeQuestionParser() {
+        return newChallengeQuestionParser;
     }
 
 }

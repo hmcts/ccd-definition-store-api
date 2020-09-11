@@ -1,25 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
-import com.google.common.annotations.VisibleForTesting;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
@@ -30,17 +23,16 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class ImportServiceImpl implements ImportService {
@@ -61,6 +53,7 @@ public class ImportServiceImpl implements ImportService {
     private final IdamProfileClient idamProfileClient;
     private final BannerService bannerService;
     private final JurisdictionUiConfigService jurisdictionUiConfigService;
+    private final ChallengeQuestionTabService challengeQuestionTabService;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -76,7 +69,8 @@ public class ImportServiceImpl implements ImportService {
                              ApplicationEventPublisher applicationEventPublisher,
                              IdamProfileClient idamProfileClient,
                              BannerService bannerService,
-                             JurisdictionUiConfigService jurisdictionUiConfigService) {
+                             JurisdictionUiConfigService jurisdictionUiConfigService,
+                             ChallengeQuestionTabService challengeQuestionTabService) {
 
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
@@ -92,6 +86,7 @@ public class ImportServiceImpl implements ImportService {
         this.applicationEventPublisher = applicationEventPublisher;
         this.bannerService = bannerService;
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
+        this.challengeQuestionTabService = challengeQuestionTabService;
     }
 
     /**
@@ -233,6 +228,16 @@ public class ImportServiceImpl implements ImportService {
 
         metadata.setUserId(userDetails.getEmail());
 
+        // ChallengeQuestionTab
+        if (definitionSheets.get(SheetName.CHALLENGE_QUESTION_TAB.getName()) != null) {
+            logger.debug("Importing spreadsheet: NewChallengeQuestion...");
+            final NewChallengeQuestionParser newChallengeQuestionParser =
+                parserFactory.createNewChallengeQuestionParser();
+
+            List<NewChallengeQuestionTabEntity> newChallengeQuestionEntities = newChallengeQuestionParser.parse(definitionSheets,parseContext);
+            challengeQuestionTabService.saveAll(newChallengeQuestionEntities);
+            logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
+        }
         return metadata;
     }
 

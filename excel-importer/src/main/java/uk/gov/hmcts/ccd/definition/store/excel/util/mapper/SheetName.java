@@ -27,6 +27,7 @@ public enum SheetName {
     AUTHORISATION_CASE_EVENT("AuthorisationCaseEvent"),
     AUTHORISATION_CASE_STATE("AuthorisationCaseState"),
     SEARCH_ALIAS("SearchAlias"),
+    CHALLENGE_QUESTION_TAB("ChallengeQuestionTab"),
     BANNER("Banner");
 
     private final String name;
