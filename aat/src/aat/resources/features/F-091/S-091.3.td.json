@@ -11,7 +11,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid_noc_config.xlsx"
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid_multiple_noc_config.xlsx"
         }
       ]
     }

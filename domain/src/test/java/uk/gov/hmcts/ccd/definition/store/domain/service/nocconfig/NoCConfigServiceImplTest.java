@@ -86,6 +86,7 @@ class NoCConfigServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should attempt to delete noc config entries when case type reference is provided")
     void shouldAttemptToDeleteNoCConfigEntriesWhenCaseTypeReferenceIsProvided() {
         String reference = "TEST";
 
@@ -95,6 +96,7 @@ class NoCConfigServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should not attempt to delete noc config entries when case type reference is not provided")
     void shouldNotAttemptToDeleteNoCCofigsWhenNoCaseReferenceIsProvided() {
         classUnderTest.deleteCaseTypeNocConfig(null);
         classUnderTest.deleteCaseTypeNocConfig("");

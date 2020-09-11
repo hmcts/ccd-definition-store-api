@@ -93,7 +93,7 @@ class NoCConfigParserTest extends ParserTestBase {
     }
 
     @Test
-    @DisplayName("Should throw exception when noc config tab has single unknown case type")
+    @DisplayName("Should throw exception for invalid noc config values")
     public void shouldThrow_Exception_For_Invalid_Noc_ConfigValues() {
         definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_2,
             "invalidReason",

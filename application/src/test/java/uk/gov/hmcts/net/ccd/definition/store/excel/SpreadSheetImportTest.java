@@ -143,12 +143,7 @@ public class SpreadSheetImportTest extends BaseTest {
     public void importInvalidDefinitionFile() throws Exception {
         InputStream inputStream = new ClassPathResource("/CCD_TestDefinition_Invalid_Data.xlsx",
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
@@ -171,12 +166,7 @@ public class SpreadSheetImportTest extends BaseTest {
     public void rollbackFailedDefinitionFileImport() throws Exception {
         InputStream inputStream = new ClassPathResource("/ccd_testdefinition-missing-WorkBasketResultFields.xlsx",
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
@@ -196,12 +186,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
         InputStream inputStream = new ClassPathResource("/ccd-definition-wrong-complex-type.xlsx",
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         WireMock.verify(0, putRequestedFor(urlEqualTo("/user-profile/users")));
 
@@ -250,12 +235,7 @@ public class SpreadSheetImportTest extends BaseTest {
     public void importInvalidNoCConfigDefinitionFile() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_INVALID_NOC_CONFIG,
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
@@ -264,17 +244,21 @@ public class SpreadSheetImportTest extends BaseTest {
                 + "TestAddressBookCase,TestComplexAddressBookCase"));
     }
 
+    private MvcResult performAndGetMvcResult(InputStream inputStream) throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", inputStream);
+        return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn();
+    }
+
     @Test
     @Transactional
     public void importInvalidCaseTypeNoCConfigDefinitionFile() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG,
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
