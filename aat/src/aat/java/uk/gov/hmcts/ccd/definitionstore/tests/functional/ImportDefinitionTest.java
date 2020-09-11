@@ -54,7 +54,7 @@ class ImportDefinitionTest extends BaseTest {
             .response()
             .when()
             .post("/import");
-        assert (response.getBody().jsonPath().get("message").toString()
+        assert (response.getBody().prettyPrint()
             .contains("Only one NoC config is allowed per case type(s) "
                 + "TestAddressBookCase,TestComplexAddressBookCase"));
     }
@@ -71,7 +71,7 @@ class ImportDefinitionTest extends BaseTest {
             .response()
             .when()
             .post("/import");
-        assert (response.getBody().jsonPath().get("message").toString()
+        assert (response.getBody().prettyPrint()
             .contains("Unknown Case Type(s) 'TestComplexAddressBookCase1' in worksheet 'NoCConfig'"));
     }
 
