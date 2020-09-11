@@ -20,7 +20,6 @@ Feature: F-091: 'ChangeOranisationRequest' Base Complex Type
     And the request [contains case type not defined]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
-    And the response has all the other details expected
 
   @S-091.3
   Scenario: Must return a negative response in an attempt to import a definition file containing a NoticeofChange config tab with multiple entries per case type
