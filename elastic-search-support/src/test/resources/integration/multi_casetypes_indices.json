@@ -21,7 +21,7 @@
                             "keyword": {
                                 "type": "keyword",
                                 "ignore_above": 256,
-                                "normalizer": "sort_normalizer"
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -37,7 +37,7 @@
                                     "keyword": {
                                         "type": "keyword",
                                         "ignore_above": 256,
-                                        "normalizer": "sort_normalizer"
+                                        "normalizer": "lowercase_normalizer"
                                     }
                                 }
                             }
@@ -63,7 +63,7 @@
                             "keyword": {
                                 "type": "keyword",
                                 "ignore_above": 256,
-                                "normalizer": "sort_normalizer"
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -81,13 +81,13 @@
                             "keyword": {
                                 "type": "keyword",
                                 "ignore_above": 256,
-                                "normalizer": "sort_normalizer"
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
                     "security_classification": {
                         "type": "keyword",
-                        "normalizer": "sort_normalizer"
+                        "normalizer": "lowercase_normalizer"
                     },
                     "state": {
                         "type": "text",
@@ -95,7 +95,7 @@
                             "keyword": {
                                 "type": "keyword",
                                 "ignore_above": 256,
-                                "normalizer": "sort_normalizer"
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     }
@@ -130,7 +130,7 @@
                         }
                     },
                     "normalizer": {
-                        "sort_normalizer": {
+                        "lowercase_normalizer": {
                             "type": "custom",
                             "char_filter": [],
                             "filter": [
@@ -170,7 +170,7 @@
                             "keyword": {
                                 "type": "keyword",
                                 "ignore_above": 256,
-                                "normalizer": "sort_normalizer"
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -186,7 +186,7 @@
                                     "keyword": {
                                         "type": "keyword",
                                         "ignore_above": 256,
-                                        "normalizer": "sort_normalizer"
+                                        "normalizer": "lowercase_normalizer"
                                     }
                                 }
                             }
@@ -212,7 +212,7 @@
                             "keyword": {
                                 "type": "keyword",
                                 "ignore_above": 256,
-                                "normalizer": "sort_normalizer"
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -230,7 +230,7 @@
                             "keyword": {
                                 "type": "keyword",
                                 "ignore_above": 256,
-                                "normalizer": "sort_normalizer"
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -243,7 +243,7 @@
                             "keyword": {
                                 "type": "keyword",
                                 "ignore_above": 256,
-                                "normalizer": "sort_normalizer"
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     }
@@ -278,7 +278,7 @@
                         }
                     },
                     "normalizer": {
-                        "sort_normalizer": {
+                        "lowercase_normalizer": {
                             "type": "custom",
                             "char_filter": [],
                             "filter": [

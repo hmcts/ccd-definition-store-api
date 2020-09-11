@@ -9,8 +9,8 @@ elasticsearch:
   dynamic: ${ELASTIC_SEARCH_DYNAMIC:true}
   elasticMappings:
     disabled: '{"enabled": false}'
-    defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "sort_normalizer"}}}'
-    defaultKeyword: '{"type" : "keyword", "normalizer": "sort_normalizer"}'
+    defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "lowercase_normalizer"}}}'
+    defaultKeyword: '{"type" : "keyword", "normalizer": "lowercase_normalizer"}'
     defaultKeywordWithoutNormalizer: '{"type" : "keyword"}'
     defaultDate: '{"type" : "date", "ignore_malformed": true}'
     defaultBoolean: '{"type" : "boolean"}'
@@ -39,10 +39,10 @@ elasticsearch:
                             "value": {
                                 "properties": {
                                     "code": {
-                                      "type": "text" , "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "sort_normalizer"}}
+                                      "type": "text" , "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "lowercase_normalizer"}}
                                     },
                                     "label": {
-                                      "type": "text" , "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "sort_normalizer"}}
+                                      "type": "text" , "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "lowercase_normalizer"}}
                                     }
                                 }
                             },
