@@ -34,11 +34,8 @@ public class HiddenFieldsValidator {
                 } else if (isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem)) {
                     throw new MapperException(String.format("retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['%s'] on ['%s']",
                         caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
-                } else if (isSubfieldsToBeDefaultedToTrue(caseFieldRetainHiddenValue, definitionDataItem)) {
-                    retainHiddenValue = Boolean.TRUE;
-                } else {
-                    retainHiddenValue = definitionDataItem.getRetainHiddenValue();
                 }
+                retainHiddenValue = definitionDataItem.getRetainHiddenValue();
             });
         });
         return retainHiddenValue;
@@ -51,11 +48,6 @@ public class HiddenFieldsValidator {
     private Boolean isSubFieldsIncorrectlyConfigured(Boolean caseFieldRetainHiddenValue, DefinitionDataItem definitionDataItem) {
         return (Boolean.FALSE.equals(caseFieldRetainHiddenValue)
             && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
-    }
-
-    private Boolean isSubfieldsToBeDefaultedToTrue(Boolean caseFieldRetainHiddenValue, DefinitionDataItem definitionDataItem) {
-        return (Boolean.TRUE.equals(caseFieldRetainHiddenValue)
-            && definitionDataItem.getRetainHiddenValue() == null);
     }
 
     public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem) {
