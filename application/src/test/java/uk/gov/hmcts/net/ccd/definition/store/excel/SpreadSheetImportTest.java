@@ -263,7 +263,7 @@ public class SpreadSheetImportTest extends BaseTest {
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
             result.getResponse().getContentAsString(),
-            containsString("Unknown Case Type(s) 'TestComplexAddressBookCase1' in worksheet 'NoCConfig'"));
+            containsString("Unknown Case Type(s) 'TestComplexAddressBookCase1' in worksheet 'NoticeOfChangeConfig'"));
     }
 
     /**

@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Unknown Case Type(s) 'FT_ComplexOrganisation1' in worksheet 'NoCConfig'"
+      "__plainTextValue__": "Unknown Case Type(s) 'FT_ComplexOrganisation1' in worksheet 'NoticeOfChangeConfig'"
     }
   }
 }

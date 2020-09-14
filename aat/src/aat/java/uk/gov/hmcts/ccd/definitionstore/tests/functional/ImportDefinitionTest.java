@@ -72,7 +72,7 @@ class ImportDefinitionTest extends BaseTest {
             .when()
             .post("/import");
         assert (response.getBody().prettyPrint()
-            .contains("Unknown Case Type(s) 'AATPUBLIC1' in worksheet 'NoCConfig'"));
+            .contains("Unknown Case Type(s) 'AATPUBLIC1' in worksheet 'NoticeOfChangeConfig'"));
     }
 
     @Disabled("This test case is breaking the master build. Marking it ignored to unblock the other developers."

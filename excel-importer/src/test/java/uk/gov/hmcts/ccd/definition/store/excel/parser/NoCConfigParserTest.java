@@ -80,7 +80,7 @@ class NoCConfigParserTest extends ParserTestBase {
     public void shouldThrow_Exception_For_Non_Matching_CaseTypeIds() {
         definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_3, false, false));
         MapperException thrown = assertThrows(MapperException.class, () -> configParser.parse(definitionSheets));
-        assertEquals("Unknown Case Type(s) 'FT_MasterCaseType_3' in worksheet 'NoCConfig'", thrown.getMessage());
+        assertEquals("Unknown Case Type(s) 'FT_MasterCaseType_3' in worksheet 'NoticeOfChangeConfig'", thrown.getMessage());
     }
 
     @Test
@@ -89,7 +89,7 @@ class NoCConfigParserTest extends ParserTestBase {
         definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_3, false, false));
         definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_4, false, false));
         MapperException thrown = assertThrows(MapperException.class, () -> configParser.parse(definitionSheets));
-        assertEquals("Unknown Case Type(s) 'FT_MasterCaseType_3,FT_MasterCaseType_4' in worksheet 'NoCConfig'", thrown.getMessage());
+        assertEquals("Unknown Case Type(s) 'FT_MasterCaseType_3,FT_MasterCaseType_4' in worksheet 'NoticeOfChangeConfig'", thrown.getMessage());
     }
 
     @Test
