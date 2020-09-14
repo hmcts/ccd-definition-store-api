@@ -26,7 +26,7 @@ class ElasticsearchErrorMessageBuilderTest {
     void shouldBuildMessage() {
         ElasticsearchError error = elasticsearchError("SOME REASON");
 
-        String result = messageBuilder.buildMessage(error);
+        String result = messageBuilder.doBuildMessage(error);
 
         assertAll(
             () -> assertThat(result, is("MESSAGE"))
@@ -38,7 +38,7 @@ class ElasticsearchErrorMessageBuilderTest {
         ElasticsearchError error = elasticsearchError("INVALID");
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> messageBuilder.buildMessage(error));
+            () -> messageBuilder.doBuildMessage(error));
 
         assertAll(
             () -> assertThat(exception.getMessage(), is("This error message builder does not support errors with the provided reason 'INVALID'."))

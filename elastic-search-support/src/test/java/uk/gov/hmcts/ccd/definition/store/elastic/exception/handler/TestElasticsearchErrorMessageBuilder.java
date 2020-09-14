@@ -13,7 +13,7 @@ public class TestElasticsearchErrorMessageBuilder extends ElasticsearchErrorMess
     }
 
     @Override
-    protected String buildMessageForError(ElasticsearchError error) {
+    protected String buildMessage(ElasticsearchError error) {
         return message;
     }
 }

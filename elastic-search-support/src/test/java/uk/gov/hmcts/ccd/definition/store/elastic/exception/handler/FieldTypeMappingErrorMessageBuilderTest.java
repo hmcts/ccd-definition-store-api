@@ -5,7 +5,6 @@ import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticsearchError;
-import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.FieldTypeMappingErrorMessageBuilder;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
@@ -28,7 +27,7 @@ class FieldTypeMappingErrorMessageBuilderTest {
     void shouldBuildMessageForDataField() {
         ElasticsearchError error = createNativeEsError("data.FieldName", "date", "keyword");
 
-        String result = messageBuilder.buildMessage(error);
+        String result = messageBuilder.doBuildMessage(error);
 
         assertAll(
             () -> assertThat(result, is("Field 'data.FieldName' in case type 'CaseTypeId' does not match the field type of the field with "
@@ -41,7 +40,7 @@ class FieldTypeMappingErrorMessageBuilderTest {
     void shouldBuildMessageForDataClassificationField() {
         ElasticsearchError error = createNativeEsError("data_classification.FieldName", "date", "keyword");
 
-        String result = messageBuilder.buildMessage(error);
+        String result = messageBuilder.doBuildMessage(error);
 
         assertAll(
             () -> assertThat(result, is("Field 'data_classification.FieldName' in case type 'CaseTypeId' does not match the field type of the field with "
@@ -54,7 +53,7 @@ class FieldTypeMappingErrorMessageBuilderTest {
     void shouldBuildMessageForNonServiceDefinedField() {
         ElasticsearchError error = createNativeEsError("security_classification", "text", "keyword");
 
-        String result = messageBuilder.buildMessage(error);
+        String result = messageBuilder.doBuildMessage(error);
 
         assertAll(
             () -> assertThat(result, is("Field 'security_classification' in case type 'CaseTypeId' does not match the expected Elasticsearch type. "

@@ -33,7 +33,7 @@ public class ElasticsearchErrorHandler {
 
     private String buildMessage(ElasticsearchError error) {
         return getErrorMessageBuilder(error)
-            .map(messageBuilder -> messageBuilder.buildMessage(error))
+            .map(messageBuilder -> messageBuilder.doBuildMessage(error))
             .orElse(error.getMessage());
     }
 

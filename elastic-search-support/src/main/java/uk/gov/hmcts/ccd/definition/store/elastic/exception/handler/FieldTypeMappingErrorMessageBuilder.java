@@ -23,8 +23,8 @@ public class FieldTypeMappingErrorMessageBuilder extends ElasticsearchErrorMessa
     }
 
     @Override
-    protected String buildMessageForError(ElasticsearchError error) {
-        Matcher m = getMatcher(error.getReason());
+    protected String buildMessage(ElasticsearchError error) {
+        Matcher m = getReasonMatcher(error.getReason());
         String fieldPath = m.group(1);
         return String.format(isServiceDefinedField(fieldPath) ? SERVICE_DEFINED_FIELD_TEMPLATE : CCD_METADATA_FIELD_TEMPLATE,
             fieldPath, error.getCaseTypeReference(), m.group(2), m.group(3));

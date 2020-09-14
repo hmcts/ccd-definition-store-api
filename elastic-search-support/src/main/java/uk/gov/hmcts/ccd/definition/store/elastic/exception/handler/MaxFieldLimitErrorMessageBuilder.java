@@ -15,8 +15,8 @@ public class MaxFieldLimitErrorMessageBuilder extends ElasticsearchErrorMessageB
     }
 
     @Override
-    protected String buildMessageForError(ElasticsearchError error) {
-        Matcher m = getMatcher(error.getReason());
+    protected String buildMessage(ElasticsearchError error) {
+        Matcher m = getReasonMatcher(error.getReason());
         return String.format("Case type '%s' exceeds the limit of %s fields permitted by Elasticsearch. "
                 + "To reduce the number, please configure fields for this case type that are not required to be searched on "
                 + "to be non-searchable in the definition.",

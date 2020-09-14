@@ -5,7 +5,6 @@ import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticsearchError;
-import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.MaxFieldLimitErrorMessageBuilder;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
@@ -30,7 +29,7 @@ class MaxFieldLimitErrorMessageBuilderTest {
             + "reason=Limit of total fields [5000] in index [casetypeid_cases-000001] has been exceeded]", RestStatus.BAD_REQUEST),
             caseType);
 
-        String result = messageBuilder.buildMessage(error);
+        String result = messageBuilder.doBuildMessage(error);
 
         assertAll(
             () -> assertThat(result, is("Case type 'CaseTypeId' exceeds the limit of 5000 fields permitted by "
