@@ -48,7 +48,7 @@ class ImportDefinitionTest extends BaseTest {
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
         Response response = asUser.get()
             .given()
-            .multiPart(new File("src/resource/CCD_TestDefinition_Invalid_NOC_CONFIG.xlsx"))
+            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Invalid_NoC_Config.xlsx"))
             .expect()
             .statusCode(400)
             .response()
@@ -56,7 +56,7 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
         assert (response.getBody().prettyPrint()
             .contains("Only one NoC config is allowed per case type(s) "
-                + "TestAddressBookCase,TestComplexAddressBookCase"));
+                + "AATPUBLIC,AATRESTRICTED"));
     }
 
     @Test
@@ -65,14 +65,14 @@ class ImportDefinitionTest extends BaseTest {
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
         Response response = asUser.get()
             .given()
-            .multiPart(new File("src/resource/CCD_TestDefinition_Invalid_Case_Type_NOC_CONFIG.xlsx"))
+            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Invalid_Case_Type_NoC_Config.xlsx"))
             .expect()
             .statusCode(400)
             .response()
             .when()
             .post("/import");
         assert (response.getBody().prettyPrint()
-            .contains("Unknown Case Type(s) 'TestComplexAddressBookCase1' in worksheet 'NoCConfig'"));
+            .contains("Unknown Case Type(s) 'AATPUBLIC1' in worksheet 'NoCConfig'"));
     }
 
     @Disabled("This test case is breaking the master build. Marking it ignored to unblock the other developers."
