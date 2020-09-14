@@ -1,0 +1,9 @@
+elasticsearch:
+  host: localhost
+  port: 9200
+  scheme: http
+  enabled: true
+  indexShards: 8
+  indexShardsReplicas: 3
+  failImportIfError: true
+  dynamic: strict
