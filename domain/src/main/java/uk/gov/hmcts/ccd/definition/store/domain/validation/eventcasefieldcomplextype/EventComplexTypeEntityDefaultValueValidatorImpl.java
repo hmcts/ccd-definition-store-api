@@ -16,8 +16,8 @@ public class EventComplexTypeEntityDefaultValueValidatorImpl implements EventCom
     public ValidationResult validate(EventComplexTypeEntity eventCaseFieldEntity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
         final ValidationResult validationResult = new ValidationResult();
-        if (isOrgPolicyCaseAssignedRole(eventCaseFieldEntity.getReference()) &&
-            !eventCaseFieldEntityValidationContext.getCaseRoles().contains(eventCaseFieldEntity.getDefaultValue())
+        if (isOrgPolicyCaseAssignedRole(eventCaseFieldEntity.getReference())
+            && !eventCaseFieldEntityValidationContext.getCaseRoles().contains(eventCaseFieldEntity.getDefaultValue())
             && !GlobalCaseRole.all().contains(eventCaseFieldEntity.getDefaultValue())) {
             validationResult.addError(
                 new EventComplexTypeEntityDefaultValueError(

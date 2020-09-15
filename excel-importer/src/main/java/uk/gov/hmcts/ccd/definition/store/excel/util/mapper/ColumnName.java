@@ -81,6 +81,8 @@ public enum ColumnName {
     BANNER_URL("BannerURL"),
     DEFAULT_VALUE("DefaultValue"),
     RETAIN_HIDDEN_VALUE("RetainHiddenValue");
+    REASON_REQUIRED("ReasonRequired"),
+    NOC_ACTION_INTERPRETATION_REQUIRED("NoCActionInterpretationRequired");
 
     private final String name;
 
