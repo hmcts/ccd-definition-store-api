@@ -36,18 +36,19 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
     private final FieldTypeEntity complexBaseType;
     private final FieldTypeParser fieldTypeParser;
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
-
-    private HiddenFieldsValidator hiddenFieldsValidator = new HiddenFieldsValidator();
+    private final HiddenFieldsValidator hiddenFieldsValidator;
 
     public ComplexFieldTypeParser(ParseContext parseContext,
                                   FieldTypeParser fieldTypeParser,
                                   ShowConditionParser showConditionParser,
-                                  EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry
+                                  EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
+                                  HiddenFieldsValidator hiddenFieldsValidator
     ) {
         this.parseContext = parseContext;
         this.showConditionParser = showConditionParser;
         this.fieldTypeParser = fieldTypeParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
+        this.hiddenFieldsValidator = hiddenFieldsValidator;
 
         complexBaseType = parseContext.getBaseType(BASE_COMPLEX).orElseThrow(() ->
             new SpreadsheetParsingException("No base type found for Complex field: " + BASE_COMPLEX));
@@ -126,7 +127,8 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         complexField.setOrder(order);
         complexField.setShowCondition(parseShowCondition(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
         complexField.setDisplayContextParameter(definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
-        complexField.setRetainHiddenValue(hiddenFieldsValidator.parseHiddenFields(definitionDataItem, definitionSheets));
+        complexField.setSearchable(definitionDataItem.getBooleanOrDefault(ColumnName.SEARCHABLE, true));
+        complexField.setRetainHiddenValue(hiddenFieldsValidator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
 
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(complexField, definitionDataItem);
 

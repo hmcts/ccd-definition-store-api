@@ -1,5 +1,7 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.apache.http.HttpStatus;
+import org.hamcrest.Matcher;
+import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
@@ -27,21 +41,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import org.apache.http.HttpStatus;
-import org.hamcrest.Matcher;
-import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
-
 /**
  * Component-level tests for the Core Case Definition Importer API.
  *
@@ -52,6 +51,9 @@ public class SpreadSheetImportTest extends BaseTest {
     private static final String TEST_CASE_TYPE = "TestAddressBookCase";
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
         + TEST_CASE_TYPE;
+    public static final String EXCEL_FILE_NOC_CONFIG = "/CCD_TestDefinition_NOC_CONFIG.xlsx";
+    public static final String EXCEL_FILE_INVALID_NOC_CONFIG = "/CCD_TestDefinition_Invalid_NOC_CONFIG.xlsx";
+    public static final String EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG = "/CCD_TestDefinition_Invalid_Case_Type_NOC_CONFIG.xlsx";
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
     private static final String RESPONSE_JSON = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
@@ -141,12 +143,7 @@ public class SpreadSheetImportTest extends BaseTest {
     public void importInvalidDefinitionFile() throws Exception {
         InputStream inputStream = new ClassPathResource("/CCD_TestDefinition_Invalid_Data.xlsx",
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
@@ -169,12 +166,7 @@ public class SpreadSheetImportTest extends BaseTest {
     public void rollbackFailedDefinitionFileImport() throws Exception {
         InputStream inputStream = new ClassPathResource("/ccd_testdefinition-missing-WorkBasketResultFields.xlsx",
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
@@ -194,12 +186,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
         InputStream inputStream = new ClassPathResource("/ccd-definition-wrong-complex-type.xlsx",
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         WireMock.verify(0, putRequestedFor(urlEqualTo("/user-profile/users")));
 
@@ -210,6 +197,73 @@ public class SpreadSheetImportTest extends BaseTest {
         assertEquals("data stored during a failed import",
             0,
             jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
+    }
+
+    /**
+     * API test for successful import of a valid Case Definition with Noc Config spreadsheet.
+     *
+     * @throws Exception On error running test
+     */
+    @Test
+    @Transactional
+    public void importValidDefinitionFileContainsNocConfig() throws Exception {
+
+        try (final InputStream inputStream =
+                 new ClassPathResource(EXCEL_FILE_NOC_CONFIG, getClass()).getInputStream()) {
+            MockMultipartFile file = new MockMultipartFile("file", inputStream);
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+                .file(file)
+                .header(AUTHORIZATION, "Bearer testUser")) //
+                .andReturn();
+
+            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+        }
+
+        // Check the HTTP GET request for the imported Case Type returns the correct response.
+        MvcResult getCaseTypesMvcResult = mockMvc.perform(MockMvcRequestBuilders.get(CASE_TYPE_DEF_URL)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+        assertBody(getCaseTypesMvcResult.getResponse().getContentAsString());
+
+        assertDatabaseIsCorrect();
+        assertNoCConfig();
+    }
+
+    @Test
+    @Transactional
+    public void importInvalidNoCConfigDefinitionFile() throws Exception {
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_INVALID_NOC_CONFIG,
+            getClass()).getInputStream();
+        final MvcResult result = performAndGetMvcResult(inputStream);
+
+        // Check the error response message.
+        assertThat("Incorrect HTTP status message for bad request",
+            result.getResponse().getContentAsString(),
+            containsString("Only one NoC config is allowed per case type(s) "
+                + "TestAddressBookCase,TestComplexAddressBookCase"));
+    }
+
+    private MvcResult performAndGetMvcResult(InputStream inputStream) throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", inputStream);
+        return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn();
+    }
+
+    @Test
+    @Transactional
+    public void importInvalidCaseTypeNoCConfigDefinitionFile() throws Exception {
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG,
+            getClass()).getInputStream();
+        final MvcResult result = performAndGetMvcResult(inputStream);
+
+        // Check the error response message.
+        assertThat("Incorrect HTTP status message for bad request",
+            result.getResponse().getContentAsString(),
+            containsString("Unknown Case Type(s) 'TestComplexAddressBookCase1' in worksheet 'NoticeOfChangeConfig'"));
     }
 
     /**
@@ -686,5 +740,10 @@ public class SpreadSheetImportTest extends BaseTest {
     private int getIdForTestJurisdiction() {
         return jdbcTemplate.queryForObject("SELECT id FROM jurisdiction WHERE reference = 'TEST' AND version = 1",
             Integer.class);
+    }
+
+    private void assertNoCConfig() {
+        List<Map<String, Object>> nocConfig = jdbcTemplate.queryForList("SELECT * FROM noc_config");
+        assertThat(nocConfig, hasSize(1));
     }
 }

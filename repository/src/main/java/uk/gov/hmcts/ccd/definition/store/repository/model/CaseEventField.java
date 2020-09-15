@@ -126,9 +126,9 @@ public class CaseEventField {
     }
 
     /**
-     * whether this field is optional, mandatory or read only for this event.
+     * whether to retain value of this field, is dependant on there being a show condition
      **/
-    @ApiModelProperty(value = "whether this field is optional, mandatory or read only for this event")
+    @ApiModelProperty(value = "whether to retain value of this field, is dependant on there being a show condition")
     @JsonProperty("retain_hidden_value")
     public Boolean getRetainHiddenValue() {
         return retainHiddenValue;
