@@ -33,7 +33,7 @@ Feature: F-New: 'Retain hidden field'
     And the response has all other details as expected
     And the response [provides a clear validation message describing why the definition import has failed, for example, retainHiddenValue  can only be configured for a field that uses a showCondition. Field [FieldID] on [TabName] does not use a showCondition]
 
-  @S-600.3 #AC6 on RDM-8200
+  @S-600.4 #AC6 on RDM-8200
   Scenario: Import must fail when definition file contains configuration for 'retainHiddenValue' set to 'No' for a complex field but 'Yes' on some of its subfields
     Given a user with [permissions to import case definition files]
     When a request is prepared with appropriate values
