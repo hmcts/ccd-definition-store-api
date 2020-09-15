@@ -201,6 +201,10 @@ public class DefinitionDataItem {
         return getString(ColumnName.USE_CASE);
     }
 
+    public Boolean getRetainHiddenValue() {
+        return getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
+    }
+
     public String getCaseFieldId() {
         return getString(ColumnName.CASE_FIELD_ID) != null ? getString(ColumnName.CASE_FIELD_ID) :
             new StringBuilder()

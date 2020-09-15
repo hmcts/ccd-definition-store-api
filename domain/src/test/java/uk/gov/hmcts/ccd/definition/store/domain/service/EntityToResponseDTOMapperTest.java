@@ -91,7 +91,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
 
-class EntityToResponseDTOMapperTest {
+class  EntityToResponseDTOMapperTest {
 
     private static final SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -119,6 +119,7 @@ class EntityToResponseDTOMapperTest {
             eventCaseFieldEntity.setShowSummaryChangeOption(true);
             eventCaseFieldEntity.setShowSummaryContentOption(2);
             eventCaseFieldEntity.setDisplayContext(DisplayContext.MANDATORY);
+            eventCaseFieldEntity.setRetainHiddenValue(true);
 
             CaseEventField caseEventField = spyOnClassUnderTest.map(
                 eventCaseFieldEntity
@@ -132,7 +133,9 @@ class EntityToResponseDTOMapperTest {
                 () -> assertEquals("showSummaryChangeOption", eventCaseFieldEntity.getShowSummaryChangeOption(),
                     caseEventField.getShowSummaryChangeOption()),
                 () -> assertEquals("showSummaryContentOption", eventCaseFieldEntity.getShowSummaryContentOption(),
-                    caseEventField.getShowSummaryContentOption())
+                    caseEventField.getShowSummaryContentOption()),
+                () -> assertEquals("retainHiddenValue", eventCaseFieldEntity.getRetainHiddenValue(),
+                    caseEventField.getRetainHiddenValue())
             );
         }
 

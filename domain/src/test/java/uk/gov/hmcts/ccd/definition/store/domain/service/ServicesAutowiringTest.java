@@ -51,7 +51,23 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeVa
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldNameValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.*;
+import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.DraftDefinitionRepositoryDecorator;
+import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionUiConfigRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.NoCConfigRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
@@ -222,12 +238,6 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
 
         @Bean
         @Primary
-        public ChallengeQuestionTabRepository challengeQuestionTabRepository() {
-            return mock(ChallengeQuestionTabRepository.class);
-        }
-
-        @Bean
-        @Primary
         public CaseTypeLiteRepository caseTypeLiteRepository() {
             return mock(CaseTypeLiteRepository.class);
         }
@@ -237,6 +247,13 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         public BannerRepository bannerRepository() {
             return mock(BannerRepository.class);
         }
+
+        @Bean
+        @Primary
+        public NoCConfigRepository noCConfigRepository() {
+            return mock(NoCConfigRepository.class);
+        }
+
 
         @Bean
         @Primary

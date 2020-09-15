@@ -2,11 +2,13 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
 import java.util.Map;
+
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
 @Component
 public class ParserFactory {
@@ -15,19 +17,19 @@ public class ParserFactory {
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     private final Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry;
     private final SpreadsheetValidator spreadsheetValidator;
-    private final ChallengeQuestionParser challengeQuestionParser;
+    private final HiddenFieldsValidator hiddenFieldsValidator;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
                          EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
                          SpreadsheetValidator spreadsheetValidator,
-                         ChallengeQuestionParser challengeQuestionParser) {
+                         HiddenFieldsValidator hiddenFieldsValidator) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
         this.spreadsheetValidator = spreadsheetValidator;
-        this.challengeQuestionParser = challengeQuestionParser;
+        this.hiddenFieldsValidator = hiddenFieldsValidator;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -39,7 +41,12 @@ public class ParserFactory {
 
         return new FieldsTypeParser(
             new ListFieldTypeParser(context, spreadsheetValidator),
-            new ComplexFieldTypeParser(context, fieldTypeParser, showConditionParser, entityToDefinitionDataItemRegistry),
+            new ComplexFieldTypeParser(
+                context,
+                fieldTypeParser,
+                showConditionParser,
+                entityToDefinitionDataItemRegistry,
+                hiddenFieldsValidator),
             new CaseFieldTypeParser(context, fieldTypeParser)
         );
     }
@@ -54,7 +61,8 @@ public class ParserFactory {
                 new EventCaseFieldParser(
                     context,
                     showConditionParser,
-                    entityToDefinitionDataItemRegistry
+                    entityToDefinitionDataItemRegistry,
+                    hiddenFieldsValidator
                 ),
                 new EventCaseFieldComplexTypeParser(showConditionParser),
                 entityToDefinitionDataItemRegistry
@@ -92,8 +100,8 @@ public class ParserFactory {
         return new JurisdictionUiConfigParser(context);
     }
 
-    public ChallengeQuestionParser createNewChallengeQuestionParser() {
-        return challengeQuestionParser;
+    public NoCConfigParser createNoCConfigParser(ParseContext context) {
+        return new NoCConfigParser(context);
     }
 
 }

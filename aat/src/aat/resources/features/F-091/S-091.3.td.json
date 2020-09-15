@@ -1,0 +1,31 @@
+{
+	"_guid_": "S-091.3",
+	"_extends_": "F-091_Test_Base_data",
+	"title": "must return a negative response in an attempt to import a definition file containing a NoticeofChange config tab with multiple entries per case type",
+	"specs": [
+		"an active profile in CCD",
+		"contains multiple noc config entries per config type"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid_multiple_noc_config.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Only one NoC config is allowed per case type(s) FT_ComplexOrganisation"
+    }
+  }
+}

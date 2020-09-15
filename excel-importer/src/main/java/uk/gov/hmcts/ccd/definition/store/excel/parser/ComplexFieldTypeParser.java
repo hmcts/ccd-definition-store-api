@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificationColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
@@ -35,16 +36,19 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
     private final FieldTypeEntity complexBaseType;
     private final FieldTypeParser fieldTypeParser;
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
+    private final HiddenFieldsValidator hiddenFieldsValidator;
 
     public ComplexFieldTypeParser(ParseContext parseContext,
                                   FieldTypeParser fieldTypeParser,
                                   ShowConditionParser showConditionParser,
-                                  EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry
+                                  EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
+                                  HiddenFieldsValidator hiddenFieldsValidator
     ) {
         this.parseContext = parseContext;
         this.showConditionParser = showConditionParser;
         this.fieldTypeParser = fieldTypeParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
+        this.hiddenFieldsValidator = hiddenFieldsValidator;
 
         complexBaseType = parseContext.getBaseType(BASE_COMPLEX).orElseThrow(() ->
             new SpreadsheetParsingException("No base type found for Complex field: " + BASE_COMPLEX));
@@ -63,7 +67,8 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         logger.debug("Complex types parsing: {} complex types detected", complexTypesItems.size());
 
         // TODO Check for already existing types with same identity
-        ParseResult<FieldTypeEntity> result = complexTypesItems.entrySet().stream().map(this::parseComplexType).reduce(new ParseResult(),
+        ParseResult<FieldTypeEntity> result = complexTypesItems.entrySet()
+            .stream().map(complexTypeItem -> parseComplexType(complexTypeItem, definitionSheets)).reduce(new ParseResult(),
             (res, complexTypeParseResult) -> res.add(complexTypeParseResult));
 
         logger.info("Complex types parsing: OK: {} types parsed, including {} complex", result.getAllResults().size(), complexTypesItems.size());
@@ -71,7 +76,8 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         return result;
     }
 
-    private ParseResult<FieldTypeEntity> parseComplexType(Entry<String, List<DefinitionDataItem>> complexTypeItems) {
+    private ParseResult<FieldTypeEntity> parseComplexType(Entry<String, List<DefinitionDataItem>> complexTypeItems,
+                                                          Map<String, DefinitionSheet> definitionSheets) {
         logger.debug("Complex types parsing: parsing '{}'", complexTypeItems.getKey());
 
 
@@ -80,8 +86,8 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         final List<DefinitionDataItem> items = complexTypeItems.getValue();
 
         final List<ComplexFieldEntity> complexFields = items.stream()
-                                                               .map(item -> parseComplexField(item, items.size(), result))
-                                                               .collect(toList());
+            .map(item -> parseComplexField(item, items.size(), result, definitionSheets))
+            .collect(toList());
 
         final FieldTypeEntity complexType = new FieldTypeEntity();
         complexType.setReference(complexTypeItems.getKey());
@@ -95,7 +101,10 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         return result;
     }
 
-    private ComplexFieldEntity parseComplexField(DefinitionDataItem definitionDataItem, int itemsCount, ParseResult<FieldTypeEntity> result) {
+    private ComplexFieldEntity parseComplexField(DefinitionDataItem definitionDataItem,
+                                                 int itemsCount,
+                                                 ParseResult<FieldTypeEntity> result,
+                                                 Map<String, DefinitionSheet> definitionSheets) {
         final ComplexFieldEntity complexField = new ComplexFieldEntity();
 
         final String fieldId = definitionDataItem.getString(ColumnName.LIST_ELEMENT_CODE);
@@ -119,6 +128,7 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         complexField.setShowCondition(parseShowCondition(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
         complexField.setDisplayContextParameter(definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
         complexField.setSearchable(definitionDataItem.getBooleanOrDefault(ColumnName.SEARCHABLE, true));
+        complexField.setRetainHiddenValue(hiddenFieldsValidator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
 
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(complexField, definitionDataItem);
 
