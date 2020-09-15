@@ -208,7 +208,13 @@
 						"default_value": null
 					 }
 					]
-				}
+				},
+         {
+           "case_field_id": "CaseLinkField",
+           "order": 1,
+           "page_column_no": null,
+           "complex_field_overrides": []
+         }
 			 ],
 			 "show_condition": null,
 			 "callback_url_mid_event": null,

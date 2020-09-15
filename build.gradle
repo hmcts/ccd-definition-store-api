@@ -127,7 +127,7 @@ allprojects {
 
     // Global constraints
     dependencies {
-        compile "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"    
+        compile "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         compile "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
         compile "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
         compile "org.hibernate:hibernate-core:${hibernateVersion}"
@@ -278,7 +278,8 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.1.0'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.9.0'
+
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
