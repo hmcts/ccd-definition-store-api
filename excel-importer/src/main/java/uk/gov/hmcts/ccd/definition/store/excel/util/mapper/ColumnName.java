@@ -82,7 +82,7 @@ public enum ColumnName {
     DEFAULT_VALUE("DefaultValue"),
     RETAIN_HIDDEN_VALUE("RetainHiddenValue"),
     REASON_REQUIRED("ReasonRequired"),
-    NOC_ACTION_INTERPRETATION_REQUIRED("NoCActionInterpretationRequired");
+    NOC_ACTION_INTERPRETATION_REQUIRED("NoCActionInterpretationRequired"),
     CHALLENGE_QUESTION_DISPLAY_ORDER("DisplayOrder"),
     CHALLENGE_QUESTION_TEXT("QuestionText"),
     CHALLENGE_QUESTION_ANSWER_FIELD_TYPE("AnswerFieldType"),
