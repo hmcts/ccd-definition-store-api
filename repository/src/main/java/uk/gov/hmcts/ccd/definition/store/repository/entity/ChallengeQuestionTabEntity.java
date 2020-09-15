@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Table(name = "new_challenge_question")
 @Entity
-public class NewChallengeQuestionTabEntity implements Serializable {
+public class ChallengeQuestionTabEntity implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -37,6 +37,9 @@ public class NewChallengeQuestionTabEntity implements Serializable {
 
     @Column(name = "answer_field", nullable = false)
     private String answerField;
+
+    @Column(name = "question_id")
+    private String  questionId;
 
     public Integer getId() {
         return id;
@@ -100,5 +103,13 @@ public class NewChallengeQuestionTabEntity implements Serializable {
 
     public void setAnswerField(String answerField) {
         this.answerField = answerField;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
     }
 }

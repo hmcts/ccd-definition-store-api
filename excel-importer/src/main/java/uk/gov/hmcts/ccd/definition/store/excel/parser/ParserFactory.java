@@ -15,19 +15,19 @@ public class ParserFactory {
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     private final Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry;
     private final SpreadsheetValidator spreadsheetValidator;
-    private final NewChallengeQuestionParser newChallengeQuestionParser;
+    private final ChallengeQuestionParser challengeQuestionParser;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
                          EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
                          SpreadsheetValidator spreadsheetValidator,
-                         NewChallengeQuestionParser newChallengeQuestionParser) {
+                         ChallengeQuestionParser challengeQuestionParser) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
         this.spreadsheetValidator = spreadsheetValidator;
-        this.newChallengeQuestionParser = newChallengeQuestionParser;
+        this.challengeQuestionParser = challengeQuestionParser;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -92,8 +92,8 @@ public class ParserFactory {
         return new JurisdictionUiConfigParser(context);
     }
 
-    public NewChallengeQuestionParser createNewChallengeQuestionParser() {
-        return newChallengeQuestionParser;
+    public ChallengeQuestionParser createNewChallengeQuestionParser() {
+        return challengeQuestionParser;
     }
 
 }

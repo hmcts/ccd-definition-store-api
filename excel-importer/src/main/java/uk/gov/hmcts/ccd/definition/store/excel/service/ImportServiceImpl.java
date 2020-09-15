@@ -231,10 +231,10 @@ public class ImportServiceImpl implements ImportService {
         // ChallengeQuestionTab
         if (definitionSheets.get(SheetName.CHALLENGE_QUESTION_TAB.getName()) != null) {
             logger.debug("Importing spreadsheet: NewChallengeQuestion...");
-            final NewChallengeQuestionParser newChallengeQuestionParser =
+            final ChallengeQuestionParser challengeQuestionParser =
                 parserFactory.createNewChallengeQuestionParser();
 
-            List<NewChallengeQuestionTabEntity> newChallengeQuestionEntities = newChallengeQuestionParser.parse(definitionSheets,parseContext);
+            List<ChallengeQuestionTabEntity> newChallengeQuestionEntities = challengeQuestionParser.parse(definitionSheets,parseContext);
             challengeQuestionTabService.saveAll(newChallengeQuestionEntities);
             logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
         }

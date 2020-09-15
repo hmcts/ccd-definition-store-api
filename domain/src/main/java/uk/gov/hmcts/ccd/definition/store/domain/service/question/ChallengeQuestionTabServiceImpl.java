@@ -5,9 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.ChallengeQuestionTabRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.NewChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ChallengeQuestionTabServiceImpl implements ChallengeQuestionTabService {
@@ -21,9 +22,14 @@ public class ChallengeQuestionTabServiceImpl implements ChallengeQuestionTabServ
     }
 
     @Override
-    public void saveAll(List<NewChallengeQuestionTabEntity> entity) {
+    public void saveAll(List<ChallengeQuestionTabEntity> entity) {
         LOG.debug("Create ChallengeQuestionTabEntity Entity {}", entity);
         this.challengeQuestionTabRepository.saveAll(entity);
+    }
+
+    @Override
+    public Optional<ChallengeQuestionTabEntity> findByQuestionId(String questionId) {
+        return challengeQuestionTabRepository.findByQuestionId(questionId);
     }
 }
 

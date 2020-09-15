@@ -137,7 +137,7 @@ public class ImportServiceImplTest {
     private JurisdictionUiConfigService jurisdictionUiConfigService;
 
     @Mock
-    private NewChallengeQuestionParser newChallengeQuestionParser;
+    private ChallengeQuestionParser challengeQuestionParser;
     @Mock
     private ChallengeQuestionTabService challengeQuestionTabService;
 
@@ -171,7 +171,7 @@ public class ImportServiceImplTest {
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
-            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, newChallengeQuestionParser);
+            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, challengeQuestionParser);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -337,7 +337,7 @@ public class ImportServiceImplTest {
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
-            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, newChallengeQuestionParser);
+            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, challengeQuestionParser);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
