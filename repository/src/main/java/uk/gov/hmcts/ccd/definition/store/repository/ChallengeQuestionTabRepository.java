@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface ChallengeQuestionTabRepository extends JpaRepository<ChallengeQuestionTabEntity, Integer> {
 
-    @Query("select c from NewChallengeQuestionTabEntity c where c.questionId=:questionId ")
+    @Query("select c from ChallengeQuestionTabEntity c where c.questionId=:questionId ")
     Optional<ChallengeQuestionTabEntity> findByQuestionId(@Param("questionId") String questionId);
 }
