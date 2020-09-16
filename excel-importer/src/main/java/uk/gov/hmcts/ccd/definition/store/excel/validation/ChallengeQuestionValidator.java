@@ -9,11 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -96,9 +92,11 @@ public class ChallengeQuestionValidator {
                     if (answersField.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
                         final String role = answersField.split(ANSWER_FIELD_ROLE_SEPARATOR)[1];
                         Optional<UserRoleEntity> result = this.parseContext.getRole(challengeQuestionTabEntity.getCaseType().getReference(), role);
-                        result.orElseThrow(() -> new InvalidImportException(ERROR_MESSAGE + " value: "
+                        if (!result.isPresent()) {
+                            throw new InvalidImportException(ERROR_MESSAGE + " value: "
                                 + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                                + " value. Please check the expression format and the roles."));
+                                + " value. Please check the expression format and the roles.");
+                        }
                     }
                     // validate dot notation content.
                     validateAnswerFieldExpression(definitionDataItem.getString(ColumnName.CASE_TYPE_ID), answersField);
