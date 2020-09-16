@@ -52,7 +52,7 @@ public class HiddenFieldsValidator {
 
     public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem) {
         if (isShowConditionPopulated(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION), definitionDataItem)) {
-            throw new MapperException(String.format("retainHiddenValue can only be configured for a field that uses a "
+            throw new MapperException(String.format("'retainHiddenValue' can only be configured for a field that uses a "
                     + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
                 definitionDataItem.getString(ColumnName.CASE_FIELD_ID), SheetName.CASE_EVENT_TO_FIELDS.getName()));
         }
