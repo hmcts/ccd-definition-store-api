@@ -91,7 +91,7 @@ public class ChallengeQuestionValidator {
                     //validate the roles.
                     if (answersField.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
                         final String role = answersField.split(ANSWER_FIELD_ROLE_SEPARATOR)[1];
-                        Optional<UserRoleEntity> result = this.parseContext.getRole(challengeQuestionTabEntity.getCaseType().getReference(), role);
+                        final Optional<UserRoleEntity> result = this.parseContext.getRole(challengeQuestionTabEntity.getCaseType().getReference(), role);
                         if (!result.isPresent()) {
                             throw new InvalidImportException(ERROR_MESSAGE + " value: "
                                 + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
@@ -133,12 +133,14 @@ public class ChallengeQuestionValidator {
 
     private void validateAttributes(String currentAttribute, List<ComplexFieldEntity> complexFieldACLEntity) {
 
-        Optional<ComplexFieldEntity> result = complexFieldACLEntity.stream().filter(complexFieldACLEItem ->
+        final Optional<ComplexFieldEntity> result = complexFieldACLEntity.stream().filter(complexFieldACLEItem ->
                 complexFieldACLEItem.getReference().equals(currentAttribute)
         ).findAny();
-        result.orElseThrow(() -> new InvalidImportException(ERROR_MESSAGE + " value: "
+        if (!result.isPresent()) {
+            throw new InvalidImportException(ERROR_MESSAGE + " value: "
                 + currentAttribute + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                + " value, The expression dot notation values should be valid caseTypes fields."));
+                + " value, The expression dot notation values should be valid caseTypes fields.");
+        }
     }
 
     private void validateDisplayContext(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
@@ -146,8 +148,10 @@ public class ChallengeQuestionValidator {
         final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: " + displayContext +
                 " is not a valid DisplayContextParameter value. OR Date and Time are the only valid DisplayContextParameter values.");
         final Optional<DisplayContextParameterType> displayContextParameterType = DisplayContextParameterType.getParameterTypeFor(displayContext);
-        displayContextParameterType.orElseThrow(() -> invalidImportException);
 
+        if (!displayContextParameterType.isPresent()) {
+            throw invalidImportException;
+        }
         if (displayContext != null && displayContextValues.contains(displayContextParameterType.get().name())) {
             challengeQuestionTabEntity.setDisplayContextParameter(displayContext);
         } else {
