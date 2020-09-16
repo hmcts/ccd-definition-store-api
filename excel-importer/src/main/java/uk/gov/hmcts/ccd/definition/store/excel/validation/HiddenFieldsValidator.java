@@ -27,12 +27,12 @@ public class HiddenFieldsValidator {
                 String fieldShowCondition = caseEventToFieldDataItem.getString(ColumnName.FIELD_SHOW_CONDITION);
                 Boolean caseFieldRetainHiddenValue = caseEventToFieldDataItem.getRetainHiddenValue();
                 if (isShowConditionPopulated(fieldShowCondition, definitionDataItem)) {
-                    throw new MapperException(String.format("retainHiddenValue can only be configured "
+                    throw new MapperException(String.format("'retainHiddenValue' can only be configured "
                             + "for a field that uses a "
                             + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
                         caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
                 } else if (isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem)) {
-                    throw new MapperException(String.format("retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['%s'] on ['%s']",
+                    throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['%s'] on ['%s']",
                         caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
                 }
                 retainHiddenValue = definitionDataItem.getRetainHiddenValue();

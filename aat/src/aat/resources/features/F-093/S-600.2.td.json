@@ -1,6 +1,6 @@
 {
   "_guid_": "S-600.2",
-  "_extends_": "F-New_Test_Base_data",
+  "_extends_": "F-093_Test_Base_data",
   "title": "must return all details successfully for a case type containing some Organisation and OrganisationPolicy fields",
   "specs": [
     "contains incorrectly configured 'retainHiddenValue' column, see notes below",
@@ -17,7 +17,7 @@
     }
   },
   "expectedResponse": {
-    "responseCode": 422,
+    "responseCode": 400,
     "responseMessage": "Unprocessable Entity",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- validationError: retainHiddenValue has been incorrectly configured or is invalid for fieldID [FieldID] on [TabName] "
+      "__plainTextValue__" : "'retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['AddressComplex1'] on ['CaseEventToFields']"
     }
   }
 }
