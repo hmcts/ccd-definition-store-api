@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-600.2",
+  "_extends_": "F-093_Test_Base_data",
+  "title": "must return all details successfully for a case type containing some Organisation and OrganisationPolicy fields",
+  "specs": [
+    "contains incorrectly configured 'retainHiddenValue' column, see notes below",
+    "provides a clear validation message describing why the definition import has failed, for example, retainHiddenValue has been incorrectly configured or is invalid for fieldID [FieldID] on [TabName]"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid_config_retain_hidden_value.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "'retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['AddressComplex1'] on ['CaseEventToFields']"
+    }
+  }
+}
