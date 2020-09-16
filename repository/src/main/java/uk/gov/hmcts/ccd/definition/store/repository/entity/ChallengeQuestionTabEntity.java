@@ -6,7 +6,7 @@ import static javax.persistence.FetchType.LAZY;
 
 import javax.persistence.*;
 
-@Table(name = "new_challenge_question")
+@Table(name = "challenge_question")
 @Entity
 public class ChallengeQuestionTabEntity implements Serializable {
 

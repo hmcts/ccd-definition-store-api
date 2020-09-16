@@ -4,13 +4,13 @@
 
     <changeSet id="rdm-9031" author="tobias.derose@hmcts.net">
 
-        <createTable tableName="new_challenge_question">
+        <createTable tableName="challenge_question">
 
-            <column name="case_type_id"  type="integer" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
 
-            <column name="id"  type="serial" >
+            <column name="case_type_id"  type="integer" >
                 <constraints nullable="false"/>
             </column>
 
@@ -30,30 +30,34 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="case_role"  type="varchar(1000)" >
+            <column name="challenge_question_id"  type="varchar(70)" >
                 <constraints nullable="false"/>
             </column>
 
             <column name="answer_field"  type="varchar(1000)" >
                 <constraints nullable="false"/>
             </column>
+
+            <column name="question_id"  type="varchar(70)" >
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addPrimaryKey columnNames="id"
-                       constraintName="pk_new_challenge_question"
-                       tableName="new_challenge_question"/>
+                       constraintName="pk_challenge_question"
+                       tableName="challenge_question"/>
 
         <addForeignKeyConstraint baseColumnNames="case_type_id"
-                                 baseTableName="new_challenge_question"
-                                 constraintName="fk_new_challenge_question_case_type_id"
+                                 baseTableName="challenge_question"
+                                 constraintName="fk_challenge_question_case_type_id"
                                  referencedColumnNames="id"
                                  referencedTableName="case_type"/>
 
 
 
         <addForeignKeyConstraint baseColumnNames="answer_field_type"
-                                 baseTableName="new_challenge_question"
-                                 constraintName="fk_new_challenge_question_field_type_id"
+                                 baseTableName="challenge_question"
+                                 constraintName="fk_challenge_question_field_type_id"
                                  referencedColumnNames="id"
                                  referencedTableName="field_type"/>
 

@@ -83,11 +83,10 @@ public enum ColumnName {
     RETAIN_HIDDEN_VALUE("RetainHiddenValue"),
     REASON_REQUIRED("ReasonRequired"),
     NOC_ACTION_INTERPRETATION_REQUIRED("NoCActionInterpretationRequired"),
-    CHALLENGE_QUESTION_DISPLAY_ORDER("DisplayOrder"),
     CHALLENGE_QUESTION_TEXT("QuestionText"),
     CHALLENGE_QUESTION_ANSWER_FIELD_TYPE("AnswerFieldType"),
     CHALLENGE_QUESTION_CASE_ROLE_ID("CaseRoleId"),
-    CHALLENGE_QUESTION_QUESTION_ID("questionId"),
+    CHALLENGE_QUESTION_QUESTION_ID("QuestionId"),
     CHALLENGE_QUESTION_ANSWER_FIELD("Answer");
 
     private final String name;

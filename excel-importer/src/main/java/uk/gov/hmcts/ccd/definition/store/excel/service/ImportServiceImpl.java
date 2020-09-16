@@ -234,7 +234,7 @@ public class ImportServiceImpl implements ImportService {
 
         metadata.setUserId(userDetails.getEmail());
 
-        // ChallengeQuestionTab
+        // ChallengeQuestion
         if (definitionSheets.get(SheetName.CHALLENGE_QUESTION_TAB.getName()) != null) {
             logger.debug("Importing spreadsheet: NewChallengeQuestion...");
             final ChallengeQuestionParser challengeQuestionParser =

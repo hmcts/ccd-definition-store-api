@@ -220,7 +220,7 @@ public class ChallengeQuestionValidatorTest {
 
         definitionDataItem.addAttribute(ColumnName.CASE_TYPE_ID, caseType);
         definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD_TYPE, filedType);
-        definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_DISPLAY_ORDER, displayOder);
+        definitionDataItem.addAttribute(ColumnName.DISPLAY_ORDER, displayOder);
         definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_TEXT, questionText);
         definitionDataItem.addAttribute(ColumnName.DISPLAY_CONTEXT_PARAMETER, displayContextParameter);
         definitionDataItem.addAttribute(ColumnName.ID, id);

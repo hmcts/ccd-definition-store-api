@@ -172,7 +172,7 @@ public class ChallengeQuestionValidator {
     }
 
     private void validateDisplayOrder(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
-        final String displayOrder = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_DISPLAY_ORDER);
+        final String displayOrder = definitionDataItem.getString(ColumnName.DISPLAY_ORDER);
         try {
             challengeQuestionTabEntity.setOrder(Integer.parseInt(displayOrder));
         } catch (NumberFormatException NumberFormatException) {
