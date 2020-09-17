@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ChallengeQuestionDisplayContextParameterValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -23,6 +25,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class ChallengeQuestionValidatorTest {
@@ -34,14 +37,17 @@ public class ChallengeQuestionValidatorTest {
     private static final String CASE_TYPE = "Case_Type";
     private static final String FIELD_TYPE = "Text";
     private static final String QUESTION_TEXT = "What's the name of the party you wish to represent?";
-    private static final String DISPLAY_CONTEXT_PARAMETER_1 = "#DATETIMEDISPLAY(dd-MM-yyyy)";
-    private static final String DISPLAY_CONTEXT_PARAMETER_2 = "#DATETIMEDISPLAY(MM-yyyy)";
+    private static final String DISPLAY_CONTEXT_PARAMETER_1 = "#DATETIMEENTRY(dd-MM-yyyy)";
+    private static final String DISPLAY_CONTEXT_PARAMETER_2 = "#DATETIMEENTRY(dd-MM-yyyy)";
     private static final String QUESTION_ID = "NoCChallenge";
     private static final String ANSWERD = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[CLAIMANT]";
     private ChallengeQuestionValidator challengeQuestionValidator;
 
     @Mock
     private ChallengeQuestionTabService challengeQuestionTabService;
+
+    @Mock
+    ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
 
     @Before
     public void setup() {
@@ -51,9 +57,10 @@ public class ChallengeQuestionValidatorTest {
         ChallengeQuestionTabEntity entity = new ChallengeQuestionTabEntity();
         entity.setQuestionId("questionId");
         Optional<ChallengeQuestionTabEntity> mockResult = Optional.of(entity);
+        when(challengeQuestionDisplayContextParameterValidator.validate(any(),any())).thenReturn(new ValidationResult());
         when(challengeQuestionTabService.findByQuestionId(questionId)).thenReturn(mockResult);
         buildParseContext();
-        challengeQuestionValidator = new ChallengeQuestionValidator(challengeQuestionTabService);
+        challengeQuestionValidator = new ChallengeQuestionValidator(challengeQuestionTabService,challengeQuestionDisplayContextParameterValidator);
     }
 
     @Test
@@ -131,18 +138,6 @@ public class ChallengeQuestionValidatorTest {
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
             assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: QuestionText cannot be null."));
-            throw exception;
-        }
-    }
-
-    @Test(expected = InvalidImportException.class)
-    public void failForDisplayContextParameterValidation() {
-        try {
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, "HHHHH", QUESTION_ID, ANSWERD,"questionId");
-            challengeQuestionValidator.validate(parseContext, definitionDataItem);
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: HHHHH is not a " +
-                "valid DisplayContextParameter value. OR Date and Time are the only valid DisplayContextParameter values."));
             throw exception;
         }
     }
