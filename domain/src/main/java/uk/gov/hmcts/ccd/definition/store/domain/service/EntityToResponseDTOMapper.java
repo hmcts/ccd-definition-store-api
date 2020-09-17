@@ -237,6 +237,9 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.name", target = "name")
     JurisdictionUiConfig map(JurisdictionUiConfigEntity jurisdictionUiConfigEntity);
 
+    @Mapping(source = "caseType.reference", target = "caseTypeId")
+    ChallengeQuestion map(ChallengeQuestionTabEntity challengeQuestionEntity);
+
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
     // but this does not play nicely with Mockito v1
