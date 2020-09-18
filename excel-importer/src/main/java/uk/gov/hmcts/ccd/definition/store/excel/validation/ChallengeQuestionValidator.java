@@ -84,7 +84,8 @@ public class ChallengeQuestionValidator {
         challengeQuestionTabEntity.setAnswerField(answers);
     }
 
-    private void validateAnswerExpression(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity, InvalidImportException invalidImportException, String currentAnswerExpression) {
+    private void validateAnswerExpression(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity,
+                                          InvalidImportException invalidImportException, String currentAnswerExpression) {
 
         final String[] answersFields = currentAnswerExpression.split(Pattern.quote(ANSWER_FIELD_SEPARATOR));
         Arrays.asList(answersFields).stream().forEach(answersField -> {
@@ -153,8 +154,11 @@ public class ChallengeQuestionValidator {
 
         final String displayContext = definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER);
         challengeQuestionTabEntity.setDisplayContextParameter(displayContext);
-        final ValidationResult validationResult = challengeQuestionDisplayContextParameterValidator.validate(challengeQuestionTabEntity, Collections.EMPTY_LIST);
-        if ( !validationResult.isValid() ){
+        final ValidationResult validationResult = challengeQuestionDisplayContextParameterValidator.validate(
+            challengeQuestionTabEntity,
+            Collections.EMPTY_LIST
+        );
+        if (!validationResult.isValid()) {
             throw new ValidationException(validationResult);
         }
     }
