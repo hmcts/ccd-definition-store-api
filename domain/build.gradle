@@ -38,7 +38,9 @@ dependencies {
         exclude group: 'org.mapstruct', module: 'mapstruct'
     }
     compile "org.apache.commons:commons-lang3"
-    compile group: 'commons-validator', name: 'commons-validator', version: '1.6'
+    compile (group: 'commons-validator', name: 'commons-validator', version: '1.6') {
+        exclude group: 'commons-beanutils', module: 'commons-beanutils'
+    }
     compile "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
     compileOnly "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
     testCompile project(":app-insights").sourceSets.main.output

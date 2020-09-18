@@ -23,15 +23,22 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa") {
         exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
-    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
-    compile "commons-beanutils:commons-beanutils:1.9.3"
+    compile (group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    compile "commons-beanutils:commons-beanutils:1.9.4"
     compile "org.apache.commons:commons-lang3:3.7"
-    compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
-    compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    compile ("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}") {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    compile ("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}") {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    compile "com.google.guava:guava:28.1-jre"
     compile "javax.validation:validation-api:2.0.1.Final"
     compile "org.hibernate.validator:hibernate-validator:6.0.10.Final"
     compile "org.glassfish:javax.el:3.0.0"
-    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.3'
+    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.8.7'
     testCompile "org.assertj:assertj-core"
     testCompile project(":commons").sourceSets.main.output
     compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.3.2'

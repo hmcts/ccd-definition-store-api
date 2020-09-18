@@ -716,48 +716,75 @@
         <sql>
             ALTER TABLE display_group ADD CONSTRAINT enum_display_group_purpose CHECK (purpose in ('VIEW', 'EDIT'))
         </sql>
+        <sql>
+            CREATE SEQUENCE case_field_acl_id_seq;
+            CREATE SEQUENCE case_field_id_seq;
+            CREATE SEQUENCE complex_field_id_seq;
+            CREATE SEQUENCE display_group_case_field_id_seq;
+            CREATE SEQUENCE event_case_field_id_seq;
+            CREATE SEQUENCE event_id_seq;
+            CREATE SEQUENCE field_type_id_seq;
+            CREATE SEQUENCE field_type_list_item_id_seq;
+            CREATE SEQUENCE display_group_id_seq;
+            CREATE SEQUENCE webhook_id_seq;
+            CREATE SEQUENCE event_webhook_id_seq;
+            CREATE SEQUENCE case_field_user_role_id_seq;
+            CREATE SEQUENCE case_type_user_role_id_seq;
+            CREATE SEQUENCE event_user_role_id_seq;
+            CREATE SEQUENCE state_user_role_id_seq;
+            CREATE SEQUENCE case_type_acl_id_seq;
+            CREATE SEQUENCE event_acl_id_seq;
+            CREATE SEQUENCE state_acl_id_seq;
+        </sql>
     </changeSet>
 
     <!-- Populate base types -->
     <changeSet id="6" author="valentin.laurin@hmcts.net">
         <!-- Text -->
         <insert tableName="field_type">
+            <column name="id" value="1" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="Text" />
             <column name="version" value="1" />
         </insert>
         <!-- Number -->
         <insert tableName="field_type">
+            <column name="id" value="2" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="Number" />
             <column name="version" value="1" />
         </insert>
         <!-- Email -->
         <insert tableName="field_type">
+            <column name="id" value="3" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="Email" />
             <column name="version" value="1" />
         </insert>
         <!-- YesOrNo -->
         <insert tableName="field_type">
+            <column name="id" value="4" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="YesOrNo" />
             <column name="version" value="1" />
         </insert>
         <!-- Date -->
         <insert tableName="field_type">
+            <column name="id" value="5" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="Date" />
             <column name="version" value="1" />
         </insert>
         <!-- FixedList -->
         <insert tableName="field_type">
+            <column name="id" value="6" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="FixedList" />
             <column name="version" value="1" />
         </insert>
         <!-- Postcode -->
         <insert tableName="field_type">
+            <column name="id" value="7" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="Postcode" />
             <column name="version" value="1" />
@@ -765,12 +792,14 @@
         </insert>
         <!-- MoneyGBP -->
         <insert tableName="field_type">
+            <column name="id" value="8" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="MoneyGBP" />
             <column name="version" value="1" />
         </insert>
         <!-- PhoneUK -->
         <insert tableName="field_type">
+            <column name="id" value="9" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="PhoneUK" />
             <column name="version" value="1" />
@@ -778,24 +807,28 @@
         </insert>
         <!-- TextArea -->
         <insert tableName="field_type">
+            <column name="id" value="10" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="TextArea" />
             <column name="version" value="1" />
         </insert>
         <!-- Complex -->
         <insert tableName="field_type">
+            <column name="id" value="11" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="Complex" />
             <column name="version" value="1" />
         </insert>
         <!-- Collection -->
         <insert tableName="field_type">
+            <column name="id" value="12" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="Collection" />
             <column name="version" value="1" />
         </insert>
         <!-- MultiSelectList -->
         <insert tableName="field_type">
+            <column name="id" value="13" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="MultiSelectList" />
             <column name="version" value="1" />

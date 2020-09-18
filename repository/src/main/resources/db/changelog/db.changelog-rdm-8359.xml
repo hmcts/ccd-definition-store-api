@@ -6,6 +6,7 @@
 
         <!-- Organisation Policy -->
         <insert tableName="field_type">
+            <column name="id" value="33" />
             <column name="created_at" value="${now}"/>
             <column name="reference" value="OrganisationPolicy"/>
             <column name="version" value="1" />
@@ -19,6 +20,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="32" />
             <column name="reference" value="Organisation" />
             <column name="label" value="Organisation" />
             <column name="security_classification" value="PUBLIC" />
@@ -34,6 +36,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="33" />
             <column name="reference" value="OrgPolicyCaseAssignedRole" />
             <column name="label" value="Case Assigned Role" />
             <column name="security_classification" value="PUBLIC" />
@@ -49,6 +52,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="34" />
             <column name="reference" value="OrgPolicyReference" />
             <column name="label" value="Reference" />
             <column name="security_classification" value="PUBLIC" />

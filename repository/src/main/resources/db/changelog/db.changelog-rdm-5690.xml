@@ -5,6 +5,7 @@
     <changeSet id="rdm-5690" author="sateesh.mathangi@hmcts.net">
 
         <insert tableName="case_field">
+            <column name="id" value="7" />
             <column name="reference" value="[LAST_STATE_MODIFIED_DATE]"/>
             <column name="live_from" value="${now}"/>
             <column name="label" value="Last State Modified Date"/>

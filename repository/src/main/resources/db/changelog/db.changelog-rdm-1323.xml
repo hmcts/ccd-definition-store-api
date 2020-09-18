@@ -28,6 +28,7 @@
         </update>
 
         <insert tableName="field_type">
+            <column name="id" value="19" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="TextMax50" />
             <column name="version" value="1" />
@@ -39,6 +40,7 @@
         </insert>
 
         <insert tableName="field_type">
+            <column name="id" value="20" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="TextMax150" />
             <column name="version" value="1" />
@@ -50,6 +52,7 @@
         </insert>
 
         <insert tableName="field_type">
+            <column name="id" value="21" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="TextMax14" />
             <column name="version" value="1" />
@@ -61,6 +64,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="2" />
             <column name="reference" value="AddressLine1" />
             <column name="label" value="Building and Street" />
             <column name="security_classification" value="PUBLIC" />
@@ -72,6 +76,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="3" />
             <column name="reference" value="AddressLine2" />
             <column name="label" value="" />
             <column name="security_classification" value="PUBLIC" />
@@ -83,6 +88,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="4" />
             <column name="reference" value="AddressLine3" />
             <column name="label" value="" />
             <column name="security_classification" value="PUBLIC" />
@@ -94,6 +100,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="5" />
             <column name="reference" value="PostTown" />
             <column name="label" value="Town or City" />
             <column name="security_classification" value="PUBLIC" />
@@ -105,6 +112,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="6" />
             <column name="reference" value="County" />
             <column name="label" value="County/State (Optional)" />
             <column name="security_classification" value="PUBLIC" />
@@ -116,6 +124,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="7" />
             <column name="reference" value="Country" />
             <column name="label" value="Country" />
             <column name="security_classification" value="PUBLIC" />
@@ -127,6 +136,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="8" />
             <column name="reference" value="PostCode" />
             <column name="label" value="Postcode/Zipcode" />
             <column name="security_classification" value="PUBLIC" />
@@ -140,6 +150,7 @@
 
         <!-- Add new AddressGlobalUK definition -->
         <insert tableName="field_type">
+            <column name="id" value="22" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="AddressGlobalUK" />
             <column name="version" value="1" />
@@ -150,6 +161,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="9" />
             <column name="reference" value="AddressLine1" />
             <column name="label" value="Building and Street" />
             <column name="security_classification" value="PUBLIC" />
@@ -161,6 +173,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="10" />
             <column name="reference" value="AddressLine2" />
             <column name="label" value="" />
             <column name="security_classification" value="PUBLIC" />
@@ -172,6 +185,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="11" />
             <column name="reference" value="AddressLine3" />
             <column name="label" value="" />
             <column name="security_classification" value="PUBLIC" />
@@ -183,6 +197,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="12" />
             <column name="reference" value="PostTown" />
             <column name="label" value="Town or City" />
             <column name="security_classification" value="PUBLIC" />
@@ -194,6 +209,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="13" />
             <column name="reference" value="County" />
             <column name="label" value="County/State (Optional)" />
             <column name="security_classification" value="PUBLIC" />
@@ -205,6 +221,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="14" />
             <column name="reference" value="Country" />
             <column name="label" value="Country" />
             <column name="security_classification" value="PUBLIC" />
@@ -216,6 +233,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="15" />
             <column name="reference" value="PostCode" />
             <column name="label" value="Postcode/Zipcode" />
             <column name="security_classification" value="PUBLIC" />
@@ -228,6 +246,7 @@
 
         <!-- Add new AddressUK definition -->
         <insert tableName="field_type">
+            <column name="id" value="23" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="AddressUK" />
             <column name="version" value="1" />
@@ -238,6 +257,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="16" />
             <column name="reference" value="AddressLine1" />
             <column name="label" value="Building and Street" />
             <column name="security_classification" value="PUBLIC" />
@@ -249,6 +269,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="17" />
             <column name="reference" value="AddressLine2" />
             <column name="label" value="" />
             <column name="security_classification" value="PUBLIC" />
@@ -260,6 +281,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="18" />
             <column name="reference" value="AddressLine3" />
             <column name="label" value="" />
             <column name="security_classification" value="PUBLIC" />
@@ -271,6 +293,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="19" />
             <column name="reference" value="PostTown" />
             <column name="label" value="Town or City" />
             <column name="security_classification" value="PUBLIC" />
@@ -282,6 +305,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="20" />
             <column name="reference" value="County" />
             <column name="label" value="County (Optional)" />
             <column name="security_classification" value="PUBLIC" />
@@ -293,6 +317,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="21" />
             <column name="reference" value="PostCode" />
             <column name="label" value="Postcode/Zipcode" />
             <column name="security_classification" value="PUBLIC" />
@@ -304,6 +329,7 @@
         </insert>
 
         <insert tableName="complex_field">
+            <column name="id" value="22" />
             <column name="reference" value="Country" />
             <column name="label" value="Country" />
             <column name="security_classification" value="PUBLIC" />

@@ -16,6 +16,13 @@
             ALTER SEQUENCE display_group_id_seq increment by 50;
             ALTER SEQUENCE webhook_id_seq increment by 50;
             ALTER SEQUENCE event_webhook_id_seq increment by 50;
+            ALTER SEQUENCE case_field_user_role_id_seq increment by 50;
+            ALTER SEQUENCE case_type_user_role_id_seq increment by 50;
+            ALTER SEQUENCE event_user_role_id_seq increment by 50;
+            ALTER SEQUENCE state_user_role_id_seq increment by 50;
+            ALTER SEQUENCE case_type_acl_id_seq increment by 50;
+            ALTER SEQUENCE event_acl_id_seq increment by 50;
+            ALTER SEQUENCE state_acl_id_seq increment by 50;
         </sql>
     </changeSet>
 </databaseChangeLog>

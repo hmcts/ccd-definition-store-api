@@ -1,7 +1,9 @@
 apply plugin: 'com.github.spacialcircumstances.gradle-cucumber-reporting'
 //apply plugin: 'info.solidsoft.pitest'
 dependencies {
-    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
+    compile (group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
     compile group: 'org.awaitility', name: 'awaitility', version: '3.1.6'
 }
 

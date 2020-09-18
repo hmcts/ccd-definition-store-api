@@ -1,7 +1,7 @@
 apply plugin: 'info.solidsoft.pitest'
 jar {
     enabled = true
-    baseName = 'definition-store-elastic-search-support'
+    baseName = 'definition-store-es-support'
 }
 
 bootJar {

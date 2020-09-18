@@ -26,12 +26,12 @@ public class UserRoleSetup {
         jdbcTemplate.update("update workbasket_input_case_field set role_id = null where role_id is not null");
         jdbcTemplate.update("update workbasket_case_field set role_id = null where role_id is not null");
         jdbcTemplate.update("delete from role");
-        jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) "
-            + "values ('CaseWorker1', 'CaseWorker1', 'PUBLIC', 'USERROLE')");
-        jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) "
-            + "values ('CaseWorker2', 'CaseWorker2', 'PRIVATE', 'USERROLE')");
-        jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) "
-            + "values ('CaseWorker3', 'CaseWorker3', 'RESTRICTED', 'USERROLE')");
+        jdbcTemplate.update("insert into role(id, reference, name, security_classification, dtype) "
+            + "values (1, 'CaseWorker1', 'CaseWorker1', 'PUBLIC', 'USERROLE')");
+        jdbcTemplate.update("insert into role(id, reference, name, security_classification, dtype) "
+            + "values (2, 'CaseWorker2', 'CaseWorker2', 'PRIVATE', 'USERROLE')");
+        jdbcTemplate.update("insert into role(id, reference, name, security_classification, dtype) "
+            + "values (3, 'CaseWorker3', 'CaseWorker3', 'RESTRICTED', 'USERROLE')");
 
         final List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from role");
         return list

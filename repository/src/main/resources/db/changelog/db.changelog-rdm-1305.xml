@@ -7,6 +7,7 @@
     <changeSet id="rdm-1305" author="simon@sics-ltd.co.uk">
         <!-- Add new AddressGlobal definition -->
         <insert tableName="field_type">
+            <column name="id" value="18" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="AddressGlobal" />
             <column name="version" value="1" />

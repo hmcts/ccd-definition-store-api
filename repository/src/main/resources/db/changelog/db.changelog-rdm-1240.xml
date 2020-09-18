@@ -19,6 +19,7 @@
 
     <changeSet id="rdm-1240-3" author="giri.benadikar@hmcts.net">
         <insert tableName="case_field">
+            <column name="id" value="1" />
             <column name="reference" value="jurisdiction"/>
             <column name="live_from" value="${now}"/>
             <column name="label" value="Jurisdiction"/>
@@ -30,6 +31,7 @@
         </insert>
 
         <insert tableName="case_field">
+            <column name="id" value="2" />
             <column name="reference" value="case_type"/>
             <column name="live_from" value="${now}"/>
             <column name="label" value="Case Type"/>
@@ -39,8 +41,9 @@
                     valueComputed="(select id from field_type where reference = 'Text' and jurisdiction_id is null order by version limit 1)"/>
             <column name="data_field_type" value="METADATA"/>
         </insert>
-        
+
         <insert tableName="case_field">
+            <column name="id" value="3" />
             <column name="reference" value="security_classification"/>
             <column name="live_from" value="${now}"/>
             <column name="label" value="Security Classification"/>
@@ -52,6 +55,7 @@
         </insert>
 
         <insert tableName="case_field">
+            <column name="id" value="4" />
             <column name="reference" value="case_reference"/>
             <column name="live_from" value="${now}"/>
             <column name="label" value="Case Reference"/>
@@ -63,6 +67,7 @@
         </insert>
 
         <insert tableName="case_field">
+            <column name="id" value="5" />
             <column name="reference" value="created_date"/>
             <column name="live_from" value="${now}"/>
             <column name="label" value="Created Date"/>
@@ -74,6 +79,7 @@
         </insert>
 
         <insert tableName="case_field">
+            <column name="id" value="6" />
             <column name="reference" value="last_modified_date"/>
             <column name="live_from" value="${now}"/>
             <column name="label" value="Last Modified Date"/>
