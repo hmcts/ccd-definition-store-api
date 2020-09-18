@@ -19,7 +19,6 @@ public class ChallengeQuestionDisplayContextParameterValidator extends AbstractD
     private static final List<String> ALLOWED_FIELD_TYPES =
         Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
     private static final String CHALLENGE_QUESTION_TAB = "ChallengeQuestion";
-    private static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
 
     @Autowired
     public ChallengeQuestionDisplayContextParameterValidator(final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
