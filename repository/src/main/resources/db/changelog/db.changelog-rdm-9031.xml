@@ -27,7 +27,7 @@
             </column>
 
             <column name="display_context_parameter"  type="varchar(1000)" >
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="challenge_question_id"  type="varchar(70)" >

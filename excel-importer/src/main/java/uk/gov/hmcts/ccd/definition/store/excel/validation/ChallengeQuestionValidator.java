@@ -2,8 +2,10 @@ package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ChallengeQuestionDisplayContextParameterValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
@@ -12,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -19,7 +22,6 @@ import java.util.regex.Pattern;
 @Component
 public class ChallengeQuestionValidator {
 
-    private List<String> displayContextValues = Arrays.asList(new String[]{DisplayContextParameterType.DATETIMEDISPLAY.toString(), DisplayContextParameterType.DATETIMEENTRY.toString()});
     private ParseContext parseContext;
     private static final String ANSWER_MAIN_SEPARATOR = ",";
     private static final String ANSWER_FIELD_SEPARATOR = "|";
@@ -28,10 +30,14 @@ public class ChallengeQuestionValidator {
     private static final String ANSWER_FIELD_MATCHER = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
     private static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
     private final ChallengeQuestionTabService challengeQuestionTabService;
+    private ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
 
     @Autowired
-    public ChallengeQuestionValidator(ChallengeQuestionTabService challengeQuestionTabService) {
+    public ChallengeQuestionValidator(ChallengeQuestionTabService challengeQuestionTabService,
+                                      ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator) {
+
         this.challengeQuestionTabService = challengeQuestionTabService;
+        this.challengeQuestionDisplayContextParameterValidator = challengeQuestionDisplayContextParameterValidator;
     }
 
     public ChallengeQuestionTabEntity validate(ParseContext parseContext, DefinitionDataItem definitionDataItem) {
@@ -46,9 +52,9 @@ public class ChallengeQuestionValidator {
         challengeQuestionTabEntity.setAnswerFieldType(getFieldTypeEntity(definitionDataItem));
         validateDisplayOrder(definitionDataItem, challengeQuestionTabEntity);
         validateQuestionText(definitionDataItem, challengeQuestionTabEntity);
-        validateDisplayContext(definitionDataItem, challengeQuestionTabEntity);
         validateID(definitionDataItem, challengeQuestionTabEntity);
         validateAnswer(definitionDataItem, challengeQuestionTabEntity);
+        validateDisplayContext(definitionDataItem, challengeQuestionTabEntity);
         return challengeQuestionTabEntity;
     }
 
@@ -78,7 +84,8 @@ public class ChallengeQuestionValidator {
         challengeQuestionTabEntity.setAnswerField(answers);
     }
 
-    private void validateAnswerExpression(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity, InvalidImportException invalidImportException, String currentAnswerExpression) {
+    private void validateAnswerExpression(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity,
+                                          InvalidImportException invalidImportException, String currentAnswerExpression) {
 
         final String[] answersFields = currentAnswerExpression.split(Pattern.quote(ANSWER_FIELD_SEPARATOR));
         Arrays.asList(answersFields).stream().forEach(answersField -> {
@@ -144,18 +151,15 @@ public class ChallengeQuestionValidator {
     }
 
     private void validateDisplayContext(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
-        final String displayContext = definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER);
-        final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: " + displayContext +
-                " is not a valid DisplayContextParameter value. OR Date and Time are the only valid DisplayContextParameter values.");
-        final Optional<DisplayContextParameterType> displayContextParameterType = DisplayContextParameterType.getParameterTypeFor(displayContext);
 
-        if (!displayContextParameterType.isPresent()) {
-            throw invalidImportException;
-        }
-        if (displayContext != null && displayContextValues.contains(displayContextParameterType.get().name())) {
-            challengeQuestionTabEntity.setDisplayContextParameter(displayContext);
-        } else {
-            throw invalidImportException;
+        final String displayContext = definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER);
+        challengeQuestionTabEntity.setDisplayContextParameter(displayContext);
+        final ValidationResult validationResult = challengeQuestionDisplayContextParameterValidator.validate(
+            challengeQuestionTabEntity,
+            Collections.EMPTY_LIST
+        );
+        if (!validationResult.isValid()) {
+            throw new ValidationException(validationResult);
         }
     }
 
