@@ -9,7 +9,7 @@ java:
       secrets:
         - ccd-definition-s2s-secret
   environment:
-    DEFINITION_STORE_DB_HOST: ccd-data-store-api-pr-1125-es-master
+    DEFINITION_STORE_DB_HOST: "{{ .Release.Name }}-postgresql"
     DEFINITION_STORE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
     DEFINITION_STORE_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
     DEFINITION_STORE_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
@@ -21,7 +21,7 @@ java:
 
     # enable whenever required and provide host url to match with corresponding data-store-api
     ELASTIC_SEARCH_ENABLED: true
-    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-601-es-master
+    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-1125-es-master
 
     USER_PROFILE_HOST: http://ccd-user-profile-api-pr-224.service.core-compute-preview.internal
 
