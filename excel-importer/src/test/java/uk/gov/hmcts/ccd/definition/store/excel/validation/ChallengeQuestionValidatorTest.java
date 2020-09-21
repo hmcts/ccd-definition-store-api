@@ -99,8 +99,8 @@ public class ChallengeQuestionValidatorTest {
             buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${XXXX}:[CLAIMANT] is not a valid Answer," +
-                " Please check the expression format and the roles."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${OrganisationField}:[CCCCCC] " +
+                "is not a valid Answer value. Please check the expression format and the roles."));
             throw exception;
 
         }
@@ -113,7 +113,7 @@ public class ChallengeQuestionValidatorTest {
             buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${OrganisationField}:[CCCCCC] is not a valid Answer value. " +
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${XXXX}:[CLAIMANT] is not a valid Answer, " +
                 "Please check the expression format and the roles."));
             throw exception;
 
