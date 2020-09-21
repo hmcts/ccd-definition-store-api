@@ -162,9 +162,9 @@ public class DisplayApiController {
     }
 
     @GetMapping(path = "/display/challenge-questions/case-type/{ctid}/question-groups/{id}")
-    @ApiOperation(value = "TODO", response = ChallengeQuestionsResult.class)
+    @ApiOperation(value = "Get challenge questions", response = ChallengeQuestionsResult.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "TODO")
+        @ApiResponse(code = 200, message = "List of challenge questions for requested criteria")
     })
     public ChallengeQuestionsResult getChallengeQuestions(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("ctid") String caseTypeId,
