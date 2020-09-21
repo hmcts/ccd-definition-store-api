@@ -9,7 +9,7 @@ java:
       secrets:
         - ccd-definition-s2s-secret
   environment:
-    DEFINITION_STORE_DB_HOST: "{{ .Release.Name }}-postgresql"
+    DEFINITION_STORE_DB_HOST: ccd-data-store-api-pr-1125-es-master
     DEFINITION_STORE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
     DEFINITION_STORE_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
     DEFINITION_STORE_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
