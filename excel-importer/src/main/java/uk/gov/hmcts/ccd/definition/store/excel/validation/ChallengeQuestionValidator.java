@@ -11,7 +11,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -121,20 +125,35 @@ public class ChallengeQuestionValidator {
                 .replace("{", "")
                 .replace("}", "");
 
-        final String[] splittedDotNotationExpression = dotNotationExpression.split(Pattern.quote(ANSWER_FIELD_DOT_SEPARATOR));
+        if (!dotNotationExpression.contains(ANSWER_FIELD_DOT_SEPARATOR)) {
+            validateSingleExpression(dotNotationExpression, invalidImportException, currentCaseType);
+        } else {
+            final String[] splittedDotNotationExpression = dotNotationExpression.split(Pattern.quote(ANSWER_FIELD_DOT_SEPARATOR));
+            try {
+                final FieldTypeEntity fieldType = parseContext.getCaseFieldType(currentCaseType, splittedDotNotationExpression[0]);
+                final String[] attributesDotNotation = Arrays.copyOfRange(splittedDotNotationExpression, 1, splittedDotNotationExpression.length);
+                Arrays.asList(attributesDotNotation).stream().forEach(attribute -> {
+                    // Remove Role is needed.
+                    if (attribute.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
+                        attribute = attribute.substring(0, attribute.indexOf(":"));
+                    }
+                    validateAttributes(attribute, fieldType.getComplexFields());
+                });
+            } catch (SpreadsheetParsingException exception) {
+                throw invalidImportException;
+            }
+        }
+    }
 
-        try {
-            final FieldTypeEntity fieldType = parseContext.getCaseFieldType(currentCaseType, splittedDotNotationExpression[0]);
-            final String[] attributesDotNotation = Arrays.copyOfRange(splittedDotNotationExpression, 1, splittedDotNotationExpression.length);
-            Arrays.asList(attributesDotNotation).stream().forEach(attribute -> {
-                // Remove Role is needed.
-                if (attribute.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
-                    attribute = attribute.substring(0, attribute.indexOf(":"));
-                }
-                validateAttributes(attribute, fieldType.getComplexFields());
-            });
-        } catch (SpreadsheetParsingException exception) {
-            throw invalidImportException;
+    private void validateSingleExpression(String singleExpression, InvalidImportException invalidImportException, String currentCaseType) {
+
+        if (singleExpression.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
+            String attribute = singleExpression.substring(0, singleExpression.indexOf(":"));
+            final FieldTypeEntity fieldType = parseContext.getCaseFieldType(currentCaseType, attribute);
+            if (fieldType == null) {
+                throw invalidImportException;
+            }
+
         }
     }
 

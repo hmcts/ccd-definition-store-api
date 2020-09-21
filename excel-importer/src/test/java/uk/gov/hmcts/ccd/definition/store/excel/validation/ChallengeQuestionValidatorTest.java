@@ -12,11 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,11 +77,47 @@ public class ChallengeQuestionValidatorTest {
     }
 
     @Test
+    public void testAnswerFormatForMinimunExpression() {
+        String answer = "${OrganisationField}:[CLAIMANT]";
+        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_2, QUESTION_ID, answer,"questionId");
+        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        assertValues(answer, challengeQuestionTabEntity, DISPLAY_CONTEXT_PARAMETER_2);
+    }
+
+    @Test
     public void testAnswerFormatForSmallestExpression() {
         String answer = "${OrganisationField.OrganisationID}:[CLAIMANT]";
         buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId");
         ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator.validate(parseContext, definitionDataItem);
         assertValues(answer, challengeQuestionTabEntity, DISPLAY_CONTEXT_PARAMETER_1);
+    }
+
+    @Test(expected = InvalidImportException.class)
+    public void failAnswerFormatForSmallestExpression() {
+        try {
+            String answer = "${OrganisationField}:[CCCCCC]";
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId");
+            challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        } catch (Exception exception) {
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${OrganisationField}:[CCCCCC] " +
+                "is not a valid Answer value. Please check the expression format and the roles."));
+            throw exception;
+
+        }
+    }
+
+    @Test(expected = InvalidImportException.class)
+    public void failAnswerFormatForSmallestForRoleExpression() {
+        try {
+            String answer = "${XXXX}:[CLAIMANT]";
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId");
+            challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        } catch (Exception exception) {
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${XXXX}:[CLAIMANT] is not a valid Answer, " +
+                "Please check the expression format and the roles."));
+            throw exception;
+
+        }
     }
 
     private void assertValues(String answer, ChallengeQuestionTabEntity challengeQuestionTabEntity, String displayContext) {
