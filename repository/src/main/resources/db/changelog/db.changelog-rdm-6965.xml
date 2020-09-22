@@ -4,7 +4,7 @@
 
     <changeSet id="rdm-6965" author="daniel.lysiak1@hmcts.net">
         <createTable tableName="jurisdiction_ui_config">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="shuttered" type="boolean">

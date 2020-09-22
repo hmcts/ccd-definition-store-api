@@ -5,7 +5,7 @@
     <changeSet id="rdm-1345" author="fatih.ozceylan@hmcts.net">
 
         <createTable tableName="workbasket_input_case_field">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date">

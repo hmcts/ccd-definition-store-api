@@ -7,7 +7,7 @@
     <changeSet id="5" author="ccd@hmcts.net">
 
         <createTable tableName="jurisdiction">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="created_at"  type="datetime" >
@@ -42,7 +42,7 @@
                              tableName="jurisdiction"/>
 
         <createTable tableName="field_type">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="created_at"  type="datetime" >
@@ -101,7 +101,7 @@
                              tableName="field_type"/>
 
         <createTable tableName="complex_field">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(40)" >
@@ -202,7 +202,7 @@
                                  referencedTableName="webhook"/>
 
         <createTable tableName="case_type">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="created_at"  type="datetime" >
@@ -255,7 +255,7 @@
                              tableName="case_type"/>
 
         <createTable tableName="case_field">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(40)" >
@@ -306,7 +306,7 @@
                              tableName="case_field"/>
 
         <createTable tableName="state">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(100)" >
@@ -490,7 +490,7 @@
                              tableName="event_case_field"/>
 
         <createTable tableName="workbasket_case_field">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >
@@ -534,7 +534,7 @@
                              tableName="workbasket_case_field"/>
 
         <createTable tableName="search_input_case_field">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >
@@ -715,23 +715,6 @@
         </sql>
         <sql>
             ALTER TABLE display_group ADD CONSTRAINT enum_display_group_purpose CHECK (purpose in ('VIEW', 'EDIT'))
-        </sql>
-        <sql>
-            CREATE SEQUENCE case_field_acl_id_seq;
-            CREATE SEQUENCE display_group_case_field_id_seq;
-            CREATE SEQUENCE event_case_field_id_seq;
-            CREATE SEQUENCE event_id_seq;
-            CREATE SEQUENCE field_type_list_item_id_seq;
-            CREATE SEQUENCE display_group_id_seq;
-            CREATE SEQUENCE webhook_id_seq;
-            CREATE SEQUENCE event_webhook_id_seq;
-            CREATE SEQUENCE case_field_user_role_id_seq increment by 50;
-            CREATE SEQUENCE case_type_user_role_id_seq increment by 50;
-            CREATE SEQUENCE event_user_role_id_seq increment by 50;
-            CREATE SEQUENCE state_user_role_id_seq increment by 50;
-            CREATE SEQUENCE case_type_acl_id_seq increment by 50;
-            CREATE SEQUENCE event_acl_id_seq increment by 50;
-            CREATE SEQUENCE state_acl_id_seq increment by 50;
         </sql>
     </changeSet>
 

@@ -10,7 +10,7 @@
         </sql>
 
         <createTable tableName="definition_designer">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="jurisdiction_id" type="integer">

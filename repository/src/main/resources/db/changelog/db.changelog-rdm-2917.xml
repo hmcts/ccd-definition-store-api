@@ -7,7 +7,7 @@
         <!-- START - role table -->
         <!-- create the new role table -->
         <createTable tableName="role">
-            <column name="id" type="serial" autoIncrement="true">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(255)" >
