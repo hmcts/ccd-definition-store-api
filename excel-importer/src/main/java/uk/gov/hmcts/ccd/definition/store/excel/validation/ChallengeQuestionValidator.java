@@ -32,7 +32,7 @@ public class ChallengeQuestionValidator {
     private static final String ANSWER_FIELD_DOT_SEPARATOR = ".";
     private static final String ANSWER_FIELD_ROLE_SEPARATOR = ":";
     private static final String ANSWER_FIELD_MATCHER = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
-    private static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
+    public static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
     private final ChallengeQuestionTabService challengeQuestionTabService;
     private ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
 
