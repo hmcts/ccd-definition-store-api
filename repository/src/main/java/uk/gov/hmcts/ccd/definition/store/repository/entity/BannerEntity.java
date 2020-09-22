@@ -100,7 +100,7 @@ public class BannerEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "JurisdictionEntity{"
+        return "BannerEntity{"
             + "id=" + id
             + ", createdAt=" + createdAt
             + ", bannerEnabled='" + bannerEnabled + '\''

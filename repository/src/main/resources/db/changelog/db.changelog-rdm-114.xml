@@ -5,7 +5,6 @@
     <changeSet id="RDM-114" author="Adrian Cho">
 
         <insert tableName="field_type">
-            <column name="id" value="16" />
             <column name="created_at" value="${now}"/>
             <column name="reference" value="CaseLink"/>
             <column name="version" value="1" />
@@ -19,7 +18,6 @@
         </insert>
 
         <insert tableName="field_type">
-            <column name="id" value="17" />
             <column name="created_at" value="${now}"/>
             <column name="reference" value="TextCaseReference"/>
             <column name="version" value="1" />
@@ -34,7 +32,6 @@
         </insert>
 
         <insert tableName="complex_field">
-            <column name="id" value="1" />
             <column name="reference" value="CaseReference" />
             <column name="label" value="Case Reference" />
             <column name="security_classification" value="PUBLIC" />

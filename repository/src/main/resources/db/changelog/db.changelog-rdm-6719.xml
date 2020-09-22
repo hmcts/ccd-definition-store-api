@@ -5,7 +5,7 @@
     <changeSet id="rdm-6719" author="kiran.yenigala@hmcts.net">
 
         <createTable tableName="banner">
-            <column name="id" type="serial">
+            <column name="id" type="serial" autoIncrement="true">
                 <constraints nullable="false"/>
             </column>
             <column name="banner_enabled" type="boolean">

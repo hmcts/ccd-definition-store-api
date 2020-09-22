@@ -37,7 +37,7 @@ dependencies {
     compile (project(':repository')) {
         exclude group: 'org.mapstruct', module: 'mapstruct'
     }
-    compile "org.apache.commons:commons-lang3"
+    compile "org.apache.commons:commons-lang3:3.11"
     compile (group: 'commons-validator', name: 'commons-validator', version: '1.6') {
         exclude group: 'commons-beanutils', module: 'commons-beanutils'
     }

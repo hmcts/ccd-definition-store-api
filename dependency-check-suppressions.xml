@@ -41,6 +41,35 @@
 
 	<suppress>
 		<notes><![CDATA[
+			Jars: accessors-smart-1.2.jar
+				  jjwt-0.9.1.jar
+				  json-smart-2.3.jar
+				  spring-boot-starter-json-2.2.5.RELEASE.jar
+			Solution: No fix available
+		]]></notes>
+		<cve>CVE-2020-7712</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
+			Jars: accessors-smart-1.2.jar
+				  jjwt-0.9.1.jar
+			Solution: No fix available
+		]]></notes>
+		<cve>CVE-2020-10663</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
+			Jars: oauth2-oidc-sdk-7.5.jar
+			Solution: False alarm
+		]]></notes>
+		<cve>CVE-2007-1651</cve>
+		<cve>CVE-2007-1652</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
 			Jar: maven/com.github.ben-manes.caffeine/caffeine@2.8.5
 			Details: Allows an attacker to bypass SAML authentication. Allows unauthenticated remote
 					 attackers to execute arbitrary code. This occurs because the enterprise session secret

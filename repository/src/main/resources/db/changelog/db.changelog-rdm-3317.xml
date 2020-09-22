@@ -5,7 +5,7 @@
     <changeSet id="rdm-3317" author="giri.benadikar@hmcts.net">
 
         <createTable tableName="search_alias_field">
-            <column name="id" type="serial">
+            <column name="id" type="serial" autoIncrement="true">
                 <constraints nullable="false"/>
             </column>
             <column name="reference" type="varchar(40)">

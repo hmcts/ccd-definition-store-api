@@ -8,7 +8,6 @@
 
         <!-- Add new DynamicList definition -->
         <insert tableName="field_type">
-            <column name="id" value="31" />
             <column name="created_at" value="${now}" />
             <column name="reference" value="DynamicList" />
             <column name="version" value="1" />

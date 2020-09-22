@@ -11,7 +11,7 @@ buildscript {
 
 plugins {
     id 'application'
-    id 'org.owasp.dependencycheck' version '5.1.0'
+    id 'org.owasp.dependencycheck' version '6.0.1'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'se.patrikerdes.use-latest-versions' version '0.2.7'
     id 'com.github.ben-manes.versions' version '0.20.0'
@@ -159,7 +159,7 @@ allprojects {
 
             eachDependency { details ->
                 if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
-                    details.useVersion '3.10.2'
+                    details.useVersion '4.0.0'
                 }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'

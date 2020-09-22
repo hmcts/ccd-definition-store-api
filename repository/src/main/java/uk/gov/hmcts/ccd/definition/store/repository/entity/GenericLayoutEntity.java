@@ -14,7 +14,7 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generic_layout_id_seq")
     private Integer id;
 
     @Column(name = "live_from")

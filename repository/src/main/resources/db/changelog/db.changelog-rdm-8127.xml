@@ -6,7 +6,6 @@
 
         <!-- Organisation -->
         <insert tableName="field_type">
-            <column name="id" value="32" />
             <column name="created_at" value="${now}"/>
             <column name="reference" value="Organisation"/>
             <column name="version" value="1" />
@@ -20,7 +19,6 @@
         </insert>
 
         <insert tableName="complex_field">
-            <column name="id" value="30" />
             <column name="reference" value="OrganisationID" />
             <column name="label" value="Organisation ID" />
             <column name="security_classification" value="PUBLIC" />
@@ -36,7 +34,6 @@
         </insert>
 
         <insert tableName="complex_field">
-            <column name="id" value="31" />
             <column name="reference" value="OrganisationName" />
             <column name="label" value="Name" />
             <column name="security_classification" value="PUBLIC" />
