@@ -36,6 +36,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 
 
 // Vars needed for AKS functional and smoke tests
+env.TEST_URL = "http://ccd-definition-store-api-aat.service.core-compute-aat.internal"
 env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
 env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
 env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
