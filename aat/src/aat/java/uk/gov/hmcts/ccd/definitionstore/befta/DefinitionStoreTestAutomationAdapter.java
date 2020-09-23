@@ -4,6 +4,13 @@ import io.restassured.RestAssured;
 import uk.gov.hmcts.befta.BeftaMain;
 import uk.gov.hmcts.befta.DefaultTestAutomationAdapter;
 import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
+import uk.gov.hmcts.befta.exception.FunctionalTestException;
+import uk.gov.hmcts.befta.player.BackEndFunctionalTestScenarioContext;
+import uk.gov.hmcts.befta.util.ReflectionUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationAdapter {
 
@@ -13,10 +20,19 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
             BeftaMain.getConfig().getTestUrl());
 
     @Override
+    public Object calculateCustomValue(BackEndFunctionalTestScenarioContext scenarioContext, Object key) {
+        if (key.toString().startsWith("no_dynamic_injection_")) {
+            return key.toString().replace("no_dynamic_injection_","");
+        }
+        return super.calculateCustomValue(scenarioContext, key);
+    }
+
+
+    @Override
     public void doLoadTestData() {
         RestAssured.useRelaxedHTTPSValidation();
-        loader.addCcdRoles();
-        loader.importDefinitions();
+//        loader.addCcdRoles();
+//        loader.importDefinitions();
     }
 
 }
