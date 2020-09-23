@@ -1,15 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import org.junit.Before;
-import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import org.junit.*;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.*;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.*;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -45,8 +41,9 @@ public class DisplayContextParameterValidatorTest {
         try {
             validator.validate(definitionSheets);
         } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(),
-                is("Display context parameter #TABLE() has been incorrectly configured or is invalid for field fieldId on tab ComplexTypes"));
+            assertThat(ex.getMessage(), is(
+                "Display context parameter #TABLE() has been incorrectly configured or "
+                    + "is invalid for field fieldId on tab ComplexTypes"));
             throw ex;
         }
     }
@@ -96,8 +93,9 @@ public class DisplayContextParameterValidatorTest {
         try {
             validator.validate(definitionSheets);
         } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(),
-                is("Display context parameter #LIST() has been incorrectly configured or is invalid for field fieldId on tab ComplexTypes"));
+            assertThat(ex.getMessage(), is(
+                "Display context parameter #LIST() has been incorrectly configured "
+                    + "or is invalid for field fieldId on tab ComplexTypes"));
             throw ex;
         }
     }

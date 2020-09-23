@@ -31,7 +31,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
                 String property = field.getReference();
                 jw.name(property);
                 TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
-                String mapping = typeMapper.dataMapping(field);
+                String mapping = typeMapper.doDataMapping(field);
                 jw.jsonValue(mapping);
                 log.info("property: {}, mapping: {}", property, mapping);
             }
@@ -60,7 +60,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
                 String property = field.getReference();
                 jw.name(property);
                 TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
-                String mapping = typeMapper.dataClassificationMapping(field);
+                String mapping = typeMapper.doDataClassificationMapping(field);
                 jw.jsonValue(mapping);
                 log.info("property: {}, mapping: {}", property, mapping);
             }

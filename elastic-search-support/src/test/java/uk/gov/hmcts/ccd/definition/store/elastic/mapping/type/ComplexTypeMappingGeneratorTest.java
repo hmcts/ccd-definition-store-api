@@ -1,5 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,14 +23,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
-
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
@@ -34,9 +35,9 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
         super.setup();
 
         when(config.getSecurityClassificationMapping()).thenReturn("securityClassificationMapping");
-        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping", "dataClassificationMapping"));
+        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
         addMappingGenerator(new StubTypeMappingGenerator("Complex", "dataMappingForComplexType",
-            "dataClassificationMappingForComplexType"));
+                "dataClassificationMappingForComplexType"));
         complexTypeMapper.inject(stubTypeMappersManager);
     }
 
@@ -44,20 +45,52 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     public void shouldGenerateMappingForAllComplexTypeFields() {
         CaseFieldEntity complexField = newComplexField();
 
-        String result = complexTypeMapper.dataMapping(complexField);
+        String result = complexTypeMapper.doDataMapping(complexField);
 
         assertThat(result, equalToJSONInFile(
-            readFileFromClasspath("json/type_mapping_complex_type.json")));
+                readFileFromClasspath("json/type_mapping_complex_type.json")));
     }
 
     @Test
     public void shouldGenerateClassificationMappingForAllComplexTypeFields() {
         CaseFieldEntity complexField = newComplexField();
 
-        String result = complexTypeMapper.dataClassificationMapping(complexField);
+        String result = complexTypeMapper.doDataClassificationMapping(complexField);
 
         assertThat(result, equalToJSONInFile(
-            readFileFromClasspath("json/type_mapping_classification_complex_type.json")));
+                readFileFromClasspath("json/type_mapping_classification_complex_type.json")));
+    }
+
+    @Test
+    public void shouldGenerateDataMappingForNonSearchableComplexType() {
+        CaseFieldEntity complexField = newComplexField();
+        complexField.setSearchable(false);
+
+        String result = complexTypeMapper.doDataMapping(complexField);
+
+        assertThat(result, is(disabledMapping));
+    }
+
+    @Test
+    public void shouldGenerateDataMappingForComplexTypeWithNonSearchableNestedField() {
+        CaseFieldEntity complexField = newComplexField();
+        complexField.getFieldType().getComplexFields().get(1).setSearchable(false);
+
+        String result = complexTypeMapper.doDataMapping(complexField);
+
+        assertThat(result, equalToJSONInFile(
+            readFileFromClasspath("json/type_mapping_complex_type_disabled.json")));
+    }
+
+
+    @Test
+    public void shouldGenerateDataClassificationMappingForNonSearchableComplexType() {
+        CaseFieldEntity complexField = newComplexField();
+        complexField.setSearchable(false);
+
+        String result = complexTypeMapper.doDataClassificationMapping(complexField);
+
+        assertThat(result, is(disabledMapping));
     }
 
     private CaseFieldEntity newComplexField() {

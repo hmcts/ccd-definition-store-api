@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @Table(name = "field_type_list_item")
 @Entity
@@ -18,7 +18,7 @@ public class FieldTypeListItemEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE, generator = "field_type_list_item_id_seq")
     private Integer id;
 
     @Column(name = "value", nullable = false)

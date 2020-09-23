@@ -23,8 +23,10 @@ public abstract class AbstractMapperTest {
     protected Map<String, String> elasticMappings = newHashMap();
     protected Map<String, String> predefinedMappings = new HashMap<>();
     protected List<String> ignoredTypes = newArrayList("Label");
+    protected String disabledMapping = "{\"enabled\": false}";
 
     protected void setup() {
+        elasticMappings.put("disabled", disabledMapping);
         when(config.getTypeMappings()).thenReturn(typeMappings);
         when(config.getElasticMappings()).thenReturn(elasticMappings);
         when(config.getCasePredefinedMappings()).thenReturn(predefinedMappings);

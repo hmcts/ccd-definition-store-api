@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +7,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
 public class CaseFieldEntityUtil {
@@ -26,26 +26,20 @@ public class CaseFieldEntityUtil {
     }
 
     public List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
-        return removeElementsThoseAreNotTreeLeafs(buildAllDottedComplexFieldPossibilities(caseFieldEntities));
+        return buildAllDottedComplexFieldPossibilities(caseFieldEntities, true);
     }
 
     public List<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(List<? extends FieldEntity> caseFieldEntities) {
-        return removeElementsThatAreCaseFields(buildAllDottedComplexFieldPossibilities(caseFieldEntities), caseFieldEntities);
+        return removeElementsThatAreCaseFields(buildAllDottedComplexFieldPossibilities(caseFieldEntities, false), caseFieldEntities);
     }
 
-    private List<String> buildAllDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
+    private List<String> buildAllDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities, boolean leavesOnly) {
         List<String> allSubTypePossibilities = new ArrayList<>();
         List<? extends FieldEntity> fieldEntities = caseFieldEntities.stream()
             .filter(Objects::nonNull)
             .collect(Collectors.<FieldEntity>toList());
-        prepare(allSubTypePossibilities, "", fieldEntities);
+        prepare(allSubTypePossibilities, "", fieldEntities, leavesOnly);
         return allSubTypePossibilities;
-    }
-
-    private List<String> removeElementsThoseAreNotTreeLeafs(List<String> allSubTypePossibilities) {
-        return allSubTypePossibilities.stream()
-            .filter(e -> allSubTypePossibilities.stream().noneMatch(el -> el.startsWith(e + ".")))
-            .collect(Collectors.toList());
     }
 
     private List<String> removeElementsThatAreCaseFields(List<String> allSubTypePossibilities, List<? extends FieldEntity> caseFieldEntities) {
@@ -55,12 +49,11 @@ public class CaseFieldEntityUtil {
     }
 
     private void prepare(List<String> allSubTypePossibilities,
-                         String startingString,
-                         List<? extends FieldEntity> caseFieldEntities) {
+                                String startingString,
+                                List<? extends FieldEntity> caseFieldEntities, boolean leavesOnly) {
 
         String concatenationCharacter = isBlank(startingString) ? "" : ".";
         caseFieldEntities.forEach(caseFieldEntity -> {
-            allSubTypePossibilities.add(startingString + concatenationCharacter + caseFieldEntity.getReference());
 
             List<ComplexFieldEntity> complexFields;
             if (caseFieldEntity.getFieldType() == null) {
@@ -71,9 +64,14 @@ public class CaseFieldEntityUtil {
                 complexFields = caseFieldEntity.getFieldType().getComplexFields();
             }
 
+            // If only looking for leaves, only add if this field has no children.
+            if (!leavesOnly || (complexFields.isEmpty())) {
+                allSubTypePossibilities.add(startingString + concatenationCharacter + caseFieldEntity.getReference());
+            }
+
             prepare(allSubTypePossibilities,
                 startingString + concatenationCharacter + caseFieldEntity.getReference(),
-                complexFields.stream().map(FieldEntity.class::cast).collect(Collectors.toList()));
+                complexFields.stream().map(FieldEntity.class::cast).collect(Collectors.toList()), leavesOnly);
         });
     }
 

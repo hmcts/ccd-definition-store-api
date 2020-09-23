@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
+import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIndexController;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
 import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
 import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
@@ -69,7 +70,7 @@ public class SecurityConfiguration
             .formLogin().disable()
             .logout().disable()
             .authorizeRequests()
-            .antMatchers(ImportController.URI_IMPORT).hasAuthority("ccd-import")
+            .antMatchers(ImportController.URI_IMPORT, ElasticsearchIndexController.ELASTIC_INDEX_URI).hasAuthority("ccd-import")
             .anyRequest()
             .authenticated()
             .and()

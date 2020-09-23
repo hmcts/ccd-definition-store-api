@@ -1,9 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
+
+import javax.persistence.*;
 
 @Table(name = "search_cases_result_fields")
 @Entity
@@ -34,5 +33,10 @@ public class SearchCasesResultFieldEntity extends GenericLayoutEntity {
     @Override
     public String getSheetName() {
         return "SearchCasesResultFields";
+    }
+
+    @Override
+    public LayoutSheetType getLayoutSheetType() {
+        return LayoutSheetType.RESULT;
     }
 }

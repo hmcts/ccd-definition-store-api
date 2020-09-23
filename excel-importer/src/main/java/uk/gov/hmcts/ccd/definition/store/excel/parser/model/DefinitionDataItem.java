@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -149,6 +150,10 @@ public class DefinitionDataItem {
         }
     }
 
+    public boolean getBooleanOrDefault(ColumnName columnName, boolean defaultValue) {
+        return Optional.ofNullable(getBoolean(columnName)).orElse(defaultValue);
+    }
+
     public SecurityClassificationColumn getSecurityClassification() {
         final String securityClassificationString = getString(ColumnName.SECURITY_CLASSIFICATION);
         final SecurityClassification securityClassification;
@@ -194,6 +199,10 @@ public class DefinitionDataItem {
 
     public String getUseCase() {
         return getString(ColumnName.USE_CASE);
+    }
+
+    public Boolean getRetainHiddenValue() {
+        return getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
     }
 
     public String getCaseFieldId() {

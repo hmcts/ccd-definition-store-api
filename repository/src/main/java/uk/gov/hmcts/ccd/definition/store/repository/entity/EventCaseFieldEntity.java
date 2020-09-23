@@ -34,7 +34,7 @@ import static javax.persistence.FetchType.EAGER;
 public class EventCaseFieldEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_case_field_id_seq")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -71,6 +71,9 @@ public class EventCaseFieldEntity implements Serializable {
 
     @Column(name = "hint_text")
     private String hintText;
+
+    @Column(name = "retain_hidden_value")
+    private Boolean retainHiddenValue;
 
     public DisplayContext getDisplayContext() {
         return displayContext;
@@ -155,5 +158,11 @@ public class EventCaseFieldEntity implements Serializable {
 
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
+    }
+
+    public Boolean getRetainHiddenValue() { return retainHiddenValue; }
+
+    public void setRetainHiddenValue(Boolean retainHiddenValue) {
+        this.retainHiddenValue = retainHiddenValue;
     }
 }

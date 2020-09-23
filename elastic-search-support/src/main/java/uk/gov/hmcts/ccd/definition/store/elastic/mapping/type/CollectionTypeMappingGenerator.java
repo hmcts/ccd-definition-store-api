@@ -54,7 +54,7 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
 
                 for (ComplexFieldEntity complexField : notIgnoredFields) {
                     TypeMappingGenerator typeMapper = getTypeMapper(complexField.getBaseTypeString());
-                    String mapping = typeMapper.dataClassificationMapping(complexField);
+                    String mapping = typeMapper.doDataClassificationMapping(complexField);
                     jw.name(complexField.getReference());
                     jw.jsonValue(mapping);
                 }

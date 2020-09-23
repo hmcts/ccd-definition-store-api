@@ -1,24 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
+import static javax.persistence.GenerationType.SEQUENCE;
+
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import java.io.Serializable;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "complex_field")
 @Entity
@@ -31,7 +22,7 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE, generator = "complex_field_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -45,6 +36,9 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     @Column(name = "hidden")
     private Boolean hidden;
+
+    @Column(name = "searchable")
+    private boolean searchable = true;
 
     @Column(name = "security_classification")
     @Type(type = "pgsql_securityclassification_enum")
@@ -66,6 +60,9 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     @Column(name = "display_context_parameter")
     private String displayContextParameter;
+
+    @Column(name = "retain_hidden_value")
+    private Boolean retainHiddenValue;
 
     @Override
     public String getReference() {
@@ -98,6 +95,15 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     public void setHidden(final Boolean hidden) {
         this.hidden = hidden;
+    }
+
+    @Override
+    public boolean isSearchable() {
+        return searchable;
+    }
+
+    public void setSearchable(boolean searchable) {
+        this.searchable = searchable;
     }
 
     public SecurityClassification getSecurityClassification() {
@@ -154,4 +160,11 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
     }
+
+    public Boolean getRetainHiddenValue() { return retainHiddenValue; }
+
+    public void setRetainHiddenValue(Boolean retainHiddenValue) {
+        this.retainHiddenValue = retainHiddenValue;
+    }
+
 }

@@ -14,16 +14,20 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import javax.persistence.EntityManager;
+
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
 @RunWith(SpringRunner.class)
@@ -274,5 +278,30 @@ public class CaseTypeRepositoryTest {
         assertEquals(caseTypeACLEntityWithFullAccess.getUpdate(), caseTypeACLEntityWithFullAccessFromDB.getUpdate());
         assertEquals(caseTypeACLEntityWithFullAccess.getDelete(), caseTypeACLEntityWithFullAccessFromDB.getDelete());
         assertEquals(caseTypeACLEntityWithFullAccess.getRead(), caseTypeACLEntityWithFullAccessFromDB.getRead());
+    }
+
+    @Test
+    public void getAllCaseTypeDefinitinon() {
+        createCaseTypeEntity("ref1", "name1.1", 1, testJurisdiction);
+        createCaseTypeEntity("ref2", "name2.1", 1, testJurisdiction);
+        createCaseTypeEntity("ref2", "name2.2", 2, testJurisdiction);
+        createCaseTypeEntity("ref3", "name3.1", 1, testJurisdiction);
+        createCaseTypeEntity("ref4", "name4.1", 1, testJurisdiction);
+        createCaseTypeEntity("ref4", "name4.2", 2, testJurisdiction);
+        createCaseTypeEntity("ref4", "name4.3", 3, testJurisdiction);
+        createCaseTypeEntity("ref4", "name4.4", 4, testJurisdiction);
+
+        List<CaseTypeEntity> result = classUnderTest.findAllLatestVersions();
+
+        assertAll(
+            () -> assertThat(result, hasItem(hasProperty("name", is("name1.1")))),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name2.2")))),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name3.1")))),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name4.4")))),
+            () -> assertThat(result, not(hasItem(hasProperty("name", is("name2.1"))))),
+            () -> assertThat(result, not(hasItem(hasProperty("name", is("name4.1"))))),
+            () -> assertThat(result, not(hasItem(hasProperty("name", is("name4.2"))))),
+            () -> assertThat(result, not(hasItem(hasProperty("name", is("name4.3")))))
+        );
     }
 }

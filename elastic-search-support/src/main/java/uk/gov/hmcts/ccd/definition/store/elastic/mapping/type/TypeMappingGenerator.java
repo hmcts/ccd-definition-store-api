@@ -10,9 +10,17 @@ import java.util.Optional;
 
 public abstract class TypeMappingGenerator extends MappingGenerator {
 
-    public abstract String dataMapping(FieldEntity field);
+    public String doDataMapping(FieldEntity field) {
+        return field.isSearchable() ? dataMapping(field) : disabled();
+    }
 
-    public abstract String dataClassificationMapping(FieldEntity field);
+    public String doDataClassificationMapping(FieldEntity field) {
+        return field.isSearchable() ? dataClassificationMapping(field) : disabled();
+    }
+
+    protected abstract String dataMapping(FieldEntity field);
+
+    protected abstract String dataClassificationMapping(FieldEntity field);
 
     public abstract List<String> getMappedTypes();
 

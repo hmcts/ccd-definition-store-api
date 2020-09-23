@@ -53,13 +53,13 @@ public class CaseMappingGenerator extends MappingGenerator {
     private void dataMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
         log.info("generating case data mapping");
         jw.name(DATA);
-        genericDataMapping(jw, caseType, typeMapper -> typeMapper::dataMapping);
+        genericDataMapping(jw, caseType, typeMapper -> typeMapper::doDataMapping);
     }
 
     private void dataClassificationMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
         log.info("generating case data classification mapping");
         jw.name(DATA_CLASSIFICATION);
-        genericDataMapping(jw, caseType, typeMapper -> typeMapper::dataClassificationMapping);
+        genericDataMapping(jw, caseType, typeMapper -> typeMapper::doDataClassificationMapping);
     }
 
     private void genericDataMapping(JsonWriter jw, CaseTypeEntity caseType,

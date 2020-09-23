@@ -15,11 +15,16 @@
         "pattern":" ",
         "replacement":""
       }
-    }
-  },
-  "mapping" : {
-    "total_fields" : {
-      "limit" : "8000"
+    },
+    "normalizer": {
+      "lowercase_normalizer": {
+        "type": "custom",
+        "char_filter": [],
+        "filter": [
+          "lowercase",
+          "asciifolding"
+        ]
+      }
     }
   }
 }

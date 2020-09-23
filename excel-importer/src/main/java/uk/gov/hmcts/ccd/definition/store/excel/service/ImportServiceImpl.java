@@ -1,6 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigServ
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.nocconfig.NoCConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
@@ -22,6 +30,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionUiConfigParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.LayoutParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.NoCConfigParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
@@ -40,15 +49,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.NoCConfigEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Component
 public class ImportServiceImpl implements ImportService {
@@ -69,6 +73,7 @@ public class ImportServiceImpl implements ImportService {
     private final IdamProfileClient idamProfileClient;
     private final BannerService bannerService;
     private final JurisdictionUiConfigService jurisdictionUiConfigService;
+    private final NoCConfigService noCConfigService;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -84,7 +89,8 @@ public class ImportServiceImpl implements ImportService {
                              ApplicationEventPublisher applicationEventPublisher,
                              IdamProfileClient idamProfileClient,
                              BannerService bannerService,
-                             JurisdictionUiConfigService jurisdictionUiConfigService) {
+                             JurisdictionUiConfigService jurisdictionUiConfigService,
+                             NoCConfigService noCConfigService) {
 
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
@@ -100,17 +106,18 @@ public class ImportServiceImpl implements ImportService {
         this.applicationEventPublisher = applicationEventPublisher;
         this.bannerService = bannerService;
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
+        this.noCConfigService = noCConfigService;
     }
 
     /**
      * Imports the Case Definition data and inserts it into the database.
      *
      * @param inputStream the Case Definition data as an <code>InputStream</code>
-     * @return A {@link DefinitionFileUploadMetadata} instance containing the Jurisdiction and Case Types from the
-     *      Definition data, and the user ID of the account used for importing the Definition
      * @throws IOException            in the event that there is a problem reading in the data
      * @throws InvalidImportException if any of the Case Definition sheets fails checks for a definition name and a row
      *                                of attribute headers
+     * @return A {@link DefinitionFileUploadMetadata} instance containing the Jurisdiction and Case Types from the
+     *         Definition data, and the user ID of the account used for importing the Definition
      */
     @Override
     public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream) throws IOException {
@@ -164,7 +171,7 @@ public class ImportServiceImpl implements ImportService {
         fieldTypeService.saveTypes(jurisdiction, parsedFieldTypes.getNewResults());
 
         logger.info("Importing spreadsheet: Field types: OK: {} field types imported",
-            parsedFieldTypes.getNewResults().size());
+                    parsedFieldTypes.getNewResults().size());
 
         /*
             3 - metadata fields
@@ -183,8 +190,9 @@ public class ImportServiceImpl implements ImportService {
 
         logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 
-        logger.info("Importing spreadsheet: Case types: OK: {} case types imported",
-            caseTypes.size());
+        importNoCConfigDefinition(definitionSheets, parseContext);
+
+        logger.info("Importing spreadsheet: Case types: OK: {} case types imported", caseTypes.size());
 
         /*
             5 - UI definition
@@ -222,9 +230,9 @@ public class ImportServiceImpl implements ImportService {
         final List<WorkBasketUserDefault> workBasketUserDefaults = userProfilesParser.parse(definitionSheets);
         final IdamProperties userDetails = getUserDetails();
         workBasketUserDefaultService.saveWorkBasketUserDefaults(workBasketUserDefaults,
-            jurisdiction,
-            parsedCaseTypes.getAllResults(),
-            userDetails.getEmail());
+                                                                jurisdiction,
+                                                                parsedCaseTypes.getAllResults(),
+                                                                userDetails.getEmail());
         logger.info("Importing spreadsheet: User profiles: OK");
 
         applicationEventPublisher.publishEvent(new DefinitionImportedEvent(caseTypes));
@@ -242,6 +250,31 @@ public class ImportServiceImpl implements ImportService {
         metadata.setUserId(userDetails.getEmail());
 
         return metadata;
+    }
+
+    private void importNoCConfigDefinition(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
+        String nocConfigSheetName = SheetName.NOC_CONFIG.getName();
+        if (definitionSheets.get(nocConfigSheetName) != null) {
+            logger.debug("Importing tab: " + nocConfigSheetName + " ...");
+            final NoCConfigParser noCConfigParser = parserFactory.createNoCConfigParser(parseContext);
+            Map<String, List<NoCConfigEntity>> caseTypeNoCConfigEntities = noCConfigParser.parse(definitionSheets);
+            Set<String> caseTypesWithMultipleEntries = caseTypeNoCConfigEntities
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().size() > 1)
+                .map(strEntry -> strEntry.getKey())
+                .collect(Collectors.toSet());
+
+            if (caseTypesWithMultipleEntries.size() > 0) {
+                throw new InvalidImportException("Only one NoC config is allowed per case type(s) "
+                    + caseTypesWithMultipleEntries.stream().sorted().collect(Collectors.joining(",")));
+            }
+            caseTypeNoCConfigEntities
+                .entrySet()
+                .stream()
+                .forEach(entry -> entry.getValue().forEach(entity -> noCConfigService.save(entity)));
+            logger.debug("Importing tab: " + nocConfigSheetName + " ...: OK");
+        }
     }
 
     @VisibleForTesting  // used by BaseTest

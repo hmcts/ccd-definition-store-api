@@ -19,6 +19,10 @@ public class StubComplexTypeMappingGenerator extends ComplexTypeMappingGenerator
         this.dataClassificationMapping = dataClassificationMapping;
     }
 
+    public String disabled() {
+        return "\"disabled\"";
+    }
+
     public String dataMapping(FieldEntity field) {
         return dataMapping;
     }
