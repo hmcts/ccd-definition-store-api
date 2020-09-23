@@ -4,13 +4,7 @@ import io.restassured.RestAssured;
 import uk.gov.hmcts.befta.BeftaMain;
 import uk.gov.hmcts.befta.DefaultTestAutomationAdapter;
 import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
-import uk.gov.hmcts.befta.exception.FunctionalTestException;
 import uk.gov.hmcts.befta.player.BackEndFunctionalTestScenarioContext;
-import uk.gov.hmcts.befta.util.ReflectionUtils;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationAdapter {
 
