@@ -25,8 +25,8 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
     @Override
     public void doLoadTestData() {
         RestAssured.useRelaxedHTTPSValidation();
-//        loader.addCcdRoles();
-//        loader.importDefinitions();
+        loader.addCcdRoles();
+        loader.importDefinitions();
     }
 
 }
