@@ -1,4 +1,4 @@
-@F-080
+@F-080 @Ignore
 Feature: F-080: Get Case Type details by Jurisdiction
 
   Background:
