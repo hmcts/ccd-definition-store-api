@@ -117,7 +117,8 @@
                     "analyzer": {
                         "phone_number_analyzer": {
                             "filter": [
-                                "whitespace_remove"
+                              "shingle_filter",
+                              "whitespace_remove"
                             ],
                             "type": "custom",
                             "tokenizer": "keyword"
@@ -250,7 +251,8 @@
                     "analyzer": {
                         "phone_number_analyzer": {
                             "filter": [
-                                "whitespace_remove"
+                              "shingle_filter",
+                              "whitespace_remove"
                             ],
                             "type": "custom",
                             "tokenizer": "keyword"
