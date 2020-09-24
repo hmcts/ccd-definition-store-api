@@ -28,6 +28,9 @@ public interface CaseTypeRepository extends VersionedDefinitionRepository<CaseTy
         @Param("caseTypeReference") String caseTypeReference,
         @Param("excludedJurisdictionReference") String excludedJurisdictionReference);
 
+    @Query(value = "SELECT * FROM case_type c WHERE LOWER(c.reference) = LOWER(:caseTypeReference) AND c.version IN "
+        + "(SELECT MAX(c1.version) FROM case_type c1 WHERE LOWER(c1.reference) = LOWER(:caseTypeReference))"
+        + "ORDER BY c.created_at DESC, c.id LIMIT 1", nativeQuery = true)
     Optional<CaseTypeEntity> findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(
         @Param("caseTypeReference") String caseTypeReference);
 
