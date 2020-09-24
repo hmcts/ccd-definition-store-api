@@ -68,10 +68,13 @@ public interface EntityToResponseDTOMapper {
         target = "preStates"
     )
     @Mapping(
-        expression = "java(eventEntity.getPostState() == null ? \"*\" : eventEntity.getPostState().getReference())",
-        target = "postState"
+        expression = "java(eventEntity.getPostStates().isEmpty()? java.util.Arrays.asList(\"*\") "
+            + ": eventEntity.getPostStates().stream().map(EventPostStateEntity::getPostStateReference).collect(java.util.stream.Collectors.toList()))",
+        target = "postStates"
     )
     CaseEvent map(EventEntity eventEntity);
+
+    EventPostState map(EventPostStateEntity eventPostStateEntity);
 
     @Mapping(
         expression = "java(eventLiteEntity.isCanCreate() ? java.util.Collections.emptyList() "
@@ -232,7 +235,7 @@ public interface EntityToResponseDTOMapper {
     SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
 
     Banner map(BannerEntity bannerEntity);
-    
+
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.reference", target = "id")
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.name", target = "name")
     JurisdictionUiConfig map(JurisdictionUiConfigEntity jurisdictionUiConfigEntity);

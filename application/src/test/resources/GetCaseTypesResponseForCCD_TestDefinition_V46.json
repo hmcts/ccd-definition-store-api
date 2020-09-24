@@ -192,7 +192,7 @@
       "case_fields_complex" : [ ]
     } ],
     "pre_states" : [ "CaseCreated" ],
-    "post_states" : [ "CaseEnteredIntoLegacy" ],
+    "post_states" : [ "*", "CaseStopped" ],
     "callback_url_about_to_start_event" : null,
     "retries_timeout_about_to_start_event" : [ ],
     "callback_url_about_to_submit_event" : null,
