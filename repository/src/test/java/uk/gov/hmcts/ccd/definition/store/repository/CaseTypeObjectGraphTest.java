@@ -1,18 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
-
+import javax.persistence.EntityManager;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -23,7 +15,33 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
+
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -113,7 +131,9 @@ public class CaseTypeObjectGraphTest {
         caseType.addCaseTypeACL(cture2);
         caseType.addCaseTypeACL(cture3);
 
-        e1.setPostState(s1);
+        EventPostStateEntity eventPostStateEntity = new EventPostStateEntity();
+        eventPostStateEntity.setPostStateReference(s1.getReference());
+        e1.addEventPostState(eventPostStateEntity);
 
         WebhookEntity h1 = createWebHook("url1", 3, 5, 6, 7, 8);
         WebhookEntity h2 = createWebHook("url2", 3, 50, 6, 20);
