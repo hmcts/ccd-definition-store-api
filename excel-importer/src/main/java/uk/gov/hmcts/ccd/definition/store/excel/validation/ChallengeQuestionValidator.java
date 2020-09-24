@@ -11,17 +11,14 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 @Component
 public class ChallengeQuestionValidator {
@@ -125,6 +122,7 @@ public class ChallengeQuestionValidator {
                 .replace("{", "")
                 .replace("}", "");
 
+
         if (!dotNotationExpression.contains(ANSWER_FIELD_DOT_SEPARATOR)) {
             validateSingleExpression(dotNotationExpression, invalidImportException, currentCaseType);
         } else {
@@ -132,13 +130,14 @@ public class ChallengeQuestionValidator {
             try {
                 final FieldTypeEntity fieldType = parseContext.getCaseFieldType(currentCaseType, splittedDotNotationExpression[0]);
                 final String[] attributesDotNotation = Arrays.copyOfRange(splittedDotNotationExpression, 1, splittedDotNotationExpression.length);
-                Arrays.asList(attributesDotNotation).stream().forEach(attribute -> {
-                    // Remove Role is needed.
-                    if (attribute.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
-                        attribute = attribute.substring(0, attribute.indexOf(":"));
+                IntStream.range(0, attributesDotNotation.length).forEach(index -> {
+                        // Remove Role is needed.
+                        if (attributesDotNotation[index].contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
+                            attributesDotNotation[index] = attributesDotNotation[index].substring(0, attributesDotNotation[index].indexOf(":"));
+                        }
+                        validateAttributes(attributesDotNotation[index], fieldType.getComplexFields(),attributesDotNotation,index);
                     }
-                    validateAttributes(attribute, fieldType.getComplexFields());
-                });
+                );
             } catch (SpreadsheetParsingException exception) {
                 throw invalidImportException;
             }
@@ -153,20 +152,39 @@ public class ChallengeQuestionValidator {
             if (fieldType == null) {
                 throw invalidImportException;
             }
-
         }
     }
 
-    private void validateAttributes(String currentAttribute, List<ComplexFieldEntity> complexFieldACLEntity) {
+    private void validateAttributes(String currentAttribute, List<ComplexFieldEntity> complexFieldACLEntity,
+                                    String[] attributesDotNotation, int currentIndex ) {
+        final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: "
+            + currentAttribute + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+            + " value, The expression dot notation values should be valid caseTypes fields.");
 
-        final Optional<ComplexFieldEntity> result = complexFieldACLEntity.stream().filter(complexFieldACLEItem ->
-                complexFieldACLEItem.getReference().equals(currentAttribute)
-        ).findAny();
-        if (!result.isPresent()) {
-            throw new InvalidImportException(ERROR_MESSAGE + " value: "
-                + currentAttribute + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                + " value, The expression dot notation values should be valid caseTypes fields.");
+        final Optional<ComplexFieldEntity> result = getComplexFieldEntity(complexFieldACLEntity,currentAttribute);
+
+        if (!result.isPresent() ) {
+            if (currentIndex-1<0){
+                throw invalidImportException;
+            }
+            //It means that there is a parent component.;
+            final Optional<ComplexFieldEntity>  parent = getComplexFieldEntity(complexFieldACLEntity,attributesDotNotation[currentIndex-1]);
+            if( parent.isPresent()) {
+                final Optional<ComplexFieldEntity>  attributeDefinition = getComplexFieldEntity(
+                    parent.get().getFieldType().getComplexFields(),
+                    currentAttribute
+                );
+                if (!attributeDefinition.isPresent()){
+                    throw invalidImportException;
+                }
+            }
         }
+    }
+
+    private Optional<ComplexFieldEntity> getComplexFieldEntity(List<ComplexFieldEntity> complexFieldACLEntity, String currentAttribute) {
+        return complexFieldACLEntity.stream().filter(complexFieldACLEItem ->
+            complexFieldACLEItem.getReference().equals(currentAttribute)
+        ).findAny();
     }
 
     private void validateDisplayContext(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
