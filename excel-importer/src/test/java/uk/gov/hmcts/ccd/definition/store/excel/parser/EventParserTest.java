@@ -158,7 +158,7 @@ public class EventParserTest extends ParserTestBase {
         assertThat(eventEntities.size(), is(1));
         entity = new ArrayList<>(eventEntities).get(0);
         assertEvent(entity);
-        assertThat(entity.getPostStates().size(), is(0));
+        assertThat(entity.getPostStates().size(), is(1));
         assertThat(entity.getPreStates().get(0), is(state));
     }
 
