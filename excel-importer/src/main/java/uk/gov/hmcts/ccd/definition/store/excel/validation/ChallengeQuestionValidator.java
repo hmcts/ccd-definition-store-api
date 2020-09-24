@@ -152,8 +152,12 @@ public class ChallengeQuestionValidator {
 
         if (singleExpression.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
             String attribute = singleExpression.substring(0, singleExpression.indexOf(":"));
-            final FieldTypeEntity fieldType = parseContext.getCaseFieldType(currentCaseType, attribute);
-            if (fieldType == null) {
+            try {
+                final FieldTypeEntity fieldType = parseContext.getCaseFieldType(currentCaseType, attribute);
+                if (fieldType == null) {
+                    throw invalidImportException;
+                }
+            } catch (SpreadsheetParsingException spreadsheetParsingException) {
                 throw invalidImportException;
             }
         }
