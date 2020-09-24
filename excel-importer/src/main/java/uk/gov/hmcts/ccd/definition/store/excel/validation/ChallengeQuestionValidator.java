@@ -11,7 +11,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -156,25 +160,25 @@ public class ChallengeQuestionValidator {
     }
 
     private void validateAttributes(String currentAttribute, List<ComplexFieldEntity> complexFieldACLEntity,
-                                    String[] attributesDotNotation, int currentIndex ) {
+                                    String[] attributesDotNotation, int currentIndex) {
         final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: "
-            + currentAttribute + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-            + " value, The expression dot notation values should be valid caseTypes fields.");
+                + currentAttribute + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+                + " value, The expression dot notation values should be valid caseTypes fields.");
 
-        final Optional<ComplexFieldEntity> result = getComplexFieldEntity(complexFieldACLEntity,currentAttribute);
+        final Optional<ComplexFieldEntity> result = getComplexFieldEntity(complexFieldACLEntity, currentAttribute);
 
-        if (!result.isPresent() ) {
-            if (currentIndex-1<0){
+        if (!result.isPresent()) {
+            if (currentIndex - 1 < 0) {
                 throw invalidImportException;
             }
             //It means that there is a parent component.;
-            final Optional<ComplexFieldEntity>  parent = getComplexFieldEntity(complexFieldACLEntity,attributesDotNotation[currentIndex-1]);
-            if( parent.isPresent()) {
-                final Optional<ComplexFieldEntity>  attributeDefinition = getComplexFieldEntity(
-                    parent.get().getFieldType().getComplexFields(),
-                    currentAttribute
+            final Optional<ComplexFieldEntity> parent = getComplexFieldEntity(complexFieldACLEntity, attributesDotNotation[currentIndex - 1]);
+            if (parent.isPresent()) {
+                final Optional<ComplexFieldEntity> attributeDefinition = getComplexFieldEntity(
+                        parent.get().getFieldType().getComplexFields(),
+                        currentAttribute
                 );
-                if (!attributeDefinition.isPresent()){
+                if (!attributeDefinition.isPresent()) {
                     throw invalidImportException;
                 }
             }
@@ -183,7 +187,7 @@ public class ChallengeQuestionValidator {
 
     private Optional<ComplexFieldEntity> getComplexFieldEntity(List<ComplexFieldEntity> complexFieldACLEntity, String currentAttribute) {
         return complexFieldACLEntity.stream().filter(complexFieldACLEItem ->
-            complexFieldACLEItem.getReference().equals(currentAttribute)
+                complexFieldACLEItem.getReference().equals(currentAttribute)
         ).findAny();
     }
 
