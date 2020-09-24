@@ -3,6 +3,9 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,15 +27,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntit
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
