@@ -15,7 +15,7 @@ public class EventEntityShowConditionReferencesInvalidCaseFieldError extends Val
                                                                    String showCondition) {
         super(
             String.format(
-                "Unknown field '%s' for event '%s' in show condition: '%s'",
+                "Unknown field '%s' for event '%s' in post state condition: '%s'",
                 showConditionField,
                 eventEntity.getReference(),
                 showCondition

@@ -618,7 +618,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     public String createErrorMessage(EventEntityShowConditionReferencesInvalidCaseFieldError error) {
         return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
             String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
-            return String.format("Unknown field '%s' for event '%s' in show condition: '%s' in %s tab",
+            return String.format("Unknown field '%s' for event '%s' in post state condition: '%s' in %s tab",
                 error.getShowConditionField(),
                 error.getEventEntity().getReference(),
                 StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
