@@ -78,7 +78,7 @@
           "pre_states": [
             "*"
           ],
-          "post_state": "DONE",
+          "post_states": [ "DONE" ],
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [
           ],
@@ -235,7 +235,7 @@
           "pre_states": [
             "TODO"
           ],
-          "post_state": "IN_PROGRESS",
+          "post_states": [ "IN_PROGRESS" ],
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [
           ],
@@ -392,7 +392,7 @@
           "pre_states": [
             "TODO"
           ],
-          "post_state": "TODO",
+          "post_states": [ "TODO" ],
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [
           ],
@@ -548,7 +548,7 @@
           ],
           "pre_states": [
           ],
-          "post_state": "TODO",
+          "post_states": [ "TODO" ],
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [
           ],

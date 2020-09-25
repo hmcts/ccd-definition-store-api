@@ -246,7 +246,7 @@
           "pre_states": [
             "CaseCreated"
           ],
-          "post_state": "CaseUpdated",
+          "post_states": [ "CaseUpdated" ],
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [],
           "callback_url_about_to_submit_event": null,
@@ -475,7 +475,7 @@
             }
           ],
           "pre_states": [],
-          "post_state": "CaseCreated",
+          "post_states": [ "CaseCreated" ],
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [],
           "callback_url_about_to_submit_event": null,
