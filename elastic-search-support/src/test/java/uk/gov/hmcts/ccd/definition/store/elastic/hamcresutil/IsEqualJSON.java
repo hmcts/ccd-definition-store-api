@@ -137,12 +137,14 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
      * @param expectedPath the path containing the expected JSON
      * @return the JSON matcher
      */
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     @Factory
     public static IsEqualJSON equalToJSONInFile(final Path expectedPath) {
         return equalToJSON(getFileContents(expectedPath));
     }
 
     @Factory
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     public static IsEqualJSON equalToJSONInFile(final Path expectedPath, JSONComparator comparator) {
         return equalToJSON(getFileContents(expectedPath), comparator);
     }
@@ -159,6 +161,7 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
      * @param expectedFileName the name of the file containing the expected JSON
      * @return the JSON matcher
      */
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     @Factory
     public static IsEqualJSON equalToJSONInFile(final String expectedFileName) {
         return equalToJSONInFile(Paths.get(expectedFileName));

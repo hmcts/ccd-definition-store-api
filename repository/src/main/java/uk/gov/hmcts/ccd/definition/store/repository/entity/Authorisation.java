@@ -17,13 +17,14 @@ import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @MappedSuperclass
 public abstract class Authorisation implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "case_field_acl_id_seq")
+    @GeneratedValue(strategy = SEQUENCE, generator = "case_field_acl_id_seq")
     private Integer id;
 
     @NotNull
