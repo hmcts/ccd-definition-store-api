@@ -17,8 +17,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -36,6 +38,7 @@ public class ChallengeQuestionValidator {
     public static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
     private final ChallengeQuestionTabService challengeQuestionTabService;
     private ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
+    private HashMap<String, List<String>> displayOrderList = new HashMap<>();
 
     @Autowired
     public ChallengeQuestionValidator(ChallengeQuestionTabService challengeQuestionTabService,
@@ -55,9 +58,9 @@ public class ChallengeQuestionValidator {
         challengeQuestionTabEntity.setQuestionId(questionId);
         challengeQuestionTabEntity.setCaseType(getCaseTypeEntity(definitionDataItem));
         challengeQuestionTabEntity.setAnswerFieldType(getFieldTypeEntity(definitionDataItem));
+        validateID(definitionDataItem, challengeQuestionTabEntity);
         validateDisplayOrder(definitionDataItem, challengeQuestionTabEntity);
         validateQuestionText(definitionDataItem, challengeQuestionTabEntity);
-        validateID(definitionDataItem, challengeQuestionTabEntity);
         validateAnswer(definitionDataItem, challengeQuestionTabEntity);
         validateDisplayContext(definitionDataItem, challengeQuestionTabEntity);
         return challengeQuestionTabEntity;
@@ -219,6 +222,7 @@ public class ChallengeQuestionValidator {
         final String displayOrder = definitionDataItem.getString(ColumnName.DISPLAY_ORDER);
         try {
             challengeQuestionTabEntity.setOrder(Integer.parseInt(displayOrder));
+            addInDisplayOrderMap(challengeQuestionTabEntity.getChallengeQuestionId(),displayOrder);
         } catch (NumberFormatException NumberFormatException) {
             throw new InvalidImportException(ERROR_MESSAGE + " value: " + displayOrder + " is not a valid DisplayOrder.");
         }
@@ -249,4 +253,25 @@ public class ChallengeQuestionValidator {
         }
     }
 
+    private void addInDisplayOrderMap(String questionGroup, String displayOrder) {
+
+        List<String> listOfDisplayOrder = displayOrderList.get(questionGroup);
+        if (listOfDisplayOrder == null) {
+            listOfDisplayOrder = new ArrayList<>();
+            listOfDisplayOrder.add(displayOrder);
+            displayOrderList.put(questionGroup, listOfDisplayOrder);
+        } else {
+            if (listOfDisplayOrder.contains(displayOrder)) {
+                throw new InvalidImportException(ERROR_MESSAGE +
+                        " value: " + displayOrder + ". The " + ColumnName.DISPLAY_ORDER +
+                        " values must be unique in the question group " + questionGroup);
+            } else {
+                listOfDisplayOrder.add(displayOrder);
+            }
+        }
+    }
+
+    public void setDisplayOrderList(HashMap<String, List<String>> displayOrderList) {
+        this.displayOrderList = displayOrderList;
+    }
 }

@@ -13,10 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.ChallengeQuestionValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,6 +31,7 @@ public class ChallengeQuestionParser {
         try {
             final List<DefinitionDataItem> questionItems = definitionSheets.get(SheetName.CHALLENGE_QUESTION_TAB.getName()).getDataItems();
             validateUniqueIds(questionItems);
+            challengeQuestionValidator.setDisplayOrderList(new HashMap<>());
             final List<ChallengeQuestionTabEntity> newChallengeQuestionEntities = questionItems.stream().map(questionItem -> {
                 return challengeQuestionValidator.validate(parseContext, questionItem);
             }).collect(Collectors.toList());
