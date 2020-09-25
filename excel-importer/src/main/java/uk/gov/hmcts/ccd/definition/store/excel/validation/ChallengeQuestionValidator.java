@@ -231,7 +231,7 @@ public class ChallengeQuestionValidator {
                 caseTypeEntity -> caseTypeEntity.getReference().equals(caseType)
         ).findAny();
         return caseTypeEntityOptional.orElseThrow(() ->
-                new InvalidImportException(ERROR_MESSAGE + " Case Type value: " + caseType + ". It cannot be found the spreadsheet.")
+                new InvalidImportException(ERROR_MESSAGE + " Case Type value: " + caseType + ". It cannot be found in the spreadsheet.")
         );
     }
 

@@ -136,7 +136,7 @@ public class ChallengeQuestionValidatorTest {
             buildDefinitionDataItem("incorrectCaseType", FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: incorrectCaseType. It cannot be found the spreadsheet."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: incorrectCaseType. It cannot be found in the spreadsheet."));
             throw exception;
         }
     }
