@@ -45,7 +45,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
 
@@ -56,7 +57,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
@@ -70,8 +72,10 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
-        assertEquals("DisplayContextParameter text should begin with #LIST( or #TABLE(", validationResult.getValidationErrors().get(1).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("DisplayContextParameter text should begin with #LIST( or #TABLE(",
+            validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
 
     private EventCaseFieldEntity eventCaseFieldEntity() {

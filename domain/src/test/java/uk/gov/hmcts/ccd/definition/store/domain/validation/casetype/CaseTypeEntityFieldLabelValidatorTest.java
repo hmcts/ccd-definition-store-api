@@ -96,7 +96,8 @@ public class CaseTypeEntityFieldLabelValidatorTest {
 
         Assertions.assertAll(
             () -> assertFalse(validate.isValid()),
-            () -> assertTrue(validate.getValidationErrors().get(0) instanceof CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError),
+            () -> assertTrue(validate.getValidationErrors().get(0)
+                instanceof CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError),
             () -> assertThat(validate.getValidationErrors(), hasItems(hasProperty("defaultMessage",
                 is("Label of caseField 'case field' has placeholder "
                     + "'complex.collection.nested.nested2' that points to "
@@ -114,7 +115,8 @@ public class CaseTypeEntityFieldLabelValidatorTest {
 
         Assertions.assertAll(
             () -> assertTrue(!validate.isValid()),
-            () -> assertTrue(validate.getValidationErrors().get(0) instanceof CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError),
+            () -> assertTrue(validate.getValidationErrors().get(0)
+                instanceof CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError),
             () -> assertThat(validate.getValidationErrors(), hasItems(hasProperty("defaultMessage",
                 is("Label of caseField 'case field' has placeholder 'complex.collection' "
                     + "that points to case field 'collection' of non simple type"))))
@@ -130,7 +132,8 @@ public class CaseTypeEntityFieldLabelValidatorTest {
 
         Assertions.assertAll(
             () -> assertTrue(!validate.isValid()),
-            () -> assertTrue(validate.getValidationErrors().get(0) instanceof CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError),
+            () -> assertTrue(validate.getValidationErrors().get(0)
+                instanceof CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError),
             () -> assertThat(validate.getValidationErrors(), hasItems(hasProperty("defaultMessage",
                 is("Label of caseField 'case field' has placeholder 'complex.fieldNotFound' "
                     + "that points to unknown case field"))))

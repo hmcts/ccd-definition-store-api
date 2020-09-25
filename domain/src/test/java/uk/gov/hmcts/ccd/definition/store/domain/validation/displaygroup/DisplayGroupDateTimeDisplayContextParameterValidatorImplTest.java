@@ -33,8 +33,10 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        validator = new DisplayGroupDateTimeDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
-        when(displayContextParameterValidatorFactory.getValidator(Mockito.any())).thenReturn(displayContextParameterValidator);
+        validator = new DisplayGroupDateTimeDisplayContextParameterValidatorImpl(
+            displayContextParameterValidatorFactory);
+        when(displayContextParameterValidatorFactory.getValidator(Mockito.any()))
+            .thenReturn(displayContextParameterValidator);
     }
 
     @Test
@@ -93,7 +95,8 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setDisplayContextParameter("#DATETIMEDISPLAY(0123456789)");
         entity.setCaseField(caseFieldEntity());
-        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
+        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator)
+            .validate(Mockito.any(), Mockito.any());
 
         final ValidationResult result = validator.validate(entity);
 
@@ -118,7 +121,8 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' on tab 'CaseTypeTab'"))
+                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' "
+                    + "for field 'CASE_FIELD' on tab 'CaseTypeTab'"))
         );
     }
 
@@ -147,7 +151,8 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Display context parameter '#DATETIMEDISPLAY(HHmmss)' is unsupported for field type 'Text' of field 'CASE_FIELD' on tab 'CaseTypeTab'"))
+                is("Display context parameter '#DATETIMEDISPLAY(HHmmss)' is unsupported for field type 'Text' "
+                    + "of field 'CASE_FIELD' on tab 'CaseTypeTab'"))
         );
     }
 

@@ -60,6 +60,7 @@ import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_ORDER_COMPARATOR;
 
+@SuppressWarnings("checkstyle:LineLength")
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
     EntityToResponseDTOMapper INSTANCE = Mappers.getMapper(EntityToResponseDTOMapper.class);
@@ -111,7 +112,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(
         expression = "java(eventEntity.isCanCreate() ? java.util.Collections.emptyList() "
             + ": eventEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") "
-            + ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+            + ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect("
+            + "java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
     @Mapping(
@@ -123,7 +125,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(
         expression = "java(eventLiteEntity.isCanCreate() ? java.util.Collections.emptyList() "
             + ": eventLiteEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") "
-            + ": eventLiteEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+            + ": eventLiteEntity.getPreStates().stream().map(StateEntity::getReference).collect("
+            + "java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
     @Mapping(source = "eventLiteEntity.reference", target = "id")

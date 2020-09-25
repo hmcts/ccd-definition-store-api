@@ -28,22 +28,26 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
     @Test
     public void shouldPassValidationIfFieldIsNotCasePaymentHistoryViewer() {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotCasePaymentHistoryViewer"), null, DisplayContext.READONLY), null).isValid());
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotCasePaymentHistoryViewer"), null, DisplayContext.OPTIONAL), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotCasePaymentHistoryViewer"),
+            null, DisplayContext.READONLY), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotCasePaymentHistoryViewer"),
+            null, DisplayContext.OPTIONAL), null).isValid());
 
     }
 
     @Test
     public void shouldPassValidationIfFieldTypeReadonly() throws Exception {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER), null, DisplayContext.READONLY), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER), null,
+            DisplayContext.READONLY), null).isValid());
 
     }
 
     @Test
     public void shouldPassValidationIfDisplayContextIsNull() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER), null, null), null);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(
+            caseField(CASE_PAYMENT_HISTORY_VIEWER), null, null), null);
 
         assertAll(
             () -> assertTrue(validationResult.isValid()),
@@ -53,8 +57,8 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
     @Test
     public void shouldReturnValidationErrorIfFieldTypeOptional() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER),
-            event("Event Reference"),
+        ValidationResult validationResult = classUnderTest.validate(
+            eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER), event("Event Reference"),
             DisplayContext.OPTIONAL), null);
 
         assertAll(
@@ -64,15 +68,16 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
                 hasItem(
                     hasProperty("defaultMessage",
                         equalTo(
-                            "'" + CASE_PAYMENT_HISTORY_VIEWER
-                                + "' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                            "'" + CASE_PAYMENT_HISTORY_VIEWER + "' is CasePaymentHistoryViewer type "
+                                + "and cannot be editable for event with reference 'Event Reference'"))))
         );
     }
 
     @Test
     public void shouldReturnValidationErrorIfFieldTypeMandatory() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER),
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(
+            caseField(CASE_PAYMENT_HISTORY_VIEWER),
             event("Event Reference"),
             DisplayContext.MANDATORY), null);
 
@@ -82,8 +87,8 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
             () -> assertThat(validationResult.getValidationErrors(),
                 hasItem(
                     hasProperty("defaultMessage",
-                        equalTo("'" + CASE_PAYMENT_HISTORY_VIEWER
-                            + "' is CasePaymentHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                        equalTo("'" + CASE_PAYMENT_HISTORY_VIEWER + "' is CasePaymentHistoryViewer type "
+                            + "and cannot be editable for event with reference 'Event Reference'"))))
         );
     }
 
@@ -102,7 +107,9 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
         return eventEntity;
     }
 
-    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField, EventEntity event, DisplayContext displayContext) {
+    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField,
+                                                      EventEntity event,
+                                                      DisplayContext displayContext) {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setCaseField(caseField);
         eventCaseFieldEntity.setEvent(event);

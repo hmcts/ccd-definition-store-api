@@ -46,8 +46,10 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        validator = new GenericLayoutEntityDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
-        when(displayContextParameterValidatorFactory.getValidator(Mockito.any())).thenReturn(displayContextParameterValidator);
+        validator = new GenericLayoutEntityDisplayContextParameterValidatorImpl(
+            displayContextParameterValidatorFactory);
+        when(displayContextParameterValidatorFactory.getValidator(Mockito.any()))
+            .thenReturn(displayContextParameterValidator);
     }
 
     @ParameterizedTest
@@ -112,7 +114,8 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Unsupported display context parameter type '#DATETIMEDISPLAY(HHmmss)' for field 'CASE_FIELD' on tab '" + tab + "'"))
+                is("Unsupported display context parameter type '#DATETIMEDISPLAY(HHmmss)' for field 'CASE_FIELD' "
+                    + "on tab '" + tab + "'"))
         );
     }
 
@@ -128,7 +131,8 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' on tab '" + tab + "'"))
+                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' "
+                    + "on tab '" + tab + "'"))
         );
     }
 
@@ -137,7 +141,8 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     void shouldFailValidationForInvalidDateTimeFormat(GenericLayoutEntity entity, String tab) throws Exception {
         entity.setDisplayContextParameter("#DATETIMEENTRY(0123456789)");
         entity.setCaseField(caseFieldEntity());
-        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
+        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator)
+            .validate(Mockito.any(), Mockito.any());
 
         final ValidationResult result = validator.validate(entity, Collections.emptyList());
 
@@ -179,7 +184,8 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD' on tab '" + tab + "'"))
+                is("Unsupported display context parameter type '#TABLE(FieldId)' for field 'CASE_FIELD' on tab '"
+                    + tab + "'"))
         );
     }
 
@@ -195,7 +201,8 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Display context parameter '#DATETIMEDISPLAY(hhmmss)' is unsupported for field type 'Text' of field 'CASE_FIELD' on tab '" + tab + "'"))
+                is("Display context parameter '#DATETIMEDISPLAY(hhmmss)' is unsupported for field type 'Text' "
+                    + "of field 'CASE_FIELD' on tab '" + tab + "'"))
         );
     }
 

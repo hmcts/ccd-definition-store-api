@@ -147,7 +147,8 @@ class DisplayGroupAdapterServiceTest {
             CaseFieldEntity finalReturnOther = caseFieldEntity("finalReturnOther",
                 "Final return other",
                 null, fieldTypeEntity("Text", textFieldTypeEntity(), emptyList()));
-            EventCaseFieldEntity eventFinalReturnOther = eventCaseFieldEntity(DisplayContext.OPTIONAL, finalReturnOther, emptyList());
+            EventCaseFieldEntity eventFinalReturnOther = eventCaseFieldEntity(
+                DisplayContext.OPTIONAL, finalReturnOther, emptyList());
 
             given(eventEntityMock.getEventCaseFields()).willReturn(
                 asList(
@@ -155,17 +156,29 @@ class DisplayGroupAdapterServiceTest {
                         DisplayContext.COMPLEX,
                         caseFieldEntity("finalReturn", "Final Return", null,
                             fieldTypeEntity("Return", baseFieldType("Complex"),
-                                asList(complexFieldEntity("bailiffName", "Bailiff", fieldType("FixedList-BailiffList")),
-                                    complexFieldEntity("dateOfVisit", "Date of visit", fieldType("Date")),
+                                asList(complexFieldEntity(
+                                    "bailiffName", "Bailiff",
+                                    fieldType("FixedList-BailiffList")),
+                                    complexFieldEntity(
+                                        "dateOfVisit", "Date of visit", fieldType("Date")),
                                     complexFieldEntity("addressAttended", "Address Attended",
-                                        fieldTypeEntity(PREDEFINED_COMPLEX_ADDRESS_UK, baseFieldType("Complex"),
-                                            asList(complexFieldEntity("AddressLine1", "Building and Street", fieldType("TextMax150")),
-                                                complexFieldEntity("AddressLine2", "Building and Street", fieldType("TextMax50")),
-                                                complexFieldEntity("AddressLine3", "Building and Street", fieldType("TextMax50")),
-                                                complexFieldEntity("PostTown", "Town or City", fieldType("TextMax50")),
-                                                complexFieldEntity("County", "County", fieldType("TextMax50")),
-                                                complexFieldEntity("PostCode", "Postcode/Zipcode", fieldType("TextMax14")),
-                                                complexFieldEntity("Country", "Country", fieldType("TextMax50")))))))
+                                        fieldTypeEntity(PREDEFINED_COMPLEX_ADDRESS_UK,
+                                            baseFieldType("Complex"),
+                                            asList(
+                                                complexFieldEntity("AddressLine1", "Building and Street",
+                                                    fieldType("TextMax150")),
+                                                complexFieldEntity("AddressLine2", "Building and Street",
+                                                    fieldType("TextMax50")),
+                                                complexFieldEntity("AddressLine3", "Building and Street",
+                                                    fieldType("TextMax50")),
+                                                complexFieldEntity("PostTown", "Town or City",
+                                                    fieldType("TextMax50")),
+                                                complexFieldEntity("County", "County",
+                                                    fieldType("TextMax50")),
+                                                complexFieldEntity("PostCode", "Postcode/Zipcode",
+                                                    fieldType("TextMax14")),
+                                                complexFieldEntity("Country", "Country",
+                                                    fieldType("TextMax50")))))))
 
                         ),
                         asList(bailiffName, addressLine1, postcode)),
@@ -198,11 +211,20 @@ class DisplayGroupAdapterServiceTest {
             assertThat(findWizardPageField(wizardPage, "finalReturn").getPageColumnNumber(), is(66));
 
             assertThat(findWizardPageComplexFieldOverrides(wizardPage, "finalReturn").size(), is(10));
-            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getDisplayContext(), is("READONLY"));
-            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(), is("Bailiff Name"));
-            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getDefaultValue(), is("DefaultValue1"));
-            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(), is("Hint text override"));
-            assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
+            assertThat(findWizardPageComplexFieldOverride(
+                wizardPage, "finalReturn", "finalReturn.bailiffName").getDisplayContext(),
+                is("READONLY"));
+            assertThat(findWizardPageComplexFieldOverride(
+                wizardPage, "finalReturn", "finalReturn.bailiffName").getLabel(),
+                is("Bailiff Name"));
+            assertThat(findWizardPageComplexFieldOverride(
+                wizardPage, "finalReturn", "finalReturn.bailiffName").getDefaultValue(),
+                is("DefaultValue1"));
+            assertThat(findWizardPageComplexFieldOverride(
+                wizardPage, "finalReturn", "finalReturn.bailiffName").getHintText(),
+                is("Hint text override"));
+            assertThat(findWizardPageComplexFieldOverride(
+                wizardPage, "finalReturn",
                 "finalReturn.bailiffName").getShowCondition(), is("fieldName1.subField2=\"potato\""));
 
             assertThat(findWizardPageComplexFieldOverride(wizardPage, "finalReturn",
@@ -256,16 +278,22 @@ class DisplayGroupAdapterServiceTest {
     }
 
     private static WizardPageField findWizardPageField(WizardPage wizardPage, String fieldId) {
-        return wizardPage.getWizardPageFields().stream().filter(e -> e.getCaseFieldId().equals(fieldId)).findFirst().get();
+        return wizardPage.getWizardPageFields()
+            .stream()
+            .filter(e -> e.getCaseFieldId().equals(fieldId))
+            .findFirst()
+            .get();
     }
 
-    private static WizardPageComplexFieldOverride findWizardPageComplexFieldOverride(WizardPage wizardPage, String fieldId,
+    private static WizardPageComplexFieldOverride findWizardPageComplexFieldOverride(WizardPage wizardPage,
+                                                                                     String fieldId,
                                                                                      String complexFieldId) {
         return findWizardPageComplexFieldOverrides(wizardPage, fieldId)
             .stream().filter(w -> w.getComplexFieldElementId().equals(complexFieldId)).findFirst().get();
     }
 
-    private static List<WizardPageComplexFieldOverride> findWizardPageComplexFieldOverrides(WizardPage wizardPage, String fieldId) {
+    private static List<WizardPageComplexFieldOverride> findWizardPageComplexFieldOverrides(WizardPage wizardPage,
+                                                                                            String fieldId) {
         WizardPageField wizardPageField = wizardPage.getWizardPageFields().stream()
             .filter(e -> e.getCaseFieldId().equals(fieldId))
             .findFirst().get();
@@ -280,7 +308,8 @@ class DisplayGroupAdapterServiceTest {
         return webhookEntity;
     }
 
-    private DisplayGroupEntity displayGroupEntity(EventEntity eventEntity, List<DisplayGroupCaseFieldEntity> displayGroupCaseFieldEntities) {
+    private DisplayGroupEntity displayGroupEntity(
+        EventEntity eventEntity, List<DisplayGroupCaseFieldEntity> displayGroupCaseFieldEntities) {
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setReference("solicitorCreate1");
         displayGroupEntity.setLabel("label");

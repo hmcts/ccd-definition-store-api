@@ -26,7 +26,8 @@ public class EventEntitySecurityClassificationValidatorImpl implements EventEnti
         if (parentSecurityClassification != null
             && parentSecurityClassification.isMoreRestrictiveThan(event.getSecurityClassification())) {
             validationResult.addError(
-                new EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(event, validationContext)
+                new EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
+                    event, validationContext)
             );
         }
 

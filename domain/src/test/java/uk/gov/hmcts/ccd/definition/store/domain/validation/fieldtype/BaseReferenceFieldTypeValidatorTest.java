@@ -71,7 +71,8 @@ public class BaseReferenceFieldTypeValidatorTest {
         );
         assertEquals(
             globalType,
-            ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0)).getConflictingFieldTypeEntity()
+            ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0))
+                .getConflictingFieldTypeEntity()
         );
 
     }

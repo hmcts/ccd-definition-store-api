@@ -175,7 +175,8 @@ class GenericLayoutEntityElementPathValidatorImplTest {
                 () -> assertThat(result.isValid(), is(false)),
                 () -> assertThat(result.getValidationErrors().size(), is(1)),
                 () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                    is("ListElementCode 'SomeNonExistingPath' can be only defined for complex fields. Case Field 'Case Field I', case type 'Case Type I'"))
+                    is("ListElementCode 'SomeNonExistingPath' can be only defined for complex fields. "
+                        + "Case Field 'Case Field I', case type 'Case Type I'"))
             );
         }
 
@@ -195,7 +196,8 @@ class GenericLayoutEntityElementPathValidatorImplTest {
                 () -> assertThat(result.isValid(), is(false)),
                 () -> assertThat(result.getValidationErrors().size(), is(1)),
                 () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                    is("Invalid ListElementCode 'SomeNonExistingPath' for case type 'Case Type I', case field 'MySchool' with label 'Label'"))
+                    is("Invalid ListElementCode 'SomeNonExistingPath' for case type 'Case Type I', case field "
+                        + "'MySchool' with label 'Label'"))
             );
         }
     }
@@ -205,11 +207,13 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             asList(
                 complexFieldEntity("Name", fieldTypeEntity("Text", emptyList())),
                 complexFieldEntity("ProvidesSupport", fieldTypeEntity("YesOrNo", emptyList())),
-                complexFieldEntity("Class", collectionFieldTypeEntity("Class-8fcabcec-327f-4b4b-99b9-9dadb8317da8",
+                complexFieldEntity("Class", collectionFieldTypeEntity(
+                    "Class-8fcabcec-327f-4b4b-99b9-9dadb8317da8",
                     complexFieldTypeEntity("SchoolClass", asList(
                         complexFieldEntity("ClassName", fieldTypeEntity("Text", emptyList())),
                         complexFieldEntity("ClassAddress", addressUKFieldTypeEntity()),
-                        complexFieldEntity("ClassMembers", collectionFieldTypeEntity("ClassMembers-f07e3000-a3c4-4232-ac69-586b7b013bf1",
+                        complexFieldEntity("ClassMembers", collectionFieldTypeEntity(
+                            "ClassMembers-f07e3000-a3c4-4232-ac69-586b7b013bf1",
                             complexFieldTypeEntity("Child",
                                 asList(
                                     complexFieldEntity("FixedListGender",
@@ -234,7 +238,8 @@ class GenericLayoutEntityElementPathValidatorImplTest {
                 complexFieldTypeEntity("SchoolClass", asList(
                     complexFieldEntity("ClassName", fieldTypeEntity("Text", emptyList())),
                     complexFieldEntity("ClassAddress", addressUKFieldTypeEntity()),
-                    complexFieldEntity("ClassMembers", collectionFieldTypeEntity("ClassMembers-f07e3000-a3c4-4232-ac69-586b7b013bf1",
+                    complexFieldEntity("ClassMembers", collectionFieldTypeEntity(
+                        "ClassMembers-f07e3000-a3c4-4232-ac69-586b7b013bf1",
                         complexFieldTypeEntity("Child",
                             asList(
                                 complexFieldEntity("FixedListGender",

@@ -67,19 +67,24 @@ public class MultipleControllersEndpointIT extends BaseTest {
             final CaseType caseType = mapper.readValue(result.getResponse()
                 .getContentAsString(), TypeFactory.defaultInstance().constructType(CaseType.class));
             assertAll(
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
                     hasProperty("caseFields", hasItem(allOf(
                         hasProperty("showSummaryContentOption", equalTo(2)),
                         hasProperty("caseFieldId", containsString("PersonFirstName")))))),
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
                     hasProperty("caseFields", hasItem(allOf(
                         hasProperty("showSummaryContentOption", equalTo(1)),
                         hasProperty("caseFieldId", containsString("PersonLastName")))))),
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("createCase")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("createCase")).findFirst().get(),
                     hasProperty("showEventNotes", equalTo(true))),
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
                     hasProperty("showEventNotes", equalTo(false))),
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("stopCase")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("stopCase")).findFirst().get(),
                     hasProperty("showEventNotes", nullValue()))
             );
         }
@@ -102,7 +107,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
             .andReturn();
 
-        final WorkbasketInputDefinition workbasketInputDefinition = mapper.readValue(result.getResponse().getContentAsString(),
+        final WorkbasketInputDefinition workbasketInputDefinition = mapper.readValue(
+            result.getResponse().getContentAsString(),
             TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
         assertAll(
             () -> assertThat(workbasketInputDefinition.getFields(), hasSize(3)),
@@ -136,14 +142,17 @@ public class MultipleControllersEndpointIT extends BaseTest {
             TypeFactory.defaultInstance().constructType(CaseTabCollection.class));
         assertAll(
             () -> assertThat(caseTabCollection.getTabs(), hasSize(5)),
-            () -> assertThat(caseTabCollection.getTabs(), hasItem(allOf(hasProperty("showCondition", containsString("PersonLastName=\"Sparrow\"")),
+            () -> assertThat(caseTabCollection.getTabs(), hasItem(allOf(
+                hasProperty("showCondition", containsString("PersonLastName=\"Sparrow\"")),
                 hasProperty("id", containsString("NameTab")),
                 hasProperty("label", containsString("Name"))))),
             () -> {
-                assertThat(caseTabCollection.getTabs().stream().filter(t -> t.getId().equals("NameTab")).findFirst().get(),
+                assertThat(caseTabCollection.getTabs().stream()
+                        .filter(t -> t.getId().equals("NameTab")).findFirst().get(),
                     hasProperty("tabFields", hasItem(allOf(
                         hasProperty("showCondition", containsString("PersonFirstName=\"Jack\"")),
-                        hasProperty("caseField", hasProperty("id", containsString("PersonLastName")))))));
+                        hasProperty("caseField",
+                            hasProperty("id", containsString("PersonLastName")))))));
             }
         );
     }
@@ -204,7 +213,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
             () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(1)),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
                 containsString("Contact Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("id", containsString("createCaseContactPage")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(
+                hasProperty("id", containsString("createCaseContactPage")))),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("wizardPageFields",
                 hasItem(hasProperty("caseFieldId", containsString("ContectEmail"))))))
         );

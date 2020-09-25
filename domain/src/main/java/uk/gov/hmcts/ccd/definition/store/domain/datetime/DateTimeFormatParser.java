@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
 @Slf4j
 public class DateTimeFormatParser {
 
-    public void parseDateTimeFormat(String dateTimeFormat, Pattern dateTimeFormatPattern) throws InvalidDateTimeFormatException {
+    public void parseDateTimeFormat(String dateTimeFormat, Pattern dateTimeFormatPattern)
+        throws InvalidDateTimeFormatException {
         Matcher m = dateTimeFormatPattern.matcher(dateTimeFormat);
         if (m.find()) {
             throw new InvalidDateTimeFormatException(dateTimeFormat);

@@ -53,7 +53,8 @@ public class SpreadSheetImportTest extends BaseTest {
         + TEST_CASE_TYPE;
     public static final String EXCEL_FILE_NOC_CONFIG = "/CCD_TestDefinition_NOC_CONFIG.xlsx";
     public static final String EXCEL_FILE_INVALID_NOC_CONFIG = "/CCD_TestDefinition_Invalid_NOC_CONFIG.xlsx";
-    public static final String EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG = "/CCD_TestDefinition_Invalid_Case_Type_NOC_CONFIG.xlsx";
+    public static final String EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG =
+        "/CCD_TestDefinition_Invalid_Case_Type_NOC_CONFIG.xlsx";
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
     private static final String RESPONSE_JSON = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
@@ -128,7 +129,8 @@ public class SpreadSheetImportTest extends BaseTest {
             // Check the error response message.
             assertThat("Incorrect HTTP response",
                 result.getResponse().getContentAsString(),
-                allOf(containsString("Problem updating user profile"), containsString("403 Forbidden")));
+                allOf(containsString("Problem updating user profile"),
+                    containsString("403 Forbidden")));
         }
     }
 
@@ -263,7 +265,8 @@ public class SpreadSheetImportTest extends BaseTest {
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
             result.getResponse().getContentAsString(),
-            containsString("Unknown Case Type(s) 'TestComplexAddressBookCase1' in worksheet 'NoticeOfChangeConfig'"));
+            containsString(
+                "Unknown Case Type(s) 'TestComplexAddressBookCase1' in worksheet 'NoticeOfChangeConfig'"));
     }
 
     /**
@@ -283,7 +286,8 @@ public class SpreadSheetImportTest extends BaseTest {
         String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
             .getResource(RESPONSE_JSON)
             .toURI())));
-        expected = expected.replaceAll("#date", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        expected = expected.replaceAll("#date",
+            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         assertEquals(removeGuids(expected), formatJsonString(removeGuids(contentAsString)));
     }
@@ -363,7 +367,8 @@ public class SpreadSheetImportTest extends BaseTest {
                 hasItem(allOf(hasColumn("reference", "FixedList-regionalCentreEnum"))),
                 hasItem(allOf(hasColumn("reference", "MultiSelectList-regionalCentreEnum")))));
 
-        List<Map<String, Object>> fieldTypeListItems = jdbcTemplate.queryForList("SELECT * FROM field_type_list_item");
+        List<Map<String, Object>> fieldTypeListItems = jdbcTemplate.queryForList(
+            "SELECT * FROM field_type_list_item");
 
         assertThat(fieldTypeListItems,
             allOf(hasItem(allOf(hasColumn("value", "MARRIAGE"),
@@ -443,7 +448,8 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertCaseRoles() {
-        List<Map<String, Object>> allCaseRoles = jdbcTemplate.queryForList("SELECT * FROM role WHERE role.dtype = 'CASEROLE'");
+        List<Map<String, Object>> allCaseRoles = jdbcTemplate.queryForList(
+            "SELECT * FROM role WHERE role.dtype = 'CASEROLE'");
         assertThat(allCaseRoles, hasSize(6));
 
         List<Map<String, Object>> caseTypeCaseRoles = jdbcTemplate.queryForList("SELECT * FROM role where "
@@ -486,7 +492,8 @@ public class SpreadSheetImportTest extends BaseTest {
             + "workbasket_input_case_field");
         assertThat(allWorkbasket, hasSize(13));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM workbasket_input_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
@@ -506,7 +513,8 @@ public class SpreadSheetImportTest extends BaseTest {
         List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM workbasket_case_field");
         assertThat(allWorkbasket, hasSize(6));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM workbasket_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
@@ -522,10 +530,12 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertSearchInput(Map<Object, Object> caseFieldIds) {
-        List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM search_input_case_field");
+        List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList(
+            "SELECT * FROM search_input_case_field");
         assertThat(allWorkbasket, hasSize(13));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM search_input_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
@@ -541,10 +551,12 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertSearchResult(Map<Object, Object> caseFieldIds) {
-        List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM search_result_case_field");
+        List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList(
+            "SELECT * FROM search_result_case_field");
         assertThat(allWorkbasket, hasSize(7));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM search_result_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
@@ -564,7 +576,8 @@ public class SpreadSheetImportTest extends BaseTest {
             "SELECT * FROM display_group WHERE type = 'TAB'");
         assertThat(allDisplayGroups, hasSize(14));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeDisplayGroup = jdbcTemplate.queryForList(
             "SELECT * FROM display_group WHERE case_type_id = ? AND type = 'TAB'",
             caseTypesId.get("TestAddressBookCase"));
@@ -589,8 +602,8 @@ public class SpreadSheetImportTest extends BaseTest {
             "TestAddressBookCase");
 
         List<Map<String, Object>> displayGroupsFields = jdbcTemplate.queryForList(
-            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id "
-                + "AND dg.type = 'TAB' AND case_type_id = ?", caseTypesId.get("TestAddressBookCase"));
+            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id"
+                + " AND dg.type = 'TAB' AND case_type_id = ?", caseTypesId.get("TestAddressBookCase"));
 
         assertThat(displayGroupsFields, hasSize(6));
         assertThat(displayGroupsFields,
@@ -637,8 +650,8 @@ public class SpreadSheetImportTest extends BaseTest {
             "TestComplexAddressBookCase");
 
         List<Map<String, Object>> complexDisplayGroupsFields = jdbcTemplate.queryForList(
-            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id "
-                + "AND dg.type = 'TAB'  AND case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
+            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id"
+                + " AND dg.type = 'TAB'  AND case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
         assertThat(complexDisplayGroupsFields, hasSize(10));
         assertThat(complexDisplayGroupsFields,
             allOf(hasItem(allOf(hasColumn("display_group_id", complexDisplayGroupsId.get("NameTab")),
@@ -679,8 +692,8 @@ public class SpreadSheetImportTest extends BaseTest {
             "TestAddressBookCase");
 
         List<Map<String, Object>> displayGroupsFields = jdbcTemplate.queryForList(
-            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id "
-                + "AND dg.type = 'PAGE';");
+            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id"
+                + " AND dg.type = 'PAGE';");
         assertThat(displayGroupsFields, hasSize(13));
         assertThat(displayGroupsFields,
             allOf(hasItem(allOf(hasColumn("display_group_id",
@@ -711,7 +724,8 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertSearchAliases() {
-        List<Map<String, Object>> searchAliasDefinition = jdbcTemplate.queryForList("SELECT * FROM search_alias_field");
+        List<Map<String, Object>> searchAliasDefinition = jdbcTemplate.queryForList(
+            "SELECT * FROM search_alias_field");
         assertThat(searchAliasDefinition, hasSize(3));
 
         List<Map<String, Object>> caseTypeSearchAliasDefinition = jdbcTemplate.queryForList(

@@ -54,7 +54,8 @@ public class CaseTypeEntityCaseFieldsValidatorImplTest {
 
     private CaseFieldEntity caseFieldEntity3 = new CaseFieldEntity();
 
-    private Collection<CaseFieldEntity> caseFieldEntities = Arrays.asList(caseFieldEntity1, caseFieldEntity2, caseFieldEntity3);
+    private Collection<CaseFieldEntity> caseFieldEntities = Arrays.asList(
+        caseFieldEntity1, caseFieldEntity2, caseFieldEntity3);
 
     private CaseTypeEntityCaseFieldsValidatorImpl classUnderTest;
 
@@ -74,7 +75,8 @@ public class CaseTypeEntityCaseFieldsValidatorImplTest {
     public void caseFieldsAllValid_allValidatorsCalledWithContextBuiltFromCaseType_EmptyValidationResultReturned() {
 
 
-        ValidationResult validationResult = classUnderTest.validate(caseType(CASE_TYPE_NAME, CASE_TYPE_SECURITY_CLASSIFICATION, caseFieldEntities));
+        ValidationResult validationResult = classUnderTest.validate(caseType(
+            CASE_TYPE_NAME, CASE_TYPE_SECURITY_CLASSIFICATION, caseFieldEntities));
 
         assertTrue(validationResult.isValid());
         assertTrue(validationResult.getValidationErrors().isEmpty());
@@ -83,15 +85,19 @@ public class CaseTypeEntityCaseFieldsValidatorImplTest {
 
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void caseFields1And3AreInvalid_allValidatorsCalledWithContextBuiltFromCaseType_ValidationResultWithErrorsForCaseFieldEntity1And3Returned() {
 
         when(caseFieldEntityValidator1.validate(eq(caseFieldEntity1), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("caseFieldEntityValidator1 failed for caseFieldEntity1")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "caseFieldEntityValidator1 failed for caseFieldEntity1")));
         when(caseFieldEntityValidator2.validate(eq(caseFieldEntity3), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("caseFieldEntityValidator2 failed for caseFieldEntity3")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "caseFieldEntityValidator2 failed for caseFieldEntity3")));
 
-        ValidationResult validationResult = classUnderTest.validate(caseType(CASE_TYPE_NAME, CASE_TYPE_SECURITY_CLASSIFICATION, caseFieldEntities));
+        ValidationResult validationResult = classUnderTest.validate(caseType(
+            CASE_TYPE_NAME, CASE_TYPE_SECURITY_CLASSIFICATION, caseFieldEntities));
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
@@ -144,19 +150,22 @@ public class CaseTypeEntityCaseFieldsValidatorImplTest {
         );
     }
 
-    private <T> Matcher<T> matchesCaseFieldEntityValidationContext(String caseTypeName, SecurityClassification securityClassification) {
+    private <T> Matcher<T> matchesCaseFieldEntityValidationContext(String caseTypeName,
+                                                                   SecurityClassification securityClassification) {
         return new BaseMatcher<T>() {
             @Override
             public boolean matches(Object o) {
                 return o instanceof CaseFieldEntityValidationContext
                     && ((CaseFieldEntityValidationContext) o).getCaseName() == caseTypeName
-                    && ((CaseFieldEntityValidationContext) o).getParentSecurityClassification() == securityClassification;
+                    && ((CaseFieldEntityValidationContext) o)
+                    .getParentSecurityClassification() == securityClassification;
             }
 
             @Override
             public void describeTo(Description description) {
                 description.appendText(
-                    " a CaseFieldEntityValidationContext containing the reference to the Case Type Name and SecurityClassification of the CaseType");
+                    " a CaseFieldEntityValidationContext containing the reference to the Case Type Name and "
+                        + "SecurityClassification of the CaseType");
             }
         };
     }

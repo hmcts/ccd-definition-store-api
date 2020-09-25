@@ -28,7 +28,8 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl
         {DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY};
     private static final List<String> ALLOWED_FIELD_TYPES =
         Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
-    private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP = new EnumMap<>(DisplayContext.class);
+    private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP =
+        new EnumMap<>(DisplayContext.class);
 
     static {
         DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.READONLY, DisplayContextParameterType.DATETIMEDISPLAY);
@@ -36,14 +37,16 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl
         DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.put(DisplayContext.MANDATORY, DisplayContextParameterType.DATETIMEENTRY);
     }
 
-    public EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
+    public EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(
+        DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
         super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, ALLOWED_FIELD_TYPES);
     }
 
     @Override
     public ValidationResult validate(EventCaseFieldEntity entity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
-        return shouldSkipValidatorForEntity(entity) ? new ValidationResult() : super.validate(entity, Collections.EMPTY_LIST);
+        return shouldSkipValidatorForEntity(entity) ? new ValidationResult()
+            : super.validate(entity, Collections.EMPTY_LIST);
     }
 
     @Override
@@ -73,7 +76,8 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImpl
                 DisplayContextParameterType.getParameterTypeFor(displayContextParameter);
             // Validation for #TABLE and #LIST covered in EventCaseFieldDisplayContextParameterValidatorImpl
             return parameterType
-                .map(t -> !(t.equals(DisplayContextParameterType.DATETIMEDISPLAY) || t.equals(DisplayContextParameterType.DATETIMEENTRY)))
+                .map(t -> !(t.equals(DisplayContextParameterType.DATETIMEDISPLAY)
+                    || t.equals(DisplayContextParameterType.DATETIMEENTRY)))
                 .orElse(true);
         }
         return true;

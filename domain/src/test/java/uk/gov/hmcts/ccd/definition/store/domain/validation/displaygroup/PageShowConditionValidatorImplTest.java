@@ -95,7 +95,8 @@ public class PageShowConditionValidatorImplTest {
         EventEntity event = mock(EventEntity.class);
         when(event.hasField("field")).thenReturn(true);
         displayGroup.setEvent(event);
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("field").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("field").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(validParsedShowCondition);
 
@@ -111,10 +112,12 @@ public class PageShowConditionValidatorImplTest {
     @Test
     public void successfullyValidatesShowConditionForCustomComplexField() throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
-        String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
+        String matchingCaseFieldKey = matchingCaseFieldId
+            + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
         String showCondition = matchingCaseFieldKey + "=\"UK\"";
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression(showCondition).field(matchingCaseFieldKey).build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression(showCondition).field(matchingCaseFieldKey).build();
         when(mockShowConditionParser.parseShowCondition(showCondition))
             .thenReturn(validParsedShowCondition);
 
@@ -141,7 +144,8 @@ public class PageShowConditionValidatorImplTest {
         String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode";
         String invalidShowCondition = matchingCaseFieldKey + "=\"UK\"";
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression(invalidShowCondition).field(matchingCaseFieldKey).build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression(invalidShowCondition).field(matchingCaseFieldKey).build();
         when(mockShowConditionParser.parseShowCondition(invalidShowCondition))
             .thenReturn(validParsedShowCondition);
 
@@ -165,7 +169,8 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition() throws InvalidShowConditionException {
+    public void returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition()
+        throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.PAGE);
@@ -187,7 +192,8 @@ public class PageShowConditionValidatorImplTest {
         EventEntity event = mock(EventEntity.class);
         when(event.hasField(field)).thenReturn(false);
         displayGroup.setEvent(event);
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field(field).build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field(field).build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(validParsedShowCondition);
 
@@ -201,7 +207,8 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidField() throws InvalidShowConditionException {
+    public void returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidField()
+        throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.PAGE);
@@ -245,7 +252,8 @@ public class PageShowConditionValidatorImplTest {
                                     complexFieldEntity("AddressGlobalCode", addressGlobalFieldTypeEntity()),
                                     complexFieldEntity("AddressGlobalUKCode", addressGlobalUKFieldTypeEntity()),
                                     complexFieldEntity("OrderSummaryCode", orderSummaryFieldTypeEntity()),
-                                    complexFieldEntity("SecondSurname", fieldTypeEntity("Text", emptyList()))
+                                    complexFieldEntity("SecondSurname",
+                                        fieldTypeEntity("Text", emptyList()))
                                 )))
                     ))))
         );

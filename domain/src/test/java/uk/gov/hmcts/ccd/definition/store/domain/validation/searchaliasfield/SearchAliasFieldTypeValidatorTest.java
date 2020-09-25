@@ -47,7 +47,8 @@ class SearchAliasFieldTypeValidatorTest {
         @Test
         @DisplayName("should return no validation errors")
         void shouldReturnNoErrors() {
-            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder("ref").withCaseType(caseType).build();
+            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder("ref")
+                .withCaseType(caseType).build();
 
             ValidationResult result = validator.validate(searchAliasField);
             assertThat(result.getValidationErrors().size(), is(0));
@@ -63,7 +64,8 @@ class SearchAliasFieldTypeValidatorTest {
         @DisplayName("should return validation errors for null field type")
         void shouldReturnErrors() {
             String aliasName = "alias";
-            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(aliasName).withCaseType(caseType).build();
+            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(aliasName)
+                .withCaseType(caseType).build();
             searchAliasField.setFieldType(null);
 
             ValidationResult result1 = validator.validate(searchAliasField);
@@ -80,8 +82,10 @@ class SearchAliasFieldTypeValidatorTest {
         @Test
         @DisplayName("should return no validation error")
         void shouldReturnNoErrors() {
-            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE).withFieldType(BASE_TEXT).build();
-            when(repository.findByReference(SEARCH_ALIAS_REFERENCE)).thenReturn(Collections.singletonList(searchAliasField));
+            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE)
+                .withFieldType(BASE_TEXT).build();
+            when(repository.findByReference(SEARCH_ALIAS_REFERENCE))
+                .thenReturn(Collections.singletonList(searchAliasField));
 
             ValidationResult validationResult = validator.validate(searchAliasField);
             assertThat(validationResult.getValidationErrors().size(), is(0));
@@ -101,7 +105,8 @@ class SearchAliasFieldTypeValidatorTest {
                 .withFieldType(BASE_NUMBER)
                 .withCaseType(new CaseTypeEntity())
                 .build();
-            when(repository.findByReference(SEARCH_ALIAS_REFERENCE)).thenReturn(Collections.singletonList(existingField));
+            when(repository.findByReference(SEARCH_ALIAS_REFERENCE))
+                .thenReturn(Collections.singletonList(existingField));
 
             SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE)
                 .withFieldType(BASE_TEXT)

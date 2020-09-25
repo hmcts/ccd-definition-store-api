@@ -84,13 +84,16 @@ public class CaseTypeEntityEventValidatorImplTest {
 
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void caseFields1And3AreInvalid_allValidatorsCalledWithContextBuiltFromCaseType_ValidationResultWithErrorsForCaseFieldEntity1And3Returned() {
 
         when(eventEntityValidator1.validate(eq(eventEntity1), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("eventEntityValidator1 failed for eventEntity1")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "eventEntityValidator1 failed for eventEntity1")));
         when(eventEntityValidator2.validate(eq(eventEntity3), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("eventEntityValidator3 failed for eventEntity3")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "eventEntityValidator3 failed for eventEntity3")));
 
         ValidationResult validationResult = classUnderTest.validate(caseType);
 
@@ -145,7 +148,8 @@ public class CaseTypeEntityEventValidatorImplTest {
         );
     }
 
-    private <T> Matcher<T> matchesEventEntityValidationContext(String caseTypeName, SecurityClassification securityClassification) {
+    private <T> Matcher<T> matchesEventEntityValidationContext(String caseTypeName,
+                                                               SecurityClassification securityClassification) {
         return new BaseMatcher<T>() {
             @Override
             public boolean matches(Object o) {
@@ -157,7 +161,8 @@ public class CaseTypeEntityEventValidatorImplTest {
             @Override
             public void describeTo(Description description) {
                 description.appendText(
-                    " a EventEntityValidationContext containing the reference to the Case Type Name and SecurityClassification of the CaseType");
+                    " a EventEntityValidationContext containing the reference to the Case Type Name "
+                        + "and SecurityClassification of the CaseType");
             }
         };
     }

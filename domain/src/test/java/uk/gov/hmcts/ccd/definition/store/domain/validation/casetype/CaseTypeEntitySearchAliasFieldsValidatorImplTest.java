@@ -29,7 +29,8 @@ class CaseTypeEntitySearchAliasFieldsValidatorImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        caseTypeEntitySearchAliasFieldsValidator = new CaseTypeEntitySearchAliasFieldsValidatorImpl(Collections.singletonList(searchAliasFieldValidator));
+        caseTypeEntitySearchAliasFieldsValidator = new CaseTypeEntitySearchAliasFieldsValidatorImpl(
+            Collections.singletonList(searchAliasFieldValidator));
     }
 
     @Nested
@@ -42,7 +43,8 @@ class CaseTypeEntitySearchAliasFieldsValidatorImplTest {
             SearchAliasFieldEntity searchAliasField = new SearchAliasFieldEntity();
             CaseTypeEntity caseType = new CaseTypeEntity();
             caseType.addSearchAliasFields(Collections.singletonList(searchAliasField));
-            when(searchAliasFieldValidator.validate(any(SearchAliasFieldEntity.class))).thenReturn(new ValidationResult());
+            when(searchAliasFieldValidator.validate(any(SearchAliasFieldEntity.class)))
+                .thenReturn(new ValidationResult());
 
             ValidationResult validationResult = caseTypeEntitySearchAliasFieldsValidator.validate(caseType);
             assertThat(validationResult.getValidationErrors().size(), is(0));
@@ -62,7 +64,8 @@ class CaseTypeEntitySearchAliasFieldsValidatorImplTest {
             CaseTypeEntity caseType = new CaseTypeEntity();
             caseType.addSearchAliasFields(Collections.singletonList(searchAliasField));
             ValidationResult validationResult = new ValidationResult();
-            SearchAliasFieldValidator.ValidationError validationError = new SearchAliasFieldValidator.ValidationError("Error", searchAliasField);
+            SearchAliasFieldValidator.ValidationError validationError = new SearchAliasFieldValidator
+                .ValidationError("Error", searchAliasField);
             validationResult.addError(validationError);
             when(searchAliasFieldValidator.validate(any(SearchAliasFieldEntity.class))).thenReturn(validationResult);
 

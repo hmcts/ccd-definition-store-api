@@ -77,9 +77,11 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         complexACL6 = new ComplexFieldACLEntity();
         complexACL6.setListElementCode(PREDEFINED_COMPLEX_ADDRESS_GLOBAL + ".AddressLine1");
         complexACL7 = new ComplexFieldACLEntity();
-        complexACL7.setListElementCode(CLASS + "." + CLASS_MEMBERS + "." + CHILDREN + "." + PREDEFINED_COMPLEX_ADDRESS_GLOBAL);
+        complexACL7.setListElementCode(
+            CLASS + "." + CLASS_MEMBERS + "." + CHILDREN + "." + PREDEFINED_COMPLEX_ADDRESS_GLOBAL);
         complexACL8 = new ComplexFieldACLEntity();
-        complexACL8.setListElementCode(CLASS + "." + CLASS_MEMBERS + "." + CHILDREN + "." + PREDEFINED_COMPLEX_ADDRESS_GLOBAL + ".AddressLine1");
+        complexACL8.setListElementCode(
+            CLASS + "." + CLASS_MEMBERS + "." + CHILDREN + "." + PREDEFINED_COMPLEX_ADDRESS_GLOBAL + ".AddressLine1");
 
         given(caseFieldEntityValidationContext.getCaseReference()).willReturn("case_type");
 
@@ -92,12 +94,15 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
                     .addFieldToComplex(CLASS_MEMBERS, newType(CLASS_MEMBERS)
                         .addFieldToComplex(CHILDREN, newType(CHILDREN)
                             .addFieldToComplex(CHILD_FULL_NAME, newType(CHILD_FULL_NAME).buildComplex())
-                            .addFieldToComplex(PREDEFINED_COMPLEX_ADDRESS_GLOBAL, newType(PREDEFINED_COMPLEX_ADDRESS_GLOBAL).buildComplex())
+                            .addFieldToComplex(
+                                PREDEFINED_COMPLEX_ADDRESS_GLOBAL, newType(PREDEFINED_COMPLEX_ADDRESS_GLOBAL)
+                                    .buildComplex())
                             .buildComplex())
                         .buildComplex())
                     .buildComplex())
                 .addFieldToComplex(CLASS_MEMBERS, newType("Text").build())
-                .addFieldToComplex(PREDEFINED_COMPLEX_ADDRESS_GLOBAL, newType(PREDEFINED_COMPLEX_ADDRESS_GLOBAL).buildComplex())
+                .addFieldToComplex(PREDEFINED_COMPLEX_ADDRESS_GLOBAL, newType(PREDEFINED_COMPLEX_ADDRESS_GLOBAL)
+                    .buildComplex())
                 .buildComplex()
         );
 
@@ -119,7 +124,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
 
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(2)),
-            () -> assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidUserRoleValidationError.class)),
+            () -> assertThat(result.getValidationErrors().get(0), instanceOf(
+                CaseFieldEntityInvalidUserRoleValidationError.class)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
                 "Invalid UserRole nf_user_role_id for case type 'case_type', case field 'case_field'"))
         );
@@ -193,7 +199,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         final List<ValidationError> validationErrors = result.getValidationErrors();
         assertAll(
             () -> assertThat(validationErrors, not(empty())),
-            () -> assertThat(validationErrors.get(0).getDefaultMessage(), is("List element code 'Class' has higher"
+            () -> assertThat(validationErrors.get(0).getDefaultMessage(),
+                is("List element code 'Class' has higher"
                 + " access than case field 'case_field'"))
         );
     }
@@ -308,7 +315,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         complexACL7.setCreate(false);
         complexACL8.setUserRole(userRole);
         complexACL8.setCreate(false);
-        caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2, complexACL5, complexACL6, complexACL7, complexACL8));
+        caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2, complexACL5, complexACL6,
+            complexACL7, complexACL8));
         fieldACL.setUserRole(userRole);
         fieldACL.setCreate(true);
         caseField.addCaseFieldACL(fieldACL);
@@ -319,9 +327,11 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
             () -> assertThat(result.getValidationErrors(), not(empty())),
             () -> assertThat(result.getValidationErrors().size(), is(2)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is("List element code "
-                + "'AddressGlobal.AddressLine1' refers to a predefined complex type parent 'AddressGlobal' and is not allowed")),
+                + "'AddressGlobal.AddressLine1' refers to a predefined complex type parent 'AddressGlobal' "
+                + "and is not allowed")),
             () -> assertThat(result.getValidationErrors().get(1).getDefaultMessage(), is("List element code "
-                + "'Class.ClassMembers.Children.AddressGlobal.AddressLine1' refers to a predefined complex type parent 'AddressGlobal' and is not allowed"))
+                + "'Class.ClassMembers.Children.AddressGlobal.AddressLine1' refers to "
+                + "a predefined complex type parent 'AddressGlobal' and is not allowed"))
         );
     }
 

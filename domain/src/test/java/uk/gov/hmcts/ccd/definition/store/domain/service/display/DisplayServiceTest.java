@@ -81,6 +81,7 @@ public class DisplayServiceTest {
 
         }
 
+        @SuppressWarnings("checkstyle:LineLength")
         @Test
         public void shouldReturnCaseTabCollectionWithPopulatedChannelsAndTabsLists_whenDisplayGroupEntitiesExistForCaseType() {
 
@@ -151,14 +152,17 @@ public class DisplayServiceTest {
             when(entityToResponseDTOMapper.map(searchInputCaseFieldEntity2)).thenReturn(searchInputField2);
             when(entityToResponseDTOMapper.map(searchInputCaseFieldEntity3)).thenReturn(searchInputField3);
 
-            SearchInputDefinition searchInputDefinition = classUnderTest.findSearchInputDefinitionForCaseType(caseTypeId);
+            SearchInputDefinition searchInputDefinition = classUnderTest
+                .findSearchInputDefinitionForCaseType(caseTypeId);
 
             assertEquals(caseTypeId, searchInputDefinition.getCaseTypeId());
             assertEquals(3, searchInputDefinition.getFields().size());
-            assertThat(searchInputDefinition.getFields(), hasItems(searchInputField1, searchInputField2, searchInputField3));
+            assertThat(searchInputDefinition.getFields(), hasItems(
+                searchInputField1, searchInputField2, searchInputField3));
 
         }
 
+        @SuppressWarnings("checkstyle:LineLength")
         @Test
         public void shouldReturnSearchInputDefinitionWithEmptySearchInputFieldList_whenNoSearchInputCaseFieldEntitiesForCaseType() {
 
@@ -168,7 +172,8 @@ public class DisplayServiceTest {
                 Collections.emptyList()
             );
 
-            SearchInputDefinition searchInputDefinition = classUnderTest.findSearchInputDefinitionForCaseType(caseTypeId);
+            SearchInputDefinition searchInputDefinition = classUnderTest
+                .findSearchInputDefinitionForCaseType(caseTypeId);
 
             assertTrue(searchInputDefinition.getFields().isEmpty());
 
@@ -202,14 +207,17 @@ public class DisplayServiceTest {
             when(entityToResponseDTOMapper.map(searchInputCaseFieldEntity2)).thenReturn(searchResultsField2);
             when(entityToResponseDTOMapper.map(searchInputCaseFieldEntity3)).thenReturn(searchResultsField3);
 
-            SearchResultDefinition searchResultDefinition = classUnderTest.findSearchResultDefinitionForCaseType(caseTypeId);
+            SearchResultDefinition searchResultDefinition = classUnderTest
+                .findSearchResultDefinitionForCaseType(caseTypeId);
 
             assertEquals(caseTypeId, searchResultDefinition.getCaseTypeId());
             assertEquals(3, searchResultDefinition.getFields().size());
-            assertThat(searchResultDefinition.getFields(), hasItems(searchResultsField1, searchResultsField2, searchResultsField3));
+            assertThat(searchResultDefinition.getFields(), hasItems(
+                searchResultsField1, searchResultsField2, searchResultsField3));
 
         }
 
+        @SuppressWarnings("checkstyle:LineLength")
         @Test
         public void shouldReturnSearchResultDefinitionWithEmptySearchResultFieldList_whenNoSearchResultCaseFieldEntitiesForCaseType() {
 
@@ -219,7 +227,8 @@ public class DisplayServiceTest {
                 Collections.emptyList()
             );
 
-            SearchResultDefinition searchResultDefinition = classUnderTest.findSearchResultDefinitionForCaseType(caseTypeId);
+            SearchResultDefinition searchResultDefinition = classUnderTest
+                .findSearchResultDefinitionForCaseType(caseTypeId);
 
             assertTrue(searchResultDefinition.getFields().isEmpty());
 
@@ -253,14 +262,17 @@ public class DisplayServiceTest {
             when(entityToResponseDTOMapper.map(workbasketInputCaseFieldEntity2)).thenReturn(workbasketInputField2);
             when(entityToResponseDTOMapper.map(workbasketInputCaseFieldEntity3)).thenReturn(workbasketInputField3);
 
-            WorkbasketInputDefinition workbasketInputDefinition = classUnderTest.findWorkBasketInputDefinitionForCaseType(caseTypeId);
+            WorkbasketInputDefinition workbasketInputDefinition = classUnderTest
+                .findWorkBasketInputDefinitionForCaseType(caseTypeId);
 
             assertEquals(caseTypeId, workbasketInputDefinition.getCaseTypeId());
             assertEquals(3, workbasketInputDefinition.getFields().size());
-            assertThat(workbasketInputDefinition.getFields(), hasItems(workbasketInputField1, workbasketInputField2, workbasketInputField3));
+            assertThat(workbasketInputDefinition.getFields(), hasItems(
+                workbasketInputField1, workbasketInputField2, workbasketInputField3));
 
         }
 
+        @SuppressWarnings("checkstyle:LineLength")
         @Test
         void shouldReturnWorkbasketInputDefinitionWithEmptyWorkbasketInputFieldList_whenNoWorkbasketInputCaseFieldEntitiesForCaseType() {
 
@@ -270,7 +282,8 @@ public class DisplayServiceTest {
                 Collections.emptyList()
             );
 
-            WorkbasketInputDefinition workbasketInputDefinition = classUnderTest.findWorkBasketInputDefinitionForCaseType(caseTypeId);
+            WorkbasketInputDefinition workbasketInputDefinition = classUnderTest
+                .findWorkBasketInputDefinitionForCaseType(caseTypeId);
 
             assertTrue(workbasketInputDefinition.getFields().isEmpty());
         }
@@ -306,10 +319,12 @@ public class DisplayServiceTest {
 
             assertEquals(caseTypeId, workBasketResult.getCaseTypeId());
             assertEquals(3, workBasketResult.getFields().size());
-            assertThat(workBasketResult.getFields(), hasItems(workBasketResultField1, workBasketResultField2, workBasketResultField3));
+            assertThat(workBasketResult.getFields(), hasItems(
+                workBasketResultField1, workBasketResultField2, workBasketResultField3));
 
         }
 
+        @SuppressWarnings("checkstyle:LineLength")
         @Test
         public void shouldReturnWorkBasketResultWithEmptySearchResultFieldList_whenNoWorkBasketCaseFieldEntitiesForCaseType() {
 
@@ -357,10 +372,12 @@ public class DisplayServiceTest {
 
             assertEquals(caseTypeId, searchCasesResult.getCaseTypeId());
             assertEquals(3, searchCasesResult.getFields().size());
-            assertThat(searchCasesResult.getFields(), hasItems(searchCasesResultField1, searchCasesResultField2, searchCasesResultField3));
+            assertThat(searchCasesResult.getFields(), hasItems(
+                searchCasesResultField1, searchCasesResultField2, searchCasesResultField3));
 
         }
 
+        @SuppressWarnings("checkstyle:LineLength")
         @Test
         void shouldReturnSearchCasesResultWithEmptySearchResultFieldList_whenNoSearchCasesResultFieldEntitiesForCaseType() {
 

@@ -21,7 +21,8 @@ public class CaseRoleEntityUniquenessValidatorImpl implements CaseRoleEntityVali
             final Optional<CaseRoleEntity> duplicateEntity =
                 caseRoleEntities
                     .stream()
-                    .filter(re -> !caseRoleEntity.equals(re) && re.getReference().equalsIgnoreCase(caseRoleEntity.getReference()))
+                    .filter(re -> !caseRoleEntity.equals(re)
+                        && re.getReference().equalsIgnoreCase(caseRoleEntity.getReference()))
                     .findFirst();
             duplicateEntity.ifPresent(caseRoleEntity1 ->
                 validationResult.addError(new CaseRoleEntityUniquenessValidatorImpl.ValidationError(String.format(

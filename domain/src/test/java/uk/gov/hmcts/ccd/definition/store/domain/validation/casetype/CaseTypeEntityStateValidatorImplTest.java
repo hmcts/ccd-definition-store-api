@@ -60,10 +60,12 @@ public class CaseTypeEntityStateValidatorImplTest {
     @Test
     public void shouldReturnValidationResultWithValidationErrorWhenThereAreErrors() {
         ValidationResult vr1 = new ValidationResult();
-        vr1.addError(new StateEntityACLValidatorImpl.ValidationError("Default user role validation error message...", new StateACLEntity()));
+        vr1.addError(new StateEntityACLValidatorImpl.ValidationError(
+            "Default user role validation error message...", new StateACLEntity()));
         when(crudValidatorImpl.validate(any(), any())).thenReturn(vr1);
         ValidationResult vr2 = new ValidationResult();
-        vr1.addError(new StateEntityCrudValidatorImpl.ValidationError("Default crud validation error message...", new StateACLEntity()));
+        vr1.addError(new StateEntityCrudValidatorImpl.ValidationError(
+            "Default crud validation error message...", new StateACLEntity()));
         caseType.addState(new StateEntity());
         when(userRoleValidatorImpl.validate(any(), any())).thenReturn(vr2);
 

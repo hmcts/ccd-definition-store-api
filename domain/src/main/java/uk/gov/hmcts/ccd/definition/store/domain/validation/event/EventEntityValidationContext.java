@@ -21,7 +21,8 @@ public class EventEntityValidationContext implements ValidationContext {
         this.caseName = parentCaseType.getName();
         this.caseReference = parentCaseType.getReference();
         this.parentSecurityClassification = parentCaseType.getSecurityClassification();
-        this.caseRoles = parentCaseType.getCaseRoles().stream().map(caseRole -> caseRole.getReference()).collect(Collectors.toList());
+        this.caseRoles = parentCaseType.getCaseRoles().stream().map(
+            caseRole -> caseRole.getReference()).collect(Collectors.toList());
     }
 
     public SecurityClassification getParentSecurityClassification() {

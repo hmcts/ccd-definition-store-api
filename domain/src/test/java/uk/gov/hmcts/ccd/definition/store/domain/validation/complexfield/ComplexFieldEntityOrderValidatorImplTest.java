@@ -20,7 +20,8 @@ import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
 class ComplexFieldEntityOrderValidatorImplTest {
 
-    private ComplexFieldEntityOrderValidatorImpl complexFieldEntityOrderValidator = new ComplexFieldEntityOrderValidatorImpl();
+    private ComplexFieldEntityOrderValidatorImpl complexFieldEntityOrderValidator =
+        new ComplexFieldEntityOrderValidatorImpl();
 
     CaseFieldComplexFieldEntityValidator.ValidationContext validationContext;
 

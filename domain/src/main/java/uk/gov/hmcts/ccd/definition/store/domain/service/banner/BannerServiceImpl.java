@@ -58,6 +58,7 @@ public class BannerServiceImpl implements BannerService {
             return;
         }
         int deletedBannersCount = bannerRepository.deleteByJurisdictionReference(jurisdictionReference);
-        LOG.debug("Deleted {} existing banner entities for jurisdiction {}.", deletedBannersCount, jurisdictionReference);
+        LOG.debug(
+            "Deleted {} existing banner entities for jurisdiction {}.", deletedBannersCount, jurisdictionReference);
     }
 }

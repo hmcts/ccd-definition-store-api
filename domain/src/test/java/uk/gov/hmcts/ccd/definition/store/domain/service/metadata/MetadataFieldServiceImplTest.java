@@ -51,7 +51,8 @@ class MetadataFieldServiceImplTest {
         metadataField.setFieldType(fieldType);
 
         CaseFieldEntity metadataFieldEntity = new CaseFieldEntity();
-        when(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(METADATA)).thenReturn(singletonList(metadataFieldEntity));
+        when(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(METADATA))
+            .thenReturn(singletonList(metadataFieldEntity));
         when(dtoMapper.map(metadataFieldEntity)).thenReturn(metadataField);
 
         List<CaseField> metadataFields = metadataFieldService.getCaseMetadataFields();

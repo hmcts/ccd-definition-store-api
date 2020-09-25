@@ -33,7 +33,8 @@ public class JurisdictionUiConfigServiceImpl implements JurisdictionUiConfigServ
     public void save(JurisdictionUiConfigEntity jurisdictionUiConfigEntity) {
         LOG.debug("Create Jurisdiction UI Config Entity {}", jurisdictionUiConfigEntity);
         String reference = jurisdictionUiConfigEntity.getJurisdiction().getReference();
-        Optional<JurisdictionUiConfigEntity> entityObj = Optional.ofNullable(repository.findByJurisdictionId(reference));
+        Optional<JurisdictionUiConfigEntity> entityObj = Optional.ofNullable(
+            repository.findByJurisdictionId(reference));
         JurisdictionUiConfigEntity entityDB = jurisdictionUiConfigEntity;
         if (entityObj.isPresent()) {
             entityDB = entityObj.get();

@@ -46,8 +46,10 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
                 if (isStartPlaceholderAndNotCollecting(label, scanIndex, isCollecting)) {
                     isCollecting = true;
                 } else if (isCollecting) {
-                    if (isClosingPlaceholder(label, scanIndex) && !exceptionalValuesPredicate.test(placeholderToSubstitute)) {
-                        processPlaceholderIfMatched(caseType, validationResult, caseFieldEntity, placeholderToSubstitute);
+                    if (isClosingPlaceholder(label, scanIndex)
+                        && !exceptionalValuesPredicate.test(placeholderToSubstitute)) {
+                        processPlaceholderIfMatched(
+                            caseType, validationResult, caseFieldEntity, placeholderToSubstitute);
                         isCollecting = false;
                         placeholderToSubstitute = "";
                     } else if (!isOpeningPlaceholder(label, scanIndex)) {
@@ -79,14 +81,14 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
         for (CaseFieldEntity lookupEntity : caseType.getCaseFields()) {
             String[] fieldIds = placeholderToSubstitute.split("\\.");
             if (lookupEntity.getReference().equals(fieldIds[0])) {
-                Optional<FieldEntity> nestedElementByPath = lookupEntity.findNestedElementByPath(join(".", subarray(fieldIds,
-                    1,
-                    fieldIds.length)));
+                Optional<FieldEntity> nestedElementByPath = lookupEntity.findNestedElementByPath(
+                    join(".", subarray(fieldIds, 1, fieldIds.length)));
                 if (nestedElementByPath.isPresent()) {
                     hasFoundPlaceholderField = true;
                     FieldEntity nestedElement = nestedElementByPath.get();
                     if (isPlaceholderLeafOfNonSimpleType(nestedElement)) {
-                        validationResult.addError(new PlaceholderLeafNotSimpleTypeValidationError(caseFieldEntity.getReference(),
+                        validationResult.addError(new PlaceholderLeafNotSimpleTypeValidationError(
+                            caseFieldEntity.getReference(),
                             placeholderToSubstitute,
                             nestedElement.getReference(),
                             caseFieldEntity));
@@ -95,7 +97,8 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
                 }
             }
         }
-        addErrorIfPlaceholderUnresolved(validationResult, caseFieldEntity, placeholderToSubstitute, hasFoundPlaceholderField);
+        addErrorIfPlaceholderUnresolved(
+            validationResult, caseFieldEntity, placeholderToSubstitute, hasFoundPlaceholderField);
     }
 
     private void addErrorIfPlaceholderUnresolved(ValidationResult validationResult,
@@ -138,8 +141,10 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
     }
 
     public static class PlaceholderLeafNotSimpleTypeValidationError extends SimpleValidationError<CaseFieldEntity> {
-        public PlaceholderLeafNotSimpleTypeValidationError(String caseFieldReference, String placeholder, String leafReference, CaseFieldEntity entity) {
-            super(format("Label of caseField '%s' has placeholder '%s' that points to case field '%s' of non simple type",
+        public PlaceholderLeafNotSimpleTypeValidationError(
+            String caseFieldReference, String placeholder, String leafReference, CaseFieldEntity entity) {
+            super(format(
+                "Label of caseField '%s' has placeholder '%s' that points to case field '%s' of non simple type",
                 caseFieldReference,
                 placeholder,
                 leafReference),
@@ -153,7 +158,8 @@ public class CaseTypeEntityFieldLabelValidator implements CaseTypeEntityValidato
     }
 
     public static class PlaceholderCannotBeResolvedValidationError extends SimpleValidationError<CaseFieldEntity> {
-        public PlaceholderCannotBeResolvedValidationError(String caseFieldReference, String placeholder, CaseFieldEntity entity) {
+        public PlaceholderCannotBeResolvedValidationError(
+            String caseFieldReference, String placeholder, CaseFieldEntity entity) {
             super(format("Label of caseField '%s' has placeholder '%s' that points to unknown case field",
                 caseFieldReference,
                 placeholder),

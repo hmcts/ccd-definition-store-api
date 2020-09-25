@@ -3,7 +3,14 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -11,13 +18,14 @@ import java.util.Optional;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @MappedSuperclass
 public abstract class GenericLayoutEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @Column(name = "live_from")
