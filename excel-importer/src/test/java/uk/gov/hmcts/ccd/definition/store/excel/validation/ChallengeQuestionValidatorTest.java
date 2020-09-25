@@ -136,7 +136,7 @@ public class ChallengeQuestionValidatorTest {
             buildDefinitionDataItem("incorrectCaseType", FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: incorrectCaseTypeit cannot be found the spreadsheet."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: incorrectCaseType. It cannot be found the spreadsheet."));
             throw exception;
         }
     }
@@ -224,7 +224,7 @@ public class ChallengeQuestionValidatorTest {
         } catch (Exception exception) {
             exception.printStackTrace();
             assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${XXXXX.OrganisationName} is " +
-                "not a valid Answer value, The expression dot notation values should be valid caseTypes fields."));
+                "not a valid Answer value. The expression dot notation values should be valid caseTypes fields."));
             throw exception;
         }
     }

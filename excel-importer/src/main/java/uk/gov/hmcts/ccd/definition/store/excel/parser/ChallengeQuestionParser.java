@@ -2,6 +2,9 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -28,13 +31,23 @@ public class ChallengeQuestionParser {
 
     public List<ChallengeQuestionTabEntity> parse(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
 
-        final List<DefinitionDataItem> questionItems = definitionSheets.get(SheetName.CHALLENGE_QUESTION_TAB.getName()).getDataItems();
-        validateUniqueIds(questionItems);
-        final List<ChallengeQuestionTabEntity> newChallengeQuestionEntities = questionItems.stream().map(questionItem -> {
-            return challengeQuestionValidator.validate(parseContext, questionItem);
-        }).collect(Collectors.toList());
-
-        return newChallengeQuestionEntities;
+        try {
+            final List<DefinitionDataItem> questionItems = definitionSheets.get(SheetName.CHALLENGE_QUESTION_TAB.getName()).getDataItems();
+            validateUniqueIds(questionItems);
+            final List<ChallengeQuestionTabEntity> newChallengeQuestionEntities = questionItems.stream().map(questionItem -> {
+                return challengeQuestionValidator.validate(parseContext, questionItem);
+            }).collect(Collectors.toList());
+            return newChallengeQuestionEntities;
+        } catch (InvalidImportException invalidImportException) {
+            ValidationResult validationResult = new ValidationResult();
+            validationResult.addError(new ValidationError(invalidImportException.getMessage()) {
+                @Override
+                public String toString() {
+                    return getDefaultMessage();
+                }
+            });
+            throw new ValidationException(validationResult);
+        }
     }
 
     private void validateUniqueIds(List<DefinitionDataItem> questionItems) {

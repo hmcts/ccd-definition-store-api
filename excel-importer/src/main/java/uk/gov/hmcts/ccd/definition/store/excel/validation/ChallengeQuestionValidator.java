@@ -71,26 +71,21 @@ public class ChallengeQuestionValidator {
 
     private void validateAnswer(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
         final String answers = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD);
-        final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: "
-                + answers + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                + " value, Please check the expression format and the roles.");
-
         validateNullValue(answers, ERROR_MESSAGE + " value: answer cannot be null.");
         final String[] answersRules = answers.split(ANSWER_MAIN_SEPARATOR);
 
         if (answersRules.length > 0 && answersRules.length != 1) {
             Arrays.asList(answersRules).stream().forEach(currentAnswerExpression -> {
-                        validateAnswerExpression(definitionDataItem, challengeQuestionTabEntity, invalidImportException, currentAnswerExpression);
+                        validateAnswerExpression(definitionDataItem, challengeQuestionTabEntity, currentAnswerExpression);
                     }
             );
         } else {
-            validateAnswerExpression(definitionDataItem, challengeQuestionTabEntity, invalidImportException, answers);
+            validateAnswerExpression(definitionDataItem, challengeQuestionTabEntity, answers);
         }
         challengeQuestionTabEntity.setAnswerField(answers);
     }
 
-    private void validateAnswerExpression(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity,
-                                          InvalidImportException invalidImportException, String currentAnswerExpression) {
+    private void validateAnswerExpression(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity, String currentAnswerExpression) {
 
         final String[] answersFields = currentAnswerExpression.split(Pattern.quote(ANSWER_FIELD_SEPARATOR));
         Arrays.asList(answersFields).stream().forEach(answersField -> {
@@ -106,8 +101,8 @@ public class ChallengeQuestionValidator {
                         final Optional<UserRoleEntity> result = this.parseContext.getRole(challengeQuestionTabEntity.getCaseType().getReference(), role);
                         if (!result.isPresent()) {
                             throw new InvalidImportException(ERROR_MESSAGE + " value: "
-                                + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                                + " value. Please check the expression format and the roles.");
+                                    + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+                                    + " value. Please check the expression format and the roles.");
                         }
                     }
                     // validate dot notation content.
@@ -120,7 +115,7 @@ public class ChallengeQuestionValidator {
     private void validateAnswerFieldExpression(String currentCaseType, String expression) {
         final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: "
                 + expression + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                + " value, The expression dot notation values should be valid caseTypes fields.");
+                + " value. The expression dot notation values should be valid caseTypes fields.");
         // remove previous validated ${} notation
         final String dotNotationExpression = expression.replace("$", "")
                 .replace("{", "")
@@ -236,7 +231,7 @@ public class ChallengeQuestionValidator {
                 caseTypeEntity -> caseTypeEntity.getReference().equals(caseType)
         ).findAny();
         return caseTypeEntityOptional.orElseThrow(() ->
-                new InvalidImportException(ERROR_MESSAGE + " Case Type value: " + caseType + "it cannot be found the spreadsheet.")
+                new InvalidImportException(ERROR_MESSAGE + " Case Type value: " + caseType + ". It cannot be found the spreadsheet.")
         );
     }
 

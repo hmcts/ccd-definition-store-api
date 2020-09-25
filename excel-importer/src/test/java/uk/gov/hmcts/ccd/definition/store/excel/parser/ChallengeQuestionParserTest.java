@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -43,15 +43,9 @@ public class ChallengeQuestionParserTest {
         assertThat(challengeQuestionTabEntities.get(0).getQuestionId(), is("questionID1"));
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test(expected = ValidationException.class)
     public void failDueToDuplicatedIDs() {
-        try {
-            challengeQuestionParser.parse(createDefinitionSheets(true), new ParseContext());
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: [questionID1] " +
-                    "is not a valid QuestionId value, QuestionId cannot be duplicated."));
-            throw exception;
-        }
+        challengeQuestionParser.parse(createDefinitionSheets(true), new ParseContext());
     }
 
     private Map<String, DefinitionSheet> createDefinitionSheets(boolean failTest) {
