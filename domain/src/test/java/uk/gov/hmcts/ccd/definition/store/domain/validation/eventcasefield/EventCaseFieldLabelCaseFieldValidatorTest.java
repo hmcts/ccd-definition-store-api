@@ -26,22 +26,29 @@ public class EventCaseFieldLabelCaseFieldValidatorTest {
     @Test
     public void fieldIsNotLabelType_validationPassesRegardlessOfFieldSetting() {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotLabel"), null, DisplayContext.READONLY), null).isValid());
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotLabel"), null, DisplayContext.OPTIONAL), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(
+            caseField("NotLabel"), null, DisplayContext.READONLY), null)
+            .isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(
+            caseField("NotLabel"), null, DisplayContext.OPTIONAL), null)
+            .isValid());
 
     }
 
     @Test
     public void fieldIsLabelType_validationPassesWhenFieldIsReadOnly() {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("Label"), null, DisplayContext.READONLY), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(
+            caseField("Label"), null, DisplayContext.READONLY), null)
+            .isValid());
 
     }
 
     @Test
     public void fieldIsLabelType_validationFailsWithLabelTypeCannotBeEditableValidationErrorWhenFieldIsNotReadOnly() {
 
-        EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity(caseField("Label"), event("Event Reference"), DisplayContext.OPTIONAL);
+        EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity(
+            caseField("Label"), event("Event Reference"), DisplayContext.OPTIONAL);
 
         ValidationResult validationResult
             = classUnderTest.validate(eventCaseFieldEntity, null);
@@ -51,14 +58,17 @@ public class EventCaseFieldLabelCaseFieldValidatorTest {
         ValidationError validationError = validationResult.getValidationErrors().get(0);
         assertThat(validationResult.getValidationErrors(),
             hasItem(
-                hasProperty("defaultMessage", equalTo("'Label' is Label type and cannot be editable for event with reference 'Event Reference'"))));
+                hasProperty("defaultMessage", equalTo(
+                    "'Label' is Label type and cannot be editable for event with reference 'Event Reference'"))
+            ));
 
     }
 
     @Test
     public void fieldIsLabelType_validationDoesNotFailWhenDisplayContextIsNull() {
 
-        EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity(caseField("Label"), event("Event Reference"), null);
+        EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity(
+            caseField("Label"), event("Event Reference"), null);
 
         ValidationResult validationResult
             = classUnderTest.validate(eventCaseFieldEntity, null);
@@ -82,7 +92,9 @@ public class EventCaseFieldLabelCaseFieldValidatorTest {
         return eventEntity;
     }
 
-    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField, EventEntity event, DisplayContext displayContext) {
+    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField,
+                                                      EventEntity event,
+                                                      DisplayContext displayContext) {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setCaseField(caseField);
         eventCaseFieldEntity.setEvent(event);

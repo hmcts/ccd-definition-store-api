@@ -24,7 +24,8 @@ public class CaseFieldEntityMissingSecurityClassificationValidationErrorTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(mockValidationErrorMessageCreator.createErrorMessage(any(CaseFieldEntityMissingSecurityClassificationValidationError.class)))
+        when(mockValidationErrorMessageCreator.createErrorMessage(
+            any(CaseFieldEntityMissingSecurityClassificationValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
         classUnderTest = new CaseFieldEntityMissingSecurityClassificationValidationError(
             caseFieldEntityWithReferenceAndSecurityClassification("Case Field Reference"),

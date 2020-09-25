@@ -24,9 +24,11 @@ public class CaseTypeEntityMissingSecurityClassificationValidationErrorTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(mockValidationErrorMessageCreator.createErrorMessage(any(CaseTypeEntityMissingSecurityClassificationValidationError.class)))
+        when(mockValidationErrorMessageCreator.createErrorMessage(
+            any(CaseTypeEntityMissingSecurityClassificationValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
-        classUnderTest = new CaseTypeEntityMissingSecurityClassificationValidationError(caseTypeEntityWithName("Charley says Dont talk to strangers"));
+        classUnderTest = new CaseTypeEntityMissingSecurityClassificationValidationError(
+            caseTypeEntityWithName("Charley says Dont talk to strangers"));
     }
 
     @Test

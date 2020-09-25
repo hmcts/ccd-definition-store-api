@@ -26,7 +26,8 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
     private final CaseFieldEntityUtil caseFieldEntityUtil;
 
     @Autowired
-    public GenericLayoutShowConditionValidatorImpl(ShowConditionParser showConditionExtractor, CaseFieldEntityUtil caseFieldEntityUtil) {
+    public GenericLayoutShowConditionValidatorImpl(ShowConditionParser showConditionExtractor,
+                                                   CaseFieldEntityUtil caseFieldEntityUtil) {
         this.showConditionExtractor = showConditionExtractor;
         this.caseFieldEntityUtil = caseFieldEntityUtil;
     }

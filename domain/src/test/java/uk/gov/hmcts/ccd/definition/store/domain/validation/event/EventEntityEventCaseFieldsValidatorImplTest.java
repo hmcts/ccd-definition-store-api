@@ -70,6 +70,7 @@ public class EventEntityEventCaseFieldsValidatorImplTest {
         );
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void eventCaseFieldsAllValid_allValidatorsCalledWithContextBuiltFromCaseType_EmptyValidationResultReturned() {
 
@@ -88,13 +89,16 @@ public class EventEntityEventCaseFieldsValidatorImplTest {
 
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void eventCaseFields1And3AreInvalid_allValidatorsCalled_ValidationResultWithErrorsForEventCaseFields1And3Returned() {
 
         when(eventCaseFieldValidator1.validate(eq(eventCaseFieldEntity1), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("eventCaseFieldValidator1 failed for eventCaseFieldEntity1")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "eventCaseFieldValidator1 failed for eventCaseFieldEntity1")));
         when(eventCaseFieldValidator2.validate(eq(eventCaseFieldEntity3), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("eventCaseFieldValidator2 failed for eventCaseFieldEntity3")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "eventCaseFieldValidator2 failed for eventCaseFieldEntity3")));
 
         ValidationResult validationResult = classUnderTest.validate(
             event(
@@ -107,8 +111,10 @@ public class EventEntityEventCaseFieldsValidatorImplTest {
         assertEquals(2, validationResult.getValidationErrors().size());
 
         assertThat(validationResult.getValidationErrors(), allOf(
-            hasItem(matchesValidationErrorWithDefaultMessage("eventCaseFieldValidator1 failed for eventCaseFieldEntity1")),
-            hasItem(matchesValidationErrorWithDefaultMessage("eventCaseFieldValidator2 failed for eventCaseFieldEntity3"))
+            hasItem(matchesValidationErrorWithDefaultMessage(
+                "eventCaseFieldValidator1 failed for eventCaseFieldEntity1")),
+            hasItem(matchesValidationErrorWithDefaultMessage(
+                "eventCaseFieldValidator2 failed for eventCaseFieldEntity3"))
             )
         );
 
@@ -150,6 +156,7 @@ public class EventEntityEventCaseFieldsValidatorImplTest {
         );
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     private org.hamcrest.Matcher<EventCaseFieldEntityValidationContext> matchesExpectedEventCaseFieldEntityValidationContext() {
         return new BaseMatcher<EventCaseFieldEntityValidationContext>() {
             @Override
@@ -167,7 +174,8 @@ public class EventEntityEventCaseFieldsValidatorImplTest {
 
             @Override
             public void describeTo(Description description) {
-                description.appendText("a EventCaseFieldEntityValidationContext containing all the EventCaseFields for the event");
+                description.appendText(
+                    "a EventCaseFieldEntityValidationContext containing all the EventCaseFields for the event");
             }
         };
     }

@@ -20,8 +20,8 @@ public class CaseFieldEntityComplexFieldsValidatorImpl implements CaseFieldEntit
     private List<FieldTypeEntity> preDefinedComplexTypes;
 
     @Autowired
-    public CaseFieldEntityComplexFieldsValidatorImpl(List<CaseFieldComplexFieldEntityValidator> complexFieldEntityValidators,
-                                                     FieldTypeService fieldTypeService) {
+    public CaseFieldEntityComplexFieldsValidatorImpl(
+        List<CaseFieldComplexFieldEntityValidator> complexFieldEntityValidators, FieldTypeService fieldTypeService) {
         this.complexFieldEntityValidators = complexFieldEntityValidators;
         this.preDefinedComplexTypes = fieldTypeService.getPredefinedComplexTypes();
     }

@@ -36,7 +36,8 @@ public class GenericLayoutEntityElementPathValidatorImpl implements GenericLayou
     }
 
     private void validatePaths(final GenericLayoutEntity entity, final ValidationResult validationResult) {
-        if (entity.getCaseField() != null && entity.getCaseType() != null && isNotBlank(entity.getCaseFieldElementPath())) {
+        if (entity.getCaseField() != null && entity.getCaseType() != null
+            && isNotBlank(entity.getCaseFieldElementPath())) {
             if (entity.getCaseField().isComplexFieldType() || entity.getCaseField().isCollectionFieldType()) {
                 List<CaseFieldEntity> caseFields = entity.getCaseType().getCaseFields();
 

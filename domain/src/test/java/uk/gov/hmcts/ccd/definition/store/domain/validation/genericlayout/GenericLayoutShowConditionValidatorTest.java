@@ -95,7 +95,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         assertThat(result.getValidationErrors().size(), is(1));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("Invalid show condition 'someShowCondition' for case type 'Case Type I' and case field 'Case Field I'"));
+            is("Invalid show condition 'someShowCondition' for case type 'Case Type I' "
+                + "and case field 'Case Field I'"));
 
     }
 
@@ -104,7 +105,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field(CASE_FIELD2).build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field(CASE_FIELD2).build();
         when(showConditionExtractor.parseShowCondition(SOME_SHOW_CONDITION))
             .thenReturn(validParsedShowCondition);
 
@@ -118,7 +120,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("UnKnownCaseField").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("UnKnownCaseField").build();
         when(showConditionExtractor.parseShowCondition(SOME_SHOW_CONDITION))
             .thenReturn(validParsedShowCondition);
 
@@ -128,7 +131,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         assertThat(result.getValidationErrors().size(), is(1));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("Unknown field 'UnKnownCaseField' for case type 'Case Type I' in show condition: 'someShowCondition'"));
+            is("Unknown field 'UnKnownCaseField' for case type 'Case Type I' "
+                + "in show condition: 'someShowCondition'"));
     }
 
     @Test
@@ -136,7 +140,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("[CREATED_DATE]").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("[CREATED_DATE]").build();
         when(showConditionExtractor.parseShowCondition(SOME_SHOW_CONDITION))
             .thenReturn(validParsedShowCondition);
 
@@ -164,7 +169,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         entity.setShowCondition(showCondition);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field(matchingCaseFieldKey).build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field(matchingCaseFieldKey).build();
         when(showConditionExtractor.parseShowCondition(any()))
             .thenReturn(validParsedShowCondition);
 
@@ -204,8 +210,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         assertThat(result.getValidationErrors().size(), is(1));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("Unknown field 'complexName.LastNameWithSomeCplxFields.ABC' for case type 'Case Type I' in show condition:"
-                + " 'complexName.LastNameWithSomeCplxFields.ABC=\"Mathangi\"'"));
+            is("Unknown field 'complexName.LastNameWithSomeCplxFields.ABC' for case type 'Case Type I' "
+                + "in show condition: 'complexName.LastNameWithSomeCplxFields.ABC=\"Mathangi\"'"));
 
     }
 

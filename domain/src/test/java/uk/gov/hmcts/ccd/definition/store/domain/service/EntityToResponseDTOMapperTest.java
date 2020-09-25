@@ -131,7 +131,8 @@ class EntityToResponseDTOMapperTest {
                     caseEventField.getShowCondition()),
                 () -> assertEquals("showSummaryChangeOption", eventCaseFieldEntity.getShowSummaryChangeOption(),
                     caseEventField.getShowSummaryChangeOption()),
-                () -> assertEquals("showSummaryContentOption", eventCaseFieldEntity.getShowSummaryContentOption(),
+                () -> assertEquals("showSummaryContentOption",
+                    eventCaseFieldEntity.getShowSummaryContentOption(),
                     caseEventField.getShowSummaryContentOption()),
                 () -> assertEquals("retainHiddenValue", eventCaseFieldEntity.getRetainHiddenValue(),
                     caseEventField.getRetainHiddenValue())
@@ -276,13 +277,17 @@ class EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(searchAliasFieldEntity1)).thenReturn(searchAliasField1);
             when(spyOnClassUnderTest.map(searchAliasFieldEntity2)).thenReturn(searchAliasField2);
 
-            CaseTypeACLEntity roleWithCreateOnly = caseTypeUserRoleEntity("role-with-create-only", true, false,
+            CaseTypeACLEntity roleWithCreateOnly = caseTypeUserRoleEntity(
+                "role-with-create-only", true, false,
                 false, false);
-            CaseTypeACLEntity roleWithReadOnly = caseTypeUserRoleEntity("role-with-read-only", false, true, false,
+            CaseTypeACLEntity roleWithReadOnly = caseTypeUserRoleEntity(
+                "role-with-read-only", false, true, false,
                 false);
-            CaseTypeACLEntity roleWithUpdateOnly = caseTypeUserRoleEntity("role-with-update-only", false, false,
+            CaseTypeACLEntity roleWithUpdateOnly = caseTypeUserRoleEntity(
+                "role-with-update-only", false, false,
                 true, false);
-            CaseTypeACLEntity roleWithDeleteOnly = caseTypeUserRoleEntity("role-with-delete-only", false, false,
+            CaseTypeACLEntity roleWithDeleteOnly = caseTypeUserRoleEntity(
+                "role-with-delete-only", false, false,
                 false, true);
 
             CaseTypeEntity caseTypeEntity = caseTypeEntity(
@@ -636,12 +641,14 @@ class EntityToResponseDTOMapperTest {
                     Collections.singletonList("*"), "PostState"
                 ),
                 new Parameters(
-                    false, asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
+                    false, asList(stateEntity("preState1"), stateEntity("preState2"),
+                    stateEntity("preState3")),
                     null,
                     asList("preState1", "preState2", "preState3"), "*"
                 ),
                 new Parameters(
-                    false, asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
+                    false, asList(stateEntity("preState1"), stateEntity("preState2"),
+                    stateEntity("preState3")),
                     stateEntity("PostState"),
                     asList("preState1", "preState2", "preState3"), "PostState"
                 ),
@@ -654,12 +661,14 @@ class EntityToResponseDTOMapperTest {
                     Collections.emptyList(), "PostState"
                 ),
                 new Parameters(
-                    true, asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
+                    true, asList(stateEntity("preState1"), stateEntity("preState2"),
+                    stateEntity("preState3")),
                     null,
                     Collections.emptyList(), "*"
                 ),
                 new Parameters(
-                    true, asList(stateEntity("preState1"), stateEntity("preState2"), stateEntity("preState3")),
+                    true, asList(stateEntity("preState1"), stateEntity("preState2"),
+                    stateEntity("preState3")),
                     stateEntity("PostState"),
                     Collections.emptyList(), "PostState"
                 )
@@ -752,14 +761,14 @@ class EntityToResponseDTOMapperTest {
             eventEntity.addEventCaseFields(
                 asList(eventCaseFieldEntity1, eventCaseFieldEntity2, eventCaseFieldEntity3));
 
-            EventACLEntity roleWithCreateOnly = eventUserRoleEntity("role-with-create-only", true, false, false,
-                false);
-            EventACLEntity roleWithReadOnly = eventUserRoleEntity("role-with-read-only", false, true, false,
-                false);
-            EventACLEntity roleWithUpdateOnly = eventUserRoleEntity("role-with-update-only", false, false, true,
-                false);
-            EventACLEntity roleWithDeleteOnly = eventUserRoleEntity("role-with-delete-only", false, false, false,
-                true);
+            EventACLEntity roleWithCreateOnly = eventUserRoleEntity(
+                "role-with-create-only", true, false, false, false);
+            EventACLEntity roleWithReadOnly = eventUserRoleEntity(
+                "role-with-read-only", false, true, false, false);
+            EventACLEntity roleWithUpdateOnly = eventUserRoleEntity(
+                "role-with-update-only", false, false, true, false);
+            EventACLEntity roleWithDeleteOnly = eventUserRoleEntity(
+                "role-with-delete-only", false, false, false, true);
             eventEntity.addEventACLEntities(
                 asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
 
@@ -840,14 +849,14 @@ class EntityToResponseDTOMapperTest {
             stateEntity.setName("name");
             stateEntity.setDescription("description");
             stateEntity.setOrder(69);
-            StateACLEntity roleWithCreateOnly = stateUserRoleEntity("role-with-create-only", true, false, false,
-                false);
-            StateACLEntity roleWithReadOnly = stateUserRoleEntity("role-with-read-only", false, true, false,
-                false);
-            StateACLEntity roleWithUpdateOnly = stateUserRoleEntity("role-with-update-only", false, false, true,
-                false);
-            StateACLEntity roleWithDeleteOnly = stateUserRoleEntity("role-with-delete-only", false, false, false,
-                true);
+            StateACLEntity roleWithCreateOnly = stateUserRoleEntity(
+                "role-with-create-only", true, false, false, false);
+            StateACLEntity roleWithReadOnly = stateUserRoleEntity(
+                "role-with-read-only", false, true, false, false);
+            StateACLEntity roleWithUpdateOnly = stateUserRoleEntity(
+                "role-with-update-only", false, false, true, false);
+            StateACLEntity roleWithDeleteOnly = stateUserRoleEntity(
+                "role-with-delete-only", false, false, false, true);
             stateEntity.addStateACLEntities(
                 asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
 
@@ -913,14 +922,14 @@ class EntityToResponseDTOMapperTest {
             caseFieldEntity.setLiveTo(LocalDate.parse(LIVE_TO));
             caseFieldEntity.setDataFieldType(DataFieldType.METADATA);
 
-            CaseFieldACLEntity roleWithCreateOnly = caseFieldUserRoleEntity("role-with-create-only", true, false,
-                false, false);
-            CaseFieldACLEntity roleWithReadOnly = caseFieldUserRoleEntity("role-with-read-only", false, true,
-                false, false);
-            CaseFieldACLEntity roleWithUpdateOnly = caseFieldUserRoleEntity("role-with-update-only", false, false,
-                true, false);
-            CaseFieldACLEntity roleWithDeleteOnly = caseFieldUserRoleEntity("role-with-delete-only", false, false,
-                false, true);
+            CaseFieldACLEntity roleWithCreateOnly = caseFieldUserRoleEntity(
+                "role-with-create-only", true, false, false, false);
+            CaseFieldACLEntity roleWithReadOnly = caseFieldUserRoleEntity(
+                "role-with-read-only", false, true, false, false);
+            CaseFieldACLEntity roleWithUpdateOnly = caseFieldUserRoleEntity(
+                "role-with-update-only", false, false, true, false);
+            CaseFieldACLEntity roleWithDeleteOnly = caseFieldUserRoleEntity(
+                "role-with-delete-only", false, false, false, true);
             caseFieldEntity.addCaseACLEntities(
                 asList(roleWithCreateOnly, roleWithReadOnly, roleWithUpdateOnly, roleWithDeleteOnly));
 
@@ -1106,7 +1115,8 @@ class EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity4)).thenReturn(fixedListItem4);
             when(spyOnClassUnderTest.map(fieldTypeListItemEntity5)).thenReturn(fixedListItem5);
             fieldTypeEntity.addListItems(
-                asList(fieldTypeListItemEntity1, fieldTypeListItemEntity4, fieldTypeListItemEntity5, fieldTypeListItemEntity2, fieldTypeListItemEntity3));
+                asList(fieldTypeListItemEntity1, fieldTypeListItemEntity4, fieldTypeListItemEntity5,
+                    fieldTypeListItemEntity2, fieldTypeListItemEntity3));
 
             FieldTypeEntity collectionFieldTypeEntity = fieldTypeEntity("CollectionFieldType");
             FieldType collectionFieldType = new FieldType();
@@ -1292,10 +1302,12 @@ class EntityToResponseDTOMapperTest {
 
             assertEquals(searchInputCaseFieldEntity.getOrder(), searchInputField.getOrder());
             assertEquals(searchInputCaseFieldEntity.getLabel(), searchInputField.getLabel());
-            assertEquals(searchInputCaseFieldEntity.getCaseFieldElementPath(), searchInputField.getCaseFieldElementPath());
+            assertEquals(
+                searchInputCaseFieldEntity.getCaseFieldElementPath(), searchInputField.getCaseFieldElementPath());
             assertEquals(searchInputCaseFieldEntity.getShowCondition(), searchInputField.getShowCondition());
             assertEquals(searchInputCaseFieldEntity.getCaseField().getReference(), searchInputField.getCaseFieldId());
-            assertEquals(searchInputCaseFieldEntity.getDisplayContextParameter(), searchInputField.getDisplayContextParameter());
+            assertEquals(
+                searchInputCaseFieldEntity.getDisplayContextParameter(), searchInputField.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), searchInputField.getRole());
         }
 
@@ -1324,11 +1336,13 @@ class EntityToResponseDTOMapperTest {
             SearchResultsField searchResultsField = spyOnClassUnderTest.map(searchResultCaseFieldEntity);
 
             assertEquals(searchResultCaseFieldEntity.getOrder(), searchResultsField.getOrder());
-            assertEquals(searchResultCaseFieldEntity.getCaseFieldElementPath(), searchResultsField.getCaseFieldElementPath());
+            assertEquals(
+                searchResultCaseFieldEntity.getCaseFieldElementPath(), searchResultsField.getCaseFieldElementPath());
             assertEquals(searchResultCaseFieldEntity.getLabel(), searchResultsField.getLabel());
             assertEquals(searchResultCaseFieldEntity.getCaseField().getReference(),
                 searchResultsField.getCaseFieldId());
-            assertEquals(searchResultCaseFieldEntity.getDisplayContextParameter(), searchResultsField.getDisplayContextParameter());
+            assertEquals(searchResultCaseFieldEntity.getDisplayContextParameter(),
+                searchResultsField.getDisplayContextParameter());
             assertThat(searchResultsField.isMetadata(), is(false));
             assertEquals(userRoleEntity.getReference(), searchResultsField.getRole());
 
@@ -1377,9 +1391,12 @@ class EntityToResponseDTOMapperTest {
             assertEquals(workBasketInputCaseFieldEntity.getShowCondition(), workbasketInputField.getShowCondition());
             assertEquals(workBasketInputCaseFieldEntity.getOrder(), workbasketInputField.getOrder());
             assertEquals(workBasketInputCaseFieldEntity.getLabel(), workbasketInputField.getLabel());
-            assertEquals(workBasketInputCaseFieldEntity.getCaseFieldElementPath(), workbasketInputField.getCaseFieldElementPath());
-            assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(), workbasketInputField.getCaseFieldId());
-            assertEquals(workBasketInputCaseFieldEntity.getDisplayContextParameter(), workbasketInputField.getDisplayContextParameter());
+            assertEquals(workBasketInputCaseFieldEntity.getCaseFieldElementPath(),
+                workbasketInputField.getCaseFieldElementPath());
+            assertEquals(workBasketInputCaseFieldEntity.getCaseField().getReference(),
+                workbasketInputField.getCaseFieldId());
+            assertEquals(workBasketInputCaseFieldEntity.getDisplayContextParameter(),
+                workbasketInputField.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), workbasketInputField.getRole());
         }
 
@@ -1408,10 +1425,12 @@ class EntityToResponseDTOMapperTest {
             WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
 
             assertEquals(workBasketCaseFieldEntity.getOrder(), workBasketResult.getOrder());
-            assertEquals(workBasketCaseFieldEntity.getCaseFieldElementPath(), workBasketResult.getCaseFieldElementPath());
+            assertEquals(
+                workBasketCaseFieldEntity.getCaseFieldElementPath(), workBasketResult.getCaseFieldElementPath());
             assertEquals(workBasketCaseFieldEntity.getLabel(), workBasketResult.getLabel());
             assertEquals(workBasketCaseFieldEntity.getCaseField().getReference(), workBasketResult.getCaseFieldId());
-            assertEquals(workBasketCaseFieldEntity.getDisplayContextParameter(), workBasketResult.getDisplayContextParameter());
+            assertEquals(workBasketCaseFieldEntity.getDisplayContextParameter(),
+                workBasketResult.getDisplayContextParameter());
             assertEquals(userRoleEntity.getReference(), workBasketResult.getRole());
 
             assertEquals(sortOrder.getDirection(), workBasketResult.getSortOrder().getDirection());
@@ -1459,10 +1478,13 @@ class EntityToResponseDTOMapperTest {
             SearchCasesResultField searchCasesResultField = spyOnClassUnderTest.map(searchCasesResultFieldEntity);
 
             assertEquals(searchCasesResultFieldEntity.getOrder(), searchCasesResultField.getOrder());
-            assertEquals(searchCasesResultFieldEntity.getCaseFieldElementPath(), searchCasesResultField.getCaseFieldElementPath());
+            assertEquals(searchCasesResultFieldEntity.getCaseFieldElementPath(),
+                searchCasesResultField.getCaseFieldElementPath());
             assertEquals(searchCasesResultFieldEntity.getLabel(), searchCasesResultField.getLabel());
-            assertEquals(searchCasesResultFieldEntity.getCaseField().getReference(), searchCasesResultField.getCaseFieldId());
-            assertEquals(searchCasesResultFieldEntity.getDisplayContextParameter(), searchCasesResultField.getDisplayContextParameter());
+            assertEquals(searchCasesResultFieldEntity.getCaseField().getReference(),
+                searchCasesResultField.getCaseFieldId());
+            assertEquals(searchCasesResultFieldEntity.getDisplayContextParameter(),
+                searchCasesResultField.getDisplayContextParameter());
             assertEquals(searchCasesResultFieldEntity.getUseCase(), searchCasesResultField.getUseCase());
             assertEquals(userRoleEntity.getReference(), searchCasesResultField.getRole());
 
@@ -1528,6 +1550,7 @@ class EntityToResponseDTOMapperTest {
         }
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Nested
     @DisplayName("Should return a JurisdictionUiConfig model whose fields match those in the JurisdictionUiConfigEntity")
     class MapJurisdictionUiConfigEntityTests {
@@ -1629,7 +1652,8 @@ class EntityToResponseDTOMapperTest {
             public void describeTo(Description description) {
                 description.appendText(
                     String.format(
-                        "an AccessControlList with role %s, create %s, read %s, update %s, delete %s, listElementCode %s",
+                        "an AccessControlList with role %s, create %s, read %s, "
+                            + "update %s, delete %s, listElementCode %s",
                         role,
                         aclEntity.getCreate(),
                         aclEntity.getRead(),

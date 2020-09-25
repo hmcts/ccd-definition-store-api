@@ -54,14 +54,17 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
         return complexFieldEntity.getOrder() != null && complexFieldEntity.getOrder() > sizeOfComplexType;
     }
 
-    private Optional<ValidationError> validateComplexField(ComplexFieldEntity complexFieldEntity, List<ComplexFieldEntity> children) {
+    private Optional<ValidationError> validateComplexField(ComplexFieldEntity complexFieldEntity,
+                                                           List<ComplexFieldEntity> children) {
         Optional<ValidationError> validationErrorOptional = Optional.empty();
         List<ComplexFieldEntity> sortedFields = getSortedComplexFieldEntities(children);
         if (isChildOfComplexFieldMissingOrder(children, sortedFields)) {
-            validationErrorOptional = Optional.of(new ComplexFieldEntityMissingOrderValidationError(complexFieldEntity));
+            validationErrorOptional = Optional.of(
+                new ComplexFieldEntityMissingOrderValidationError(complexFieldEntity));
         } else if (!sortedFields.isEmpty()) {
             if (isNotIncrementallyOrdered(sortedFields)) {
-                validationErrorOptional = Optional.of(new ComplexFieldEntityIncorrectOrderValidationError(complexFieldEntity));
+                validationErrorOptional = Optional.of(
+                    new ComplexFieldEntityIncorrectOrderValidationError(complexFieldEntity));
             }
         }
         return validationErrorOptional;
@@ -71,7 +74,8 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
         return range(0, sortedFields.size()).anyMatch(index -> sortedFields.get(index).getOrder() != index + 1);
     }
 
-    private boolean isChildOfComplexFieldMissingOrder(List<ComplexFieldEntity> children, List<ComplexFieldEntity> sortedFields) {
+    private boolean isChildOfComplexFieldMissingOrder(List<ComplexFieldEntity> children,
+                                                      List<ComplexFieldEntity> sortedFields) {
         return sortedFields.size() != 0 && sortedFields.size() != children.size();
     }
 

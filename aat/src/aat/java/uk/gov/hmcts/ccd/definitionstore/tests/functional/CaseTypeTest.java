@@ -24,7 +24,6 @@ class CaseTypeTest extends BaseTest {
     Supplier<RequestSpecification> asUserWithUser = asAutoTestCaseworkerWithUser();
     Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
 
-
     @Test
     @DisplayName("should return case type definition")
     void shouldReturnCaseTypeDefinition() {
@@ -40,9 +39,12 @@ class CaseTypeTest extends BaseTest {
             .statusCode(200)
             .rootPath("case_fields")
             .assertThat()
-            .body("findAll{case_fields->case_fields.label == \"A `Complex` field\"}[0].complexACLs[0]", not(empty()))
-            .body("findAll{case_fields->case_fields.label == \"A `Collection` of `Text` fields\"}[0].complexACLs", empty())
-            .body("findAll{case_fields->case_fields.label == \"A `AddressUK` field\"}[0].complexACLs", empty());
+            .body("findAll{case_fields->case_fields.label == \"A `Complex` field\"}[0].complexACLs[0]",
+                not(empty()))
+            .body("findAll{case_fields->case_fields.label == \"A `Collection` of `Text` fields\"}[0].complexACLs",
+                empty())
+            .body("findAll{case_fields->case_fields.label == \"A `AddressUK` field\"}[0].complexACLs",
+                empty());
     }
 
     @Test

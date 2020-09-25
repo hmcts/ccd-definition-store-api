@@ -38,7 +38,8 @@ public class ComplexFieldEntityShowConditionValidatorImpl implements ComplexFiel
         }
 
         showCondition.getFields().forEach(showConditionField -> {
-            if (!complexField.getComplexFieldType().hasComplexField(showConditionField) && !MetadataField.isMetadataField(showConditionField)) {
+            if (!complexField.getComplexFieldType().hasComplexField(showConditionField)
+                && !MetadataField.isMetadataField(showConditionField)) {
                 validationResult.addError(
                     new ComplexFieldShowConditionReferencesInvalidFieldError(showConditionField, complexField)
                 );

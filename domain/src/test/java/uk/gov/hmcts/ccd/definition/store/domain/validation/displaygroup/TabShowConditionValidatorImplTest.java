@@ -40,7 +40,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
 public class TabShowConditionValidatorImplTest {
-    private static final List<DisplayGroupEntity> UNUSED_DISPLAY_GROUPS = com.google.common.collect.Lists.newArrayList();
+    private static final List<DisplayGroupEntity> UNUSED_DISPLAY_GROUPS =
+        com.google.common.collect.Lists.newArrayList();
 
     @Mock
     private ShowConditionParser mockShowConditionParser;
@@ -98,7 +99,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabFieldShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInOtherTab() throws InvalidShowConditionException {
+    public void tabFieldShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInOtherTab()
+        throws InvalidShowConditionException {
 
         displayGroup.setType(DisplayGroupType.TAB);
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
@@ -118,7 +120,8 @@ public class TabShowConditionValidatorImplTest {
         otherTabDisplayGroup.setCaseType(caseTypeEntity);
         allTabDisplayGroups.add(otherTabDisplayGroup);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("otherField").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("otherField").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(validParsedShowCondition);
 
@@ -128,7 +131,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabFieldShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInThisTab() throws InvalidShowConditionException {
+    public void tabFieldShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInThisTab()
+        throws InvalidShowConditionException {
 
         displayGroup.setType(DisplayGroupType.TAB);
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
@@ -141,7 +145,8 @@ public class TabShowConditionValidatorImplTest {
         displayGroup.addDisplayGroupCaseField(displayGroupCaseField);
         allTabDisplayGroups.add(displayGroup);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("field").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("field").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(validParsedShowCondition);
 
@@ -151,12 +156,15 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabFieldShowCondition_shouldValidateShowConditionForCustomComplexField() throws InvalidShowConditionException {
+    public void tabFieldShowCondition_shouldValidateShowConditionForCustomComplexField()
+        throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
-        String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
+        String matchingCaseFieldKey = matchingCaseFieldId
+            + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
         String showCondition = matchingCaseFieldKey + "=\"UK\"";
 
-        ShowCondition sc = new ShowCondition.Builder().showConditionExpression(showCondition).field(matchingCaseFieldKey).build();
+        ShowCondition sc = new ShowCondition.Builder()
+            .showConditionExpression(showCondition).field(matchingCaseFieldKey).build();
         when(mockShowConditionParser.parseShowCondition(showCondition))
             .thenReturn(sc);
 
@@ -181,12 +189,14 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabFieldShowCondition_shouldAddErrorForInvalidShowConditionForCustomComplexField() throws InvalidShowConditionException {
+    public void tabFieldShowCondition_shouldAddErrorForInvalidShowConditionForCustomComplexField()
+        throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode";
         String invalidShowCondition = matchingCaseFieldKey + "=\"UK\"";
 
-        ShowCondition sc = new ShowCondition.Builder().showConditionExpression(invalidShowCondition).field(matchingCaseFieldKey).build();
+        ShowCondition sc = new ShowCondition.Builder()
+            .showConditionExpression(invalidShowCondition).field(matchingCaseFieldKey).build();
         when(mockShowConditionParser.parseShowCondition(invalidShowCondition))
             .thenReturn(sc);
 
@@ -213,7 +223,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabFieldShowCondition_returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition() throws InvalidShowConditionException {
+    public void tabFieldShowCondition_returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition()
+        throws InvalidShowConditionException {
 
         displayGroup.setType(DisplayGroupType.TAB);
         DisplayGroupCaseFieldEntity displayGroupCaseField = new DisplayGroupCaseFieldEntity();
@@ -231,6 +242,7 @@ public class TabShowConditionValidatorImplTest {
         assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabFieldShowCondition.class));
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void tabFieldShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromSameTab()
         throws InvalidShowConditionException {
@@ -257,7 +269,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabFieldShowCondition_shouldValidateShowConditionForMetadataField() throws InvalidShowConditionException {
+    public void tabFieldShowCondition_shouldValidateShowConditionForMetadataField()
+        throws InvalidShowConditionException {
         displayGroup.setType(DisplayGroupType.TAB);
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("SimpleType");
@@ -269,7 +282,8 @@ public class TabShowConditionValidatorImplTest {
         displayGroup.addDisplayGroupCaseField(displayGroupCaseField);
         allTabDisplayGroups.add(displayGroup);
 
-        ShowCondition sc = new ShowCondition.Builder().showConditionExpression("parsedSC").field(MetadataField.STATE.getReference()).build();
+        ShowCondition sc = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field(MetadataField.STATE.getReference()).build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(sc);
 
@@ -278,6 +292,7 @@ public class TabShowConditionValidatorImplTest {
         assertThat(result.isValid(), is(true));
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void tabFieldShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromOtherTab()
         throws InvalidShowConditionException {
@@ -343,7 +358,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInOtherTab() throws InvalidShowConditionException {
+    public void tabShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInOtherTab()
+        throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.TAB);
@@ -359,7 +375,8 @@ public class TabShowConditionValidatorImplTest {
         otherTabDisplayGroup.setCaseType(caseTypeEntity);
         allTabDisplayGroups.add(otherTabDisplayGroup);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("field").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("field").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(validParsedShowCondition);
 
@@ -369,7 +386,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInThisTab() throws InvalidShowConditionException {
+    public void tabShowCondition_returnsNoValidationErrorsOnSuccessWhenReferencedFieldInThisTab()
+        throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.TAB);
@@ -382,7 +400,8 @@ public class TabShowConditionValidatorImplTest {
         displayGroup.addDisplayGroupCaseField(displayGroupCaseField);
         allTabDisplayGroups.add(displayGroup);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("field").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("field").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(validParsedShowCondition);
 
@@ -392,12 +411,15 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabShowCondition_shouldValidateShowConditionForCustomComplexField() throws InvalidShowConditionException {
+    public void tabShowCondition_shouldValidateShowConditionForCustomComplexField()
+        throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
-        String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
+        String matchingCaseFieldKey = matchingCaseFieldId
+            + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
         String showCondition = matchingCaseFieldKey + "=\"UK\"";
 
-        ShowCondition sc = new ShowCondition.Builder().showConditionExpression(showCondition).field(matchingCaseFieldKey).build();
+        ShowCondition sc = new ShowCondition.Builder()
+            .showConditionExpression(showCondition).field(matchingCaseFieldKey).build();
         when(mockShowConditionParser.parseShowCondition(showCondition))
             .thenReturn(sc);
 
@@ -422,12 +444,14 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabShowCondition_shouldAddErrorForInvalidShowConditionForCustomComplexField() throws InvalidShowConditionException {
+    public void tabShowCondition_shouldAddErrorForInvalidShowConditionForCustomComplexField()
+        throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode";
         String invalidShowCondition = matchingCaseFieldKey + "=\"UK\"";
 
-        ShowCondition sc = new ShowCondition.Builder().showConditionExpression(invalidShowCondition).field(matchingCaseFieldKey).build();
+        ShowCondition sc = new ShowCondition.Builder()
+            .showConditionExpression(invalidShowCondition).field(matchingCaseFieldKey).build();
         when(mockShowConditionParser.parseShowCondition(invalidShowCondition))
             .thenReturn(sc);
 
@@ -454,7 +478,8 @@ public class TabShowConditionValidatorImplTest {
     }
 
     @Test
-    public void tabShowCondition_returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition() throws InvalidShowConditionException {
+    public void tabShowCondition_returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition()
+        throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.TAB);
@@ -468,6 +493,7 @@ public class TabShowConditionValidatorImplTest {
         assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabShowCondition.class));
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void tabShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromSameTab()
         throws InvalidShowConditionException {
@@ -492,6 +518,7 @@ public class TabShowConditionValidatorImplTest {
         assertThat(result.getValidationErrors().get(0), instanceOf(DisplayGroupInvalidTabShowCondition.class));
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void tabShowCondition_returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidFieldFromOtherTab()
         throws InvalidShowConditionException {
@@ -536,7 +563,8 @@ public class TabShowConditionValidatorImplTest {
         displayGroupCaseField.setCaseField(caseFieldEntity("otherField"));
         displayGroup.addDisplayGroupCaseField(displayGroupCaseField);
 
-        ShowCondition sc = new ShowCondition.Builder().showConditionExpression("parsedSC").field(MetadataField.STATE.getReference()).build();
+        ShowCondition sc = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field(MetadataField.STATE.getReference()).build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(sc);
 
@@ -567,7 +595,8 @@ public class TabShowConditionValidatorImplTest {
                                     complexFieldEntity("AddressGlobalCode", addressGlobalFieldTypeEntity()),
                                     complexFieldEntity("AddressGlobalUKCode", addressGlobalUKFieldTypeEntity()),
                                     complexFieldEntity("OrderSummaryCode", orderSummaryFieldTypeEntity()),
-                                    complexFieldEntity("SecondSurname", fieldTypeEntity("Text", emptyList()))
+                                    complexFieldEntity("SecondSurname", fieldTypeEntity(
+                                        "Text", emptyList()))
                                 )))
                     ))))
         );

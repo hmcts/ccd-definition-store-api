@@ -146,6 +146,7 @@ class CaseTypeServiceImplTest {
             assertComponentsCalled(true, null);
         }
 
+        @SuppressWarnings("checkstyle:LineLength")
         @Test
         @DisplayName(
             "Should add the jurisdiction to all items in list, validate and throw a ValidationException with details "
@@ -160,7 +161,8 @@ class CaseTypeServiceImplTest {
                     validationErrorWithDefaultMessage("caseTypeEntityValidator2 failed for caseTypeEntity3")));
 
             ValidationException validationException
-                = assertThrows(ValidationException.class, () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
+                = assertThrows(ValidationException.class, () -> classUnderTest.createAll(
+                    jurisdiction, caseTypeEntities, new HashSet<>()));
 
             ValidationResult validationResult = validationException.getValidationResult();
             assertFalse(validationResult.isValid());
@@ -177,6 +179,7 @@ class CaseTypeServiceImplTest {
 
         }
 
+        @SuppressWarnings("checkstyle:LineLength")
         @Test
         @DisplayName("Should throw propagate the CaseTypeValidationException thrown by the LegacyCaseTypeValidator")
         void shouldThrowCaseTypeValidationExceptionWithoutSaving_whenLegacyCaseTypeValidatorThrowsCaseTypeValidationException() {
@@ -188,7 +191,8 @@ class CaseTypeServiceImplTest {
                 argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity2, jurisdiction)));
 
             CaseTypeValidationException actualCaseTypeValidationException = assertThrows(
-                CaseTypeValidationException.class, () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
+                CaseTypeValidationException.class, () -> classUnderTest.createAll(
+                    jurisdiction, caseTypeEntities, new HashSet<>()));
 
             assertTrue(actualCaseTypeValidationException == caseTypeValidationException);
 
@@ -210,7 +214,8 @@ class CaseTypeServiceImplTest {
             when(dtoMapper.map(same(caseTypeEntity))).thenReturn(caseType);
 
             ValidationException validationException
-                = assertThrows(ValidationException.class, () -> classUnderTest.createAll(jurisdiction, caseTypeEntities, new HashSet<>()));
+                = assertThrows(ValidationException.class, () -> classUnderTest.createAll(
+                    jurisdiction, caseTypeEntities, new HashSet<>()));
             verify(caseTypeRepository).findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_2);
 
             ValidationResult validationResult = validationException.getValidationResult();
@@ -298,7 +303,8 @@ class CaseTypeServiceImplTest {
             for (CaseTypeEntity caseTypeEntity : caseTypeEntities) {
                 inOrder.verify(legacyCaseTypeValidator).validateCaseType(
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
-                if (caseTypeWithLegacyValidationException != null && caseTypeWithLegacyValidationException == caseTypeEntity) {
+                if (caseTypeWithLegacyValidationException != null
+                    && caseTypeWithLegacyValidationException == caseTypeEntity) {
                     return;
                 }
                 inOrder.verify(caseTypeEntityValidator1).validate(
@@ -307,7 +313,8 @@ class CaseTypeServiceImplTest {
                     argThat(matchesCaseTypeEntityWithJurisdictionAdded(caseTypeEntity, jurisdiction)));
                 inOrder.verify(caseTypeRepository).findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(
                     caseTypeEntity.getReference());
-                inOrder.verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(caseTypeEntity.getReference(), jurisdiction.getReference());
+                inOrder.verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(
+                    caseTypeEntity.getReference(), jurisdiction.getReference());
             }
 
             if (shouldSave) {
@@ -332,6 +339,7 @@ class CaseTypeServiceImplTest {
     @Nested
     class FindByJurisdictionIdTests {
 
+        @SuppressWarnings("checkstyle:LineLength")
         @Test
         @DisplayName("Should map each CaseTypeEntity to a CaseType and return a list of mapped CaseTypes")
         void shouldOrderEventsBeforeCallingMapperForEachCaseTypeAndReturnListOfMappedCaseTypes_whenRepositoryReturnsCaseTypeEntitiesWithDisorderedEvents() {
@@ -446,9 +454,11 @@ class CaseTypeServiceImplTest {
         @Test
         @DisplayName("Should return true if case type for jurisdiction other than given exists")
         void shouldReturnTrue_whenCaseTypeForJurisdictionOtherThanGivenExist() {
-            when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(2);
+            when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE))
+                .thenReturn(2);
 
-            boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(
+                CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
             assertTrue(caseTypeExists);
             verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
@@ -457,8 +467,10 @@ class CaseTypeServiceImplTest {
         @Test
         @DisplayName("Should return false if case type for jurisdiction other than given does not exist")
         void shouldReturnFalse_whenCaseTypeForJurisdictionOtherThanGivenDoesNotExist() {
-            when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE)).thenReturn(0);
-            Boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
+            when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE))
+                .thenReturn(0);
+            Boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(
+                CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
             assertFalse(caseTypeExists);
             verify(caseTypeRepository).caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);

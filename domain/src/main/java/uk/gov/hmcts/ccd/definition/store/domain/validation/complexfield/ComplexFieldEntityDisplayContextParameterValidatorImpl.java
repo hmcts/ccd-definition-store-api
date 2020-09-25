@@ -26,7 +26,8 @@ public class ComplexFieldEntityDisplayContextParameterValidatorImpl
         Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
 
     @Autowired
-    public ComplexFieldEntityDisplayContextParameterValidatorImpl(final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
+    public ComplexFieldEntityDisplayContextParameterValidatorImpl(
+        final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
         super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, Collections.emptyList());
     }
 

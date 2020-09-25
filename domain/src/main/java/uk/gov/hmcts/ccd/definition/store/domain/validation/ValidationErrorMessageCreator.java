@@ -90,7 +90,8 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(CaseFieldEntityInvalidCrudValidationError caseFieldEntityInvalidCrudValidationError);
 
-    String createErrorMessage(CaseFieldEntityInvalidComplexCrudValidationError caseFieldEntityInvalidComplexCrudValidationError);
+    String createErrorMessage(
+        CaseFieldEntityInvalidComplexCrudValidationError caseFieldEntityInvalidComplexCrudValidationError);
 
     String createErrorMessage(CaseFieldEntityComplexACLValidationError caseFieldEntityComplexACLValidationError);
 
@@ -165,7 +166,9 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(CaseTypeEntityReferenceSpellingValidationError validationError);
 
-    String createErrorMessage(CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError validationError);
+    String createErrorMessage(
+        CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError validationError);
 
-    String createErrorMessage(CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError validationError);
+    String createErrorMessage(
+        CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError validationError);
 }

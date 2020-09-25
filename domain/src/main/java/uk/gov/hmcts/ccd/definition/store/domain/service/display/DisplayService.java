@@ -42,11 +42,13 @@ public class DisplayService {
     }
 
     public SearchResultDefinition findSearchResultDefinitionForCaseType(String caseTypeId) {
-        return mapToSearchResultDefinition(this.genericLayoutRepository.findSearchResultsByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToSearchResultDefinition(
+            this.genericLayoutRepository.findSearchResultsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public SearchInputDefinition findSearchInputDefinitionForCaseType(String caseTypeId) {
-        return mapToSearchInputDefinition(this.genericLayoutRepository.findSearchInputsByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToSearchInputDefinition(
+            this.genericLayoutRepository.findSearchInputsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public CaseTabCollection findTabStructureForCaseType(String caseTypeId) {
@@ -54,19 +56,23 @@ public class DisplayService {
     }
 
     public WorkbasketInputDefinition findWorkBasketInputDefinitionForCaseType(String caseTypeId) {
-        return mapToWorkBasketInputDefinition(this.genericLayoutRepository.findWorkbasketInputByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToWorkBasketInputDefinition(
+            this.genericLayoutRepository.findWorkbasketInputByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public WorkBasketResult findWorkBasketDefinitionForCaseType(String caseTypeId) {
-        return mapToWorkBasketResult(this.genericLayoutRepository.findWorkbasketByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToWorkBasketResult(
+            this.genericLayoutRepository.findWorkbasketByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public SearchCasesResult findSearchCasesResultDefinitionForCaseType(String caseTypeId) {
-        return mapToSearchCasesResult(this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToSearchCasesResult(
+            this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public SearchCasesResult findSearchCasesResultDefinitionForCaseType(String caseTypeId, String useCase) {
-        return mapToSearchCasesResult(this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId, useCase), caseTypeId);
+        return mapToSearchCasesResult(
+            this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId, useCase), caseTypeId);
     }
 
 
@@ -91,8 +97,8 @@ public class DisplayService {
         return caseTabCollection;
     }
 
-    private SearchInputDefinition mapToSearchInputDefinition(List<SearchInputCaseFieldEntity> searchInputCaseFieldEntities,
-                                                             String caseTypeId) {
+    private SearchInputDefinition mapToSearchInputDefinition(
+        List<SearchInputCaseFieldEntity> searchInputCaseFieldEntities, String caseTypeId) {
         SearchInputDefinition searchInputDefinition = new SearchInputDefinition();
         searchInputDefinition.setCaseTypeId(caseTypeId);
         searchInputDefinition.setFields(
@@ -103,8 +109,8 @@ public class DisplayService {
         return searchInputDefinition;
     }
 
-    private SearchResultDefinition mapToSearchResultDefinition(List<SearchResultCaseFieldEntity> searchResultCaseFieldEntities,
-                                                               String caseTypeId) {
+    private SearchResultDefinition mapToSearchResultDefinition(
+        List<SearchResultCaseFieldEntity> searchResultCaseFieldEntities, String caseTypeId) {
         SearchResultDefinition searchResultDefinition = new SearchResultDefinition();
         searchResultDefinition.setCaseTypeId(caseTypeId);
         searchResultDefinition.setFields(
@@ -115,8 +121,8 @@ public class DisplayService {
         return searchResultDefinition;
     }
 
-    private WorkbasketInputDefinition mapToWorkBasketInputDefinition(List<WorkBasketInputCaseFieldEntity> workBasketInputCaseFieldEntities,
-                                                                     String caseTypeId) {
+    private WorkbasketInputDefinition mapToWorkBasketInputDefinition(
+        List<WorkBasketInputCaseFieldEntity> workBasketInputCaseFieldEntities, String caseTypeId) {
         WorkbasketInputDefinition workbasketInputDefinition = new WorkbasketInputDefinition();
         workbasketInputDefinition.setCaseTypeId(caseTypeId);
         workbasketInputDefinition.setFields(

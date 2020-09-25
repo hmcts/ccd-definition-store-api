@@ -13,6 +13,7 @@ public class EventEntityCreateEventValidatorTest {
 
     private EventEntityCreateEventValidator classUnderTest = new EventEntityCreateEventValidator();
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void eventHasCanCreateTrueAndPostStateIsNull_validationResultContainingCreateEventDoesNotHavePostconditionValidationErrorReturned() {
 
@@ -36,7 +37,8 @@ public class EventEntityCreateEventValidatorTest {
         if (!isValid) {
             ValidationError validationError = validationResult.getValidationErrors().get(0);
             assertTrue(validationError instanceof CreateEventDoesNotHavePostStateValidationError);
-            assertTrue(((CreateEventDoesNotHavePostStateValidationError) validationError).getEventEntity() == eventEntity);
+            assertTrue(((CreateEventDoesNotHavePostStateValidationError) validationError)
+                .getEventEntity() == eventEntity);
         }
     }
 

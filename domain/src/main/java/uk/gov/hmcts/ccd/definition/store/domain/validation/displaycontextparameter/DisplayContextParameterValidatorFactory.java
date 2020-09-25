@@ -24,6 +24,7 @@ public class DisplayContextParameterValidatorFactory {
     }
 
     public DisplayContextParameterValidator getValidator(DisplayContextParameterType displayContextParameterType) {
-        return Optional.ofNullable(validatorCache.get(displayContextParameterType)).orElseThrow(NoSuchElementException::new);
+        return Optional.ofNullable(
+            validatorCache.get(displayContextParameterType)).orElseThrow(NoSuchElementException::new);
     }
 }

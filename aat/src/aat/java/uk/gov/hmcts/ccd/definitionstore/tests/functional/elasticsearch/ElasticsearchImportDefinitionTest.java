@@ -40,7 +40,8 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     @BeforeAll
     static void setUp() {
         // stop execution of these tests if elasticsearch is not enabled
-        boolean elasticsearchEnabled = ofNullable(System.getenv("ELASTIC_SEARCH_ENABLED")).map(Boolean::valueOf).orElse(false);
+        boolean elasticsearchEnabled = ofNullable(System.getenv("ELASTIC_SEARCH_ENABLED"))
+            .map(Boolean::valueOf).orElse(false);
         assumeTrue(elasticsearchEnabled, () -> "Ignoring Elasticsearch tests, variable ELASTIC_SEARCH_ENABLED not set");
     }
 
@@ -50,7 +51,8 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     }
 
     @Test
-    @DisplayName("should import a valid definition multiple times and create Elasticsearch index, alias and field mappings")
+    @DisplayName(
+        "should import a valid definition multiple times and create Elasticsearch index, alias and field mappings")
     void shouldImportValidDefinitionMultipleTimes() throws Exception {
         // invoke definition import
         File file = BeftaUtils.getClassPathResourceIntoTemporaryFile(
@@ -67,7 +69,8 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             file.delete();
         }
 
-        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS, "ES index verification", () -> verifyIndexAndFieldMappings(false));
+        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS,
+            "ES index verification", () -> verifyIndexAndFieldMappings(false));
 
         // invoke definition import second time
         asAutoTestImporter().get()
@@ -78,7 +81,8 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             .when()
             .post("/import");
 
-        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS, "ES index verification", () -> verifyIndexAndFieldMappings(true));
+        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS,
+            "ES index verification", () -> verifyIndexAndFieldMappings(true));
     }
 
     private boolean verifyIndexAndFieldMappings(boolean verifyNewFields) {

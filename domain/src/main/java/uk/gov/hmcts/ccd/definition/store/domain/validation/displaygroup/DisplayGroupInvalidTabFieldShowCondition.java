@@ -9,7 +9,8 @@ public class DisplayGroupInvalidTabFieldShowCondition extends ValidationError {
     private String showConditionField;
     private DisplayGroupCaseFieldEntity displayGroupCaseField;
 
-    public DisplayGroupInvalidTabFieldShowCondition(String showConditionField, DisplayGroupCaseFieldEntity displayGroupCaseField) {
+    public DisplayGroupInvalidTabFieldShowCondition(String showConditionField,
+                                                    DisplayGroupCaseFieldEntity displayGroupCaseField) {
         super(
             String.format(
                 "Invalid show condition '%s' for tab field '%s': unknown field '%s'",

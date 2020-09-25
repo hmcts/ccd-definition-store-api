@@ -68,7 +68,8 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
         FieldTypeEntity complexFieldType = mock(FieldTypeEntity.class);
         when(complexFieldType.hasComplexField("field")).thenReturn(true);
         complexField.setComplexFieldType(complexFieldType);
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("field").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("field").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(validParsedShowCondition);
 
@@ -78,7 +79,8 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsComplexFieldInvalidShowConditionErrorWhenUnableToParseShowCondition() throws InvalidShowConditionException {
+    public void returnsComplexFieldInvalidShowConditionErrorWhenUnableToParseShowCondition()
+        throws InvalidShowConditionException {
 
         complexField.setShowCondition("someShowCondition");
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
@@ -92,7 +94,8 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsComplexFieldInvalidShowConditionFieldWhenShowConditionReferencesInvalidField() throws InvalidShowConditionException {
+    public void returnsComplexFieldInvalidShowConditionFieldWhenShowConditionReferencesInvalidField()
+        throws InvalidShowConditionException {
 
         complexField.setShowCondition("someShowCondition");
         FieldTypeEntity complexFieldType = mock(FieldTypeEntity.class);
@@ -106,7 +109,8 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
 
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors(), hasSize(1));
-        assertThat(result.getValidationErrors().get(0), instanceOf(ComplexFieldShowConditionReferencesInvalidFieldError.class));
+        assertThat(result.getValidationErrors().get(0),
+            instanceOf(ComplexFieldShowConditionReferencesInvalidFieldError.class));
     }
 
     @Test

@@ -21,7 +21,8 @@ class ComplexFieldEntityDocumentTypeRegularExpressionValidatorTest {
     @Mock
     private ComplexFieldValidator.ValidationContext context;
 
-    private final ComplexFieldEntityDocumentTypeRegularExpressionValidator validator = new ComplexFieldEntityDocumentTypeRegularExpressionValidator();
+    private final ComplexFieldEntityDocumentTypeRegularExpressionValidator validator =
+        new ComplexFieldEntityDocumentTypeRegularExpressionValidator();
 
     private final FieldTypeEntity fieldType = new FieldTypeEntity();
     private final ComplexFieldEntity complexField = new ComplexFieldEntity();

@@ -28,10 +28,11 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
 
     private DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory;
 
-    public AbstractDisplayContextParameterValidator(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory,
-                                                    DisplayContextParameterType[] allowedTypes,
-                                                    List<String> allowedFieldTypes,
-                                                    List<String> allowedCollectionFieldTypes) {
+    public AbstractDisplayContextParameterValidator(
+        DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory,
+        DisplayContextParameterType[] allowedTypes,
+        List<String> allowedFieldTypes,
+        List<String> allowedCollectionFieldTypes) {
         this.displayContextParameterValidatorFactory = displayContextParameterValidatorFactory;
         this.allowedTypes = allowedTypes;
         this.allowedFieldTypes = allowedFieldTypes;
@@ -134,7 +135,8 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     }
 
     private boolean isAllowedCollectionFieldType(T entity) {
-        return getFieldType(entity).equals("Collection") && allowedCollectionFieldTypes.contains(getCollectionFieldType(entity));
+        return getFieldType(entity).equals("Collection")
+            && allowedCollectionFieldTypes.contains(getCollectionFieldType(entity));
     }
 
     protected ValidationError unsupportedDisplayContextParameterTypeError(final T entity) {
