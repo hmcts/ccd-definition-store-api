@@ -46,11 +46,11 @@ public class EventPostStateEntity implements Serializable {
         this.enablingCondition = enablingCondition;
     }
 
-    public int getPriority() {
+    public Integer getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(Integer priority) {
         this.priority = priority;
     }
 
