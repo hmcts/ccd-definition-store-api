@@ -38,7 +38,7 @@ public class EventEntityPostStateValidatorTest {
 
     private static final String STATE_DEFAULT = "DefaultPostState";
 
-    private static final String MATCHING_CONDITION = "FieldA!=\"\" AND FieldB=\"I'm innocent\"";
+    private static final String ENABLING_CONDITION = "FieldA!=\"\" AND FieldB=\"I'm innocent\"";
 
     private EventEntityPostStateValidator classUnderTest;
 
@@ -74,7 +74,7 @@ public class EventEntityPostStateValidatorTest {
 
     @Test
     public void shouldFailWhenNoDefaultPostStatePresent() {
-        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, MATCHING_CONDITION, 1);
+        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, ENABLING_CONDITION, 1);
         ValidationResult validationResult = classUnderTest.validate(eventEntity, eventEntityValidationContext);
 
         assertNotNull(validationResult, "validation result should not be null");
@@ -85,7 +85,7 @@ public class EventEntityPostStateValidatorTest {
 
     @Test
     public void shouldNotFailWhenDefaultPostStatePresent() {
-        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, MATCHING_CONDITION, 1);
+        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, ENABLING_CONDITION, 1);
         EventPostStateEntity defaultPostStateEntity = createEventPostStateEntity(STATE_READY_FOR_DIRECTIONS,
             null, eventEntity, 99);
         eventEntity.getPostStates().add(defaultPostStateEntity);
@@ -97,9 +97,9 @@ public class EventEntityPostStateValidatorTest {
 
     @Test
     public void shouldFailWhenMultiplePostStatesHasSamePriority() {
-        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, MATCHING_CONDITION, 1);
+        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, ENABLING_CONDITION, 1);
         EventPostStateEntity postStateEntity = createEventPostStateEntity(STATE_READY_FOR_DIRECTIONS,
-            MATCHING_CONDITION, eventEntity, 1);
+            ENABLING_CONDITION, eventEntity, 1);
         eventEntity.getPostStates().add(postStateEntity);
 
         EventPostStateEntity defaultPostStateEntity = createEventPostStateEntity(STATE_DEFAULT,
@@ -116,7 +116,7 @@ public class EventEntityPostStateValidatorTest {
 
     @Test
     public void shouldNotFailWhenMultiplePostStatesHasDifferentPriority() {
-        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, MATCHING_CONDITION, 2);
+        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, ENABLING_CONDITION, 2);
         EventPostStateEntity defaultPostStateEntity = createEventPostStateEntity(STATE_READY_FOR_DIRECTIONS,
             null, eventEntity, 1);
         eventEntity.getPostStates().add(defaultPostStateEntity);
@@ -204,8 +204,8 @@ public class EventEntityPostStateValidatorTest {
                                                             int priority) {
         EventPostStateEntity postStateEntity = new EventPostStateEntity();
         postStateEntity.setPostStateReference(postStateReference);
-        postStateEntity.setMatchingCondition(matchingCondition);
-        postStateEntity.setStatePriority(priority);
+        postStateEntity.setEnablingCondition(matchingCondition);
+        postStateEntity.setPriority(priority);
         postStateEntity.setEventEntity(eventEntity);
         return postStateEntity;
     }

@@ -365,7 +365,11 @@
             }
           ],
           "pre_states": [],
-          "post_states": [ "CaseCreated" ],
+          "post_states": [{
+              "enablingCondition": null,
+              "priority": 99,
+              "postStateReference": "CaseCreated"
+            } ],
           "callback_url_about_to_start_event": "http://{{CCD_STUB_SERVICE_URI_BASE}}/case_type/fe-functional-test/mid_event_dynamic_list",
           "retries_timeout_about_to_start_event": [],
           "callback_url_about_to_submit_event": null,
@@ -536,7 +540,11 @@
           "pre_states": [
             "CaseCreated"
           ],
-          "post_states": [ "CaseUpdated" ],
+          "post_states": [ {
+            "enablingCondition": null,
+            "priority": 99,
+            "postStateReference": "CaseUpdated"
+          }],
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [],
           "callback_url_about_to_submit_event": null,

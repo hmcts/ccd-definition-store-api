@@ -21,11 +21,11 @@ public class EventPostStateEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "matching_condition", nullable = false)
-    private String matchingCondition;
+    @Column(name = "enabling_condition", nullable = false)
+    private String enablingCondition;
 
-    @Column(name = "state_priority")
-    private Integer statePriority;
+    @Column(name = "priority")
+    private Integer priority;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_event_id", nullable = false)
@@ -38,20 +38,20 @@ public class EventPostStateEntity implements Serializable {
         return id;
     }
 
-    public String getMatchingCondition() {
-        return matchingCondition;
+    public String getEnablingCondition() {
+        return enablingCondition;
     }
 
-    public void setMatchingCondition(String matchingCondition) {
-        this.matchingCondition = matchingCondition;
+    public void setEnablingCondition(String enablingCondition) {
+        this.enablingCondition = enablingCondition;
     }
 
-    public int getStatePriority() {
-        return statePriority;
+    public int getPriority() {
+        return priority;
     }
 
-    public void setStatePriority(int statePriority) {
-        this.statePriority = statePriority;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public String getPostStateReference() {

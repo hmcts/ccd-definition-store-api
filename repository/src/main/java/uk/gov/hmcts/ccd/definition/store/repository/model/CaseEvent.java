@@ -17,7 +17,7 @@ public class CaseEvent implements HasAcls {
     private Integer order = null;
     private List<CaseEventField> caseFields = new ArrayList<>();
     private List<String> preStates = new ArrayList<>();
-    private List<String> postStates = new ArrayList<>();
+    private List<EventPostState> postStates = new ArrayList<>();
     private String callBackURLAboutToStartEvent;
     private List<Integer> retriesTimeoutAboutToStartEvent;
     private String callBackURLAboutToSubmitEvent;
@@ -107,11 +107,11 @@ public class CaseEvent implements HasAcls {
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("post_states")
-    public List<String> getPostStates() {
+    public List<EventPostState> getPostStates() {
         return postStates;
     }
 
-    public void setPostStates(List<String> postStates) {
+    public void setPostStates(List<EventPostState> postStates) {
         this.postStates = postStates;
     }
 

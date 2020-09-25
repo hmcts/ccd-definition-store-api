@@ -30,12 +30,12 @@ public class EventPostStateParserTest extends ParserTestBase {
 
     private static final String STATE_DEFAULT = "DefaultPostState";
 
-    private static final String VALID_MATCHING_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\"):1";
+    private static final String VALID_ENABLING_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\"):1";
 
-    private static final String VALID_MULTI_STATE_MATCHING_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\"):1;"
+    private static final String VALID_MULTI_STATE_ENABLING_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\"):1;"
         + "ScheduleForHearing(FieldC=\"*\" AND FieldD=\"Plea Entered\"):2";
 
-    private static final String NO_PRIORITY_MATCHING_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\")";
+    private static final String NO_PRIORITY_ENABLING_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\")";
 
     private static final String IN_VALID_POST_STATE_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB\"I'm innocent\"):3";
 
@@ -72,8 +72,8 @@ public class EventPostStateParserTest extends ParserTestBase {
         final List<EventPostStateEntity> eventEntities = postStateParser.parse("*");
         assertThat(eventEntities.size(), is(1));
         assertThat(eventEntities.get(0).getPostStateReference(), is("*"));
-        assertThat(eventEntities.get(0).getMatchingCondition(), is(nullValue()));
-        assertThat(eventEntities.get(0).getStatePriority(), is(99));
+        assertThat(eventEntities.get(0).getEnablingCondition(), is(nullValue()));
+        assertThat(eventEntities.get(0).getPriority(), is(99));
     }
 
     @Test
@@ -87,29 +87,29 @@ public class EventPostStateParserTest extends ParserTestBase {
         final List<EventPostStateEntity> eventEntities = postStateParser.parse(STATE_DEFAULT);
         assertThat(eventEntities.size(), is(1));
         assertThat(eventEntities.get(0).getPostStateReference(), is(STATE_DEFAULT));
-        assertThat(eventEntities.get(0).getMatchingCondition(), is(nullValue()));
-        assertThat(eventEntities.get(0).getStatePriority(), is(99));
+        assertThat(eventEntities.get(0).getEnablingCondition(), is(nullValue()));
+        assertThat(eventEntities.get(0).getPriority(), is(99));
     }
 
     @Test
     public void shouldParseEventPostStateConditionWithValidConditions() {
-        final List<EventPostStateEntity> eventEntities = postStateParser.parse(VALID_MATCHING_CONDITION);
+        final List<EventPostStateEntity> eventEntities = postStateParser.parse(VALID_ENABLING_CONDITION);
         assertThat(eventEntities.size(), is(1));
         assertThat(eventEntities.get(0).getPostStateReference(), is("ApprovalRequired"));
-        assertThat(eventEntities.get(0).getMatchingCondition(), is("FieldA!=\"\" AND FieldB=\"I'm innocent\""));
-        assertThat(eventEntities.get(0).getStatePriority(), is(1));
+        assertThat(eventEntities.get(0).getEnablingCondition(), is("FieldA!=\"\" AND FieldB=\"I'm innocent\""));
+        assertThat(eventEntities.get(0).getPriority(), is(1));
     }
 
     @Test
     public void shouldParseEventPostStateConditionWithMultipleStates() {
-        final List<EventPostStateEntity> eventEntities = postStateParser.parse(VALID_MULTI_STATE_MATCHING_CONDITION);
+        final List<EventPostStateEntity> eventEntities = postStateParser.parse(VALID_MULTI_STATE_ENABLING_CONDITION);
         assertThat(eventEntities.size(), is(2));
     }
 
     @Test
     public void shouldParseEventPostStateConditionWithNoPriority() {
         SpreadsheetParsingException thrown = assertThrows(SpreadsheetParsingException.class,
-            () -> postStateParser.parse(NO_PRIORITY_MATCHING_CONDITION));
+            () -> postStateParser.parse(NO_PRIORITY_ENABLING_CONDITION));
 
         Assert.assertThat(thrown.getMessage(), is("Invalid Post State ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\")"));
     }

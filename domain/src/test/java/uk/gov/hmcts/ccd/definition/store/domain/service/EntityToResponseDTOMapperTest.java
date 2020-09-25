@@ -678,7 +678,7 @@ class  EntityToResponseDTOMapperTest {
                                                           int priority) {
             EventPostStateEntity eventPostStateEntity = new EventPostStateEntity();
             eventPostStateEntity.setPostStateReference(reference);
-            eventPostStateEntity.setStatePriority(priority);
+            eventPostStateEntity.setPriority(priority);
             return eventPostStateEntity;
         }
 

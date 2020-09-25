@@ -49,7 +49,7 @@ public class EventPostStateParser {
                 if (isDefaultState(entry)) {
                     EventPostStateEntity postStateEntity = new EventPostStateEntity();
                     setPostStateReference(postStateEntity, entry);
-                    postStateEntity.setStatePriority(DEFAULT_PRIORITY);
+                    postStateEntity.setPriority(DEFAULT_PRIORITY);
                     return postStateEntity;
                 }
                 return createPostStateEntity(entry);
@@ -62,8 +62,8 @@ public class EventPostStateParser {
             String postSate = postStateWithPriority[0];
             int priority = Integer.parseInt(postStateWithPriority[1]);
             EventPostStateEntity postStateEntity = new EventPostStateEntity();
-            postStateEntity.setMatchingCondition(getParsedCondition(postSate));
-            postStateEntity.setStatePriority(priority);
+            postStateEntity.setEnablingCondition(getParsedCondition(postSate));
+            postStateEntity.setPriority(priority);
             setPostStateReference(postStateEntity, postSate.substring(0, postSate.indexOf("(")));
             return postStateEntity;
         }

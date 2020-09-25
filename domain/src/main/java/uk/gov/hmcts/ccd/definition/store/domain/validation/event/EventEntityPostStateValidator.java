@@ -64,10 +64,10 @@ public class EventEntityPostStateValidator implements EventEntityValidator {
 
         postStateEntities
             .stream()
-            .filter(postStateEntity -> postStateEntity.getMatchingCondition() != null)
+            .filter(postStateEntity -> postStateEntity.getEnablingCondition() != null)
             .forEach(entity -> {
                 try {
-                    ShowCondition showCondition = showConditionExtractor.parseShowCondition(entity.getMatchingCondition());
+                    ShowCondition showCondition = showConditionExtractor.parseShowCondition(entity.getEnablingCondition());
 
                     List<String> allSubTypePossibilities = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(eventEntity.getCaseType().getCaseFields());
 
@@ -76,7 +76,7 @@ public class EventEntityPostStateValidator implements EventEntityValidator {
                             validationResult.addError(new EventEntityShowConditionReferencesInvalidCaseFieldError(
                                 showConditionField,
                                 eventEntity,
-                                entity.getMatchingCondition()
+                                entity.getEnablingCondition()
                             ));
                         }
                     });
@@ -89,7 +89,7 @@ public class EventEntityPostStateValidator implements EventEntityValidator {
                             validationResult.addError(new EventEntityShowConditionReferencesInvalidCaseFieldError(
                                 showConditionField,
                                 eventEntity,
-                                entity.getMatchingCondition()
+                                entity.getEnablingCondition()
                             ));
                         }
                     });
@@ -105,12 +105,12 @@ public class EventEntityPostStateValidator implements EventEntityValidator {
                                                  EventEntityValidationContext eventEntityValidationContext) {
         Optional<EventPostStateEntity> conditionalEntity = postStateEntities
             .stream()
-            .filter(postStateEntity -> postStateEntity.getMatchingCondition() != null)
+            .filter(postStateEntity -> postStateEntity.getEnablingCondition() != null)
             .findAny();
 
         Optional<EventPostStateEntity> defaultEntity = postStateEntities
             .stream()
-            .filter(postStateEntity -> postStateEntity.getMatchingCondition() == null)
+            .filter(postStateEntity -> postStateEntity.getEnablingCondition() == null)
             .findAny();
         if (conditionalEntity.isPresent() && defaultEntity.isEmpty()) {
             validationResult.addError(new EventEntityInvalidDefaultPostStateError(event, eventEntityValidationContext));
@@ -123,7 +123,7 @@ public class EventEntityPostStateValidator implements EventEntityValidator {
                                                       EventEntityValidationContext eventEntityValidationContext) {
         List<EventPostStateEntity> postStateEntitiesUniquePriority = postStateEntities
             .stream()
-            .filter(distinctByKey(postState -> postState.getStatePriority()))
+            .filter(distinctByKey(postState -> postState.getPriority()))
             .collect(Collectors.toList());
 
         if (postStateEntitiesUniquePriority.size() != postStateEntities.size()) {

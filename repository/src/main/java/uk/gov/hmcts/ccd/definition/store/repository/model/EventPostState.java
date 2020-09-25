@@ -5,36 +5,26 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(description = "")
 public class EventPostState {
 
-    private String id = null;
+    private String enablingCondition;
 
-    private String matchingCondition;
-
-    private Integer statePriority;
+    private Integer priority;
 
     private String postStateReference;
 
-    public String getId() {
-        return id;
+    public String getEnablingCondition() {
+        return enablingCondition;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setEnablingCondition(String enablingCondition) {
+        this.enablingCondition = enablingCondition;
     }
 
-    public String getMatchingCondition() {
-        return matchingCondition;
+    public Integer getPriority() {
+        return priority;
     }
 
-    public void setMatchingCondition(String matchingCondition) {
-        this.matchingCondition = matchingCondition;
-    }
-
-    public Integer getStatePriority() {
-        return statePriority;
-    }
-
-    public void setStatePriority(Integer statePriority) {
-        this.statePriority = statePriority;
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public String getPostStateReference() {

@@ -8,10 +8,10 @@
             <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
-            <column name="matching_condition" type="varchar(2000)">
+            <column name="enabling_condition" type="varchar(2000)">
                 <constraints nullable="true"/>
             </column>
-            <column name="state_priority" type="integer">
+            <column name="priority" type="integer">
                 <constraints nullable="true"/>
             </column>
             <column name="case_event_id" type="integer">
