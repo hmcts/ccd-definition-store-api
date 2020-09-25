@@ -1,7 +1,6 @@
-#====================================================
-@F-080
-Feature: F-080: Get Case Type Details by Jurisdiction
-#====================================================
+
+@F-080 @Ignore
+Feature: F-080: Get Case Type details by Jurisdiction
 
 Background:
     Given an appropriate test context as detailed in the test data source
