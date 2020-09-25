@@ -2,11 +2,13 @@
 	"_guid_": "S-331",
 	"_extends_": "F-077_Test_Base_Data",
 	"title": "Should return all valid base types",
+
 	"specs": [
 		"an active profile in CCD",
 		"has the 200 OK code",
 		"contains a list of all the base type data structures"
 	],
+
 	"expectedResponse": {
 		"_extends_": "Common_200_Response",
 		"headers": {

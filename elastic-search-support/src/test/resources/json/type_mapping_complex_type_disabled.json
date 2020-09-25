@@ -1,0 +1,9 @@
+{
+  "properties": {
+    "field1": "dataMapping",
+    "field2": {
+      "enabled": false
+    },
+    "nestedComplexField": "dataMappingForComplexType"
+  }
+}
