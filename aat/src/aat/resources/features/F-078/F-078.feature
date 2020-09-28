@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-335 @Smoke
+@S-335
 Scenario: must return 200 and Gets the current version of a Case Type Schema
 
     Given a user with [an active profile in CCD]
