@@ -20,7 +20,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -35,7 +36,8 @@
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
-                                        "ignore_above": 256
+                                        "ignore_above": 256,
+                                        "normalizer": "lowercase_normalizer"
                                     }
                                 }
                             }
@@ -60,7 +62,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -77,19 +80,22 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
                     "security_classification": {
-                        "type": "keyword"
+                        "type": "keyword",
+                        "normalizer": "lowercase_normalizer"
                     },
                     "state": {
                         "type": "text",
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     }
@@ -117,11 +123,20 @@
                     "analyzer": {
                         "phone_number_analyzer": {
                             "filter": [
-                              "shingle_filter",
-                              "whitespace_remove"
+                                "whitespace_remove"
                             ],
                             "type": "custom",
                             "tokenizer": "keyword"
+                        }
+                    },
+                    "normalizer": {
+                        "lowercase_normalizer": {
+                            "type": "custom",
+                            "char_filter": [],
+                            "filter": [
+                                "lowercase",
+                                "asciifolding"
+                            ]
                         }
                     }
                 },
@@ -154,7 +169,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -169,7 +185,8 @@
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
-                                        "ignore_above": 256
+                                        "ignore_above": 256,
+                                        "normalizer": "lowercase_normalizer"
                                     }
                                 }
                             }
@@ -194,7 +211,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -211,7 +229,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -223,7 +242,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     }
@@ -251,11 +271,20 @@
                     "analyzer": {
                         "phone_number_analyzer": {
                             "filter": [
-                              "shingle_filter",
-                              "whitespace_remove"
+                                "whitespace_remove"
                             ],
                             "type": "custom",
                             "tokenizer": "keyword"
+                        }
+                    },
+                    "normalizer": {
+                        "lowercase_normalizer": {
+                            "type": "custom",
+                            "char_filter": [],
+                            "filter": [
+                                "lowercase",
+                                "asciifolding"
+                            ]
                         }
                     }
                 },

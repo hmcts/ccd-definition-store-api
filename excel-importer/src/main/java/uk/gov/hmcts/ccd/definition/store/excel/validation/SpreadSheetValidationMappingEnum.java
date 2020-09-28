@@ -52,7 +52,7 @@ public enum SpreadSheetValidationMappingEnum {
     SEARCH_CASES_RESULT_FIELDS_LABEL("SearchCaseResults", "Label", 200),
     SEARCH_CASES_RESULT_FIELDS_CASE_FIELD_ELEMENT_PATH("SearchCaseResults", "ListElementCode", 300),
 
-    WORK_BASKET_INPUT_FIELDS_LABEL("WorkBasketInputFields", "Label", 30),
+    WORK_BASKET_INPUT_FIELDS_LABEL("WorkBasketInputFields", "Label", 200),
     WORK_BASKET_INPUT_FIELDS_CASE_FIELD_ELEMENT_PATH("WorkBasketInputFields", "ListElementCode", 300),
 
     WORK_BASKET_RESULT_FIELDS_LABEL("WorkBasketResultFields", "Label", 200),
