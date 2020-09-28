@@ -4,11 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 import javax.persistence.Transient;
 
 import java.io.Serializable;

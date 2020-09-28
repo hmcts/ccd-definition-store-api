@@ -7,6 +7,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+
 @Table(name = "search_cases_result_fields")
 @Entity
 public class SearchCasesResultFieldEntity extends GenericLayoutEntity {
