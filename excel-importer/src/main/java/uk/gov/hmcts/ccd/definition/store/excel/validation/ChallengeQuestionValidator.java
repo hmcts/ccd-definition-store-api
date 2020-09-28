@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ChallengeQuestionDisplayContextParameterValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -36,15 +35,11 @@ public class ChallengeQuestionValidator {
     private static final String ANSWER_FIELD_ROLE_SEPARATOR = ":";
     private static final String ANSWER_FIELD_MATCHER = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
     public static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
-    private final ChallengeQuestionTabService challengeQuestionTabService;
     private ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
     private HashMap<String, List<String>> displayOrderList = new HashMap<>();
 
     @Autowired
-    public ChallengeQuestionValidator(ChallengeQuestionTabService challengeQuestionTabService,
-                                      ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator) {
-
-        this.challengeQuestionTabService = challengeQuestionTabService;
+    public ChallengeQuestionValidator(ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator) {
         this.challengeQuestionDisplayContextParameterValidator = challengeQuestionDisplayContextParameterValidator;
     }
 
@@ -53,8 +48,7 @@ public class ChallengeQuestionValidator {
         this.parseContext = parseContext;
         validateQuestionId(definitionDataItem);
         final String questionId = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_QUESTION_ID);
-        Optional<ChallengeQuestionTabEntity> result = challengeQuestionTabService.findByQuestionId(questionId);
-        final ChallengeQuestionTabEntity challengeQuestionTabEntity = result.orElseGet(ChallengeQuestionTabEntity::new);
+        ChallengeQuestionTabEntity challengeQuestionTabEntity = new ChallengeQuestionTabEntity();
         challengeQuestionTabEntity.setQuestionId(questionId);
         challengeQuestionTabEntity.setCaseType(getCaseTypeEntity(definitionDataItem));
         challengeQuestionTabEntity.setAnswerFieldType(getFieldTypeEntity(definitionDataItem));
