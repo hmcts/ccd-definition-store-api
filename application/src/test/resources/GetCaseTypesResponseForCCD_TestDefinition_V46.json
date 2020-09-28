@@ -100,9 +100,9 @@
     } ],
     "pre_states" : [ ],
     "post_states" : [ {
-      "enablingCondition" : null,
+      "enabling_condition" : null,
       "priority" : 99,
-      "postStateReference" : "CaseCreated"
+      "post_state_reference" : "CaseCreated"
     } ],
     "callback_url_about_to_start_event" : "http://localhost:8080/about_to_start",
     "retries_timeout_about_to_start_event" : [ 5, 10, 15 ],
@@ -197,13 +197,13 @@
     } ],
     "pre_states" : [ "CaseCreated" ],
     "post_states" : [ {
-      "enablingCondition" : "PersonHasSecondAddress=\"Yes\"",
+      "enabling_condition" : "PersonHasSecondAddress=\"Yes\"",
       "priority" : 1,
-      "postStateReference" : "*"
+      "post_state_reference" : "*"
     }, {
-      "enablingCondition" : null,
+      "enabling_condition" : null,
       "priority" : 99,
-      "postStateReference" : "CaseStopped"
+      "post_state_reference" : "CaseStopped"
     } ],
     "callback_url_about_to_start_event" : null,
     "retries_timeout_about_to_start_event" : [ ],
@@ -231,9 +231,9 @@
     "case_fields" : [ ],
     "pre_states" : [ "CaseCreated" ],
     "post_states" : [ {
-      "enablingCondition" : null,
+      "enabling_condition" : null,
       "priority" : 99,
-      "postStateReference" : "CaseStopped"
+      "post_state_reference" : "CaseStopped"
     } ],
     "callback_url_about_to_start_event" : null,
     "retries_timeout_about_to_start_event" : [ ],
