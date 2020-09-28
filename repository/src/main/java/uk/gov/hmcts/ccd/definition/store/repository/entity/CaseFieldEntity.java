@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Parameter;

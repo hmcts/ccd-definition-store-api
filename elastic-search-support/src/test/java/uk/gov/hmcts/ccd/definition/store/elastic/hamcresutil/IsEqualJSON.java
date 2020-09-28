@@ -151,7 +151,6 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
 
     @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     @Factory
-    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     public static IsEqualJSON equalToJSONInFile(final Path expectedPath, JSONComparator comparator) {
         return equalToJSON(getFileContents(expectedPath), comparator);
     }
