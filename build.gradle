@@ -40,17 +40,16 @@ apply plugin: 'pmd'
 apply from: 'liquibase.gradle'
 
 pmd {
-    toolVersion = '6.18.0'
-    // https://github.com/pmd/pmd/issues/876
-    ruleSets = []
-    ruleSetFiles = files("config/pmd/ruleset.xml")
-    ignoreFailures = true
+    toolVersion = '6.11.0'
 }
 
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
 dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
+
+    // Ignore these non-runtime configurations
+    skipConfigurations = ['codacy']
 }
 
 //spring boot dependency override
