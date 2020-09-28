@@ -107,7 +107,9 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
         return eventEntity;
     }
 
-    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField, EventEntity event, DisplayContext displayContext) {
+    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField,
+                                                      EventEntity event,
+                                                      DisplayContext displayContext) {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setCaseField(caseField);
         eventCaseFieldEntity.setEvent(event);

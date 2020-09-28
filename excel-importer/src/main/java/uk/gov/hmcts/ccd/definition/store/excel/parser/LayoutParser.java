@@ -40,7 +40,8 @@ public class LayoutParser {
         return workbasketLayoutParser.parseAll(definitionSheets);
     }
 
-    public ParseResult<GenericLayoutEntity> parseSearchCasesResultsLayout(Map<String, DefinitionSheet> definitionSheets) {
+    public ParseResult<GenericLayoutEntity> parseSearchCasesResultsLayout(
+        Map<String, DefinitionSheet> definitionSheets) {
         return searchCasesResultLayoutParser.parseAllForSearchCases(definitionSheets);
     }
 

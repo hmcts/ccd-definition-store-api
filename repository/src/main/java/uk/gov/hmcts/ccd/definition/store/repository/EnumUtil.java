@@ -3,7 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 public class EnumUtil {
 
     private EnumUtil() {
-        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor (squid:S1118)
+        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor
+        // (squid:S1118)
     }
 
     /**

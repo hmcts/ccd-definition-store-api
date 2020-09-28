@@ -106,7 +106,8 @@ public class AzureImportAuditsClientTest {
         when(b31.getProperties()).thenReturn(p31);
         when(b32.getProperties()).thenReturn(p32);
 
-        newArrayList(b11, b12, b21, b22, b31, b32).forEach(blob -> when(blob.getMetadata()).thenReturn(new HashMap<>()));
+        newArrayList(b11, b12, b21, b22, b31, b32).forEach(
+            blob -> when(blob.getMetadata()).thenReturn(new HashMap<>()));
 
         when(b11.getName()).thenReturn("b11");
         when(b12.getName()).thenReturn("b12");

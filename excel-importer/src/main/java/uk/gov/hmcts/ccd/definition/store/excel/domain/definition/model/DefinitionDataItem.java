@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Object representation of a row of Case Definition data from an imported workbook sheet. A <code>DefinitionDataItem</code>
- * uses a list of {@link Pair}s to represent a row of data, which comprises the various attributes of a data item.
+ * Object representation of a row of Case Definition data from an imported workbook sheet.
+ * A <code>DefinitionDataItem</code> uses a list of {@link Pair}s to represent a row of data, which comprises the
+ * various attributes of a data item.
  *
  * @author Daniel Lam (A533913)
  */

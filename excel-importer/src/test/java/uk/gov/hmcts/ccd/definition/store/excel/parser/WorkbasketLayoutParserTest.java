@@ -38,13 +38,15 @@ public class WorkbasketLayoutParserTest {
         MockitoAnnotations.initMocks(this);
 
         definitionSheets = new HashMap<>();
-        classUnderTest = new WorkbasketLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
+        classUnderTest = new WorkbasketLayoutParser(
+            parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
     }
 
     @Test
     @DisplayName("Should Fail when no worksheet provided")
     public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
         assertEquals("A definition must contain a WorkBasketResultFields sheet", thrown.getMessage());
     }
 
@@ -59,8 +61,11 @@ public class WorkbasketLayoutParserTest {
     void shouldThrowExceptionWhenPopulateUseCaserIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
         assertEquals(String.format("useCase is not supported in worksheet '%s' for caseType '%s'",
-            SheetName.WORK_BASKET_RESULT_FIELDS.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
+            SheetName.WORK_BASKET_RESULT_FIELDS.getName(),
+            layoutEntity.getCaseType().getReference()),
+            thrown.getMessage());
     }
 }

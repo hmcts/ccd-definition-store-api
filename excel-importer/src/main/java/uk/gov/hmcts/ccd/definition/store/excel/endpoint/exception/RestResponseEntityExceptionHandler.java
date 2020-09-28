@@ -26,7 +26,8 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
- * Global exception handler for the Case Definition Importer {@link uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController
+ * Global exception handler for the Case Definition Importer
+ * {@link uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController
  * ImportController} class, providing appropriate HTTP responses based on the exceptions caught.
  *
  * @author Daniel Lam (A533913)
@@ -39,14 +40,16 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     private SpreadsheetValidationErrorMessageCreator spreadsheetValidationErrorMessageCreator;
 
-    public RestResponseEntityExceptionHandler(SpreadsheetValidationErrorMessageCreator spreadsheetValidationErrorMessageCreator) {
+    public RestResponseEntityExceptionHandler(
+        SpreadsheetValidationErrorMessageCreator spreadsheetValidationErrorMessageCreator) {
         this.spreadsheetValidationErrorMessageCreator = spreadsheetValidationErrorMessageCreator;
     }
 
     @ExceptionHandler(value = {InvalidImportException.class, MapperException.class})
     ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
         log.error("Exception thrown '{}'", ex.getMessage(), ex);
-        return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(
+            ex, flattenExceptionMessages(ex), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = MissingUserRolesException.class)
@@ -57,18 +60,23 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
                 .collect(Collectors.joining("\n"))).toString();
         log.warn(missingUserRoles);
 
-        String validationErrors = getValidationErrorMessage("\n\nValidation errors occurred importing the spreadsheet.\n\n", ex.getValidationErrors());
+        String validationErrors = getValidationErrorMessage(
+            "\n\nValidation errors occurred importing the spreadsheet.\n\n", ex.getValidationErrors());
 
-        return handleExceptionInternal(ex, missingUserRoles + validationErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(
+            ex, missingUserRoles + validationErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = {ValidationException.class})
-    public ResponseEntity<Object> handleValidationException(ValidationException validationException, WebRequest request) {
+    public ResponseEntity<Object> handleValidationException(ValidationException validationException,
+                                                            WebRequest request) {
 
-        String errorMessage = getValidationErrorMessage("Validation errors occurred importing the spreadsheet.\n\n",
+        String errorMessage = getValidationErrorMessage(
+            "Validation errors occurred importing the spreadsheet.\n\n",
             validationException.getValidationResult().getValidationErrors());
 
-        return handleExceptionInternal(validationException, errorMessage, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+        return handleExceptionInternal(
+            validationException, errorMessage, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
     @ExceptionHandler(CaseTypeValidationException.class)

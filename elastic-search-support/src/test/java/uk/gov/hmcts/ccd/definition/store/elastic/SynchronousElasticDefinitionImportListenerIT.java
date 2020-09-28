@@ -35,7 +35,8 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     @Autowired
     private SynchronousElasticDefinitionImportListener definitionImportListener;
 
-    private final CaseTypeBuilder caseTypeBuilder = new CaseTypeBuilder().withJurisdiction("JUR").withReference(CASE_TYPE_A);
+    private final CaseTypeBuilder caseTypeBuilder = new CaseTypeBuilder()
+        .withJurisdiction("JUR").withReference(CASE_TYPE_A);
 
     @BeforeEach
     void setUp() throws IOException {
@@ -47,14 +48,18 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException, JSONException {
         CaseFieldEntity baseTypeField = newTextField("TextField").build();
         CaseFieldEntity complexField = newComplexField("ComplexField");
-        CaseFieldEntity collectionField = newCollectionFieldOfBaseType("CollectionField", "BaseCollectionType");
+        CaseFieldEntity collectionField = newCollectionFieldOfBaseType(
+            "CollectionField", "BaseCollectionType");
         CaseFieldEntity complexCollectionField = newCollectionOfComplexField(
             "ComplexCollectionField", "ComplexCollectionType");
 
-        CaseFieldEntity nonSearchableBaseTypeField = newTextField("NonSearchableTextField").withSearchable(false).build();
+        CaseFieldEntity nonSearchableBaseTypeField = newTextField("NonSearchableTextField")
+            .withSearchable(false).build();
         CaseFieldEntity nonSearchableComplexField = newComplexField("NonSearchableComplexField");
-        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType().getComplexFields().get(1).setSearchable(false);
-        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType().getComplexFields().get(2).setSearchable(false);
+        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
+            .getComplexFields().get(1).setSearchable(false);
+        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
+            .getComplexFields().get(2).setSearchable(false);
 
         CaseFieldEntity nonSearchableCollectionField = newCollectionField(
             "NonSearchableCollectionField", "NonSearchableCollectionType");

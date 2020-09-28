@@ -29,11 +29,14 @@ public class CaseFieldEntityUtil {
         return buildAllDottedComplexFieldPossibilities(caseFieldEntities, true);
     }
 
-    public List<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(List<? extends FieldEntity> caseFieldEntities) {
-        return removeElementsThatAreCaseFields(buildAllDottedComplexFieldPossibilities(caseFieldEntities, false), caseFieldEntities);
+    public List<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(
+        List<? extends FieldEntity> caseFieldEntities) {
+        return removeElementsThatAreCaseFields(buildAllDottedComplexFieldPossibilities(
+            caseFieldEntities, false), caseFieldEntities);
     }
 
-    private List<String> buildAllDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities, boolean leavesOnly) {
+    private List<String> buildAllDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities,
+                                                                 boolean leavesOnly) {
         List<String> allSubTypePossibilities = new ArrayList<>();
         List<? extends FieldEntity> fieldEntities = caseFieldEntities.stream()
             .filter(Objects::nonNull)
@@ -42,7 +45,8 @@ public class CaseFieldEntityUtil {
         return allSubTypePossibilities;
     }
 
-    private List<String> removeElementsThatAreCaseFields(List<String> allSubTypePossibilities, List<? extends FieldEntity> caseFieldEntities) {
+    private List<String> removeElementsThatAreCaseFields(
+        List<String> allSubTypePossibilities, List<? extends FieldEntity> caseFieldEntities) {
         return allSubTypePossibilities.stream()
             .filter(e -> caseFieldEntities.stream().noneMatch(element -> element.getReference().equalsIgnoreCase(e)))
             .collect(Collectors.toList());

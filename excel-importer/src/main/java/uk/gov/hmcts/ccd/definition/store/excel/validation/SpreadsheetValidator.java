@@ -27,13 +27,15 @@ public class SpreadsheetValidator {
     }
 
     public void validate(String sheetName, String columnName, String cellValue, String additionalColumnName) {
-        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum.fromSheetColumnName(sheetName, columnName);
+        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum
+            .fromSheetColumnName(sheetName, columnName);
         String displayColumnName = additionalColumnName + " - " + columnName;
         validate(sheetName, displayColumnName, columnNameEnum, cellValue, "");
     }
 
     public void validate(String sheetName, String columnName, String cellValue, Integer rowNumber) {
-        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum.fromSheetColumnName(sheetName, columnName);
+        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum
+            .fromSheetColumnName(sheetName, columnName);
         String rowNumberInfo = " at row number '" + rowNumber + "'";
         validate(sheetName, columnName, columnNameEnum, cellValue, rowNumberInfo);
     }

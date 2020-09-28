@@ -40,10 +40,11 @@ public class ElasticsearchIndexController {
 
     @PostMapping(ELASTIC_INDEX_URI)
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation("Builds the Elasticsearch indices for all known case types, using their latest version. "
-        + "This API can be used to negate the need to reimport all spreadsheet definitions as part of an Elasticsearch reindex.")
+    @ApiOperation("Builds the Elasticsearch indices for all known case types, using their latest version. This API can "
+        + "be used to negate the need to reimport all spreadsheet definitions as part of an Elasticsearch reindex.")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Elasticsearch indices have been created successfully for all known case types"),
+        @ApiResponse(code = 201, message = "Elasticsearch indices have been created successfully "
+            + "for all known case types"),
         @ApiResponse(code = 400, message = "An error occurred during creation of indices"),
         @ApiResponse(code = 404, message = "Endpoint is disabled")
     })

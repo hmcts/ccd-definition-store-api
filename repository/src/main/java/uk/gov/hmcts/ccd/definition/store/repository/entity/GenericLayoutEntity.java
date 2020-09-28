@@ -143,8 +143,9 @@ public abstract class GenericLayoutEntity implements Serializable {
     }
 
     /**
-     * Determine whether the field that the layout entity represents is searchable. All fields (top level and nested) have a searchable property.
-     * In the case of nested fields, a field is considered searchable if its parent (and its parent's parent etc.) are all searchable too.
+     * Determine whether the field that the layout entity represents is searchable. All fields (top level and nested)
+     * have a searchable property. In the case of nested fields, a field is considered searchable if its parent (and
+     * its parent's parent etc.) are all searchable too.
      * @return Whether the entity represents a searchable field.
      */
     @Transient

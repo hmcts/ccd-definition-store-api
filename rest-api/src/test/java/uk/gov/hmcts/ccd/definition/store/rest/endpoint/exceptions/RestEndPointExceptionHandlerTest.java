@@ -51,7 +51,8 @@ public class RestEndPointExceptionHandlerTest {
 
     @Test
     public void handleConflictWhenOptimisticLockExceptionHappens() {
-        final OptimisticLockException exception = new OptimisticLockException("Outer message", new Exception("Inner message"));
+        final OptimisticLockException exception = new OptimisticLockException(
+            "Outer message", new Exception("Inner message"));
 
         final ResponseEntity<Object> response = exceptionHandler.handleConflict(exception, mock(WebRequest.class));
 

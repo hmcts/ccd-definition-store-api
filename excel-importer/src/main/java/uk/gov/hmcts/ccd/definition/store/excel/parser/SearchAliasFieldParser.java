@@ -33,14 +33,17 @@ public class SearchAliasFieldParser {
         this.parseContext = parseContext;
     }
 
-    public List<SearchAliasFieldEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseType) {
-        Map<String, List<DefinitionDataItem>> searchAliasFieldsByCaseTypes = ofNullable(definitionSheets.get(SheetName.SEARCH_ALIAS.getName()))
+    public List<SearchAliasFieldEntity> parseAll(Map<String, DefinitionSheet> definitionSheets,
+                                                 CaseTypeEntity caseType) {
+        Map<String, List<DefinitionDataItem>> searchAliasFieldsByCaseTypes = ofNullable(definitionSheets
+            .get(SheetName.SEARCH_ALIAS.getName()))
             .map(DefinitionSheet::groupDataItemsByCaseType)
             .orElse(Collections.emptyMap());
 
         log.debug("Parsing search alias case fields for case type {}...", caseType.getReference());
 
-        List<SearchAliasFieldEntity> searchAliasFields = ofNullable(searchAliasFieldsByCaseTypes.get(caseType.getReference()))
+        List<SearchAliasFieldEntity> searchAliasFields = ofNullable(searchAliasFieldsByCaseTypes
+            .get(caseType.getReference()))
             .map(dataItems -> dataItems
                 .stream()
                 .map(dataItem -> parseSearchAliasField(dataItem, caseType))
@@ -69,7 +72,8 @@ public class SearchAliasFieldParser {
             return null;
         }
         List<String> fieldsInPath = parseCaseFieldPath(caseFieldPath);
-        CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(caseType.getReference(), fieldsInPath.remove(0));
+        CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(
+            caseType.getReference(), fieldsInPath.remove(0));
         if (caseField.isComplexFieldType()) {
             return deriveComplexFieldType(caseField.getFieldType().getReference(), fieldsInPath);
         } else if (caseField.isCollectionFieldType()) {
@@ -82,9 +86,11 @@ public class SearchAliasFieldParser {
     private FieldTypeEntity deriveCollectionFieldType(CaseFieldEntity caseField, List<String> fieldsInPath) {
         removeCollectionValuePlaceholder(fieldsInPath);
         if (caseField.isCollectionOfComplex()) {
-            return deriveComplexFieldType(caseField.getFieldType().getCollectionFieldType().getReference(), fieldsInPath);
+            return deriveComplexFieldType(
+                caseField.getFieldType().getCollectionFieldType().getReference(), fieldsInPath);
         } else {
-            return parseContext.getBaseType(caseField.getFieldType().getCollectionFieldType().getReference()).orElse(null);
+            return parseContext.getBaseType(caseField.getFieldType().getCollectionFieldType().getReference())
+                .orElse(null);
         }
     }
 

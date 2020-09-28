@@ -37,7 +37,8 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
     }
 
     protected String deleteElasticsearchIndices(String... caseTypes) throws IOException {
-        String indices = caseTypes[0].equals(WILDCARD) ? WILDCARD : String.format("/%s", getIndicesFromCaseTypes(caseTypes));
+        String indices = caseTypes[0].equals(WILDCARD) ? WILDCARD : String.format(
+            "/%s", getIndicesFromCaseTypes(caseTypes));
         return elasticResponseAsString(DELETE, indices);
     }
 

@@ -82,7 +82,8 @@ public class JsonUtilsTest {
         } catch (IllegalArgumentException ex) {
             final Throwable cause = ex.getCause();
             assertThat(cause, instanceOf(JsonMappingException.class));
-            Assertions.assertThat(cause).hasMessageContaining("Cannot deserialize instance of `java.lang.String` out of START_OBJECT token");
+            Assertions.assertThat(cause).hasMessageContaining(
+                "Cannot deserialize instance of `java.lang.String` out of START_OBJECT token");
             throw cause;
         }
     }

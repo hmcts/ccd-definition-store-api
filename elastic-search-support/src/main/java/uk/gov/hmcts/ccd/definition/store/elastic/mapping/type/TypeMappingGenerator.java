@@ -34,7 +34,8 @@ public abstract class TypeMappingGenerator extends MappingGenerator {
 
     protected String getConfiguredMapping(String ccdType) {
         return Optional.ofNullable(configuredTypeMappings().get(ccdType))
-            .orElseThrow(() -> new ElasticSearchInitialisationException(String.format("no configured mapping for ccd type %s", ccdType)));
+            .orElseThrow(() -> new ElasticSearchInitialisationException(
+                String.format("no configured mapping for ccd type %s", ccdType)));
     }
 
     protected String securityClassificationMapping() {

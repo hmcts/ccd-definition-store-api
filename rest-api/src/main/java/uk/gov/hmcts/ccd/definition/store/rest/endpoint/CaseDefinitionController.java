@@ -45,7 +45,8 @@ public class CaseDefinitionController {
     private static final Logger LOG = LoggerFactory.getLogger(CaseDefinitionController.class);
 
     @RequestMapping(value = "/data/case-type/{id}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n", response = CaseType.class)
+    @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n",
+        response = CaseType.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -55,8 +56,10 @@ public class CaseDefinitionController {
         return caseTypeService.findByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
     }
 
-    @RequestMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n", response = CaseType.class)
+    @RequestMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}", method = RequestMethod.GET,
+        produces = {"application/json"})
+    @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n",
+        response = CaseType.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -68,8 +71,10 @@ public class CaseDefinitionController {
         return caseTypeService.findByCaseTypeId(caseTypeId).orElseThrow(() -> new NotFoundException(caseTypeId));
     }
 
-    @RequestMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Get Case Roles for a case type", notes = "Returns list of case roles of a single case type.\n", response = CaseRole.class)
+    @RequestMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles",
+        method = RequestMethod.GET, produces = {"application/json"})
+    @ApiOperation(value = "Get Case Roles for a case type",
+        notes = "Returns list of case roles of a single case type.\n", response = CaseRole.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of Case Roles")
     })
@@ -80,7 +85,8 @@ public class CaseDefinitionController {
         return caseRoleService.findByCaseTypeId(caseTypeId);
     }
 
-    @RequestMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type", method = RequestMethod.GET, produces = {"application/json"})
+    @RequestMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type", method = RequestMethod.GET,
+        produces = {"application/json"})
     @ApiOperation(value = "Get case types",
         notes = "Get the case types as a list with optional jurisdiction filter",
         response = CaseType.class, responseContainer = "List")
@@ -88,7 +94,8 @@ public class CaseDefinitionController {
         @ApiResponse(code = 200, message = "List of Case Types")
     })
     public List<CaseType> dataJurisdictionsJurisdictionIdCaseTypeGet(
-        @ApiParam(value = "ID for a Jurisdiction", required = true) @PathVariable("jurisdiction_id") String jurisdictionId) {
+        @ApiParam(value = "ID for a Jurisdiction", required = true)
+        @PathVariable("jurisdiction_id") String jurisdictionId) {
         return caseTypeService.findByJurisdictionId(jurisdictionId);
     }
 

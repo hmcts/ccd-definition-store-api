@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Need to investigate.
  *
  * @deprecated I am here to get sonar to pass.
- * Needs investigation on why test coverage is picking up JUnit5 cases selectively.
+ *      Needs investigation on why test coverage is picking up JUnit5 cases selectively.
  */
 @Deprecated
 public class UserProfileValidatorImplJunit4Test {

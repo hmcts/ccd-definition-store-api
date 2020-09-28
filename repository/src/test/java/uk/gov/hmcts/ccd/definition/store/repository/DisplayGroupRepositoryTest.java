@@ -69,6 +69,7 @@ public class DisplayGroupRepositoryTest {
         caseTypeV3 = versionedCaseTypeRepository.save(caseTypeEntity());
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void shouldReturnDisplayGroupEntityForLatestCaseTypeVersion_whenDisplayGroupEntitesExistAcrossMultipleVersionsOfCaseType() {
 
@@ -76,7 +77,8 @@ public class DisplayGroupRepositoryTest {
         createDisplayGroupsForCase(caseTypeV2);
         createDisplayGroupsForCase(caseTypeV3);
 
-        final List<DisplayGroupEntity> fetched = displayGroupRepository.findTabsByCaseTypeReference(CASE_TYPE_REFERENCE);
+        final List<DisplayGroupEntity> fetched = displayGroupRepository
+            .findTabsByCaseTypeReference(CASE_TYPE_REFERENCE);
 
         assertThat(fetched, hasSize(1));
 
@@ -109,13 +111,20 @@ public class DisplayGroupRepositoryTest {
     }
 
     private void createDisplayGroupsForCase(CaseTypeEntity caseType) {
-        displayGroupRepository.save(createDisplayGroup(caseType, "ref dg page edit", "label dg", "channel dg", 4, PAGE, EDIT, SHOW_CONDITION));
-        displayGroupRepository.save(createDisplayGroup(caseType, "ref dg page view", "label dg", "channel dg", 4, PAGE, VIEW, SHOW_CONDITION));
-        displayGroupRepository.save(createDisplayGroup(caseType, "ref dg tab edit", "label dg", "channel dg", 4, TAB, EDIT, SHOW_CONDITION));
-        displayGroupRepository.save(createDisplayGroup(caseType, "ref dg tab view", "label dg", "channel dg", 4, TAB, VIEW, SHOW_CONDITION));
+        displayGroupRepository.save(createDisplayGroup(
+            caseType, "ref dg page edit", "label dg", "channel dg", 4, PAGE, EDIT, SHOW_CONDITION));
+        displayGroupRepository.save(createDisplayGroup(
+            caseType, "ref dg page view", "label dg", "channel dg", 4, PAGE, VIEW, SHOW_CONDITION));
+        displayGroupRepository.save(createDisplayGroup(
+            caseType, "ref dg tab edit", "label dg", "channel dg", 4, TAB, EDIT, SHOW_CONDITION));
+        displayGroupRepository.save(createDisplayGroup(
+            caseType, "ref dg tab view", "label dg", "channel dg", 4, TAB, VIEW, SHOW_CONDITION));
     }
 
-    private void addDisplayGroupField(final CaseFieldEntity cf, final DisplayGroupEntity dg, final int order, Integer column) {
+    private void addDisplayGroupField(final CaseFieldEntity cf,
+                                      final DisplayGroupEntity dg,
+                                      final int order,
+                                      Integer column) {
         final DisplayGroupCaseFieldEntity dgf = new DisplayGroupCaseFieldEntity();
         dgf.setCaseField(cf);
         dgf.setOrder(order);

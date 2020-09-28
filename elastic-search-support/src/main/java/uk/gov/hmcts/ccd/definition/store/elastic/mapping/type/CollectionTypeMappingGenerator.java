@@ -49,8 +49,10 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
                 jw.beginObject();
                 jw.name(PROPERTIES);
                 jw.beginObject();
-                List<ComplexFieldEntity> complexFields = collectionField.getFieldType().getCollectionFieldType().getComplexFields();
-                List<ComplexFieldEntity> notIgnoredFields = complexFields.stream().filter(f -> !shouldIgnore(f)).collect(toList());
+                List<ComplexFieldEntity> complexFields = collectionField.getFieldType()
+                    .getCollectionFieldType().getComplexFields();
+                List<ComplexFieldEntity> notIgnoredFields = complexFields.stream()
+                    .filter(f -> !shouldIgnore(f)).collect(toList());
 
                 for (ComplexFieldEntity complexField : notIgnoredFields) {
                     TypeMappingGenerator typeMapper = getTypeMapper(complexField.getBaseTypeString());

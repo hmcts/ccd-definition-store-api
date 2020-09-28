@@ -55,12 +55,14 @@ public class WorkbasketLayoutParser extends GenericLayoutParser {
     @Override
     protected void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition) {
         throw new MapperException(String.format("showCondition is not supported in worksheet '%s' for "
-            + "caseType '%s'", SheetName.WORK_BASKET_RESULT_FIELDS.getName(), layoutEntity.getCaseType().getReference()));
+            + "caseType '%s'", SheetName.WORK_BASKET_RESULT_FIELDS.getName(),
+            layoutEntity.getCaseType().getReference()));
     }
 
     @Override
     protected void populateUseCase(GenericLayoutEntity layoutEntity, String useCase) {
         throw new MapperException(String.format("useCase is not supported in worksheet '%s' for "
-            + "caseType '%s'", SheetName.WORK_BASKET_RESULT_FIELDS.getName(), layoutEntity.getCaseType().getReference()));
+            + "caseType '%s'", SheetName.WORK_BASKET_RESULT_FIELDS.getName(),
+            layoutEntity.getCaseType().getReference()));
     }
 }

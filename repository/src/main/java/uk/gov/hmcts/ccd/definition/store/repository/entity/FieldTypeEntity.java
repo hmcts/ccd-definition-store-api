@@ -219,7 +219,8 @@ public class FieldTypeEntity implements Serializable, Versionable {
 
     @Transient
     public boolean isDocumentType() {
-        return (BASE_DOCUMENT.equals(reference) || (baseFieldType != null && BASE_DOCUMENT.equals(baseFieldType.getReference())));
+        return (BASE_DOCUMENT.equals(reference)
+            || (baseFieldType != null && BASE_DOCUMENT.equals(baseFieldType.getReference())));
     }
 
     @Transient

@@ -56,7 +56,8 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
                     caseTypeReference, dataItems.size());
 
                 if (null == collect.get(caseFieldReference)) {
-                    LOG.warn("No row is defined for case type '{}', case field '{}'", caseTypeReference, caseFieldReference);
+                    LOG.warn("No row is defined for case type '{}', case field '{}'",
+                        caseTypeReference, caseFieldReference);
                     // and let validation handles this Exception
                 } else {
                     for (DefinitionDataItem definition : collect.get(caseFieldReference)) {

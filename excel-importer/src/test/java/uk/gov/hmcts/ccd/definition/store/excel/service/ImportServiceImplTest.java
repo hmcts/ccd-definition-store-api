@@ -332,7 +332,9 @@ public class ImportServiceImplTest {
         assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
         assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
         assertEquals("user@hmcts.net", metadata.getUserId());
-        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypesAsString());
+        assertEquals(
+            TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE,
+            metadata.getCaseTypesAsString());
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());

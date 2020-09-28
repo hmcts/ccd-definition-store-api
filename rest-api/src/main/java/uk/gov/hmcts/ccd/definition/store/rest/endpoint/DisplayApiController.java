@@ -49,8 +49,10 @@ public class DisplayApiController {
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
     }
 
-    @RequestMapping(value = "/display/search-input-definition/{id}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch the UI definition for the search inputs for a given Case Type", notes = "", response = SearchInputDefinition.class)
+    @RequestMapping(value = "/display/search-input-definition/{id}", method = RequestMethod.GET,
+        produces = {"application/json"})
+    @ApiOperation(value = "Fetch the UI definition for the search inputs for a given Case Type", notes = "",
+        response = SearchInputDefinition.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Search input definition"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -60,8 +62,10 @@ public class DisplayApiController {
         return this.displayService.findSearchInputDefinitionForCaseType(id);
     }
 
-    @RequestMapping(value = "/display/search-result-definition/{id}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch the UI definition for the search result fields for a given Case Type", notes = "", response = SearchResultDefinition.class)
+    @RequestMapping(value = "/display/search-result-definition/{id}", method = RequestMethod.GET,
+        produces = {"application/json"})
+    @ApiOperation(value = "Fetch the UI definition for the search result fields for a given Case Type", notes = "",
+        response = SearchResultDefinition.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Search result definition"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -96,8 +100,10 @@ public class DisplayApiController {
         return this.displayService.findWizardPageForCaseType(caseTypeId, eventReference);
     }
 
-    @RequestMapping(value = "/display/work-basket-input-definition/{id}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch the UI definition for the work basket inputs for a given Case Type", notes = "", response = SearchInputDefinition.class)
+    @RequestMapping(value = "/display/work-basket-input-definition/{id}", method = RequestMethod.GET,
+        produces = {"application/json"})
+    @ApiOperation(value = "Fetch the UI definition for the work basket inputs for a given Case Type", notes = "",
+        response = SearchInputDefinition.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Work Basket input definition"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -107,8 +113,10 @@ public class DisplayApiController {
         return this.displayService.findWorkBasketInputDefinitionForCaseType(id);
     }
 
-    @RequestMapping(value = "/display/work-basket-definition/{id}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch the UI definition for the work basket for a given Case Type", notes = "", response = WorkBasketResult.class)
+    @RequestMapping(value = "/display/work-basket-definition/{id}", method = RequestMethod.GET,
+        produces = {"application/json"})
+    @ApiOperation(value = "Fetch the UI definition for the work basket for a given Case Type", notes = "",
+        response = WorkBasketResult.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Work Basket Result"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -119,14 +127,17 @@ public class DisplayApiController {
     }
 
     @GetMapping(path = "/display/search-cases-result-fields/{id}")
-    @ApiOperation(value = "Fetch the UI definition for the search cases result for a given Case Type", notes = "", response = SearchCasesResult.class)
+    @ApiOperation(value = "Fetch the UI definition for the search cases result for a given Case Type", notes = "",
+        response = SearchCasesResult.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Search Case Result Fields"),
         @ApiResponse(code = 200, message = "Unexpected error")
     })
     public SearchCasesResult displaySearchCasesResultIdGet(
-        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id, @RequestParam(value = "use_case", required = false) String useCase) {
-        return (useCase == null || useCase.isEmpty()) ? this.displayService.findSearchCasesResultDefinitionForCaseType(id)
+        @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id,
+        @RequestParam(value = "use_case", required = false) String useCase) {
+        return (useCase == null || useCase.isEmpty())
+            ? this.displayService.findSearchCasesResultDefinitionForCaseType(id)
             : this.displayService.findSearchCasesResultDefinitionForCaseType(id, useCase);
     }
 
@@ -136,18 +147,23 @@ public class DisplayApiController {
         @ApiResponse(code = 200, message = "List of Banners")
     })
     public BannersResult getBanners(
-        @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> referencesOptional) {
-        List<Banner> banners = referencesOptional.map(references -> bannerService.getAll(references)).orElse(Collections.emptyList());
+        @ApiParam(value = "list of jurisdiction references")
+        @RequestParam("ids") Optional<List<String>> referencesOptional) {
+        List<Banner> banners = referencesOptional.map(
+            references -> bannerService.getAll(references)).orElse(Collections.emptyList());
         return new BannersResult(banners);
     }
 
-    @RequestMapping(value = "/display/jurisdiction-ui-configs", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Get UI config details for list of jurisdictions", response = JurisdictionUiConfigResult.class)
+    @RequestMapping(
+        value = "/display/jurisdiction-ui-configs", method = RequestMethod.GET, produces = {"application/json"})
+    @ApiOperation(
+        value = "Get UI config details for list of jurisdictions", response = JurisdictionUiConfigResult.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of Jurisdiction UI Configs")
     })
     public JurisdictionUiConfigResult getJurisdictionUiConfigs(
-        @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> referencesOptional) {
+        @ApiParam(value = "list of jurisdiction references")
+        @RequestParam("ids") Optional<List<String>> referencesOptional) {
         List<JurisdictionUiConfig> configs = referencesOptional
             .map(references -> jurisdictionUiConfigService.getAll(references)).orElse(Collections.emptyList());
         return new JurisdictionUiConfigResult(configs);

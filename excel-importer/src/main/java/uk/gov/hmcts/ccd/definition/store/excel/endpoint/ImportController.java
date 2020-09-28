@@ -65,7 +65,9 @@ public class ImportController {
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes));
 
-            if (azureStorageConfiguration != null && azureStorageConfiguration.isAzureUploadEnabled() && fileStorageService != null) {
+            if (azureStorageConfiguration != null
+                && azureStorageConfiguration.isAzureUploadEnabled()
+                && fileStorageService != null) {
                 LOG.info("Uploading Definition file to Azure Storage...");
                 fileStorageService.uploadFile(file, metadata);
             }

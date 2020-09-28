@@ -15,6 +15,7 @@ public class SwaggerGeneratorTest extends BaseTest {
 
     @DisplayName("Generate swagger documentation for all APIs")
     @Test
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     public void generateDocs() throws Exception {
         ResultActions perform = mockMvc.perform(get("/v2/api-docs"));
         byte[] specs = perform

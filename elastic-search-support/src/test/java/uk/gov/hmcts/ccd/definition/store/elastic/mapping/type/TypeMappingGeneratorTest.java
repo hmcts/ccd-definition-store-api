@@ -30,18 +30,21 @@ public class TypeMappingGeneratorTest extends AbstractMapperTest {
 
     @BeforeEach
     public void setUp() {
-        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
+        addMappingGenerator(new StubTypeMappingGenerator(
+            "Text", "dataMapping","dataClassificationMapping"));
         typeMappingGenerator.inject(stubTypeMappersManager);
     }
 
     @Test
     public void shouldThrowErrorWhenNoMapperForType() {
-        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator.getTypeMapper("unkonwnType"));
+        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator
+            .getTypeMapper("unkonwnType"));
     }
 
     @Test
     public void shouldThrowErrorWhenNoConfiguredMapping() {
-        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator.getConfiguredMapping("Unknown"));
+        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator
+            .getConfiguredMapping("Unknown"));
     }
 
     @Test

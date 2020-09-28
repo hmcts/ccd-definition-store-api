@@ -11,7 +11,8 @@ import java.util.Map;
 public class JurisdictionParser {
 
     public JurisdictionEntity parse(Map<String, DefinitionSheet> definitionSheets) {
-        final DefinitionDataItem jurisdictionItem = definitionSheets.get(SheetName.JURISDICTION.getName()).getDataItems().get(0);
+        final DefinitionDataItem jurisdictionItem = definitionSheets
+            .get(SheetName.JURISDICTION.getName()).getDataItems().get(0);
 
         JurisdictionEntity jurisdiction = new JurisdictionEntity();
         jurisdiction.setReference(jurisdictionItem.getString(ColumnName.ID));

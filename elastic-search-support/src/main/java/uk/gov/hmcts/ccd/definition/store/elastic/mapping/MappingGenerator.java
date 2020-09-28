@@ -40,7 +40,8 @@ public abstract class MappingGenerator implements JsonGenerator, Injectable {
 
     public TypeMappingGenerator getTypeMapper(String type) {
         return Optional.ofNullable(this.typeMappers.get(type))
-            .orElseThrow(() -> new ElasticSearchInitialisationException(String.format("cannot find mapper for type %s", type)));
+            .orElseThrow(() -> new ElasticSearchInitialisationException(
+                String.format("cannot find mapper for type %s", type)));
     }
 
     public boolean shouldIgnore(FieldEntity field) {

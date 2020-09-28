@@ -47,20 +47,23 @@ public class SearchInputLayoutParserTest {
         parseContext.registerCaseFieldForCaseType(CASE_TYPE_ID, caseFieldEntity);
 
         definitionSheets = new HashMap<>();
-        classUnderTest = new SearchInputLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
+        classUnderTest = new SearchInputLayoutParser(
+            parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
     }
 
     @Test
     @DisplayName("Should Fail when no worksheet provided")
     public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
         assertEquals("A definition must contain a SearchInputFields sheet", thrown.getMessage());
     }
 
     @Test
     @DisplayName("Should fail when no values provided in SearchInputFields worksheet")
     public void shouldFailWhenNoDataInWorksheet() {
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
         assertEquals("A definition must contain a SearchInputFields sheet", thrown.getMessage());
     }
 
@@ -75,7 +78,8 @@ public class SearchInputLayoutParserTest {
     public void shouldThrowExceptionWhenPopulateSortOrderIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateSortOrder(layoutEntity, "1:ASC"));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.populateSortOrder(layoutEntity, "1:ASC"));
         assertEquals(String.format("Results ordering is not supported in worksheet '%s' for caseType '%s'",
             SheetName.SEARCH_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }
@@ -85,7 +89,8 @@ public class SearchInputLayoutParserTest {
     void shouldThrowExceptionWhenPopulateUseCaserIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
         assertEquals(String.format("useCase is not supported in worksheet '%s' for caseType '%s'",
             SheetName.SEARCH_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }

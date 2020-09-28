@@ -38,7 +38,8 @@ class SearchCasesResultLayoutParserTest {
         MockitoAnnotations.initMocks(this);
 
         definitionSheets = new HashMap<>();
-        classUnderTest = new SearchCasesResultLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
+        classUnderTest = new SearchCasesResultLayoutParser(
+            parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
     }
 
     @Test
@@ -50,7 +51,8 @@ class SearchCasesResultLayoutParserTest {
     @Test
     @DisplayName("Should Fail when no worksheet provided")
     void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
         assertEquals("A definition must contain a SearchCasesResultFields sheet", thrown.getMessage());
     }
 
@@ -59,8 +61,11 @@ class SearchCasesResultLayoutParserTest {
     void shouldThrowExceptionWhenPopulateShowConditionIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateShowCondition(layoutEntity, "WORKBASKET"));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.populateShowCondition(layoutEntity, "WORKBASKET"));
         assertEquals(String.format("showCondition is not supported in worksheet '%s' for caseType '%s'",
-            SheetName.SEARCH_CASES_RESULT_FIELDS.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
+            SheetName.SEARCH_CASES_RESULT_FIELDS.getName(),
+            layoutEntity.getCaseType().getReference()),
+            thrown.getMessage());
     }
 }
