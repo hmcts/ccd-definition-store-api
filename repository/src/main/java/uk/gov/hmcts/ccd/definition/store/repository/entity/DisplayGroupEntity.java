@@ -181,7 +181,8 @@ public class DisplayGroupEntity implements Serializable {
     }
 
     public boolean hasField(String fieldReference) {
-        return displayGroupCaseFields.stream().anyMatch(dgcf -> dgcf.getCaseField().getReference().equals(fieldReference));
+        return displayGroupCaseFields.stream().anyMatch(
+            dgcf -> dgcf.getCaseField().getReference().equals(fieldReference));
     }
 
     public UserRoleEntity getUserRole() {

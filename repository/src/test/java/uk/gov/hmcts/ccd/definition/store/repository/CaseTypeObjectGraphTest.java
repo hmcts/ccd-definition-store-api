@@ -176,7 +176,8 @@ public class CaseTypeObjectGraphTest {
             && x.getWebhookPreSubmit().getTimeouts().equals(Lists.newArrayList(3, 50, 6, 20))));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPostSubmit() != null
             && x.getWebhookPostSubmit().getTimeouts().equals(Lists.newArrayList(23, 5, 6))));
-        assertThat(fetchedEvents, hasItem(hasProperty("securityClassification", equalTo(SecurityClassification.PRIVATE))));
+        assertThat(fetchedEvents, hasItem(hasProperty(
+            "securityClassification", equalTo(SecurityClassification.PRIVATE))));
         assertThat(fetchedEvents.get(1).getEventCaseFields(), hasSize(1));
         EventCaseFieldEntity eventCaseFieldEntity = fetchedEvents.get(1).getEventCaseFields().get(0);
         assertThat(eventCaseFieldEntity.getCaseField().getReference(), equalTo(cf.getReference()));
@@ -218,8 +219,10 @@ public class CaseTypeObjectGraphTest {
 
         // Check authorisation case fields
         assertThat(caseField.getCaseFieldACLEntities().size(), equalTo(2));
-        assertThat(caseField.getCaseFieldACLEntities().get(0).getUserRole().getReference(), equalTo("user role 1"));
-        assertThat(caseField.getCaseFieldACLEntities().get(1).getUserRole().getReference(), equalTo("user role 2"));
+        assertThat(caseField.getCaseFieldACLEntities().get(0).getUserRole().getReference(),
+            equalTo("user role 1"));
+        assertThat(caseField.getCaseFieldACLEntities().get(1).getUserRole().getReference(),
+            equalTo("user role 2"));
         assertThat(caseField.getCaseFieldACLEntities().get(0).getCreate(), equalTo(true));
         assertThat(caseField.getCaseFieldACLEntities().get(0).getRead(), equalTo(false));
         assertThat(caseField.getCaseFieldACLEntities().get(0).getUpdate(), equalTo(false));
@@ -250,8 +253,10 @@ public class CaseTypeObjectGraphTest {
         assertNotNull(optionalfetched.get());
         CaseTypeEntity fetchedAltered = optionalfetched.get();
         assertThat(fetchedAltered.getSecurityClassification(), equalTo(SecurityClassification.RESTRICTED));
-        assertThat(fetchedAltered.getCaseFields().get(0).getSecurityClassification(), equalTo(SecurityClassification.PRIVATE));
-        assertThat(fetchedAltered.getEvents().get(0).getSecurityClassification(), equalTo(SecurityClassification.PUBLIC));
+        assertThat(fetchedAltered.getCaseFields().get(0).getSecurityClassification(),
+            equalTo(SecurityClassification.PRIVATE));
+        assertThat(fetchedAltered.getEvents().get(0).getSecurityClassification(),
+            equalTo(SecurityClassification.PUBLIC));
 
     }
 
@@ -261,7 +266,8 @@ public class CaseTypeObjectGraphTest {
                                            final boolean canUpdate,
                                            final boolean canDelete) {
         final String reasonPrefix = String.format("Case type '%s, Event '%s', User Role '%s' ",
-            entity.getEvent().getCaseType().getReference(), entity.getEvent().getReference(), entity.getUserRole().getReference());
+            entity.getEvent().getCaseType().getReference(), entity.getEvent().getReference(),
+            entity.getUserRole().getReference());
         assertThat(reasonPrefix + "can create", entity.getCreate(), is(canCreate));
         assertThat(reasonPrefix + "can read", entity.getRead(), is(canRead));
         assertThat(reasonPrefix + "can update", entity.getUpdate(), is(canUpdate));
@@ -293,7 +299,8 @@ public class CaseTypeObjectGraphTest {
                                               final CaseTypeACLEntity actual) {
         assertThat(expected.getCaseType().getReference(), is(caseType.getReference()));
         assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
-        assertThat(expected.getUserRole().getSecurityClassification(), is(actual.getUserRole().getSecurityClassification()));
+        assertThat(expected.getUserRole().getSecurityClassification(),
+            is(actual.getUserRole().getSecurityClassification()));
     }
 
     private void assertStateUserRoleEntity(final StateEntity stateEntity,
@@ -301,7 +308,8 @@ public class CaseTypeObjectGraphTest {
                                            final StateACLEntity actual) {
         assertThat(expected.getStateEntity().getReference(), is(stateEntity.getReference()));
         assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
-        assertThat(expected.getUserRole().getSecurityClassification(), is(actual.getUserRole().getSecurityClassification()));
+        assertThat(expected.getUserRole().getSecurityClassification(),
+            is(actual.getUserRole().getSecurityClassification()));
     }
 
     private void setAuthorisationData(final Authorisation entity,
@@ -368,7 +376,10 @@ public class CaseTypeObjectGraphTest {
         return webhook;
     }
 
-    private EventEntity createEvent(final String reference, final String name, final Integer order, final SecurityClassification sc) {
+    private EventEntity createEvent(final String reference,
+                                    final String name,
+                                    final Integer order,
+                                    final SecurityClassification sc) {
         final EventEntity event = new EventEntity();
         event.setReference(reference);
         event.setName(name);

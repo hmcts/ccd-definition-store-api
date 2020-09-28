@@ -92,14 +92,16 @@ public class EventParserTest extends ParserTestBase {
         caseEventToComplexTypesSheet = new DefinitionSheet();
         definitionSheets.put(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName(), caseEventToComplexTypesSheet);
 
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(
+            ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
         root.addAppender(mockAppender);
         root.setLevel(Level.INFO);
     }
 
     @After
     public void teardown() {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(
+            ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
         root.detachAppender(mockAppender);
 
         if (assertEntityAddedToRegistry) {
@@ -247,7 +249,8 @@ public class EventParserTest extends ParserTestBase {
 
         final Collection<EventEntity> events = eventParser.parseAll(definitionSheets, caseType);
 
-        verify(eventCaseFieldComplexTypeParser).parseEventCaseFieldComplexType(singletonList(caseEventToComplexTypesDataItem));
+        verify(eventCaseFieldComplexTypeParser)
+            .parseEventCaseFieldComplexType(singletonList(caseEventToComplexTypesDataItem));
 
         assertThat(events.size(), is(1));
         entity = new ArrayList<>(events).get(0);

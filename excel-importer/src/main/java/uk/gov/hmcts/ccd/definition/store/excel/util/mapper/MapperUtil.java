@@ -37,7 +37,8 @@ public class MapperUtil {
         "Found '%s' whilst expecting a comma separated list of numbers in the column '%s' of sheet '%s'";
     private static final String FIELD_SEPARATOR = ",";
     private static final String INVALID_VALUE_COLUMN = "Invalid value '%s' is found in column '%s' in the sheet '%s'";
-    private static final String INVALID_OR_BLANK_COLUMN = "Couldn't find the column '%s' or invalid value in the sheet '%s'";
+    private static final String INVALID_OR_BLANK_COLUMN
+        = "Couldn't find the column '%s' or invalid value in the sheet '%s'";
 
     private static final Logger LOG = LoggerFactory.getLogger(MapperUtil.class);
 
@@ -206,13 +207,15 @@ public class MapperUtil {
     }
 
     /**
-     * Find the Integer list attribute in the given item.  If there is an error in the attribute, then we return an empty list.
+     * Find the Integer list attribute in the given item.
+     * If there is an error in the attribute, then we return an empty list.
      *
      * @param definitionDataItem - definition data item
      * @param sheetName          - sheetName
      * @param columnName         - columnName
      * @return integer list
-     * @throws MapperException - thrown if the field is required, but the attribute wasn't found or numbers in the list cannot be parsed
+     * @throws MapperException - thrown if the field is required, but the attribute wasn't found or numbers in the
+     *      list cannot be parsed
      */
     static List<Integer> getIntegerList(DefinitionDataItem definitionDataItem,
                                         SheetName sheetName,
@@ -299,7 +302,8 @@ public class MapperUtil {
     }
 
     /**
-     * Create all the CaseField objects for Complex Types from the Case Definition and map them in lists by their Field Type Id.
+     * Create all the CaseField objects for Complex Types from the Case Definition and map them in lists
+     * by their Field Type Id.
      *
      * @param sheets - DefinitionSheets representing a Case Definition
      * @return Map of CaseField's by CaseTypeId
@@ -319,9 +323,11 @@ public class MapperUtil {
             caseField.setId(getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.LIST_ELEMENT_CODE));
             caseField.setLabel(getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.ELEMENT_LABEL));
             caseField.setHintText(getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.HINT_TEXT));
-            caseField.setFieldType(createFieldType(SheetName.COMPLEX_TYPES, complexTypeItem, fixedListsByCode, complexTypeIds));
+            caseField.setFieldType(createFieldType(
+                SheetName.COMPLEX_TYPES, complexTypeItem, fixedListsByCode, complexTypeIds));
             caseField.setHidden(getBoolean(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.DEFAULT_HIDDEN));
-            caseField.setSecurityClassification(getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.SECURITY_CLASSIFICATION));
+            caseField.setSecurityClassification(getString(
+                complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.SECURITY_CLASSIFICATION));
             String complexTypeId = getString(complexTypeItem, SheetName.COMPLEX_TYPES, ColumnName.ID);
             complexTypeFieldsById.computeIfAbsent(complexTypeId, k -> new ArrayList<>());
             complexTypeFieldsById.get(complexTypeId).add(caseField);
@@ -340,8 +346,10 @@ public class MapperUtil {
         List<CaseField> complexFields = complexTypesById.get(fieldTypeId);
         for (CaseField complexField : complexFields) {
             // If the Field Type is COMPLEX with no ComplexTypeFields, then the tree hasn't been mapped yet
-            if (complexField.getFieldType().getType().equals(COMPLEX) && complexField.getFieldType().getComplexFields().isEmpty()) {
-                // Make recursive call to map populate and Complex Fields of this Field Type, then set them onto the Field
+            if (complexField.getFieldType().getType().equals(COMPLEX)
+                && complexField.getFieldType().getComplexFields().isEmpty()) {
+                // Make recursive call to map populate and Complex Fields of this Field Type,
+                // then set them onto the Field
                 populateComplexCaseFields(complexField.getFieldType().getId(), complexTypesById);
                 complexField.getFieldType().setComplexFields(complexTypesById.get(complexField.getFieldType().getId()));
             }

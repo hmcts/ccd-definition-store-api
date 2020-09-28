@@ -85,7 +85,12 @@ class CreateDefinitionSheetUtil {
      * @param postState - case event post-state
      * @return the created CaseEvent
      */
-    static DefinitionDataItem createCaseEventItem(String id, String name, String desc, String preState, String postState, String caseTypeId) {
+    static DefinitionDataItem createCaseEventItem(String id,
+                                                  String name,
+                                                  String desc,
+                                                  String preState,
+                                                  String postState,
+                                                  String caseTypeId) {
         return createCaseEventItem(id, name, desc, preState, postState, caseTypeId, null, null, null, null, null, null);
     }
 
@@ -143,7 +148,10 @@ class CreateDefinitionSheetUtil {
      * @param displayOrder - display order of result field
      * @return the created Work Basket Result Field
      */
-    static DefinitionDataItem createWorkBasketResultFieldItem(String caseTypeId, String caseFieldId, String label, double displayOrder) {
+    static DefinitionDataItem createWorkBasketResultFieldItem(String caseTypeId,
+                                                              String caseFieldId,
+                                                              String label,
+                                                              double displayOrder) {
         Map<ColumnName, Object> attributes = new EnumMap<>(ColumnName.class);
         attributes.put(ColumnName.CASE_TYPE_ID, caseTypeId);
         attributes.put(ColumnName.CASE_FIELD_ID, caseFieldId);
@@ -166,8 +174,15 @@ class CreateDefinitionSheetUtil {
      * @param tabFieldDisplayOrder - tab field display order
      * @return the created Case Tab Collection
      */
-    static DefinitionDataItem createCaseTabCollectionItem(Date liveFrom, Date liveTo, String caseTypeId, String channel, String tabId,
-                                                          String tabLabel, double tabDisplayOrder, String caseFieldId, double tabFieldDisplayOrder) {
+    static DefinitionDataItem createCaseTabCollectionItem(Date liveFrom,
+                                                          Date liveTo,
+                                                          String caseTypeId,
+                                                          String channel,
+                                                          String tabId,
+                                                          String tabLabel,
+                                                          double tabDisplayOrder,
+                                                          String caseFieldId,
+                                                          double tabFieldDisplayOrder) {
         Map<ColumnName, Object> attributes = new EnumMap<>(ColumnName.class);
         attributes.put(ColumnName.LIVE_FROM, liveFrom);
         attributes.put(ColumnName.LIVE_TO, liveTo);
@@ -181,7 +196,12 @@ class CreateDefinitionSheetUtil {
         return createDefinitionDataItem(attributes);
     }
 
-    static DefinitionDataItem createSearchFieldItem(Date liveFrom, Date liveTo, String caseTypeId, String caseFieldId, String label, double displayOrder) {
+    static DefinitionDataItem createSearchFieldItem(Date liveFrom,
+                                                    Date liveTo,
+                                                    String caseTypeId,
+                                                    String caseFieldId,
+                                                    String label,
+                                                    double displayOrder) {
         Map<ColumnName, Object> attributes = new EnumMap<>(ColumnName.class);
         attributes.put(ColumnName.LIVE_FROM, liveFrom);
         attributes.put(ColumnName.LIVE_TO, liveTo);
@@ -222,7 +242,11 @@ class CreateDefinitionSheetUtil {
         return createDefinitionDataItem(attributes);
     }
 
-    static DefinitionDataItem createFixListCodeItem(Date liveFrom, Date liveTo, String id, String listElementCode, String listElement) {
+    static DefinitionDataItem createFixListCodeItem(Date liveFrom,
+                                                    Date liveTo,
+                                                    String id,
+                                                    String listElementCode,
+                                                    String listElement) {
         Map<ColumnName, Object> attributes = new EnumMap<>(ColumnName.class);
         attributes.put(ColumnName.LIVE_FROM, liveFrom);
         attributes.put(ColumnName.LIVE_TO, liveTo);

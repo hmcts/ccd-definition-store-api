@@ -30,7 +30,8 @@ public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
     }
 
     @Override
-    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws SQLException {
+    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner)
+        throws SQLException {
         return EnumUtil.getEnumFromString(clazz, rs.getString(names[0]));
     }
 

@@ -96,7 +96,8 @@ public class VersionedDefinitionRepositoryDecoratorTest {
         Optional<CaseTypeEntity> retrievedCaseType = versionedCaseTypeRepository.findById(savedEntities.get(0).getId());
         assertNotNull(retrievedCaseType.get());
         assertThat(retrievedCaseType.get().getVersion(), is(1));
-        Optional<CaseTypeEntity> retrievedCaseType2 = versionedCaseTypeRepository.findById(savedEntities.get(1).getId());
+        Optional<CaseTypeEntity> retrievedCaseType2 = versionedCaseTypeRepository
+            .findById(savedEntities.get(1).getId());
         assertNotNull(retrievedCaseType2.get());
         assertThat(retrievedCaseType2.get().getVersion(), is(1));
 

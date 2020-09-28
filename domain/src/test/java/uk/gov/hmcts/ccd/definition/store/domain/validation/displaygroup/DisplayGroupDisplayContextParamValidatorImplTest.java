@@ -43,7 +43,8 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
 
@@ -53,7 +54,8 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
@@ -66,8 +68,10 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
-        assertEquals("DisplayContextParameter text should begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(",
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("DisplayContextParameter text should begin with "
+                + "#LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
 

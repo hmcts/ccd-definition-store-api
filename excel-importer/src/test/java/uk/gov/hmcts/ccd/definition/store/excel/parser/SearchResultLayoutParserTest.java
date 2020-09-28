@@ -37,13 +37,15 @@ public class SearchResultLayoutParserTest {
         MockitoAnnotations.initMocks(this);
 
         definitionSheets = new HashMap<>();
-        classUnderTest = new SearchResultLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
+        classUnderTest = new SearchResultLayoutParser(
+            parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
     }
 
     @Test
     @DisplayName("Should Fail when no worksheet provided")
     public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
         assertEquals("A definition must contain a SearchResultFields sheet", thrown.getMessage());
     }
 
@@ -59,7 +61,8 @@ public class SearchResultLayoutParserTest {
     void shouldThrowExceptionWhenPopulateShowConditionIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateShowCondition(layoutEntity, "WORKBASKET"));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.populateShowCondition(layoutEntity, "WORKBASKET"));
         assertEquals(String.format("showCondition is not supported in worksheet '%s' for caseType '%s'",
             SheetName.SEARCH_RESULT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }
@@ -69,7 +72,8 @@ public class SearchResultLayoutParserTest {
     void shouldThrowExceptionWhenPopulateUseCaseIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
         assertEquals(String.format("useCase is not supported in worksheet '%s' for caseType '%s'",
             SheetName.SEARCH_RESULT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
     }

@@ -31,7 +31,8 @@ public class NoCConfigParser {
     }
 
     public Map<String, List<NoCConfigEntity>> parse(Map<String, DefinitionSheet> definitionSheets) {
-        Map<String, List<DefinitionDataItem>> nocConfigsCaseType = ofNullable(definitionSheets.get(SheetName.NOC_CONFIG.getName()))
+        Map<String, List<DefinitionDataItem>> nocConfigsCaseType = ofNullable(definitionSheets
+            .get(SheetName.NOC_CONFIG.getName()))
             .map(DefinitionSheet::groupDataItemsByCaseType)
             .orElse(Collections.emptyMap());
 

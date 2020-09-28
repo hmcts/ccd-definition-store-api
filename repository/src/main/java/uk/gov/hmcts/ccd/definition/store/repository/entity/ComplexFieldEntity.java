@@ -25,7 +25,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 @TypeDef(
     name = "pgsql_securityclassification_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
+    parameters = @Parameter(name = "type",
+        value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
 public class ComplexFieldEntity implements FieldEntity, Serializable {
 
@@ -170,7 +171,9 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
         this.displayContextParameter = displayContextParameter;
     }
 
-    public Boolean getRetainHiddenValue() { return retainHiddenValue; }
+    public Boolean getRetainHiddenValue() {
+        return retainHiddenValue;
+    }
 
     public void setRetainHiddenValue(Boolean retainHiddenValue) {
         this.retainHiddenValue = retainHiddenValue;

@@ -96,7 +96,8 @@ class ControllerExceptionHandlerTest {
         @Test
         @DisplayName("should return error details as map")
         void shouldReturnErrorDetailsAsMap() {
-            final String error = handler.caseTypeValidation(new CaseTypeValidationException(new CaseTypeValidationResult("")));
+            final String error = handler.caseTypeValidation(
+                new CaseTypeValidationException(new CaseTypeValidationResult("")));
 
             assertAll(
                 () -> assertThat(error, is(notNullValue()))

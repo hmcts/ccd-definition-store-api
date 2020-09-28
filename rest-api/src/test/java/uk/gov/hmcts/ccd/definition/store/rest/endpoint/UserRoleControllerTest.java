@@ -144,10 +144,12 @@ class UserRoleControllerTest {
                 () -> assertThat(userRoles.size(), is(2)),
                 () -> assertThat(userRoles.get(0).getId(), is(1)),
                 () -> assertThat(userRoles.get(0).getRole(), is(ROLE1)),
-                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
+                () -> assertThat(
+                    userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
                 () -> assertThat(userRoles.get(1).getId(), is(2)),
                 () -> assertThat(userRoles.get(1).getRole(), is(ROLE2)),
-                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
+                () -> assertThat(
+                    userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
             );
         }
 
@@ -192,10 +194,12 @@ class UserRoleControllerTest {
                 () -> assertThat(userRoles.size(), is(2)),
                 () -> assertThat(userRoles.get(0).getId(), is(1)),
                 () -> assertThat(userRoles.get(0).getRole(), is(ROLE1)),
-                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
+                () -> assertThat(
+                    userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
                 () -> assertThat(userRoles.get(1).getId(), is(2)),
                 () -> assertThat(userRoles.get(1).getRole(), is(ROLE2)),
-                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
+                () -> assertThat(
+                    userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
             );
         }
     }
@@ -294,7 +298,8 @@ class UserRoleControllerTest {
         void shouldHaveStatusResetContent_whenPutSuccessfully() throws Exception {
             final UserRole argument = buildUserRole(ROLE_DEFINED);
             final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -7);
-            when(userRoleService.createRole(isA(UserRole.class))).thenReturn(new ServiceResponse<>(mockUserRole, CREATE));
+            when(userRoleService.createRole(isA(UserRole.class)))
+                .thenReturn(new ServiceResponse<>(mockUserRole, CREATE));
 
             mockMvc.perform(
                 post(URL_API_USER_ROLE)

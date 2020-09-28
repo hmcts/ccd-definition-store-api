@@ -58,8 +58,10 @@ class NoCConfigParserTest extends ParserTestBase {
     @Test
     @DisplayName("Should parse the noc config content for the two case types with single entry each")
     public void shouldParse_whenOnlyOneNocConfigPerCaseType() {
-        definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_1, false, false));
-        definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_2, true, false));
+        definitionSheet.addDataItem(buildDefinitionDataItem(
+            CASE_TYPE_ID_1, false, false));
+        definitionSheet.addDataItem(buildDefinitionDataItem(
+            CASE_TYPE_ID_2, true, false));
         Map<String, List<NoCConfigEntity>> nocConfigs = configParser.parse(definitionSheets);
         Assertions.assertNotNull(nocConfigs);
         Assertions.assertEquals(2, nocConfigs.size());
@@ -68,7 +70,8 @@ class NoCConfigParserTest extends ParserTestBase {
     @Test
     @DisplayName("Should parse the noc config content for the case type with single entry")
     public void shouldParse_whenOnlyOneNocConfigForCaseType() {
-        definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_1, false, false));
+        definitionSheet.addDataItem(buildDefinitionDataItem(
+            CASE_TYPE_ID_1, false, false));
         Map<String, List<NoCConfigEntity>> nocConfigs = configParser.parse(definitionSheets);
         Assertions.assertNotNull(nocConfigs);
         Assertions.assertEquals(2, nocConfigs.size());
@@ -78,18 +81,23 @@ class NoCConfigParserTest extends ParserTestBase {
     @Test
     @DisplayName("Should throw exception when noc config tab has single unknown case type")
     public void shouldThrow_Exception_For_Non_Matching_CaseTypeIds() {
-        definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_3, false, false));
+        definitionSheet.addDataItem(buildDefinitionDataItem(
+            CASE_TYPE_ID_3, false, false));
         MapperException thrown = assertThrows(MapperException.class, () -> configParser.parse(definitionSheets));
-        assertEquals("Unknown Case Type(s) 'FT_MasterCaseType_3' in worksheet 'NoticeOfChangeConfig'", thrown.getMessage());
+        assertEquals("Unknown Case Type(s) 'FT_MasterCaseType_3' in worksheet 'NoticeOfChangeConfig'",
+            thrown.getMessage());
     }
 
     @Test
     @DisplayName("Should throw exception when noc config tab has multiple unknown case types")
     public void shouldThrow_Exception_For_Non_Matching_Multiple_CaseTypeIds() {
-        definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_3, false, false));
-        definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_4, false, false));
+        definitionSheet.addDataItem(buildDefinitionDataItem(
+            CASE_TYPE_ID_3, false, false));
+        definitionSheet.addDataItem(buildDefinitionDataItem(
+            CASE_TYPE_ID_4, false, false));
         MapperException thrown = assertThrows(MapperException.class, () -> configParser.parse(definitionSheets));
-        assertEquals("Unknown Case Type(s) 'FT_MasterCaseType_3,FT_MasterCaseType_4' in worksheet 'NoticeOfChangeConfig'", thrown.getMessage());
+        assertEquals("Unknown Case Type(s) 'FT_MasterCaseType_3,FT_MasterCaseType_4' "
+            + "in worksheet 'NoticeOfChangeConfig'", thrown.getMessage());
     }
 
     @Test
@@ -98,18 +106,24 @@ class NoCConfigParserTest extends ParserTestBase {
         definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_2,
             "invalidReason",
             "invalidNocAction"));
-        ValidationException thrown = assertThrows(ValidationException.class, () -> configParser.parse(definitionSheets));
+        ValidationException thrown = assertThrows(
+            ValidationException.class, () -> configParser.parse(definitionSheets));
         assertNotNull(thrown);
         assertNotNull(thrown.getValidationResult());
         List<ValidationError> validationErrors = thrown.getValidationResult().getValidationErrors();
         assertEquals(2, validationErrors.size());
     }
 
-    private DefinitionDataItem buildDefinitionDataItem(String caseTypeId, boolean reasonsRequired, boolean nocActionInterpretationRequired) {
-        return buildDefinitionDataItem(caseTypeId, String.valueOf(reasonsRequired), String.valueOf(nocActionInterpretationRequired));
+    private DefinitionDataItem buildDefinitionDataItem(String caseTypeId,
+                                                       boolean reasonsRequired,
+                                                       boolean nocActionInterpretationRequired) {
+        return buildDefinitionDataItem(
+            caseTypeId, String.valueOf(reasonsRequired), String.valueOf(nocActionInterpretationRequired));
     }
 
-    private DefinitionDataItem buildDefinitionDataItem(String caseTypeId, String reasonsRequired, String nocActionInterpretationRequired) {
+    private DefinitionDataItem buildDefinitionDataItem(String caseTypeId,
+                                                       String reasonsRequired,
+                                                       String nocActionInterpretationRequired) {
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.NOC_CONFIG.toString());
         item.addAttribute(ColumnName.REASON_REQUIRED.toString(), reasonsRequired);
         item.addAttribute(ColumnName.NOC_ACTION_INTERPRETATION_REQUIRED.toString(), nocActionInterpretationRequired);

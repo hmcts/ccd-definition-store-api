@@ -55,7 +55,8 @@ public class SearchCasesResultLayoutParser extends GenericLayoutParser {
     @Override
     protected void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition) {
         throw new MapperException(String.format("showCondition is not supported in worksheet '%s' for "
-            + "caseType '%s'", SheetName.SEARCH_CASES_RESULT_FIELDS.getName(), layoutEntity.getCaseType().getReference()));
+            + "caseType '%s'", SheetName.SEARCH_CASES_RESULT_FIELDS.getName(),
+            layoutEntity.getCaseType().getReference()));
     }
 
     @Override

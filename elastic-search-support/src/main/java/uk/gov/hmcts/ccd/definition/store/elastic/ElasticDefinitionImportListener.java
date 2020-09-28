@@ -34,8 +34,9 @@ public abstract class ElasticDefinitionImportListener {
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
 
     /**
-     * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new HighLevelCCDElasticClient on each import
-     * and we close it once the import is completed. The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
+     * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new
+     * HighLevelCCDElasticClient on each import and we close it once the import is completed.
+     * The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
      */
     @Transactional
     public void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) {

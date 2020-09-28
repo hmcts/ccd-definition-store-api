@@ -186,23 +186,25 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
     private boolean hasDuplicateRows(List<DefinitionDataItem> layoutItems, DefinitionDataItem ddi) {
         return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
-            ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
+            ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE))
+            : StringUtils.isEmpty(item.getString(USER_ROLE)))
             && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
             && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
             && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
-            ? ddi.getString(LIST_ELEMENT_CODE)
-            .equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE)) : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
+            ? ddi.getString(LIST_ELEMENT_CODE).equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE))
+            : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE))))
             .count() > 1;
     }
 
     private boolean hasDuplicateRowsForSearchCases(List<DefinitionDataItem> layoutItems, DefinitionDataItem ddi) {
         return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
-            ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE)) : StringUtils.isEmpty(item.getString(USER_ROLE)))
+            ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE))
+            : StringUtils.isEmpty(item.getString(USER_ROLE)))
             && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
             && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
             && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
-            ? ddi.getString(LIST_ELEMENT_CODE)
-            .equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE)) : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE)))
+            ? ddi.getString(LIST_ELEMENT_CODE).equalsIgnoreCase(item.getString(LIST_ELEMENT_CODE))
+            : StringUtils.isEmpty(item.getString(LIST_ELEMENT_CODE)))
             && ddi.getString(USE_CASE).equalsIgnoreCase(item.getString(USE_CASE))).count() > 1;
     }
 
@@ -251,7 +253,8 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
     private UserRoleEntity getRoleEntity(GenericLayoutEntity layoutEntity, String sheetName, String userRole) {
         return parseContext.getIdamRole(userRole)
-            .orElseThrow(() -> new MapperException(String.format("- Unknown idam role '%s' in worksheet '%s' for caseField '%s'",
+            .orElseThrow(() -> new MapperException(String.format(
+                "- Unknown idam role '%s' in worksheet '%s' for caseField '%s'",
                 userRole, sheetName, layoutEntity.getCaseField().getReference())));
     }
 
@@ -270,12 +273,16 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
     private void validateSortOrderPatternString(DefinitionDataItem dataItem, String caseTyeReference) {
         if (!SORT_ORDER_PATTERN.matcher(dataItem.getString(RESULTS_ORDERING)).matches()) {
-            throw new MapperException(String.format("Invalid results ordering pattern '%s' in worksheet '%s' for caseType '%s' for caseField '%s'",
-                dataItem.getString(RESULTS_ORDERING), dataItem.getSheetName(), caseTyeReference, dataItem.getString(CASE_FIELD_ID)));
+            throw new MapperException(String.format(
+                "Invalid results ordering pattern '%s' in worksheet '%s' for caseType '%s' for caseField '%s'",
+                dataItem.getString(RESULTS_ORDERING), dataItem.getSheetName(), caseTyeReference,
+                dataItem.getString(CASE_FIELD_ID)));
         }
     }
 
-    private void validateDuplicateAndGaps(CaseTypeEntity caseType, String sheetName, List<DefinitionDataItem> sortDataItems) {
+    private void validateDuplicateAndGaps(CaseTypeEntity caseType,
+                                          String sheetName,
+                                          List<DefinitionDataItem> sortDataItems) {
         Map<String, List<Integer>> sortPrioritiesByUserRole = getSortPrioritiesByRole(sortDataItems);
         sortPrioritiesByUserRole.values().forEach(items -> {
             checkDuplicateSortOrders(items, sheetName, caseType.getReference());
@@ -284,16 +291,19 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     }
 
     private void checkGapsInSortPriority(List<Integer> items, String sheetName, String caseType) {
-        boolean noGaps = items.stream().allMatch(e -> items.containsAll(IntStream.range(1, e).boxed().collect(Collectors.toList())));
+        boolean noGaps = items.stream().allMatch(e -> items
+            .containsAll(IntStream.range(1, e).boxed().collect(Collectors.toList())));
         if (!noGaps) {
-            throw new MapperException(String.format("Missing sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
+            throw new MapperException(String.format(
+                "Missing sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
         }
     }
 
     private void checkDuplicateSortOrders(List<Integer> items, String sheetName, String caseType) {
         boolean isUnique = items.stream().allMatch(new HashSet<>()::add);
         if (!isUnique) {
-            throw new MapperException(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
+            throw new MapperException(String.format(
+                "Duplicate sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
         }
     }
 
@@ -302,7 +312,8 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
         sortDataItems.stream().forEach(ddi -> {
             String key = StringUtils.isNotEmpty(ddi.getString(USER_ROLE)) ? ddi.getString(USER_ROLE) : ALL_ROLES;
-            key = ddi.getSheetName().equals(SheetName.SEARCH_CASES_RESULT_FIELDS.getName()) ? key + "_" + ddi.getUseCase() : key;
+            key = ddi.getSheetName().equals(SheetName.SEARCH_CASES_RESULT_FIELDS.getName())
+                ? key + "_" + ddi.getUseCase() : key;
             List<Integer> priorities = sortPrioritiesByUserRole.getOrDefault(key, new ArrayList<>());
             priorities.add(Integer.valueOf(ddi.getString(RESULTS_ORDERING).split(SORT_STRING_DELIMITER)[0]));
             sortPrioritiesByUserRole.put(key, priorities);

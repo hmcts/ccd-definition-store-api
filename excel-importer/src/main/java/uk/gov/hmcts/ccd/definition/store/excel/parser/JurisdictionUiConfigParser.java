@@ -18,7 +18,8 @@ public class JurisdictionUiConfigParser {
     }
 
     public JurisdictionUiConfigEntity parse(Map<String, DefinitionSheet> definitionSheets) {
-        final DefinitionDataItem jurisdictionItem = definitionSheets.get(SheetName.JURISDICTION.getName()).getDataItems().get(0);
+        final DefinitionDataItem jurisdictionItem = definitionSheets
+            .get(SheetName.JURISDICTION.getName()).getDataItems().get(0);
 
         JurisdictionUiConfigEntity jurisdictionUiConfig = new JurisdictionUiConfigEntity();
         jurisdictionUiConfig.setShuttered(defaultFalse(jurisdictionItem.getBoolean(ColumnName.SHUTTERED)));

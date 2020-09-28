@@ -49,8 +49,8 @@ public class EventParser {
 
         final List<EventEntity> events = Lists.newArrayList();
 
-        final Map<String, List<DefinitionDataItem>> eventItemsByCaseTypes = definitionSheets.get(SheetName.CASE_EVENT.getName())
-            .groupDataItemsByCaseType();
+        final Map<String, List<DefinitionDataItem>> eventItemsByCaseTypes = definitionSheets.get(
+            SheetName.CASE_EVENT.getName()).groupDataItemsByCaseType();
 
         if (!eventItemsByCaseTypes.containsKey(caseTypeId)) {
             throw new SpreadsheetParsingException("At least one event must be defined for case type: " + caseTypeId);
@@ -134,12 +134,15 @@ public class EventParser {
         return event;
     }
 
-    private void parseEventCaseFields(CaseTypeEntity caseType, List<EventEntity> events, Map<String, DefinitionSheet> definitionSheets) {
+    private void parseEventCaseFields(CaseTypeEntity caseType,
+                                      List<EventEntity> events,
+                                      Map<String, DefinitionSheet> definitionSheets) {
         final String caseTypeId = caseType.getReference();
 
         logger.debug("Parsing event case fields for case type {}...", caseTypeId);
 
-        final Map<String, List<DefinitionDataItem>> eventCaseFieldItemsByCaseTypes = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName())
+        final Map<String, List<DefinitionDataItem>> eventCaseFieldItemsByCaseTypes = definitionSheets.get(
+            SheetName.CASE_EVENT_TO_FIELDS.getName())
             .groupDataItemsByCaseType();
 
         if (!eventCaseFieldItemsByCaseTypes.containsKey(caseTypeId)) {
@@ -147,15 +150,17 @@ public class EventParser {
             return;
         }
 
-        final Map<String, List<DefinitionDataItem>> eventCaseFieldItemsByEvents = eventCaseFieldItemsByCaseTypes.get(caseTypeId)
-            .stream()
+        final Map<String, List<DefinitionDataItem>> eventCaseFieldItemsByEvents
+            = eventCaseFieldItemsByCaseTypes.get(caseTypeId).stream()
             .collect(groupingBy(definitionDataItem -> definitionDataItem.getString(ColumnName.CASE_EVENT_ID)));
         for (EventEntity event : events) {
-            logger.debug("Parsing event case fields for case type {} and event {}...", caseTypeId, event.getReference());
+            logger.debug("Parsing event case fields for case type {} and event {}...",
+                caseTypeId, event.getReference());
 
             final List<DefinitionDataItem> eventCaseFieldsItems = eventCaseFieldItemsByEvents.get(event.getReference());
             if (null == eventCaseFieldsItems || eventCaseFieldsItems.isEmpty()) {
-                logger.info("Parsing event case fields for case type {} and event {}: No event case fields found", caseTypeId, event.getReference());
+                logger.info("Parsing event case fields for case type {} and event {}: No event case fields found",
+                    caseTypeId, event.getReference());
                 continue;
             }
 

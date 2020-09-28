@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings({"checkstyle:InterfaceTypeParameterName", "checkstyle:ClassTypeParameterName"})
-abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable, R extends DefinitionRepository<T, ID>> implements DefinitionRepository<T, ID> {
+abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable, R extends DefinitionRepository<T, ID>>
+    implements DefinitionRepository<T, ID> {
 
     protected R repository;
 

@@ -131,7 +131,8 @@ public class AuthorisationComplexTypeParserTest {
     @DisplayName("should fail when no tab found")
     public void shouldNotParseWhenAuthorisationComplexTypeTabNotFound() {
         definitionSheets.remove(AUTHORISATION_COMPLEX_TYPE.getName());
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets, caseType));
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> classUnderTest.parseAll(definitionSheets, caseType));
         Assert.assertThat(thrown.getMessage(), is("No AuthorisationComplexType tab found in configuration"));
     }
 
@@ -158,8 +159,10 @@ public class AuthorisationComplexTypeParserTest {
         item1.addAttribute(CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
 
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets, caseType));
-        Assert.assertThat(thrown.getMessage(), is("Unknown CaseField 'Some Case Field' for CaseType 'Some Case Type' in worksheet 'AuthorisationComplexType'"));
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> classUnderTest.parseAll(definitionSheets, caseType));
+        Assert.assertThat(thrown.getMessage(), is("Unknown CaseField 'Some Case Field' for CaseType "
+            + "'Some Case Type' in worksheet 'AuthorisationComplexType'"));
     }
 
     @Test
@@ -198,7 +201,8 @@ public class AuthorisationComplexTypeParserTest {
 
         classUnderTest.parseAll(definitionSheets, caseType);
 
-        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
+        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST)
+            .orElseThrow(() -> new RuntimeException());
         final List<ComplexFieldACLEntity> entities = caseFieldEntity.getComplexFieldACLEntities();
         assertAll(
             () -> assertThat(entities.size(), is(2)),
@@ -220,7 +224,8 @@ public class AuthorisationComplexTypeParserTest {
             () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(entities.get(1)), is(Optional.of(item2)))
         );
 
-        final CaseFieldEntity caseFieldEntity2 = caseType.findCaseField(CASE_FIELD_2).orElseThrow(() -> new RuntimeException());
+        final CaseFieldEntity caseFieldEntity2 = caseType.findCaseField(CASE_FIELD_2)
+            .orElseThrow(() -> new RuntimeException());
         final List<ComplexFieldACLEntity> entities2 = caseFieldEntity2.getComplexFieldACLEntities();
         assertAll(
             () -> assertThat(entities2.size(), is(1)),
@@ -250,7 +255,8 @@ public class AuthorisationComplexTypeParserTest {
 
         classUnderTest.parseAll(definitionSheets, caseType);
 
-        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
+        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST)
+            .orElseThrow(() -> new RuntimeException());
         final ComplexFieldACLEntity complexFieldACLEntity = caseFieldEntity.getComplexFieldACLEntities().get(0);
 
         assertAll(
@@ -261,7 +267,8 @@ public class AuthorisationComplexTypeParserTest {
             () -> assertThat(complexFieldACLEntity.getUpdate(), is(false)),
             () -> assertThat(complexFieldACLEntity.getRead(), is(false)),
             () -> assertThat(complexFieldACLEntity.getDelete(), is(true)),
-            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
+            () -> assertThat(
+                entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
         );
     }
 
@@ -280,13 +287,15 @@ public class AuthorisationComplexTypeParserTest {
 
         classUnderTest.parseAll(definitionSheets, caseType);
 
-        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
+        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST)
+            .orElseThrow(() -> new RuntimeException());
         final ComplexFieldACLEntity complexFieldACLEntity = caseFieldEntity.getComplexFieldACLEntities().get(0);
         ;
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("CCCd")),
             () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),
-            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
+            () -> assertThat(
+                entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
         );
     }
 
@@ -305,14 +314,16 @@ public class AuthorisationComplexTypeParserTest {
 
         classUnderTest.parseAll(definitionSheets, caseType);
 
-        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
+        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST)
+            .orElseThrow(() -> new RuntimeException());
         final ComplexFieldACLEntity complexFieldACLEntity = caseFieldEntity.getComplexFieldACLEntities().get(0);
         ;
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("X y")),
             () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),
             () -> assertThat(complexFieldACLEntity.getUserRole(), is(mockUserRoleEntity)),
-            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
+            () -> assertThat(
+                entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
         );
     }
 
@@ -331,14 +342,16 @@ public class AuthorisationComplexTypeParserTest {
 
         classUnderTest.parseAll(definitionSheets, caseType);
 
-        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST).orElseThrow(() -> new RuntimeException());
+        final CaseFieldEntity caseFieldEntity = caseType.findCaseField(CASE_FIELD_UNDER_TEST)
+            .orElseThrow(() -> new RuntimeException());
         final ComplexFieldACLEntity complexFieldACLEntity = caseFieldEntity.getComplexFieldACLEntities().get(0);
         ;
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("X y")),
             () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),
             () -> assertThat(complexFieldACLEntity.getUserRole(), is(nullValue())),
-            () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
+            () -> assertThat(
+                entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
         );
     }
 

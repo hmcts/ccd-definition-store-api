@@ -20,6 +20,7 @@ public interface BannerRepository extends JpaRepository<BannerEntity, Integer> {
     List<BannerEntity> findAll();
 
     @Modifying
-    @Query("delete from BannerEntity b where b.id in (select b.id from BannerEntity b where b.jurisdiction.reference=:jurisdictionReference)")
+    @Query("delete from BannerEntity b where b.id in (select b.id from BannerEntity b where "
+        + "b.jurisdiction.reference=:jurisdictionReference)")
     int deleteByJurisdictionReference(@Param("jurisdictionReference") String jurisdiction);
 }

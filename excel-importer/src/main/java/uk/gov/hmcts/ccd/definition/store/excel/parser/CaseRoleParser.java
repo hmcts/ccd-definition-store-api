@@ -39,7 +39,8 @@ public class CaseRoleParser {
             return caseRoleEntities;
         }
 
-        final Map<String, List<DefinitionDataItem>> caseRoleItemsByCaseTypes = definitionSheet.groupDataItemsByCaseType();
+        final Map<String, List<DefinitionDataItem>> caseRoleItemsByCaseTypes = definitionSheet
+            .groupDataItemsByCaseType();
 
         final List<DefinitionDataItem> caseRoles = caseRoleItemsByCaseTypes.get(caseTypeId);
         if (caseRoles == null) {
@@ -59,7 +60,8 @@ public class CaseRoleParser {
             logger.info("Parsing case roles for case type '{}': Parsing case role '{}': OK", caseTypeId, caseRoleId);
         }
 
-        logger.info("Parsing case roles for case type '{}': OK: {} case roles parsed", caseTypeId, caseRoleEntities.size());
+        logger.info("Parsing case roles for case type '{}': OK: {} case roles parsed",
+            caseTypeId, caseRoleEntities.size());
 
         return caseRoleEntities;
     }

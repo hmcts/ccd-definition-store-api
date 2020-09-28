@@ -49,7 +49,8 @@ public class JurisdictionRepositoryTest {
     @Test
     public void getSpecificJurisdictionDefinitions() {
 
-        List<JurisdictionEntity> result = jurisdictionRepository.findAllLatestVersionByReference(newArrayList("ref1", "ref2", "ref4"));
+        List<JurisdictionEntity> result = jurisdictionRepository.findAllLatestVersionByReference(
+            newArrayList("ref1", "ref2", "ref4"));
 
         assertAll(
             () -> assertThat(result, hasSize(3)),

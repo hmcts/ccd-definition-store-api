@@ -34,7 +34,8 @@ public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser
             eventComplexTypeEntity.setDefaultValue(definitionDataItem.getString(ColumnName.DEFAULT_VALUE));
             DisplayContextColumn displayContextColumn = definitionDataItem.getDisplayContext();
             eventComplexTypeEntity.setDisplayContext(displayContextColumn.getDisplayContext());
-            eventComplexTypeEntity.setShowCondition(parseShowCondition(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
+            eventComplexTypeEntity.setShowCondition(parseShowCondition(
+                definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
             eventComplexTypeEntities.add(eventComplexTypeEntity);
         }
         return eventComplexTypeEntities;

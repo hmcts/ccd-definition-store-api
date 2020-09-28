@@ -11,7 +11,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT
 
 public interface CaseRoleRepository extends JpaRepository<CaseRoleEntity, Integer> {
 
-    @Query("select cre from CaseRoleEntity cre where cre.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
+    @Query("select cre from CaseRoleEntity cre where cre.caseType = ("
+        + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
     List<CaseRoleEntity> findCaseRoleEntitiesByCaseType(@Param("caseTypeReference") String caseType);
 
 }

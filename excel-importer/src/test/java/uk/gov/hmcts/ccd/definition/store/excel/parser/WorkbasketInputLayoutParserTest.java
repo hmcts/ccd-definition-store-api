@@ -39,13 +39,15 @@ public class WorkbasketInputLayoutParserTest {
         MockitoAnnotations.initMocks(this);
 
         definitionSheets = new HashMap<>();
-        classUnderTest = new WorkbasketInputLayoutParser(parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
+        classUnderTest = new WorkbasketInputLayoutParser(
+            parseContext, new EntityToDefinitionDataItemRegistry(), showConditionParser);
     }
 
     @Test
     @DisplayName("Should Fail when no worksheet provided")
     public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
         assertEquals("A definition must contain a WorkBasketInputFields sheet", thrown.getMessage());
     }
 
@@ -68,9 +70,12 @@ public class WorkbasketInputLayoutParserTest {
     public void shouldThrowExceptionWhenPopulateSortOrderIsInvoked() {
         GenericLayoutEntity layoutEntity = new WorkBasketInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateSortOrder(layoutEntity, "1:ASC"));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.populateSortOrder(layoutEntity, "1:ASC"));
         assertEquals(String.format("Results ordering is not supported in worksheet '%s' for caseType '%s'",
-            SheetName.WORK_BASKET_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
+            SheetName.WORK_BASKET_INPUT_FIELD.getName(),
+            layoutEntity.getCaseType().getReference()),
+            thrown.getMessage());
     }
 
     @Test
@@ -78,8 +83,11 @@ public class WorkbasketInputLayoutParserTest {
     void shouldThrowExceptionWhenPopulateUseCaserIsInvoked() {
         GenericLayoutEntity layoutEntity = new SearchInputCaseFieldEntity();
         layoutEntity.setCaseType(new CaseTypeEntity());
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
+        MapperException thrown = assertThrows(
+            MapperException.class, () -> classUnderTest.populateUseCase(layoutEntity, "WORKBASKET"));
         assertEquals(String.format("useCase is not supported in worksheet '%s' for caseType '%s'",
-            SheetName.WORK_BASKET_INPUT_FIELD.getName(), layoutEntity.getCaseType().getReference()), thrown.getMessage());
+            SheetName.WORK_BASKET_INPUT_FIELD.getName(),
+            layoutEntity.getCaseType().getReference()),
+            thrown.getMessage());
     }
 }

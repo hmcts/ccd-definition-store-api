@@ -68,11 +68,13 @@ public class SearchResultObjectGraphTest {
     @Test
     public void saveDisplayGroup() {
 
-        final SearchResultCaseFieldEntity f = createSearchResultCaseField(caseType, getCaseField(caseType, "cf1"), "label dg", 4);
+        final SearchResultCaseFieldEntity f = createSearchResultCaseField(
+            caseType, getCaseField(caseType, "cf1"), "label dg", 4);
 
         searchResultCaseFieldRepository.save(f);
 
-        final List<SearchResultCaseFieldEntity> fetched = searchResultCaseFieldRepository.findByCaseTypeId(caseType.getId());
+        final List<SearchResultCaseFieldEntity> fetched = searchResultCaseFieldRepository
+            .findByCaseTypeId(caseType.getId());
 
         assertThat(fetched, hasSize(1));
 

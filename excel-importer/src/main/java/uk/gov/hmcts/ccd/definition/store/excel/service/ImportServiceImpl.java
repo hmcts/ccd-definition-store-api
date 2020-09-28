@@ -150,7 +150,8 @@ public class ImportServiceImpl implements ImportService {
             bannerEntity.ifPresent(this::importBanner);
             logger.debug("Importing spreadsheet: Banner...: OK");
         }
-        final JurisdictionUiConfigParser jurisdictionUiConfigParser = parserFactory.createJurisdictionUiConfigParser(parseContext);
+        final JurisdictionUiConfigParser jurisdictionUiConfigParser = parserFactory
+            .createJurisdictionUiConfigParser(parseContext);
         JurisdictionUiConfigEntity jurisdictionUiConfigEntity = jurisdictionUiConfigParser.parse(definitionSheets);
         importJurisdictionUiConfig(jurisdictionUiConfigEntity);
 
@@ -176,7 +177,8 @@ public class ImportServiceImpl implements ImportService {
         /*
             3 - metadata fields
          */
-        parseContext.registerMetadataFields(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
+        parseContext.registerMetadataFields(caseFieldRepository
+            .findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
 
         /*
             4 - Case Type
@@ -201,10 +203,14 @@ public class ImportServiceImpl implements ImportService {
 
         final LayoutParser layoutParser = parserFactory.createLayoutParser(parseContext);
 
-        final ParseResult<GenericLayoutEntity> searchInputResult = layoutParser.parseSearchInputLayout(definitionSheets);
-        final ParseResult<GenericLayoutEntity> searchResultResult = layoutParser.parseSearchResultLayout(definitionSheets);
-        final ParseResult<GenericLayoutEntity> workbasketInputResult = layoutParser.parseWorkbasketInputLayout(definitionSheets);
-        final ParseResult<GenericLayoutEntity> workbasketLayoutResult = layoutParser.parseWorkbasketLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> searchInputResult
+            = layoutParser.parseSearchInputLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> searchResultResult
+            = layoutParser.parseSearchResultLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> workbasketInputResult
+            = layoutParser.parseWorkbasketInputLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> workbasketLayoutResult
+            = layoutParser.parseWorkbasketLayout(definitionSheets);
 
         layoutService.createGenerics(searchInputResult.getNewResults());
         layoutService.createGenerics(searchResultResult.getNewResults());
@@ -212,11 +218,13 @@ public class ImportServiceImpl implements ImportService {
         layoutService.createGenerics(workbasketLayoutResult.getNewResults());
 
         if (definitionSheets.get(SheetName.SEARCH_CASES_RESULT_FIELDS.getName()) != null) {
-            final ParseResult<GenericLayoutEntity> searchCasesResultLayoutResult = layoutParser.parseSearchCasesResultsLayout(definitionSheets);
+            final ParseResult<GenericLayoutEntity> searchCasesResultLayoutResult
+                = layoutParser.parseSearchCasesResultsLayout(definitionSheets);
             layoutService.createGenerics(searchCasesResultLayoutResult.getNewResults());
         }
 
-        final ParseResult<DisplayGroupEntity> displayGroupsResult = layoutParser.parseAllDisplayGroups(definitionSheets);
+        final ParseResult<DisplayGroupEntity> displayGroupsResult
+            = layoutParser.parseAllDisplayGroups(definitionSheets);
         layoutService.createDisplayGroups(displayGroupsResult.getNewResults());
 
         logger.info("Importing spreadsheet: UI definition: OK");

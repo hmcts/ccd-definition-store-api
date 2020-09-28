@@ -36,12 +36,14 @@ public class TypeMappingGeneratorTest extends AbstractMapperTest {
 
     @Test
     public void shouldThrowErrorWhenNoMapperForType() {
-        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator.getTypeMapper("unkonwnType"));
+        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator
+            .getTypeMapper("unkonwnType"));
     }
 
     @Test
     public void shouldThrowErrorWhenNoConfiguredMapping() {
-        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator.getConfiguredMapping("Unknown"));
+        assertThrows(ElasticSearchInitialisationException.class, () -> typeMappingGenerator
+            .getConfiguredMapping("Unknown"));
     }
 
     @Test

@@ -240,7 +240,8 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     }
 
     private boolean roleEquals(String role, CaseFieldACLEntity e) {
-        return e.getUserRole() == null ? false : (e.getUserRole().getReference() == null ? false : e.getUserRole().getReference().equalsIgnoreCase(role));
+        return e.getUserRole() == null ? false :
+            (e.getUserRole().getReference() == null ? false : e.getUserRole().getReference().equalsIgnoreCase(role));
     }
 
 }
