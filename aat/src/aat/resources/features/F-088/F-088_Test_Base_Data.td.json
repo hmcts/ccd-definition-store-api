@@ -1,23 +1,27 @@
 {
-  "_guid_": "F-088_Test_Base_Data",
-  "productName": "CCD Definition Store",
-  "operationName": "Fetch UI definition Work Basket results by CaseType",
-  "method": "GET",
-  "uri": "/api/display/work-basket-definition/{id}",
-  "users": {
-    "invokingUser": {
-      "username": "master.caseworker@gmail.com",
-      "password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
-    }
-  },
-  "request": {
-    "headers": {
-      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
-      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-      "Content-Type": "application/json"
-    },
-    "pathVariables": {
-      "id": "FT_DateTimeFormats"
-    }
-  }
+	"_guid_": "F-088_Test_Base_Data",
+
+	"productName": "CCD Definition Store",
+	"operationName": "Fetch UI definition Work Basket results by CaseType",
+
+	"method": "GET",
+	"uri": "/api/display/work-basket-definition/{id}",
+
+	"users": {
+	 "invokingUser": {
+		"username": "master.caseworker@gmail.com",
+		"password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
+	 }
+	},
+
+	"request": {
+	 "headers": {
+		"Authorization": "[[DEFAULT_AUTO_VALUE]]",
+		"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+		"Content-Type": "application/json"
+	 },
+	 "pathVariables": {
+		"id": "FT_DateTimeFormats"
+	 }
+	}
 }

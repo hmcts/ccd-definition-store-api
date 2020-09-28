@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Description;
@@ -14,6 +8,14 @@ import org.hamcrest.Factory;
 import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.JSONCompareResult;
+import org.skyscreamer.jsonassert.comparator.DefaultComparator;
+import org.skyscreamer.jsonassert.comparator.JSONComparator;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * A Matcher for comparing JSON. From:
@@ -27,10 +29,17 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
 
     private final String expectedJSON;
     private JSONCompareMode jsonCompareMode;
+    private JSONComparator comparator;
 
     public IsEqualJSON(final String expectedJSON) {
         this.expectedJSON = expectedJSON;
         this.jsonCompareMode = JSONCompareMode.STRICT;
+    }
+
+    public IsEqualJSON(String expectedJSON, JSONComparator comparator) {
+        this.expectedJSON = expectedJSON;
+        this.jsonCompareMode = JSONCompareMode.STRICT;
+        this.comparator = comparator;
     }
 
     /**
@@ -52,9 +61,13 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
                               final Description mismatchDescription) {
         try {
             final String actualJSON = toJsonString(actual);
-            final JSONCompareResult result = JSONCompare.compareJSON(expectedJSON,
-                    actualJSON,
-                    jsonCompareMode);
+
+            if (comparator == null) {
+                comparator = new DefaultComparator(jsonCompareMode);
+            }
+
+            final JSONCompareResult result = JSONCompare.compareJSON(expectedJSON, actualJSON, comparator);
+
             if (!result.passed()) {
                 mismatchDescription.appendText(result.getMessage());
             }
@@ -107,6 +120,11 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
         return new IsEqualJSON(expectedJSON);
     }
 
+    @Factory
+    public static IsEqualJSON equalToJSON(final String expectedJSON, JSONComparator comparator) {
+        return new IsEqualJSON(expectedJSON, comparator);
+    }
+
     /**
      * Creates a matcher that matches when the examined object
      * is equal to the JSON in the specified file.
@@ -122,6 +140,11 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
     @Factory
     public static IsEqualJSON equalToJSONInFile(final Path expectedPath) {
         return equalToJSON(getFileContents(expectedPath));
+    }
+
+    @Factory
+    public static IsEqualJSON equalToJSONInFile(final Path expectedPath, JSONComparator comparator) {
+        return equalToJSON(getFileContents(expectedPath), comparator);
     }
 
     /**

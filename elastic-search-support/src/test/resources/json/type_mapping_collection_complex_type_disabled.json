@@ -1,0 +1,11 @@
+{
+  "properties": {
+    "id": "disabledMapping",
+    "value": {
+      "properties": {
+        "forename": "dataMapping",
+        "surname": "disabled"
+      }
+    }
+  }
+}
