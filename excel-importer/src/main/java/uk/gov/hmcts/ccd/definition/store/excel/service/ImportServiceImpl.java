@@ -263,25 +263,23 @@ public class ImportServiceImpl implements ImportService {
     private void importNoCConfigDefinition(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
         String nocConfigSheetName = SheetName.NOC_CONFIG.getName();
         if (definitionSheets.get(nocConfigSheetName) != null) {
-            logger.debug("Importing tab: " + nocConfigSheetName + " ...");
+            logger.debug("Importing tab: {} ...", nocConfigSheetName);
             final NoCConfigParser noCConfigParser = parserFactory.createNoCConfigParser(parseContext);
             Map<String, List<NoCConfigEntity>> caseTypeNoCConfigEntities = noCConfigParser.parse(definitionSheets);
             Set<String> caseTypesWithMultipleEntries = caseTypeNoCConfigEntities
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().size() > 1)
-                .map(strEntry -> strEntry.getKey())
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
 
-            if (caseTypesWithMultipleEntries.size() > 0) {
+            if (!caseTypesWithMultipleEntries.isEmpty()) {
                 throw new InvalidImportException("Only one NoC config is allowed per case type(s) "
                     + caseTypesWithMultipleEntries.stream().sorted().collect(Collectors.joining(",")));
             }
             caseTypeNoCConfigEntities
-                .entrySet()
-                .stream()
-                .forEach(entry -> entry.getValue().forEach(entity -> noCConfigService.save(entity)));
-            logger.debug("Importing tab: " + nocConfigSheetName + " ...: OK");
+                .forEach((key, value) -> value.forEach(noCConfigService::save));
+            logger.debug("Importing tab: {} ...: OK", nocConfigSheetName);
         }
     }
 

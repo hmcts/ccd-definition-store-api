@@ -73,6 +73,8 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     public static final String INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
         = "Invalid CRUD value '%s' in %s tab, case type '%s', case field '%s', ";
+    public static final String DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE
+        = "Please make sure it is defined in the CaseRoles sheet.";
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     public SpreadsheetValidationErrorMessageCreator(EntityToDefinitionDataItemRegistry
@@ -222,7 +224,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
                 "Invalid case role '%s' in %s tab for case type '%s'. "
-                    + "Please make sure it is defined in the CaseRoles sheet.",
+                    + DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE,
                 def.getString(ColumnName.USER_ROLE),
                 def.getSheetName(),
                 error.getAuthorisationValidationContext().getCaseReference()) :
@@ -298,7 +300,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
                 "Invalid case role '%s' in %s tab, case type '%s', case field '%s'. "
-                    + "Please make sure it is defined in the CaseRoles sheet.",
+                    + DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE,
                 defaultString(def.getString(ColumnName.USER_ROLE)),
                 def.getSheetName(),
                 def.getString(ColumnName.CASE_TYPE_ID),
@@ -333,7 +335,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
                 "Invalid case role '%s' in %s tab, case type '%s', event '%s'. "
-                    + "Please make sure it is defined in the CaseRoles sheet.",
+                    + DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE,
                 defaultString(def.getString(ColumnName.USER_ROLE)),
                 def.getSheetName(),
                 error.getAuthorisationEventValidationContext().getCaseReference(),

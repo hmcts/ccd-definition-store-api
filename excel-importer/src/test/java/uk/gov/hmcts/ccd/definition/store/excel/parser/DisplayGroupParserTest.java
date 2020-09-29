@@ -47,7 +47,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         .showConditionExpression("parsedShowCondition2").build();
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         init();
 
@@ -69,7 +69,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when worksheet missing")
-    public void shouldFail_whenSheetDoesNotExist() {
+    void shouldFail_whenSheetDoesNotExist() {
         MapperException thrown = assertThrows(MapperException.class, () -> caseTypeTabParser.parseAll(new HashMap<>()));
         assertThat(thrown.getMessage(), is(String.format(
             "A definition must contain a CaseTypeTab sheet with at least one entry",
@@ -78,7 +78,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when at least one CaseField doesn't exist")
-    public void shouldFail_whenEmptyDisplayGroupDefinitionsIfDGItemIsMandatory() {
+    void shouldFail_whenEmptyDisplayGroupDefinitionsIfDGItemIsMandatory() {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -92,7 +92,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when page title missing")
-    public void shouldFail_whenMandatoryPageTitleNotGiven() {
+    void shouldFail_whenMandatoryPageTitleNotGiven() {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -113,7 +113,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("WizardPageParser - should parse when everything is fine")
-    public void shouldParseCaseEventToFields() throws InvalidShowConditionException {
+    void shouldParseCaseEventToFields() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -148,7 +148,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("WizardPageParser - should parse more than one item")
-    public void shouldParseCaseEventToFieldsEvenWithSamePageId() throws InvalidShowConditionException {
+    void shouldParseCaseEventToFieldsEvenWithSamePageId() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -186,7 +186,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("WizardPageParser - should fail when more than one page show condition defined")
-    public void shouldFailIfTwoPageShowConditionsForSameEventPageID() throws InvalidShowConditionException {
+    void shouldFailIfTwoPageShowConditionsForSameEventPageID() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -217,7 +217,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when  when more than one tab show condition defined")
-    public void shouldFailIfTwoTabShowConditionsForSameTab() throws InvalidShowConditionException {
+    void shouldFailIfTwoTabShowConditionsForSameTab() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Collections.singleton(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -251,7 +251,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("WizardPageParser - should parse with data on any row")
-    public void shouldParsePageWithDataComingFromTheFirstRowAndIgnoreItsOtherRows()
+    void shouldParsePageWithDataComingFromTheFirstRowAndIgnoreItsOtherRows()
         throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
@@ -305,7 +305,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should parse CaseTypeTab")
-    public void shouldParseCaseTypeTab() throws InvalidShowConditionException {
+    void shouldParseCaseTypeTab() throws InvalidShowConditionException {
         UserRoleEntity userRoleEntity = new UserRoleEntity();
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -344,7 +344,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when multiple user roles for same CaseTypeTab")
-    public void shouldNotParseCaseTypeTabForMultipleEntriesInUserRoles() throws InvalidShowConditionException {
+    void shouldNotParseCaseTypeTabForMultipleEntriesInUserRoles() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -380,7 +380,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when invalid user roles")
-    public void shouldNotParseCaseTypeTabForInvalidUserRoles() throws InvalidShowConditionException {
+    void shouldNotParseCaseTypeTabForInvalidUserRoles() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(parseContext.getRole(CASE_TYPE_UNDER_TEST, "Role1")).willReturn(Optional.empty());
@@ -406,7 +406,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("should fail for invalid CaseRole")
-    public void shouldFailForInvalidCaseRole() throws InvalidShowConditionException {
+    void shouldFailForInvalidCaseRole() throws InvalidShowConditionException {
         final String caseRole = "[CLAIMANT]";
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
 
@@ -430,7 +430,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("should parse for valid CaseRole")
-    public void shouldParseForValidCaseRole() throws InvalidShowConditionException {
+    void shouldParseForValidCaseRole() throws InvalidShowConditionException {
         final String caseRole = "[CLAIMANT]";
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
 

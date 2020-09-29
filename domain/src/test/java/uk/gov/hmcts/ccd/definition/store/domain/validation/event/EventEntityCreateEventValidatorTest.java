@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 public class EventEntityCreateEventValidatorTest {
 
@@ -37,8 +38,8 @@ public class EventEntityCreateEventValidatorTest {
         if (!isValid) {
             ValidationError validationError = validationResult.getValidationErrors().get(0);
             assertTrue(validationError instanceof CreateEventDoesNotHavePostStateValidationError);
-            assertTrue(((CreateEventDoesNotHavePostStateValidationError) validationError)
-                .getEventEntity() == eventEntity);
+            assertSame(((CreateEventDoesNotHavePostStateValidationError) validationError)
+                .getEventEntity(), eventEntity);
         }
     }
 

@@ -68,7 +68,7 @@ public class NoCConfigParser {
                 .noneMatch(caseTypeEntity -> caseTypeEntity.getReference().equalsIgnoreCase(key)))
             .collect(Collectors.toSet());
 
-        if (caseTypesNotDefined.size() > 0) {
+        if (!caseTypesNotDefined.isEmpty()) {
             throw new MapperException(String.format("Unknown Case Type(s) '%s' in worksheet '%s'",
                 caseTypesNotDefined.stream().sorted().collect(Collectors.joining(",")),
                 SheetName.NOC_CONFIG));

@@ -33,7 +33,7 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImpl
     @Override
     public ValidationResult validate(DisplayGroupCaseFieldEntity entity) {
         return shouldSkipValidatorForEntity(entity) ? new ValidationResult()
-            : super.validate(entity, Collections.EMPTY_LIST);
+            : super.validate(entity, Collections.emptyList());
     }
 
     @Override

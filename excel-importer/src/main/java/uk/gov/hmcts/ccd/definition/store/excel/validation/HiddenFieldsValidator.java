@@ -28,12 +28,13 @@ public class HiddenFieldsValidator {
             caseEventToField.ifPresent(caseEventToFieldDataItem -> {
                 String fieldShowCondition = caseEventToFieldDataItem.getString(ColumnName.FIELD_SHOW_CONDITION);
                 Boolean caseFieldRetainHiddenValue = caseEventToFieldDataItem.getRetainHiddenValue();
-                if (isShowConditionPopulated(fieldShowCondition, definitionDataItem)) {
+                if (Boolean.TRUE.equals(isShowConditionPopulated(fieldShowCondition, definitionDataItem))) {
                     throw new MapperException(String.format("'retainHiddenValue' can only be configured "
                             + "for a field that uses a "
                             + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
                         caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
-                } else if (isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem)) {
+                } else if (Boolean.TRUE.equals(
+                    isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem))) {
                     throw new MapperException(String.format(
                         "'retainHiddenValue' has been incorrectly configured or is invalid for "
                             + "fieldID ['%s'] on ['%s']",
@@ -56,8 +57,8 @@ public class HiddenFieldsValidator {
     }
 
     public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem) {
-        if (isShowConditionPopulated(
-            definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION), definitionDataItem)) {
+        if (Boolean.TRUE.equals(isShowConditionPopulated(
+            definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION), definitionDataItem))) {
             throw new MapperException(String.format(
                 "'retainHiddenValue' can only be configured for a field that uses a "
                     + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",

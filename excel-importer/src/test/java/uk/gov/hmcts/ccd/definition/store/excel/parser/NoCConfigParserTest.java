@@ -57,7 +57,7 @@ class NoCConfigParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("Should parse the noc config content for the two case types with single entry each")
-    public void shouldParse_whenOnlyOneNocConfigPerCaseType() {
+    void shouldParse_whenOnlyOneNocConfigPerCaseType() {
         definitionSheet.addDataItem(buildDefinitionDataItem(
             CASE_TYPE_ID_1, false, false));
         definitionSheet.addDataItem(buildDefinitionDataItem(
@@ -69,7 +69,7 @@ class NoCConfigParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("Should parse the noc config content for the case type with single entry")
-    public void shouldParse_whenOnlyOneNocConfigForCaseType() {
+    void shouldParse_whenOnlyOneNocConfigForCaseType() {
         definitionSheet.addDataItem(buildDefinitionDataItem(
             CASE_TYPE_ID_1, false, false));
         Map<String, List<NoCConfigEntity>> nocConfigs = configParser.parse(definitionSheets);
@@ -80,7 +80,7 @@ class NoCConfigParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("Should throw exception when noc config tab has single unknown case type")
-    public void shouldThrow_Exception_For_Non_Matching_CaseTypeIds() {
+    void shouldThrow_Exception_For_Non_Matching_CaseTypeIds() {
         definitionSheet.addDataItem(buildDefinitionDataItem(
             CASE_TYPE_ID_3, false, false));
         MapperException thrown = assertThrows(MapperException.class, () -> configParser.parse(definitionSheets));
@@ -90,7 +90,7 @@ class NoCConfigParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("Should throw exception when noc config tab has multiple unknown case types")
-    public void shouldThrow_Exception_For_Non_Matching_Multiple_CaseTypeIds() {
+    void shouldThrow_Exception_For_Non_Matching_Multiple_CaseTypeIds() {
         definitionSheet.addDataItem(buildDefinitionDataItem(
             CASE_TYPE_ID_3, false, false));
         definitionSheet.addDataItem(buildDefinitionDataItem(
@@ -102,7 +102,7 @@ class NoCConfigParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("Should throw exception for invalid noc config values")
-    public void shouldThrow_Exception_For_Invalid_Noc_ConfigValues() {
+    void shouldThrow_Exception_For_Invalid_Noc_ConfigValues() {
         definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_2,
             "invalidReason",
             "invalidNocAction"));

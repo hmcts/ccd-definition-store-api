@@ -27,16 +27,15 @@ public class DisplayContextParameterValidator {
         definitionSheetList.forEach(definitionSheet -> {
             if (definitionSheet != null) {
                 definitionSheet.getDataItems().forEach(item -> {
-                    if (item.getDisplayContextParameter() != null) {
-                        if (isDisplayContextParameter(item.getDisplayContextParameter(),
-                            DisplayContextParameter.DisplayContextParameterValues.LIST)
-                            || isDisplayContextParameter(item.getDisplayContextParameter(),
-                            DisplayContextParameter.DisplayContextParameterValues.TABLE)) {
-                            throw new InvalidImportException("Display context parameter "
-                                + item.getDisplayContextParameter()
-                                + " has been incorrectly configured or is invalid for field "
-                                + item.getCaseFieldId() + " on tab " + definitionSheet.getName());
-                        }
+                    if (item.getDisplayContextParameter() != null && (isDisplayContextParameter(
+                        item.getDisplayContextParameter(),
+                        DisplayContextParameter.DisplayContextParameterValues.LIST)
+                        || isDisplayContextParameter(item.getDisplayContextParameter(),
+                        DisplayContextParameter.DisplayContextParameterValues.TABLE))) {
+                        throw new InvalidImportException("Display context parameter "
+                            + item.getDisplayContextParameter()
+                            + " has been incorrectly configured or is invalid for field "
+                            + item.getCaseFieldId() + " on tab " + definitionSheet.getName());
                     }
                 });
             }
