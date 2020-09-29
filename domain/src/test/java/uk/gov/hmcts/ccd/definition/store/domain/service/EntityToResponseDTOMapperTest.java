@@ -1606,10 +1606,12 @@ class EntityToResponseDTOMapperTest {
             ChallengeQuestion challengeQuestion = classUnderTest.map(challengeQuestionEntity);
 
             assertEquals(challengeQuestion.getAnswerField(), challengeQuestionEntity.getAnswerField());
-            assertEquals(challengeQuestion.getAnswerFieldType().getId(), challengeQuestionEntity.getAnswerFieldType().getReference());
+            assertEquals(challengeQuestion.getAnswerFieldType().getId(),
+                challengeQuestionEntity.getAnswerFieldType().getReference());
             assertEquals(challengeQuestion.getCaseTypeId(), challengeQuestionEntity.getCaseType().getReference());
             assertEquals(challengeQuestion.getChallengeQuestionId(), challengeQuestionEntity.getChallengeQuestionId());
-            assertEquals(challengeQuestion.getDisplayContextParameter(), challengeQuestionEntity.getDisplayContextParameter());
+            assertEquals(challengeQuestion.getDisplayContextParameter(),
+                challengeQuestionEntity.getDisplayContextParameter());
             assertEquals(challengeQuestion.getOrder(), challengeQuestionEntity.getOrder());
             assertEquals(challengeQuestion.getQuestionId(), challengeQuestionEntity.getQuestionId());
             assertEquals(challengeQuestion.getQuestionText(), challengeQuestionEntity.getQuestionText());

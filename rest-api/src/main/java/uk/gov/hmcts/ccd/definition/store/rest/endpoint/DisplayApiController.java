@@ -178,7 +178,8 @@ public class DisplayApiController {
     public ChallengeQuestionsResult getChallengeQuestions(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("ctid") String caseTypeId,
         @ApiParam(value = "Challenge Question ID", required = true) @PathVariable("id") String challengeQuestionId) {
-        List<ChallengeQuestion> questions = challengeQuestionTabService.getChallengeQuestions(caseTypeId, challengeQuestionId);
+        List<ChallengeQuestion> questions = challengeQuestionTabService
+            .getChallengeQuestions(caseTypeId, challengeQuestionId);
         return new ChallengeQuestionsResult(questions);
     }
 }

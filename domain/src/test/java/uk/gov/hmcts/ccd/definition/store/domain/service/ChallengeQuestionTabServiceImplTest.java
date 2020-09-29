@@ -35,7 +35,8 @@ public class ChallengeQuestionTabServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.challengeQuestionTabServiceImpl = new ChallengeQuestionTabServiceImpl(challengeQuestionTabRepository, dtoMapper);
+        this.challengeQuestionTabServiceImpl = new ChallengeQuestionTabServiceImpl(
+            challengeQuestionTabRepository, dtoMapper);
     }
 
     @DisplayName("should save all NewChallengeQuestionTabEntity")
@@ -83,7 +84,8 @@ public class ChallengeQuestionTabServiceImplTest {
         when(dtoMapper.map(entity1)).thenReturn(dto1);
         when(dtoMapper.map(entity2)).thenReturn(dto2);
 
-        List<ChallengeQuestion> result = challengeQuestionTabServiceImpl.getChallengeQuestions("CaseTypeId", "ChallengeQuestionId");
+        List<ChallengeQuestion> result = challengeQuestionTabServiceImpl.getChallengeQuestions(
+            "CaseTypeId", "ChallengeQuestionId");
 
         assertAll(
             () -> assertThat(result.size(), is(2)),

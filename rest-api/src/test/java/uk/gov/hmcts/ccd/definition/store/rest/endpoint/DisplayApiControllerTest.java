@@ -50,7 +50,8 @@ public class DisplayApiControllerTest {
         bannerService = mock(BannerService.class);
         jurisdictionUiConfigService = mock(JurisdictionUiConfigService.class);
         challengeQuestionTabService = mock(ChallengeQuestionTabService.class);
-        subject = new DisplayApiController(displayService, bannerService, jurisdictionUiConfigService, challengeQuestionTabService);
+        subject = new DisplayApiController(displayService, bannerService,
+            jurisdictionUiConfigService, challengeQuestionTabService);
     }
 
     @Test
@@ -135,7 +136,8 @@ public class DisplayApiControllerTest {
     public void getChallengeQuestions() {
         List<String> references = Collections.singletonList("AUTOTEST1");
         ChallengeQuestion challengeQuestion = new ChallengeQuestion();
-        when(challengeQuestionTabService.getChallengeQuestions(any(), any())).thenReturn(Collections.singletonList(challengeQuestion));
+        when(challengeQuestionTabService.getChallengeQuestions(any(), any()))
+            .thenReturn(Collections.singletonList(challengeQuestion));
         ChallengeQuestionsResult result = subject.getChallengeQuestions("CaseTypeId", "ChallengeQuestionId");
         verify(challengeQuestionTabService).getChallengeQuestions("CaseTypeId", "ChallengeQuestionId");
         assertAll(
