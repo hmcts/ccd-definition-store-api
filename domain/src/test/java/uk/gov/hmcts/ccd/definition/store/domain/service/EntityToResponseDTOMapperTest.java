@@ -25,6 +25,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
@@ -65,6 +66,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTab;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTabField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ChallengeQuestion;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ComplexACL;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
@@ -1568,6 +1570,64 @@ class  EntityToResponseDTOMapperTest {
             assertNull(jurisdictionUiConfig.getId());
             assertNull(jurisdictionUiConfig.getName());
             assertNull(jurisdictionUiConfig.getShuttered());
+        }
+    }
+
+    @Nested
+    @DisplayName("Should return a ChallengeQuestion model whose fields match those in the ChallengeQuestionEntity")
+    class MapChallengeQuestionEntityTests {
+
+        @Test
+        void testMapChallengeQuestionEntity() {
+            ChallengeQuestionTabEntity challengeQuestionEntity = new ChallengeQuestionTabEntity();
+            challengeQuestionEntity.setAnswerField("Answer Field");
+            challengeQuestionEntity.setAnswerFieldType(fieldTypeEntity("FieldTypeReference"));
+            challengeQuestionEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+            challengeQuestionEntity.setChallengeQuestionId("ChallengeQuestionId");
+            challengeQuestionEntity.setDisplayContextParameter("DisplayContextParameter");
+            challengeQuestionEntity.setId(1);
+            challengeQuestionEntity.setOrder(2);
+            challengeQuestionEntity.setQuestionId("QuestionId");
+            challengeQuestionEntity.setQuestionText("QuestionText");
+
+            ChallengeQuestion challengeQuestion = classUnderTest.map(challengeQuestionEntity);
+
+            assertEquals(challengeQuestion.getAnswerField(), challengeQuestionEntity.getAnswerField());
+            assertEquals(challengeQuestion.getAnswerFieldType().getId(), challengeQuestionEntity.getAnswerFieldType().getReference());
+            assertEquals(challengeQuestion.getCaseTypeId(), challengeQuestionEntity.getCaseType().getReference());
+            assertEquals(challengeQuestion.getChallengeQuestionId(), challengeQuestionEntity.getChallengeQuestionId());
+            assertEquals(challengeQuestion.getDisplayContextParameter(), challengeQuestionEntity.getDisplayContextParameter());
+            assertEquals(challengeQuestion.getOrder(), challengeQuestionEntity.getOrder());
+            assertEquals(challengeQuestion.getQuestionId(), challengeQuestionEntity.getQuestionId());
+            assertEquals(challengeQuestion.getQuestionText(), challengeQuestionEntity.getQuestionText());
+        }
+
+        @Test
+        void testMapEmptyChallengeQuestionEntity() {
+            ChallengeQuestionTabEntity challengeQuestionEntity = new ChallengeQuestionTabEntity();
+
+            ChallengeQuestion challengeQuestion = classUnderTest.map(challengeQuestionEntity);
+
+            assertNull(challengeQuestion.getAnswerField());
+            assertNull(challengeQuestion.getAnswerFieldType());
+            assertNull(challengeQuestion.getCaseTypeId());
+            assertNull(challengeQuestion.getChallengeQuestionId());
+            assertNull(challengeQuestion.getDisplayContextParameter());
+            assertNull(challengeQuestion.getOrder());
+            assertNull(challengeQuestion.getQuestionId());
+            assertNull(challengeQuestion.getQuestionText());
+        }
+
+        private FieldTypeEntity fieldTypeEntity(String reference) {
+            FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
+            fieldTypeEntity.setReference(reference);
+            return fieldTypeEntity;
+        }
+
+        private CaseTypeEntity caseTypeEntity(String reference) {
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference("Reference");
+            return caseTypeEntity;
         }
     }
 

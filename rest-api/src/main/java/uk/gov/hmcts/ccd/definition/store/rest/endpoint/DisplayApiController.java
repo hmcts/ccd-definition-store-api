@@ -19,9 +19,12 @@ import io.swagger.annotations.ApiResponses;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 import uk.gov.hmcts.ccd.definition.store.repository.model.BannersResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ChallengeQuestion;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ChallengeQuestionsResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfigResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResult;
@@ -42,12 +45,16 @@ public class DisplayApiController {
 
     private final JurisdictionUiConfigService jurisdictionUiConfigService;
 
+    private final ChallengeQuestionTabService challengeQuestionTabService;
+
     public DisplayApiController(DisplayService displayService,
                                 BannerService bannerService,
-                                JurisdictionUiConfigService jurisdictionUiConfigService) {
+                                JurisdictionUiConfigService jurisdictionUiConfigService,
+                                ChallengeQuestionTabService challengeQuestionTabService) {
         this.displayService = displayService;
         this.bannerService = bannerService;
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
+        this.challengeQuestionTabService = challengeQuestionTabService;
     }
 
     @RequestMapping(value = "/display/search-input-definition/{id}", method = RequestMethod.GET, produces = {"application/json"})
@@ -152,5 +159,17 @@ public class DisplayApiController {
         List<JurisdictionUiConfig> configs = referencesOptional
             .map(references -> jurisdictionUiConfigService.getAll(references)).orElse(Collections.emptyList());
         return new JurisdictionUiConfigResult(configs);
+    }
+
+    @GetMapping(path = "/display/challenge-questions/case-type/{ctid}/question-groups/{id}")
+    @ApiOperation(value = "Get challenge questions", response = ChallengeQuestionsResult.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of challenge questions for requested criteria")
+    })
+    public ChallengeQuestionsResult getChallengeQuestions(
+        @ApiParam(value = "Case Type ID", required = true) @PathVariable("ctid") String caseTypeId,
+        @ApiParam(value = "Challenge Question ID", required = true) @PathVariable("id") String challengeQuestionId) {
+        List<ChallengeQuestion> questions = challengeQuestionTabService.getChallengeQuestions(caseTypeId, challengeQuestionId);
+        return new ChallengeQuestionsResult(questions);
     }
 }
