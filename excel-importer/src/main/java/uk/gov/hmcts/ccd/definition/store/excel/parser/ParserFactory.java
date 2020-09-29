@@ -17,18 +17,21 @@ public class ParserFactory {
     private final Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry;
     private final SpreadsheetValidator spreadsheetValidator;
     private final HiddenFieldsValidator hiddenFieldsValidator;
+    private final ChallengeQuestionParser challengeQuestionParser;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
                          EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
                          SpreadsheetValidator spreadsheetValidator,
-                         HiddenFieldsValidator hiddenFieldsValidator) {
+                         HiddenFieldsValidator hiddenFieldsValidator,
+                         ChallengeQuestionParser challengeQuestionParser) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
         this.spreadsheetValidator = spreadsheetValidator;
         this.hiddenFieldsValidator = hiddenFieldsValidator;
+        this.challengeQuestionParser = challengeQuestionParser;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -103,4 +106,7 @@ public class ParserFactory {
         return new NoCConfigParser(context);
     }
 
+    public ChallengeQuestionParser createNewChallengeQuestionParser() {
+        return challengeQuestionParser;
+    }
 }
