@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -591,7 +592,7 @@ class  EntityToResponseDTOMapperTest {
                     parameters
                 );
                 assertEquals(parameters.getPreStateExpectation(), caseEvent.getPreStates());
-//                assertEquals(parameters.getPostStateExpectation(), caseEvent.getPostState());
+                assertEquals(parameters.getPostStates().size(), caseEvent.getPostStates().size());
             }
         }
 
@@ -623,7 +624,7 @@ class  EntityToResponseDTOMapperTest {
 
             assertEquals(1, caseEvent.getPreStates().size());
             assertThat(caseEvent.getPreStates(), hasItems("*"));
-//            assertEquals("*", caseEvent.getPostState());
+            assertEquals(0, caseEvent.getPostStates().size());
 
         }
 
@@ -699,7 +700,7 @@ class  EntityToResponseDTOMapperTest {
                        String postStateExpectation) {
                 this.canCreate = canCreate;
                 this.preStates = preStates;
-                this.postStates = postStates;
+                this.postStates = postStates == null ? new ArrayList<>() : postStates;
                 this.preStateExpectation = preStateExpectation;
                 this.postStateExpectation = postStateExpectation;
             }

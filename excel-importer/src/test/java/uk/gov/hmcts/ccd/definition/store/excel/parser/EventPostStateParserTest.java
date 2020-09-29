@@ -1,19 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.core.Appender;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
@@ -43,11 +38,6 @@ public class EventPostStateParserTest extends ParserTestBase {
 
     private DefinitionSheet caseEventToFieldsSheet;
 
-    @Mock
-    private Appender mockAppender;
-
-    private EventEntity entity;
-
     @Before
     public void setup() {
         init();
@@ -61,10 +51,6 @@ public class EventPostStateParserTest extends ParserTestBase {
         caseEventToFieldsSheet = new DefinitionSheet();
         definitionSheets.put(SheetName.CASE_EVENT_TO_FIELDS.getName(), caseEventToFieldsSheet);
         when(parseContext.getStateForCaseType(anyString(), anyString())).thenReturn(new StateEntity());
-
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        root.addAppender(mockAppender);
-        root.setLevel(Level.INFO);
     }
 
     @Test
