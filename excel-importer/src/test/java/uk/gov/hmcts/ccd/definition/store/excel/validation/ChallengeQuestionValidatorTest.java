@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ChallengeQuestionDisplayContextParameterValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
@@ -40,9 +39,6 @@ public class ChallengeQuestionValidatorTest {
     private ChallengeQuestionValidator challengeQuestionValidator;
 
     @Mock
-    private ChallengeQuestionTabService challengeQuestionTabService;
-
-    @Mock
     ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
 
     @Before
@@ -54,9 +50,8 @@ public class ChallengeQuestionValidatorTest {
         entity.setQuestionId("questionId");
         Optional<ChallengeQuestionTabEntity> mockResult = Optional.of(entity);
         when(challengeQuestionDisplayContextParameterValidator.validate(any(),any())).thenReturn(new ValidationResult());
-        when(challengeQuestionTabService.findByQuestionId(questionId)).thenReturn(mockResult);
         buildParseContext();
-        challengeQuestionValidator = new ChallengeQuestionValidator(challengeQuestionTabService,challengeQuestionDisplayContextParameterValidator);
+        challengeQuestionValidator = new ChallengeQuestionValidator(challengeQuestionDisplayContextParameterValidator);
     }
 
     @Test
@@ -136,7 +131,7 @@ public class ChallengeQuestionValidatorTest {
             buildDefinitionDataItem("incorrectCaseType", FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: incorrectCaseTypeit cannot be found the spreadsheet."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: incorrectCaseType. It cannot be found in the spreadsheet."));
             throw exception;
         }
     }
@@ -224,7 +219,7 @@ public class ChallengeQuestionValidatorTest {
         } catch (Exception exception) {
             exception.printStackTrace();
             assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${XXXXX.OrganisationName} is " +
-                "not a valid Answer value, The expression dot notation values should be valid caseTypes fields."));
+                "not a valid Answer value. The expression dot notation values should be valid caseTypes fields."));
             throw exception;
         }
     }
