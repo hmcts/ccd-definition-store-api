@@ -13,7 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class ChallengeQuestionDisplayContextParameterValidator extends AbstractDisplayContextParameterValidator<ChallengeQuestionTabEntity> {
+public class ChallengeQuestionDisplayContextParameterValidator
+    extends AbstractDisplayContextParameterValidator<ChallengeQuestionTabEntity> {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES = {DisplayContextParameterType.DATETIMEENTRY};
     private static final List<String> ALLOWED_FIELD_TYPES =
@@ -21,7 +22,8 @@ public class ChallengeQuestionDisplayContextParameterValidator extends AbstractD
     private static final String CHALLENGE_QUESTION_TAB = "ChallengeQuestion";
 
     @Autowired
-    public ChallengeQuestionDisplayContextParameterValidator(final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
+    public ChallengeQuestionDisplayContextParameterValidator(
+        final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
         super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, null);
     }
 
