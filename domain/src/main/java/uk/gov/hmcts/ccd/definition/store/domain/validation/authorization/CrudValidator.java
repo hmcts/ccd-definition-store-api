@@ -6,7 +6,8 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 public class CrudValidator {
 
-    private CrudValidator(){}
+    private CrudValidator() {
+    }
 
     private static final Pattern CRUD_PATTERN = Pattern.compile("^[CRUDcrud\\s]{1,5}$");
 

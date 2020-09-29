@@ -21,7 +21,7 @@ public class CaseFieldEntityMetadataFieldValidatorImpl implements CaseFieldEntit
             validationResult.addError(
                 new CaseFieldEntityInvalidMetadataFieldValidationError(
                     String.format("Metadata field syntax cannot be used for a case field. Found '%s'",
-                                  caseField.getReference()), caseField, context)
+                        caseField.getReference()), caseField, context)
             );
         }
 

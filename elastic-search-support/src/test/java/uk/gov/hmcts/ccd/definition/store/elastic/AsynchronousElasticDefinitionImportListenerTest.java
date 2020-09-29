@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import java.io.IOException;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +13,13 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
+
+import java.io.IOException;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AsynchronousElasticDefinitionImportListenerTest {

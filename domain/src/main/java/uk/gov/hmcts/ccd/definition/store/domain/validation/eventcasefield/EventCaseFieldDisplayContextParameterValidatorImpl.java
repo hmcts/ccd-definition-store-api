@@ -16,8 +16,10 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
     public static final String TABLE_PREFIX = "#TABLE(";
 
     /**
-     * Validate event case field entity to contain display context as per #List/TABLE(DisplayContextParameter,DisplayContextParameter) format.
-     * @param eventCaseFieldEntity object
+     * Validate event case field entity to contain display context
+     * as per #List/TABLE(DisplayContextParameter,DisplayContextParameter) format.
+     *
+     * @param eventCaseFieldEntity                  object
      * @param eventCaseFieldEntityValidationContext object
      * @return ValidationResult object
      */
@@ -26,21 +28,25 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
         ValidationResult validationResult = new ValidationResult();
 
-        if (Strings.isNullOrEmpty(eventCaseFieldEntity.getDisplayContextParameter()) || isDisplayContextParameterDateTimeType(eventCaseFieldEntity)) {
+        if (Strings.isNullOrEmpty(eventCaseFieldEntity.getDisplayContextParameter())
+            || isDisplayContextParameterDateTimeType(eventCaseFieldEntity)) {
             return validationResult;
         }
 
         if (isFieldTypeNotCollection(eventCaseFieldEntity)) {
 
-            validationResult.addError(new ValidationError("Display context parameter is not of type collection") {
+            validationResult.addError(new ValidationError(
+                "Display context parameter is not of type collection") {
             });
         }
         if (StringUtils.isNotBlank(eventCaseFieldEntity.getDisplayContextParameter())) {
 
             if (isFieldTypeNotTableOrList(eventCaseFieldEntity)) {
-                validationResult.addError(new ValidationError("DisplayContextParameter text should begin with #LIST( or #TABLE("){});
+                validationResult.addError(new ValidationError(
+                    "DisplayContextParameter text should begin with #LIST( or #TABLE(") {
+                });
             } else {
-                String removeBeginingSection = eventCaseFieldEntity.getDisplayContextParameter().indexOf(LIST_PREFIX) > -1
+                String removeBeginingSection = eventCaseFieldEntity.getDisplayContextParameter().contains(LIST_PREFIX)
                     ? eventCaseFieldEntity.getDisplayContextParameter().replace(LIST_PREFIX, "") :
                     eventCaseFieldEntity.getDisplayContextParameter().replace(TABLE_PREFIX, "");
                 String[] result = removeBeginingSection.replace(")", "").split(",");
@@ -53,12 +59,15 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
         return validationResult;
     }
 
-    private void verifyListCodeElements(EventCaseFieldEntity eventCaseFieldEntity, ValidationResult validationResult, String[] listCodeElementNames) {
+    private void verifyListCodeElements(EventCaseFieldEntity eventCaseFieldEntity,
+                                        ValidationResult validationResult,
+                                        String[] listCodeElementNames) {
         for (String listCodeElementName : listCodeElementNames) {
             if (eventCaseFieldEntity.getCaseField().getFieldType().getCollectionFieldType().getComplexFields()
                 .stream().noneMatch(complexField -> complexField.getReference().equals(listCodeElementName.trim()))) {
                 validationResult.addError(new ValidationError(
-                    String.format("ListCodeElement %s display context parameter is not one of the fields in collection", listCodeElementName.trim())
+                    String.format("ListCodeElement %s display context parameter is not one of the fields in collection",
+                        listCodeElementName.trim())
                 ) {
                 });
             }
@@ -67,7 +76,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
 
     private boolean isDisplayContextParameterDateTimeType(EventCaseFieldEntity entity) {
         return DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter())
-            .map(t -> t == DisplayContextParameterType.DATETIMEDISPLAY || t == DisplayContextParameterType.DATETIMEENTRY).orElse(false);
+            .map(t -> t == DisplayContextParameterType.DATETIMEDISPLAY
+                || t == DisplayContextParameterType.DATETIMEENTRY).orElse(false);
     }
 
     private boolean isFieldTypeNotTableOrList(EventCaseFieldEntity eventCaseFieldEntity) {

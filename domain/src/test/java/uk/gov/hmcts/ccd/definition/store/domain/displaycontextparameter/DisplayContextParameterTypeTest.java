@@ -2,7 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -14,7 +14,8 @@ public class DisplayContextParameterTypeTest {
 
     @Test
     void shouldGetParameterTypeForKnownType() {
-        Optional<DisplayContextParameterType> result = DisplayContextParameterType.getParameterTypeFor(DATE_TIME_ENTRY_PARAMETER);
+        Optional<DisplayContextParameterType> result = DisplayContextParameterType
+            .getParameterTypeFor(DATE_TIME_ENTRY_PARAMETER);
 
         assertAll(
             () -> assertThat(result.get(), is(DisplayContextParameterType.DATETIMEENTRY))
@@ -23,7 +24,8 @@ public class DisplayContextParameterTypeTest {
 
     @Test
     void shouldNotReturnTypeForUnknownType() {
-        Optional<DisplayContextParameterType> result = DisplayContextParameterType.getParameterTypeFor("#INVALID(123)");
+        Optional<DisplayContextParameterType> result = DisplayContextParameterType
+            .getParameterTypeFor("#INVALID(123)");
 
         assertAll(
             () -> assertThat(result.isPresent(), is(false))
@@ -32,7 +34,8 @@ public class DisplayContextParameterTypeTest {
 
     @Test
     void shouldNotReturnTypeForInvalidFormat() {
-        Optional<DisplayContextParameterType> result = DisplayContextParameterType.getParameterTypeFor("INVALID_FORMAT");
+        Optional<DisplayContextParameterType> result = DisplayContextParameterType
+            .getParameterTypeFor("INVALID_FORMAT");
 
         assertAll(
             () -> assertThat(result.isPresent(), is(false))
@@ -50,7 +53,8 @@ public class DisplayContextParameterTypeTest {
 
     @Test
     void shouldNotReturnParameterValueForNoValuePassed() {
-        Optional<String> result = DisplayContextParameterType.getParameterValueFor("#DATETIMEENTRY()");
+        Optional<String> result = DisplayContextParameterType
+            .getParameterValueFor("#DATETIMEENTRY()");
 
         assertAll(
             () -> assertThat(result.isPresent(), is(false))

@@ -1,15 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield;
 
-import java.util.Collections;
-
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_NUMBER;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,6 +12,16 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.SearchAliasFieldBuilder;
+
+import java.util.Collections;
+
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_NUMBER;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 
 class SearchAliasFieldTypeValidatorTest {
 
@@ -47,7 +47,8 @@ class SearchAliasFieldTypeValidatorTest {
         @Test
         @DisplayName("should return no validation errors")
         void shouldReturnNoErrors() {
-            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder("ref").withCaseType(caseType).build();
+            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder("ref")
+                .withCaseType(caseType).build();
 
             ValidationResult result = validator.validate(searchAliasField);
             assertThat(result.getValidationErrors().size(), is(0));
@@ -63,7 +64,8 @@ class SearchAliasFieldTypeValidatorTest {
         @DisplayName("should return validation errors for null field type")
         void shouldReturnErrors() {
             String aliasName = "alias";
-            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(aliasName).withCaseType(caseType).build();
+            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(aliasName)
+                .withCaseType(caseType).build();
             searchAliasField.setFieldType(null);
 
             ValidationResult result1 = validator.validate(searchAliasField);
@@ -80,8 +82,10 @@ class SearchAliasFieldTypeValidatorTest {
         @Test
         @DisplayName("should return no validation error")
         void shouldReturnNoErrors() {
-            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE).withFieldType(BASE_TEXT).build();
-            when(repository.findByReference(SEARCH_ALIAS_REFERENCE)).thenReturn(Collections.singletonList(searchAliasField));
+            SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE)
+                .withFieldType(BASE_TEXT).build();
+            when(repository.findByReference(SEARCH_ALIAS_REFERENCE))
+                .thenReturn(Collections.singletonList(searchAliasField));
 
             ValidationResult validationResult = validator.validate(searchAliasField);
             assertThat(validationResult.getValidationErrors().size(), is(0));
@@ -101,7 +105,8 @@ class SearchAliasFieldTypeValidatorTest {
                 .withFieldType(BASE_NUMBER)
                 .withCaseType(new CaseTypeEntity())
                 .build();
-            when(repository.findByReference(SEARCH_ALIAS_REFERENCE)).thenReturn(Collections.singletonList(existingField));
+            when(repository.findByReference(SEARCH_ALIAS_REFERENCE))
+                .thenReturn(Collections.singletonList(existingField));
 
             SearchAliasFieldEntity searchAliasField = new SearchAliasFieldBuilder(SEARCH_ALIAS_REFERENCE)
                 .withFieldType(BASE_TEXT)

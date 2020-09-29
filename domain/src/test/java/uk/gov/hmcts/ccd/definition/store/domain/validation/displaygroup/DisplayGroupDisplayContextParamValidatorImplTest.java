@@ -1,13 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
+import org.junit.Test;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DisplayGroupDisplayContextParamValidatorImplTest {
 
@@ -37,7 +43,8 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
 
@@ -47,7 +54,8 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
@@ -60,8 +68,10 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection", validationResult.getValidationErrors().get(0).getDefaultMessage());
-        assertEquals("DisplayContextParameter text should begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(",
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("DisplayContextParameter text should begin with "
+                + "#LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
 

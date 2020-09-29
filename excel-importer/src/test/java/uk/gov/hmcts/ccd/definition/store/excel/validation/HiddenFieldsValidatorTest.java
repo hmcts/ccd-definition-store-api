@@ -61,7 +61,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseHiddenFields(definitionDataItem);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'CaseEventToFields'"));
+            assertThat(ex.getMessage(), is(
+                "Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'CaseEventToFields'"));
             throw ex;
         }
     }
@@ -218,7 +219,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'ComplexTypes'"));
+            assertThat(ex.getMessage(),
+                is("Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'ComplexTypes'"));
             throw ex;
         }
     }

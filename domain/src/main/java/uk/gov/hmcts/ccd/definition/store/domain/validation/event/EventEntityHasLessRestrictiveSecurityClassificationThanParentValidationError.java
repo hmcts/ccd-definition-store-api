@@ -10,8 +10,8 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
 
     private EventEntityValidationContext eventEntityValidationContext;
 
-    public EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(EventEntity eventEntity,
-                                                                                        EventEntityValidationContext eventEntityValidationContext) {
+    public EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
+        EventEntity eventEntity, EventEntityValidationContext eventEntityValidationContext) {
         super(String.format(
             "Security classification for Event with reference '%s' "
                 + "has a less restrictive security classification of '%s' than its parent CaseType '%s' "

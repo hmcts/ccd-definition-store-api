@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.azurestorage;
 
-import java.net.URISyntaxException;
-import java.security.InvalidKeyException;
-
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
@@ -12,6 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
 
 @Configuration
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")

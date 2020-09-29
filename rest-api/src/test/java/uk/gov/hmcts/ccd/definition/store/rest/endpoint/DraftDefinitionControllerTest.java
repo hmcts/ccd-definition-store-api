@@ -103,9 +103,9 @@ class DraftDefinitionControllerTest {
             .thenReturn(new ServiceResponse<>(definition, UPDATE));
 
         mockMvc.perform(put(URL_SAVE_API_DRAFT)
-                            .contentType(CONTENT_TYPE)
-                            .content(MAPPER.writeValueAsBytes(definition)))
-               .andExpect(status().isOk());
+            .contentType(CONTENT_TYPE)
+            .content(MAPPER.writeValueAsBytes(definition)))
+            .andExpect(status().isOk());
         ArgumentCaptor<Definition> argument = ArgumentCaptor.forClass(Definition.class);
         verify(definitionService).saveDraftDefinition(argument.capture());
 
@@ -120,7 +120,7 @@ class DraftDefinitionControllerTest {
     @Test
     void shouldDeleteDraftDefinition() throws Exception {
         mockMvc.perform(delete(URL_API_DRAFT + "/Test/10"))
-               .andExpect(status().isNoContent());
+            .andExpect(status().isNoContent());
         verify(definitionService).deleteDraftDefinition("Test", 10);
     }
 
@@ -132,18 +132,19 @@ class DraftDefinitionControllerTest {
         final MvcResult
             mvcResult =
             mockMvc.perform(get(URI_TEMPLATE_GET_DRAFTS.expand(uriVariables)))
-                   .andExpect(status().isOk())
-                   .andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(),
-                   is("[{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,"
-                       + "\"live_from\":null,\"live_until\":null,\"case_types\":[]},\"description\":\"Description\","
-                       + "\"version\":null,\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},\"author\":\"ccd2@hmcts\","
-                       + "\"status\":null,\"case_types\":\"CaseType1,CaseType2\",\"created_at\":null,\"last_modified\":null,"
-                       + "\"deleted\":false},{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,"
-                       + "\"live_from\":null,\"live_until\":null,\"case_types\":[]},\"description\":\"Description\","
-                       + "\"version\":null,\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},\"author\":\"ccd2@hmcts\","
-                       + "\"status\":null,\"case_types\":\"CaseType1,CaseType2\",\"created_at\":null,\"last_modified\":null,\"deleted\":false}]"
-                   ));
+            is("[{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,"
+                + "\"live_from\":null,\"live_until\":null,\"case_types\":[]},\"description\":\"Description\","
+                + "\"version\":null,\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},"
+                + "\"author\":\"ccd2@hmcts\",\"status\":null,\"case_types\":\"CaseType1,CaseType2\","
+                + "\"created_at\":null,\"last_modified\":null,\"deleted\":false},{\"jurisdiction\":{\"id\":\"TEST\","
+                + "\"name\":null,\"description\":null,\"live_from\":null,\"live_until\":null,\"case_types\":[]},"
+                + "\"description\":\"Description\",\"version\":null,\"data\":{\"Data\":{\"Field1\":\"Value1\","
+                + "\"Field2\":[]}},\"author\":\"ccd2@hmcts\",\"status\":null,\"case_types\":\"CaseType1,CaseType2\","
+                + "\"created_at\":null,\"last_modified\":null,\"deleted\":false}]"
+            ));
     }
 
     @DisplayName("should return 200 when finding a draft by jurisdiction and version")
@@ -155,14 +156,14 @@ class DraftDefinitionControllerTest {
         final MvcResult
             mvcResult =
             mockMvc.perform(get(URI_TEMPLATE_ONE_DRAFT.expand(uriVariables)))
-                   .andExpect(status().isOk())
-                   .andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(),
-                   is("{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null,\"live_until\":null,"
-                       + "\"case_types\":[]},\"description\":\"Description\",\"version\":null,"
-                       + "\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},\"author\":\"ccd2@hmcts\",\"status\":null,"
-                       + "\"case_types\":\"CaseType1,CaseType2\",\"created_at\":null,\"last_modified\":null,\"deleted\":false}"
-                   ));
+            is("{\"jurisdiction\":{\"id\":\"TEST\",\"name\":null,\"description\":null,\"live_from\":null,"
+                + "\"live_until\":null,\"case_types\":[]},\"description\":\"Description\",\"version\":null,"
+                + "\"data\":{\"Data\":{\"Field1\":\"Value1\",\"Field2\":[]}},\"author\":\"ccd2@hmcts\",\"status\":null,"
+                + "\"case_types\":\"CaseType1,CaseType2\",\"created_at\":null,\"last_modified\":null,\"deleted\":false}"
+            ));
     }
 
     private Definition createDefinition() throws IOException {

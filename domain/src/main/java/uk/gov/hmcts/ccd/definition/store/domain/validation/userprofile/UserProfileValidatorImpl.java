@@ -44,7 +44,7 @@ public class UserProfileValidatorImpl implements UserProfileValidator {
             result.addError(new UserProfileInvalidEmailValidationError(workBasketUserDefault));
         }
         if (!StringUtils.equals(workBasketUserDefault.getWorkBasketDefaultJurisdiction(),
-                                jurisdiction.getReference())) {
+            jurisdiction.getReference())) {
             LOG.warn("Invalid jurisdiction found for {}", workBasketUserDefault);
             result.addError(new UserProfileInvalidJurisdictionValidationError(workBasketUserDefault));
         } else {
@@ -74,12 +74,12 @@ public class UserProfileValidatorImpl implements UserProfileValidator {
 
         public ValidationError(String invalidEntity, WorkBasketUserDefault workBasketUserDefault) {
             super(String.format("Invalid %s in workbasket user default; " //
-                      + "user: '%s', jurisdiction: '%s', case type: '%s', state: '%s'",
-                  invalidEntity,
-                  workBasketUserDefault.getUserIdamId(),
-                  workBasketUserDefault.getWorkBasketDefaultJurisdiction(),
-                  workBasketUserDefault.getWorkBasketDefaultCaseType(),
-                  workBasketUserDefault.getWorkBasketDefaultState()), workBasketUserDefault);
+                    + "user: '%s', jurisdiction: '%s', case type: '%s', state: '%s'",
+                invalidEntity,
+                workBasketUserDefault.getUserIdamId(),
+                workBasketUserDefault.getWorkBasketDefaultJurisdiction(),
+                workBasketUserDefault.getWorkBasketDefaultCaseType(),
+                workBasketUserDefault.getWorkBasketDefaultState()), workBasketUserDefault);
         }
 
         @Override

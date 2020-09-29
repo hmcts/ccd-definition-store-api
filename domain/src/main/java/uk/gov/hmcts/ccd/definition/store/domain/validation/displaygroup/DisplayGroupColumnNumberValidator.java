@@ -1,16 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
-
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 @Component
 public class DisplayGroupColumnNumberValidator implements DisplayGroupCaseFieldValidator {

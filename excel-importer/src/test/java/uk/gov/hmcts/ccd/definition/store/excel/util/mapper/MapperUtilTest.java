@@ -13,7 +13,11 @@ import java.util.List;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class MapperUtilTest {
 
@@ -204,7 +208,8 @@ public class MapperUtilTest {
         sheet.setName(SheetName.CASE_TYPE.getName());
         item.addAttribute(ColumnName.DISPLAY_CONTEXT, "3  ,5, 8,13,21");
         sheet.addDataItem(item);
-        final List<Integer> integerList = MapperUtil.getIntegerList(item, SheetName.CASE_TYPE, ColumnName.DISPLAY_CONTEXT);
+        final List<Integer> integerList = MapperUtil.getIntegerList(
+            item, SheetName.CASE_TYPE, ColumnName.DISPLAY_CONTEXT);
         assertThat(integerList, contains(3, 5, 8, 13, 21));
     }
 
@@ -222,7 +227,8 @@ public class MapperUtilTest {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         sheet.addDataItem(item);
-        final List<Integer> integerList = MapperUtil.getIntegerList(item, SheetName.CASE_TYPE, ColumnName.DISPLAY_CONTEXT);
+        final List<Integer> integerList = MapperUtil.getIntegerList(
+            item, SheetName.CASE_TYPE, ColumnName.DISPLAY_CONTEXT);
         assertThat(integerList, empty());
     }
 

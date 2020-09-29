@@ -48,10 +48,10 @@ public class DefinitionDataItem {
         final Object
             result =
             attributes.stream()
-                      .filter(attribute -> attribute.getKey().equalsIgnoreCase(name))
-                      .findFirst()
-                      .map(p -> p.getValue())
-                      .orElse(null);
+                .filter(attribute -> attribute.getKey().equalsIgnoreCase(name))
+                .findFirst()
+                .map(p -> p.getValue())
+                .orElse(null);
 
         if (ColumnName.isRequired(SheetName.forName(sheetName), columnName)) {
             if (result == null) {

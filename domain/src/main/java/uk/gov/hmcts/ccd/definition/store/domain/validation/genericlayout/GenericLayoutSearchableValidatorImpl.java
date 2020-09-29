@@ -11,7 +11,8 @@ import java.util.List;
 public class GenericLayoutSearchableValidatorImpl implements GenericLayoutValidator {
 
     @Override
-    public ValidationResult validate(GenericLayoutEntity genericLayoutEntity, List<GenericLayoutEntity> allGenericLayouts) {
+    public ValidationResult validate(GenericLayoutEntity genericLayoutEntity,
+                                     List<GenericLayoutEntity> allGenericLayouts) {
         ValidationResult validationResult = new ValidationResult();
 
         if (genericLayoutEntity.getLayoutSheetType() != LayoutSheetType.INPUT) {

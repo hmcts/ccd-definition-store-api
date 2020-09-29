@@ -1,9 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import com.fasterxml.jackson.annotation.*;
-import io.swagger.annotations.*;
-
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 
 @ApiModel(description = "")
 public class SearchCasesResultField {

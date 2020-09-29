@@ -2,7 +2,10 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
 
-import javax.persistence.*;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 
 @Table(name = "search_result_case_field")
 @Entity

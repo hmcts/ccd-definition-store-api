@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import static javax.persistence.GenerationType.IDENTITY;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -13,12 +7,30 @@ import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Table(name = "role")
 @Entity
 @TypeDef(
     name = "pgsql_securityclassification_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
+    parameters = @Parameter(name = "type",
+        value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)

@@ -19,6 +19,7 @@ public interface NoCConfigRepository extends JpaRepository<NoCConfigEntity, Inte
     List<NoCConfigEntity> findAll();
 
     @Modifying
-    @Query("delete from NoCConfigEntity b where b.id in (select b.id from NoCConfigEntity b where b.caseType.reference=:caseTypeReference)")
+    @Query("delete from NoCConfigEntity b where b.id in (select b.id from NoCConfigEntity b where "
+        + "b.caseType.reference=:caseTypeReference)")
     int deleteByCaseTypeReference(@Param("caseTypeReference") String reference);
 }

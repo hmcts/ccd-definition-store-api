@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,10 @@ public class EventEntityValidationContext implements ValidationContext {
         this.caseName = parentCaseType.getName();
         this.caseReference = parentCaseType.getReference();
         this.parentSecurityClassification = parentCaseType.getSecurityClassification();
-        this.caseRoles = parentCaseType.getCaseRoles().stream().map(caseRole -> caseRole.getReference()).collect(Collectors.toList());
+        this.caseRoles = parentCaseType.getCaseRoles()
+            .stream()
+            .map(UserRoleEntity::getReference)
+            .collect(Collectors.toList());
     }
 
     public SecurityClassification getParentSecurityClassification() {

@@ -16,9 +16,9 @@ public class BaseReferenceFieldTypeValidator implements FieldTypeValidator {
 
         if (null != fieldType.getJurisdiction()) {
             final Optional<FieldTypeEntity> referenceConflict = context.getBaseTypes()
-                                                                       .stream()
-                                                                       .filter(type -> type.getReference().equalsIgnoreCase(fieldType.getReference()))
-                                                                       .findAny();
+                .stream()
+                .filter(type -> type.getReference().equalsIgnoreCase(fieldType.getReference()))
+                .findAny();
             if (referenceConflict.isPresent()) {
                 validationResult.addError(
                     new CannotOverrideBaseTypeValidationError(fieldType, referenceConflict.get())

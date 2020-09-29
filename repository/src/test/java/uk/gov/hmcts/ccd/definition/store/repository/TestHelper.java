@@ -89,7 +89,10 @@ public class TestHelper {
         return userRoleRepository.save(entity);
     }
 
-    public EventCaseFieldEntity createEventCaseField(CaseFieldEntity caseField, DisplayContext displayContext, String showCondition, Boolean ssco) {
+    public EventCaseFieldEntity createEventCaseField(CaseFieldEntity caseField,
+                                                     DisplayContext displayContext,
+                                                     String showCondition,
+                                                     Boolean ssco) {
         EventCaseFieldEntity ecf = new EventCaseFieldEntity();
         ecf.setCaseField(caseField);
         ecf.setDisplayContext(displayContext);

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
+
 import java.util.function.Supplier;
 
 class DisplayApiTest extends BaseTest {

@@ -19,21 +19,23 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
     public ValidationResult validate(DisplayGroupCaseFieldEntity entity) {
         ValidationResult validationResult = new ValidationResult();
 
-        if (Strings.isNullOrEmpty(entity.getDisplayContextParameter()) || isDisplayContextParameterDateTimeType(entity)) {
+        if (Strings.isNullOrEmpty(
+            entity.getDisplayContextParameter()) || isDisplayContextParameterDateTimeType(entity)) {
             return validationResult;
         }
 
         if (isFieldTypeNotCollection(entity)) {
-
-            validationResult.addError(new ValidationError("Display context parameter is not of type collection") {
-            });
+            validationResult.addError(
+                new ValidationError("Display context parameter is not of type collection") {
+                });
         }
         if (StringUtils.isNotBlank(entity.getDisplayContextParameter())) {
 
             if (isFieldTypeNotTableOrList(entity)) {
                 validationResult.addError(
                     new ValidationError("DisplayContextParameter text should "
-                        + "begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY("){});
+                        + "begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(") {
+                    });
             } else {
                 String removeBeginingSection = entity.getDisplayContextParameter().indexOf(LIST_PREFIX) > -1
                     ? entity.getDisplayContextParameter().replace(LIST_PREFIX, "") :
@@ -48,12 +50,14 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
         return validationResult;
     }
 
-    private void verifyListCodeElements(DisplayGroupCaseFieldEntity eventCaseFieldEntity, ValidationResult validationResult, String[] listCodeElementNames) {
+    private void verifyListCodeElements(DisplayGroupCaseFieldEntity eventCaseFieldEntity,
+                                        ValidationResult validationResult, String[] listCodeElementNames) {
         for (String listCodeElementName : listCodeElementNames) {
             if (eventCaseFieldEntity.getCaseField().getFieldType().getCollectionFieldType().getComplexFields()
                 .stream().noneMatch(complexField -> complexField.getReference().equals(listCodeElementName.trim()))) {
                 validationResult.addError(new ValidationError(
-                    String.format("ListCodeElement %s display context parameter is not one of the fields in collection", listCodeElementName.trim())
+                    String.format("ListCodeElement %s display context parameter is not one of the fields in collection",
+                        listCodeElementName.trim())
                 ) {
                 });
             }
@@ -62,7 +66,8 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
 
     private boolean isDisplayContextParameterDateTimeType(DisplayGroupCaseFieldEntity entity) {
         return DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter())
-            .map(t -> t == DisplayContextParameterType.DATETIMEDISPLAY || t == DisplayContextParameterType.DATETIMEENTRY).orElse(false);
+            .map(t -> t == DisplayContextParameterType.DATETIMEDISPLAY
+                || t == DisplayContextParameterType.DATETIMEENTRY).orElse(false);
     }
 
     private boolean isFieldTypeNotTableOrList(DisplayGroupCaseFieldEntity entity) {

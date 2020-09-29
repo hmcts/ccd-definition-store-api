@@ -31,10 +31,10 @@ public class AdminWebAuthorizationController {
 
     @GetMapping(value = "/idam/adminweb/authorization", produces = {"application/json"})
     @ApiOperation(value = "Gets admin web authorization from current logged in user",
-                  response = AdminWebAuthorization.class)
+        response = AdminWebAuthorization.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Admin web authorization")})
     public AdminWebAuthorization getAdminWebAuthorization() {
-        final IdamProperties loggedInUserDetails =  idamProfileClient.getLoggedInUserDetails();
+        final IdamProperties loggedInUserDetails = idamProfileClient.getLoggedInUserDetails();
         return adminWebAuthorizationBuilder.withIdamProperties(loggedInUserDetails).build();
     }
 }

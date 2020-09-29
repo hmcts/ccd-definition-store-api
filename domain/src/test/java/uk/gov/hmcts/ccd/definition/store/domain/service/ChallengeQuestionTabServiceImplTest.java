@@ -41,7 +41,8 @@ public class ChallengeQuestionTabServiceImplTest {
     @DisplayName("should save all NewChallengeQuestionTabEntity")
     @Test
     void testSaveAll() {
-        List<ChallengeQuestionTabEntity> entities = Arrays.asList(new ChallengeQuestionTabEntity(), new ChallengeQuestionTabEntity());
+        List<ChallengeQuestionTabEntity> entities = Arrays.asList(
+            new ChallengeQuestionTabEntity(), new ChallengeQuestionTabEntity());
         when(challengeQuestionTabRepository.saveAll(entities)).thenReturn(entities);
         challengeQuestionTabServiceImpl.saveAll(entities);
         verify(challengeQuestionTabRepository).saveAll(entities);

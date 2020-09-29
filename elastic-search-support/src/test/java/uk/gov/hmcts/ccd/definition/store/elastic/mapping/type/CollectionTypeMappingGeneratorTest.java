@@ -40,10 +40,10 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
         elasticMappings.put("disabled", "disabledMapping");
 
         StubTypeMappingGenerator stubTypeMappingGenerator = new StubTypeMappingGenerator("Text", "dataMapping",
-                "dataClassificationMapping");
+            "dataClassificationMapping");
         StubComplexTypeMappingGenerator stubComplexTypeMappingGenerator =
-                new StubComplexTypeMappingGenerator("Complex",
-                        "complexDataMapping", "complexDataClassificationMapping");
+            new StubComplexTypeMappingGenerator("Complex",
+                "complexDataMapping", "complexDataClassificationMapping");
         addMappingGenerator(stubTypeMappingGenerator);
         addMappingGenerator(stubComplexTypeMappingGenerator);
         collectionTypeMapper.inject(stubTypeMappersManager);
@@ -58,7 +58,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
         String result = collectionTypeMapper.doDataMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
-                readFileFromClasspath("json/type_mapping_collection_type.json")));
+            readFileFromClasspath("json/type_mapping_collection_type.json")));
     }
 
     @Test
@@ -68,7 +68,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
         String result = collectionTypeMapper.doDataClassificationMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
-                readFileFromClasspath("json/type_mapping_classification_collection_type.json")));
+            readFileFromClasspath("json/type_mapping_classification_collection_type.json")));
 
     }
 
@@ -79,7 +79,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
         String result = collectionTypeMapper.doDataMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
-                readFileFromClasspath("json/type_mapping_collection_complex_type.json")));
+            readFileFromClasspath("json/type_mapping_collection_complex_type.json")));
     }
 
     @Test
@@ -89,7 +89,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
         String result = collectionTypeMapper.doDataClassificationMapping(collectionField);
 
         assertThat(result, equalToJSONInFile(
-                readFileFromClasspath("json/type_mapping_classification_collection_complex_type.json")));
+            readFileFromClasspath("json/type_mapping_classification_collection_complex_type.json")));
 
     }
 
@@ -125,7 +125,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
 
     private CaseFieldEntity newCollectionField() {
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .addFieldToCollection(textFieldType()).buildCollection();
+            .addFieldToCollection(textFieldType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");
@@ -135,7 +135,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
 
     private CaseFieldEntity newCollectionOfComplexField() {
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .addFieldToCollection(newComplexType()).buildCollection();
+            .addFieldToCollection(newComplexType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");

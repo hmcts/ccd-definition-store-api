@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -9,6 +7,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEnti
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+
+import java.util.List;
 
 @Component
 public class CaseTypeEntityCaseRoleValidatorImpl implements CaseTypeEntityValidator {

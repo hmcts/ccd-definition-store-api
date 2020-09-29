@@ -33,13 +33,15 @@ public class ChallengeQuestionValidator {
     private static final String ANSWER_FIELD_SEPARATOR = "|";
     private static final String ANSWER_FIELD_DOT_SEPARATOR = ".";
     private static final String ANSWER_FIELD_ROLE_SEPARATOR = ":";
-    private static final String ANSWER_FIELD_MATCHER = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
+    private static final String ANSWER_FIELD_MATCHER
+        = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
     public static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
     private ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
     private HashMap<String, List<String>> displayOrderList = new HashMap<>();
 
     @Autowired
-    public ChallengeQuestionValidator(ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator) {
+    public ChallengeQuestionValidator(
+        ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator) {
         this.challengeQuestionDisplayContextParameterValidator = challengeQuestionDisplayContextParameterValidator;
     }
 
@@ -66,81 +68,88 @@ public class ChallengeQuestionValidator {
 
     }
 
-    private void validateAnswer(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+    private void validateAnswer(DefinitionDataItem definitionDataItem,
+                                ChallengeQuestionTabEntity challengeQuestionTabEntity) {
         final String answers = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD);
         validateNullValue(answers, ERROR_MESSAGE + " value: answer cannot be null.");
         final String[] answersRules = answers.split(ANSWER_MAIN_SEPARATOR);
 
         if (answersRules.length > 0 && answersRules.length != 1) {
             Arrays.asList(answersRules).stream().forEach(currentAnswerExpression -> {
-                        validateAnswerExpression(definitionDataItem, challengeQuestionTabEntity, currentAnswerExpression);
-                    }
-            );
+                validateAnswerExpression(definitionDataItem, challengeQuestionTabEntity, currentAnswerExpression);
+            });
         } else {
             validateAnswerExpression(definitionDataItem, challengeQuestionTabEntity, answers);
         }
         challengeQuestionTabEntity.setAnswerField(answers);
     }
 
-    private void validateAnswerExpression(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity, String currentAnswerExpression) {
+    private void validateAnswerExpression(DefinitionDataItem definitionDataItem,
+                                          ChallengeQuestionTabEntity challengeQuestionTabEntity,
+                                          String currentAnswerExpression) {
 
         final String[] answersFields = currentAnswerExpression.split(Pattern.quote(ANSWER_FIELD_SEPARATOR));
         Arrays.asList(answersFields).stream().forEach(answersField -> {
-                    //validate the format.
-                    if (!answersField.matches(ANSWER_FIELD_MATCHER)) {
-                        throw new InvalidImportException(ERROR_MESSAGE + " value: "
-                                + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                                + ", Please check the expression format and the roles.");
-                    }
-                    //validate the roles.
-                    if (answersField.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
-                        final String role = answersField.split(ANSWER_FIELD_ROLE_SEPARATOR)[1];
-                        final Optional<UserRoleEntity> result = this.parseContext.getRole(challengeQuestionTabEntity.getCaseType().getReference(), role);
-                        if (!result.isPresent()) {
-                            throw new InvalidImportException(ERROR_MESSAGE + " value: "
-                                    + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                                    + " value. Please check the expression format and the roles.");
-                        }
-                    }
-                    // validate dot notation content.
-                    validateAnswerFieldExpression(definitionDataItem.getString(ColumnName.CASE_TYPE_ID), answersField);
+            //validate the format.
+            if (!answersField.matches(ANSWER_FIELD_MATCHER)) {
+                throw new InvalidImportException(ERROR_MESSAGE + " value: "
+                        + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+                        + ", Please check the expression format and the roles.");
+            }
+            //validate the roles.
+            if (answersField.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
+                final String role = answersField.split(ANSWER_FIELD_ROLE_SEPARATOR)[1];
+                final Optional<UserRoleEntity> result = this.parseContext.getRole(
+                    challengeQuestionTabEntity.getCaseType().getReference(), role);
+                if (!result.isPresent()) {
+                    throw new InvalidImportException(ERROR_MESSAGE + " value: "
+                            + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+                            + " value. Please check the expression format and the roles.");
                 }
-        );
-
+            }
+            // validate dot notation content.
+            validateAnswerFieldExpression(definitionDataItem.getString(ColumnName.CASE_TYPE_ID), answersField);
+        });
     }
 
     private void validateAnswerFieldExpression(String currentCaseType, String expression) {
         final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: "
                 + expression + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
                 + " value. The expression dot notation values should be valid caseTypes fields.");
+
         // remove previous validated ${} notation
         final String dotNotationExpression = expression.replace("$", "")
                 .replace("{", "")
                 .replace("}", "");
 
-
         if (!dotNotationExpression.contains(ANSWER_FIELD_DOT_SEPARATOR)) {
             validateSingleExpression(dotNotationExpression, invalidImportException, currentCaseType);
         } else {
-            final String[] splittedDotNotationExpression = dotNotationExpression.split(Pattern.quote(ANSWER_FIELD_DOT_SEPARATOR));
+            final String[] splittedDotNotationExpression = dotNotationExpression
+                .split(Pattern.quote(ANSWER_FIELD_DOT_SEPARATOR));
             try {
-                final FieldTypeEntity fieldType = parseContext.getCaseFieldType(currentCaseType, splittedDotNotationExpression[0]);
-                final String[] attributesDotNotation = Arrays.copyOfRange(splittedDotNotationExpression, 1, splittedDotNotationExpression.length);
+                final FieldTypeEntity fieldType = parseContext.getCaseFieldType(
+                    currentCaseType, splittedDotNotationExpression[0]);
+                final String[] attributesDotNotation = Arrays.copyOfRange(
+                    splittedDotNotationExpression, 1, splittedDotNotationExpression.length);
                 IntStream.range(0, attributesDotNotation.length).forEach(index -> {
-                        // Remove Role is needed.
-                        if (attributesDotNotation[index].contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
-                            attributesDotNotation[index] = attributesDotNotation[index].substring(0, attributesDotNotation[index].indexOf(":"));
-                        }
-                        validateAttributes(attributesDotNotation[index], fieldType.getComplexFields(),attributesDotNotation,index);
+                    // Remove Role is needed.
+                    if (attributesDotNotation[index].contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
+                        attributesDotNotation[index] = attributesDotNotation[index]
+                            .substring(0, attributesDotNotation[index].indexOf(":"));
                     }
-                );
+                    validateAttributes(
+                        attributesDotNotation[index], fieldType.getComplexFields(), attributesDotNotation,index);
+                });
             } catch (SpreadsheetParsingException exception) {
                 throw invalidImportException;
             }
         }
     }
 
-    private void validateSingleExpression(String singleExpression, InvalidImportException invalidImportException, String currentCaseType) {
+    private void validateSingleExpression(String singleExpression,
+                                          InvalidImportException invalidImportException,
+                                          String currentCaseType) {
 
         if (singleExpression.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
             String attribute = singleExpression.substring(0, singleExpression.indexOf(":"));
@@ -155,8 +164,10 @@ public class ChallengeQuestionValidator {
         }
     }
 
-    private void validateAttributes(String currentAttribute, List<ComplexFieldEntity> complexFieldACLEntity,
-                                    String[] attributesDotNotation, int currentIndex) {
+    private void validateAttributes(String currentAttribute,
+                                    List<ComplexFieldEntity> complexFieldACLEntity,
+                                    String[] attributesDotNotation,
+                                    int currentIndex) {
         final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: "
                 + currentAttribute + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
                 + " value, The expression dot notation values should be valid caseTypes fields.");
@@ -168,12 +179,11 @@ public class ChallengeQuestionValidator {
                 throw invalidImportException;
             }
             //It means that there is a parent component.;
-            final Optional<ComplexFieldEntity> parent = getComplexFieldEntity(complexFieldACLEntity, attributesDotNotation[currentIndex - 1]);
+            final Optional<ComplexFieldEntity> parent = getComplexFieldEntity(
+                complexFieldACLEntity, attributesDotNotation[currentIndex - 1]);
             if (parent.isPresent()) {
                 final Optional<ComplexFieldEntity> attributeDefinition = getComplexFieldEntity(
-                        parent.get().getFieldType().getComplexFields(),
-                        currentAttribute
-                );
+                    parent.get().getFieldType().getComplexFields(), currentAttribute);
                 if (!attributeDefinition.isPresent()) {
                     throw invalidImportException;
                 }
@@ -181,13 +191,14 @@ public class ChallengeQuestionValidator {
         }
     }
 
-    private Optional<ComplexFieldEntity> getComplexFieldEntity(List<ComplexFieldEntity> complexFieldACLEntity, String currentAttribute) {
+    private Optional<ComplexFieldEntity> getComplexFieldEntity(List<ComplexFieldEntity> complexFieldACLEntity,
+                                                               String currentAttribute) {
         return complexFieldACLEntity.stream().filter(complexFieldACLEItem ->
-                complexFieldACLEItem.getReference().equals(currentAttribute)
-        ).findAny();
+                complexFieldACLEItem.getReference().equals(currentAttribute)).findAny();
     }
 
-    private void validateDisplayContext(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+    private void validateDisplayContext(DefinitionDataItem definitionDataItem,
+                                        ChallengeQuestionTabEntity challengeQuestionTabEntity) {
 
         final String displayContext = definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER);
         challengeQuestionTabEntity.setDisplayContextParameter(displayContext);
@@ -200,36 +211,41 @@ public class ChallengeQuestionValidator {
         }
     }
 
-    private void validateQuestionText(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+    private void validateQuestionText(DefinitionDataItem definitionDataItem,
+                                      ChallengeQuestionTabEntity challengeQuestionTabEntity) {
         final String questionText = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_TEXT);
         validateNullValue(questionText, ERROR_MESSAGE + " value: QuestionText cannot be null.");
         challengeQuestionTabEntity.setQuestionText(questionText);
     }
 
-    private void validateID(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+    private void validateID(DefinitionDataItem definitionDataItem,
+                            ChallengeQuestionTabEntity challengeQuestionTabEntity) {
         final String id = definitionDataItem.getString(ColumnName.ID);
         validateNullValue(id, ERROR_MESSAGE + " value: ID cannot be null.");
         challengeQuestionTabEntity.setChallengeQuestionId(id);
     }
 
-    private void validateDisplayOrder(DefinitionDataItem definitionDataItem, ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+    private void validateDisplayOrder(DefinitionDataItem definitionDataItem,
+                                      ChallengeQuestionTabEntity challengeQuestionTabEntity) {
         final String displayOrder = definitionDataItem.getString(ColumnName.DISPLAY_ORDER);
         try {
             challengeQuestionTabEntity.setOrder(Integer.parseInt(displayOrder));
             addInDisplayOrderMap(challengeQuestionTabEntity.getChallengeQuestionId(),displayOrder);
-        } catch (NumberFormatException NumberFormatException) {
-            throw new InvalidImportException(ERROR_MESSAGE + " value: " + displayOrder + " is not a valid DisplayOrder.");
+        } catch (NumberFormatException numberFormatException) {
+            throw new InvalidImportException(
+                ERROR_MESSAGE + " value: " + displayOrder + " is not a valid DisplayOrder.");
         }
     }
 
     private CaseTypeEntity getCaseTypeEntity(DefinitionDataItem questionItem) {
 
         final String caseType = questionItem.getString(ColumnName.CASE_TYPE_ID);
-        Optional<CaseTypeEntity> caseTypeEntityOptional = parseContext.getCaseTypes().stream().filter(
-                caseTypeEntity -> caseTypeEntity.getReference().equals(caseType)
-        ).findAny();
-        return caseTypeEntityOptional.orElseThrow(() ->
-                new InvalidImportException(ERROR_MESSAGE + " Case Type value: " + caseType + ". It cannot be found in the spreadsheet.")
+        Optional<CaseTypeEntity> caseTypeEntityOptional = parseContext.getCaseTypes()
+            .stream()
+            .filter(caseTypeEntity -> caseTypeEntity.getReference().equals(caseType))
+            .findAny();
+        return caseTypeEntityOptional.orElseThrow(() -> new InvalidImportException(
+            ERROR_MESSAGE + " Case Type value: " + caseType + ". It cannot be found in the spreadsheet.")
         );
     }
 
@@ -238,7 +254,8 @@ public class ChallengeQuestionValidator {
         final String fieldType = questionItem.getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD_TYPE);
         Optional<FieldTypeEntity> fieldTypeEntity = parseContext.getType(fieldType);
 
-        return fieldTypeEntity.orElseThrow(() -> new InvalidImportException(ERROR_MESSAGE + "Field Type value: " + fieldType + " cannot be found as a valid Field type."));
+        return fieldTypeEntity.orElseThrow(() -> new InvalidImportException(
+            ERROR_MESSAGE + "Field Type value: " + fieldType + " cannot be found as a valid Field type."));
     }
 
     private void validateNullValue(String value, String message) {
@@ -248,17 +265,17 @@ public class ChallengeQuestionValidator {
     }
 
     private void addInDisplayOrderMap(String questionGroup, String displayOrder) {
-
         List<String> listOfDisplayOrder = displayOrderList.get(questionGroup);
+
         if (listOfDisplayOrder == null) {
             listOfDisplayOrder = new ArrayList<>();
             listOfDisplayOrder.add(displayOrder);
             displayOrderList.put(questionGroup, listOfDisplayOrder);
         } else {
             if (listOfDisplayOrder.contains(displayOrder)) {
-                throw new InvalidImportException(ERROR_MESSAGE +
-                        " value: " + displayOrder + ". The " + ColumnName.DISPLAY_ORDER +
-                        " values must be unique in the question group " + questionGroup);
+                throw new InvalidImportException(ERROR_MESSAGE
+                        + " value: " + displayOrder + ". The " + ColumnName.DISPLAY_ORDER
+                        + " values must be unique in the question group " + questionGroup);
             } else {
                 listOfDisplayOrder.add(displayOrder);
             }

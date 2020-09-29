@@ -1,19 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import static uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator.*;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 
-public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError extends ValidationError {
+import static uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator.ValidationContext;
+
+public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError
+    extends ValidationError {
 
     private ComplexFieldEntity complexFieldEntity;
 
     private ValidationContext complexFieldEntityValidationContext;
 
-    public ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(ComplexFieldEntity complexFieldEntity,
-                                                                                               ValidationContext validationContext) {
+    public ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
+        ComplexFieldEntity complexFieldEntity, ValidationContext validationContext) {
         super(String.format(
             "Security classification for ComplexField with reference '%s' "
                 + "has a less restrictive security classification of '%s' than its parent CaseField '%s' "

@@ -1,15 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
-import static uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator.ALIAS_CASE_FIELD_PATH_PLACE_HOLDER;
-import static uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator.ALIAS;
-import static uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator.ALIAS_TEXT_SORT;
-import static uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator.DEFAULT_TEXT;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +12,16 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.SearchAliasFieldBuilder;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator.ALIAS_CASE_FIELD_PATH_PLACE_HOLDER;
+import static uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator.ALIAS;
+import static uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator.ALIAS_TEXT_SORT;
+import static uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator.DEFAULT_TEXT;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -36,7 +36,7 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
     public void setUp() {
         super.setup();
         when(config.getDynamic()).thenReturn("dynamicConfig");
-        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping","dataClassificationMapping"));
+        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping", "dataClassificationMapping"));
         mappingGenerator.inject(stubTypeMappersManager);
     }
 
@@ -48,7 +48,7 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
         String result = mappingGenerator.generateMapping(caseType.build());
 
         assertThat(result, equalToJSONInFile(
-                readFileFromClasspath("json/case_mapping_generator_predefined_properties.json")));
+            readFileFromClasspath("json/case_mapping_generator_predefined_properties.json")));
     }
 
     @Test

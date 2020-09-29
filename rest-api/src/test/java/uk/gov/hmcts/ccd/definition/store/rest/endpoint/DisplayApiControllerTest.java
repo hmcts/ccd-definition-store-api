@@ -1,20 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
@@ -32,6 +19,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultDefinition
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DisplayApiControllerTest {
 

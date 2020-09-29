@@ -35,7 +35,7 @@ import static javax.persistence.GenerationType.IDENTITY;
         name = "pgsql_definitionstatus_enum",
         typeClass = PostgreSQLEnumType.class,
         parameters = @Parameter(name = "type",
-                                value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus")
+            value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus")
     )
 })
 public class DefinitionEntity implements Serializable, Versionable {

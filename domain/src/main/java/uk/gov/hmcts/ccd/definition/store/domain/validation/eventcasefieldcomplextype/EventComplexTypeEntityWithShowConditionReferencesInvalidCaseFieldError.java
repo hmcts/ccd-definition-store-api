@@ -13,9 +13,10 @@ public class EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldEr
 
     private String eventId;
 
-    public EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError(String showConditionField,
-                                                                                  EventCaseFieldEntityValidationContext validationContext,
-                                                                                  EventComplexTypeEntity eventComplexTypeEntity) {
+    public EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError(
+        String showConditionField,
+        EventCaseFieldEntityValidationContext validationContext,
+        EventComplexTypeEntity eventComplexTypeEntity) {
         super(
             String.format(
                 "Unknown field '%s' for event '%s' in show condition: '%s'",

@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @ApiModel
 public class UserRole {
