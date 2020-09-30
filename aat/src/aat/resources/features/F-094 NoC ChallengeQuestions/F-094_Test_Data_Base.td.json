@@ -1,0 +1,27 @@
+{
+  "_guid_": "F-094_Test_Base_data",
+  "productName": "CCD Definition Store Api",
+  "operationName": "GET ChallengeQuestion",
+
+  "specs": [
+    "MCA System - with an IDAM role of caseworker CAA",
+    "intends to get the contents of a set of questions"
+  ],
+
+  "method": "GET",
+  "uri": "/api/display/challenge-questions/case-type/{ctid}/question-groups/{id}",
+
+  "users": {
+    "invokingUser": {
+      "username": "master.caseworker@gmail.COM",
+      "password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
+    }
+  },
+
+  "request": {
+    "headers": {
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]"
+    }
+  }
+}
