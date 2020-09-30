@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ChallengeQuestionDisplayContextParameterValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
@@ -12,11 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,9 +39,6 @@ public class ChallengeQuestionValidatorTest {
     private ChallengeQuestionValidator challengeQuestionValidator;
 
     @Mock
-    private ChallengeQuestionTabService challengeQuestionTabService;
-
-    @Mock
     ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
 
     @Before
@@ -58,9 +50,8 @@ public class ChallengeQuestionValidatorTest {
         entity.setQuestionId("questionId");
         Optional<ChallengeQuestionTabEntity> mockResult = Optional.of(entity);
         when(challengeQuestionDisplayContextParameterValidator.validate(any(),any())).thenReturn(new ValidationResult());
-        when(challengeQuestionTabService.findByQuestionId(questionId)).thenReturn(mockResult);
         buildParseContext();
-        challengeQuestionValidator = new ChallengeQuestionValidator(challengeQuestionTabService,challengeQuestionDisplayContextParameterValidator);
+        challengeQuestionValidator = new ChallengeQuestionValidator(challengeQuestionDisplayContextParameterValidator);
     }
 
     @Test
@@ -81,11 +72,47 @@ public class ChallengeQuestionValidatorTest {
     }
 
     @Test
+    public void testAnswerFormatForMinimunExpression() {
+        String answer = "${OrganisationField}:[CLAIMANT]";
+        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_2, QUESTION_ID, answer,"questionId");
+        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        assertValues(answer, challengeQuestionTabEntity, DISPLAY_CONTEXT_PARAMETER_2);
+    }
+
+    @Test
     public void testAnswerFormatForSmallestExpression() {
         String answer = "${OrganisationField.OrganisationID}:[CLAIMANT]";
         buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId");
         ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator.validate(parseContext, definitionDataItem);
         assertValues(answer, challengeQuestionTabEntity, DISPLAY_CONTEXT_PARAMETER_1);
+    }
+
+    @Test(expected = InvalidImportException.class)
+    public void failAnswerFormatForSmallestExpression() {
+        try {
+            String answer = "${OrganisationField}:[CCCCCC]";
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId");
+            challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        } catch (Exception exception) {
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${OrganisationField}:[CCCCCC] " +
+                "is not a valid Answer value. Please check the expression format and the roles."));
+            throw exception;
+
+        }
+    }
+
+    @Test(expected = InvalidImportException.class)
+    public void failAnswerFormatForSmallestForRoleExpression() {
+        try {
+            String answer = "${XXXX}:[CLAIMANT]";
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId");
+            challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        } catch (Exception exception) {
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${XXXX}:[CLAIMANT] is not a valid Answer, " +
+                "Please check the expression format and the roles."));
+            throw exception;
+
+        }
     }
 
     private void assertValues(String answer, ChallengeQuestionTabEntity challengeQuestionTabEntity, String displayContext) {
@@ -104,7 +131,7 @@ public class ChallengeQuestionValidatorTest {
             buildDefinitionDataItem("incorrectCaseType", FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: incorrectCaseTypeit cannot be found the spreadsheet."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: incorrectCaseType. It cannot be found in the spreadsheet."));
             throw exception;
         }
     }
@@ -192,7 +219,7 @@ public class ChallengeQuestionValidatorTest {
         } catch (Exception exception) {
             exception.printStackTrace();
             assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${XXXXX.OrganisationName} is " +
-                "not a valid Answer value, The expression dot notation values should be valid caseTypes fields."));
+                "not a valid Answer value. The expression dot notation values should be valid caseTypes fields."));
             throw exception;
         }
     }

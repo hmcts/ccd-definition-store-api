@@ -60,6 +60,17 @@ public class ChallengeQuestionTabServiceImplTest {
         assertThat(result.get().getQuestionId(), is(questionId));
     }
 
+    @DisplayName("should fail findByQuestionId due to null question id.")
+    @Test
+    void failFindByQuestionIdDueToANullQuestionId() {
+        final String questionId = null;
+        Optional<ChallengeQuestionTabEntity> mockResult = Optional.ofNullable(null);
+        when(challengeQuestionTabRepository.findByQuestionId(questionId)).thenReturn(mockResult);
+        Optional<ChallengeQuestionTabEntity> result = challengeQuestionTabServiceImpl.findByQuestionId(questionId);
+        verify(challengeQuestionTabRepository).findByQuestionId(questionId);
+        assertThat(result.isPresent(), is(false));
+    }
+
     @Test
     void shouldGetChallengeQuestions() {
         ChallengeQuestionTabEntity entity1 = new ChallengeQuestionTabEntity();

@@ -93,5 +93,6 @@
     <include file="db/changelog/db.changelog-rdm-9033.xml"/>
     <include file="db/changelog/db.changelog-rdm-9338.xml"/>
     <include file="db/changelog/db.changelog-rdm-9024.xml"/>
+    <include file="db/changelog/db.changelog-rdm-9453.xml"/>
     <include file="db/changelog/db.changelog-rdm-9031.xml"/>
 </databaseChangeLog>
