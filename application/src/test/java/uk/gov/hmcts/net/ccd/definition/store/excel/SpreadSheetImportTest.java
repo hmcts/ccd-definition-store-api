@@ -347,8 +347,8 @@ public class SpreadSheetImportTest extends BaseTest {
         assertBody(contentAsString, RESPONSE_JSON_V45);
     }
 
-        private void assertBody(String contentAsString, String fileName)
-            throws IOException, URISyntaxException {
+    private void assertBody(String contentAsString, String fileName)
+        throws IOException, URISyntaxException {
 
         String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
             .getResource(fileName)
