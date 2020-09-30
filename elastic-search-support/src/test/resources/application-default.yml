@@ -6,4 +6,4 @@ elasticsearch:
   indexShards: 8
   indexShardsReplicas: 3
   failImportIfError: true
-  dynamic: strict
+  dynamic: true

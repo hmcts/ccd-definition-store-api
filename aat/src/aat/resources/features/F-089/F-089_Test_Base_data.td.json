@@ -1,27 +1,28 @@
 {
-  "_guid_": "F-089_Test_Base_data",
-  "productName": "CCD Definition Store",
-  "operationName": "POST Case Definition File",
+	"_guid_": "F-089_Test_Base_data",
 
-  "specs": [
-    "an active profile in CCD"
-  ],
+	"productName": "CCD Definition Store",
+	"operationName": "POST Case Definition File",
 
-  "method": "POST",
-  "uri": "/import",
+	"method": "POST",
+	"uri": "/import",
 
-  "users": {
-    "invokingUser": {
-      "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
-      "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
-    }
-  },
+	"specs": [
+	 "an active profile in CCD"
+	],
 
-  "request": {
-    "headers": {
-      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
-      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-      "Content-Type": "multipart/form-data"
-    }
-  }
+	"users": {
+	 "invokingUser": {
+		"username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
+		"password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
+	 }
+	},
+
+	"request": {
+	 "headers": {
+		"Authorization": "[[DEFAULT_AUTO_VALUE]]",
+		"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+		"Content-Type": "multipart/form-data"
+	 }
+	}
 }

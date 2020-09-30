@@ -1,32 +1,33 @@
 {
-  "_guid_": "S-089.3",
-  "_extends_": "F-089_Test_Base_data",
-  "title": "must fail to import definition file",
-  "specs": [
-    "contains invalid default value"
-  ],
-  "request": {
-    "body": {
-      "arrayInMap": [
-        {
-          "key": "file",
-          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid.xlsx"
-        }
-      ]
-    }
-  },
-  "expectedResponse": {
-    "responseCode": 422,
-    "responseMessage": "Unprocessable Entity",
-    "headers": {
-      "Content-Encoding": "[[ANYTHING_PRESENT]]",
-      "Content-Type": "application/json",
-      "Content-Length": "[[ANYTHING_PRESENT]]"
-    },
-    "body": {
-      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- validationError: DefaultValue '[INVALID]' is not a valid role for 'OrgPolicyCaseAssignedRole' "
-    }
-  }
+	"_guid_": "S-089.3",
+	"_extends_": "F-089_Test_Base_data",
+	"title": "must fail to import definition file",
+
+	"specs": [
+		"contains invalid default value"
+	],
+
+	"request": {
+		"body": {
+			"arrayInMap": [
+				{
+					"key": "file",
+					"filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid.xlsx"
+				}
+			]
+		}
+	},
+
+	"expectedResponse": {
+		"responseCode": 422,
+		"responseMessage": "Unprocessable Entity",
+		"headers": {
+			"Content-Encoding": "[[ANYTHING_PRESENT]]",
+			"Content-Type": "application/json",
+			"Content-Length": "[[ANYTHING_PRESENT]]"
+		},
+		"body": {
+			"__plainTextValue__": "Validation errors occurred importing the spreadsheet.- validationError: DefaultValue '[INVALID]' is not a valid role for 'OrgPolicyCaseAssignedRole' "
+		}
+	}
 }
-
-

@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -147,6 +148,10 @@ public class DefinitionDataItem {
                     throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
             }
         }
+    }
+
+    public boolean getBooleanOrDefault(ColumnName columnName, boolean defaultValue) {
+        return Optional.ofNullable(getBoolean(columnName)).orElse(defaultValue);
     }
 
     public SecurityClassificationColumn getSecurityClassification() {
