@@ -56,7 +56,7 @@
         },
         {
           "case_type_id": "FT_ComplexOrganisation",
-          "order": 2,
+          "order": 3,
           "question_text": "What  time is it?",
           "answer_field_type": {
             "id": "DateTime",
