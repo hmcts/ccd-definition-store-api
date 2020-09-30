@@ -10,7 +10,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DisplayGroupDateTimeDisplayContextParameterValidatorImpl
@@ -18,17 +21,19 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImpl
     implements DisplayGroupCaseFieldValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
-        { DisplayContextParameterType.DATETIMEDISPLAY};
+        {DisplayContextParameterType.DATETIMEDISPLAY};
     private static final List<String> ALLOWED_FIELD_TYPES =
         Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
 
-    public DisplayGroupDateTimeDisplayContextParameterValidatorImpl(DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
+    public DisplayGroupDateTimeDisplayContextParameterValidatorImpl(
+        DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
         super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, ALLOWED_FIELD_TYPES);
     }
 
     @Override
     public ValidationResult validate(DisplayGroupCaseFieldEntity entity) {
-        return shouldSkipValidatorForEntity(entity) ? new ValidationResult() : super.validate(entity, Collections.EMPTY_LIST);
+        return shouldSkipValidatorForEntity(entity) ? new ValidationResult()
+            : super.validate(entity, Collections.emptyList());
     }
 
     @Override
@@ -48,7 +53,8 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImpl
                 DisplayContextParameterType.getParameterTypeFor(displayContextParameter);
             // Validation for #TABLE and #LIST covered in DisplayGroupDisplayContextParamValidator
             return parameterType
-                .map(t -> !(t.equals(DisplayContextParameterType.DATETIMEDISPLAY) || t.equals(DisplayContextParameterType.DATETIMEENTRY)))
+                .map(t -> !(t.equals(DisplayContextParameterType.DATETIMEDISPLAY)
+                    || t.equals(DisplayContextParameterType.DATETIMEENTRY)))
                 .orElse(true);
         }
         return true;

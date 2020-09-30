@@ -11,13 +11,13 @@ public class DisplayGroupInvalidEventFieldShowCondition extends ValidationError 
 
     public DisplayGroupInvalidEventFieldShowCondition(String showConditionField, DisplayGroupEntity displayGroup) {
         super(
-                String.format(
-                        "Invalid show condition '%s' for display group '%s': unknown field '%s' for event '%s'",
-                        displayGroup.getShowCondition(),
-                        displayGroup.getReference(),
-                        showConditionField,
-                        displayGroup.getEvent().getReference()
-                )
+            String.format(
+                "Invalid show condition '%s' for display group '%s': unknown field '%s' for event '%s'",
+                displayGroup.getShowCondition(),
+                displayGroup.getReference(),
+                showConditionField,
+                displayGroup.getEvent().getReference()
+            )
         );
 
         this.showConditionField = showConditionField;

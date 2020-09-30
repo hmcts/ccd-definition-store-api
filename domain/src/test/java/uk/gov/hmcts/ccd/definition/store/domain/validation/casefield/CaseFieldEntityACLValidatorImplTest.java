@@ -56,7 +56,8 @@ public class CaseFieldEntityACLValidatorImplTest {
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 
         assertThat(result.getValidationErrors().size(), is(1));
-        assertThat(result.getValidationErrors().get(0), instanceOf(CaseFieldEntityInvalidUserRoleValidationError.class));
+        assertThat(result.getValidationErrors().get(0),
+            instanceOf(CaseFieldEntityInvalidUserRoleValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
             "Invalid UserRole nf_user_role_id for case type 'case_type', case field 'case_field'"));
     }

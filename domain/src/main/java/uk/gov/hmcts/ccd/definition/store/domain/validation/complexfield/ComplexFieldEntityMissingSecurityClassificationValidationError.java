@@ -9,7 +9,9 @@ public class ComplexFieldEntityMissingSecurityClassificationValidationError exte
     private ComplexFieldEntity complexFieldEntity;
 
     public ComplexFieldEntityMissingSecurityClassificationValidationError(ComplexFieldEntity complexFieldEntity) {
-        super(String.format("ComplexField with reference '%s' must have a Security Classification defined", complexFieldEntity.getReference()));
+        super(String.format(
+            "ComplexField with reference '%s' must have a Security Classification defined",
+            complexFieldEntity.getReference()));
         this.complexFieldEntity = complexFieldEntity;
     }
 

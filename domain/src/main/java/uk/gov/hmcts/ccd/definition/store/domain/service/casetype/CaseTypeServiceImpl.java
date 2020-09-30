@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 import static java.util.stream.Collectors.toList;
 
 @Component
@@ -54,7 +55,9 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     @Override
-    public void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes, Set<String> missingUserRoles) {
+    public void createAll(JurisdictionEntity jurisdiction,
+                          Collection<CaseTypeEntity> caseTypes,
+                          Set<String> missingUserRoles) {
         validate(jurisdiction, caseTypes, missingUserRoles);
         versionedRepository.saveAll(caseTypes);
     }

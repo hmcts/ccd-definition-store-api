@@ -14,7 +14,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.*;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_IDAM_ID;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.WORK_BASKET_DEFAULT_CASETYPE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.WORK_BASKET_DEFAULT_JURISDICTION;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.WORK_BASKET_DEFAULT_STATE;
 
 public class UserProfilesParser {
 

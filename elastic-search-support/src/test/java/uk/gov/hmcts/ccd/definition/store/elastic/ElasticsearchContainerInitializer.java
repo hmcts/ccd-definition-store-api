@@ -9,7 +9,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-public class ElasticsearchContainerInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+public class ElasticsearchContainerInitializer
+    implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     @Container
     private GenericContainer<ElasticsearchContainer> elasticsearchContainer;

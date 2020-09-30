@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-
-import static org.mockito.Mockito.*;
-
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
@@ -24,6 +18,17 @@ import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.util.DateTimeStringGenerator;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class})

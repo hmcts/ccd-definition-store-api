@@ -1,13 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import java.util.Collections;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -19,6 +11,14 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.Sear
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 
+import java.util.Collections;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 class CaseTypeEntitySearchAliasFieldsValidatorImplTest {
 
     @Mock
@@ -29,7 +29,8 @@ class CaseTypeEntitySearchAliasFieldsValidatorImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        caseTypeEntitySearchAliasFieldsValidator = new CaseTypeEntitySearchAliasFieldsValidatorImpl(Collections.singletonList(searchAliasFieldValidator));
+        caseTypeEntitySearchAliasFieldsValidator = new CaseTypeEntitySearchAliasFieldsValidatorImpl(
+            Collections.singletonList(searchAliasFieldValidator));
     }
 
     @Nested
@@ -42,7 +43,8 @@ class CaseTypeEntitySearchAliasFieldsValidatorImplTest {
             SearchAliasFieldEntity searchAliasField = new SearchAliasFieldEntity();
             CaseTypeEntity caseType = new CaseTypeEntity();
             caseType.addSearchAliasFields(Collections.singletonList(searchAliasField));
-            when(searchAliasFieldValidator.validate(any(SearchAliasFieldEntity.class))).thenReturn(new ValidationResult());
+            when(searchAliasFieldValidator.validate(any(SearchAliasFieldEntity.class)))
+                .thenReturn(new ValidationResult());
 
             ValidationResult validationResult = caseTypeEntitySearchAliasFieldsValidator.validate(caseType);
             assertThat(validationResult.getValidationErrors().size(), is(0));
@@ -62,7 +64,8 @@ class CaseTypeEntitySearchAliasFieldsValidatorImplTest {
             CaseTypeEntity caseType = new CaseTypeEntity();
             caseType.addSearchAliasFields(Collections.singletonList(searchAliasField));
             ValidationResult validationResult = new ValidationResult();
-            SearchAliasFieldValidator.ValidationError validationError = new SearchAliasFieldValidator.ValidationError("Error", searchAliasField);
+            SearchAliasFieldValidator.ValidationError validationError = new SearchAliasFieldValidator
+                .ValidationError("Error", searchAliasField);
             validationResult.addError(validationError);
             when(searchAliasFieldValidator.validate(any(SearchAliasFieldEntity.class))).thenReturn(validationResult);
 

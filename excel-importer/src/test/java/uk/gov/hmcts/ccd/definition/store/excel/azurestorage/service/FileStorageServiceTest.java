@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +9,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class FileStorageServiceTest {
 

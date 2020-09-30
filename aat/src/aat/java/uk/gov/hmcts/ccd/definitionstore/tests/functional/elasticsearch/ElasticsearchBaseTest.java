@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional.elasticsearch;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.ValidatableResponse;
@@ -10,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
+
+import static org.hamcrest.CoreMatchers.equalTo;
 
 abstract class ElasticsearchBaseTest extends BaseTest {
 
@@ -59,7 +59,7 @@ abstract class ElasticsearchBaseTest extends BaseTest {
 
     private RequestSpecification asElasticsearchApiUser() {
         return RestAssured.given(new RequestSpecBuilder()
-                                     .setBaseUri(aat.getElasticsearchBaseUri())
-                                     .build());
+            .setBaseUri(aat.getElasticsearchBaseUri())
+            .build());
     }
 }

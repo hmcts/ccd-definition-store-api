@@ -18,7 +18,7 @@ public class DefinitionModelMapper {
      *
      * @param definition The Definition to be mapped
      * @return A DefinitionEntity with the mappings. Note: The JurisdictionEntity will be null and needs to be set post
-     * mapping with the proper, retrieved entity
+     *      mapping with the proper, retrieved entity
      */
     public DefinitionEntity toEntity(@NotNull final Definition definition) {
         final DefinitionEntity definitionEntity = new DefinitionEntity();

@@ -16,8 +16,8 @@ public interface DisplayGroupRepository extends DefinitionRepository<DisplayGrou
         + "AND dg.caseType = (" + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
     List<DisplayGroupEntity> findTabsByCaseTypeReference(@Param("caseTypeReference") String caseTypeReference);
 
-    List<DisplayGroupEntity> findByTypeAndCaseTypeIdAndEventOrderByOrder(@Param("type")DisplayGroupType type,
-                                                             @Param("caseTypeId")Integer caseTypeId,
-                                                             @Param("event")EventEntity event);
+    List<DisplayGroupEntity> findByTypeAndCaseTypeIdAndEventOrderByOrder(@Param("type") DisplayGroupType type,
+                                                                         @Param("caseTypeId") Integer caseTypeId,
+                                                                         @Param("event") EventEntity event);
 
 }

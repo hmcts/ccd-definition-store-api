@@ -11,7 +11,7 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
     public static final String DEFAULT_DEFINITIONS_PATH = "uk/gov/hmcts/befta/dse/ccd/definitions/valid";
 
     private TestDataLoaderToDefinitionStore loader = new TestDataLoaderToDefinitionStore(this, DEFAULT_DEFINITIONS_PATH,
-            BeftaMain.getConfig().getTestUrl());
+        BeftaMain.getConfig().getTestUrl());
 
     @Override
     public Object calculateCustomValue(BackEndFunctionalTestScenarioContext scenarioContext, Object key) {

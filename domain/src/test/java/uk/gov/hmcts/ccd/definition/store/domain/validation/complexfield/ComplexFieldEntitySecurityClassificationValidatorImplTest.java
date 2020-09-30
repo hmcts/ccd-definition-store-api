@@ -60,29 +60,39 @@ public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
     @Test
     public void securityClassificationIsSetOnPredefinedComplexType_alwaysValid() {
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+            complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
             SecurityClassification.PUBLIC, SecurityClassification.PUBLIC, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+            complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
             SecurityClassification.PRIVATE, SecurityClassification.PUBLIC, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+            complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
             SecurityClassification.RESTRICTED, SecurityClassification.PUBLIC, true);
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+            complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
             SecurityClassification.PUBLIC, SecurityClassification.PRIVATE, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+            complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
             SecurityClassification.PRIVATE, SecurityClassification.PRIVATE, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+            complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
             SecurityClassification.RESTRICTED, SecurityClassification.PRIVATE, true);
 
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+            complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
             SecurityClassification.PUBLIC, SecurityClassification.RESTRICTED, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+            complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
             SecurityClassification.PRIVATE, SecurityClassification.RESTRICTED, true);
-        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
+        assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+            complexField(fieldType(PREDEFINED_COMPLEX_TYPE)),
             SecurityClassification.RESTRICTED, SecurityClassification.RESTRICTED, true);
 
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void securityClassificationIsNull_invalidValidationResultContainingCaseFieldEntityMissingSecurityClassificationValidationErrorReturned() {
 
@@ -90,27 +100,31 @@ public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
 
         ValidationResult validationResult
             = classUnderTest.validate(
-                complexFieldEntity,
-                complexFieldEntityValidationContext
+            complexFieldEntity,
+            complexFieldEntityValidationContext
         );
 
-        assertValidationResultContainsComplexFieldEntityMissingSecurityClassificationValidationError(validationResult, complexFieldEntity);
+        assertValidationResultContainsComplexFieldEntityMissingSecurityClassificationValidationError(
+            validationResult, complexFieldEntity);
 
         validationResult = classUnderTest.validate(complexFieldEntity);
 
-        assertValidationResultContainsComplexFieldEntityMissingSecurityClassificationValidationError(validationResult, complexFieldEntity);
+        assertValidationResultContainsComplexFieldEntityMissingSecurityClassificationValidationError(
+            validationResult, complexFieldEntity);
     }
 
-    private void assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(ComplexFieldEntity complexFieldEntity,
-                                                                                      SecurityClassification caseFieldSecurityClassification,
-                                                                                      SecurityClassification parentSecurityClassification,
-                                                                                      boolean isValid) {
+    private void assertComplexFieldWithSecurityClassificationIsValidInContextOfParent(
+        ComplexFieldEntity complexFieldEntity, SecurityClassification caseFieldSecurityClassification,
+        SecurityClassification parentSecurityClassification, boolean isValid) {
 
-        when(complexFieldEntityValidationContext.getParentSecurityClassification()).thenReturn(parentSecurityClassification);
-        when(complexFieldEntityValidationContext.getPreDefinedComplexTypes()).thenReturn(Arrays.asList(fieldType(PREDEFINED_COMPLEX_TYPE)));
+        when(complexFieldEntityValidationContext.getParentSecurityClassification())
+            .thenReturn(parentSecurityClassification);
+        when(complexFieldEntityValidationContext.getPreDefinedComplexTypes())
+            .thenReturn(Arrays.asList(fieldType(PREDEFINED_COMPLEX_TYPE)));
 
         complexFieldEntity.setSecurityClassification(caseFieldSecurityClassification);
-        ValidationResult validationResult = classUnderTest.validate(complexFieldEntity, complexFieldEntityValidationContext);
+        ValidationResult validationResult = classUnderTest.validate(
+            complexFieldEntity, complexFieldEntityValidationContext);
 
         assertEquals(isValid, validationResult.isValid());
         assertEquals(isValid ? 0 : 1, validationResult.getValidationErrors().size());
@@ -121,20 +135,22 @@ public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
 
             assertEquals(
                 complexFieldEntity,
-                ((ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) validationResult.getValidationErrors().get(0))
+                ((ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) validationResult
+                    .getValidationErrors().get(0))
                     .getComplexFieldEntity()
             );
             assertEquals(
                 complexFieldEntityValidationContext,
-                ((ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) validationResult.getValidationErrors().get(0))
+                ((ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) validationResult
+                    .getValidationErrors().get(0))
                     .getComplexFieldEntityValidationContext()
             );
         }
 
     }
 
-    private void assertValidationResultContainsComplexFieldEntityMissingSecurityClassificationValidationError(ValidationResult validationResult,
-                                                                                                              ComplexFieldEntity complexFieldEntity) {
+    private void assertValidationResultContainsComplexFieldEntityMissingSecurityClassificationValidationError(
+        ValidationResult validationResult, ComplexFieldEntity complexFieldEntity) {
 
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
@@ -142,7 +158,8 @@ public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
             instanceof ComplexFieldEntityMissingSecurityClassificationValidationError);
         assertEquals(
             complexFieldEntity,
-            ((ComplexFieldEntityMissingSecurityClassificationValidationError) validationResult.getValidationErrors().get(0))
+            ((ComplexFieldEntityMissingSecurityClassificationValidationError) validationResult
+                .getValidationErrors().get(0))
                 .getComplexFieldEntity()
         );
 

@@ -26,8 +26,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_C
  * This includes Complex types themselves and the custom simple types they use.
  */
 public class ComplexFieldTypeParser implements FieldShowConditionParser {
-    private static final String INVALID_ORDER_COLUMN = "ComplexField with reference='%s' has incorrect order for nested fields. "
-        + "Order has to be incremental and start from 1";
+    private static final String INVALID_ORDER_COLUMN = "ComplexField with reference='%s' has incorrect order for "
+        + "nested fields. Order has to be incremental and start from 1";
     private static final Logger logger = LoggerFactory.getLogger(ComplexFieldTypeParser.class);
 
     private ParseContext parseContext;
@@ -62,16 +62,19 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
     public ParseResult<FieldTypeEntity> parse(Map<String, DefinitionSheet> definitionSheets) {
         logger.debug("Complex types parsing...");
 
-        final Map<String, List<DefinitionDataItem>> complexTypesItems = definitionSheets.get(SheetName.COMPLEX_TYPES.getName()).groupDataItemsById();
+        final Map<String, List<DefinitionDataItem>> complexTypesItems = definitionSheets.get(
+            SheetName.COMPLEX_TYPES.getName()).groupDataItemsById();
 
         logger.debug("Complex types parsing: {} complex types detected", complexTypesItems.size());
 
         // TODO Check for already existing types with same identity
         ParseResult<FieldTypeEntity> result = complexTypesItems.entrySet()
-            .stream().map(complexTypeItem -> parseComplexType(complexTypeItem, definitionSheets)).reduce(new ParseResult(),
-            (res, complexTypeParseResult) -> res.add(complexTypeParseResult));
+            .stream()
+            .map(complexTypeItem -> parseComplexType(complexTypeItem, definitionSheets))
+            .reduce(new ParseResult(), (res, complexTypeParseResult) -> res.add(complexTypeParseResult));
 
-        logger.info("Complex types parsing: OK: {} types parsed, including {} complex", result.getAllResults().size(), complexTypesItems.size());
+        logger.info("Complex types parsing: OK: {} types parsed, including {} complex",
+            result.getAllResults().size(), complexTypesItems.size());
 
         return result;
     }
@@ -125,10 +128,12 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
             throw new MapperException(String.format(INVALID_ORDER_COLUMN, fieldId));
         }
         complexField.setOrder(order);
-        complexField.setShowCondition(parseShowCondition(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
+        complexField.setShowCondition(parseShowCondition(
+            definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
         complexField.setDisplayContextParameter(definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
         complexField.setSearchable(definitionDataItem.getBooleanOrDefault(ColumnName.SEARCHABLE, true));
-        complexField.setRetainHiddenValue(hiddenFieldsValidator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+        complexField.setRetainHiddenValue(hiddenFieldsValidator.parseComplexTypesHiddenFields(
+            definitionDataItem, definitionSheets));
 
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(complexField, definitionDataItem);
 

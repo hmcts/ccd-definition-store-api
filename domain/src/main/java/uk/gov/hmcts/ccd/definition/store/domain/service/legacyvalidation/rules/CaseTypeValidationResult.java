@@ -37,6 +37,7 @@ public class CaseTypeValidationResult {
 
     /**
      * Get list of error messages.
+     *
      * @return the list of errors.
      */
     public Set<String> getErrors() {

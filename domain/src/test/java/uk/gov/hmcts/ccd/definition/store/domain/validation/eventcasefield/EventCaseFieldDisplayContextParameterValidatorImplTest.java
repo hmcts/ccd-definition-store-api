@@ -1,14 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
@@ -39,7 +45,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection",validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
 
@@ -50,7 +57,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection",validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("ListCodeElement firstname display context parameter is not one of the fields in collection",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
@@ -64,8 +72,10 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(2, validationResult.getValidationErrors().size());
-        assertEquals("Display context parameter is not of type collection",validationResult.getValidationErrors().get(0).getDefaultMessage());
-        assertEquals("DisplayContextParameter text should begin with #LIST( or #TABLE(",validationResult.getValidationErrors().get(1).getDefaultMessage());
+        assertEquals("Display context parameter is not of type collection",
+            validationResult.getValidationErrors().get(0).getDefaultMessage());
+        assertEquals("DisplayContextParameter text should begin with #LIST( or #TABLE(",
+            validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
 
     private EventCaseFieldEntity eventCaseFieldEntity() {

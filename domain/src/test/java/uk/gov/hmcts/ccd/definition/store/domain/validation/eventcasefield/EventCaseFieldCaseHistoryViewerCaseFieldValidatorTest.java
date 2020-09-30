@@ -28,22 +28,29 @@ public class EventCaseFieldCaseHistoryViewerCaseFieldValidatorTest {
     @Test
     public void shouldPassValidationIfFieldIsNotCaseHistoryViewer() {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotCaseHistoryViewer"), null, DisplayContext.READONLY), null).isValid());
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotCaseHistoryViewer"), null, DisplayContext.OPTIONAL), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(
+            caseField("NotCaseHistoryViewer"), null, DisplayContext.READONLY), null)
+            .isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(
+            caseField("NotCaseHistoryViewer"), null, DisplayContext.OPTIONAL), null)
+            .isValid());
 
     }
 
     @Test
     public void shouldPassValidationIfFieldTypeReadonly() throws Exception {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_HISTORY_VIEWER), null, DisplayContext.READONLY), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(
+            caseField(CASE_HISTORY_VIEWER), null, DisplayContext.READONLY), null)
+            .isValid());
 
     }
 
     @Test
     public void shouldPassValidationIfDisplayContextIsNull() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_HISTORY_VIEWER), null, null), null);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(
+            caseField(CASE_HISTORY_VIEWER), null, null), null);
 
         assertAll(
             () -> assertTrue(validationResult.isValid()),
@@ -54,18 +61,19 @@ public class EventCaseFieldCaseHistoryViewerCaseFieldValidatorTest {
     public void shouldReturnValidationErrorIfFieldTypeOptional() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_HISTORY_VIEWER),
-                                                                                         event("Event Reference"),
-                                                                                         DisplayContext.OPTIONAL), null);
+            event("Event Reference"),
+            DisplayContext.OPTIONAL), null);
 
         assertAll(
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
-                         hasItem(
-                             hasProperty("defaultMessage",
-                                         equalTo(
-                                             "'" + CASE_HISTORY_VIEWER
-                                                 + "' is CaseHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                hasItem(
+                    hasProperty("defaultMessage",
+                        equalTo(
+                            "'" + CASE_HISTORY_VIEWER
+                                + "' is CaseHistoryViewer type and cannot be editable for event "
+                                + "with reference 'Event Reference'"))))
         );
     }
 
@@ -73,17 +81,18 @@ public class EventCaseFieldCaseHistoryViewerCaseFieldValidatorTest {
     public void shouldReturnValidationErrorIfFieldTypeMandatory() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_HISTORY_VIEWER),
-                                                                                         event("Event Reference"),
-                                                                                         DisplayContext.MANDATORY), null);
+            event("Event Reference"),
+            DisplayContext.MANDATORY), null);
 
         assertAll(
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
-                             hasItem(
-                                 hasProperty("defaultMessage",
-                                     equalTo("'" + CASE_HISTORY_VIEWER
-                                                 + "' is CaseHistoryViewer type and cannot be editable for event with reference 'Event Reference'"))))
+                hasItem(
+                    hasProperty("defaultMessage",
+                        equalTo("'" + CASE_HISTORY_VIEWER
+                            + "' is CaseHistoryViewer type and cannot be editable for event "
+                            + "with reference 'Event Reference'"))))
         );
     }
 
@@ -102,7 +111,9 @@ public class EventCaseFieldCaseHistoryViewerCaseFieldValidatorTest {
         return eventEntity;
     }
 
-    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField, EventEntity event, DisplayContext displayContext) {
+    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField,
+                                                      EventEntity event,
+                                                      DisplayContext displayContext) {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setCaseField(caseField);
         eventCaseFieldEntity.setEvent(event);
