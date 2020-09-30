@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.apache.commons.lang3.StringUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -48,6 +51,8 @@ public abstract class GenericLayoutEntity implements Serializable {
     private String displayContextParameter;
 
     public abstract String getSheetName();
+
+    public abstract LayoutSheetType getLayoutSheetType();
 
     public Integer getId() {
         return id;
@@ -127,5 +132,23 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
+    }
+
+    /**
+     * Determine whether the field that the layout entity represents is searchable. All fields (top level and nested) have a searchable property.
+     * In the case of nested fields, a field is considered searchable if its parent (and its parent's parent etc.) are all searchable too.
+     * @return Whether the entity represents a searchable field.
+     */
+    @Transient
+    public boolean isSearchable() {
+        return getCaseField().isNestedFieldSearchable(getCaseFieldElementPath());
+    }
+
+    @Transient
+    public String buildFieldPath() {
+        if (StringUtils.isNotBlank(getCaseFieldElementPath())) {
+            return getCaseField().getReference() + '.' + getCaseFieldElementPath();
+        }
+        return getCaseField().getReference();
     }
 }
