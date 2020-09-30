@@ -10,8 +10,8 @@ public class CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentVa
 
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
 
-    public CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(CaseFieldEntity caseFieldEntity,
-                                                                                            CaseFieldEntityValidationContext caseFieldValidationContext) {
+    public CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
+        CaseFieldEntity caseFieldEntity, CaseFieldEntityValidationContext caseFieldValidationContext) {
         super(String.format(
             "Security classification for CaseField with reference '%s' "
                 + "has a less restrictive security classification of '%s' than its parent CaseType '%s' "

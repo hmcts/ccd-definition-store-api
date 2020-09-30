@@ -26,14 +26,15 @@ public class ElasticSearchConfiguration {
     private RestHighLevelClient restHighLevelClient;
 
     /**
-     * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new HighLevelCCDElasticClient on each import
-     * and we close it once the import is completed. The HighLevelCCDElasticClient is injected every time with a new restHighLevelClient
-     * which opens new connections
+     * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new
+     * HighLevelCCDElasticClient on each import and we close it once the import is completed.
+     * The HighLevelCCDElasticClient is injected every time with a new restHighLevelClient which opens new connections
      */
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public RestHighLevelClient restHighLevelClient() {
-        RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort())).setMaxRetryTimeoutMillis(60000);
+        RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort()))
+            .setMaxRetryTimeoutMillis(60000);
         RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
             requestConfigBuilder.setConnectTimeout(5000)
                 .setSocketTimeout(60000);

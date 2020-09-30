@@ -1,5 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -11,10 +15,6 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_D
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 
 class FieldTypeEntityTest {
 
@@ -35,7 +35,7 @@ class FieldTypeEntityTest {
         public void shouldReturnEmptyListIfTypeIsFixedListType() {
             List<ComplexFieldEntity> children = newType("fixedList")
                 .withBaseFieldType(newType("FixedListType")
-                                       .build())
+                    .build())
                 .build()
                 .getChildren();
 
@@ -47,11 +47,11 @@ class FieldTypeEntityTest {
         public void shouldGetChildrenOfCollectionType() {
             FieldTypeEntity collectionType = newType("collectionType")
                 .addFieldToCollection(newType("complexType")
-                                          .addFieldToComplex("simpleType1", newType("simpleType1")
-                                              .build())
-                                          .addFieldToComplex("simpleType2", newType("simpleType2")
-                                              .build())
-                                          .buildComplex())
+                    .addFieldToComplex("simpleType1", newType("simpleType1")
+                        .build())
+                    .addFieldToComplex("simpleType2", newType("simpleType2")
+                        .build())
+                    .buildComplex())
                 .buildCollection();
 
             List<ComplexFieldEntity> children = collectionType.getChildren();

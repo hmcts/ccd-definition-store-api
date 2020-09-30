@@ -50,9 +50,9 @@ public class SpreadsheetParserTest {
 
         assertThat(importWarnings, containsInAnyOrder(
             "CaseField sheet contains DefaultHidden column that will be deprecated. "
-            + "Please remove from future Definition imports.",
+                + "Please remove from future Definition imports.",
             "ComplexTypes sheet contains DefaultHidden column that will be deprecated. "
-            + "Please remove from future Definition imports."
+                + "Please remove from future Definition imports."
         ));
     }
 

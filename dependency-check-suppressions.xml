@@ -20,7 +20,6 @@
 		<vulnerabilityName>CVE-2019-7611</vulnerabilityName>
 	</suppress>
 
-
 	<suppress>
 		<notes><![CDATA[
         The checker is misidentifying our support jar as the elastic search client jar
@@ -34,6 +33,27 @@
 		<cve>CVE-2014-6439</cve>
 		<cve>CVE-2015-1427</cve>
 		<cve>CVE-2019-7614</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
+        liquibase-core-3.6.3.jar: bootstrap.js (pkg:javascript/bootstrap@3.1.1)
+        liquibase-core-3.6.3.jar: bootstrap.min.js (pkg:javascript/bootstrap@3.1.1)
+   ]]></notes>
+		<cve>CVE-2018-14040</cve>
+		<cve>CVE-2018-14041</cve>
+		<cve>CVE-2018-14042</cve>
+		<cve>CVE-2019-8331</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
+        liquibase-core-3.6.3.jar: jquery-1.11.0.min.js (pkg:javascript/jquery@1.11.0.min)
+   ]]></notes>
+		<cve>CVE-2015-9251</cve>
+		<cve>CVE-2019-11358</cve>
+		<cve>CVE-2020-11022</cve>
+		<cve>CVE-2020-11023</cve>
 	</suppress>
 
 	<suppress>

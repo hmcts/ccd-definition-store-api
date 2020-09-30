@@ -6,7 +6,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.regex.AbstractDocumen
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 
 @Component
-public class ComplexFieldEntityDocumentTypeRegularExpressionValidator extends AbstractDocumentTypeRegularExpressionValidator implements ComplexFieldValidator {
+public class ComplexFieldEntityDocumentTypeRegularExpressionValidator
+    extends AbstractDocumentTypeRegularExpressionValidator implements ComplexFieldValidator {
 
     @Override
     public ValidationResult validate(ComplexFieldEntity complexField, ValidationContext validationContext) {

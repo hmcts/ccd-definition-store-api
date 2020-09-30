@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CaseType implements HasAcls {
     private String id = null;

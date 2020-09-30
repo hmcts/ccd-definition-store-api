@@ -17,7 +17,8 @@ import static uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield
 
 public class EventComplexTypeEntityDefaultValueValidatorImplTest {
 
-    private EventComplexTypeEntityDefaultValueValidatorImpl classUnderTest = new EventComplexTypeEntityDefaultValueValidatorImpl();
+    private EventComplexTypeEntityDefaultValueValidatorImpl classUnderTest =
+        new EventComplexTypeEntityDefaultValueValidatorImpl();
     final List<String> caseRoles = new ArrayList<>();
     final EventComplexTypeEntity eventCaseFieldEntity = new EventComplexTypeEntity();
     final List<EventCaseFieldEntity> allEventCaseFieldEntitiesForEventCase = new ArrayList();
@@ -27,7 +28,7 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     private static final String GLOBAL_ROLE_COLLABORATOR = "[COLLABORATOR]";
 
     final EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext(eventId, allEventCaseFieldEntitiesForEventCase, caseRoles);
+        new EventCaseFieldEntityValidationContext(eventId, allEventCaseFieldEntitiesForEventCase, caseRoles);
 
     @Before
     public void setUp() {
@@ -40,7 +41,8 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     public void should_pass_validation() {
 
         eventCaseFieldEntity.setDefaultValue(ROLE2);
-        final ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
+        final ValidationResult validationResult = classUnderTest.validate(
+            eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
 
         assertTrue(validationResult.isValid());
         assertEquals(0, validationResult.getValidationErrors().size());
@@ -50,7 +52,8 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     public void should_pass_validation_complex_field_reference() {
         eventCaseFieldEntity.setReference("TestComplexField." + ORGANISATION_POLICY_ROLE);
         eventCaseFieldEntity.setDefaultValue(ROLE2);
-        final ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
+        final ValidationResult validationResult = classUnderTest.validate(
+            eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
 
         assertTrue(validationResult.isValid());
         assertEquals(0, validationResult.getValidationErrors().size());
@@ -60,7 +63,8 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     public void should_pass_validation_due_to_global_role() {
 
         eventCaseFieldEntity.setDefaultValue(GLOBAL_ROLE_COLLABORATOR);
-        final ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
+        final ValidationResult validationResult = classUnderTest.validate(
+            eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
 
         assertTrue(validationResult.isValid());
         assertEquals(0, validationResult.getValidationErrors().size());
@@ -71,10 +75,12 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     public void should_not_pass_validation_due_to_incorrect_role() {
 
         eventCaseFieldEntity.setDefaultValue("xxx");
-        final ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
+        final ValidationResult validationResult = classUnderTest.validate(
+            eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
 
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
-        assertTrue(validationResult.getValidationErrors().get(0).getDefaultMessage().contains("is not a valid role for"));
+        assertTrue(validationResult.getValidationErrors().get(0)
+            .getDefaultMessage().contains("is not a valid role for"));
     }
 }

@@ -61,7 +61,8 @@ public class StateMetadataCaseFieldEntityFactory implements MetadataCaseFieldEnt
         FieldTypeEntity fixedListType = new FieldTypeEntity();
         fixedListType.setJurisdiction(caseType.getJurisdiction());
         fixedListType.setBaseFieldType(fixedListBaseType);
-        fixedListType.setReference(ReferenceUtils.listReference(BASE_FIXED_LIST, caseType.getReference() + STATE.getReference()));
+        fixedListType.setReference(ReferenceUtils.listReference(
+            BASE_FIXED_LIST, caseType.getReference() + STATE.getReference()));
         fixedListType.setJurisdiction(parseContext.getJurisdiction());
         fixedListType.addListItems(createStateListItems(caseType));
 

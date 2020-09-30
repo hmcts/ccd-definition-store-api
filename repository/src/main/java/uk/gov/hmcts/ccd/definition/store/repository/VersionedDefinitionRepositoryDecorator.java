@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
-
-@SuppressWarnings("checkstyle:InterfaceTypeParameterName")
+@SuppressWarnings({"checkstyle:InterfaceTypeParameterName", "checkstyle:ClassTypeParameterName"})
 public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID extends Serializable>
     extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
 

@@ -23,9 +23,9 @@ public class IdamHelper {
 
     public IdamHelper(String idamBaseUrl, OAuth2 oauth2) {
         idamApi = Feign.builder()
-                       .encoder(new JacksonEncoder())
-                       .decoder(new JacksonDecoder())
-                       .target(IdamApi.class, idamBaseUrl);
+            .encoder(new JacksonEncoder())
+            .decoder(new JacksonDecoder())
+            .target(IdamApi.class, idamBaseUrl);
         this.oauth2 = oauth2;
     }
 

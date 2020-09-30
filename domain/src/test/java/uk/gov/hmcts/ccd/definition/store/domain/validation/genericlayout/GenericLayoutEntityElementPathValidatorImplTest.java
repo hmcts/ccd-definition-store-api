@@ -1,13 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
-
 import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -24,14 +25,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFi
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
-import org.junit.jupiter.params.provider.ArgumentsSource;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
 @DisplayName("Generic Layout Entity Validator Path Implementation Tests")
 class GenericLayoutEntityElementPathValidatorImplTest {
@@ -176,7 +175,8 @@ class GenericLayoutEntityElementPathValidatorImplTest {
                 () -> assertThat(result.isValid(), is(false)),
                 () -> assertThat(result.getValidationErrors().size(), is(1)),
                 () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                    is("ListElementCode 'SomeNonExistingPath' can be only defined for complex fields. Case Field 'Case Field I', case type 'Case Type I'"))
+                    is("ListElementCode 'SomeNonExistingPath' can be only defined for complex fields. "
+                        + "Case Field 'Case Field I', case type 'Case Type I'"))
             );
         }
 
@@ -196,7 +196,8 @@ class GenericLayoutEntityElementPathValidatorImplTest {
                 () -> assertThat(result.isValid(), is(false)),
                 () -> assertThat(result.getValidationErrors().size(), is(1)),
                 () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                    is("Invalid ListElementCode 'SomeNonExistingPath' for case type 'Case Type I', case field 'MySchool' with label 'Label'"))
+                    is("Invalid ListElementCode 'SomeNonExistingPath' for case type 'Case Type I', case field "
+                        + "'MySchool' with label 'Label'"))
             );
         }
     }
@@ -206,11 +207,13 @@ class GenericLayoutEntityElementPathValidatorImplTest {
             asList(
                 complexFieldEntity("Name", fieldTypeEntity("Text", emptyList())),
                 complexFieldEntity("ProvidesSupport", fieldTypeEntity("YesOrNo", emptyList())),
-                complexFieldEntity("Class", collectionFieldTypeEntity("Class-8fcabcec-327f-4b4b-99b9-9dadb8317da8",
+                complexFieldEntity("Class", collectionFieldTypeEntity(
+                    "Class-8fcabcec-327f-4b4b-99b9-9dadb8317da8",
                     complexFieldTypeEntity("SchoolClass", asList(
                         complexFieldEntity("ClassName", fieldTypeEntity("Text", emptyList())),
                         complexFieldEntity("ClassAddress", addressUKFieldTypeEntity()),
-                        complexFieldEntity("ClassMembers", collectionFieldTypeEntity("ClassMembers-f07e3000-a3c4-4232-ac69-586b7b013bf1",
+                        complexFieldEntity("ClassMembers", collectionFieldTypeEntity(
+                            "ClassMembers-f07e3000-a3c4-4232-ac69-586b7b013bf1",
                             complexFieldTypeEntity("Child",
                                 asList(
                                     complexFieldEntity("FixedListGender",
@@ -235,7 +238,8 @@ class GenericLayoutEntityElementPathValidatorImplTest {
                 complexFieldTypeEntity("SchoolClass", asList(
                     complexFieldEntity("ClassName", fieldTypeEntity("Text", emptyList())),
                     complexFieldEntity("ClassAddress", addressUKFieldTypeEntity()),
-                    complexFieldEntity("ClassMembers", collectionFieldTypeEntity("ClassMembers-f07e3000-a3c4-4232-ac69-586b7b013bf1",
+                    complexFieldEntity("ClassMembers", collectionFieldTypeEntity(
+                        "ClassMembers-f07e3000-a3c4-4232-ac69-586b7b013bf1",
                         complexFieldTypeEntity("Child",
                             asList(
                                 complexFieldEntity("FixedListGender",

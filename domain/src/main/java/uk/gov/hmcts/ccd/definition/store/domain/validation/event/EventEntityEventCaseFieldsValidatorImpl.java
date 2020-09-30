@@ -27,11 +27,11 @@ public class EventEntityEventCaseFieldsValidatorImpl implements EventEntityValid
         for (EventCaseFieldEntity eventCaseField : allEventCaseFieldsForEvent) {
             for (EventCaseFieldEntityValidator eventCaseFieldValidator : eventCaseFieldValidators) {
                 validationResult.merge(eventCaseFieldValidator.validate(
-                        eventCaseField,
-                        new EventCaseFieldEntityValidationContext(caseEvent.getReference(),
-                            allEventCaseFieldsForEvent,
-                            eventEntityValidationContext.getCaseRoles())
-                        )
+                    eventCaseField,
+                    new EventCaseFieldEntityValidationContext(caseEvent.getReference(),
+                        allEventCaseFieldsForEvent,
+                        eventEntityValidationContext.getCaseRoles())
+                    )
                 );
             }
         }

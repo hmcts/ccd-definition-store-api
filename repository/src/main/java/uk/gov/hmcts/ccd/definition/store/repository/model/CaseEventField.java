@@ -126,7 +126,7 @@ public class CaseEventField {
     }
 
     /**
-     * whether to retain value of this field, is dependant on there being a show condition
+     * whether to retain value of this field, is dependant on there being a show condition.
      **/
     @ApiModelProperty(value = "whether to retain value of this field, is dependant on there being a show condition")
     @JsonProperty("retain_hidden_value")

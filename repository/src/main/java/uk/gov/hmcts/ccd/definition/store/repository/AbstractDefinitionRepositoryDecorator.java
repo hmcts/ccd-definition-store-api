@@ -1,16 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-@SuppressWarnings("checkstyle:InterfaceTypeParameterName")
-abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable, R extends DefinitionRepository<T, ID>> implements DefinitionRepository<T, ID> {
+import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+
+@SuppressWarnings({"checkstyle:InterfaceTypeParameterName", "checkstyle:ClassTypeParameterName"})
+abstract class AbstractDefinitionRepositoryDecorator<T, ID extends Serializable, R extends DefinitionRepository<T, ID>>
+    implements DefinitionRepository<T, ID> {
 
     protected R repository;
 

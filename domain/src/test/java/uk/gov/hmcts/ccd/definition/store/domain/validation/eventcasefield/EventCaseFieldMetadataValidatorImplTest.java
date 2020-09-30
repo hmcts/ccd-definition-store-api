@@ -21,7 +21,8 @@ class EventCaseFieldMetadataValidatorImplTest {
     private final EventCaseFieldMetadataValidatorImpl validator = new EventCaseFieldMetadataValidatorImpl();
 
     @Test
-    @DisplayName("Should return validation result with exception when metadata case field id is defined in case event fields")
+    @DisplayName(
+        "Should return validation result with exception when metadata case field id is defined in case event fields")
     void shouldReturnValidationResultWithError_whenNonMetadataCaseFieldIdContainsSquareBrackets() {
         EventEntity eventEntity = new EventEntity();
         eventEntity.setReference("event");
@@ -38,7 +39,7 @@ class EventCaseFieldMetadataValidatorImplTest {
 
         assertThat(result.getValidationErrors(), hasSize(1));
         Assert.assertThat(result.getValidationErrors().get(0),
-                          instanceOf(EventCaseFieldMetadataValidatorImpl.ValidationError.class));
+            instanceOf(EventCaseFieldMetadataValidatorImpl.ValidationError.class));
         Assert.assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
             "'[FIELD]' is a metadata field and cannot be editable for event with reference 'event'"));
     }

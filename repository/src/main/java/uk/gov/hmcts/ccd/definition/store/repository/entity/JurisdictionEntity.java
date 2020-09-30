@@ -1,13 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 import static javax.persistence.GenerationType.IDENTITY;
-
-import org.hibernate.annotations.CreationTimestamp;
 
 @Table(name = "jurisdiction")
 @Entity

@@ -10,7 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 class IdamProfileClientTest {

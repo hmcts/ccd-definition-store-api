@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import java.util.List;
-
-import static uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator.ValidationContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
@@ -13,6 +9,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
+import java.util.List;
+
+import static uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.CaseFieldComplexFieldEntityValidator.ValidationContext;
+
 @Component
 public class CaseFieldEntityComplexFieldsValidatorImpl implements CaseFieldEntityValidator {
 
@@ -20,8 +20,8 @@ public class CaseFieldEntityComplexFieldsValidatorImpl implements CaseFieldEntit
     private List<FieldTypeEntity> preDefinedComplexTypes;
 
     @Autowired
-    public CaseFieldEntityComplexFieldsValidatorImpl(List<CaseFieldComplexFieldEntityValidator> complexFieldEntityValidators,
-                                                     FieldTypeService fieldTypeService) {
+    public CaseFieldEntityComplexFieldsValidatorImpl(
+        List<CaseFieldComplexFieldEntityValidator> complexFieldEntityValidators, FieldTypeService fieldTypeService) {
         this.complexFieldEntityValidators = complexFieldEntityValidators;
         this.preDefinedComplexTypes = fieldTypeService.getPredefinedComplexTypes();
     }

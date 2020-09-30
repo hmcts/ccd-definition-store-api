@@ -1,5 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import com.google.common.base.MoreObjects;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,11 +31,6 @@ import static javax.persistence.GenerationType.SEQUENCE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
-
-import com.google.common.base.MoreObjects;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 @Table(name = "field_type")
 @Entity
@@ -84,8 +84,8 @@ public class FieldTypeEntity implements Serializable, Versionable {
     private JurisdictionEntity jurisdiction;
 
     private static final Set<String> FIXED_List_ITEMS = new HashSet<>(Arrays.asList(new String[] {"FixedList",
-                                                                                                  "MultiSelectList",
-                                                                                                  "FixedRadioList"}));
+        "MultiSelectList",
+        "FixedRadioList"}));
 
     public Integer getId() {
         return id;
@@ -188,9 +188,9 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                          .add("reference", reference)
-                          .add("version", version)
-                          .toString();
+            .add("reference", reference)
+            .add("version", version)
+            .toString();
     }
 
     public static String uniqueReference(String id) {
@@ -219,7 +219,8 @@ public class FieldTypeEntity implements Serializable, Versionable {
 
     @Transient
     public boolean isDocumentType() {
-        return (BASE_DOCUMENT.equals(reference) || (baseFieldType != null && BASE_DOCUMENT.equals(baseFieldType.getReference())));
+        return (BASE_DOCUMENT.equals(reference)
+            || (baseFieldType != null && BASE_DOCUMENT.equals(baseFieldType.getReference())));
     }
 
     @Transient

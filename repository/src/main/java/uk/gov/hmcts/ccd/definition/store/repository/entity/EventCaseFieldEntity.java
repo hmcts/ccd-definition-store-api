@@ -29,7 +29,8 @@ import static javax.persistence.FetchType.EAGER;
 @TypeDef(
     name = "pgsql_displaycontext_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @org.hibernate.annotations.Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
+    parameters = @org.hibernate.annotations.Parameter(name = "type",
+        value = "uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
 )
 public class EventCaseFieldEntity implements Serializable {
     @Id
@@ -160,7 +161,9 @@ public class EventCaseFieldEntity implements Serializable {
         this.displayContextParameter = displayContextParameter;
     }
 
-    public Boolean getRetainHiddenValue() { return retainHiddenValue; }
+    public Boolean getRetainHiddenValue() {
+        return retainHiddenValue;
+    }
 
     public void setRetainHiddenValue(Boolean retainHiddenValue) {
         this.retainHiddenValue = retainHiddenValue;
