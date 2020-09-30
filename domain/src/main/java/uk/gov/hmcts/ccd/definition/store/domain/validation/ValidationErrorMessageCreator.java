@@ -93,7 +93,8 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(CaseFieldEntityInvalidCrudValidationError caseFieldEntityInvalidCrudValidationError);
 
-    String createErrorMessage(CaseFieldEntityInvalidComplexCrudValidationError caseFieldEntityInvalidComplexCrudValidationError);
+    String createErrorMessage(
+        CaseFieldEntityInvalidComplexCrudValidationError caseFieldEntityInvalidComplexCrudValidationError);
 
     String createErrorMessage(CaseFieldEntityComplexACLValidationError caseFieldEntityComplexACLValidationError);
 
@@ -117,7 +118,7 @@ public interface ValidationErrorMessageCreator {
                                   eventComplexTypeEntityInvalidShowConditionError);
 
     String createErrorMessage(EventComplexTypeEntityDefaultValueError
-                                      eventComplexTypeEntityDefaultValueError);
+                                  eventComplexTypeEntityDefaultValueError);
 
     String createErrorMessage(EventEntityMissingForPageTypeDisplayGroupError
                                   eventEntityMissingForPageTypeDisplayGroupError);
@@ -168,14 +169,15 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(CaseTypeEntityReferenceSpellingValidationError validationError);
 
-    String createErrorMessage(CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError validationError);
+    String createErrorMessage(
+        CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError validationError);
 
-    String createErrorMessage(CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError validationError);
+    String createErrorMessage(
+        CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError validationError);
 
     String createErrorMessage(EventEntityInvalidPostStatePriorityError classUnderTest);
 
     String createErrorMessage(EventEntityInvalidDefaultPostStateError classUnderTest);
 
     String createErrorMessage(EventEntityShowConditionReferencesInvalidCaseFieldError classUnderTest);
-
 }

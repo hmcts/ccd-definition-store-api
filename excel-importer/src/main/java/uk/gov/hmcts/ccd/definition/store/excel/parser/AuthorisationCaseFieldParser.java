@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import static java.util.stream.Collectors.groupingBy;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_FIELD;
 
@@ -55,7 +56,8 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
                     caseTypeReference, dataItems.size());
 
                 if (null == collect.get(caseFieldReference)) {
-                    LOG.warn("No row is defined for case type '{}', case field '{}'", caseTypeReference, caseFieldReference);
+                    LOG.warn("No row is defined for case type '{}', case field '{}'",
+                        caseTypeReference, caseFieldReference);
                     // and let validation handles this Exception
                 } else {
                     for (DefinitionDataItem definition : collect.get(caseFieldReference)) {

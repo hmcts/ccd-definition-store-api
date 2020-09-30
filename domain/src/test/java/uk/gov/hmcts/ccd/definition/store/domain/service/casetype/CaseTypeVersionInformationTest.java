@@ -10,18 +10,20 @@ import static org.junit.Assert.assertThat;
 
 public class CaseTypeVersionInformationTest {
 
-    @Test public void testJson() throws JsonProcessingException {
+    @Test
+    public void testJson() throws JsonProcessingException {
         final CaseTypeVersionInformation version = new CaseTypeVersionInformation(678);
         final ObjectMapper objectMapper = new ObjectMapper();
         assertThat(objectMapper.writeValueAsString(version), is("{\"version\":678}"));
     }
 
-    @Test public void testGetterAndToString() {
+    @Test
+    public void testGetterAndToString() {
         final CaseTypeVersionInformation version = new CaseTypeVersionInformation(679);
         assertThat(version.getVersion(), is(679));
         assertThat(version.toString(),
-                   matchesPattern("^uk.gov.hmcts.ccd.definition.store.domain.service.casetype"
-                       + ".CaseTypeVersionInformation@\\S+\\[version=679\\]$"));
+            matchesPattern("^uk.gov.hmcts.ccd.definition.store.domain.service.casetype"
+                + ".CaseTypeVersionInformation@\\S+\\[version=679\\]$"));
     }
 
 }

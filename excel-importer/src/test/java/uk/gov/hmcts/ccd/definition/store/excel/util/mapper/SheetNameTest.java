@@ -2,9 +2,9 @@ package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class SheetNameTest {
@@ -19,7 +19,7 @@ class SheetNameTest {
     @Test
     void shouldReturnSheetWhenMatchingNameIsFound() {
         final SheetName[] sheetNames = SheetName.values();
-        for (SheetName s: sheetNames) {
+        for (SheetName s : sheetNames) {
             assertThat(SheetName.forName(s.getName()), is(s));
         }
     }

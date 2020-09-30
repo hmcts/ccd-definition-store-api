@@ -14,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
@@ -52,15 +53,19 @@ class AuthorisationComplexTypeParser implements AuthorisationParser {
             if (null == dataItems) {
                 LOG.warn("No data is found for case type '{} in AuthorisationComplexTypes tab", caseTypeReference);
             } else {
-                LOG.debug("Parsing user roles for case type '{}': '{}' AuthorisationComplexTypes detected", caseTypeReference, dataItems.size());
-                List<String> allPaths = caseFieldEntityUtil.buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(caseType.getCaseFields());
+                LOG.debug("Parsing user roles for case type '{}': '{}' AuthorisationComplexTypes detected",
+                    caseTypeReference, dataItems.size());
+                List<String> allPaths = caseFieldEntityUtil
+                    .buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(caseType.getCaseFields());
                 for (DefinitionDataItem definition : dataItems) {
                     final String caseFieldReference = definition.getString(CASE_FIELD_ID);
                     final String listElementCode = definition.getString(LIST_ELEMENT_CODE);
                     final CaseFieldEntity caseFieldEntity = caseType.findCaseField(caseFieldReference)
-                        .orElseThrow(() -> new MapperException(String.format("Unknown CaseField '%s' in worksheet '%s'", caseFieldReference, getSheetName())));
+                        .orElseThrow(() -> new MapperException(String.format(
+                            "Unknown CaseField '%s' in worksheet '%s'", caseFieldReference, getSheetName())));
                     if (!allPaths.contains(caseFieldReference + "." + listElementCode)) {
-                        throw new MapperException(String.format("Unknown List Element Code '%s' for CaseField '%s' in worksheet '%s'",
+                        throw new MapperException(String.format(
+                            "Unknown List Element Code '%s' for CaseField '%s' in worksheet '%s'",
                             listElementCode,
                             caseFieldReference,
                             getSheetName()));
@@ -70,10 +75,12 @@ class AuthorisationComplexTypeParser implements AuthorisationParser {
                     parseCrud(complexFieldACLEntity, definition);
                     complexFieldACLEntity.setListElementCode(listElementCode);
                     caseFieldEntity.addComplexFieldACL(complexFieldACLEntity);
-                    entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(complexFieldACLEntity, definition);
+                    entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(
+                        complexFieldACLEntity, definition);
                     parseResults.add(complexFieldACLEntity);
 
-                    LOG.info("Parsing complexType authorisation for case type '{}', case field '{}', complexFieldReference '{}', user role '{}', crud '{}': OK",
+                    LOG.info("Parsing complexType authorisation for case type '{}', case field '{}', "
+                            + "complexFieldReference '{}', user role '{}', crud '{}': OK",
                         definition.getString(CASE_TYPE_ID),
                         definition.getString(CASE_FIELD_ID),
                         definition.getString(LIST_ELEMENT_CODE),

@@ -67,7 +67,8 @@ public class CaseTypeParser {
 
         final ParseResult<CaseTypeEntity> result = new ParseResult<>();
 
-        final Map<String, List<DefinitionDataItem>> caseTypeItems = definitionSheets.get(SheetName.CASE_TYPE.getName()).groupDataItemsById();
+        final Map<String, List<DefinitionDataItem>> caseTypeItems = definitionSheets
+            .get(SheetName.CASE_TYPE.getName()).groupDataItemsById();
 
         logger.debug("Case types parsing: {} case types detected", caseTypeItems.size());
 
@@ -92,7 +93,8 @@ public class CaseTypeParser {
                 .addSearchAliasFields(searchAliasFieldParser.parseAll(definitionSheets, caseType));
 
             parseContext.registerCaseRoles(new ArrayList<>(caseRoleEntities));
-            Collection<CaseTypeACLEntity> caseTypeACLEntities = authorisationCaseTypeParser.parseAll(definitionSheets, caseType);
+            Collection<CaseTypeACLEntity> caseTypeACLEntities = authorisationCaseTypeParser
+                .parseAll(definitionSheets, caseType);
             caseType.addCaseTypeACLEntities(caseTypeACLEntities);
 
             authorisationCaseFieldParser.parseAndSetACLEntities(definitionSheets, caseType, caseType.getCaseFields());
@@ -102,7 +104,8 @@ public class CaseTypeParser {
             authorisationCaseEventParser.parseAndSetEventACLEntities(definitionSheets, caseType, caseType.getEvents());
 
             for (StateEntity stateEntity : caseType.getStates()) {
-                Collection<StateACLEntity> stateACLEntities = authorisationCaseStateParser.parseAll(definitionSheets, caseType, stateEntity);
+                Collection<StateACLEntity> stateACLEntities = authorisationCaseStateParser
+                    .parseAll(definitionSheets, caseType, stateEntity);
                 stateEntity.addStateACLEntities(stateACLEntities);
             }
             result.addNew(caseType);
@@ -114,7 +117,8 @@ public class CaseTypeParser {
         return result;
     }
 
-    private CaseTypeEntity parseCaseType(Map.Entry<String, List<DefinitionDataItem>> caseTypeItem, DefinitionDataItem caseTypeDefinition) {
+    private CaseTypeEntity parseCaseType(Map.Entry<String, List<DefinitionDataItem>> caseTypeItem,
+                                         DefinitionDataItem caseTypeDefinition) {
         final CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setJurisdiction(parseContext.getJurisdiction());
         caseType.setReference(caseTypeItem.getKey());

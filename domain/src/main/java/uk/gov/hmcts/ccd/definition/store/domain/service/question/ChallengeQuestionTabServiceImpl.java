@@ -41,7 +41,8 @@ public class ChallengeQuestionTabServiceImpl implements ChallengeQuestionTabServ
 
     @Override
     public List<ChallengeQuestion> getChallengeQuestions(String caseTypeId, String challengeQuestionId) {
-        List<ChallengeQuestionTabEntity> questions = challengeQuestionTabRepository.getChallengeQuestions(caseTypeId, challengeQuestionId);
+        List<ChallengeQuestionTabEntity> questions = challengeQuestionTabRepository
+            .getChallengeQuestions(caseTypeId, challengeQuestionId);
         return questions.stream()
             .map(dtoMapper::map)
             .collect(Collectors.toList());

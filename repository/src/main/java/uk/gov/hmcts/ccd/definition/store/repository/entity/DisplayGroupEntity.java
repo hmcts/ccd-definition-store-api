@@ -1,6 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.*;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,10 +23,6 @@ import java.util.List;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 @Table(name = "display_group")
 @Entity
@@ -171,7 +181,8 @@ public class DisplayGroupEntity implements Serializable {
     }
 
     public boolean hasField(String fieldReference) {
-        return displayGroupCaseFields.stream().anyMatch(dgcf -> dgcf.getCaseField().getReference().equals(fieldReference));
+        return displayGroupCaseFields.stream().anyMatch(
+            dgcf -> dgcf.getCaseField().getReference().equals(fieldReference));
     }
 
     public UserRoleEntity getUserRole() {

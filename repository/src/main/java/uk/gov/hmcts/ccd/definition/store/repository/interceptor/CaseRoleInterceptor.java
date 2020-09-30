@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.repository.interceptor;
 
-import java.io.Serializable;
-
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+
+import java.io.Serializable;
 
 @Component
 public class CaseRoleInterceptor extends EmptyInterceptor {

@@ -1,18 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,9 +14,27 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_CASES_RESULT_FIELDS;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_INPUT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_RESULT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_RESULT_FIELDS;
 
 @DisplayName("Generic Layout Parser Test")
 public class GenericLayoutParserTest {
@@ -273,8 +278,10 @@ public class GenericLayoutParserTest {
         addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
-        assertEquals(String.format("Invalid results ordering pattern '%s' in worksheet '%s' for caseType '%s' for caseField '%s'",
-            invalidSortOrder, item.getSheetName(), CASE_TYPE_ID, item.getString(ColumnName.CASE_FIELD_ID)), thrown.getMessage());
+        assertEquals(String.format(
+            "Invalid results ordering pattern '%s' in worksheet '%s' for caseType '%s' for caseField '%s'",
+            invalidSortOrder, item.getSheetName(), CASE_TYPE_ID,
+            item.getString(ColumnName.CASE_FIELD_ID)), thrown.getMessage());
     }
 
     @Test
@@ -474,7 +481,8 @@ public class GenericLayoutParserTest {
         ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
 
         assertEquals(parseResult.getAllResults().size(), 2);
-        assertThat(parseResult.getAllResults(), hasItem(hasProperty("showCondition", equalTo(PARSED_SHOW_CONDITION))));
+        assertThat(parseResult.getAllResults(), hasItem(hasProperty(
+            "showCondition", equalTo(PARSED_SHOW_CONDITION))));
     }
 
     @Test
@@ -497,11 +505,13 @@ public class GenericLayoutParserTest {
             new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build()
         );
 
-        classUnderTest = new WorkbasketInputLayoutParser(context, entityToDefinitionDataItemRegistry, showConditionParser);
+        classUnderTest = new WorkbasketInputLayoutParser(
+            context, entityToDefinitionDataItemRegistry, showConditionParser);
         ParseResult<GenericLayoutEntity> parseResult = classUnderTest.parseAll(definitionSheets);
 
         assertEquals(parseResult.getAllResults().size(), 2);
-        assertThat(parseResult.getAllResults(), hasItem(hasProperty("showCondition", equalTo(PARSED_SHOW_CONDITION))));
+        assertThat(parseResult.getAllResults(), hasItem(hasProperty(
+            "showCondition", equalTo(PARSED_SHOW_CONDITION))));
     }
 
     @DisplayName("Should fail when show condition appears in search results")
@@ -646,7 +656,8 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item2);
         addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllForSearchCases(definitionSheets));
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> classUnderTest.parseAllForSearchCases(definitionSheets));
         assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
     }
@@ -666,7 +677,8 @@ public class GenericLayoutParserTest {
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         sheet.addDataItem(item2);
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllForSearchCases(definitionSheets));
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> classUnderTest.parseAllForSearchCases(definitionSheets));
         assertEquals(String.format("Unknown Case Type '%s' for layout '%s'",
             INVALID_CASE_TYPE_ID, classUnderTest.getLayoutName()), thrown.getMessage());
     }
@@ -721,7 +733,8 @@ public class GenericLayoutParserTest {
         UserRoleEntity userRoleEntity = new UserRoleEntity();
         userRoleEntity.setReference(ROLE1);
         context.registerUserRoles(Arrays.asList(userRoleEntity));
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAllForSearchCases(definitionSheets));
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> classUnderTest.parseAllForSearchCases(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 

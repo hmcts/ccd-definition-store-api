@@ -16,8 +16,8 @@ public enum GlobalCaseRole {
 
     public static List<String> all() {
         return Arrays.stream(GlobalCaseRole.values())
-                .map(GlobalCaseRole::getRole)
-                .collect(Collectors.toList());
+            .map(GlobalCaseRole::getRole)
+            .collect(Collectors.toList());
     }
 
     public String getRole() {

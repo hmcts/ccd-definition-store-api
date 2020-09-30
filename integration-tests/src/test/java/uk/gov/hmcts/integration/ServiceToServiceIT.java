@@ -6,7 +6,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
@@ -32,14 +38,14 @@ public class ServiceToServiceIT extends IntegrationTest {
             restTemplate.exchange(URI_IMPORT, GET, validRequestEntity(), String.class);
         assertHappyPath(response);
         verify(getRequestedFor(urlEqualTo(URL_S2S_DETAILS)).withHeader(AUTHORIZATION,
-                                                                       equalTo(BEARER + SERVICE_TOKEN)));
+            equalTo(BEARER + SERVICE_TOKEN)));
     }
 
     @Test
     public void shouldFailServiceAuthorizationWhenInvalidServiceToken() {
 
         stubFor(get(urlEqualTo(URL_S2S_DETAILS)).withHeader(AUTHORIZATION, equalTo(BEARER + INVALID_SERVICE_TOKEN))
-                                                .willReturn(aResponse().withStatus(SC_UNAUTHORIZED)));
+            .willReturn(aResponse().withStatus(SC_UNAUTHORIZED)));
 
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HEADER_SERVICE_AUTHORIZATION, INVALID_SERVICE_TOKEN);
@@ -52,6 +58,6 @@ public class ServiceToServiceIT extends IntegrationTest {
 
         assertThat(response.getStatusCodeValue(), is(SC_FORBIDDEN));
         verify(getRequestedFor(urlEqualTo(URL_S2S_DETAILS)).withHeader(AUTHORIZATION,
-                                                                      equalTo(BEARER + INVALID_SERVICE_TOKEN)));
+            equalTo(BEARER + INVALID_SERVICE_TOKEN)));
     }
 }

@@ -26,10 +26,12 @@ public class CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentVa
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(mockValidationErrorMessageCreator.createErrorMessage(any(CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
+        when(mockValidationErrorMessageCreator.createErrorMessage(
+            any(CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
         classUnderTest = new CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
-            caseFieldEntityWithReferenceAndSecurityClassification("Case Field Reference", SecurityClassification.PUBLIC),
+            caseFieldEntityWithReferenceAndSecurityClassification(
+                "Case Field Reference", SecurityClassification.PUBLIC),
             caseFieldEntityValidationContext("Parent Case Name", SecurityClassification.PRIVATE)
         );
     }
@@ -38,8 +40,8 @@ public class CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentVa
     public void testDefaultMessage() {
         assertEquals(
             "Security classification for CaseField with reference 'Case Field Reference' "
-                + "has a less restrictive security classification of 'PUBLIC' than its parent CaseType 'Parent Case Name' "
-                + "which is 'PRIVATE'.",
+                + "has a less restrictive security classification of 'PUBLIC' than"
+                + " its parent CaseType 'Parent Case Name' which is 'PRIVATE'.",
             classUnderTest.getDefaultMessage()
         );
     }
@@ -50,19 +52,21 @@ public class CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentVa
         verify(mockValidationErrorMessageCreator).createErrorMessage(classUnderTest);
     }
 
-    private CaseFieldEntity caseFieldEntityWithReferenceAndSecurityClassification(String caseFieldReference,
-                                                                                  SecurityClassification securityClassification) {
+    private CaseFieldEntity caseFieldEntityWithReferenceAndSecurityClassification(
+        String caseFieldReference, SecurityClassification securityClassification) {
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
         caseFieldEntity.setSecurityClassification(securityClassification);
         caseFieldEntity.setReference(caseFieldReference);
         return caseFieldEntity;
     }
 
-    private CaseFieldEntityValidationContext caseFieldEntityValidationContext(String parentCaseName,
-                                                                              SecurityClassification parentCaseFieldSecurityClassification) {
-        CaseFieldEntityValidationContext caseFieldEntityValidationContext = mock(CaseFieldEntityValidationContext.class);
+    private CaseFieldEntityValidationContext caseFieldEntityValidationContext(
+        String parentCaseName, SecurityClassification parentCaseFieldSecurityClassification) {
+        CaseFieldEntityValidationContext caseFieldEntityValidationContext =
+            mock(CaseFieldEntityValidationContext.class);
         when(caseFieldEntityValidationContext.getCaseName()).thenReturn(parentCaseName);
-        when(caseFieldEntityValidationContext.getParentSecurityClassification()).thenReturn(parentCaseFieldSecurityClassification);
+        when(caseFieldEntityValidationContext.getParentSecurityClassification())
+            .thenReturn(parentCaseFieldSecurityClassification);
         return caseFieldEntityValidationContext;
     }
 

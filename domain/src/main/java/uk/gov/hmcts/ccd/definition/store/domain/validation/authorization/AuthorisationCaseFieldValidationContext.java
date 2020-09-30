@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.authorization;
 
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationContext;
 
 public class AuthorisationCaseFieldValidationContext implements ValidationContext {
 

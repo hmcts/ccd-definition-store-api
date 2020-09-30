@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
+
+import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -32,11 +32,11 @@ class FieldTypeListItemMapperTest {
 
         assertAll(
             () -> assertThat(fixedListItems, contains(allOf(hasProperty("label", is("ONE")),
-                                                            hasProperty("code", is("1"))),
-                                                      allOf(hasProperty("label", is("TWO")),
-                                                            hasProperty("code", is("2"))),
-                                                      allOf(hasProperty("label", is("THREE")),
-                                                            hasProperty("code", is("3")))))
+                hasProperty("code", is("1"))),
+                allOf(hasProperty("label", is("TWO")),
+                    hasProperty("code", is("2"))),
+                allOf(hasProperty("label", is("THREE")),
+                    hasProperty("code", is("3")))))
         );
     }
 
@@ -52,14 +52,14 @@ class FieldTypeListItemMapperTest {
 
         assertAll(
             () -> assertThat(fixedListItems, contains(allOf(hasProperty("order", is(1)),
-                                                            hasProperty("label", is("THREE")),
-                                                            hasProperty("code", is("3"))),
-                                                      allOf(hasProperty("order", is(2)),
-                                                            hasProperty("label", is("TWO")),
-                                                            hasProperty("code", is("2"))),
-                                                      allOf(hasProperty("order", is(3)),
-                                                            hasProperty("label", is("ONE")),
-                                                            hasProperty("code", is("1")))))
+                hasProperty("label", is("THREE")),
+                hasProperty("code", is("3"))),
+                allOf(hasProperty("order", is(2)),
+                    hasProperty("label", is("TWO")),
+                    hasProperty("code", is("2"))),
+                allOf(hasProperty("order", is(3)),
+                    hasProperty("label", is("ONE")),
+                    hasProperty("code", is("1")))))
         );
     }
 
@@ -76,20 +76,20 @@ class FieldTypeListItemMapperTest {
 
         assertAll(
             () -> assertThat(fixedListItems, contains(allOf(hasProperty("order", is(2)),
-                                                            hasProperty("label", is("Label 3")),
-                                                            hasProperty("code", is("LABEL3"))),
-                                                      allOf(hasProperty("order", is(5)),
-                                                            hasProperty("label", is("Label 1")),
-                                                            hasProperty("code", is("LABEL1"))),
-                                                      allOf(hasProperty("order", is(9)),
-                                                            hasProperty("label", is("Label 4")),
-                                                            hasProperty("code", is("LABEL4"))),
-                                                      allOf(hasProperty("order", is(nullValue())),
-                                                            hasProperty("label", is("Label 2")),
-                                                            hasProperty("code", is("LABEL2"))),
-                                                      allOf(hasProperty("order", is(nullValue())),
-                                                            hasProperty("label", is("Label 5")),
-                                                            hasProperty("code", is("LABEL5")))))
+                hasProperty("label", is("Label 3")),
+                hasProperty("code", is("LABEL3"))),
+                allOf(hasProperty("order", is(5)),
+                    hasProperty("label", is("Label 1")),
+                    hasProperty("code", is("LABEL1"))),
+                allOf(hasProperty("order", is(9)),
+                    hasProperty("label", is("Label 4")),
+                    hasProperty("code", is("LABEL4"))),
+                allOf(hasProperty("order", is(nullValue())),
+                    hasProperty("label", is("Label 2")),
+                    hasProperty("code", is("LABEL2"))),
+                allOf(hasProperty("order", is(nullValue())),
+                    hasProperty("label", is("Label 5")),
+                    hasProperty("code", is("LABEL5")))))
         );
     }
 }

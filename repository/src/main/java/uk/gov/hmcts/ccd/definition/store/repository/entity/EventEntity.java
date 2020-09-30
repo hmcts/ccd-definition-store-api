@@ -41,7 +41,8 @@ import static org.hibernate.annotations.FetchMode.SUBSELECT;
 @TypeDef(
     name = "pgsql_securityclassification_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
+    parameters = @Parameter(name = "type",
+        value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
 )
 public class EventEntity implements Serializable {
 

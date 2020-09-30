@@ -16,7 +16,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {

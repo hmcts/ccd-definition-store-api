@@ -160,7 +160,8 @@ public class CaseEvent implements HasAcls {
     @ApiModelProperty(value = "")
     @JsonProperty("retries_timeout_url_about_to_submit_event")
     public List<Integer> getRetriesTimeoutURLAboutToSubmitEvent() {
-        return retriesTimeoutURLAboutToSubmitEvent == null ? Collections.emptyList() : retriesTimeoutURLAboutToSubmitEvent;
+        return retriesTimeoutURLAboutToSubmitEvent == null
+            ? Collections.emptyList() : retriesTimeoutURLAboutToSubmitEvent;
     }
 
     public void setRetriesTimeoutURLAboutToSubmitEvent(List<Integer> retriesTimeoutURLAboutToSubmitEvent) {

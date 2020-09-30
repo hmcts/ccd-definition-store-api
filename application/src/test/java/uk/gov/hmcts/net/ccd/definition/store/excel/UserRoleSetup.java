@@ -1,10 +1,10 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.springframework.jdbc.core.JdbcTemplate;
 
 public class UserRoleSetup {
 
@@ -36,7 +36,7 @@ public class UserRoleSetup {
         final List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from role");
         return list
             .stream()
-            .collect(Collectors.toMap(l -> (String)l.get("reference"), l -> (Integer)l.get("id")));
+            .collect(Collectors.toMap(l -> (String) l.get("reference"), l -> (Integer) l.get("id")));
     }
 
 }

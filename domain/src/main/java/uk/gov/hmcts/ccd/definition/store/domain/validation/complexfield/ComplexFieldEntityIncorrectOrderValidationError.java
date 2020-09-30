@@ -8,9 +8,11 @@ public class ComplexFieldEntityIncorrectOrderValidationError extends SimpleValid
 
 
     public ComplexFieldEntityIncorrectOrderValidationError(ComplexFieldEntity complexFieldEntity) {
-        super(String.format("ComplexField with reference=%s has incorrect order for nested fields. Order has to be incremental and start from 1",
-                            complexFieldEntity.getReference()),
-              complexFieldEntity);
+        super(String.format(
+            "ComplexField with reference=%s has incorrect order for nested fields. "
+                + "Order has to be incremental and start from 1",
+            complexFieldEntity.getReference()),
+            complexFieldEntity);
     }
 
     @Override

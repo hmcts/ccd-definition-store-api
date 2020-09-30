@@ -60,7 +60,8 @@ public class ChallengeQuestionTabRepositoryTest {
 
     @Test
     public void shouldGetChallengeQuestions() {
-        List<ChallengeQuestionTabEntity> result = challengeQuestionTabRepository.getChallengeQuestions(CASE_TYPE_REFERENCE, CHALLENGE_QUESTION_ID);
+        List<ChallengeQuestionTabEntity> result = challengeQuestionTabRepository
+            .getChallengeQuestions(CASE_TYPE_REFERENCE, CHALLENGE_QUESTION_ID);
 
         assertAll(
             () -> assertThat(result, hasSize(2)),
@@ -77,14 +78,18 @@ public class ChallengeQuestionTabRepositoryTest {
 
     @Test
     public void shouldReturnNoChallengeQuestionsForUnknownParameters() {
-        List<ChallengeQuestionTabEntity> result = challengeQuestionTabRepository.getChallengeQuestions("Unknown", "Unknown");
+        List<ChallengeQuestionTabEntity> result = challengeQuestionTabRepository
+            .getChallengeQuestions("Unknown", "Unknown");
 
         assertAll(
             () -> assertThat(result, hasSize(0))
         );
     }
 
-    private ChallengeQuestionTabEntity createChallengeQuestion(CaseTypeEntity caseType, String questionId, String challengeQuestionId, String suffix) {
+    private ChallengeQuestionTabEntity createChallengeQuestion(CaseTypeEntity caseType,
+                                                               String questionId,
+                                                               String challengeQuestionId,
+                                                               String suffix) {
         ChallengeQuestionTabEntity challengeQuestion = new ChallengeQuestionTabEntity();
         challengeQuestion.setQuestionText("QuestionText" + suffix);
         challengeQuestion.setQuestionId(questionId);

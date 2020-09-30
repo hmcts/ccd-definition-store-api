@@ -1,14 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.PageEventMissingDisplayGroupValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.GenericLayoutEntityValidatorImpl;
@@ -26,12 +23,14 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFi
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 
 public class LayoutServiceImplTest {
 
@@ -113,7 +112,7 @@ public class LayoutServiceImplTest {
         DisplayGroupEntity dg1 = new DisplayGroupEntity();
         dg1.setType(DisplayGroupType.PAGE);
         dg1.setEvent(new EventEntity());
-        DisplayGroupEntity dg2 =  new DisplayGroupEntity();
+        DisplayGroupEntity dg2 = new DisplayGroupEntity();
         dg2.setType(DisplayGroupType.PAGE);
         final List<DisplayGroupEntity> displayGroupEntities = asList(dg1, dg2);
 
@@ -125,7 +124,7 @@ public class LayoutServiceImplTest {
         DisplayGroupEntity dg1 = new DisplayGroupEntity();
         dg1.setType(DisplayGroupType.TAB);
         dg1.setEvent(new EventEntity());
-        DisplayGroupEntity dg2 =  new DisplayGroupEntity();
+        DisplayGroupEntity dg2 = new DisplayGroupEntity();
         dg2.setType(DisplayGroupType.TAB);
         final List<DisplayGroupEntity> displayGroupEntities = asList(dg1, dg2);
 

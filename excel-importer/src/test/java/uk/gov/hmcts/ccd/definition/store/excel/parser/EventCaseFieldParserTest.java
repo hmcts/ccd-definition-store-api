@@ -55,6 +55,7 @@ public class EventCaseFieldParserTest {
         );
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void defDataItemHasValidShowConditionParseEveCaseFldCalledParsedEventEntityWithShowCondtionSetToRsltOfShowConditionParsngAddToRegstryReturned() {
 
@@ -65,7 +66,8 @@ public class EventCaseFieldParserTest {
         String hint = "hint";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
-        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, label, hint, false);
+        DefinitionDataItem definitionDataItem = definitionDataItem(
+            caseFieldId, displayContext, originalShowCondition, label, hint, false);
         when(hiddenFieldsValidator.parseHiddenFields(definitionDataItem)).thenReturn(Boolean.FALSE);
         EventCaseFieldEntity eventCaseFieldEntity = classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem);
 
@@ -76,12 +78,14 @@ public class EventCaseFieldParserTest {
         assertEquals(label, eventCaseFieldEntity.getLabel());
         assertEquals(hint, eventCaseFieldEntity.getHintText());
 
-        verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(eq(eventCaseFieldEntity), eq(definitionDataItem));
+        verify(entityToDefinitionDataItemRegistry)
+            .addDefinitionDataItemForEntity(eq(eventCaseFieldEntity), eq(definitionDataItem));
         verify(parseContext).getCaseFieldForCaseType(eq(caseTypeId), eq(caseFieldId));
         verify(definitionDataItem).getString(ColumnName.CASE_EVENT_FIELD_LABEL);
         verify(definitionDataItem).getString(ColumnName.CASE_EVENT_FIELD_HINT);
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void defDataItemHasInValidShowConditionParseEventCaseFldCalledParsedEventEntityWithShowConditionSetToOrgShowConditionAddedToRegistryAndReturned()
         throws InvalidShowConditionException {
@@ -91,7 +95,8 @@ public class EventCaseFieldParserTest {
         String originalShowCondition = "Original Show Condition";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
-        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, null, null, true);
+        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition,
+            null, null, true);
 
         when(showConditionParser.parseShowCondition(any())).thenThrow(
             new InvalidShowConditionException("")
@@ -104,7 +109,8 @@ public class EventCaseFieldParserTest {
         assertEquals(originalShowCondition, eventCaseFieldEntity.getShowCondition());
         assertTrue(eventCaseFieldEntity.getRetainHiddenValue());
 
-        verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(eq(eventCaseFieldEntity), eq(definitionDataItem));
+        verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(
+            eq(eventCaseFieldEntity), eq(definitionDataItem));
         verify(parseContext).getCaseFieldForCaseType(eq(caseTypeId), eq(caseFieldId));
     }
 

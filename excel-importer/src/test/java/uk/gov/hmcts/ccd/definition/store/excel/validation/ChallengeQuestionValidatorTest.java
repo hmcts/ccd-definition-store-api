@@ -11,7 +11,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +39,8 @@ public class ChallengeQuestionValidatorTest {
     private static final String DISPLAY_CONTEXT_PARAMETER_1 = "#DATETIMEENTRY(dd-MM-yyyy)";
     private static final String DISPLAY_CONTEXT_PARAMETER_2 = "#DATETIMEENTRY(dd-MM-yyyy)";
     private static final String QUESTION_ID = "NoCChallenge";
-    private static final String ANSWERD = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[CLAIMANT]";
+    private static final String ANSWERD
+        = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[CLAIMANT]";
     private ChallengeQuestionValidator challengeQuestionValidator;
 
     @Mock
@@ -49,41 +54,50 @@ public class ChallengeQuestionValidatorTest {
         ChallengeQuestionTabEntity entity = new ChallengeQuestionTabEntity();
         entity.setQuestionId("questionId");
         Optional<ChallengeQuestionTabEntity> mockResult = Optional.of(entity);
-        when(challengeQuestionDisplayContextParameterValidator.validate(any(),any())).thenReturn(new ValidationResult());
+        when(challengeQuestionDisplayContextParameterValidator.validate(any(),any()))
+            .thenReturn(new ValidationResult());
         buildParseContext();
         challengeQuestionValidator = new ChallengeQuestionValidator(challengeQuestionDisplayContextParameterValidator);
     }
 
     @Test
     public void testAnswerFormatForLongExpression() {
-        String answer = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[CLAIMANT]," +
-            "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
-        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId");
-        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        String answer = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[CLAIMANT],"
+            + "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
+        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+            QUESTION_ID, answer,"questionId");
+        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator
+            .validate(parseContext, definitionDataItem);
         assertValues(answer, challengeQuestionTabEntity, DISPLAY_CONTEXT_PARAMETER_1);
     }
 
     @Test
     public void testAnswerFormatForSortExpression() {
         String answer = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[CLAIMANT]";
-        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_2, QUESTION_ID, answer,"questionId");
-        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_2,
+            QUESTION_ID, answer,"questionId");
+        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator
+            .validate(parseContext, definitionDataItem);
         assertValues(answer, challengeQuestionTabEntity, DISPLAY_CONTEXT_PARAMETER_2);
     }
 
     @Test
     public void testAnswerFormatForMinimunExpression() {
         String answer = "${OrganisationField}:[CLAIMANT]";
-        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_2, QUESTION_ID, answer,"questionId");
-        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_2,
+            QUESTION_ID, answer,"questionId");
+        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator
+            .validate(parseContext, definitionDataItem);
         assertValues(answer, challengeQuestionTabEntity, DISPLAY_CONTEXT_PARAMETER_2);
     }
 
     @Test
     public void testAnswerFormatForSmallestExpression() {
         String answer = "${OrganisationField.OrganisationID}:[CLAIMANT]";
-        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId");
-        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator.validate(parseContext, definitionDataItem);
+        buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+            QUESTION_ID, answer,"questionId");
+        ChallengeQuestionTabEntity challengeQuestionTabEntity = challengeQuestionValidator
+            .validate(parseContext, definitionDataItem);
         assertValues(answer, challengeQuestionTabEntity, DISPLAY_CONTEXT_PARAMETER_1);
     }
 
@@ -91,11 +105,13 @@ public class ChallengeQuestionValidatorTest {
     public void failAnswerFormatForSmallestExpression() {
         try {
             String answer = "${OrganisationField}:[CCCCCC]";
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId");
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer, "questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${OrganisationField}:[CCCCCC] " +
-                "is not a valid Answer value. Please check the expression format and the roles."));
+            assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: ${OrganisationField}:[CCCCCC] "
+                + "is not a valid Answer value. Please check the expression format and the roles."));
             throw exception;
 
         }
@@ -105,17 +121,21 @@ public class ChallengeQuestionValidatorTest {
     public void failAnswerFormatForSmallestForRoleExpression() {
         try {
             String answer = "${XXXX}:[CLAIMANT]";
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId");
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer, "questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${XXXX}:[CLAIMANT] is not a valid Answer, " +
-                "Please check the expression format and the roles."));
+            assertThat(exception.getMessage(), is(
+                "ChallengeQuestionTab Invalid value: ${XXXX}:[CLAIMANT] is not a valid Answer, "
+                + "Please check the expression format and the roles."));
             throw exception;
 
         }
     }
 
-    private void assertValues(String answer, ChallengeQuestionTabEntity challengeQuestionTabEntity, String displayContext) {
+    private void assertValues(String answer,
+                              ChallengeQuestionTabEntity challengeQuestionTabEntity,
+                              String displayContext) {
 
         assertThat(challengeQuestionTabEntity.getAnswerField(), is(answer));
         assertThat(challengeQuestionTabEntity.getCaseType().getReference(), is(CASE_TYPE));
@@ -128,10 +148,12 @@ public class ChallengeQuestionValidatorTest {
     @Test(expected = InvalidImportException.class)
     public void failForCaseTypeValidation() {
         try {
-            buildDefinitionDataItem("incorrectCaseType", FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
+            buildDefinitionDataItem("incorrectCaseType", FIELD_TYPE, "2", QUESTION_TEXT,
+                DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: incorrectCaseType. It cannot be found in the spreadsheet."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid Case Type value: "
+                + "incorrectCaseType. It cannot be found in the spreadsheet."));
             throw exception;
         }
     }
@@ -139,10 +161,12 @@ public class ChallengeQuestionValidatorTest {
     @Test(expected = InvalidImportException.class)
     public void failForFieldTypeValidation() {
         try {
-            buildDefinitionDataItem(CASE_TYPE, "fiedType-CCC", "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
+            buildDefinitionDataItem(CASE_TYPE, "fiedType-CCC", "2", QUESTION_TEXT,
+                DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab InvalidField Type value: fiedType-CCC cannot be found as a valid Field type."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab InvalidField Type value: "
+                + "fiedType-CCC cannot be found as a valid Field type."));
             throw exception;
         }
     }
@@ -150,10 +174,12 @@ public class ChallengeQuestionValidatorTest {
     @Test(expected = InvalidImportException.class)
     public void failForDisplayOrderValidation() {
         try {
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "TTTT", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "TTTT", QUESTION_TEXT,
+                DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: TTTT is not a valid DisplayOrder."));
+            assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: TTTT is not a valid DisplayOrder."));
             throw exception;
         }
     }
@@ -161,10 +187,12 @@ public class ChallengeQuestionValidatorTest {
     @Test(expected = InvalidImportException.class)
     public void failForQuestionTextValidation() {
         try {
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", null, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, ANSWERD,"questionId");
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", null, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, ANSWERD,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: QuestionText cannot be null."));
+            assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: QuestionText cannot be null."));
             throw exception;
         }
     }
@@ -172,7 +200,8 @@ public class ChallengeQuestionValidatorTest {
     @Test(expected = InvalidImportException.class)
     public void failForIDValidation() {
         try {
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, null, ANSWERD,"questionId");
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                null, ANSWERD,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
             assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ID cannot be null."));
@@ -183,14 +212,15 @@ public class ChallengeQuestionValidatorTest {
     @Test(expected = InvalidImportException.class)
     public void failAnswerFormatDueToInvalidRole() {
         try {
-            String answer = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[NO]," +
-                "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId");
+            String answer = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[NO],"
+                + "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: " +
-                "${OrganisationField.OrganisationID}:[NO] is not a valid Answer value. " +
-                "Please check the expression format and the roles."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: "
+                + "${OrganisationField.OrganisationID}:[NO] is not a valid Answer value. "
+                + "Please check the expression format and the roles."));
             throw exception;
         }
     }
@@ -198,13 +228,14 @@ public class ChallengeQuestionValidatorTest {
     @Test(expected = InvalidImportException.class)
     public void failAnswerFormatDueToInvalidPathInExpressionAttribute() {
         try {
-            String answer = "${OrganisationField.XXXX}|${OrganisationField.OrganisationID}:[DEFENDANT]," +
-                "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId");
+            String answer = "${OrganisationField.XXXX}|${OrganisationField.OrganisationID}:[DEFENDANT],"
+                + "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: XXXX is not a valid Answer " +
-                "value, The expression dot notation values should be valid caseTypes fields."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: XXXX is not a valid Answer"
+                + " value, The expression dot notation values should be valid caseTypes fields."));
             throw exception;
         }
     }
@@ -212,14 +243,16 @@ public class ChallengeQuestionValidatorTest {
     @Test(expected = InvalidImportException.class)
     public void failAnswerFormatDueToInvalidPathInExpression() {
         try {
-            String answer = "${XXXXX.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]," +
-                "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId");
+            String answer = "${XXXXX.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT],"
+                + "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
             exception.printStackTrace();
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${XXXXX.OrganisationName} is " +
-                "not a valid Answer value. The expression dot notation values should be valid caseTypes fields."));
+            assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: ${XXXXX.OrganisationName} is not a valid Answer value. "
+                    + "The expression dot notation values should be valid caseTypes fields."));
             throw exception;
         }
     }
@@ -228,11 +261,13 @@ public class ChallengeQuestionValidatorTest {
     public void failAnswerFormatDueToInvalidFormat() {
         try {
             String answer = "CXFSEKEOE";
-            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId");
+            buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer,"questionId");
             challengeQuestionValidator.validate(parseContext, definitionDataItem);
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: CXFSEKEOE is not a valid Answer, " +
-                "Please check the expression format and the roles."));
+            assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: CXFSEKEOE is not a valid Answer, "
+                + "Please check the expression format and the roles."));
             throw exception;
         }
     }
@@ -295,7 +330,8 @@ public class ChallengeQuestionValidatorTest {
 
         ComplexFieldEntity orgPolicyReference = new ComplexFieldEntity();
         orgPolicyReference.setReference("OrgPolicyReference");
-        fieldTypeEntityOrganisation.addComplexFields(Arrays.asList(organisation, orgPolicyCaseAssignedRole, orgPolicyReference));
+        fieldTypeEntityOrganisation.addComplexFields(Arrays.asList(
+            organisation, orgPolicyCaseAssignedRole, orgPolicyReference));
         parseContext.registerCaseFieldType(CASE_TYPE, "OrganisationPolicyField", fieldTypeEntityOrganisation);
     }
 }

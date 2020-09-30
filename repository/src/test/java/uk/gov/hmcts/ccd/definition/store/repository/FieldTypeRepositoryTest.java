@@ -83,7 +83,8 @@ public class FieldTypeRepositoryTest {
 
     @Test
     public void canCreateFixedListType() {
-        final Optional<FieldTypeEntity> fixedListType = fieldTypeRepository.findFirstByReferenceOrderByVersionDesc("FixedList");
+        final Optional<FieldTypeEntity> fixedListType = fieldTypeRepository
+            .findFirstByReferenceOrderByVersionDesc("FixedList");
 
         final FieldTypeEntity newType = new FieldTypeEntity();
         newType.setBaseFieldType(fixedListType.get());
@@ -122,7 +123,8 @@ public class FieldTypeRepositoryTest {
 
     @Test
     public void canCreateCollectionType() {
-        final Optional<FieldTypeEntity> collectionType = fieldTypeRepository.findFirstByReferenceOrderByVersionDesc("Collection");
+        final Optional<FieldTypeEntity> collectionType = fieldTypeRepository
+            .findFirstByReferenceOrderByVersionDesc("Collection");
 
         final FieldTypeEntity newType = new FieldTypeEntity();
         newType.setBaseFieldType(collectionType.get());
@@ -147,7 +149,8 @@ public class FieldTypeRepositoryTest {
 
     @Test
     public void canCreateComplexType() {
-        final Optional<FieldTypeEntity> complexType = fieldTypeRepository.findFirstByReferenceOrderByVersionDesc("Complex");
+        final Optional<FieldTypeEntity> complexType = fieldTypeRepository
+            .findFirstByReferenceOrderByVersionDesc("Complex");
 
         final FieldTypeEntity newType = new FieldTypeEntity();
         newType.setBaseFieldType(complexType.get());
@@ -222,13 +225,13 @@ public class FieldTypeRepositoryTest {
         assertEquals(8, predefinedComplexTypes.size());
 
         assertThat(predefinedComplexTypes, hasItems(
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_UK),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ORDER_SUMMARY),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION_POLICY),
-                fieldTypeWithReference(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST)
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_UK),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ORDER_SUMMARY),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION_POLICY),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST)
             )
         );
     }

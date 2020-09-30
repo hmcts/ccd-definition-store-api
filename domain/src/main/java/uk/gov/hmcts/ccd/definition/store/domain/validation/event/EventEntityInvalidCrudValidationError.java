@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
-import static org.apache.commons.lang3.StringUtils.defaultString;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
+
+import static org.apache.commons.lang3.StringUtils.defaultString;
 
 public class EventEntityInvalidCrudValidationError extends ValidationError {
 
