@@ -105,7 +105,7 @@ public class EventPostStateParserTest extends ParserTestBase {
         SpreadsheetParsingException thrown = assertThrows(SpreadsheetParsingException.class,
             () -> postStateParser.parse(IN_VALID_POST_STATE_CONDITION));
 
-        Assert.assertThat(thrown.getMessage(), is("Invalid Show Condition ApprovalRequired(FieldA!=\"\" AND FieldB\"I'm innocent\")"));
+        Assert.assertThat(thrown.getMessage(), is("Invalid Post State Condition ApprovalRequired(FieldA!=\"\" AND FieldB\"I'm innocent\")"));
     }
 
 }

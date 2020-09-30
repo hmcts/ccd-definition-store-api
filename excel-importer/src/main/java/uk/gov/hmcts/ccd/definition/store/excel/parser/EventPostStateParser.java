@@ -92,7 +92,7 @@ public class EventPostStateParser {
             ShowCondition condition = this.conditionParser.parseShowCondition(postStateCondition);
             return condition.getShowConditionExpression();
         } catch (InvalidShowConditionException e) {
-            throw new SpreadsheetParsingException("Invalid Show Condition " + postSate);
+            throw new SpreadsheetParsingException("Invalid Post State Condition " + postSate);
         }
     }
 
