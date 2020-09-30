@@ -15,6 +15,9 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 
 public final class BaseShowConditionTest {
 
+    private BaseShowConditionTest() {
+    }
+
     public static FieldTypeEntity exampleFieldTypeEntityWithComplexFields() {
         return fieldTypeEntity("FullName",
             asList(

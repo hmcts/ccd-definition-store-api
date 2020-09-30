@@ -67,9 +67,11 @@ public class EventEntityPostStateValidator implements EventEntityValidator {
             .filter(postStateEntity -> postStateEntity.getEnablingCondition() != null)
             .forEach(entity -> {
                 try {
-                    ShowCondition showCondition = showConditionExtractor.parseShowCondition(entity.getEnablingCondition());
+                    ShowCondition showCondition = showConditionExtractor
+                        .parseShowCondition(entity.getEnablingCondition());
 
-                    List<String> allSubTypePossibilities = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(eventEntity.getCaseType().getCaseFields());
+                    List<String> allSubTypePossibilities = caseFieldEntityUtil
+                        .buildDottedComplexFieldPossibilities(eventEntity.getCaseType().getCaseFields());
 
                     showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
                         if (!allSubTypePossibilities.contains(showConditionField)) {
@@ -127,12 +129,14 @@ public class EventEntityPostStateValidator implements EventEntityValidator {
             .collect(Collectors.toList());
 
         if (postStateEntitiesUniquePriority.size() != postStateEntities.size()) {
-            validationResult.addError(new EventEntityInvalidPostStatePriorityError(event, eventEntityValidationContext));
+            validationResult.addError(new EventEntityInvalidPostStatePriorityError(
+                event,
+                eventEntityValidationContext));
         }
     }
 
     private boolean forShowConditionFieldExistsAtLeastOneCaseFieldEntity(String showConditionField,
-                                                                              List<CaseFieldEntity> caseFieldEntities) {
+                                                                         List<CaseFieldEntity> caseFieldEntities) {
         return caseFieldEntities
             .stream()
             .anyMatch(f -> f.getReference().equals(showConditionField));

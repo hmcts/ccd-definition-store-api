@@ -25,14 +25,18 @@ public class EventPostStateParserTest extends ParserTestBase {
 
     private static final String STATE_DEFAULT = "DefaultPostState";
 
-    private static final String VALID_ENABLING_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\"):1";
+    private static final String VALID_ENABLING_CONDITION =
+        "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\"):1";
 
-    private static final String VALID_MULTI_STATE_ENABLING_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\"):1;"
+    private static final String VALID_MULTI_STATE_ENABLING_CONDITION =
+        "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\"):1;"
         + "ScheduleForHearing(FieldC=\"*\" AND FieldD=\"Plea Entered\"):2";
 
-    private static final String NO_PRIORITY_ENABLING_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\")";
+    private static final String NO_PRIORITY_ENABLING_CONDITION =
+        "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\")";
 
-    private static final String IN_VALID_POST_STATE_CONDITION = "ApprovalRequired(FieldA!=\"\" AND FieldB\"I'm innocent\"):3";
+    private static final String IN_VALID_POST_STATE_CONDITION =
+        "ApprovalRequired(FieldA!=\"\" AND FieldB\"I'm innocent\"):3";
 
     private EventPostStateParser postStateParser;
 
@@ -97,7 +101,8 @@ public class EventPostStateParserTest extends ParserTestBase {
         SpreadsheetParsingException thrown = assertThrows(SpreadsheetParsingException.class,
             () -> postStateParser.parse(NO_PRIORITY_ENABLING_CONDITION));
 
-        Assert.assertThat(thrown.getMessage(), is("Invalid Post State ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\")"));
+        Assert.assertThat(thrown.getMessage(), is("Invalid Post State "
+            + "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\")"));
     }
 
     @Test
@@ -105,7 +110,8 @@ public class EventPostStateParserTest extends ParserTestBase {
         SpreadsheetParsingException thrown = assertThrows(SpreadsheetParsingException.class,
             () -> postStateParser.parse(IN_VALID_POST_STATE_CONDITION));
 
-        Assert.assertThat(thrown.getMessage(), is("Invalid Post State Condition ApprovalRequired(FieldA!=\"\" AND FieldB\"I'm innocent\")"));
+        Assert.assertThat(thrown.getMessage(), is("Invalid Post State Condition "
+            + "ApprovalRequired(FieldA!=\"\" AND FieldB\"I'm innocent\")"));
     }
 
 }

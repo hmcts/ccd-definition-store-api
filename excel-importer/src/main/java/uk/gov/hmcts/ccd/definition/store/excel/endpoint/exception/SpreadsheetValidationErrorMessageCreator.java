@@ -617,7 +617,8 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     public String createErrorMessage(EventEntityInvalidDefaultPostStateError error) {
         return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
             String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
-            return String.format("Post state condition %s has to include non conditional post state for event '%s' in %s tab",
+            return String.format("Post state condition %s has to include "
+                    + "non conditional post state for event '%s' in %s tab",
                 StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
                 error.getEventEntity().getReference(),
                 def.getSheetName());

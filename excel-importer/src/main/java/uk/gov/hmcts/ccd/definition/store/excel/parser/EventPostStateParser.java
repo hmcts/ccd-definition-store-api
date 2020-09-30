@@ -21,15 +21,15 @@ public class EventPostStateParser {
 
     private static final int DEFAULT_PRIORITY = 99;
 
+    private static final String POST_STATE_CONDITION_PATTERN = ".*[\\(.*\\)]:\\d{1,2}";
+
+    private static final String REPLACE_CHAR_PATTERN = "[\\(\\)]";
+
     private final String caseTypeId;
 
     private final ParseContext parseContext;
 
     private final ShowConditionParser conditionParser;
-
-    private final String POST_STATE_CONDITION_PATTERN = ".*[\\(.*\\)]:\\d{1,2}";
-
-    private final String REPLACE_CHAR_PATTERN = "[\\(\\)]";
 
     public EventPostStateParser(ParseContext parseContext,
                                 String caseTypeId) {

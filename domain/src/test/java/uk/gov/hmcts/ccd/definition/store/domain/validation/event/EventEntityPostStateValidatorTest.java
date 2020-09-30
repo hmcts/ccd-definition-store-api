@@ -131,7 +131,8 @@ public class EventEntityPostStateValidatorTest {
         mockShowCondition(Sets.newHashSet("FieldA", "FieldC"), new ArrayList<>());
         String matchingConditionFieldNotDefined = "FieldA!=\"\" AND FieldC=\"I'm innocent\"";
 
-        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, matchingConditionFieldNotDefined, 1);
+        EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED,
+            matchingConditionFieldNotDefined, 1);
         EventPostStateEntity defaultPostStateEntity = createEventPostStateEntity(STATE_READY_FOR_DIRECTIONS,
             null, eventEntity, 99);
         eventEntity.getPostStates().add(defaultPostStateEntity);
@@ -144,18 +145,25 @@ public class EventEntityPostStateValidatorTest {
     @Test
     public void successfullyValidatesPostStateConditionForCustomComplexField() throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
-        String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
+        String matchingCaseFieldKey = matchingCaseFieldId
+            + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
         String showCondition = matchingCaseFieldKey + "=\"UK\"";
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression(showCondition).field(matchingCaseFieldKey).build();
-        Mockito.when(showConditionExtractor.parseShowCondition(ArgumentMatchers.any())).thenReturn(validParsedShowCondition);
+        ShowCondition validParsedShowCondition = new ShowCondition
+            .Builder()
+            .showConditionExpression(showCondition)
+            .field(matchingCaseFieldKey)
+            .build();
+        Mockito.when(showConditionExtractor
+            .parseShowCondition(ArgumentMatchers.any()))
+            .thenReturn(validParsedShowCondition);
 
-        EventEntity event = new EventEntity();
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("SimpleType");
         caseTypeEntity.addCaseField(caseFieldEntity("NonMatchingCaseFieldId1"));
         caseTypeEntity.addCaseField(caseFieldEntity(matchingCaseFieldId, exampleFieldTypeEntityWithComplexFields()));
         caseTypeEntity.addCaseField(caseFieldEntity("NonMatchingCaseFieldId2"));
+        EventEntity event = new EventEntity();
         event.setCaseType(caseTypeEntity);
 
         EventPostStateEntity eventPostStateEntity = createEventPostStateEntity(STATE_APPROVAL_REQUIRED,
@@ -175,7 +183,8 @@ public class EventEntityPostStateValidatorTest {
         return mockShowCondition(new HashSet<>(), new ArrayList<>());
     }
 
-    private ShowCondition mockShowCondition(Set<String> fields, List<String> fieldsWithSubTypes) throws InvalidShowConditionException {
+    private ShowCondition mockShowCondition(Set<String> fields,
+                                            List<String> fieldsWithSubTypes) throws InvalidShowConditionException {
         ShowCondition showCondition = mock(ShowCondition.class);
         Mockito.when(showCondition.getFields()).thenReturn(fields);
         Mockito.when(showCondition.getFieldsWithSubtypes()).thenReturn(fieldsWithSubTypes);
