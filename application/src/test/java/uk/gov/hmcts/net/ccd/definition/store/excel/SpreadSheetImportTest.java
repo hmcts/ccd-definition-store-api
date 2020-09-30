@@ -68,8 +68,10 @@ public class SpreadSheetImportTest extends BaseTest {
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
         + TEST_CASE_TYPE;
     public static final String EXCEL_FILE_NOC_CONFIG = "/CCD_TestDefinition_NOC_CONFIG.xlsx";
-    public static final String EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT = "/CCD_TestDefinition_Invalid_PostState_NoDefault.xlsx";
-    public static final String EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES = "/CCD_TestDefinition_Invalid_PostState_DuplicatePriorities.xlsx";
+    public static final String EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT =
+        "/CCD_TestDefinition_Invalid_PostState_NoDefault.xlsx";
+    public static final String EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES =
+        "/CCD_TestDefinition_Invalid_PostState_DuplicatePriorities.xlsx";
     public static final String EXCEL_FILE_INVALID_NOC_CONFIG = "/CCD_TestDefinition_Invalid_NOC_CONFIG.xlsx";
     public static final String EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG =
         "/CCD_TestDefinition_Invalid_Case_Type_NOC_CONFIG.xlsx";
@@ -292,7 +294,8 @@ public class SpreadSheetImportTest extends BaseTest {
         assertThat("Incorrect HTTP status message for bad request",
             result.getResponse().getContentAsString(),
             containsString("Post state condition "
-                + "CaseEnteredIntoLegacy(PersonHasSecondAddress=\"Yes\"):1;CaseStopped(PersonHasSecondAddress=\"Yes\"):1;CaseEnteredIntoLegacy "
+                + "CaseEnteredIntoLegacy(PersonHasSecondAddress=\"Yes\"):1;"
+                + "CaseStopped(PersonHasSecondAddress=\"Yes\"):1;CaseEnteredIntoLegacy "
                 + "has duplicate priorities for event 'enterCaseIntoLegacy' in CaseEvent tab"));
     }
 
@@ -344,7 +347,8 @@ public class SpreadSheetImportTest extends BaseTest {
         assertBody(contentAsString, RESPONSE_JSON_V45);
     }
 
-        private void assertBody(String contentAsString, String fileName) throws IOException, URISyntaxException {
+        private void assertBody(String contentAsString, String fileName)
+            throws IOException, URISyntaxException {
 
         String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
             .getResource(fileName)
