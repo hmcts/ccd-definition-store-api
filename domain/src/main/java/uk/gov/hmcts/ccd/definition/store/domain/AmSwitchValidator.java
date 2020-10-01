@@ -17,13 +17,13 @@ public class AmSwitchValidator {
         List<String> allForWriteDestinations = new ArrayList<>();
 
         findAndStoreDuplicates(appParams.getCaseTypesWithAmWrittenOnlyToCcd(), allForWriteDestinations,
-                duplicateForWriteDestinations);
+            duplicateForWriteDestinations);
 
         findAndStoreDuplicates(appParams.getCaseTypesWithAmWrittenOnlyToAm(), allForWriteDestinations,
-                duplicateForWriteDestinations);
+            duplicateForWriteDestinations);
 
         findAndStoreDuplicates(appParams.getCaseTypesWithAmWrittenToBoth(), allForWriteDestinations,
-                duplicateForWriteDestinations);
+            duplicateForWriteDestinations);
 
         List<String> duplicateForReadSources = new ArrayList<>();
         List<String> allForReadSources = new ArrayList<>();
@@ -35,17 +35,17 @@ public class AmSwitchValidator {
         if (!(duplicateForReadSources.isEmpty() && duplicateForWriteDestinations.isEmpty())) {
             LOGGER.error("Duplicate configuration(s) detected for case type(s)!");
             LOGGER.error("{} Case Types With Duplicate Read Source Configurations: {}", duplicateForReadSources.size(),
-                    duplicateForReadSources);
+                duplicateForReadSources);
             LOGGER.error("{} Case Types With Duplicate Write Destination Configurations: {}",
-                    duplicateForWriteDestinations.size(), duplicateForWriteDestinations);
+                duplicateForWriteDestinations.size(), duplicateForWriteDestinations);
             throw new InvalidPropertyException(ApplicationParams.class,
-                    "properties mapped from ccd.am.read.* and ccd.am.write.*",
-                    "Duplicate case type configurations detected for Access Management persistence switches.");
+                "properties mapped from ccd.am.read.* and ccd.am.write.*",
+                "Duplicate case type configurations detected for Access Management persistence switches.");
         }
     }
 
     private <T> void findAndStoreDuplicates(List<String> caseTypes, List<String> allCaseTypesConfigured,
-            List<String> duplicateCaseTypesConfigured) {
+                                            List<String> duplicateCaseTypesConfigured) {
         caseTypes.forEach(caseType -> {
             if (!StringUtils.isEmpty(caseType)) {
                 if (allCaseTypesConfigured.contains(caseType.toUpperCase())) {

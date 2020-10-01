@@ -10,7 +10,8 @@ public class EventEntityMissingSecurityClassificationValidationError extends Val
 
 
     public EventEntityMissingSecurityClassificationValidationError(EventEntity eventEntity) {
-        super(String.format("CaseField with reference '%s' must have a Security Classification defined", eventEntity.getReference()));
+        super(String.format(
+            "CaseField with reference '%s' must have a Security Classification defined", eventEntity.getReference()));
         this.eventEntity = eventEntity;
     }
 

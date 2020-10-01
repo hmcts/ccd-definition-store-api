@@ -1,26 +1,25 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional.elasticsearch;
 
-import static java.util.Optional.ofNullable;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.hasKey;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static uk.gov.hmcts.ccd.definitionstore.tests.util.TestUtils.withRetries;
-
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
+import uk.gov.hmcts.befta.util.BeftaUtils;
+import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 
 import java.io.File;
 import java.util.stream.Stream;
 
-import io.restassured.response.ValidatableResponse;
-import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
-import uk.gov.hmcts.befta.util.BeftaUtils;
-import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
+import static java.util.Optional.ofNullable;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.hasKey;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static uk.gov.hmcts.ccd.definitionstore.tests.util.TestUtils.withRetries;
 
 class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
 
@@ -41,7 +40,8 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     @BeforeAll
     static void setUp() {
         // stop execution of these tests if elasticsearch is not enabled
-        boolean elasticsearchEnabled = ofNullable(System.getenv("ELASTIC_SEARCH_ENABLED")).map(Boolean::valueOf).orElse(false);
+        boolean elasticsearchEnabled = ofNullable(System.getenv("ELASTIC_SEARCH_ENABLED"))
+            .map(Boolean::valueOf).orElse(false);
         assumeTrue(elasticsearchEnabled, () -> "Ignoring Elasticsearch tests, variable ELASTIC_SEARCH_ENABLED not set");
     }
 
@@ -51,24 +51,26 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     }
 
     @Test
-    @DisplayName("should import a valid definition multiple times and create Elasticsearch index, alias and field mappings")
+    @DisplayName(
+        "should import a valid definition multiple times and create Elasticsearch index, alias and field mappings")
     void shouldImportValidDefinitionMultipleTimes() throws Exception {
         // invoke definition import
         File file = BeftaUtils.getClassPathResourceIntoTemporaryFile(
-                TestDataLoaderToDefinitionStore.DEFAULT_DEFINITIONS_PATH + "CCD_CNP_27.xlsx");
+            TestDataLoaderToDefinitionStore.DEFAULT_DEFINITIONS_PATH + "CCD_CNP_27.xlsx");
         try {
             asAutoTestImporter().get()
-            .given()
+                .given()
                 .multiPart(file)
-            .expect()
-            .statusCode(201)
-            .when()
-            .post("/import");
+                .expect()
+                .statusCode(201)
+                .when()
+                .post("/import");
         } finally {
             file.delete();
         }
 
-        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS, "ES index verification", () -> verifyIndexAndFieldMappings(false));
+        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS,
+            "ES index verification", () -> verifyIndexAndFieldMappings(false));
 
         // invoke definition import second time
         asAutoTestImporter().get()
@@ -79,7 +81,8 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
             .when()
             .post("/import");
 
-        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS, "ES index verification", () -> verifyIndexAndFieldMappings(true));
+        withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS,
+            "ES index verification", () -> verifyIndexAndFieldMappings(true));
     }
 
     private boolean verifyIndexAndFieldMappings(boolean verifyNewFields) {

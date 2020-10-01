@@ -44,12 +44,14 @@ public class DateTimeEntryValidatorImplTest {
     @Test
     void shouldErrorWhenTimeIsConfiguredInDcpForDateField() throws Exception {
         doThrow(InvalidDateTimeFormatException.class).when(dateTimeFormatParser).parseDateTimeFormat(any(), any());
-        assertThrows(InvalidDateTimeFormatException.class, () -> validator.validate("yyyy-MM-dd'T'HH:mm:ss", BASE_DATE));
+        assertThrows(InvalidDateTimeFormatException.class, () -> validator.validate(
+            "yyyy-MM-dd'T'HH:mm:ss", BASE_DATE));
     }
 
     @Test
     void shouldErrorWhenDateTimeFormatParserErrors() throws Exception {
         doThrow(InvalidDateTimeFormatException.class).when(dateTimeFormatParser).parseDateTimeFormat(any(), any());
-        assertThrows(InvalidDateTimeFormatException.class, () -> validator.validate("###", BASE_DATE_TIME));
+        assertThrows(InvalidDateTimeFormatException.class, () -> validator.validate(
+            "###", BASE_DATE_TIME));
     }
 }

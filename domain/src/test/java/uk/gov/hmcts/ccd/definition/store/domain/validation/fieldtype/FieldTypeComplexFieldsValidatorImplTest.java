@@ -20,7 +20,9 @@ import java.util.List;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -40,7 +42,8 @@ public class FieldTypeComplexFieldsValidatorImplTest {
 
     private ComplexFieldEntity complexFieldEntity3 = new ComplexFieldEntity();
 
-    private List<ComplexFieldEntity> complexFieldEntities = Arrays.asList(complexFieldEntity1, complexFieldEntity2, complexFieldEntity3);
+    private List<ComplexFieldEntity> complexFieldEntities = Arrays.asList(
+        complexFieldEntity1, complexFieldEntity2, complexFieldEntity3);
 
     private FieldTypeComplexFieldsValidatorImpl classUnderTest;
 
@@ -69,13 +72,16 @@ public class FieldTypeComplexFieldsValidatorImplTest {
 
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void caseFields1And3AreInvalid_allValidatorsCalledWithContextBuiltFromCaseType_ValidationResultWithErrorsForCaseFieldEntity1And3Returned() {
 
         when(complexFieldEntityValidator1.validate(eq(complexFieldEntity1), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("caseFieldEntityValidator1 failed for complexFieldEntity1")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "caseFieldEntityValidator1 failed for complexFieldEntity1")));
         when(complexFieldEntityValidator2.validate(eq(complexFieldEntity3), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("complexFieldEntityValidator2 failed for complexFieldEntity3")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "complexFieldEntityValidator2 failed for complexFieldEntity3")));
 
         ValidationResult validationResult = classUnderTest.validate(null, fieldType(complexFieldEntities));
 
@@ -83,8 +89,10 @@ public class FieldTypeComplexFieldsValidatorImplTest {
         assertEquals(2, validationResult.getValidationErrors().size());
 
         assertThat(validationResult.getValidationErrors(), allOf(
-            hasItem(matchesValidationErrorWithDefaultMessage("caseFieldEntityValidator1 failed for complexFieldEntity1")),
-            hasItem(matchesValidationErrorWithDefaultMessage("complexFieldEntityValidator2 failed for complexFieldEntity3"))
+            hasItem(matchesValidationErrorWithDefaultMessage(
+                "caseFieldEntityValidator1 failed for complexFieldEntity1")),
+            hasItem(matchesValidationErrorWithDefaultMessage(
+                "complexFieldEntityValidator2 failed for complexFieldEntity3"))
             )
         );
 

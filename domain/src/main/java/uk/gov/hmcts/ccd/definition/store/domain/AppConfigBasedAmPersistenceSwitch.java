@@ -1,20 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.List;
+import java.util.Map;
+
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceReadSource.FROM_AM;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceReadSource.FROM_CCD;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_AM;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_BOTH;
 import static uk.gov.hmcts.ccd.definition.store.domain.AmPersistenceWriteDestination.TO_CCD;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.collect.Maps;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import java.util.List;
-import java.util.Map;
 
 @Named
 @Singleton
@@ -27,13 +25,13 @@ public class AppConfigBasedAmPersistenceSwitch implements AmPersistenceSwitch {
     public AppConfigBasedAmPersistenceSwitch(final ApplicationParams appParams) {
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmWrittenOnlyToCcd(),
-                caseTypesToWriteModes, TO_CCD);
+            caseTypesToWriteModes, TO_CCD);
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmWrittenOnlyToAm(),
-                caseTypesToWriteModes, TO_AM);
+            caseTypesToWriteModes, TO_AM);
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmWrittenToBoth(),
-                caseTypesToWriteModes, TO_BOTH);
+            caseTypesToWriteModes, TO_BOTH);
 
         mapCaseTypeVsSwitchValueWith(appParams.getCaseTypesWithAmReadFromCcd(), caseTypesToReadModes, FROM_CCD);
 

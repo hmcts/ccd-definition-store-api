@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
+
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.Map;
-
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
 
 /**
  * Util class to assist with creating mock Case Definitions in tests.
@@ -85,25 +85,30 @@ class CreateDefinitionSheetUtil {
      * @param postState - case event post-state
      * @return the created CaseEvent
      */
-    static DefinitionDataItem createCaseEventItem(String id, String name, String desc, String preState, String postState, String caseTypeId) {
+    static DefinitionDataItem createCaseEventItem(String id,
+                                                  String name,
+                                                  String desc,
+                                                  String preState,
+                                                  String postState,
+                                                  String caseTypeId) {
         return createCaseEventItem(id, name, desc, preState, postState, caseTypeId, null, null, null, null, null, null);
     }
 
     /**
      * Creates a Case Event.
      *
-     * @param id                                    - case event id
-     * @param name                                  - case event name
-     * @param desc                                  - case event description
-     * @param preState                              - pre state the case event should expect
-     * @param postState                             - the state in which the case event should transition to
-     * @param caseTypeId                            - case type id associated to the case event
-     * @param callBackURLAboutToStartEvent          - call back url for about to start
-     * @param retriesTimeoutAboutToStartEvent       - number of retries to attempt
-     * @param callBackURLAboutToSubmitEvent         - call back url for about to submit
-     * @param retriesTimeoutURLAboutToSubmitEvent   - number of retries to attempt
-     * @param callBackURLSubmittedEvent             - call back url for submitted
-     * @param retriesTimeoutURLSubmittedEvent       - number of retries to attempt
+     * @param id                                  - case event id
+     * @param name                                - case event name
+     * @param desc                                - case event description
+     * @param preState                            - pre state the case event should expect
+     * @param postState                           - the state in which the case event should transition to
+     * @param caseTypeId                          - case type id associated to the case event
+     * @param callBackURLAboutToStartEvent        - call back url for about to start
+     * @param retriesTimeoutAboutToStartEvent     - number of retries to attempt
+     * @param callBackURLAboutToSubmitEvent       - call back url for about to submit
+     * @param retriesTimeoutURLAboutToSubmitEvent - number of retries to attempt
+     * @param callBackURLSubmittedEvent           - call back url for submitted
+     * @param retriesTimeoutURLSubmittedEvent     - number of retries to attempt
      * @return the created CaseEvent
      */
     static DefinitionDataItem createCaseEventItem(final String id,
@@ -143,7 +148,10 @@ class CreateDefinitionSheetUtil {
      * @param displayOrder - display order of result field
      * @return the created Work Basket Result Field
      */
-    static DefinitionDataItem createWorkBasketResultFieldItem(String caseTypeId, String caseFieldId, String label, double displayOrder) {
+    static DefinitionDataItem createWorkBasketResultFieldItem(String caseTypeId,
+                                                              String caseFieldId,
+                                                              String label,
+                                                              double displayOrder) {
         Map<ColumnName, Object> attributes = new EnumMap<>(ColumnName.class);
         attributes.put(ColumnName.CASE_TYPE_ID, caseTypeId);
         attributes.put(ColumnName.CASE_FIELD_ID, caseFieldId);
@@ -166,8 +174,15 @@ class CreateDefinitionSheetUtil {
      * @param tabFieldDisplayOrder - tab field display order
      * @return the created Case Tab Collection
      */
-    static DefinitionDataItem createCaseTabCollectionItem(Date liveFrom, Date liveTo, String caseTypeId, String channel, String tabId,
-                                                          String tabLabel, double tabDisplayOrder, String caseFieldId, double tabFieldDisplayOrder) {
+    static DefinitionDataItem createCaseTabCollectionItem(Date liveFrom,
+                                                          Date liveTo,
+                                                          String caseTypeId,
+                                                          String channel,
+                                                          String tabId,
+                                                          String tabLabel,
+                                                          double tabDisplayOrder,
+                                                          String caseFieldId,
+                                                          double tabFieldDisplayOrder) {
         Map<ColumnName, Object> attributes = new EnumMap<>(ColumnName.class);
         attributes.put(ColumnName.LIVE_FROM, liveFrom);
         attributes.put(ColumnName.LIVE_TO, liveTo);
@@ -181,7 +196,12 @@ class CreateDefinitionSheetUtil {
         return createDefinitionDataItem(attributes);
     }
 
-    static DefinitionDataItem createSearchFieldItem(Date liveFrom, Date liveTo, String caseTypeId, String caseFieldId, String label, double displayOrder) {
+    static DefinitionDataItem createSearchFieldItem(Date liveFrom,
+                                                    Date liveTo,
+                                                    String caseTypeId,
+                                                    String caseFieldId,
+                                                    String label,
+                                                    double displayOrder) {
         Map<ColumnName, Object> attributes = new EnumMap<>(ColumnName.class);
         attributes.put(ColumnName.LIVE_FROM, liveFrom);
         attributes.put(ColumnName.LIVE_TO, liveTo);
@@ -222,7 +242,11 @@ class CreateDefinitionSheetUtil {
         return createDefinitionDataItem(attributes);
     }
 
-    static DefinitionDataItem createFixListCodeItem(Date liveFrom, Date liveTo, String id, String listElementCode, String listElement) {
+    static DefinitionDataItem createFixListCodeItem(Date liveFrom,
+                                                    Date liveTo,
+                                                    String id,
+                                                    String listElementCode,
+                                                    String listElement) {
         Map<ColumnName, Object> attributes = new EnumMap<>(ColumnName.class);
         attributes.put(ColumnName.LIVE_FROM, liveFrom);
         attributes.put(ColumnName.LIVE_TO, liveTo);

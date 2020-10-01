@@ -160,12 +160,16 @@ class CaseFieldEntityTest {
         void shouldErrorWhenUnknownFieldIsInPath() {
             setUpComplex(true, true, true);
 
-            NullPointerException exception = assertThrows(NullPointerException.class, () -> debtorDetails.isNestedFieldSearchable("Person.UnknownField"));
+            NullPointerException exception = assertThrows(NullPointerException.class,
+                () -> debtorDetails.isNestedFieldSearchable("Person.UnknownField"));
 
-            assertEquals("Unable to find nested field 'UnknownField' within field 'Person'.", exception.getMessage());
+            assertEquals("Unable to find nested field 'UnknownField' within field 'Person'.",
+                exception.getMessage());
         }
 
-        private void setUpComplex(boolean topLevelFieldSearchable, boolean firstLevelNestedFieldSearchable, boolean secondLevelNestedFieldSearchable) {
+        private void setUpComplex(boolean topLevelFieldSearchable,
+                                  boolean firstLevelNestedFieldSearchable,
+                                  boolean secondLevelNestedFieldSearchable) {
             debtorDetails.setSearchable(topLevelFieldSearchable);
             debtorDetails.getFieldType().addComplexFields(singletonList(newComplexField(PERSON)
                 .withSearchable(firstLevelNestedFieldSearchable)

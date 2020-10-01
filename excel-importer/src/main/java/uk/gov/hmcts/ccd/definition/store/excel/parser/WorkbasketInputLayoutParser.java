@@ -56,7 +56,7 @@ public class WorkbasketInputLayoutParser extends GenericLayoutParser {
 
     @Override
     protected void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition) {
-        WorkBasketInputCaseFieldEntity entity = ((WorkBasketInputCaseFieldEntity)layoutEntity);
+        WorkBasketInputCaseFieldEntity entity = ((WorkBasketInputCaseFieldEntity) layoutEntity);
         entity.setShowCondition(showCondition);
     }
 

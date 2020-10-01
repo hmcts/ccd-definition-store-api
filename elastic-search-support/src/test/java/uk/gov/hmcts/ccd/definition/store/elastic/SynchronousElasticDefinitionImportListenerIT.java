@@ -35,7 +35,8 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     @Autowired
     private SynchronousElasticDefinitionImportListener definitionImportListener;
 
-    private final CaseTypeBuilder caseTypeBuilder = new CaseTypeBuilder().withJurisdiction("JUR").withReference(CASE_TYPE_A);
+    private final CaseTypeBuilder caseTypeBuilder = new CaseTypeBuilder()
+        .withJurisdiction("JUR").withReference(CASE_TYPE_A);
 
     @BeforeEach
     void setUp() throws IOException {
@@ -43,19 +44,29 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     }
 
     @Test
+    @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
     void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException, JSONException {
         CaseFieldEntity baseTypeField = newTextField("TextField").build();
         CaseFieldEntity complexField = newComplexField("ComplexField");
-        CaseFieldEntity collectionField = newCollectionFieldOfBaseType("CollectionField", "BaseCollectionType");
-        CaseFieldEntity complexCollectionField = newCollectionOfComplexField("ComplexCollectionField", "ComplexCollectionType");
+        CaseFieldEntity collectionField = newCollectionFieldOfBaseType(
+            "CollectionField", "BaseCollectionType");
+        CaseFieldEntity complexCollectionField = newCollectionOfComplexField(
+            "ComplexCollectionField", "ComplexCollectionType");
 
-        CaseFieldEntity nonSearchableBaseTypeField = newTextField("NonSearchableTextField").withSearchable(false).build();
+        CaseFieldEntity nonSearchableBaseTypeField = newTextField("NonSearchableTextField")
+            .withSearchable(false).build();
         CaseFieldEntity nonSearchableComplexField = newComplexField("NonSearchableComplexField");
-        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType().getComplexFields().get(1).setSearchable(false);
-        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType().getComplexFields().get(2).setSearchable(false);
-        CaseFieldEntity nonSearchableCollectionField = newCollectionField("NonSearchableCollectionField", "NonSearchableCollectionType");
+        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
+            .getComplexFields().get(1).setSearchable(false);
+        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
+            .getComplexFields().get(2).setSearchable(false);
+
+        CaseFieldEntity nonSearchableCollectionField = newCollectionField(
+            "NonSearchableCollectionField", "NonSearchableCollectionType");
         nonSearchableCollectionField.setSearchable(false);
-        CaseFieldEntity nonSearchableComplexCollectionField = newCollectionOfComplexField("NonSearchableComplexCollectionField", "NonSearchableComplexCollectionType");
+
+        CaseFieldEntity nonSearchableComplexCollectionField = newCollectionOfComplexField(
+            "NonSearchableComplexCollectionField", "NonSearchableComplexCollectionType");
         nonSearchableComplexCollectionField.getCollectionFieldType().getComplexFields().get(0).setSearchable(false);
         nonSearchableComplexCollectionField.getCollectionFieldType().getComplexFields().get(2).setSearchable(false);
 
@@ -109,22 +120,22 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         return Arrays.stream(indexNames)
             .map(String::toLowerCase)
             .map(index -> new String[] {
-                    // Paths of fields which may have a different value each time an index is created
-                    index + "_cases-000001.settings.index.creation_date",
-                    index + "_cases-000001.settings.index.uuid",
-                    index + "_cases-000001.settings.index.version.created"})
+                // Paths of fields which may have a different value each time an index is created
+                index + "_cases-000001.settings.index.creation_date",
+                index + "_cases-000001.settings.index.uuid",
+                index + "_cases-000001.settings.index.version.created"})
             .flatMap(Arrays::stream)
             .toArray(String[]::new);
     }
 
     private CaseFieldEntity newComplexField(String topLevelReference) {
-        CaseFieldBuilder complexOfComplex = newField(topLevelReference, topLevelReference);
-
         FieldTypeBuilder complexType = newType("Person");
         complexType.addFieldToComplex("Forename", textFieldType());
         complexType.addFieldToComplex("Surname", textFieldType());
         complexType.addFieldToComplex("Dob", newType("Date").build());
         FieldTypeEntity execPersonComplexFieldType = complexType.buildComplex();
+
+        CaseFieldBuilder complexOfComplex = newField(topLevelReference, topLevelReference);
         complexOfComplex.addFieldToComplex(topLevelReference + "Person", execPersonComplexFieldType);
 
         return complexOfComplex.buildComplex();

@@ -10,6 +10,10 @@ jacocoTestReport {
     }
 }
 
+dependencyCheck {
+    suppressionFile = "${rootDir}/dependency-check-suppressions.xml"
+}
+
 dependencies {
     compile project(':application')
     compile project(':excel-importer')

@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import static org.apache.commons.lang3.StringUtils.defaultString;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+
+import static org.apache.commons.lang3.StringUtils.defaultString;
 
 public class CaseFieldEntityInvalidCrudValidationError extends ValidationError {
 

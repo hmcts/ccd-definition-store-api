@@ -1,10 +1,23 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.domain.service.UserRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
@@ -36,7 +49,8 @@ public class UserRoleController {
         notes = "a user role is created if it does not exist")
     @ApiResponses(value = {
         @ApiResponse(code = 215, message = "User role is created"),
-        @ApiResponse(code = 205, message = "User role is updated successfully and the user agent SHOULD reset the document view"),
+        @ApiResponse(code = 205,
+            message = "User role is updated successfully and the user agent SHOULD reset the document view"),
         @ApiResponse(code = 409, message = "Bad request, for example, incorrect data")
     })
     public ResponseEntity<UserRole> userRolePut(
@@ -53,7 +67,8 @@ public class UserRoleController {
         notes = "a user role is created if it does not exist")
     @ApiResponses(value = {
         @ApiResponse(code = 215, message = "User role is created"),
-        @ApiResponse(code = 205, message = "User role is updated successfully and the user agent SHOULD reset the document view"),
+        @ApiResponse(code = 205,
+            message = "User role is updated successfully and the user agent SHOULD reset the document view"),
         @ApiResponse(code = 409, message = "Bad request, for example, incorrect data")
     })
     public ResponseEntity<UserRole> userRoleCreate(
@@ -76,7 +91,8 @@ public class UserRoleController {
     }
 
     @RequestMapping(value = "/user-roles/{roles}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Get user role definitions given as comma separated values", notes = "", response = UserRole.class, responseContainer = "List")
+    @ApiOperation(value = "Get user role definitions given as comma separated values", notes = "",
+        response = UserRole.class, responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "User Role Response is returned"),
     })
@@ -86,7 +102,8 @@ public class UserRoleController {
     }
 
     @RequestMapping(value = "/user-roles", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Get All user role definitions", notes = "", response = UserRole.class, responseContainer = "List")
+    @ApiOperation(
+        value = "Get All user role definitions", notes = "", response = UserRole.class, responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "User Roles Response is returned"),
     })

@@ -1,5 +1,25 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
+import com.microsoft.azure.storage.ResultSegment;
+import com.microsoft.azure.storage.StorageException;
+import com.microsoft.azure.storage.blob.BlobProperties;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -10,28 +30,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import com.microsoft.azure.storage.ResultSegment;
-import com.microsoft.azure.storage.StorageException;
-import com.microsoft.azure.storage.blob.BlobProperties;
-import com.microsoft.azure.storage.blob.CloudBlobContainer;
-import com.microsoft.azure.storage.blob.CloudBlockBlob;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
-import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class, BlobProperties.class})
@@ -88,12 +86,12 @@ public class AzureImportAuditsClientTest {
         subject = new AzureImportAuditsClient(cloudBlobContainer, applicationParams);
 
         when(cloudBlobContainer.listBlobsSegmented(anyString(),
-                                                   eq(true),
-                                                   any(EnumSet.class),
-                                                   eq(Integer.MAX_VALUE),
-                                                   eq(null),
-                                                   eq(null),
-                                                   eq(null)))
+            eq(true),
+            any(EnumSet.class),
+            eq(Integer.MAX_VALUE),
+            eq(null),
+            eq(null),
+            eq(null)))
             .thenReturn(blobsPage1)
             .thenReturn(blobsPage2)
             .thenReturn(blobsPage3);
@@ -108,7 +106,8 @@ public class AzureImportAuditsClientTest {
         when(b31.getProperties()).thenReturn(p31);
         when(b32.getProperties()).thenReturn(p32);
 
-        newArrayList(b11, b12, b21, b22, b31, b32).forEach(blob -> when(blob.getMetadata()).thenReturn(new HashMap<>()));
+        newArrayList(b11, b12, b21, b22, b31, b32).forEach(
+            blob -> when(blob.getMetadata()).thenReturn(new HashMap<>()));
 
         when(b11.getName()).thenReturn("b11");
         when(b12.getName()).thenReturn("b12");

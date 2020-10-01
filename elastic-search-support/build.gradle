@@ -1,4 +1,9 @@
 apply plugin: 'info.solidsoft.pitest'
+
+dependencyCheck {
+    suppressionFile = "${rootDir}/dependency-check-suppressions.xml"
+}
+
 jar {
     enabled = true
     baseName = 'definition-store-es-support'

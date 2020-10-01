@@ -54,7 +54,7 @@ public class SearchInputLayoutParser extends GenericLayoutParser {
 
     @Override
     protected void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition) {
-        SearchInputCaseFieldEntity entity = ((SearchInputCaseFieldEntity)layoutEntity);
+        SearchInputCaseFieldEntity entity = ((SearchInputCaseFieldEntity) layoutEntity);
         entity.setShowCondition(showCondition);
     }
 

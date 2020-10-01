@@ -1,5 +1,10 @@
 // Create JAR with test fixtures
 apply plugin: 'info.solidsoft.pitest'
+
+dependencyCheck {
+    suppressionFile = "${rootDir}/dependency-check-suppressions.xml"
+}
+
 task testJar(type: Jar, dependsOn: testClasses) {
     baseName = 'test-' + project.archivesBaseName
     classifier = 'tests'

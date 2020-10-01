@@ -8,7 +8,8 @@ import java.util.Map;
 public class ImportDefinitonDataSetup {
 
     private ImportDefinitonDataSetup() {
-        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor (squid:S1118)
+        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor
+        // (squid:S1118)
     }
 
     private static List<Map<String, String>> caseTypeFromDefinition = new ArrayList<>();

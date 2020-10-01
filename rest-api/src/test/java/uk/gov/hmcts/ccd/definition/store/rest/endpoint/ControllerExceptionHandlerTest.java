@@ -14,7 +14,10 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ControllerExceptionHandlerTest {
@@ -93,7 +96,8 @@ class ControllerExceptionHandlerTest {
         @Test
         @DisplayName("should return error details as map")
         void shouldReturnErrorDetailsAsMap() {
-            final String error = handler.caseTypeValidation(new CaseTypeValidationException(new CaseTypeValidationResult("")));
+            final String error = handler.caseTypeValidation(
+                new CaseTypeValidationException(new CaseTypeValidationResult("")));
 
             assertAll(
                 () -> assertThat(error, is(notNullValue()))

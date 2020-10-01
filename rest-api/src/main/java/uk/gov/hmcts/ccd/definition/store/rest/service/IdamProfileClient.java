@@ -11,7 +11,8 @@ public class IdamProfileClient {
 
     private final SecurityUtils securityUtils;
 
-    @Autowired IdamProfileClient(final SecurityUtils securityUtils) {
+    @Autowired
+    IdamProfileClient(final SecurityUtils securityUtils) {
         this.securityUtils = securityUtils;
     }
 

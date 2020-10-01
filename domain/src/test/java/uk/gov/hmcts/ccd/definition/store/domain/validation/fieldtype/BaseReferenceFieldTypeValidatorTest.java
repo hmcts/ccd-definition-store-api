@@ -11,7 +11,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -70,7 +71,8 @@ public class BaseReferenceFieldTypeValidatorTest {
         );
         assertEquals(
             globalType,
-            ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0)).getConflictingFieldTypeEntity()
+            ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0))
+                .getConflictingFieldTypeEntity()
         );
 
     }

@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
 
 @Named
 @Singleton

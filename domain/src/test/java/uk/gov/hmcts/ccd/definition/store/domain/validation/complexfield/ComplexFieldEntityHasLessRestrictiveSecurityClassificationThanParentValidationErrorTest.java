@@ -32,10 +32,13 @@ public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParen
             any(ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
         when(mockComplexFieldEntityValidationContext.getCaseName()).thenReturn("CaseType Name");
-        when(mockComplexFieldEntityValidationContext.getCaseFieldReference()).thenReturn(("Parent CaseField Reference"));
-        when(mockComplexFieldEntityValidationContext.getParentSecurityClassification()).thenReturn(SecurityClassification.PRIVATE);
+        when(mockComplexFieldEntityValidationContext.getCaseFieldReference())
+            .thenReturn(("Parent CaseField Reference"));
+        when(mockComplexFieldEntityValidationContext.getParentSecurityClassification())
+            .thenReturn(SecurityClassification.PRIVATE);
         classUnderTest = new ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
-            complexFieldEntityWithReferenceAndSecurityClassification("Complex Field Reference", SecurityClassification.PUBLIC),
+            complexFieldEntityWithReferenceAndSecurityClassification(
+                "Complex Field Reference", SecurityClassification.PUBLIC),
             mockComplexFieldEntityValidationContext
         );
     }
@@ -44,8 +47,8 @@ public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParen
     public void testDefaultMessage() {
         assertEquals(
             "Security classification for ComplexField with reference 'Complex Field Reference' "
-                + "has a less restrictive security classification of 'PUBLIC' than its parent CaseField 'Parent CaseField Reference' "
-                + "which is 'PRIVATE'.",
+                + "has a less restrictive security classification of 'PUBLIC' than its parent CaseField "
+                + "'Parent CaseField Reference' which is 'PRIVATE'.",
             classUnderTest.getDefaultMessage()
         );
     }
@@ -56,8 +59,8 @@ public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParen
         verify(mockValidationErrorMessageCreator).createErrorMessage(classUnderTest);
     }
 
-    private ComplexFieldEntity complexFieldEntityWithReferenceAndSecurityClassification(String caseFieldReference,
-                                                                                        SecurityClassification securityClassification) {
+    private ComplexFieldEntity complexFieldEntityWithReferenceAndSecurityClassification(
+        String caseFieldReference, SecurityClassification securityClassification) {
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
         complexFieldEntity.setSecurityClassification(securityClassification);
         complexFieldEntity.setReference(caseFieldReference);

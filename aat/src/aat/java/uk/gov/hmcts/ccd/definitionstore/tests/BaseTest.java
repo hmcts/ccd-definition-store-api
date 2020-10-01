@@ -20,22 +20,22 @@ public abstract class BaseTest {
     protected Supplier<RequestSpecification> asAutoTestImporter() {
 
         final AuthenticatedUser caseworker = aat.getIdamHelper()
-                                                .authenticate(aat.getImporterAutoTestEmail(),
-                                                              aat.getImporterAutoTestPassword());
+            .authenticate(aat.getImporterAutoTestEmail(),
+                aat.getImporterAutoTestPassword());
 
         final String s2sToken = aat.getS2SHelper()
-                                   .getToken();
+            .getToken();
 
         return () -> RestAssured.given()
-                          .header("Authorization", "Bearer " + caseworker.getAccessToken())
-                          .header("ServiceAuthorization", s2sToken);
+            .header("Authorization", "Bearer " + caseworker.getAccessToken())
+            .header("ServiceAuthorization", s2sToken);
     }
 
     protected Supplier<RequestSpecification> asAutoTestCaseworkerWithUser() {
 
         final AuthenticatedUser caseworker = aat.getIdamHelper()
-                                                .authenticate(aat.getCaseworkerAutoTestEmail(),
-                                                              aat.getCaseworkerAutoTestPassword());
+            .authenticate(aat.getCaseworkerAutoTestEmail(),
+                aat.getCaseworkerAutoTestPassword());
 
         final String s2sToken = aat.getS2SHelper()
             .getToken();
@@ -48,8 +48,8 @@ public abstract class BaseTest {
     protected Supplier<RequestSpecification> asAutoTestCaseworker() {
 
         final AuthenticatedUser caseworker = aat.getIdamHelper()
-                                                .authenticate(aat.getCaseworkerAutoTestEmail(),
-                                                              aat.getCaseworkerAutoTestPassword());
+            .authenticate(aat.getCaseworkerAutoTestEmail(),
+                aat.getCaseworkerAutoTestPassword());
 
         final String s2sToken = aat.getS2SHelper()
             .getToken();

@@ -1,14 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.util.Optional.ofNullable;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
@@ -20,6 +11,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 @Slf4j
 public class SearchAliasFieldParser {
@@ -33,14 +33,17 @@ public class SearchAliasFieldParser {
         this.parseContext = parseContext;
     }
 
-    public List<SearchAliasFieldEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseType) {
-        Map<String, List<DefinitionDataItem>> searchAliasFieldsByCaseTypes = ofNullable(definitionSheets.get(SheetName.SEARCH_ALIAS.getName()))
+    public List<SearchAliasFieldEntity> parseAll(Map<String, DefinitionSheet> definitionSheets,
+                                                 CaseTypeEntity caseType) {
+        Map<String, List<DefinitionDataItem>> searchAliasFieldsByCaseTypes = ofNullable(definitionSheets
+            .get(SheetName.SEARCH_ALIAS.getName()))
             .map(DefinitionSheet::groupDataItemsByCaseType)
             .orElse(Collections.emptyMap());
 
         log.debug("Parsing search alias case fields for case type {}...", caseType.getReference());
 
-        List<SearchAliasFieldEntity> searchAliasFields = ofNullable(searchAliasFieldsByCaseTypes.get(caseType.getReference()))
+        List<SearchAliasFieldEntity> searchAliasFields = ofNullable(searchAliasFieldsByCaseTypes
+            .get(caseType.getReference()))
             .map(dataItems -> dataItems
                 .stream()
                 .map(dataItem -> parseSearchAliasField(dataItem, caseType))
@@ -69,7 +72,8 @@ public class SearchAliasFieldParser {
             return null;
         }
         List<String> fieldsInPath = parseCaseFieldPath(caseFieldPath);
-        CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(caseType.getReference(), fieldsInPath.remove(0));
+        CaseFieldEntity caseField = parseContext.getCaseFieldForCaseType(
+            caseType.getReference(), fieldsInPath.remove(0));
         if (caseField.isComplexFieldType()) {
             return deriveComplexFieldType(caseField.getFieldType().getReference(), fieldsInPath);
         } else if (caseField.isCollectionFieldType()) {
@@ -82,9 +86,11 @@ public class SearchAliasFieldParser {
     private FieldTypeEntity deriveCollectionFieldType(CaseFieldEntity caseField, List<String> fieldsInPath) {
         removeCollectionValuePlaceholder(fieldsInPath);
         if (caseField.isCollectionOfComplex()) {
-            return deriveComplexFieldType(caseField.getFieldType().getCollectionFieldType().getReference(), fieldsInPath);
+            return deriveComplexFieldType(
+                caseField.getFieldType().getCollectionFieldType().getReference(), fieldsInPath);
         } else {
-            return parseContext.getBaseType(caseField.getFieldType().getCollectionFieldType().getReference()).orElse(null);
+            return parseContext.getBaseType(caseField.getFieldType().getCollectionFieldType().getReference())
+                .orElse(null);
         }
     }
 
@@ -93,7 +99,7 @@ public class SearchAliasFieldParser {
             fieldsInPath.remove(0);
         } else {
             throw new MapperException(String.format("%s: A collection case field ID must be suffixed with '.%s'",
-                                                    SheetName.SEARCH_ALIAS.getName(), COLLECTION_FIELD_VALUE));
+                SheetName.SEARCH_ALIAS.getName(), COLLECTION_FIELD_VALUE));
         }
     }
 

@@ -16,21 +16,32 @@ public class EventEntitySecurityClassificationValidatorImplTest {
     @Test
     public void securityClassificationIsSet_relevantValidationResultReturned() {
 
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.PUBLIC, null, true);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.PUBLIC, null, true);
 
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.PUBLIC, SecurityClassification.PUBLIC, true);
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.PRIVATE, SecurityClassification.PUBLIC, true);
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.RESTRICTED, SecurityClassification.PUBLIC, true);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.PUBLIC, SecurityClassification.PUBLIC, true);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.PRIVATE, SecurityClassification.PUBLIC, true);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.RESTRICTED, SecurityClassification.PUBLIC, true);
 
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.PUBLIC, SecurityClassification.PRIVATE, false);
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.PRIVATE, SecurityClassification.PRIVATE, true);
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.RESTRICTED, SecurityClassification.PRIVATE, true);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.PUBLIC, SecurityClassification.PRIVATE, false);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.PRIVATE, SecurityClassification.PRIVATE, true);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.RESTRICTED, SecurityClassification.PRIVATE, true);
 
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.PUBLIC, SecurityClassification.RESTRICTED, false);
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.PRIVATE, SecurityClassification.RESTRICTED, false);
-        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification.RESTRICTED, SecurityClassification.RESTRICTED, true);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.PUBLIC, SecurityClassification.RESTRICTED, false);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.PRIVATE, SecurityClassification.RESTRICTED, false);
+        assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+            SecurityClassification.RESTRICTED, SecurityClassification.RESTRICTED, true);
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void securityClassificationIsNull_InvalidValidationResultContainingEventEntityMissingSecurityClassificationValidationErrorReturned() {
 
@@ -41,8 +52,8 @@ public class EventEntitySecurityClassificationValidatorImplTest {
 
         ValidationResult validationResult
             = new EventEntitySecurityClassificationValidatorImpl().validate(
-                eventEntity,
-                eventEntityValidationContext
+            eventEntity,
+            eventEntityValidationContext
         );
 
         assertFalse(validationResult.isValid());
@@ -56,13 +67,14 @@ public class EventEntitySecurityClassificationValidatorImplTest {
         );
     }
 
-    private void assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(SecurityClassification caseFieldSecurityClassification,
-                                                                                   SecurityClassification parentSecurityClassification,
-                                                                                   boolean isValid) {
+    private void assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
+        SecurityClassification caseFieldSecurityClassification,
+        SecurityClassification parentSecurityClassification,
+        boolean isValid) {
         EventEntity eventEntity = new EventEntity();
         eventEntity.setSecurityClassification(caseFieldSecurityClassification);
         EventEntityValidationContext eventEntityValidationContext
-            = eventEntityValidationContext("",parentSecurityClassification);
+            = eventEntityValidationContext("", parentSecurityClassification);
 
         ValidationResult validationResult
             = new EventEntitySecurityClassificationValidatorImpl().validate(eventEntity, eventEntityValidationContext);
@@ -76,19 +88,22 @@ public class EventEntitySecurityClassificationValidatorImplTest {
 
             assertEquals(
                 eventEntity,
-                ((EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) validationResult.getValidationErrors().get(0))
+                ((EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) validationResult
+                    .getValidationErrors().get(0))
                     .getEventEntity()
             );
             assertEquals(
                 eventEntityValidationContext,
-                ((EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) validationResult.getValidationErrors().get(0))
+                ((EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) validationResult
+                    .getValidationErrors().get(0))
                     .getEventEntityValidationContext()
             );
         }
 
     }
 
-    private EventEntityValidationContext eventEntityValidationContext(String parentCaseName, SecurityClassification parentSecurityClassification) {
+    private EventEntityValidationContext eventEntityValidationContext(
+        String parentCaseName, SecurityClassification parentSecurityClassification) {
         EventEntityValidationContext eventEntityValidationContext = mock(EventEntityValidationContext.class);
         when(eventEntityValidationContext.getCaseName()).thenReturn(parentCaseName);
         when(eventEntityValidationContext.getParentSecurityClassification()).thenReturn(parentSecurityClassification);
