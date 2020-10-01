@@ -70,7 +70,7 @@ ext['hibernate-validator.version'] = '6.0.10.Final'
 ext['spring-security.version'] = '5.3.4.RELEASE'
 ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
-ext['liquibase.version'] = '3.10.2'
+ext['liquibase.version'] = '3.6.3'
 ext['postgresql.version'] = '42.2.16'
 ext['oauth2-oidc-sdk.version'] = '8.22'
 //overriding log4j2 default version 2.7 because of vulnerability issues
