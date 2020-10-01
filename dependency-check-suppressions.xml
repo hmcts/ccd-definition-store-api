@@ -23,7 +23,7 @@
 	<suppress>
 		<notes><![CDATA[
       		Jar: org.elasticsearch/elasticsearch@6.4.3
-      		Details: These CVEs expected to be fixed as part of RDM-9054
+      		Analysis: These CVEs expected to be fixed as part of RDM-9054
    		]]></notes>
 		<cve>CVE-2019-7611</cve>
 		<cve>CVE-2019-7614</cve>
@@ -33,19 +33,49 @@
 	<suppress>
 		<notes><![CDATA[
 			Jars: spring-security-***-5.3.4.RELEASE.jar
-			Details: There should not be any issue in using the Spring Boot version 2.3.4.RELEASE with spring-security.
-			Solution: False positive
+			Analysis: False positive
 		]]></notes>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
 	<suppress>
 		<notes><![CDATA[
-			Jars: com.nimbusds:oauth2-oidc-sdk-8.22.jar
-			Solution: No fix or work around available
+			Jar: com.nimbusds:oauth2-oidc-sdk-8.22.jar
+			Analysis: No fix or work around available
 		]]></notes>
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
 	</suppress>
 
+	<suppress>
+		<notes><![CDATA[
+			Jars: liquibase-core-3.6.3.jar: bootstrap.js (pkg:javascript/bootstrap@3.1.1)
+				  liquibase-core-3.6.3.jar: bootstrap.min.js (pkg:javascript/bootstrap@3.1.1)
+			Analysis: Upgrading liquibase is invalidating the DB schemas in changelog
+		]]></notes>
+		<cve>CVE-2018-14040</cve>
+		<cve>CVE-2018-14041</cve>
+		<cve>CVE-2018-14042</cve>
+		<cve>CVE-2019-8331</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
+			Jar: liquibase-core-3.6.3.jar: jquery-1.11.0.min.js (pkg:javascript/jquery@1.11.0.min)
+			Analysis: Upgrading liquibase is invalidating the DB schemas in changelog
+		]]></notes>
+		<cve>CVE-2015-9251</cve>
+		<cve>CVE-2019-11358</cve>
+		<cve>CVE-2020-11022</cve>
+		<cve>CVE-2020-11023</cve>
+	</suppress>
+
+	<suppress>
+		<notes><![CDATA[
+			Jars: com.nimbusds:oauth2-oidc-sdk-8.22.jar
+			Analysis: No fix or work around available
+		]]></notes>
+		<cve>CVE-2007-1651</cve>
+		<cve>CVE-2007-1652</cve>
+	</suppress>
 </suppressions>

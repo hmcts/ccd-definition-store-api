@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.3.4.RELEASE'
+        springBootVersion = '2.2.10.RELEASE'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -144,7 +144,7 @@ allprojects {
 
             eachDependency { details ->
                 if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
-                    details.useVersion '3.10.2'
+                    details.useVersion '3.6.3'
                 }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
