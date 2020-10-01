@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.5.RELEASE'
+        springBootVersion = '2.3.4.RELEASE'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -11,7 +11,7 @@ buildscript {
 
 plugins {
     id 'application'
-    id 'org.owasp.dependencycheck' version '5.3.2'
+    id 'org.owasp.dependencycheck' version '6.0.2'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'se.patrikerdes.use-latest-versions' version '0.2.7'
     id 'com.github.ben-manes.versions' version '0.20.0'
@@ -71,6 +71,8 @@ ext['spring-security.version'] = '5.3.4.RELEASE'
 ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
 ext['liquibase.version'] = '3.10.2'
+ext['postgresql.version'] = '42.2.16'
+ext['oauth2-oidc-sdk.version'] = '8.22'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.13.2'
 // end
@@ -232,7 +234,7 @@ subprojects { subproject ->
         compile "org.springframework.security:spring-security-config"
         compile "org.springframework.boot:spring-boot-starter-oauth2-client"
         compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
-        compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '7.9'
+        compile "com.nimbusds:nimbus-jose-jwt"
         implementation "io.github.openfeign:feign-httpclient:10.7.0"
 
         compile('org.springframework.boot:spring-boot-starter-web')

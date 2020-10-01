@@ -33,77 +33,19 @@
 	<suppress>
 		<notes><![CDATA[
 			Jars: spring-security-***-5.3.4.RELEASE.jar
-			Details: There should not be any issue in using the Spring Boot version 2.2.5.RELEASE with spring-security.
-			Solution: False alarm
+			Details: There should not be any issue in using the Spring Boot version 2.3.4.RELEASE with spring-security.
+			Solution: False positive
 		]]></notes>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
 	<suppress>
 		<notes><![CDATA[
-			Jars: accessors-smart-1.2.jar
-				  jjwt-0.9.1.jar
-				  json-smart-2.3.jar
-				  spring-boot-starter-json-2.2.5.RELEASE.jar
-			Solution: No fix available
-		]]></notes>
-		<cve>CVE-2020-7712</cve>
-	</suppress>
-
-	<suppress>
-		<notes><![CDATA[
-			Jars: accessors-smart-1.2.jar
-				  jjwt-0.9.1.jar
-			Solution: No fix available
-		]]></notes>
-		<cve>CVE-2020-10663</cve>
-	</suppress>
-
-	<suppress>
-		<notes><![CDATA[
-			Jars: oauth2-oidc-sdk-7.5.jar
-			Solution: False alarm
+			Jars: com.nimbusds:oauth2-oidc-sdk-8.22.jar
+			Solution: No fix or work around available
 		]]></notes>
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
-	</suppress>
-
-	<suppress>
-		<notes><![CDATA[
-			Jar: maven/com.github.ben-manes.caffeine/caffeine@2.8.5
-			Details: Allows an attacker to bypass SAML authentication. Allows unauthenticated remote
-					 attackers to execute arbitrary code. This occurs because the enterprise session secret
-					 is always the same, and can be found in the product's source code.
-			Solution: No fix available
-		]]></notes>
-		<cve>CVE-2017-18365</cve>
-	</suppress>
-
-	<suppress>
-		<notes><![CDATA[
-			Jars: maven/com.github.ben-manes.caffeine/caffeine@2.8.5
-				  maven/com.github.stephenc.jcip/jcip-annotations@1.0-1
-				  maven/com.github.virtuald/curvesapi@1.06
-				  maven/com.github.spullara.mustache.java/compiler@0.9.6
-			Details: Authenticated users of the instance to determine the names of unauthorized private
-					 repositories given their numerical IDs.
-			Solution: Update the GitHub Enterprise Server version to 2.21.6 or 2.20.15 or and 2.19.21.
-		]]></notes>
-		<cve>CVE-2020-10517</cve>
-	</suppress>
-
-	<suppress>
-		<notes><![CDATA[
-			Jars: maven/com.github.ben-manes.caffeine/caffeine@2.8.5
-				  maven/com.github.stephenc.jcip/jcip-annotations@1.0-1
-				  maven/com.github.virtuald/curvesapi@1.06
-				  maven/com.github.spullara.mustache.java/compiler@0.9.6
-			Details: User-controlled configuration of the underlying parsers used by GitHub Pages were not
-					 sufficiently restricted and made it possible to execute commands on the GitHub Enterprise
-					 Server instance.
-			Solution: Update the GitHub Enterprise Server version to 2.21.6 or 2.20.15 or and 2.19.21.
-		]]></notes>
-		<cve>CVE-2020-10518</cve>
 	</suppress>
 
 </suppressions>

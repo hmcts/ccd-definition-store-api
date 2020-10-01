@@ -26,7 +26,7 @@ dependencies {
     compile ("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    // runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
+    runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
     runtime "org.liquibase:liquibase-core:3.10.2"
     testCompile project(":app-insights").sourceSets.main.output
     testCompile project(":commons").sourceSets.main.output
