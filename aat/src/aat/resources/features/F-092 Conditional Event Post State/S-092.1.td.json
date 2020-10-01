@@ -11,7 +11,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/excel/BEFTA_Master_Definition_Invalid_CaseField.xlsx"
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_Invalid_CaseField.xlsx"
         }
       ]
     }
