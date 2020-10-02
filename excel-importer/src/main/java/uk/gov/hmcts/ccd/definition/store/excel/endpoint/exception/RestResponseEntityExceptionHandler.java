@@ -1,9 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,12 +22,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesExcep
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -64,7 +64,13 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             "\n\nValidation errors occurred importing the spreadsheet.\n\n", ex.getValidationErrors());
 
         return handleExceptionInternal(
-            ex, missingUserRoles + validationErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+            ex, missingUserRoles + validationErrors, responseContentType(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    private HttpHeaders responseContentType() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+        return headers;
     }
 
     @ExceptionHandler(value = {ValidationException.class})
