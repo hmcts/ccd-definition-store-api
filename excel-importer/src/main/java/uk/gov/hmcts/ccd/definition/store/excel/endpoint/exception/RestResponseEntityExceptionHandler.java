@@ -64,7 +64,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             "\n\nValidation errors occurred importing the spreadsheet.\n\n", ex.getValidationErrors());
 
         return handleExceptionInternal(
-            ex, missingUserRoles + validationErrors, responseContentType(), HttpStatus.BAD_REQUEST, request);
+            ex, missingUserRoles + validationErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     private HttpHeaders responseContentType() {
@@ -82,7 +82,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             validationException.getValidationResult().getValidationErrors());
 
         return handleExceptionInternal(
-            validationException, errorMessage, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+            validationException, errorMessage, responseContentType(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
     @ExceptionHandler(CaseTypeValidationException.class)
