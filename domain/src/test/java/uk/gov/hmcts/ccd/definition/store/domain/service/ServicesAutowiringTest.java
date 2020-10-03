@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -31,6 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityACLV
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCreateEventValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEventCaseFieldsValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityPostStateValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntitySecurityClassificationValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldLabelCaseFieldValidator;
@@ -61,10 +65,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
@@ -136,7 +136,8 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
             EventEntitySecurityClassificationValidatorImpl.class,
             EventEntityCrudValidatorImpl.class,
             EventEntityACLValidatorImpl.class,
-            EventEntityCreateEventValidator.class
+            EventEntityCreateEventValidator.class,
+            EventEntityPostStateValidator.class
         );
 
         // Check the EventEntityEventCaseFieldsValidatorImpl class has the required validator(s) wired in

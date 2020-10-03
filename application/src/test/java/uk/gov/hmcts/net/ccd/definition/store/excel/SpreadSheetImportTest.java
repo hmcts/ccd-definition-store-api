@@ -18,6 +18,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,12 +68,17 @@ public class SpreadSheetImportTest extends BaseTest {
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
         + TEST_CASE_TYPE;
     public static final String EXCEL_FILE_NOC_CONFIG = "/CCD_TestDefinition_NOC_CONFIG.xlsx";
+    public static final String EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT =
+        "/CCD_TestDefinition_Invalid_PostState_NoDefault.xlsx";
+    public static final String EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES =
+        "/CCD_TestDefinition_Invalid_PostState_DuplicatePriorities.xlsx";
     public static final String EXCEL_FILE_INVALID_NOC_CONFIG = "/CCD_TestDefinition_Invalid_NOC_CONFIG.xlsx";
     public static final String EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG =
         "/CCD_TestDefinition_Invalid_Case_Type_NOC_CONFIG.xlsx";
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
-    private static final String RESPONSE_JSON = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
+    private static final String RESPONSE_JSON_V45 = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
+    private static final String RESPONSE_JSON_V46 = "GetCaseTypesResponseForCCD_TestDefinition_V46.json";
 
     private Map<Object, Object> caseTypesId;
     private Map<Object, Object> fieldTypesId;
@@ -241,7 +247,7 @@ public class SpreadSheetImportTest extends BaseTest {
             .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
-        assertBody(getCaseTypesMvcResult.getResponse().getContentAsString());
+        assertBody(getCaseTypesMvcResult.getResponse().getContentAsString(), RESPONSE_JSON_V46);
 
         assertDatabaseIsCorrect();
         assertNoCConfig();
@@ -261,12 +267,53 @@ public class SpreadSheetImportTest extends BaseTest {
                 + "TestAddressBookCase,TestComplexAddressBookCase"));
     }
 
+    @Test
+    @Transactional
+    public void importInvalidEventPostStateConditionWithNoDefaultState() throws Exception {
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT,
+            getClass()).getInputStream();
+        final MvcResult result = performAndGetMvcResult(inputStream,
+            MockMvcResultMatchers.status().isUnprocessableEntity());
+
+        // Check the error response message.
+        assertThat("Incorrect HTTP status message for bad request",
+            result.getResponse().getContentAsString(),
+            containsString("Post state condition CaseEnteredIntoLegacy(PersonHasSecondAddress=\"Yes\"):1 "
+                + "has to include non conditional post state for event 'enterCaseIntoLegacy' in CaseEvent tab"));
+    }
+
+    @Test
+    @Transactional
+    public void importInvalidEventPostStateConditionWithDuplicatePriorities() throws Exception {
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES,
+            getClass()).getInputStream();
+        final MvcResult result = performAndGetMvcResult(inputStream,
+            MockMvcResultMatchers.status().isUnprocessableEntity());
+
+        // Check the error response message.
+        assertThat("Incorrect HTTP status message for bad request",
+            result.getResponse().getContentAsString(),
+            containsString("Post state condition "
+                + "CaseEnteredIntoLegacy(PersonHasSecondAddress=\"Yes\"):1;"
+                + "CaseStopped(PersonHasSecondAddress=\"Yes\"):1;CaseEnteredIntoLegacy "
+                + "has duplicate priorities for event 'enterCaseIntoLegacy' in CaseEvent tab"));
+    }
+
     private MvcResult performAndGetMvcResult(InputStream inputStream) throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn();
+    }
+
+    private MvcResult performAndGetMvcResult(InputStream inputStream, ResultMatcher resultMatcher) throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", inputStream);
+        return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(resultMatcher)
             .andReturn();
     }
 
@@ -297,9 +344,14 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertBody(String contentAsString) throws IOException, URISyntaxException {
+        assertBody(contentAsString, RESPONSE_JSON_V45);
+    }
+
+    private void assertBody(String contentAsString, String fileName)
+        throws IOException, URISyntaxException {
 
         String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
-            .getResource(RESPONSE_JSON)
+            .getResource(fileName)
             .toURI())));
         expected = expected.replaceAll("#date",
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));

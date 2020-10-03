@@ -1,5 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -31,6 +38,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntit
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -72,13 +80,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -92,7 +93,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-class EntityToResponseDTOMapperTest {
+class  EntityToResponseDTOMapperTest {
 
     private static final SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -596,7 +597,7 @@ class EntityToResponseDTOMapperTest {
                     parameters
                 );
                 assertEquals(parameters.getPreStateExpectation(), caseEvent.getPreStates());
-                assertEquals(parameters.getPostStateExpectation(), caseEvent.getPostState());
+                assertEquals(parameters.getPostStates().size(), caseEvent.getPostStates().size());
             }
         }
 
@@ -628,7 +629,7 @@ class EntityToResponseDTOMapperTest {
 
             assertEquals(1, caseEvent.getPreStates().size());
             assertThat(caseEvent.getPreStates(), hasItems("*"));
-            assertEquals("*", caseEvent.getPostState());
+            assertEquals(0, caseEvent.getPostStates().size());
 
         }
 
@@ -639,7 +640,8 @@ class EntityToResponseDTOMapperTest {
                     Collections.singletonList("*"), "*"
                 ),
                 new Parameters(
-                    false, Collections.emptyList(), stateEntity("PostState"),
+                    false, Collections.emptyList(),
+                    asList(eventPostStateEntity("PostState", 1)),
                     Collections.singletonList("*"), "PostState"
                 ),
                 new Parameters(
@@ -651,7 +653,7 @@ class EntityToResponseDTOMapperTest {
                 new Parameters(
                     false, asList(stateEntity("preState1"), stateEntity("preState2"),
                     stateEntity("preState3")),
-                    stateEntity("PostState"),
+                    asList(eventPostStateEntity("PostState", 1)),
                     asList("preState1", "preState2", "preState3"), "PostState"
                 ),
                 new Parameters(
@@ -659,7 +661,8 @@ class EntityToResponseDTOMapperTest {
                     Collections.emptyList(), "*"
                 ),
                 new Parameters(
-                    true, Collections.emptyList(), stateEntity("PostState"),
+                    true, Collections.emptyList(),
+                    asList(eventPostStateEntity("PostState", 1)),
                     Collections.emptyList(), "PostState"
                 ),
                 new Parameters(
@@ -671,7 +674,7 @@ class EntityToResponseDTOMapperTest {
                 new Parameters(
                     true, asList(stateEntity("preState1"), stateEntity("preState2"),
                     stateEntity("preState3")),
-                    stateEntity("PostState"),
+                    asList(eventPostStateEntity("PostState", 1)),
                     Collections.emptyList(), "PostState"
                 )
             );
@@ -683,22 +686,30 @@ class EntityToResponseDTOMapperTest {
             return stateEntity;
         }
 
+        private EventPostStateEntity eventPostStateEntity(String reference,
+                                                          int priority) {
+            EventPostStateEntity eventPostStateEntity = new EventPostStateEntity();
+            eventPostStateEntity.setPostStateReference(reference);
+            eventPostStateEntity.setPriority(priority);
+            return eventPostStateEntity;
+        }
+
         private class Parameters {
 
             private final Boolean canCreate;
             private final List<StateEntity> preStates;
-            private final StateEntity postState;
+            private final List<EventPostStateEntity> postStates;
             private final List<String> preStateExpectation;
             private final String postStateExpectation;
 
             Parameters(Boolean canCreate,
                        List<StateEntity> preStates,
-                       StateEntity postState,
+                       List<EventPostStateEntity> postStates,
                        List<String> preStateExpectation,
                        String postStateExpectation) {
                 this.canCreate = canCreate;
                 this.preStates = preStates;
-                this.postState = postState;
+                this.postStates = postStates == null ? new ArrayList<>() : postStates;
                 this.preStateExpectation = preStateExpectation;
                 this.postStateExpectation = postStateExpectation;
             }
@@ -711,8 +722,8 @@ class EntityToResponseDTOMapperTest {
                 return preStates;
             }
 
-            private StateEntity getPostState() {
-                return postState;
+            private List<EventPostStateEntity> getPostStates() {
+                return postStates;
             }
 
             private List<String> getPreStateExpectation() {
@@ -776,7 +787,7 @@ class EntityToResponseDTOMapperTest {
 
             eventEntity.setCanCreate(parameters.getCanCreate());
             parameters.getPreStates().forEach(eventEntity::addPreState);
-            eventEntity.setPostState(parameters.getPostState());
+            eventEntity.addEventPostStates(parameters.getPostStates());
 
             CaseEvent caseEvent = spyOnClassUnderTest.map(eventEntity);
 

@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
+import java.util.Optional;
+import java.util.function.Function;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleServiceImpl;
@@ -38,8 +40,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoes
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidDefaultPostStateError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidPostStatePriorityError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCaseHistoryViewerCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
@@ -59,9 +64,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItem
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-
-import java.util.Optional;
-import java.util.function.Function;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -600,6 +602,40 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return withWorkSheetName(error);
     }
 
+    @Override
+    public String createErrorMessage(EventEntityInvalidPostStatePriorityError error) {
+        return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
+            String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
+            return String.format("Post state condition %s has duplicate priorities for event '%s' in %s tab",
+                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
+                error.getEventEntity().getReference(),
+                def.getSheetName());
+        });
+    }
+
+    @Override
+    public String createErrorMessage(EventEntityInvalidDefaultPostStateError error) {
+        return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
+            String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
+            return String.format("Post state condition %s has to include "
+                    + "non conditional post state for event '%s' in %s tab",
+                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
+                error.getEventEntity().getReference(),
+                def.getSheetName());
+        });
+    }
+
+    @Override
+    public String createErrorMessage(EventEntityShowConditionReferencesInvalidCaseFieldError error) {
+        return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
+            String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
+            return String.format("Unknown field '%s' for event '%s' in post state condition: '%s' in %s tab",
+                error.getShowConditionField(),
+                error.getEventEntity().getReference(),
+                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
+                def.getSheetName());
+        });
+    }
 
     private String withWorkSheetName(SimpleValidationError<?> error) {
         return newMessageIfDefinitionExists(error,

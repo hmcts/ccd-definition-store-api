@@ -1,15 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import com.google.common.collect.Maps;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
-
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -25,12 +22,14 @@ import javax.persistence.MapKeyEnumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -83,9 +82,10 @@ public class EventEntity implements Serializable {
     @Column(name = "end_button_label")
     private String endButtonLabel;
 
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "post_state_id")
-    private StateEntity postState;
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_event_id")
+    private final List<EventPostStateEntity> postStates = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id", nullable = false)
@@ -216,14 +216,6 @@ public class EventEntity implements Serializable {
         this.caseType = caseType;
     }
 
-    public StateEntity getPostState() {
-        return postState;
-    }
-
-    public void setPostState(final StateEntity postState) {
-        this.postState = postState;
-    }
-
     public List<StateEntity> getPreStates() {
         return preStates;
     }
@@ -304,6 +296,24 @@ public class EventEntity implements Serializable {
 
     public void setCanSaveDraft(Boolean canSaveDraft) {
         this.canSaveDraft = canSaveDraft;
+    }
+
+    public List<EventPostStateEntity> getPostStates() {
+        return postStates;
+    }
+
+    public void addEventPostState(@NotNull EventPostStateEntity postStateEntity) {
+        postStateEntity.setEventEntity(this);
+        this.postStates.add(postStateEntity);
+    }
+
+    public void addEventPostStates(List<EventPostStateEntity> postStateEntities) {
+        if (postStateEntities != null) {
+            postStateEntities
+                .stream()
+                .filter(entity -> entity != null)
+                .forEach(this::addEventPostState);
+        }
     }
 
     private void setWebhook(WebhookType type, WebhookEntity webhook) {

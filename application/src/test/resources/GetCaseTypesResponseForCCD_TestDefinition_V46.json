@@ -103,7 +103,7 @@
       "enabling_condition" : null,
       "priority" : 99,
       "post_state_reference" : "CaseCreated"
-    }],
+    } ],
     "callback_url_about_to_start_event" : "http://localhost:8080/about_to_start",
     "retries_timeout_about_to_start_event" : [ 5, 10, 15 ],
     "callback_url_about_to_submit_event" : null,
@@ -197,10 +197,14 @@
     } ],
     "pre_states" : [ "CaseCreated" ],
     "post_states" : [ {
+      "enabling_condition" : "PersonHasSecondAddress=\"Yes\"",
+      "priority" : 1,
+      "post_state_reference" : "*"
+    }, {
       "enabling_condition" : null,
       "priority" : 99,
-      "post_state_reference" : "CaseEnteredIntoLegacy"
-    }],
+      "post_state_reference" : "CaseStopped"
+    } ],
     "callback_url_about_to_start_event" : null,
     "retries_timeout_about_to_start_event" : [ ],
     "callback_url_about_to_submit_event" : null,

@@ -1,6 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import com.google.common.collect.Lists;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -14,10 +17,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.WebhookParser.parseWebhook;
@@ -115,10 +114,9 @@ public class EventParser {
         }
 
         // Post-state
+        EventPostStateParser postStateParser = new EventPostStateParser(parseContext, caseTypeId);
         final String postStateId = eventDefinition.getString(ColumnName.POST_CONDITION_STATE);
-        if (!StringUtils.isBlank(postStateId) && !WILDCARD.equals(postStateId)) {
-            event.setPostState(parseContext.getStateForCaseType(caseTypeId, postStateId));
-        }
+        event.addEventPostStates(postStateParser.parse(postStateId));
 
         // Webhooks
         event.setWebhookStart(parseWebhook(eventDefinition,
