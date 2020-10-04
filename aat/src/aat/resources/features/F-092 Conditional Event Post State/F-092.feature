@@ -20,6 +20,7 @@ Feature: F-092: Conditional Event Post State
     And the request [contains conditional event post state with invalid case field]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
+    And the response has all other details as expected
 
   @S-092.2 @Ignore
   Scenario: Must return a negative response in an attempt to import a definition file containing conditional event post state with duplicate priority
@@ -28,6 +29,7 @@ Feature: F-092: Conditional Event Post State
     And the request [contains conditional event post state with duplicate priority]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
+    And the response has all other details as expected
 
   @S-092.3 @Ignore
   Scenario: Must return a negative response in an attempt to import a definition file containing conditional event post state with no default
@@ -36,6 +38,7 @@ Feature: F-092: Conditional Event Post State
     And the request [contains conditional event post state with no default post state]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
+    And the response has all other details as expected
 
   @S-092.4
   Scenario: Must return a negative response in an attempt to import a definition file containing conditional event post state with missing priority

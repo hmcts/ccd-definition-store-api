@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "Case Definition data successfully imported"
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- Unknown field 'TextField55' for event 'approveCase' in post state condition: 'CaseApproved(TextField55=\"showmethemoney\" AND TextField3=\"showpage5\"):1;CaseModified' in CaseEvent tab"
     }
   }
 }
