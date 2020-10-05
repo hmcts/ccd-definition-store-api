@@ -13,7 +13,7 @@ Feature: F-092: Conditional Event Post State
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-092.1 @Ignore
+  @S-092.1
   Scenario: Must return a negative response in an attempt to import a definition file containing conditional event post state with invalid case field
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
