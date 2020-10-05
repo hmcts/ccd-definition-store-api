@@ -21,7 +21,7 @@
     "responseMessage": "Unprocessable Entity",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
-      "Content-Type": "application/json",
+      "Content-Type": "text/plain",
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {

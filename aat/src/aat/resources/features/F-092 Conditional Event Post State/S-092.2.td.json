@@ -17,11 +17,11 @@
     }
   },
   "expectedResponse": {
-    "responseCode": 400,
-    "responseMessage": "Bad Request",
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
-      "Content-Type": "application/json",
+      "Content-Type": "text/plain",
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {

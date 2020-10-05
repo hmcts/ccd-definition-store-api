@@ -22,7 +22,7 @@ Feature: F-092: Conditional Event Post State
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-092.2 @Ignore
+  @S-092.2
   Scenario: Must return a negative response in an attempt to import a definition file containing conditional event post state with duplicate priority
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -31,7 +31,7 @@ Feature: F-092: Conditional Event Post State
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-092.3 @Ignore
+  @S-092.3
   Scenario: Must return a negative response in an attempt to import a definition file containing conditional event post state with no default
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
