@@ -37,8 +37,10 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        validator = new EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
-        when(displayContextParameterValidatorFactory.getValidator(Mockito.any())).thenReturn(displayContextParameterValidator);
+        validator = new EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(
+            displayContextParameterValidatorFactory);
+        when(displayContextParameterValidatorFactory.getValidator(Mockito.any()))
+            .thenReturn(displayContextParameterValidator);
     }
 
     @Test
@@ -121,7 +123,8 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
             () -> assertThat(result.isValid(), is(false)),
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' on tab 'CaseEventToFields'"))
+                is("Unsupported display context parameter type '#DATETIMEENTRY(HHmmss)' for field 'CASE_FIELD' "
+                    + "on tab 'CaseEventToFields'"))
         );
     }
 
@@ -131,7 +134,8 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter("#DATETIMEENTRY(0123456789)");
         entity.setCaseField(caseFieldEntity());
         entity.setDisplayContext(DisplayContext.MANDATORY);
-        doThrow(InvalidDateTimeFormatException.class).when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
+        doThrow(InvalidDateTimeFormatException.class)
+            .when(displayContextParameterValidator).validate(Mockito.any(), Mockito.any());
 
         final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
 

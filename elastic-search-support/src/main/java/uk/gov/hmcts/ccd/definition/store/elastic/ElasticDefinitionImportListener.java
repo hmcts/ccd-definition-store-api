@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import java.io.IOException;
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +9,9 @@ import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitiali
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+
+import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
@@ -34,8 +34,9 @@ public abstract class ElasticDefinitionImportListener {
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
 
     /**
-     * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new HighLevelCCDElasticClient on each import
-     * and we close it once the import is completed. The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
+     * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new
+     * HighLevelCCDElasticClient on each import and we close it once the import is completed.
+     * The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
      */
     @Transactional
     public void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) {

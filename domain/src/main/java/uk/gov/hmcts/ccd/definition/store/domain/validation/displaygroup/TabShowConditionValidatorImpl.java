@@ -59,8 +59,10 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
             });
 
             showCondition.getFields().forEach(showConditionField -> {
-                if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField) && !MetadataField.isMetadataField(showConditionField)) {
-                    validationResult.addError(new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
+                if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)
+                    && !MetadataField.isMetadataField(showConditionField)) {
+                    validationResult.addError(
+                        new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
                 }
             });
         }
@@ -88,8 +90,10 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                     });
 
                     showCondition.getFields().forEach(showConditionField -> {
-                        if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField) && !MetadataField.isMetadataField(showConditionField)) {
-                            validationResult.addError(new DisplayGroupInvalidTabFieldShowCondition(showConditionField, caseField));
+                        if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)
+                            && !MetadataField.isMetadataField(showConditionField)) {
+                            validationResult.addError(
+                                new DisplayGroupInvalidTabFieldShowCondition(showConditionField, caseField));
                         }
                     });
                 }
@@ -98,7 +102,8 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
         return validationResult;
     }
 
-    private List<DisplayGroupEntity> getAllTabDisplayGroups(DisplayGroupEntity thisDisplayGroup, Collection<DisplayGroupEntity> allDisplayGroups) {
+    private List<DisplayGroupEntity> getAllTabDisplayGroups(DisplayGroupEntity thisDisplayGroup,
+                                                            Collection<DisplayGroupEntity> allDisplayGroups) {
         return allDisplayGroups
             .stream()
             .filter(dg -> dg.getType() == DisplayGroupType.TAB)

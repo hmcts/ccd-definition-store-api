@@ -10,9 +10,9 @@ public class CreateEventDoesNotHavePostStateValidationError extends ValidationEr
 
     public CreateEventDoesNotHavePostStateValidationError(EventEntity eventEntity) {
         super(String.format(
-                    "PostState must be defined for the event with reference '%s'",
-                    eventEntity.getReference()
-                )
+            "PostState must be defined for the event with reference '%s'",
+            eventEntity.getReference()
+            )
         );
         this.eventEntity = eventEntity;
     }

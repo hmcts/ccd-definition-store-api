@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import java.util.Map;
-import java.util.Optional;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -12,6 +9,9 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.Injec
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.TypeMappersManager;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 public abstract class MappingGenerator implements JsonGenerator, Injectable {
@@ -40,7 +40,8 @@ public abstract class MappingGenerator implements JsonGenerator, Injectable {
 
     public TypeMappingGenerator getTypeMapper(String type) {
         return Optional.ofNullable(this.typeMappers.get(type))
-                .orElseThrow(() -> new ElasticSearchInitialisationException(String.format("cannot find mapper for type %s", type)));
+            .orElseThrow(() -> new ElasticSearchInitialisationException(
+                String.format("cannot find mapper for type %s", type)));
     }
 
     public boolean shouldIgnore(FieldEntity field) {

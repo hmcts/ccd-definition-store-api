@@ -47,7 +47,8 @@ public class RestResponseEntityExceptionHandlerTest {
         List<ValidationError> validationErrors = new ArrayList<>();
         final MissingUserRolesException exception = new MissingUserRolesException(userRoles, validationErrors);
 
-        final ResponseEntity<Object> response = exceptionHandler.handleUserRolesMissing(exception, mock(WebRequest.class));
+        final ResponseEntity<Object> response = exceptionHandler
+            .handleUserRolesMissing(exception, mock(WebRequest.class));
 
         assertThat(response.getBody().toString(), containsString("Missing UserRoles."));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
@@ -60,9 +61,11 @@ public class RestResponseEntityExceptionHandlerTest {
         List<ValidationError> validationErrors = new ArrayList<>();
         when(validationException.getValidationResult()).thenReturn(validationResult);
         when(validationResult.getValidationErrors()).thenReturn(validationErrors);
-        final ResponseEntity<Object> response = exceptionHandler.handleValidationException(validationException, mock(WebRequest.class));
+        final ResponseEntity<Object> response = exceptionHandler
+            .handleValidationException(validationException, mock(WebRequest.class));
 
-        assertThat(response.getBody().toString(), containsString("Validation errors occurred importing the spreadsheet."));
+        assertThat(response.getBody().toString(),
+            containsString("Validation errors occurred importing the spreadsheet."));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.UNPROCESSABLE_ENTITY));
     }
 

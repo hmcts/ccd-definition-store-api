@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.util.List;
-
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
+
+import java.util.List;
 
 public interface JurisdictionUiConfigService {
 

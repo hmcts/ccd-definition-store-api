@@ -21,12 +21,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+
 import static java.util.stream.Collectors.toMap;
 
 /**
- * Accumulate everything that has been parsed so far and which is required for a subsequent parse stage. This is not meant
- * to expose the result of the parse itself, but instead to facilitate the mapping of dependent elements parsed at different
- * stages. As such, it should focus on the ease of consumption by parser.
+ * Accumulate everything that has been parsed so far and which is required for a subsequent parse stage.
+ * This is not meant to expose the result of the parse itself, but instead to facilitate the mapping of dependent
+ * elements parsed at different stages. As such, it should focus on the ease of consumption by parser.
  * To expose the results of a parse stage, use {@link ParseResult} instead.
  */
 public class ParseContext {
@@ -266,8 +267,8 @@ public class ParseContext {
     public ParseContext registerUserRoles(final List<UserRoleEntity> userRoleList) {
         userRoles.clear();
         userRoles.putAll(userRoleList
-                             .stream()
-                             .collect(toMap(UserRoleEntity::getReference, u -> u)));
+            .stream()
+            .collect(toMap(UserRoleEntity::getReference, u -> u)));
         return this;
     }
 
@@ -298,8 +299,8 @@ public class ParseContext {
 
     public void registerMetadataFields(List<CaseFieldEntity> fields) {
         metadataFields.putAll(fields.stream()
-                                  .filter(Objects::nonNull)
-                                  .collect(toMap(CaseFieldEntity::getReference, Function.identity())));
+            .filter(Objects::nonNull)
+            .collect(toMap(CaseFieldEntity::getReference, Function.identity())));
     }
 
     public Set<String> getMissingUserRoles() {

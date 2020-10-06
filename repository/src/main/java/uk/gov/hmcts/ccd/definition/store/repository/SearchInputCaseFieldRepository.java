@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import java.util.List;
-
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+
+import java.util.List;
 
 public interface SearchInputCaseFieldRepository extends DefinitionRepository<SearchInputCaseFieldEntity, Integer> {
 

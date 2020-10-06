@@ -1,11 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.List;
 
 @ApiModel(description = "")
 public class JurisdictionUiConfigResult {

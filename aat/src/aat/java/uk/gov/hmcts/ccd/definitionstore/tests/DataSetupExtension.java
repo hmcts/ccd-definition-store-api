@@ -1,16 +1,15 @@
 package uk.gov.hmcts.ccd.definitionstore.tests;
 
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
-
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.apache.commons.lang3.BooleanUtils;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import uk.gov.hmcts.ccd.definitionstore.tests.helper.idam.AuthenticatedUser;
+
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 
 /**
  * Custom Extension which executes setup code only once before all tests are started.
@@ -53,7 +52,7 @@ public class DataSetupExtension implements BeforeAllCallback {
             .when()
             .put("/api/user-role")
             .then()
-            .statusCode(anyOf(is(201),is(205)));
+            .statusCode(anyOf(is(201), is(205)));
     }
 
 }

@@ -26,17 +26,19 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.nocconfig.NoCConfigService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
@@ -146,6 +148,11 @@ public class ImportServiceImplTest {
     @Mock
     private NoCConfigService noCConfigService;
 
+    @Mock
+    private ChallengeQuestionParser challengeQuestionParser;
+    @Mock
+    private ChallengeQuestionTabService challengeQuestionTabService;
+
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -176,25 +183,27 @@ public class ImportServiceImplTest {
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
-            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator);
+            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
+            challengeQuestionParser);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
         service = new ImportServiceImpl(spreadsheetValidator,
-                                        spreadsheetParser,
-                                        parserFactory,
-                                        fieldTypeService,
-                                        jurisdictionService,
-                                        caseTypeService,
-                                        layoutService,
-                                        userRoleRepository,
-                                        workBasketUserDefaultService,
-                                        caseFieldRepository,
-                                        applicationEventPublisher,
-                                        idamProfileClient,
-                                        bannerService,
-                                        jurisdictionUiConfigService,
-                                        noCConfigService);
+            spreadsheetParser,
+            parserFactory,
+            fieldTypeService,
+            jurisdictionService,
+            caseTypeService,
+            layoutService,
+            userRoleRepository,
+            workBasketUserDefaultService,
+            caseFieldRepository,
+            applicationEventPublisher,
+            idamProfileClient,
+            bannerService,
+            jurisdictionUiConfigService,
+            noCConfigService,
+            challengeQuestionTabService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -332,7 +341,9 @@ public class ImportServiceImplTest {
         assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
         assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
         assertEquals("user@hmcts.net", metadata.getUserId());
-        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypesAsString());
+        assertEquals(
+            TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE,
+            metadata.getCaseTypesAsString());
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
@@ -346,7 +357,8 @@ public class ImportServiceImplTest {
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
-            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator);
+            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
+            hiddenFieldsValidator,challengeQuestionParser);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -364,7 +376,8 @@ public class ImportServiceImplTest {
             idamProfileClient,
             bannerService,
             jurisdictionUiConfigService,
-            noCConfigService);
+            noCConfigService,
+            challengeQuestionTabService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

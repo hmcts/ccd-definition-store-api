@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.regex;
 
-import java.util.regex.Pattern;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
+import java.util.regex.Pattern;
 
 public abstract class AbstractDocumentTypeRegularExpressionValidator {
 

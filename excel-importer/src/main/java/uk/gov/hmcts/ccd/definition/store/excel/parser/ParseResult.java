@@ -6,7 +6,8 @@ import java.util.List;
 
 /**
  * Contains the results of a parse stage.
- * Parsed elements that were introduced or altered since the last import of the jurisdiction or case type are recorded as `new`.
+ * Parsed elements that were introduced or altered since the last import of the jurisdiction or
+ * case type are recorded as `new`.
  *
  * @param <T> Type of the result, e.g. {@link uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity}
  */
@@ -14,7 +15,8 @@ public class ParseResult<T> {
     private final List<T> allResults = Lists.newArrayList();
 
     /**
-     * A sorted collection must be used here as some results may need to be persisted in a specific order to satisfy inter-dependencies.
+     * A sorted collection must be used here as some results may need to be persisted in a specific order
+     * to satisfy inter-dependencies.
      */
     private final List<T> newResults = Lists.newArrayList();
 
@@ -41,6 +43,7 @@ public class ParseResult<T> {
 
     /**
      * Retrieve all results irrespective of whether they are "new" or not.
+     *
      * @return all registered result entries, marked as `new` or not.
      */
     public List<T> getAllResults() {
@@ -49,6 +52,7 @@ public class ParseResult<T> {
 
     /**
      * Return all results marked as "new".
+     *
      * @return all registered result entries marked as `new`.
      */
     public List<T> getNewResults() {

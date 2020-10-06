@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import org.springframework.data.repository.NoRepositoryBean;
+
 import java.io.Serializable;
 import java.util.Optional;
-
-import org.springframework.data.repository.NoRepositoryBean;
 
 @SuppressWarnings("checkstyle:InterfaceTypeParameterName")
 @NoRepositoryBean

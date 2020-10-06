@@ -1,16 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.stream.Collectors.toList;
-
 import com.google.gson.stream.JsonWriter;
 import org.jooq.lambda.Unchecked;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
@@ -49,8 +49,10 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
                 jw.beginObject();
                 jw.name(PROPERTIES);
                 jw.beginObject();
-                List<ComplexFieldEntity> complexFields = collectionField.getFieldType().getCollectionFieldType().getComplexFields();
-                List<ComplexFieldEntity> notIgnoredFields = complexFields.stream().filter(f -> !shouldIgnore(f)).collect(toList());
+                List<ComplexFieldEntity> complexFields = collectionField.getFieldType()
+                    .getCollectionFieldType().getComplexFields();
+                List<ComplexFieldEntity> notIgnoredFields = complexFields.stream()
+                    .filter(f -> !shouldIgnore(f)).collect(toList());
 
                 for (ComplexFieldEntity complexField : notIgnoredFields) {
                     TypeMappingGenerator typeMapper = getTypeMapper(complexField.getBaseTypeString());

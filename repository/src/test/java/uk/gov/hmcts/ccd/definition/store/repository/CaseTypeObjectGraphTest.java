@@ -1,18 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
-
+import javax.persistence.EntityManager;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -23,7 +15,33 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
+
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -113,7 +131,9 @@ public class CaseTypeObjectGraphTest {
         caseType.addCaseTypeACL(cture2);
         caseType.addCaseTypeACL(cture3);
 
-        e1.setPostState(s1);
+        EventPostStateEntity eventPostStateEntity = new EventPostStateEntity();
+        eventPostStateEntity.setPostStateReference(s1.getReference());
+        e1.addEventPostState(eventPostStateEntity);
 
         WebhookEntity h1 = createWebHook("url1", 3, 5, 6, 7, 8);
         WebhookEntity h2 = createWebHook("url2", 3, 50, 6, 20);
@@ -147,18 +167,19 @@ public class CaseTypeObjectGraphTest {
         assertThat(fetched.getJurisdiction(), hasProperty("reference", is("jurisdiction")));
         assertThat(fetched.getSecurityClassification(), is(SecurityClassification.PUBLIC));
         assertThat(fetched.getEvents(), hasItemWithProperty("preStates", contains(
-                hasProperty("reference", is("stateId")),
-                hasProperty("reference", is("stateId2"))
+            hasProperty("reference", is("stateId")),
+            hasProperty("reference", is("stateId2"))
         )));
 
         final List<EventEntity> fetchedEvents = fetched.getEvents();
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookStart() != null
-            &&  x.getWebhookStart().getTimeouts().equals(Lists.newArrayList(3, 5, 6, 7, 8))));
+            && x.getWebhookStart().getTimeouts().equals(Lists.newArrayList(3, 5, 6, 7, 8))));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPreSubmit() != null
             && x.getWebhookPreSubmit().getTimeouts().equals(Lists.newArrayList(3, 50, 6, 20))));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPostSubmit() != null
             && x.getWebhookPostSubmit().getTimeouts().equals(Lists.newArrayList(23, 5, 6))));
-        assertThat(fetchedEvents, hasItem(hasProperty("securityClassification", equalTo(SecurityClassification.PRIVATE))));
+        assertThat(fetchedEvents, hasItem(hasProperty(
+            "securityClassification", equalTo(SecurityClassification.PRIVATE))));
         assertThat(fetchedEvents.get(1).getEventCaseFields(), hasSize(1));
         EventCaseFieldEntity eventCaseFieldEntity = fetchedEvents.get(1).getEventCaseFields().get(0);
         assertThat(eventCaseFieldEntity.getCaseField().getReference(), equalTo(cf.getReference()));
@@ -200,8 +221,10 @@ public class CaseTypeObjectGraphTest {
 
         // Check authorisation case fields
         assertThat(caseField.getCaseFieldACLEntities().size(), equalTo(2));
-        assertThat(caseField.getCaseFieldACLEntities().get(0).getUserRole().getReference(), equalTo("user role 1"));
-        assertThat(caseField.getCaseFieldACLEntities().get(1).getUserRole().getReference(), equalTo("user role 2"));
+        assertThat(caseField.getCaseFieldACLEntities().get(0).getUserRole().getReference(),
+            equalTo("user role 1"));
+        assertThat(caseField.getCaseFieldACLEntities().get(1).getUserRole().getReference(),
+            equalTo("user role 2"));
         assertThat(caseField.getCaseFieldACLEntities().get(0).getCreate(), equalTo(true));
         assertThat(caseField.getCaseFieldACLEntities().get(0).getRead(), equalTo(false));
         assertThat(caseField.getCaseFieldACLEntities().get(0).getUpdate(), equalTo(false));
@@ -232,8 +255,10 @@ public class CaseTypeObjectGraphTest {
         assertNotNull(optionalfetched.get());
         CaseTypeEntity fetchedAltered = optionalfetched.get();
         assertThat(fetchedAltered.getSecurityClassification(), equalTo(SecurityClassification.RESTRICTED));
-        assertThat(fetchedAltered.getCaseFields().get(0).getSecurityClassification(), equalTo(SecurityClassification.PRIVATE));
-        assertThat(fetchedAltered.getEvents().get(0).getSecurityClassification(), equalTo(SecurityClassification.PUBLIC));
+        assertThat(fetchedAltered.getCaseFields().get(0).getSecurityClassification(),
+            equalTo(SecurityClassification.PRIVATE));
+        assertThat(fetchedAltered.getEvents().get(0).getSecurityClassification(),
+            equalTo(SecurityClassification.PUBLIC));
 
     }
 
@@ -243,7 +268,8 @@ public class CaseTypeObjectGraphTest {
                                            final boolean canUpdate,
                                            final boolean canDelete) {
         final String reasonPrefix = String.format("Case type '%s, Event '%s', User Role '%s' ",
-                entity.getEvent().getCaseType().getReference(), entity.getEvent().getReference(), entity.getUserRole().getReference());
+            entity.getEvent().getCaseType().getReference(), entity.getEvent().getReference(),
+            entity.getUserRole().getReference());
         assertThat(reasonPrefix + "can create", entity.getCreate(), is(canCreate));
         assertThat(reasonPrefix + "can read", entity.getRead(), is(canRead));
         assertThat(reasonPrefix + "can update", entity.getUpdate(), is(canUpdate));
@@ -275,15 +301,17 @@ public class CaseTypeObjectGraphTest {
                                               final CaseTypeACLEntity actual) {
         assertThat(expected.getCaseType().getReference(), is(caseType.getReference()));
         assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
-        assertThat(expected.getUserRole().getSecurityClassification(), is(actual.getUserRole().getSecurityClassification()));
+        assertThat(expected.getUserRole().getSecurityClassification(),
+            is(actual.getUserRole().getSecurityClassification()));
     }
 
     private void assertStateUserRoleEntity(final StateEntity stateEntity,
-                                              final StateACLEntity expected,
-                                              final StateACLEntity actual) {
+                                           final StateACLEntity expected,
+                                           final StateACLEntity actual) {
         assertThat(expected.getStateEntity().getReference(), is(stateEntity.getReference()));
         assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
-        assertThat(expected.getUserRole().getSecurityClassification(), is(actual.getUserRole().getSecurityClassification()));
+        assertThat(expected.getUserRole().getSecurityClassification(),
+            is(actual.getUserRole().getSecurityClassification()));
     }
 
     private void setAuthorisationData(final Authorisation entity,
@@ -350,7 +378,10 @@ public class CaseTypeObjectGraphTest {
         return webhook;
     }
 
-    private EventEntity createEvent(final String reference, final String name, final Integer order, final SecurityClassification sc) {
+    private EventEntity createEvent(final String reference,
+                                    final String name,
+                                    final Integer order,
+                                    final SecurityClassification sc) {
         final EventEntity event = new EventEntity();
         event.setReference(reference);
         event.setName(name);

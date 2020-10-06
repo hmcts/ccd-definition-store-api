@@ -2,13 +2,12 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
+
+import java.util.Map;
 
 @Component
 public class ParserFactory {
@@ -18,18 +17,21 @@ public class ParserFactory {
     private final Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry;
     private final SpreadsheetValidator spreadsheetValidator;
     private final HiddenFieldsValidator hiddenFieldsValidator;
+    private final ChallengeQuestionParser challengeQuestionParser;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
                          EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
                          SpreadsheetValidator spreadsheetValidator,
-                         HiddenFieldsValidator hiddenFieldsValidator) {
+                         HiddenFieldsValidator hiddenFieldsValidator,
+                         ChallengeQuestionParser challengeQuestionParser) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
         this.spreadsheetValidator = spreadsheetValidator;
         this.hiddenFieldsValidator = hiddenFieldsValidator;
+        this.challengeQuestionParser = challengeQuestionParser;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -104,4 +106,7 @@ public class ParserFactory {
         return new NoCConfigParser(context);
     }
 
+    public ChallengeQuestionParser createNewChallengeQuestionParser() {
+        return challengeQuestionParser;
+    }
 }

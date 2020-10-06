@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,12 +11,18 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.regex.RegularExpressi
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
+
 class ComplexFieldEntityDocumentTypeRegularExpressionValidatorTest {
 
     @Mock
     private ComplexFieldValidator.ValidationContext context;
 
-    private final ComplexFieldEntityDocumentTypeRegularExpressionValidator validator = new ComplexFieldEntityDocumentTypeRegularExpressionValidator();
+    private final ComplexFieldEntityDocumentTypeRegularExpressionValidator validator =
+        new ComplexFieldEntityDocumentTypeRegularExpressionValidator();
 
     private final FieldTypeEntity fieldType = new FieldTypeEntity();
     private final ComplexFieldEntity complexField = new ComplexFieldEntity();

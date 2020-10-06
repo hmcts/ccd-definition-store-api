@@ -10,9 +10,11 @@ public class CaseFieldEntityMissingSecurityClassificationValidationError extends
 
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
 
-    public CaseFieldEntityMissingSecurityClassificationValidationError(CaseFieldEntity caseFieldEntity,
-                                                                       CaseFieldEntityValidationContext caseFieldEntityValidationContext) {
-        super(String.format("CaseField with reference '%s' must have a Security Classification defined", caseFieldEntity.getReference()));
+    public CaseFieldEntityMissingSecurityClassificationValidationError(
+        CaseFieldEntity caseFieldEntity, CaseFieldEntityValidationContext caseFieldEntityValidationContext) {
+        super(String.format(
+            "CaseField with reference '%s' must have a Security Classification defined",
+            caseFieldEntity.getReference()));
         this.caseFieldEntity = caseFieldEntity;
         this.caseFieldEntityValidationContext = caseFieldEntityValidationContext;
     }

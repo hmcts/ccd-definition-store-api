@@ -1,13 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,10 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
-        SanityCheckApplication.class,
-        TestConfiguration.class
+    SanityCheckApplication.class,
+    TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
@@ -96,7 +96,8 @@ public class VersionedDefinitionRepositoryDecoratorTest {
         Optional<CaseTypeEntity> retrievedCaseType = versionedCaseTypeRepository.findById(savedEntities.get(0).getId());
         assertNotNull(retrievedCaseType.get());
         assertThat(retrievedCaseType.get().getVersion(), is(1));
-        Optional<CaseTypeEntity> retrievedCaseType2 = versionedCaseTypeRepository.findById(savedEntities.get(1).getId());
+        Optional<CaseTypeEntity> retrievedCaseType2 = versionedCaseTypeRepository
+            .findById(savedEntities.get(1).getId());
         assertNotNull(retrievedCaseType2.get());
         assertThat(retrievedCaseType2.get().getVersion(), is(1));
 

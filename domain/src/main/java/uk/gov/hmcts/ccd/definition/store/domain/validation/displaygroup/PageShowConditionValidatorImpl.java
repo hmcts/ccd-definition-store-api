@@ -54,8 +54,10 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
             });
 
             showCondition.getFields().forEach(showConditionField -> {
-                if (!displayGroup.getEvent().hasField(showConditionField) && !MetadataField.isMetadataField(showConditionField)) {
-                    validationResult.addError(new DisplayGroupInvalidEventFieldShowCondition(showConditionField, displayGroup));
+                if (!displayGroup.getEvent().hasField(showConditionField)
+                    && !MetadataField.isMetadataField(showConditionField)) {
+                    validationResult.addError(
+                        new DisplayGroupInvalidEventFieldShowCondition(showConditionField, displayGroup));
                 }
             });
         }

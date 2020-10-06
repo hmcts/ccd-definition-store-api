@@ -11,7 +11,8 @@ public class CaseTypeEntityNonUniqueReferenceValidationError extends ValidationE
     public CaseTypeEntityNonUniqueReferenceValidationError(CaseTypeEntity caseTypeEntity) {
         super(
             String.format(
-                "Case Type with reference '%s' already exists. Case types must be unique across all existing jurisdictions.",
+                "Case Type with reference '%s' already exists. "
+                    + "Case types must be unique across all existing jurisdictions.",
                 caseTypeEntity.getReference()
             )
         );

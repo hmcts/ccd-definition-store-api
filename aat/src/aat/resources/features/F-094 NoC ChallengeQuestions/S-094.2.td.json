@@ -1,0 +1,24 @@
+{
+  "_guid_" : "S-094.2",
+  "_extends_": "F-094_Test_Base_data",
+  "specs" : [
+    "contains a malformed CaseType ID for C1",
+    "contains a valid Collection Question ID",
+    "returns an empty questions array"
+
+  ],
+  "request" : {
+    "pathVariables": {
+      "ctid": "invalidcasetype",
+      "id": "NoCChallenge"
+    }
+  },
+
+  "expectedResponse" : {
+    "_extends_" : "Common_200_Response",
+    "body" : {
+      "questions" : []
+    }
+
+  }
+}

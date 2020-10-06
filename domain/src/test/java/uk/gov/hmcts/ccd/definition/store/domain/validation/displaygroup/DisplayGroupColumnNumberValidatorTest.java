@@ -1,17 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 public class DisplayGroupColumnNumberValidatorTest {
 
@@ -64,7 +64,8 @@ public class DisplayGroupColumnNumberValidatorTest {
 
         assertThat(result.isValid(), is(false));
         assertThat(result.getValidationErrors(), hasSize(1));
-        assertThat(result.getValidationErrors(), hasItem(instanceOf(DisplayGroupColumnNumberValidator.ValidationError.class)));
+        assertThat(result.getValidationErrors(), hasItem(
+            instanceOf(DisplayGroupColumnNumberValidator.ValidationError.class)));
         DisplayGroupColumnNumberValidator.ValidationError validationError =
             (DisplayGroupColumnNumberValidator.ValidationError) result.getValidationErrors().get(0);
         assertThat(validationError.getEntity(), is(entity));

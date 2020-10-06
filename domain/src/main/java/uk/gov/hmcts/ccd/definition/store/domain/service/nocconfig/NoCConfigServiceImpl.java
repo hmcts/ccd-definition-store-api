@@ -30,7 +30,8 @@ public class NoCConfigServiceImpl implements NoCConfigService {
     public void save(NoCConfigEntity noCConfigEntity) {
         log.debug("Create noc config entity {}", noCConfigEntity);
         String reference = noCConfigEntity.getCaseType().getReference();
-        Optional<NoCConfigEntity> noCConfigEntityObj = Optional.ofNullable(noCConfigRepository.findByCaseTypeReference(reference));
+        Optional<NoCConfigEntity> noCConfigEntityObj = Optional.ofNullable(
+            noCConfigRepository.findByCaseTypeReference(reference));
         NoCConfigEntity noCConfigEntityDb = noCConfigEntity;
         if (noCConfigEntityObj.isPresent()) {
             noCConfigEntityDb = noCConfigEntityObj.get();

@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import javax.validation.constraints.NotNull;
-
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import javax.validation.constraints.NotNull;
 
 public class UserRoleModelMapper {
 

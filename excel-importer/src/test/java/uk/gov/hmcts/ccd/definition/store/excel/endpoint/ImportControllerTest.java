@@ -1,26 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.IMPORT_WARNINGS_HEADER;
-import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.URI_IMPORT;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,15 +14,40 @@ import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageS
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.IMPORT_WARNINGS_HEADER;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.URI_IMPORT;
+
 class ImportControllerTest {
 
-    @Mock private ImportServiceImpl importService;
+    @Mock
+    private ImportServiceImpl importService;
 
-    @Mock private FileStorageService fileStorageService;
+    @Mock
+    private FileStorageService fileStorageService;
 
-    @Mock private AzureStorageConfiguration azureStorageConfiguration;
+    @Mock
+    private AzureStorageConfiguration azureStorageConfiguration;
 
-    @InjectMocks private ImportController controller;
+    @InjectMocks
+    private ImportController controller;
 
     private MockMvc mockMvc;
 
@@ -57,8 +61,8 @@ class ImportControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         file =
             new MockMultipartFile("file",
-                                  Files.readAllBytes(new File("src/test/resources/CCD_TestDefinition.xlsx")
-                                                         .toPath()));
+                Files.readAllBytes(new File("src/test/resources/CCD_TestDefinition.xlsx")
+                    .toPath()));
         metadata = new DefinitionFileUploadMetadata();
         metadata.setJurisdiction("TEST");
         metadata.addCaseType("TestCaseType");
@@ -72,8 +76,8 @@ class ImportControllerTest {
     void validUploadAzureEnabled() throws Exception {
         when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
         mockMvc.perform(multipart(URI_IMPORT).file(file))
-               .andExpect(status().isCreated())
-               .andExpect(content().string("Case Definition data successfully imported"));
+            .andExpect(status().isCreated())
+            .andExpect(content().string("Case Definition data successfully imported"));
         verify(fileStorageService).uploadFile(file, metadata);
     }
 

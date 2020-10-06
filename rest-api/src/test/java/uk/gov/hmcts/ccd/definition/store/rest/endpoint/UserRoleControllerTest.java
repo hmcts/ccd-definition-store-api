@@ -127,7 +127,7 @@ class UserRoleControllerTest {
             final UserRole mockUserRole = buildUserRole(ROLE1, 1);
             final UserRole mockUserRole2 = buildUserRole(ROLE2, 2);
             List<UserRole> roles = Arrays.asList(mockUserRole, mockUserRole2);
-            List<String> roleNames = Arrays.asList("role1","role2");
+            List<String> roleNames = Arrays.asList("role1", "role2");
             when(userRoleService.getRoles(roleNames)).thenReturn(roles);
 
             final MvcResult mvcResult = mockMvc.perform(
@@ -136,23 +136,26 @@ class UserRoleControllerTest {
                 .andReturn();
 
             final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
-                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+                }));
 
             assertAll(
                 () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
                 () -> assertThat(userRoles.size(), is(2)),
                 () -> assertThat(userRoles.get(0).getId(), is(1)),
                 () -> assertThat(userRoles.get(0).getRole(), is(ROLE1)),
-                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
+                () -> assertThat(
+                    userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
                 () -> assertThat(userRoles.get(1).getId(), is(2)),
                 () -> assertThat(userRoles.get(1).getRole(), is(ROLE2)),
-                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
+                () -> assertThat(
+                    userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
             );
         }
 
         @Test
         void shouldGetEmptyRoles_whenNoRolesExists() throws Exception {
-            List<String> roleNames = Arrays.asList("role1","role2");
+            List<String> roleNames = Arrays.asList("role1", "role2");
             when(userRoleService.getRoles(roleNames)).thenReturn(Collections.EMPTY_LIST);
 
             final MvcResult mvcResult = mockMvc.perform(
@@ -161,7 +164,8 @@ class UserRoleControllerTest {
                 .andReturn();
 
             final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
-                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+                }));
 
             assertAll(
                 () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
@@ -182,17 +186,20 @@ class UserRoleControllerTest {
                 .andReturn();
 
             final List<UserRole> userRoles = MAPPER.readValue(mvcResult.getResponse().getContentAsString(),
-                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>(){}));
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+                }));
 
             assertAll(
                 () -> assertThat(mvcResult.getResponse().getStatus(), is(SC_OK)),
                 () -> assertThat(userRoles.size(), is(2)),
                 () -> assertThat(userRoles.get(0).getId(), is(1)),
                 () -> assertThat(userRoles.get(0).getRole(), is(ROLE1)),
-                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
+                () -> assertThat(
+                    userRoles.get(0).getSecurityClassification(), is(mockUserRole.getSecurityClassification())),
                 () -> assertThat(userRoles.get(1).getId(), is(2)),
                 () -> assertThat(userRoles.get(1).getRole(), is(ROLE2)),
-                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
+                () -> assertThat(
+                    userRoles.get(1).getSecurityClassification(), is(mockUserRole2.getSecurityClassification()))
             );
         }
     }
@@ -291,7 +298,8 @@ class UserRoleControllerTest {
         void shouldHaveStatusResetContent_whenPutSuccessfully() throws Exception {
             final UserRole argument = buildUserRole(ROLE_DEFINED);
             final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -7);
-            when(userRoleService.createRole(isA(UserRole.class))).thenReturn(new ServiceResponse<>(mockUserRole, CREATE));
+            when(userRoleService.createRole(isA(UserRole.class)))
+                .thenReturn(new ServiceResponse<>(mockUserRole, CREATE));
 
             mockMvc.perform(
                 post(URL_API_USER_ROLE)

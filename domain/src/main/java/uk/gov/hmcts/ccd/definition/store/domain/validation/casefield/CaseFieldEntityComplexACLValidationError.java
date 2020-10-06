@@ -12,7 +12,8 @@ public class CaseFieldEntityComplexACLValidationError extends ValidationError {
 
     public CaseFieldEntityComplexACLValidationError(final ComplexFieldACLEntity entity,
                                                     final AuthorisationCaseFieldValidationContext context) {
-        super(String.format("The access for case type '%s', case field '%s', list element code '%s' is more than its parent",
+        super(String.format(
+            "The access for case type '%s', case field '%s', list element code '%s' is more than its parent",
             context.getCaseReference(),
             context.getCaseFieldReference(),
             entity.getListElementCode()));

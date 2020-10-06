@@ -133,8 +133,10 @@
 //        final Map<String, Object> result = template.queryForMap("select * from user_role where role = ?", role);
 //        assertThat(result.get("id"), is(notNullValue()));
 //        assertThat(result.get("created_at"), is(notNullValue()));
-//        assertThat(new Date(((Date)result.get("live_from")).getTime()), DateMatchers.sameDay(LocalDate.parse("2017-02-25")));
-//        assertThat(new Date(((Date)result.get("live_to")).getTime()), DateMatchers.sameDay(LocalDate.parse("3017-12-25")));
+//        assertThat(new Date(((Date)result.get("live_from")).getTime()),
+//            DateMatchers.sameDay(LocalDate.parse("2017-02-25")));
+//        assertThat(new Date(((Date)result.get("live_to")).getTime()),
+//            DateMatchers.sameDay(LocalDate.parse("3017-12-25")));
 //        assertThat(result.get("security_classification"), is("PUBLIC"));
 //    }
 //
@@ -144,7 +146,8 @@
 //
 //        final UserRole userRole = createUserRole(ROLE_DEFINED, RESTRICTED, null, null);
 //
-//        final Map<String, Object> before = template.queryForMap("select * from user_role where role = ?", ROLE_DEFINED);
+//        final Map<String, Object> before = template
+//          .queryForMap("select * from user_role where role = ?", ROLE_DEFINED);
 //        final Integer roleId = (Integer)before.get("id");
 //        assertThat(roleId, is(notNullValue()));
 //        assertThat(before.get("security_classification"), is("PUBLIC"));
@@ -159,7 +162,8 @@
 //            .when()
 //            .put(URL_API_USER_ROLE);
 //
-//        final Map<String, Object> result = template.queryForMap("select * from user_role where role = ?", ROLE_DEFINED);
+//        final Map<String, Object> result = template
+//          .queryForMap("select * from user_role where role = ?", ROLE_DEFINED);
 //        assertThat(result.get("id"), is(roleId));
 //        assertThat(result.get("created_at"), is(notNullValue()));
 //        assertThat(result.get("live_from"), is(nullValue()));

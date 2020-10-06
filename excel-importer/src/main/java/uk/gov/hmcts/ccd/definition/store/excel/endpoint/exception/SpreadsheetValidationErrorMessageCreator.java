@@ -1,16 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
-import static org.apache.commons.lang3.StringUtils.capitalize;
-import static org.apache.commons.lang3.StringUtils.defaultString;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
-
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
 import java.util.Optional;
 import java.util.function.Function;
-
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
@@ -47,8 +40,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoes
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidDefaultPostStateError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidPostStatePriorityError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCaseHistoryViewerCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
@@ -69,10 +65,18 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
+import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
+
 @Component
 public class SpreadsheetValidationErrorMessageCreator implements ValidationErrorMessageCreator {
 
-    public static final String INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F = "Invalid CRUD value '%s' in %s tab, case type '%s', case field '%s', ";
+    public static final String INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
+        = "Invalid CRUD value '%s' in %s tab, case type '%s', case field '%s', ";
+    public static final String DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE
+        = "Please make sure it is defined in the CaseRoles sheet.";
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     public SpreadsheetValidationErrorMessageCreator(EntityToDefinitionDataItemRegistry
@@ -153,8 +157,9 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError
-                                         complexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) {
+    public String createErrorMessage(
+        ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError
+            complexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError) {
         return String.format("%s values cannot have lower security classification than case field; " + "%s entry "
                 + "with" + " id '%s' has a security classification of '%s' " + "but %s entry with id "
                 + "'%s' has a" + " security classification of '%s'",
@@ -220,10 +225,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
-                    "Invalid case role '%s' in %s tab for case type '%s'. Please make sure it is defined in the CaseRoles sheet.",
-                    def.getString(ColumnName.USER_ROLE),
-                    def.getSheetName(),
-                    error.getAuthorisationValidationContext().getCaseReference()) :
+                "Invalid case role '%s' in %s tab for case type '%s'. "
+                    + DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE,
+                def.getString(ColumnName.USER_ROLE),
+                def.getSheetName(),
+                error.getAuthorisationValidationContext().getCaseReference()) :
                 String.format(
                     "Invalid idam role '%s' in %s tab for case type '%s'",
                     def.getString(ColumnName.USER_ROLE),
@@ -295,11 +301,12 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             error.getCaseFieldACLEntity(),
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
-                    "Invalid case role '%s' in %s tab, case type '%s', case field '%s'. Please make sure it is defined in the CaseRoles sheet.",
-                    defaultString(def.getString(ColumnName.USER_ROLE)),
-                    def.getSheetName(),
-                    def.getString(ColumnName.CASE_TYPE_ID),
-                    def.getString(ColumnName.CASE_FIELD_ID)) :
+                "Invalid case role '%s' in %s tab, case type '%s', case field '%s'. "
+                    + DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE,
+                defaultString(def.getString(ColumnName.USER_ROLE)),
+                def.getSheetName(),
+                def.getString(ColumnName.CASE_TYPE_ID),
+                def.getString(ColumnName.CASE_FIELD_ID)) :
                 String.format(
                     "Invalid idam role '%s' in %s tab, case type '%s', case field '%s', crud '%s'",
                     defaultString(def.getString(ColumnName.USER_ROLE)),
@@ -329,11 +336,12 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             error.getEventACLEntity(),
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
-                    "Invalid case role '%s' in %s tab, case type '%s', event '%s'. Please make sure it is defined in the CaseRoles sheet.",
-                    defaultString(def.getString(ColumnName.USER_ROLE)),
-                    def.getSheetName(),
-                    error.getAuthorisationEventValidationContext().getCaseReference(),
-                    error.getAuthorisationEventValidationContext().getEventReference()) :
+                "Invalid case role '%s' in %s tab, case type '%s', event '%s'. "
+                    + DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE,
+                defaultString(def.getString(ColumnName.USER_ROLE)),
+                def.getSheetName(),
+                error.getAuthorisationEventValidationContext().getCaseReference(),
+                error.getAuthorisationEventValidationContext().getEventReference()) :
                 String.format(
                     "Invalid idam role '%s' in %s tab, case type '%s', event '%s', crud '%s'",
                     defaultString(def.getString(ColumnName.USER_ROLE)),
@@ -448,11 +456,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             error.getDisplayGroup(),
             error.getShowConditionField() != null
                 ? def -> String.format("Invalid show condition '%s' for tab '%s' on spreadsheet tab '%s': "
-                        + "unknown field '%s'",
-                    def.getString(ColumnName.TAB_SHOW_CONDITION),
-                    error.getDisplayGroup().getReference(),
-                    def.getSheetName(),
-                    error.getShowConditionField()) : def -> error.getDefaultMessage());
+                    + "unknown field '%s'",
+                def.getString(ColumnName.TAB_SHOW_CONDITION),
+                error.getDisplayGroup().getReference(),
+                def.getSheetName(),
+                error.getShowConditionField()) : def -> error.getDefaultMessage());
     }
 
     @Override
@@ -483,7 +491,8 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     public String createErrorMessage(ComplexFieldShowConditionReferencesInvalidFieldError error) {
         return newMessageIfDefinitionExists(error,
             error.getComplexField(),
-            def -> String.format("Unknown field '%s' of complex field '%s' in show condition: '%s' on " + "" + "tab '%s'",
+            def -> String.format(
+                "Unknown field '%s' of complex field '%s' in show condition: '%s' on " + "" + "tab '%s'",
                 error.getShowConditionField(),
                 error.getComplexField().getComplexFieldType().getReference(),
                 def.getString(ColumnName.FIELD_SHOW_CONDITION),
@@ -582,15 +591,51 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError error) {
+    public String createErrorMessage(
+        CaseTypeEntityFieldLabelValidator.PlaceholderLeafNotSimpleTypeValidationError error) {
         return withWorkSheetName(error);
     }
 
     @Override
-    public String createErrorMessage(CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError error) {
+    public String createErrorMessage(
+        CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError error) {
         return withWorkSheetName(error);
     }
 
+    @Override
+    public String createErrorMessage(EventEntityInvalidPostStatePriorityError error) {
+        return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
+            String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
+            return String.format("Post state condition %s has duplicate priorities for event '%s' in %s tab",
+                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
+                error.getEventEntity().getReference(),
+                def.getSheetName());
+        });
+    }
+
+    @Override
+    public String createErrorMessage(EventEntityInvalidDefaultPostStateError error) {
+        return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
+            String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
+            return String.format("Post state condition %s has to include "
+                    + "non conditional post state for event '%s' in %s tab",
+                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
+                error.getEventEntity().getReference(),
+                def.getSheetName());
+        });
+    }
+
+    @Override
+    public String createErrorMessage(EventEntityShowConditionReferencesInvalidCaseFieldError error) {
+        return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
+            String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
+            return String.format("Unknown field '%s' for event '%s' in post state condition: '%s' in %s tab",
+                error.getShowConditionField(),
+                error.getEventEntity().getReference(),
+                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
+                def.getSheetName());
+        });
+    }
 
     private String withWorkSheetName(SimpleValidationError<?> error) {
         return newMessageIfDefinitionExists(error,

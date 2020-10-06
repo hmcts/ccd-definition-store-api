@@ -15,7 +15,7 @@ public class JurisdictionRule implements ValidationRule {
 
     /**
      * Validate that a valid Jurisdiction has been provided.
-     *Should  with appropriate message when validation fails.
+     * Should  with appropriate message when validation fails.
      *
      * @param caseTypeEntity - Case Type being validated
      */
@@ -34,8 +34,8 @@ public class JurisdictionRule implements ValidationRule {
         }
 
         if (jurisdiction.getLiveFrom() != null
-                && jurisdiction.getLiveTo() != null
-                    && !jurisdiction.getLiveFrom().before(jurisdiction.getLiveTo())) {
+            && jurisdiction.getLiveTo() != null
+            && !jurisdiction.getLiveFrom().before(jurisdiction.getLiveTo())) {
             return FROM_AFTER_UNTIL;
         }
 

@@ -30,7 +30,8 @@ public class StateParser {
 
         final List<StateEntity> states = Lists.newArrayList();
 
-        final Map<String, List<DefinitionDataItem>> stateItemsByCaseTypes = definitionSheets.get(SheetName.STATE.getName())
+        final Map<String, List<DefinitionDataItem>> stateItemsByCaseTypes = definitionSheets
+            .get(SheetName.STATE.getName())
             .groupDataItemsByCaseType();
 
         if (!stateItemsByCaseTypes.containsKey(caseTypeId)) {

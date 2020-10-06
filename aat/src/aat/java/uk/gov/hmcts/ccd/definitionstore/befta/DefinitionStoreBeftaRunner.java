@@ -1,11 +1,10 @@
 package uk.gov.hmcts.ccd.definitionstore.befta;
 
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-
-import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
 import uk.gov.hmcts.befta.BeftaMain;
 
 
@@ -16,7 +15,8 @@ import uk.gov.hmcts.befta.BeftaMain;
 public class DefinitionStoreBeftaRunner {
 
     private DefinitionStoreBeftaRunner() {
-        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor (squid:S1118)
+        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor
+        // (squid:S1118)
     }
 
     @BeforeClass

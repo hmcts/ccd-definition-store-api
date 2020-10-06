@@ -1,14 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.type.EnumType;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Properties;
-
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.type.EnumType;
 
 public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
 
@@ -30,7 +30,8 @@ public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
     }
 
     @Override
-    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws SQLException {
+    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner)
+        throws SQLException {
         return EnumUtil.getEnumFromString(clazz, rs.getString(names[0]));
     }
 
@@ -54,7 +55,7 @@ public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
 
     @Override
     public int[] sqlTypes() {
-        return new int[] { Types.OTHER };
+        return new int[] {Types.OTHER};
     }
 
 }

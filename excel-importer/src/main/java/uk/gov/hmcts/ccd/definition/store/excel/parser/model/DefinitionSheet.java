@@ -43,8 +43,8 @@ public class DefinitionSheet {
 
     public Map<String, List<DefinitionDataItem>> groupDataItemsById() {
         /**
-         * We assume complex types are declared in the spreadsheet after other complex type they depend on. So the grouping
-         * must preserve this ordering
+         * We assume complex types are declared in the spreadsheet after other complex type they depend on.
+         * So the grouping must preserve this ordering
          */
         return dataItems.stream().collect(groupingBy(DefinitionDataItem::getId, LinkedHashMap::new, toList()));
     }
@@ -53,7 +53,9 @@ public class DefinitionSheet {
         return dataItems.stream().collect(groupingBy(DefinitionDataItem::getCaseTypeId));
     }
 
-    public static boolean isDisplayContextParameter(String item, DisplayContextParameter.DisplayContextParameterValues displayContextParameterValue) {
+    public static boolean isDisplayContextParameter(
+        String item,
+        DisplayContextParameter.DisplayContextParameterValues displayContextParameterValue) {
         return item.startsWith(displayContextParameterValue.toString());
     }
 }

@@ -52,7 +52,8 @@ public class EventCaseFieldComplexTypeParserTest {
         String displayContextParameter = "Display Context Parameter";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
-        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition, label, hint, displayContextParameter);
+        DefinitionDataItem definitionDataItem = definitionDataItem(
+            caseFieldId, displayContext, originalShowCondition, label, hint, displayContextParameter);
 
         List<DefinitionDataItem> definitionDataItems = singletonList(definitionDataItem);
 
