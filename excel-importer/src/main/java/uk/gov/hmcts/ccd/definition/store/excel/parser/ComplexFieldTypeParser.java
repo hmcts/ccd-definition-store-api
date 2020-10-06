@@ -67,7 +67,10 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         logger.debug("Complex types parsing: {} complex types detected", complexTypesItems.size());
 
         // TODO Check for already existing types with same identity
-        ParseResult<FieldTypeEntity> result = complexTypesItems.entrySet().stream().map(this::parseComplexType).reduce(new ParseResult(),
+        ParseResult<FieldTypeEntity> result = complexTypesItems.entrySet()
+            .stream()
+            .map(complexTypeItem -> parseComplexType(complexTypeItem, definitionSheets))
+            .reduce(new ParseResult(),
             (res, complexTypeParseResult) -> res.add(complexTypeParseResult));
 
         logger.info("Complex types parsing: OK: {} types parsed, including {} complex", result.getAllResults().size(), complexTypesItems.size());
@@ -75,7 +78,8 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         return result;
     }
 
-    private ParseResult<FieldTypeEntity> parseComplexType(Entry<String, List<DefinitionDataItem>> complexTypeItems) {
+    private ParseResult<FieldTypeEntity> parseComplexType(Entry<String, List<DefinitionDataItem>> complexTypeItems,
+                                                          Map<String, DefinitionSheet> definitionSheets) {
         logger.debug("Complex types parsing: parsing '{}'", complexTypeItems.getKey());
 
 
@@ -84,7 +88,10 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         final List<DefinitionDataItem> items = complexTypeItems.getValue();
 
         final List<ComplexFieldEntity> complexFields = items.stream()
-                                                               .map(item -> parseComplexField(item, items.size(), result))
+                                                               .map(item -> parseComplexField(item,
+                                                                   items.size(),
+                                                                   result,
+                                                                   definitionSheets))
                                                                .collect(toList());
 
         final FieldTypeEntity complexType = new FieldTypeEntity();
@@ -99,7 +106,10 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
         return result;
     }
 
-    private ComplexFieldEntity parseComplexField(DefinitionDataItem definitionDataItem, int itemsCount, ParseResult<FieldTypeEntity> result) {
+    private ComplexFieldEntity parseComplexField(DefinitionDataItem definitionDataItem,
+                                                 int itemsCount,
+                                                 ParseResult<FieldTypeEntity> result,
+                                                 Map<String, DefinitionSheet> definitionSheets) {
         final ComplexFieldEntity complexField = new ComplexFieldEntity();
 
         final String fieldId = definitionDataItem.getString(ColumnName.LIST_ELEMENT_CODE);
