@@ -17,6 +17,7 @@ public class CaseFieldBuilder {
     private FieldTypeEntity fieldTypeEntity;
     private DataFieldType dataFieldType;
     private List<ComplexFieldEntity> fieldsForComplex = newArrayList();
+    private boolean searchable = true;
 
     private CaseFieldBuilder(String reference) {
         this.reference = reference;
@@ -40,9 +41,15 @@ public class CaseFieldBuilder {
         return this;
     }
 
+    public CaseFieldBuilder withSearchable(boolean searchable) {
+        this.searchable = searchable;
+        return this;
+    }
+
     public CaseFieldEntity buildComplex() {
         CaseFieldEntity field = new CaseFieldEntity();
         field.setReference(this.reference);
+        field.setSearchable(this.searchable);
         FieldTypeEntity typeEntity = newType(fieldTypeReference).build();
         typeEntity.addComplexFields(fieldsForComplex);
         FieldTypeEntity baseTypeEntity = newType("Complex").build();
@@ -59,6 +66,7 @@ public class CaseFieldBuilder {
     public CaseFieldEntity build() {
         CaseFieldEntity field = new CaseFieldEntity();
         field.setReference(this.reference);
+        field.setSearchable(this.searchable);
         if (fieldTypeEntity != null) {
             field.setFieldType(fieldTypeEntity);
         } else {

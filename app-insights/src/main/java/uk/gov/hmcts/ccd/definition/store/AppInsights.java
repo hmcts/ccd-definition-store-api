@@ -5,6 +5,7 @@ import com.microsoft.applicationinsights.telemetry.Duration;
 import com.microsoft.applicationinsights.telemetry.RequestTelemetry;
 import org.springframework.stereotype.Component;
 
+
 @Component
 public class AppInsights {
     private static final String MODULE = "CASE_DEFINITION";

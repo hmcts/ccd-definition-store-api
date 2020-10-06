@@ -87,6 +87,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
             getClass().getResourceAsStream(CASES_INDEX_SETTINGS_JSON), false);
         settings.put("index.number_of_shards", config.getIndexShards());
         settings.put("index.number_of_replicas", config.getIndexShardsReplicas());
+        settings.put("index.mapping.total_fields.limit", config.getCasesIndexMappingFieldsLimit());
         return settings;
     }
 

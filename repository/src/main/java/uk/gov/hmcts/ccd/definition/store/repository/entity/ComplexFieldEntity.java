@@ -37,6 +37,9 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     @Column(name = "hidden")
     private Boolean hidden;
 
+    @Column(name = "searchable")
+    private boolean searchable = true;
+
     @Column(name = "security_classification")
     @Type(type = "pgsql_securityclassification_enum")
     private SecurityClassification securityClassification;
@@ -92,6 +95,15 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     public void setHidden(final Boolean hidden) {
         this.hidden = hidden;
+    }
+
+    @Override
+    public boolean isSearchable() {
+        return searchable;
+    }
+
+    public void setSearchable(boolean searchable) {
+        this.searchable = searchable;
     }
 
     public SecurityClassification getSecurityClassification() {
