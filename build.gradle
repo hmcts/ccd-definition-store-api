@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.5.RELEASE'
+        springBootVersion = '2.3.4.RELEASE'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -66,7 +66,7 @@ dependencyCheck {
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
 ext['elasticsearch.version'] = '6.4.2'
 ext['javax-validation.version'] = '2.0.1.Final'
-ext['hibernate-validator.version'] = '6.0.10.Final'
+ext['hibernate-validator.version'] = '6.1.5.Final'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.11.1'
 // end
@@ -75,14 +75,14 @@ ext {
     junitJupiterVersion = '5.5.2'
     junitVintageVersion = '5.5.2'
     springCloudVersion = 'Hoxton.RELEASE'
-    springfoxSwaggerVersion = '2.9.2'
+    springfoxSwaggerVersion = '3.0.0'
     hamcrestVersion = '1.3'
-    powermockVersion = '2.0.0-beta.5'
+    powermockVersion = '2.0.7'
     reformLogging= '5.1.1-BETA'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
-    tomcatVersion = '9.0.36!!'
-    hibernateVersion = '5.4.18.Final!!'
+    tomcatVersion = '9.0.38!!'
+    hibernateVersion = '5.4.21.Final!!'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -158,7 +158,7 @@ allprojects {
 
             eachDependency { details ->
                 if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
-                    details.useVersion '3.6.3'
+                    details.useVersion '3.8.9'
                 }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.7.0'
@@ -215,7 +215,6 @@ subprojects { subproject ->
         compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
         compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
         compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
-        compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.5'
 
         compile group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
         compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.1'
@@ -352,7 +351,6 @@ subprojects { subproject ->
             html.enabled = true
         }
     }
-
     check.dependsOn jacocoTestReport
 
     checkstyle {
@@ -360,6 +358,7 @@ subprojects { subproject ->
         toolVersion = '8.18'
         configDir = new File(rootDir, 'config/checkstyle')
     }
+
 
     tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
         reports {
@@ -424,6 +423,7 @@ idea {
         }
     }
 }
+
 
 // this allows ./gradlew run
 bootJar {

@@ -4,7 +4,7 @@
 
     <changeSet id="rdm-1074" author="fatih.ozceylan@hmcts.net">
         <createTable tableName="state_user_role">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="state_id" type="integer">

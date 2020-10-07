@@ -4,7 +4,7 @@
 
     <changeSet id="14" author="ccd@hmcts.net">
         <createTable tableName="case_field_user_role">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="case_field_id" type="integer">
