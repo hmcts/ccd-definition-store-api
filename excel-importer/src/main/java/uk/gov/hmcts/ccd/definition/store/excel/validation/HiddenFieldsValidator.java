@@ -27,9 +27,10 @@ public class HiddenFieldsValidator {
         caseField.ifPresent(ddi -> {
             List<DefinitionDataItem> caseEventToFieldList = caseEventToFields.getDataItems()
                 .stream().filter(definitionDataItem1 -> ddi.getId()
-                .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
+                    .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
 
-            if (!isAtLeastOneCaseEventToFieldsConfigured(definitionDataItem, caseEventToFieldList)){
+            if (definitionDataItem.getRetainHiddenValue() != null
+                && !isAtLeastOneCaseEventToFieldsConfigured(definitionDataItem, caseEventToFieldList)) {
                 throw new MapperException(String.format("'retainHiddenValue' can only be configured "
                         + "for a field that uses a "
                         + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
@@ -54,7 +55,8 @@ public class HiddenFieldsValidator {
         return retainHiddenValue;
     }
 
-    private boolean isAtLeastOneCaseEventToFieldsConfigured(DefinitionDataItem definitionDataItem, List<DefinitionDataItem> caseEventToFieldList) {
+    private boolean isAtLeastOneCaseEventToFieldsConfigured(DefinitionDataItem definitionDataItem,
+                                                            List<DefinitionDataItem> caseEventToFieldList) {
         return caseEventToFieldList.stream().anyMatch(dataItem -> {
             String fieldShowCondition = dataItem.getString(ColumnName.FIELD_SHOW_CONDITION);
             return isShowConditionPopulated(fieldShowCondition, definitionDataItem);
