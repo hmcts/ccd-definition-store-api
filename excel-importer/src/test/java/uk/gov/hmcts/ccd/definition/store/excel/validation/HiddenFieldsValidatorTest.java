@@ -225,6 +225,59 @@ public class HiddenFieldsValidatorTest {
         assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
     }
 
+    @Test(expected = Test.None.class)
+    public void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEvents() {
+
+        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
+        addDataItem(sheetJ);
+
+        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
+        addDataItem(sheetCT);
+
+        final DefinitionSheet sheetComplexTypes = addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
+        definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.TRUE);
+        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "ComplexTypeFieldId");
+        definitionDataItem.addAttribute(ColumnName.LIST_ELEMENT_CODE, "");
+        definitionDataItem.addAttribute(ColumnName.ID, "ComplexType");
+        sheetComplexTypes.addDataItem(definitionDataItem);
+
+        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
+        DefinitionDataItem definitionDataItem4 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        definitionDataItem4.addAttribute(ColumnName.CASE_FIELD_ID, "fieldIdTwo");
+        definitionDataItem4.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
+        definitionDataItem4.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, null);
+        sheetCETF.addDataItem(definitionDataItem4);
+
+        DefinitionDataItem definitionDataItem3 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        definitionDataItem3.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
+        definitionDataItem3.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
+        definitionDataItem3.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, null);
+        sheetCETF.addDataItem(definitionDataItem3);
+
+        DefinitionDataItem definitionDataItem1 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        definitionDataItem1.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
+        definitionDataItem1.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "abc=123");
+        definitionDataItem1.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, true);
+        sheetCETF.addDataItem(definitionDataItem1);
+
+        final DefinitionSheet sheetCF = addDefinitionSheet(SheetName.CASE_FIELD);
+        DefinitionDataItem definitionDataItem5 = new DefinitionDataItem(SheetName.CASE_FIELD.getName());
+        definitionDataItem5.addAttribute(ColumnName.ID, "fieldIdTwo");
+        definitionDataItem5.addAttribute(ColumnName.FIELD_TYPE, "ComplexType");
+        sheetCF.addDataItem(definitionDataItem5);
+
+        DefinitionDataItem definitionDataItem2 = new DefinitionDataItem(SheetName.CASE_FIELD.getName());
+        definitionDataItem2.addAttribute(ColumnName.ID, "fieldId");
+        definitionDataItem2.addAttribute(ColumnName.FIELD_TYPE, "ComplexType");
+        sheetCF.addDataItem(definitionDataItem2);
+
+        addDefinitionSheet(SheetName.FIXED_LISTS);
+
+        assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+    }
+
+
     @Test(expected = MapperException.class)
     public void shouldFail_whenRetainHiddenValueIsNotABooleanForSubFieldsOfComplexType() {
 

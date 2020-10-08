@@ -25,19 +25,10 @@ public class HiddenFieldsValidator {
             caseFields.getDataItems().stream().filter(caseFieldDataItem ->
                 definitionDataItem.getId().equals(caseFieldDataItem
                     .getString(ColumnName.FIELD_TYPE))).collect(toList());
+
+        validateCaseEventToFields(definitionDataItem, caseEventToFields, caseField);
+
         caseField.forEach(ddi -> {
-            List<DefinitionDataItem> caseEventToFieldList = caseEventToFields.getDataItems()
-                .stream().filter(definitionDataItem1 -> ddi.getId()
-                    .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
-
-            if (definitionDataItem.getRetainHiddenValue() != null
-                && !isAtLeastOneCaseEventToFieldsConfigured(definitionDataItem, caseEventToFieldList)) {
-                throw new MapperException(String.format("'retainHiddenValue' can only be configured "
-                        + "for a field that uses a "
-                        + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
-                    ddi.getId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
-            }
-
             Optional<DefinitionDataItem> caseEventToField = caseEventToFields.getDataItems()
                 .stream().filter(definitionDataItem1 -> ddi.getId()
                     .equals(definitionDataItem1.getCaseFieldId())).findFirst();
@@ -54,6 +45,30 @@ public class HiddenFieldsValidator {
             });
         });
         return retainHiddenValue;
+    }
+
+    private void validateCaseEventToFields(DefinitionDataItem definitionDataItem,
+                                           DefinitionSheet caseEventToFields,
+                                           List<DefinitionDataItem> caseField) {
+        boolean valid = true;
+        String caseFieldId = null;
+        for (DefinitionDataItem cf : caseField) {
+            List<DefinitionDataItem> caseEventToFieldList = caseEventToFields.getDataItems()
+                .stream().filter(definitionDataItem1 -> cf.getId()
+                    .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
+            caseFieldId = cf.getId();
+            valid = isAtLeastOneCaseEventToFieldsConfigured(definitionDataItem, caseEventToFieldList);
+            if (valid) {
+                break;
+            }
+        }
+        if (definitionDataItem.getRetainHiddenValue() != null
+            && !valid) {
+            throw new MapperException(String.format("'retainHiddenValue' can only be configured "
+                    + "for a field that uses a "
+                    + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
+                caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
+        }
     }
 
     private boolean isAtLeastOneCaseEventToFieldsConfigured(DefinitionDataItem definitionDataItem,
