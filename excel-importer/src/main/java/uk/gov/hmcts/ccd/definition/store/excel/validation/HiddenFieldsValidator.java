@@ -23,7 +23,8 @@ public class HiddenFieldsValidator {
         final DefinitionSheet caseFields = definitionSheets.get(SheetName.CASE_FIELD.getName());
         List<DefinitionDataItem> caseField =
             caseFields.getDataItems().stream().filter(caseFieldDataItem ->
-                definitionDataItem.getId().equals(caseFieldDataItem.getString(ColumnName.FIELD_TYPE))).collect(toList());
+                definitionDataItem.getId().equals(caseFieldDataItem
+                    .getString(ColumnName.FIELD_TYPE))).collect(toList());
         caseField.forEach(ddi -> {
             List<DefinitionDataItem> caseEventToFieldList = caseEventToFields.getDataItems()
                 .stream().filter(definitionDataItem1 -> ddi.getId()
