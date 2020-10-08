@@ -51,14 +51,17 @@ public class HiddenFieldsValidator {
 
     public Boolean parseCaseEventComplexTypesHiddenFields(DefinitionDataItem definitionDataItem,
                                                           Map<String, DefinitionSheet> definitionSheets) {
-        if (definitionDataItem.getFieldShowCondition() == null) {
+        if (definitionDataItem.getFieldShowCondition() == null
+            && definitionDataItem.getRetainHiddenValue() !=null) {
             throw new MapperException(String.format("'retainHiddenValue' can only be configured "
                     + "for a field that uses a showCondition. Field ['%s'] on ['%s'] "
                     + "does not use a showCondition",
                 definitionDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName()));
+        } else if (definitionDataItem.getFieldShowCondition() != null
+            && definitionDataItem.getRetainHiddenValue() !=null) {
+            complexTypeHasRetainHiddenValue(definitionDataItem,
+                definitionSheets.get(SheetName.COMPLEX_TYPES.getName()));
         }
-        complexTypeHasRetainHiddenValue(definitionDataItem,
-            definitionSheets.get(SheetName.COMPLEX_TYPES.getName()));
 
         return definitionDataItem.getRetainHiddenValue();
     }
