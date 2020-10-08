@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 
@@ -34,9 +35,13 @@ public class EventCaseFieldComplexTypeParserTest {
     private static final String REFERENCE_ID = "test.test";
     private static final LocalDate LIVE_FROM = LocalDate.of(2019, 1, 1);
     private static final LocalDate LIVE_TO = LocalDate.of(2099, 1, 1);
+    protected DefinitionSheet definitionSheet;
 
     @Mock
     private ShowConditionParser showConditionParser;
+
+    @Mock
+    private HiddenFieldsValidator hiddenFieldsValidator;
 
     @InjectMocks
     private EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser;
@@ -62,7 +67,9 @@ public class EventCaseFieldComplexTypeParserTest {
 
         List<DefinitionDataItem> definitionDataItems = singletonList(definitionDataItem);
         Map<String, DefinitionSheet> definitionSheets = new LinkedHashMap<>();;
-        definitionSheets.put(SheetName.CASE_EVENT.getName(), null);
+        definitionSheets.put(SheetName.CASE_EVENT.getName(), definitionSheet);
+        when(hiddenFieldsValidator
+            .parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets)).thenReturn(false);
         List<EventComplexTypeEntity> eventComplexTypeEntities =
             eventCaseFieldComplexTypeParser.parseEventCaseFieldComplexType(definitionDataItems, null);
 
