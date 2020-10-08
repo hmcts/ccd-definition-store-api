@@ -21,10 +21,10 @@ public class HiddenFieldsValidator {
                                                  Map<String, DefinitionSheet> definitionSheets) {
         final DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
         final DefinitionSheet caseFields = definitionSheets.get(SheetName.CASE_FIELD.getName());
-        Optional<DefinitionDataItem> caseField =
+        List<DefinitionDataItem> caseField =
             caseFields.getDataItems().stream().filter(caseFieldDataItem ->
-                definitionDataItem.getId().equals(caseFieldDataItem.getString(ColumnName.FIELD_TYPE))).findFirst();
-        caseField.ifPresent(ddi -> {
+                definitionDataItem.getId().equals(caseFieldDataItem.getString(ColumnName.FIELD_TYPE))).collect(toList());
+        caseField.forEach(ddi -> {
             List<DefinitionDataItem> caseEventToFieldList = caseEventToFields.getDataItems()
                 .stream().filter(definitionDataItem1 -> ddi.getId()
                     .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
