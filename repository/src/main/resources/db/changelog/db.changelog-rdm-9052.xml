@@ -1,0 +1,78 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    
+    <changeSet id="rdm-9052-1" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'field_type_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="field_type"/>  
+	</changeSet>
+    <changeSet id="rdm-9052-2" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'complex_field_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="complex_field"/>  
+	</changeSet>
+    <changeSet id="rdm-9052-3" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'role_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="role"/>  
+	</changeSet>
+    <changeSet id="rdm-9052-4" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'field_type_list_item_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="field_type_list_item"/>  
+	</changeSet>
+     <changeSet id="rdm-9052-5" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'case_field_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="case_field"/>  
+	</changeSet>
+     <changeSet id="rdm-9052-6" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'webhook_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="webhook"/>  
+	</changeSet>
+     <changeSet id="rdm-9052-7" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'event_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="event"/>  
+	</changeSet>
+     <changeSet id="rdm-9052-8" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'event_case_field_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="event_case_field"/>  
+	</changeSet>
+     <changeSet id="rdm-9052-9" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'display_group_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="display_group"/>  
+	</changeSet>
+     <changeSet id="rdm-9052-10" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'display_group_case_field_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="display_group_case_field"/>  
+	</changeSet>
+     <changeSet id="rdm-9052-11" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'case_type_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="case_type"/>  
+	</changeSet>
+     <changeSet id="rdm-9052-12" author="henry">
+	    <preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'jurisdiction_id_seq'</sqlCheck>
+	    </preConditions>
+		<addAutoIncrement columnDataType="int" columnName="id" tableName="jurisdiction"/>  
+	</changeSet>
+</databaseChangeLog>
