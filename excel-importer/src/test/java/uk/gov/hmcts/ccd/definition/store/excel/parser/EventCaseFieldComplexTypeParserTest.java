@@ -9,16 +9,21 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditi
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -56,9 +61,10 @@ public class EventCaseFieldComplexTypeParserTest {
             caseFieldId, displayContext, originalShowCondition, label, hint, displayContextParameter);
 
         List<DefinitionDataItem> definitionDataItems = singletonList(definitionDataItem);
-
+        Map<String, DefinitionSheet> definitionSheets = new LinkedHashMap<>();;
+        definitionSheets.put(SheetName.CASE_EVENT.getName(), null);
         List<EventComplexTypeEntity> eventComplexTypeEntities =
-            eventCaseFieldComplexTypeParser.parseEventCaseFieldComplexType(definitionDataItems);
+            eventCaseFieldComplexTypeParser.parseEventCaseFieldComplexType(definitionDataItems, null);
 
         assertEquals(1, eventComplexTypeEntities.size());
         assertEquals(definitionDataItem.getString(ColumnName.LIST_ELEMENT_CODE),
@@ -74,6 +80,7 @@ public class EventCaseFieldComplexTypeParserTest {
         assertEquals(definitionDataItem.getInteger(ColumnName.FIELD_DISPLAY_ORDER),
             eventComplexTypeEntities.get(0).getOrder());
         assertEquals(DisplayContext.OPTIONAL, eventComplexTypeEntities.get(0).getDisplayContext());
+        assertFalse(eventComplexTypeEntities.get(0).getRetainHiddenValue());
     }
 
     private DefinitionDataItem definitionDataItem(String caseFieldId,
@@ -94,6 +101,7 @@ public class EventCaseFieldComplexTypeParserTest {
         when(definitionDataItem.getLocalDate(ColumnName.LIVE_FROM)).thenReturn(LIVE_FROM);
         when(definitionDataItem.getLocalDate(ColumnName.LIVE_TO)).thenReturn(LIVE_TO);
         when(definitionDataItem.getString(ColumnName.LIST_ELEMENT_CODE)).thenReturn(REFERENCE_ID);
+        when(definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE)).thenReturn(false);
         return definitionDataItem;
     }
 }

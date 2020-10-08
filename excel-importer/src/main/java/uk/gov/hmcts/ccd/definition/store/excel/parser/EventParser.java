@@ -196,7 +196,7 @@ public class EventParser {
 
                     if (eventCaseFieldEntity.getDisplayContext() == DisplayContext.COMPLEX) {
                         eventCaseFieldEntity.addComplexFields(eventCaseFieldComplexTypeParser
-                            .parseEventCaseFieldComplexType(definitionDataItems));
+                            .parseEventCaseFieldComplexType(definitionDataItems, definitionSheets));
                     }
                 }
             }
