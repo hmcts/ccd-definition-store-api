@@ -1,5 +1,5 @@
 @F-090
-Feature: F-090: 'ChangeOranisationRequest' Base Complex Type
+Feature: F-090: 'ChangeOrganisationRequest' Base Complex Type
 
   Background:
     Given an appropriate test context as detailed in the test data source

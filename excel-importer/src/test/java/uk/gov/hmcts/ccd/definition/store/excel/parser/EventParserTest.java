@@ -3,6 +3,9 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,15 +28,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntit
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -164,13 +162,14 @@ public class EventParserTest extends ParserTestBase {
         assertThat(eventEntities.size(), is(1));
         entity = new ArrayList<>(eventEntities).get(0);
         assertEvent(entity);
-        assertThat(entity.getPostState(), is(nullValue()));
+        assertThat(entity.getPostStates().size(), is(1));
         assertThat(entity.getPreStates().get(0), is(state));
     }
 
     @Test
     public void shouldParseEventPostStateContent_whenParseSuccess() {
         final StateEntity state = mock(StateEntity.class);
+        when(state.getReference()).thenReturn("Post state");
         given(parseContext.getStateForCaseType(any(), any())).willReturn(state);
 
         item.addAttribute(ColumnName.PRE_CONDITION_STATE.toString(), "CaseCreated");
@@ -181,7 +180,7 @@ public class EventParserTest extends ParserTestBase {
         assertThat(eventEntities.size(), is(1));
         entity = new ArrayList<>(eventEntities).get(0);
         assertEvent(entity);
-        assertThat(entity.getPostState(), is(state));
+        assertThat(entity.getPostStates().get(0).getPostStateReference(), is(state.getReference()));
     }
 
     @Test
@@ -215,7 +214,7 @@ public class EventParserTest extends ParserTestBase {
         entity = new ArrayList<>(eventEntities).get(0);
 
         assertEvent(entity);
-        assertThat(entity.getPostState(), is(nullValue()));
+        assertThat(entity.getPostStates().size(), is(0));
         assertThat(entity.getPreStates(), empty());
     }
 
@@ -227,7 +226,7 @@ public class EventParserTest extends ParserTestBase {
         assertThat(eventEntities.size(), is(1));
         entity = new ArrayList<>(eventEntities).get(0);
         assertEvent(entity);
-        assertThat(entity.getPostState(), is(nullValue()));
+        assertThat(entity.getPostStates().size(), is(0));
         assertThat(entity.getPreStates(), empty());
 
         verify(mockAppender, atLeastOnce()).doAppend(captorLoggingEvent.capture());

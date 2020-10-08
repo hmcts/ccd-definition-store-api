@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -10,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
@@ -18,6 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -29,7 +34,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseField
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
@@ -43,7 +47,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTab;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTabField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ChallengeQuestion;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ComplexACL;
+import uk.gov.hmcts.ccd.definition.store.repository.model.EventPostState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
@@ -54,11 +60,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.ChallengeQuestion;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_ORDER_COMPARATOR;
 
@@ -118,11 +119,9 @@ public interface EntityToResponseDTOMapper {
             + "java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
-    @Mapping(
-        expression = "java(eventEntity.getPostState() == null ? \"*\" : eventEntity.getPostState().getReference())",
-        target = "postState"
-    )
     CaseEvent map(EventEntity eventEntity);
+
+    EventPostState map(EventPostStateEntity eventPostStateEntity);
 
     @Mapping(
         expression = "java(eventLiteEntity.isCanCreate() ? java.util.Collections.emptyList() "

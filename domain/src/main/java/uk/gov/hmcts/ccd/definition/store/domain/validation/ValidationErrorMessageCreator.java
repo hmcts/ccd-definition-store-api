@@ -32,8 +32,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoes
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidDefaultPostStateError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidPostStatePriorityError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCaseHistoryViewerCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
@@ -171,4 +174,10 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(
         CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError validationError);
+
+    String createErrorMessage(EventEntityInvalidPostStatePriorityError classUnderTest);
+
+    String createErrorMessage(EventEntityInvalidDefaultPostStateError classUnderTest);
+
+    String createErrorMessage(EventEntityShowConditionReferencesInvalidCaseFieldError classUnderTest);
 }
