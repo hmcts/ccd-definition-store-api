@@ -36,12 +36,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'se.patrikerdes.use-latest-versions'
-apply plugin: 'pmd'
 apply from: 'liquibase.gradle'
-
-pmd {
-    toolVersion = '6.11.0'
-}
 
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
