@@ -51,13 +51,7 @@ public class HiddenFieldsValidator {
 
     public Boolean parseCaseEventComplexTypesHiddenFields(DefinitionDataItem definitionDataItem,
                                                           Map<String, DefinitionSheet> definitionSheets) {
-        if (definitionDataItem.getFieldShowCondition() == null
-            && definitionDataItem.getRetainHiddenValue() != null) {
-            throw new MapperException(String.format("'retainHiddenValue' can only be configured "
-                    + "for a field that uses a showCondition. Field ['%s'] on ['%s'] "
-                    + "does not use a showCondition",
-                definitionDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName()));
-        } else if (definitionDataItem.getFieldShowCondition() != null
+        if (definitionDataItem.getFieldShowCondition() != null
             && definitionDataItem.getRetainHiddenValue() != null) {
             complexTypeHasRetainHiddenValue(definitionDataItem,
                 definitionSheets.get(SheetName.COMPLEX_TYPES.getName()));
@@ -69,19 +63,21 @@ public class HiddenFieldsValidator {
 
     private void complexTypeHasRetainHiddenValue(DefinitionDataItem definitionDataItem,
                                                        DefinitionSheet complexType) {
-        List<DefinitionDataItem> complexTypelist = complexType.getDataItems().stream()
+        List<DefinitionDataItem> complexTypeList = complexType.getDataItems().stream()
             .filter(definitionDataItem1 -> definitionDataItem1.getId()
-                .equals(definitionDataItem.getId())).collect(toList());
+                .equals(definitionDataItem.getId()) && definitionDataItem1.getListElementCode()
+                .equals(definitionDataItem.getListElementCode())).collect(toList());
 
-        complexTypelist.forEach(ddi -> {
-            if (ddi.getFieldShowCondition() == null
-                && definitionDataItem.getRetainHiddenValue() != null) {
-                throw new MapperException(String.format("'retainHiddenValue' can only be configured "
-                        + "for a field that uses a showCondition. Field ['%s'] on ['%s'] "
-                        + "does not use a showCondition",
-                    ddi.getCaseFieldId(), SheetName.COMPLEX_TYPES.getName()));
-            }
-        });
+        boolean match = complexTypeList.stream().noneMatch(ddi -> {
+            return ddi.getFieldShowCondition() == null
+                && (ddi.getRetainHiddenValue() != null || ddi.getRetainHiddenValue() == null) ;});
+
+        if (!match){
+            throw new MapperException(String.format("'retainHiddenValue' can only be configured "
+                    + "for a field that uses a showCondition. Field ['%s'] on ['%s'] "
+                    + "does not use a showCondition",
+                definitionDataItem.getCaseFieldId(), SheetName.COMPLEX_TYPES.getName()));
+        }
     }
 
     private Boolean isShowConditionPopulated(String fieldShowCondition, DefinitionDataItem definitionDataItem) {
