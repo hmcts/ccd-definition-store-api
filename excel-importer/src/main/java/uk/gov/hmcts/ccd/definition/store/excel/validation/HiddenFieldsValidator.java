@@ -85,7 +85,7 @@ public class HiddenFieldsValidator {
     }
 
     private Boolean isShowConditionPopulated(String fieldShowCondition, DefinitionDataItem definitionDataItem) {
-        return (fieldShowCondition != null && definitionDataItem.getRetainHiddenValue()!= null);
+        return (fieldShowCondition != null && definitionDataItem.getRetainHiddenValue() != null);
     }
 
     private Boolean isSubFieldsIncorrectlyConfigured(Boolean caseFieldRetainHiddenValue,
