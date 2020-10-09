@@ -24,7 +24,9 @@ public class HiddenFieldsValidator {
         List<DefinitionDataItem> caseField =
             caseFields.getDataItems().stream().filter(caseFieldDataItem ->
                 definitionDataItem.getId().equals(caseFieldDataItem
-                    .getString(ColumnName.FIELD_TYPE))).collect(toList());
+                    .getString(ColumnName.FIELD_TYPE))
+                    || definitionDataItem.getId().equals(caseFieldDataItem
+                    .getString(ColumnName.FIELD_TYPE_PARAMETER))).collect(toList());
 
         validateCaseEventToFields(definitionDataItem, caseEventToFields, caseField);
 
@@ -57,7 +59,7 @@ public class HiddenFieldsValidator {
                 .stream().filter(definitionDataItem1 -> cf.getId()
                     .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
             caseFieldId = cf.getId();
-            valid = isAtLeastOneCaseEventToFieldsConfigured(definitionDataItem, caseEventToFieldList);
+            valid = isAtLeastOneCaseEventToFieldsConfigured(caseEventToFieldList);
             if (valid) {
                 break;
             }
@@ -71,11 +73,10 @@ public class HiddenFieldsValidator {
         }
     }
 
-    private boolean isAtLeastOneCaseEventToFieldsConfigured(DefinitionDataItem definitionDataItem,
-                                                            List<DefinitionDataItem> caseEventToFieldList) {
+    private boolean isAtLeastOneCaseEventToFieldsConfigured(List<DefinitionDataItem> caseEventToFieldList) {
         return caseEventToFieldList.stream().anyMatch(dataItem -> {
             String fieldShowCondition = dataItem.getString(ColumnName.FIELD_SHOW_CONDITION);
-            return isShowConditionPopulated(fieldShowCondition, definitionDataItem);
+            return isShowConditionPopulated(fieldShowCondition, dataItem);
         });
     }
 
@@ -84,7 +85,7 @@ public class HiddenFieldsValidator {
     }
 
     private Boolean isShowConditionPopulated(String fieldShowCondition, DefinitionDataItem definitionDataItem) {
-        return (fieldShowCondition != null && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
+        return (fieldShowCondition != null && definitionDataItem.getRetainHiddenValue()!= null);
     }
 
     private Boolean isSubFieldsIncorrectlyConfigured(Boolean caseFieldRetainHiddenValue,
