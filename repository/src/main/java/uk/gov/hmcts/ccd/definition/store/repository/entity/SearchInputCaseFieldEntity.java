@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Table(name = "search_input_case_field")
 @Entity

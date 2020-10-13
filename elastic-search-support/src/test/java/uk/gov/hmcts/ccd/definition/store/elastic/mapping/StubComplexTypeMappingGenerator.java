@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.ComplexTypeMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.ComplexTypeMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 public class StubComplexTypeMappingGenerator extends ComplexTypeMappingGenerator {
 
@@ -17,6 +17,10 @@ public class StubComplexTypeMappingGenerator extends ComplexTypeMappingGenerator
         this.type = type;
         this.dataMapping = dataMapping;
         this.dataClassificationMapping = dataClassificationMapping;
+    }
+
+    public String disabled() {
+        return "\"disabled\"";
     }
 
     public String dataMapping(FieldEntity field) {

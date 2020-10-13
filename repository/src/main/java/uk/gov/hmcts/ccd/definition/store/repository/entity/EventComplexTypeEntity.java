@@ -23,7 +23,8 @@ import static javax.persistence.FetchType.LAZY;
 @TypeDef(
     name = "pgsql_displaycontext_enum",
     typeClass = PostgreSQLEnumType.class,
-    parameters = @org.hibernate.annotations.Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
+    parameters = @org.hibernate.annotations.Parameter(name = "type",
+        value = "uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
 )
 public class EventComplexTypeEntity implements Serializable {
     @Id

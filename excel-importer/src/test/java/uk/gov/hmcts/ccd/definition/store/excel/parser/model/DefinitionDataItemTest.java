@@ -118,6 +118,13 @@ public class DefinitionDataItemTest {
         assertBooleanValue("f", FALSE);
     }
 
+    @Test
+    public void shouldGetBooleanOrDefault() {
+        assertBooleanValueWithDefault("yes", false, TRUE);
+        assertBooleanValueWithDefault("no", true, FALSE);
+        assertBooleanValueWithDefault(null, true, TRUE);
+    }
+
     @Test(expected = MapperException.class)
     public void shouldFail_whenInvalidBoolean() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN, "k");
@@ -157,9 +164,9 @@ public class DefinitionDataItemTest {
         assertEquals("pUbLiC", securityClassificationColumn.getColumnValue());
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void securityClassificationColumnIsNotAValidEnumConstant_SecurityClassificationColumnReturnedWithNullSecurityClassification() {
-
         SecurityClassificationColumn securityClassificationColumn
             = definitionDataItemWithSecurityClassificationColumnValue("NotValid").getSecurityClassification();
 
@@ -169,7 +176,8 @@ public class DefinitionDataItemTest {
 
     @Test
     public void displayContextColumnIsOptionalLowerCase_called_OptionalDisplayContextEnumValueReturned() {
-        DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("optional").getDisplayContext();
+        DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("optional")
+            .getDisplayContext();
 
         assertEquals(DisplayContext.OPTIONAL, displayContextColumn.getDisplayContext());
         assertEquals("optional", displayContextColumn.getColumnValue());
@@ -177,7 +185,8 @@ public class DefinitionDataItemTest {
 
     @Test
     public void displayContextColumnIsOptionalUpperCase_called_OptionalDisplayContextEnumValueReturned() {
-        DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("OPTIONAL").getDisplayContext();
+        DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("OPTIONAL")
+            .getDisplayContext();
 
         assertEquals(DisplayContext.OPTIONAL, displayContextColumn.getDisplayContext());
         assertEquals("OPTIONAL", displayContextColumn.getColumnValue());
@@ -185,7 +194,8 @@ public class DefinitionDataItemTest {
 
     @Test
     public void displayContextColumnIsOptionalMixedCase_called_OptionalDisplayContextEnumValueReturned() {
-        DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("oPtiONal").getDisplayContext();
+        DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("oPtiONal")
+            .getDisplayContext();
 
         assertEquals(DisplayContext.OPTIONAL, displayContextColumn.getDisplayContext());
         assertEquals("oPtiONal", displayContextColumn.getColumnValue());
@@ -193,7 +203,8 @@ public class DefinitionDataItemTest {
 
     @Test
     public void displayContextColumnIsNotAValidEnumConstant_displayContextColumnReturnedWithNulldisplayContext() {
-        DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("NotValid").getDisplayContext();
+        DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("NotValid")
+            .getDisplayContext();
 
         assertNull(displayContextColumn.getDisplayContext());
         assertEquals("NotValid", displayContextColumn.getColumnValue());
@@ -223,7 +234,15 @@ public class DefinitionDataItemTest {
         assertThat("asserting " + field, dataItem.getBoolean(ColumnName.DEFAULT_HIDDEN), is(booleanValue));
     }
 
-    private DefinitionDataItem definitionDataItemWithSecurityClassificationColumnValue(String securityClassificationColumn) {
+    private void assertBooleanValueWithDefault(String field, boolean defaultValue, boolean expectedValue) {
+        DefinitionDataItem dataItem = new DefinitionDataItem(SheetName.CASE_EVENT.toString());
+        dataItem.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), field);
+        assertThat("asserting " + field, dataItem.getBooleanOrDefault(
+            ColumnName.DEFAULT_HIDDEN, defaultValue), is(expectedValue));
+    }
+
+    private DefinitionDataItem definitionDataItemWithSecurityClassificationColumnValue(
+        String securityClassificationColumn) {
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT.getName());
         definitionDataItem.addAttribute(ColumnName.SECURITY_CLASSIFICATION.toString(), securityClassificationColumn);
         return definitionDataItem;

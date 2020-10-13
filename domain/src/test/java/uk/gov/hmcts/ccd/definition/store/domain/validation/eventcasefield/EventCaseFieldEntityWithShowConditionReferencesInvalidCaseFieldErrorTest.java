@@ -25,7 +25,8 @@ public class EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldErro
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(mockValidationErrorMessageCreator.createErrorMessage(any(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError.class)))
+        when(mockValidationErrorMessageCreator.createErrorMessage(
+            any(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
         classUnderTest = new EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError(
             "ShowCondition Field Value",
@@ -55,7 +56,8 @@ public class EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldErro
     }
 
     private EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext(String eventId) {
-        EventCaseFieldEntityValidationContext caseFieldEntityValidationContext = mock(EventCaseFieldEntityValidationContext.class);
+        EventCaseFieldEntityValidationContext caseFieldEntityValidationContext =
+            mock(EventCaseFieldEntityValidationContext.class);
         when(caseFieldEntityValidationContext.getEventId()).thenReturn(eventId);
         return caseFieldEntityValidationContext;
     }

@@ -1,43 +1,58 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Component;
-
 import com.google.common.annotations.VisibleForTesting;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.nocconfig.NoCConfigService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionUiConfigParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.LayoutParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.NoCConfigParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.NoCConfigEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
@@ -61,6 +76,8 @@ public class ImportServiceImpl implements ImportService {
     private final IdamProfileClient idamProfileClient;
     private final BannerService bannerService;
     private final JurisdictionUiConfigService jurisdictionUiConfigService;
+    private final NoCConfigService noCConfigService;
+    private final ChallengeQuestionTabService challengeQuestionTabService;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -76,7 +93,9 @@ public class ImportServiceImpl implements ImportService {
                              ApplicationEventPublisher applicationEventPublisher,
                              IdamProfileClient idamProfileClient,
                              BannerService bannerService,
-                             JurisdictionUiConfigService jurisdictionUiConfigService) {
+                             JurisdictionUiConfigService jurisdictionUiConfigService,
+                             NoCConfigService noCConfigService,
+                             ChallengeQuestionTabService challengeQuestionTabService) {
 
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
@@ -92,6 +111,8 @@ public class ImportServiceImpl implements ImportService {
         this.applicationEventPublisher = applicationEventPublisher;
         this.bannerService = bannerService;
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
+        this.noCConfigService = noCConfigService;
+        this.challengeQuestionTabService = challengeQuestionTabService;
     }
 
     /**
@@ -135,7 +156,8 @@ public class ImportServiceImpl implements ImportService {
             bannerEntity.ifPresent(this::importBanner);
             logger.debug("Importing spreadsheet: Banner...: OK");
         }
-        final JurisdictionUiConfigParser jurisdictionUiConfigParser = parserFactory.createJurisdictionUiConfigParser(parseContext);
+        final JurisdictionUiConfigParser jurisdictionUiConfigParser = parserFactory
+            .createJurisdictionUiConfigParser(parseContext);
         JurisdictionUiConfigEntity jurisdictionUiConfigEntity = jurisdictionUiConfigParser.parse(definitionSheets);
         importJurisdictionUiConfig(jurisdictionUiConfigEntity);
 
@@ -156,12 +178,13 @@ public class ImportServiceImpl implements ImportService {
         fieldTypeService.saveTypes(jurisdiction, parsedFieldTypes.getNewResults());
 
         logger.info("Importing spreadsheet: Field types: OK: {} field types imported",
-                    parsedFieldTypes.getNewResults().size());
+            parsedFieldTypes.getNewResults().size());
 
         /*
             3 - metadata fields
          */
-        parseContext.registerMetadataFields(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
+        parseContext.registerMetadataFields(caseFieldRepository
+            .findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
 
         /*
             4 - Case Type
@@ -175,8 +198,9 @@ public class ImportServiceImpl implements ImportService {
 
         logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 
-        logger.info("Importing spreadsheet: Case types: OK: {} case types imported",
-                    caseTypes.size());
+        importNoCConfigDefinition(definitionSheets, parseContext);
+
+        logger.info("Importing spreadsheet: Case types: OK: {} case types imported", caseTypes.size());
 
         /*
             5 - UI definition
@@ -185,10 +209,14 @@ public class ImportServiceImpl implements ImportService {
 
         final LayoutParser layoutParser = parserFactory.createLayoutParser(parseContext);
 
-        final ParseResult<GenericLayoutEntity> searchInputResult = layoutParser.parseSearchInputLayout(definitionSheets);
-        final ParseResult<GenericLayoutEntity> searchResultResult = layoutParser.parseSearchResultLayout(definitionSheets);
-        final ParseResult<GenericLayoutEntity> workbasketInputResult = layoutParser.parseWorkbasketInputLayout(definitionSheets);
-        final ParseResult<GenericLayoutEntity> workbasketLayoutResult = layoutParser.parseWorkbasketLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> searchInputResult
+            = layoutParser.parseSearchInputLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> searchResultResult
+            = layoutParser.parseSearchResultLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> workbasketInputResult
+            = layoutParser.parseWorkbasketInputLayout(definitionSheets);
+        final ParseResult<GenericLayoutEntity> workbasketLayoutResult
+            = layoutParser.parseWorkbasketLayout(definitionSheets);
 
         layoutService.createGenerics(searchInputResult.getNewResults());
         layoutService.createGenerics(searchResultResult.getNewResults());
@@ -196,11 +224,13 @@ public class ImportServiceImpl implements ImportService {
         layoutService.createGenerics(workbasketLayoutResult.getNewResults());
 
         if (definitionSheets.get(SheetName.SEARCH_CASES_RESULT_FIELDS.getName()) != null) {
-            final ParseResult<GenericLayoutEntity> searchCasesResultLayoutResult = layoutParser.parseSearchCasesResultsLayout(definitionSheets);
+            final ParseResult<GenericLayoutEntity> searchCasesResultLayoutResult
+                = layoutParser.parseSearchCasesResultsLayout(definitionSheets);
             layoutService.createGenerics(searchCasesResultLayoutResult.getNewResults());
         }
 
-        final ParseResult<DisplayGroupEntity> displayGroupsResult = layoutParser.parseAllDisplayGroups(definitionSheets);
+        final ParseResult<DisplayGroupEntity> displayGroupsResult
+            = layoutParser.parseAllDisplayGroups(definitionSheets);
         layoutService.createDisplayGroups(displayGroupsResult.getNewResults());
 
         logger.info("Importing spreadsheet: UI definition: OK");
@@ -214,9 +244,9 @@ public class ImportServiceImpl implements ImportService {
         final List<WorkBasketUserDefault> workBasketUserDefaults = userProfilesParser.parse(definitionSheets);
         final IdamProperties userDetails = getUserDetails();
         workBasketUserDefaultService.saveWorkBasketUserDefaults(workBasketUserDefaults,
-                                                                jurisdiction,
-                                                                parsedCaseTypes.getAllResults(),
-                                                                userDetails.getEmail());
+            jurisdiction,
+            parsedCaseTypes.getAllResults(),
+            userDetails.getEmail());
         logger.info("Importing spreadsheet: User profiles: OK");
 
         applicationEventPublisher.publishEvent(new DefinitionImportedEvent(caseTypes));
@@ -233,7 +263,42 @@ public class ImportServiceImpl implements ImportService {
 
         metadata.setUserId(userDetails.getEmail());
 
+        // ChallengeQuestion
+        if (definitionSheets.get(SheetName.CHALLENGE_QUESTION_TAB.getName()) != null) {
+            logger.debug("Importing spreadsheet: NewChallengeQuestion...");
+            final ChallengeQuestionParser challengeQuestionParser =
+                parserFactory.createNewChallengeQuestionParser();
+
+            List<ChallengeQuestionTabEntity> newChallengeQuestionEntities = challengeQuestionParser
+                .parse(definitionSheets,parseContext);
+            challengeQuestionTabService.saveAll(newChallengeQuestionEntities);
+            logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
+        }
+
         return metadata;
+    }
+
+    private void importNoCConfigDefinition(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
+        String nocConfigSheetName = SheetName.NOC_CONFIG.getName();
+        if (definitionSheets.get(nocConfigSheetName) != null) {
+            logger.debug("Importing tab: {} ...", nocConfigSheetName);
+            final NoCConfigParser noCConfigParser = parserFactory.createNoCConfigParser(parseContext);
+            Map<String, List<NoCConfigEntity>> caseTypeNoCConfigEntities = noCConfigParser.parse(definitionSheets);
+            Set<String> caseTypesWithMultipleEntries = caseTypeNoCConfigEntities
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().size() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+
+            if (!caseTypesWithMultipleEntries.isEmpty()) {
+                throw new InvalidImportException("Only one NoC config is allowed per case type(s) "
+                    + caseTypesWithMultipleEntries.stream().sorted().collect(Collectors.joining(",")));
+            }
+            caseTypeNoCConfigEntities
+                .forEach((key, value) -> value.forEach(noCConfigService::save));
+            logger.debug("Importing tab: {} ...: OK", nocConfigSheetName);
+        }
     }
 
     @VisibleForTesting  // used by BaseTest

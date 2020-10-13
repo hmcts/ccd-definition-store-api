@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.alias.Alias;
@@ -19,6 +15,10 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 @Slf4j
 public class HighLevelCCDElasticClient implements CCDElasticClient {
@@ -87,6 +87,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
             getClass().getResourceAsStream(CASES_INDEX_SETTINGS_JSON), false);
         settings.put("index.number_of_shards", config.getIndexShards());
         settings.put("index.number_of_replicas", config.getIndexShardsReplicas());
+        settings.put("index.mapping.total_fields.limit", config.getCasesIndexMappingFieldsLimit());
         return settings;
     }
 

@@ -51,6 +51,7 @@ public enum ColumnName {
     RETRIES_TIMEOUT_URL_ABOUT_TO_SUBMIT_EVENT("RetriesTimeoutURLAboutToSubmitEvent"),
     RETRIES_TIMEOUT_URL_SUBMITTED_EVENT("RetriesTimeoutURLSubmittedEvent"),
     RETRIES_TIMEOUT_URL_MID_EVENT("RetriesTimeoutURLMidEvent"),
+    SEARCHABLE("Searchable"),
     SECURITY_CLASSIFICATION("SecurityClassification"),
     FIELD_SHOW_CONDITION("FieldShowCondition"),
     PAGE_SHOW_CONDITION("PageShowCondition"),
@@ -78,7 +79,15 @@ public enum ColumnName {
     BANNER_DESCRIPTION("BannerDescription"),
     BANNER_URL_TEXT("BannerURLText"),
     BANNER_URL("BannerURL"),
-    DEFAULT_VALUE("DefaultValue");
+    DEFAULT_VALUE("DefaultValue"),
+    RETAIN_HIDDEN_VALUE("RetainHiddenValue"),
+    REASON_REQUIRED("ReasonRequired"),
+    NOC_ACTION_INTERPRETATION_REQUIRED("NoCActionInterpretationRequired"),
+    CHALLENGE_QUESTION_TEXT("QuestionText"),
+    CHALLENGE_QUESTION_ANSWER_FIELD_TYPE("AnswerFieldType"),
+    CHALLENGE_QUESTION_CASE_ROLE_ID("CaseRoleId"),
+    CHALLENGE_QUESTION_QUESTION_ID("QuestionId"),
+    CHALLENGE_QUESTION_ANSWER_FIELD("Answer");
 
     private final String name;
 

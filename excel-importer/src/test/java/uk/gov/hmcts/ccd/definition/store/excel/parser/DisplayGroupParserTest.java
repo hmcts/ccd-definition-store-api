@@ -1,6 +1,29 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -13,19 +36,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-
 public class DisplayGroupParserTest extends ParserTestBase {
 
     private CaseTypeTabParser caseTypeTabParser;
@@ -37,7 +47,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         .showConditionExpression("parsedShowCondition2").build();
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         init();
 
@@ -46,7 +56,8 @@ public class DisplayGroupParserTest extends ParserTestBase {
         mockShowConditionParser = mock(ShowConditionParser.class);
         mockEntityToDefinitionRegistry = mock(EntityToDefinitionDataItemRegistry.class);
 
-        caseTypeTabParser = new CaseTypeTabParser(parseContext, mockShowConditionParser, mockEntityToDefinitionRegistry);
+        caseTypeTabParser = new CaseTypeTabParser(
+            parseContext, mockShowConditionParser, mockEntityToDefinitionRegistry);
         wizardPageParser = new WizardPageParser(parseContext, mockShowConditionParser, mockEntityToDefinitionRegistry);
 
         definitionSheets.put(SheetName.CASE_TYPE_TAB.getName(), definitionSheet);
@@ -58,27 +69,30 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when worksheet missing")
-    public void shouldFail_whenSheetDoesNotExist() {
+    void shouldFail_whenSheetDoesNotExist() {
         MapperException thrown = assertThrows(MapperException.class, () -> caseTypeTabParser.parseAll(new HashMap<>()));
-        assertThat(thrown.getMessage(), is(String.format("A definition must contain a CaseTypeTab sheet with at least one entry",
+        assertThat(thrown.getMessage(), is(String.format(
+            "A definition must contain a CaseTypeTab sheet with at least one entry",
             CASE_TYPE_UNDER_TEST)));
     }
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when at least one CaseField doesn't exist")
-    public void shouldFail_whenEmptyDisplayGroupDefinitionsIfDGItemIsMandatory() {
+    void shouldFail_whenEmptyDisplayGroupDefinitionsIfDGItemIsMandatory() {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
 
-        MapperException thrown = assertThrows(MapperException.class, () -> caseTypeTabParser.parseAll(definitionSheets));
-        assertThat(thrown.getMessage(), is(String.format("At least one CaseField must be defined in the CaseTypeTab for case type %s",
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(thrown.getMessage(), is(String.format(
+            "At least one CaseField must be defined in the CaseTypeTab for case type %s",
             CASE_TYPE_UNDER_TEST)));
     }
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when page title missing")
-    public void shouldFail_whenMandatoryPageTitleNotGiven() {
+    void shouldFail_whenMandatoryPageTitleNotGiven() {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -99,11 +113,12 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("WizardPageParser - should parse when everything is fine")
-    public void shouldParseCaseEventToFields() throws InvalidShowConditionException {
+    void shouldParseCaseEventToFields() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition")).willReturn(PARSED_SHOW_CONDITION);
+        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .willReturn(PARSED_SHOW_CONDITION);
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -133,11 +148,12 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("WizardPageParser - should parse more than one item")
-    public void shouldParseCaseEventToFieldsEvenWithSamePageId() throws InvalidShowConditionException {
+    void shouldParseCaseEventToFieldsEvenWithSamePageId() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition")).willReturn(PARSED_SHOW_CONDITION);
+        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .willReturn(PARSED_SHOW_CONDITION);
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -170,11 +186,12 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("WizardPageParser - should fail when more than one page show condition defined")
-    public void shouldFailIfTwoPageShowConditionsForSameEventPageID() throws InvalidShowConditionException {
+    void shouldFailIfTwoPageShowConditionsForSameEventPageID() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition")).willReturn(PARSED_SHOW_CONDITION);
+        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .willReturn(PARSED_SHOW_CONDITION);
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -194,17 +211,20 @@ public class DisplayGroupParserTest extends ParserTestBase {
         caseEventToFieldsSheet.addDataItem(item2);
 
         MapperException result = assertThrows(MapperException.class, () -> wizardPageParser.parseAll(definitionSheets));
-        assertThat(result.getMessage(), equalTo("Please provide single condition in PageShowCondition column in CaseEventToFields for the tab SomeEventName"));
+        assertThat(result.getMessage(), equalTo("Please provide single condition in PageShowCondition column "
+            + "in CaseEventToFields for the tab SomeEventName"));
     }
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when  when more than one tab show condition defined")
-    public void shouldFailIfTwoTabShowConditionsForSameTab() throws InvalidShowConditionException {
+    void shouldFailIfTwoTabShowConditionsForSameTab() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Collections.singleton(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition")).willReturn(PARSED_SHOW_CONDITION);
-        given(mockShowConditionParser.parseShowCondition("fieldShowCondition")).willReturn(new ShowCondition.Builder().build());
+        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .willReturn(PARSED_SHOW_CONDITION);
+        given(mockShowConditionParser.parseShowCondition("fieldShowCondition"))
+            .willReturn(new ShowCondition.Builder().build());
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -223,17 +243,21 @@ public class DisplayGroupParserTest extends ParserTestBase {
         definitionSheet.addDataItem(item);
         definitionSheet.addDataItem(item2);
 
-        MapperException result = assertThrows(MapperException.class, () -> caseTypeTabParser.parseAll(definitionSheets));
-        assertThat(result.getMessage(), equalTo("Please provide single condition in TabShowCondition column in CaseTypeTab for the tab Name"));
+        MapperException result = assertThrows(MapperException.class,
+            () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(result.getMessage(), equalTo("Please provide single condition in TabShowCondition column "
+            + "in CaseTypeTab for the tab Name"));
     }
 
     @Test
     @DisplayName("WizardPageParser - should parse with data on any row")
-    public void shouldParsePageWithDataComingFromTheFirstRowAndIgnoreItsOtherRows() throws InvalidShowConditionException {
+    void shouldParsePageWithDataComingFromTheFirstRowAndIgnoreItsOtherRows()
+        throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition2")).willReturn(PARSED_SHOW_CONDITION);
+        given(mockShowConditionParser.parseShowCondition("someShowCondition2"))
+            .willReturn(PARSED_SHOW_CONDITION);
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -281,7 +305,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should parse CaseTypeTab")
-    public void shouldParseCaseTypeTab() throws InvalidShowConditionException {
+    void shouldParseCaseTypeTab() throws InvalidShowConditionException {
         UserRoleEntity userRoleEntity = new UserRoleEntity();
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -320,7 +344,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when multiple user roles for same CaseTypeTab")
-    public void shouldNotParseCaseTypeTabForMultipleEntriesInUserRoles() throws InvalidShowConditionException {
+    void shouldNotParseCaseTypeTabForMultipleEntriesInUserRoles() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -348,13 +372,15 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item2.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
         definitionSheet.addDataItem(item2);
 
-        MapperException thrown = assertThrows(MapperException.class, () -> caseTypeTabParser.parseAll(definitionSheets));
-        assertThat(thrown.getMessage(), is("Please provide one user role row per tab in worksheet CaseTypeTab on column USER_ROLE for the tab NameTab"));
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(thrown.getMessage(), is("Please provide one user role row per tab in worksheet CaseTypeTab "
+            + "on column USER_ROLE for the tab NameTab"));
     }
 
     @Test
     @DisplayName("CaseTypeTabParser - should fail when invalid user roles")
-    public void shouldNotParseCaseTypeTabForInvalidUserRoles() throws InvalidShowConditionException {
+    void shouldNotParseCaseTypeTabForInvalidUserRoles() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(parseContext.getRole(CASE_TYPE_UNDER_TEST, "Role1")).willReturn(Optional.empty());
@@ -372,13 +398,15 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
         definitionSheet.addDataItem(item);
 
-        MapperException thrown = assertThrows(MapperException.class, () -> caseTypeTabParser.parseAll(definitionSheets));
-        assertThat(thrown.getMessage(), is("- Invalid idam or case role 'Role1' in 'CaseTypeTab' tab for TabId 'NameTab'"));
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(thrown.getMessage(),
+            is("- Invalid idam or case role 'Role1' in 'CaseTypeTab' tab for TabId 'NameTab'"));
     }
 
     @Test
     @DisplayName("should fail for invalid CaseRole")
-    public void shouldFailForInvalidCaseRole() throws InvalidShowConditionException {
+    void shouldFailForInvalidCaseRole() throws InvalidShowConditionException {
         final String caseRole = "[CLAIMANT]";
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
 
@@ -394,13 +422,15 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item1.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item1.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         definitionSheet.addDataItem(item1);
-        MapperException thrown = assertThrows(MapperException.class, () -> caseTypeTabParser.parseAll(definitionSheets));
-        assertThat(thrown.getMessage(), is("- Invalid idam or case role '[CLAIMANT]' in 'CaseTypeTab' tab for TabId 'Name Tab'"));
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(thrown.getMessage(),
+            is("- Invalid idam or case role '[CLAIMANT]' in 'CaseTypeTab' tab for TabId 'Name Tab'"));
     }
 
     @Test
     @DisplayName("should parse for valid CaseRole")
-    public void shouldParseForValidCaseRole() throws InvalidShowConditionException {
+    void shouldParseForValidCaseRole() throws InvalidShowConditionException {
         final String caseRole = "[CLAIMANT]";
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
 

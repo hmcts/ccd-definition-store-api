@@ -29,12 +29,16 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_CASELINK = "CaseLink";
     public static final String PREDEFINED_COMPLEX_ORGANISATION = "Organisation";
     public static final String PREDEFINED_COMPLEX_ORGANISATION_POLICY = "OrganisationPolicy";
+    public static final String PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST = "ChangeOrganisationRequest";
 
     public static Boolean isList(String baseTypeReference) {
-        return BASE_FIXED_LIST.equals(baseTypeReference) || BASE_MULTI_SELECT_LIST.equals(baseTypeReference) || BASE_RADIO_FIXED_LIST.equals(baseTypeReference);
+        return BASE_FIXED_LIST.equals(baseTypeReference)
+            || BASE_MULTI_SELECT_LIST.equals(baseTypeReference)
+            || BASE_RADIO_FIXED_LIST.equals(baseTypeReference);
     }
 
     private FieldTypeUtils() {
-        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor (squid:S1118)
+        // Hide Utility Class Constructor : Utility classes should not have a public or default constructor
+        // (squid:S1118)
     }
 }

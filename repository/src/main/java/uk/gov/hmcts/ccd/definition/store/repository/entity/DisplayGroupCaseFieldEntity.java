@@ -1,11 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.*;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
-
-import org.apache.commons.lang3.StringUtils;
 
 @Table(name = "display_group_case_field")
 @Entity

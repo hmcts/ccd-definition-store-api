@@ -1,5 +1,7 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.apache.http.HttpStatus;
+import org.hamcrest.Matcher;
+import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
@@ -52,9 +67,18 @@ public class SpreadSheetImportTest extends BaseTest {
     private static final String TEST_CASE_TYPE = "TestAddressBookCase";
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
         + TEST_CASE_TYPE;
+    public static final String EXCEL_FILE_NOC_CONFIG = "/CCD_TestDefinition_NOC_CONFIG.xlsx";
+    public static final String EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT =
+        "/CCD_TestDefinition_Invalid_PostState_NoDefault.xlsx";
+    public static final String EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES =
+        "/CCD_TestDefinition_Invalid_PostState_DuplicatePriorities.xlsx";
+    public static final String EXCEL_FILE_INVALID_NOC_CONFIG = "/CCD_TestDefinition_Invalid_NOC_CONFIG.xlsx";
+    public static final String EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG =
+        "/CCD_TestDefinition_Invalid_Case_Type_NOC_CONFIG.xlsx";
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
-    private static final String RESPONSE_JSON = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
+    private static final String RESPONSE_JSON_V45 = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
+    private static final String RESPONSE_JSON_V46 = "GetCaseTypesResponseForCCD_TestDefinition_V46.json";
 
     private Map<Object, Object> caseTypesId;
     private Map<Object, Object> fieldTypesId;
@@ -126,7 +150,8 @@ public class SpreadSheetImportTest extends BaseTest {
             // Check the error response message.
             assertThat("Incorrect HTTP response",
                 result.getResponse().getContentAsString(),
-                allOf(containsString("Problem updating user profile"), containsString("403 Forbidden")));
+                allOf(containsString("Problem updating user profile"),
+                    containsString("403 Forbidden")));
         }
     }
 
@@ -141,12 +166,7 @@ public class SpreadSheetImportTest extends BaseTest {
     public void importInvalidDefinitionFile() throws Exception {
         InputStream inputStream = new ClassPathResource("/CCD_TestDefinition_Invalid_Data.xlsx",
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
@@ -169,12 +189,7 @@ public class SpreadSheetImportTest extends BaseTest {
     public void rollbackFailedDefinitionFileImport() throws Exception {
         InputStream inputStream = new ClassPathResource("/ccd_testdefinition-missing-WorkBasketResultFields.xlsx",
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
@@ -194,12 +209,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
         InputStream inputStream = new ClassPathResource("/ccd-definition-wrong-complex-type.xlsx",
             getClass()).getInputStream();
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+        final MvcResult result = performAndGetMvcResult(inputStream);
 
         WireMock.verify(0, putRequestedFor(urlEqualTo("/user-profile/users")));
 
@@ -210,6 +220,115 @@ public class SpreadSheetImportTest extends BaseTest {
         assertEquals("data stored during a failed import",
             0,
             jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
+    }
+
+    /**
+     * API test for successful import of a valid Case Definition with Noc Config spreadsheet.
+     *
+     * @throws Exception On error running test
+     */
+    @Test
+    @Transactional
+    public void importValidDefinitionFileContainsNocConfig() throws Exception {
+
+        try (final InputStream inputStream =
+                 new ClassPathResource(EXCEL_FILE_NOC_CONFIG, getClass()).getInputStream()) {
+            MockMultipartFile file = new MockMultipartFile("file", inputStream);
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+                .file(file)
+                .header(AUTHORIZATION, "Bearer testUser")) //
+                .andReturn();
+
+            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+        }
+
+        // Check the HTTP GET request for the imported Case Type returns the correct response.
+        MvcResult getCaseTypesMvcResult = mockMvc.perform(MockMvcRequestBuilders.get(CASE_TYPE_DEF_URL)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+        assertBody(getCaseTypesMvcResult.getResponse().getContentAsString(), RESPONSE_JSON_V46);
+
+        assertDatabaseIsCorrect();
+        assertNoCConfig();
+    }
+
+    @Test
+    @Transactional
+    public void importInvalidNoCConfigDefinitionFile() throws Exception {
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_INVALID_NOC_CONFIG,
+            getClass()).getInputStream();
+        final MvcResult result = performAndGetMvcResult(inputStream);
+
+        // Check the error response message.
+        assertThat("Incorrect HTTP status message for bad request",
+            result.getResponse().getContentAsString(),
+            containsString("Only one NoC config is allowed per case type(s) "
+                + "TestAddressBookCase,TestComplexAddressBookCase"));
+    }
+
+    @Test
+    @Transactional
+    public void importInvalidEventPostStateConditionWithNoDefaultState() throws Exception {
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT,
+            getClass()).getInputStream();
+        final MvcResult result = performAndGetMvcResult(inputStream,
+            MockMvcResultMatchers.status().isUnprocessableEntity());
+
+        // Check the error response message.
+        assertThat("Incorrect HTTP status message for bad request",
+            result.getResponse().getContentAsString(),
+            containsString("Post state condition CaseEnteredIntoLegacy(PersonHasSecondAddress=\"Yes\"):1 "
+                + "has to include non conditional post state for event 'enterCaseIntoLegacy' in CaseEvent tab"));
+    }
+
+    @Test
+    @Transactional
+    public void importInvalidEventPostStateConditionWithDuplicatePriorities() throws Exception {
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES,
+            getClass()).getInputStream();
+        final MvcResult result = performAndGetMvcResult(inputStream,
+            MockMvcResultMatchers.status().isUnprocessableEntity());
+
+        // Check the error response message.
+        assertThat("Incorrect HTTP status message for bad request",
+            result.getResponse().getContentAsString(),
+            containsString("Post state condition "
+                + "CaseEnteredIntoLegacy(PersonHasSecondAddress=\"Yes\"):1;"
+                + "CaseStopped(PersonHasSecondAddress=\"Yes\"):1;CaseEnteredIntoLegacy "
+                + "has duplicate priorities for event 'enterCaseIntoLegacy' in CaseEvent tab"));
+    }
+
+    private MvcResult performAndGetMvcResult(InputStream inputStream) throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", inputStream);
+        return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andReturn();
+    }
+
+    private MvcResult performAndGetMvcResult(InputStream inputStream, ResultMatcher resultMatcher) throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", inputStream);
+        return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(resultMatcher)
+            .andReturn();
+    }
+
+    @Test
+    @Transactional
+    public void importInvalidCaseTypeNoCConfigDefinitionFile() throws Exception {
+        InputStream inputStream = new ClassPathResource(EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG,
+            getClass()).getInputStream();
+        final MvcResult result = performAndGetMvcResult(inputStream);
+
+        // Check the error response message.
+        assertThat("Incorrect HTTP status message for bad request",
+            result.getResponse().getContentAsString(),
+            containsString(
+                "Unknown Case Type(s) 'TestComplexAddressBookCase1' in worksheet 'NoticeOfChangeConfig'"));
     }
 
     /**
@@ -225,11 +344,17 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertBody(String contentAsString) throws IOException, URISyntaxException {
+        assertBody(contentAsString, RESPONSE_JSON_V45);
+    }
+
+    private void assertBody(String contentAsString, String fileName)
+        throws IOException, URISyntaxException {
 
         String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
-            .getResource(RESPONSE_JSON)
+            .getResource(fileName)
             .toURI())));
-        expected = expected.replaceAll("#date", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        expected = expected.replaceAll("#date",
+            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         assertEquals(removeGuids(expected), formatJsonString(removeGuids(contentAsString)));
     }
@@ -309,7 +434,8 @@ public class SpreadSheetImportTest extends BaseTest {
                 hasItem(allOf(hasColumn("reference", "FixedList-regionalCentreEnum"))),
                 hasItem(allOf(hasColumn("reference", "MultiSelectList-regionalCentreEnum")))));
 
-        List<Map<String, Object>> fieldTypeListItems = jdbcTemplate.queryForList("SELECT * FROM field_type_list_item");
+        List<Map<String, Object>> fieldTypeListItems = jdbcTemplate.queryForList(
+            "SELECT * FROM field_type_list_item");
 
         assertThat(fieldTypeListItems,
             allOf(hasItem(allOf(hasColumn("value", "MARRIAGE"),
@@ -389,7 +515,8 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertCaseRoles() {
-        List<Map<String, Object>> allCaseRoles = jdbcTemplate.queryForList("SELECT * FROM role WHERE role.dtype = 'CASEROLE'");
+        List<Map<String, Object>> allCaseRoles = jdbcTemplate.queryForList(
+            "SELECT * FROM role WHERE role.dtype = 'CASEROLE'");
         assertThat(allCaseRoles, hasSize(6));
 
         List<Map<String, Object>> caseTypeCaseRoles = jdbcTemplate.queryForList("SELECT * FROM role where "
@@ -432,7 +559,8 @@ public class SpreadSheetImportTest extends BaseTest {
             + "workbasket_input_case_field");
         assertThat(allWorkbasket, hasSize(13));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM workbasket_input_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
@@ -452,7 +580,8 @@ public class SpreadSheetImportTest extends BaseTest {
         List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM workbasket_case_field");
         assertThat(allWorkbasket, hasSize(6));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM workbasket_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
@@ -468,10 +597,12 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertSearchInput(Map<Object, Object> caseFieldIds) {
-        List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM search_input_case_field");
+        List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList(
+            "SELECT * FROM search_input_case_field");
         assertThat(allWorkbasket, hasSize(13));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM search_input_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
@@ -487,10 +618,12 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertSearchResult(Map<Object, Object> caseFieldIds) {
-        List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList("SELECT * FROM search_result_case_field");
+        List<Map<String, Object>> allWorkbasket = jdbcTemplate.queryForList(
+            "SELECT * FROM search_result_case_field");
         assertThat(allWorkbasket, hasSize(7));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeWorkbasket = jdbcTemplate.queryForList(
             "SELECT * FROM search_result_case_field where case_type_id = ?",
             caseTypesId.get("TestComplexAddressBookCase"));
@@ -510,7 +643,8 @@ public class SpreadSheetImportTest extends BaseTest {
             "SELECT * FROM display_group WHERE type = 'TAB'");
         assertThat(allDisplayGroups, hasSize(14));
 
-        Map<Object, Object> userRoleIds = getIdsByReference("SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
+        Map<Object, Object> userRoleIds = getIdsByReference(
+            "SELECT reference, id FROM role WHERE role.dtype = 'USERROLE'");
         List<Map<String, Object>> caseTypeDisplayGroup = jdbcTemplate.queryForList(
             "SELECT * FROM display_group WHERE case_type_id = ? AND type = 'TAB'",
             caseTypesId.get("TestAddressBookCase"));
@@ -535,8 +669,8 @@ public class SpreadSheetImportTest extends BaseTest {
             "TestAddressBookCase");
 
         List<Map<String, Object>> displayGroupsFields = jdbcTemplate.queryForList(
-            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id "
-                + "AND dg.type = 'TAB' AND case_type_id = ?", caseTypesId.get("TestAddressBookCase"));
+            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id"
+                + " AND dg.type = 'TAB' AND case_type_id = ?", caseTypesId.get("TestAddressBookCase"));
 
         assertThat(displayGroupsFields, hasSize(6));
         assertThat(displayGroupsFields,
@@ -583,8 +717,8 @@ public class SpreadSheetImportTest extends BaseTest {
             "TestComplexAddressBookCase");
 
         List<Map<String, Object>> complexDisplayGroupsFields = jdbcTemplate.queryForList(
-            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id "
-                + "AND dg.type = 'TAB'  AND case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
+            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id"
+                + " AND dg.type = 'TAB'  AND case_type_id = ?", caseTypesId.get("TestComplexAddressBookCase"));
         assertThat(complexDisplayGroupsFields, hasSize(10));
         assertThat(complexDisplayGroupsFields,
             allOf(hasItem(allOf(hasColumn("display_group_id", complexDisplayGroupsId.get("NameTab")),
@@ -625,8 +759,8 @@ public class SpreadSheetImportTest extends BaseTest {
             "TestAddressBookCase");
 
         List<Map<String, Object>> displayGroupsFields = jdbcTemplate.queryForList(
-            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id "
-                + "AND dg.type = 'PAGE';");
+            "select dgcf.* from display_group_case_field dgcf, display_group dg where dgcf.display_group_id = dg.id"
+                + " AND dg.type = 'PAGE';");
         assertThat(displayGroupsFields, hasSize(13));
         assertThat(displayGroupsFields,
             allOf(hasItem(allOf(hasColumn("display_group_id",
@@ -657,7 +791,8 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertSearchAliases() {
-        List<Map<String, Object>> searchAliasDefinition = jdbcTemplate.queryForList("SELECT * FROM search_alias_field");
+        List<Map<String, Object>> searchAliasDefinition = jdbcTemplate.queryForList(
+            "SELECT * FROM search_alias_field");
         assertThat(searchAliasDefinition, hasSize(3));
 
         List<Map<String, Object>> caseTypeSearchAliasDefinition = jdbcTemplate.queryForList(
@@ -686,5 +821,10 @@ public class SpreadSheetImportTest extends BaseTest {
     private int getIdForTestJurisdiction() {
         return jdbcTemplate.queryForObject("SELECT id FROM jurisdiction WHERE reference = 'TEST' AND version = 1",
             Integer.class);
+    }
+
+    private void assertNoCConfig() {
+        List<Map<String, Object>> nocConfig = jdbcTemplate.queryForList("SELECT * FROM noc_config");
+        assertThat(nocConfig, hasSize(1));
     }
 }

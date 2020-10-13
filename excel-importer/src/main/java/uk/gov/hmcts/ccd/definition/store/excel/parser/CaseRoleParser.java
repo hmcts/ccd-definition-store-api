@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
-
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +9,12 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
 public class CaseRoleParser {
     private static final Logger logger = LoggerFactory.getLogger(CaseRoleParser.class);
@@ -39,7 +39,8 @@ public class CaseRoleParser {
             return caseRoleEntities;
         }
 
-        final Map<String, List<DefinitionDataItem>> caseRoleItemsByCaseTypes = definitionSheet.groupDataItemsByCaseType();
+        final Map<String, List<DefinitionDataItem>> caseRoleItemsByCaseTypes = definitionSheet
+            .groupDataItemsByCaseType();
 
         final List<DefinitionDataItem> caseRoles = caseRoleItemsByCaseTypes.get(caseTypeId);
         if (caseRoles == null) {
@@ -59,7 +60,8 @@ public class CaseRoleParser {
             logger.info("Parsing case roles for case type '{}': Parsing case role '{}': OK", caseTypeId, caseRoleId);
         }
 
-        logger.info("Parsing case roles for case type '{}': OK: {} case roles parsed", caseTypeId, caseRoleEntities.size());
+        logger.info("Parsing case roles for case type '{}': OK: {} case roles parsed",
+            caseTypeId, caseRoleEntities.size());
 
         return caseRoleEntities;
     }

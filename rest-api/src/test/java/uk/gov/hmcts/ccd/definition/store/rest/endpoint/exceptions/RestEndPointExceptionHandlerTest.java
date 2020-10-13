@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions;
 
-import javax.persistence.OptimisticLockException;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -13,6 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
+
+import javax.persistence.OptimisticLockException;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 
 public class RestEndPointExceptionHandlerTest {
@@ -51,7 +51,8 @@ public class RestEndPointExceptionHandlerTest {
 
     @Test
     public void handleConflictWhenOptimisticLockExceptionHappens() {
-        final OptimisticLockException exception = new OptimisticLockException("Outer message", new Exception("Inner message"));
+        final OptimisticLockException exception = new OptimisticLockException(
+            "Outer message", new Exception("Inner message"));
 
         final ResponseEntity<Object> response = exceptionHandler.handleConflict(exception, mock(WebRequest.class));
 

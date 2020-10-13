@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 public class StubTypeMappingGenerator extends TypeMappingGenerator {
 
@@ -33,5 +33,10 @@ public class StubTypeMappingGenerator extends TypeMappingGenerator {
 
     public boolean shouldIgnore(FieldEntity field) {
         return field.getBaseTypeString().equals("Label");
+    }
+
+    @Override
+    protected String disabled() {
+        return "{\"enabled\": false}";
     }
 }

@@ -22,28 +22,32 @@ public class CaseFieldParser {
     private final ParseContext parseContext;
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
-    public CaseFieldParser(ParseContext parseContext, EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+    public CaseFieldParser(ParseContext parseContext,
+                           EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
         this.parseContext = parseContext;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
     }
 
-    public Collection<CaseFieldEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseType) {
+    public Collection<CaseFieldEntity> parseAll(Map<String, DefinitionSheet> definitionSheets,
+                                                CaseTypeEntity caseType) {
         final String caseTypeId = caseType.getReference();
 
         logger.debug("Parsing case fields for case type {}...", caseTypeId);
 
         final List<CaseFieldEntity> caseFields = Lists.newArrayList();
 
-        final Map<String, List<DefinitionDataItem>> caseFieldItemsByCaseTypes = definitionSheets.get(SheetName.CASE_FIELD.getName())
-            .groupDataItemsByCaseType();
+        final Map<String, List<DefinitionDataItem>> caseFieldItemsByCaseTypes = definitionSheets.get(
+            SheetName.CASE_FIELD.getName()).groupDataItemsByCaseType();
 
         if (!caseFieldItemsByCaseTypes.containsKey(caseTypeId)) {
-            throw new SpreadsheetParsingException("At least one case field must be defined for case type: " + caseTypeId);
+            throw new SpreadsheetParsingException(
+                "At least one case field must be defined for case type: " + caseTypeId);
         }
 
         final List<DefinitionDataItem> caseFieldItems = caseFieldItemsByCaseTypes.get(caseTypeId);
 
-        logger.debug("Parsing case fields for case type {}: {} case fields detected", caseTypeId, caseFieldItems.size());
+        logger.debug("Parsing case fields for case type {}: {} case fields detected",
+            caseTypeId, caseFieldItems.size());
 
         for (DefinitionDataItem caseFieldDefinition : caseFieldItems) {
             final String caseFieldId = caseFieldDefinition.getId();
@@ -62,7 +66,9 @@ public class CaseFieldParser {
         return caseFields;
     }
 
-    private CaseFieldEntity parseCaseField(String caseTypeId, String caseFieldId, DefinitionDataItem caseFieldDefinition) {
+    private CaseFieldEntity parseCaseField(String caseTypeId,
+                                           String caseFieldId,
+                                           DefinitionDataItem caseFieldDefinition) {
         final CaseFieldEntity caseField = new CaseFieldEntity();
 
         caseField.setReference(caseFieldId);
@@ -76,6 +82,7 @@ public class CaseFieldParser {
         caseField.setHint(caseFieldDefinition.getString(ColumnName.HINT_TEXT));
         caseField.setLiveFrom(caseFieldDefinition.getLocalDate(ColumnName.LIVE_FROM));
         caseField.setLiveTo(caseFieldDefinition.getLocalDate(ColumnName.LIVE_TO));
+        caseField.setSearchable(caseFieldDefinition.getBooleanOrDefault(ColumnName.SEARCHABLE, true));
 
         return caseField;
     }

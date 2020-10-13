@@ -11,7 +11,7 @@ public class EventEntityCreateEventValidator implements EventEntityValidator {
     public ValidationResult validate(EventEntity caseEvent, EventEntityValidationContext eventEntityValidationContext) {
         ValidationResult validationResult = new ValidationResult();
 
-        if (caseEvent.isCanCreate() && caseEvent.getPostState() == null) {
+        if (caseEvent.isCanCreate() && caseEvent.getPostStates().size() == 0) {
             validationResult.addError(
                 new CreateEventDoesNotHavePostStateValidationError(caseEvent)
             );

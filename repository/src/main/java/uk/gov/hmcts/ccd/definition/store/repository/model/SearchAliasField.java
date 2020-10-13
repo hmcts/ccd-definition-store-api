@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class SearchAliasField implements Serializable {
 
     private static final long serialVersionUID = -3153847998044997634L;
-    
+
     private String id;
     private String caseTypeId;
     private String caseFieldPath;

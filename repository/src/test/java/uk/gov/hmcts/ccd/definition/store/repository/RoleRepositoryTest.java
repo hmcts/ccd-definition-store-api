@@ -1,17 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import javax.persistence.EntityManager;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
-import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
-import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +13,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import javax.persistence.EntityManager;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {

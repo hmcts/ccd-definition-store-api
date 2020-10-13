@@ -1,7 +1,14 @@
 apply plugin: 'com.github.spacialcircumstances.gradle-cucumber-reporting'
 //apply plugin: 'info.solidsoft.pitest'
+
+dependencyCheck {
+    suppressionFile = "${rootDir}/dependency-check-suppressions.xml"
+}
+
 dependencies {
-    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
+    compile (group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
     compile group: 'org.awaitility', name: 'awaitility', version: '3.1.6'
 }
 
@@ -26,6 +33,15 @@ task smoke(type: Test) {
     useJUnitPlatform {
         includeTags 'smoke'
     }
+
+    dependsOn aatClasses
+
+    new File("$buildDir/test-results/test").mkdirs()
+    copy {
+        from "src/aat/resources/DummyTest.xml"
+        into "$buildDir/test-results/test"
+    }
+
     doLast {
         generateCucumberReports.enabled = true
         javaexec {
@@ -36,6 +52,18 @@ task smoke(type: Test) {
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
         }
     }
+
+    finalizedBy {
+        generateCucumberReports {
+            doLast {
+                delete "${rootDir}/BEFTA Report for Smoke Tests/"
+                new File("${rootDir}/BEFTA Report for Smoke Tests").mkdirs()
+                file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Smoke Tests"))
+            }
+        }
+    }
+
+    outputs.upToDateWhen { false }
 }
 
 task functional(type: Test) {
@@ -44,6 +72,14 @@ task functional(type: Test) {
     setClasspath(sourceSets.aat.runtimeClasspath)
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
     useJUnitPlatform()
+
+    dependsOn aatClasses
+
+    new File("$buildDir/test-results/test").mkdirs()
+    copy {
+        from "src/aat/resources/DummyTest.xml"
+        into "$buildDir/test-results/test"
+    }
 
     generateCucumberReports.enabled = false
 
@@ -57,11 +93,24 @@ task functional(type: Test) {
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
         }
     }
+
+    finalizedBy {
+        generateCucumberReports {
+            doLast{
+                delete "${rootDir}/BEFTA Report for Functional Tests/"
+                new File("${rootDir}/BEFTA Report for Functional Tests").mkdirs()
+                file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Functional Tests"))
+            }
+        }
+    }
+
+    outputs.upToDateWhen { false }
 }
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
     reports = files("${rootDir}/target/cucumber.json")
 }
+
 bootJar {
     enabled = false
 }

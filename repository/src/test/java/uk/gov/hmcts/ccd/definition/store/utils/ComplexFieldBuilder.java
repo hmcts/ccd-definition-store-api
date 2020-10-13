@@ -28,6 +28,11 @@ public class ComplexFieldBuilder {
         return this;
     }
 
+    public ComplexFieldBuilder withSearchable(boolean isSearchable) {
+        complexFieldEntity.setSearchable(isSearchable);
+        return this;
+    }
+
     public ComplexFieldEntity build() {
         return complexFieldEntity;
     }

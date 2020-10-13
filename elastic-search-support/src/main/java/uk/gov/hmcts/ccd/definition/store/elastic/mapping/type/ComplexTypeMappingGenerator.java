@@ -1,16 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.stream.Collectors.toList;
-
 import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.stream.Collectors.toList;
 
 @Component
 @Slf4j
@@ -31,7 +31,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
                 String property = field.getReference();
                 jw.name(property);
                 TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
-                String mapping = typeMapper.dataMapping(field);
+                String mapping = typeMapper.doDataMapping(field);
                 jw.jsonValue(mapping);
                 log.info("property: {}, mapping: {}", property, mapping);
             }
@@ -60,7 +60,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
                 String property = field.getReference();
                 jw.name(property);
                 TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
-                String mapping = typeMapper.dataClassificationMapping(field);
+                String mapping = typeMapper.doDataClassificationMapping(field);
                 jw.jsonValue(mapping);
                 log.info("property: {}, mapping: {}", property, mapping);
             }

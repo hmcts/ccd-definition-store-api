@@ -32,8 +32,7 @@
         "description": "[[ANY_STRING_NOT_NULLABLE]]",
         "live_from": "[[ANY_STRING_NOT_NULLABLE]]",
         "live_until": "[[ANY_STRING_NULLABLE]]",
-        "case_types": [
-        ]
+        "case_types": []
       },
       "events": [
         {
@@ -56,198 +55,199 @@
               "case_field_id": "TextAreaField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "TextField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "DateField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "AddressField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "PhoneField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "NumberField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "YesNoField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "CollectionFieldMan",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "CollectionField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "AddressUKField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "MarritalStatus",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "MoneyField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "DocumentField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "EmailField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "MultiSelectField",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "DynamicList",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_fields_complex": []
             },
             {
               "case_field_id": "OrganisationPolicyField1",
               "display_context": "COMPLEX",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
@@ -301,6 +301,7 @@
               "case_field_id": "OrganisationPolicyField2",
               "display_context": "COMPLEX",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
@@ -349,20 +350,32 @@
                   "defaultValue": null
                 }
               ]
+            },
+            {
+              "case_field_id": "CaseLinkField",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": []
             }
           ],
-          "pre_states": [
-          ],
-          "post_state": "CaseCreated",
-          "callback_url_about_to_start_event": "http://ccd-test-stubs-service-aat.service.core-compute-aat.internal/case_type/fe-functional-test/mid_event_dynamic_list",
-          "retries_timeout_about_to_start_event": [
-          ],
+          "pre_states": [],
+          "post_states": [{
+              "enabling_condition": null,
+              "priority": 99,
+              "post_state_reference": "CaseCreated"
+            } ],
+          "callback_url_about_to_start_event": "http://{{CCD_STUB_SERVICE_URI_BASE}}/case_type/fe-functional-test/mid_event_dynamic_list",
+          "retries_timeout_about_to_start_event": [],
           "callback_url_about_to_submit_event": null,
-          "retries_timeout_url_about_to_submit_event": [
-          ],
+          "retries_timeout_url_about_to_submit_event": [],
           "callback_url_submitted_event": null,
-          "retries_timeout_url_submitted_event": [
-          ],
+          "retries_timeout_url_submitted_event": [],
           "security_classification": "PUBLIC",
           "acls": [
             {
@@ -390,6 +403,13 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
           "show_summary": true,
@@ -412,6 +432,7 @@
               "case_field_id": "OrganisationPolicyField1",
               "display_context": "COMPLEX",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
@@ -465,6 +486,7 @@
               "case_field_id": "OrganisationPolicyField2",
               "display_context": "COMPLEX",
               "display_context_parameter": null,
+              "retain_hidden_value": null,
               "show_condition": null,
               "show_summary_change_option": true,
               "show_summary_content_option": null,
@@ -518,7 +540,11 @@
           "pre_states": [
             "CaseCreated"
           ],
-          "post_state": "CaseUpdated",
+          "post_states": [ {
+            "enabling_condition": null,
+            "priority": 99,
+            "post_state_reference": "CaseUpdated"
+          }],
           "callback_url_about_to_start_event": null,
           "retries_timeout_about_to_start_event": [],
           "callback_url_about_to_submit_event": null,
@@ -541,6 +567,13 @@
             },
             {
               "role": "caseworker-caa",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
               "create": true,
               "read": true,
               "update": true,
@@ -591,6 +624,13 @@
               "read": true,
               "update": false,
               "delete": false
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ]
         },
@@ -644,6 +684,13 @@
           "read": true,
           "update": true,
           "delete": true
+        },
+        {
+          "role": "caseworker-befta_master-solicitor",
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true
         }
       ],
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
@@ -677,21 +724,19 @@
                 "order": null
               }
             ],
-            "complex_fields": [
-            ],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
           "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
-          "acls": [
-          ],
-          "complexACLs": [
-          ],
+          "acls": [],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -705,10 +750,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -722,13 +765,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -782,7 +832,8 @@
                       "complexACLs": [],
                       "order": null,
                       "show_condition": null,
-                      "display_context_parameter": null
+                      "display_context_parameter": null,
+                      "retain_hidden_value": null
                     },
                     {
                       "metadata": false,
@@ -808,7 +859,8 @@
                       "complexACLs": [],
                       "order": null,
                       "show_condition": null,
-                      "display_context_parameter": null
+                      "display_context_parameter": null,
+                      "retain_hidden_value": null
                     }
                   ],
                   "collection_field_type": null
@@ -821,7 +873,8 @@
                 "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -847,7 +900,8 @@
                 "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -873,7 +927,8 @@
                 "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               }
             ],
             "collection_field_type": null
@@ -883,6 +938,10 @@
           "live_from": "2017-01-01",
           "live_until": null,
           "acls": [
+            {
+              "__ordering__": "unordered",
+              "__elementId__": "role"
+            },
             {
               "role": "caseworker-befta_master",
               "create": true,
@@ -896,12 +955,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
           "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -955,7 +1022,8 @@
                       "complexACLs": [],
                       "order": null,
                       "show_condition": null,
-                      "display_context_parameter": null
+                      "display_context_parameter": null,
+                      "retain_hidden_value": null
                     },
                     {
                       "metadata": false,
@@ -981,7 +1049,8 @@
                       "complexACLs": [],
                       "order": null,
                       "show_condition": null,
-                      "display_context_parameter": null
+                      "display_context_parameter": null,
+                      "retain_hidden_value": null
                     }
                   ],
                   "collection_field_type": null
@@ -994,7 +1063,8 @@
                 "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -1020,7 +1090,8 @@
                 "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -1046,7 +1117,8 @@
                 "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               }
             ],
             "collection_field_type": null
@@ -1056,6 +1128,10 @@
           "live_from": "2017-01-01",
           "live_until": null,
           "acls": [
+            {
+              "__ordering__": "unordered",
+              "__elementId__": "role"
+            },
             {
               "role": "caseworker-befta_master",
               "create": true,
@@ -1069,12 +1145,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
           "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1088,10 +1172,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1105,13 +1187,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1125,10 +1214,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1142,13 +1229,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1179,8 +1273,7 @@
                 "order": null
               }
             ],
-            "complex_fields": [
-            ],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1194,13 +1287,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1214,10 +1314,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1231,13 +1329,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1251,10 +1356,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1268,13 +1371,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1288,10 +1398,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1305,13 +1413,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1325,10 +1440,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1342,13 +1455,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1362,10 +1482,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1379,13 +1497,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1421,8 +1546,7 @@
                 "order": 4
               }
             ],
-            "complex_fields": [
-            ],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1436,13 +1560,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1456,8 +1587,7 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
+            "fixed_list_items": [],
             "complex_fields": [
               {
                 "metadata": false,
@@ -1471,10 +1601,8 @@
                   "min": null,
                   "max": "150",
                   "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
+                  "fixed_list_items": [],
+                  "complex_fields": [],
                   "collection_field_type": null
                 },
                 "hidden": null,
@@ -1482,11 +1610,11 @@
                 "live_from": null,
                 "live_until": null,
                 "acls": null,
-                "complexACLs": [
-                ],
+                "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -1500,10 +1628,8 @@
                   "min": null,
                   "max": "50",
                   "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
+                  "fixed_list_items": [],
+                  "complex_fields": [],
                   "collection_field_type": null
                 },
                 "hidden": null,
@@ -1511,11 +1637,11 @@
                 "live_from": null,
                 "live_until": null,
                 "acls": null,
-                "complexACLs": [
-                ],
+                "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -1529,10 +1655,8 @@
                   "min": null,
                   "max": "50",
                   "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
+                  "fixed_list_items": [],
+                  "complex_fields": [],
                   "collection_field_type": null
                 },
                 "hidden": null,
@@ -1540,11 +1664,11 @@
                 "live_from": null,
                 "live_until": null,
                 "acls": null,
-                "complexACLs": [
-                ],
+                "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -1558,10 +1682,8 @@
                   "min": null,
                   "max": "50",
                   "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
+                  "fixed_list_items": [],
+                  "complex_fields": [],
                   "collection_field_type": null
                 },
                 "hidden": null,
@@ -1569,11 +1691,11 @@
                 "live_from": null,
                 "live_until": null,
                 "acls": null,
-                "complexACLs": [
-                ],
+                "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -1587,10 +1709,8 @@
                   "min": null,
                   "max": "50",
                   "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
+                  "fixed_list_items": [],
+                  "complex_fields": [],
                   "collection_field_type": null
                 },
                 "hidden": null,
@@ -1598,11 +1718,11 @@
                 "live_from": null,
                 "live_until": null,
                 "acls": null,
-                "complexACLs": [
-                ],
+                "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -1616,10 +1736,8 @@
                   "min": null,
                   "max": "14",
                   "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
+                  "fixed_list_items": [],
+                  "complex_fields": [],
                   "collection_field_type": null
                 },
                 "hidden": null,
@@ -1627,11 +1745,11 @@
                 "live_from": null,
                 "live_until": null,
                 "acls": null,
-                "complexACLs": [
-                ],
+                "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
                 "metadata": false,
@@ -1645,10 +1763,8 @@
                   "min": null,
                   "max": "50",
                   "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
+                  "fixed_list_items": [],
+                  "complex_fields": [],
                   "collection_field_type": null
                 },
                 "hidden": null,
@@ -1656,11 +1772,11 @@
                 "live_from": null,
                 "live_until": null,
                 "acls": null,
-                "complexACLs": [
-                ],
+                "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               }
             ],
             "collection_field_type": null
@@ -1676,13 +1792,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1696,20 +1819,16 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": {
               "id": "Text",
               "type": "Text",
               "min": null,
               "max": null,
               "regular_expression": null,
-              "fixed_list_items": [
-              ],
-              "complex_fields": [
-              ],
+              "fixed_list_items": [],
+              "complex_fields": [],
               "collection_field_type": null
             }
           },
@@ -1724,13 +1843,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1744,20 +1870,16 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": {
               "id": "Text",
               "type": "Text",
               "min": null,
               "max": null,
               "regular_expression": null,
-              "fixed_list_items": [
-              ],
-              "complex_fields": [
-              ],
+              "fixed_list_items": [],
+              "complex_fields": [],
               "collection_field_type": null
             }
           },
@@ -1765,13 +1887,12 @@
           "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_until": null,
-          "acls": [
-          ],
-          "complexACLs": [
-          ],
+          "acls": [],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1785,10 +1906,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1802,13 +1921,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1822,10 +1948,8 @@
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1839,13 +1963,20 @@
               "read": true,
               "update": true,
               "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
@@ -1859,10 +1990,285 @@
             "min": null,
             "max": null,
             "regular_expression": "^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$",
-            "fixed_list_items": [
-            ],
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            }
+          ],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": false,
+          "id": "AddressField",
+          "case_type_id": "FT_MasterCaseType",
+          "label": "Address Field",
+          "hint_text": null,
+          "field_type": {
+            "id": "Address",
+            "type": "Complex",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
             "complex_fields": [
+              {
+                "metadata": false,
+                "id": "AddressLine1",
+                "case_type_id": null,
+                "label": "Address Line 1",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Text",
+                  "type": "Text",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null
+              },
+              {
+                "metadata": false,
+                "id": "AddressLine2",
+                "case_type_id": null,
+                "label": "Address Line 2",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Text",
+                  "type": "Text",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null
+              },
+              {
+                "metadata": false,
+                "id": "AddressLine3",
+                "case_type_id": null,
+                "label": "Address Line 3",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Text",
+                  "type": "Text",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null
+              },
+              {
+                "metadata": false,
+                "id": "Country",
+                "case_type_id": null,
+                "label": "Country",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Text",
+                  "type": "Text",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null
+              }
             ],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            }
+          ],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": false,
+          "id": "DateField",
+          "case_type_id": "FT_MasterCaseType",
+          "label": "Date Field",
+          "hint_text": null,
+          "field_type": {
+            "id": "Date",
+            "type": "Date",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            }
+          ],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": false,
+          "id": "TextAreaField",
+          "case_type_id": "FT_MasterCaseType",
+          "label": "Text Area",
+          "hint_text": null,
+          "field_type": {
+            "id": "TextArea",
+            "type": "TextArea",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            },
+            {
+              "role": "caseworker-befta_master-solicitor",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            }
+          ],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": false,
+          "id": "TextField",
+          "case_type_id": "FT_MasterCaseType",
+          "label": "Text Field",
+          "hint_text": null,
+          "field_type": {
+            "id": "Text",
+            "type": "Text",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
             "collection_field_type": null
           },
           "hidden": false,
@@ -1878,43 +2284,229 @@
               "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": true,
+          "id": "[LAST_STATE_MODIFIED_DATE]",
+          "case_type_id": null,
+          "label": "Last State Modified Date",
+          "hint_text": null,
+          "field_type": {
+            "id": "DateTime",
+            "type": "DateTime",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": true,
+          "id": "[LAST_MODIFIED_DATE]",
+          "case_type_id": null,
+          "label": "Last Modified Date",
+          "hint_text": null,
+          "field_type": {
+            "id": "DateTime",
+            "type": "DateTime",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": true,
+          "id": "[CREATED_DATE]",
+          "case_type_id": null,
+          "label": "Created Date",
+          "hint_text": null,
+          "field_type": {
+            "id": "DateTime",
+            "type": "DateTime",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": true,
+          "id": "[JURISDICTION]",
+          "case_type_id": null,
+          "label": "Jurisdiction",
+          "hint_text": null,
+          "field_type": {
+            "id": "Text",
+            "type": "Text",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": true,
+          "id": "[CASE_TYPE]",
+          "case_type_id": null,
+          "label": "Case Type",
+          "hint_text": null,
+          "field_type": {
+            "id": "Text",
+            "type": "Text",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": true,
+          "id": "[SECURITY_CLASSIFICATION]",
+          "case_type_id": null,
+          "label": "Security Classification",
+          "hint_text": null,
+          "field_type": {
+            "id": "Text",
+            "type": "Text",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
+        },
+        {
+          "metadata": true,
+          "id": "[CASE_REFERENCE]",
+          "case_type_id": null,
+          "label": "Case Reference",
+          "hint_text": null,
+          "field_type": {
+            "id": "Number",
+            "type": "Number",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
           "metadata": false,
-          "id": "AddressField",
+          "id": "CaseLinkField",
           "case_type_id": "FT_MasterCaseType",
-          "label": "Address Field",
+          "label": "Case Link Field",
           "hint_text": null,
           "field_type": {
-            "id": "Address",
+            "id": "CaseLink",
             "type": "Complex",
             "min": null,
             "max": null,
             "regular_expression": null,
-            "fixed_list_items": [
-            ],
+            "fixed_list_items": [],
             "complex_fields": [
               {
                 "metadata": false,
-                "id": "AddressLine1",
+                "id": "CaseReference",
                 "case_type_id": null,
-                "label": "Address Line 1",
+                "label": "Case Reference",
                 "hint_text": null,
                 "field_type": {
-                  "id": "Text",
+                  "id": "TextCaseReference",
                   "type": "Text",
                   "min": null,
                   "max": null,
-                  "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
+                  "regular_expression": "(?:^[0-9]{16}$|^\\d{4}-\\d{4}-\\d{4}-\\d{4}$)",
+                  "fixed_list_items": [],
+                  "complex_fields": [],
                   "collection_field_type": null
                 },
                 "hidden": null,
@@ -1922,98 +2514,11 @@
                 "live_from": null,
                 "live_until": null,
                 "acls": null,
-                "complexACLs": [
-                ],
+                "complexACLs": [],
                 "order": null,
                 "show_condition": null,
-                "display_context_parameter": null
-              },
-              {
-                "metadata": false,
-                "id": "AddressLine2",
-                "case_type_id": null,
-                "label": "Address Line 2",
-                "hint_text": null,
-                "field_type": {
-                  "id": "Text",
-                  "type": "Text",
-                  "min": null,
-                  "max": null,
-                  "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
-                  "collection_field_type": null
-                },
-                "hidden": null,
-                "security_classification": "PUBLIC",
-                "live_from": null,
-                "live_until": null,
-                "acls": null,
-                "complexACLs": [
-                ],
-                "order": null,
-                "show_condition": null,
-                "display_context_parameter": null
-              },
-              {
-                "metadata": false,
-                "id": "AddressLine3",
-                "case_type_id": null,
-                "label": "Address Line 3",
-                "hint_text": null,
-                "field_type": {
-                  "id": "Text",
-                  "type": "Text",
-                  "min": null,
-                  "max": null,
-                  "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
-                  "collection_field_type": null
-                },
-                "hidden": null,
-                "security_classification": "PUBLIC",
-                "live_from": null,
-                "live_until": null,
-                "acls": null,
-                "complexACLs": [
-                ],
-                "order": null,
-                "show_condition": null,
-                "display_context_parameter": null
-              },
-              {
-                "metadata": false,
-                "id": "Country",
-                "case_type_id": null,
-                "label": "Country",
-                "hint_text": null,
-                "field_type": {
-                  "id": "Text",
-                  "type": "Text",
-                  "min": null,
-                  "max": null,
-                  "regular_expression": null,
-                  "fixed_list_items": [
-                  ],
-                  "complex_fields": [
-                  ],
-                  "collection_field_type": null
-                },
-                "hidden": null,
-                "security_classification": "PUBLIC",
-                "live_from": null,
-                "live_until": null,
-                "acls": null,
-                "complexACLs": [
-                ],
-                "order": null,
-                "show_condition": null,
-                "display_context_parameter": null
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               }
             ],
             "collection_field_type": null
@@ -2031,332 +2536,11 @@
               "delete": true
             }
           ],
-          "complexACLs": [
-          ],
+          "complexACLs": [],
           "order": null,
           "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": false,
-          "id": "DateField",
-          "case_type_id": "FT_MasterCaseType",
-          "label": "Date Field",
-          "hint_text": null,
-          "field_type": {
-            "id": "Date",
-            "type": "Date",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-            {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
-            }
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": false,
-          "id": "TextAreaField",
-          "case_type_id": "FT_MasterCaseType",
-          "label": "Text Area",
-          "hint_text": null,
-          "field_type": {
-            "id": "TextArea",
-            "type": "TextArea",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-            {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
-            }
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": false,
-          "id": "TextField",
-          "case_type_id": "FT_MasterCaseType",
-          "label": "Text Field",
-          "hint_text": null,
-          "field_type": {
-            "id": "Text",
-            "type": "Text",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-            {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
-            }
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": true,
-          "id": "[LAST_STATE_MODIFIED_DATE]",
-          "case_type_id": null,
-          "label": "Last State Modified Date",
-          "hint_text": null,
-          "field_type": {
-            "id": "DateTime",
-            "type": "DateTime",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": true,
-          "id": "[LAST_MODIFIED_DATE]",
-          "case_type_id": null,
-          "label": "Last Modified Date",
-          "hint_text": null,
-          "field_type": {
-            "id": "DateTime",
-            "type": "DateTime",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": true,
-          "id": "[CREATED_DATE]",
-          "case_type_id": null,
-          "label": "Created Date",
-          "hint_text": null,
-          "field_type": {
-            "id": "DateTime",
-            "type": "DateTime",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": true,
-          "id": "[JURISDICTION]",
-          "case_type_id": null,
-          "label": "Jurisdiction",
-          "hint_text": null,
-          "field_type": {
-            "id": "Text",
-            "type": "Text",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": true,
-          "id": "[CASE_TYPE]",
-          "case_type_id": null,
-          "label": "Case Type",
-          "hint_text": null,
-          "field_type": {
-            "id": "Text",
-            "type": "Text",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": true,
-          "id": "[SECURITY_CLASSIFICATION]",
-          "case_type_id": null,
-          "label": "Security Classification",
-          "hint_text": null,
-          "field_type": {
-            "id": "Text",
-            "type": "Text",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
-        },
-        {
-          "metadata": true,
-          "id": "[CASE_REFERENCE]",
-          "case_type_id": null,
-          "label": "Case Reference",
-          "hint_text": null,
-          "field_type": {
-            "id": "Number",
-            "type": "Number",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [
-            ],
-            "complex_fields": [
-            ],
-            "collection_field_type": null
-          },
-          "hidden": false,
-          "security_classification": "PUBLIC",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
-          "live_until": null,
-          "acls": [
-          ],
-          "complexACLs": [
-          ],
-          "order": null,
-          "show_condition": null,
-          "display_context_parameter": null
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         }
       ],
       "printable_document_url": "[[ANY_NOT_NULLABLE]]",

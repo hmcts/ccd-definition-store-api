@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.banner;
 
-import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,9 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMappe
 import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
+
+import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.stream.Collectors.toList;
@@ -57,6 +58,7 @@ public class BannerServiceImpl implements BannerService {
             return;
         }
         int deletedBannersCount = bannerRepository.deleteByJurisdictionReference(jurisdictionReference);
-        LOG.debug("Deleted {} existing banner entities for jurisdiction {}.", deletedBannersCount, jurisdictionReference);
+        LOG.debug(
+            "Deleted {} existing banner entities for jurisdiction {}.", deletedBannersCount, jurisdictionReference);
     }
 }

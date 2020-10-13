@@ -1,14 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
-import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
-import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.UPDATE;
-import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toEntity;
-import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toModel;
-
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
@@ -17,6 +8,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper;
+
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
+import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
+import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.UPDATE;
+import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toEntity;
+import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toModel;
 
 @Component
 public class UserRoleServiceImpl implements UserRoleService {

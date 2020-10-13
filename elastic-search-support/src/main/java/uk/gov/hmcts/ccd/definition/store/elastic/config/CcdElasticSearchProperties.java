@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.config;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("elasticsearch")
 public class CcdElasticSearchProperties {
@@ -16,6 +16,7 @@ public class CcdElasticSearchProperties {
     private String dynamic;
     private String casesIndexType;
     private String casesIndexNameFormat;
+    private int casesIndexMappingFieldsLimit;
     private Map<String, String> elasticMappings;
     private Map<String, String> typeMappings;
     private Map<String, String> casePredefinedMappings;
@@ -53,6 +54,14 @@ public class CcdElasticSearchProperties {
 
     public void setCasesIndexNameFormat(String casesIndexNameFormat) {
         this.casesIndexNameFormat = casesIndexNameFormat;
+    }
+
+    public int getCasesIndexMappingFieldsLimit() {
+        return casesIndexMappingFieldsLimit;
+    }
+
+    public void setCasesIndexMappingFieldsLimit(int casesIndexMappingFieldsLimit) {
+        this.casesIndexMappingFieldsLimit = casesIndexMappingFieldsLimit;
     }
 
     public Map<String, String> getTypeMappings() {

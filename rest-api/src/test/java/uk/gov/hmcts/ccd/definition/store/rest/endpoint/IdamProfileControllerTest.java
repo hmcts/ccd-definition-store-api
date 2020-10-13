@@ -43,8 +43,8 @@ class IdamProfileControllerTest {
         given(idamProfileClient.getLoggedInUserDetails()).willReturn(idamProperties);
         final IdamProfileController controller = new IdamProfileController(idamProfileClient);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                                 .setControllerAdvice(new RestEndPointExceptionHandler())
-                                 .build();
+            .setControllerAdvice(new RestEndPointExceptionHandler())
+            .build();
     }
 
     @DisplayName("Should get idam profile")

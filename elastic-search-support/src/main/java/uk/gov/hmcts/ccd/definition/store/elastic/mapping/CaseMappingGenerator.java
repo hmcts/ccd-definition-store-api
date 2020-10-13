@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toList;
-
 import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
@@ -14,6 +8,12 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerat
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 @Slf4j
@@ -53,21 +53,24 @@ public class CaseMappingGenerator extends MappingGenerator {
     private void dataMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
         log.info("generating case data mapping");
         jw.name(DATA);
-        genericDataMapping(jw, caseType, typeMapper -> typeMapper::dataMapping);
+        genericDataMapping(jw, caseType, typeMapper -> typeMapper::doDataMapping);
     }
 
     private void dataClassificationMapping(JsonWriter jw, CaseTypeEntity caseType) throws IOException {
         log.info("generating case data classification mapping");
         jw.name(DATA_CLASSIFICATION);
-        genericDataMapping(jw, caseType, typeMapper -> typeMapper::dataClassificationMapping);
+        genericDataMapping(jw, caseType, typeMapper -> typeMapper::doDataClassificationMapping);
     }
 
-    private void genericDataMapping(JsonWriter jw, CaseTypeEntity caseType,
-                                    Function<TypeMappingGenerator, Function<CaseFieldEntity, String>> mappingMethodSelection) throws IOException {
+    private void genericDataMapping(
+        JsonWriter jw,
+        CaseTypeEntity caseType,
+        Function<TypeMappingGenerator, Function<CaseFieldEntity, String>> mappingMethodSelection) throws IOException {
         jw.beginObject();
         jw.name(PROPERTIES);
         jw.beginObject();
-        List<CaseFieldEntity> fields = caseType.getCaseFields().stream().filter(field -> !shouldIgnore(field)).collect(toList());
+        List<CaseFieldEntity> fields = caseType.getCaseFields().stream()
+            .filter(field -> !shouldIgnore(field)).collect(toList());
         for (CaseFieldEntity field : fields) {
             String property = field.getReference();
             TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
@@ -91,7 +94,8 @@ public class CaseMappingGenerator extends MappingGenerator {
             jw.beginObject();
             for (SearchAliasFieldEntity searchAliasField : caseType.getSearchAliasFields()) {
                 jw.name(searchAliasField.getReference());
-                String aliasMapping = config.getElasticMappings().get(ALIAS).replace(ALIAS_CASE_FIELD_PATH_PLACE_HOLDER, searchAliasField.getCaseFieldPath());
+                String aliasMapping = config.getElasticMappings().get(ALIAS)
+                    .replace(ALIAS_CASE_FIELD_PATH_PLACE_HOLDER, searchAliasField.getCaseFieldPath());
                 jw.jsonValue(aliasMapping);
                 log.info("property: {}, alias mapping: {}", searchAliasField.getReference(), aliasMapping);
 
@@ -102,14 +106,16 @@ public class CaseMappingGenerator extends MappingGenerator {
         }
     }
 
-    private void addAliasForTextFieldSorting(JsonWriter jw, SearchAliasFieldEntity searchAliasField) throws IOException {
+    private void addAliasForTextFieldSorting(JsonWriter jw,
+                                             SearchAliasFieldEntity searchAliasField) throws IOException {
         String fieldType = config.getTypeMappings().get(searchAliasField.getFieldType().getReference());
-        // If the elasticsearch field type is text then create alias with a suffix '_keyword' pointing to the type 'field.keyword' of the text field. As sorting
-        // on full text is disabled by default (due to high memory consumption), the alternative is to use the text field's keyword for sorting.
+        // If the elasticsearch field type is text then create alias with a suffix '_keyword' pointing to the type
+        // 'field.keyword' of the text field. As sorting on full text is disabled by default
+        // (due to high memory consumption), the alternative is to use the text field's keyword for sorting.
         if (config.getElasticMappings().get(DEFAULT_TEXT).equalsIgnoreCase(fieldType)) {
             jw.name(searchAliasField.getReference() + ALIAS_TEXT_SORT_SUFFIX);
-            String aliasMapping = config.getElasticMappings().get(ALIAS_TEXT_SORT).replace(ALIAS_CASE_FIELD_PATH_PLACE_HOLDER,
-                                                                                           searchAliasField.getCaseFieldPath());
+            String aliasMapping = config.getElasticMappings().get(ALIAS_TEXT_SORT)
+                .replace(ALIAS_CASE_FIELD_PATH_PLACE_HOLDER, searchAliasField.getCaseFieldPath());
             jw.jsonValue(aliasMapping);
             log.info("property: {}, sort alias mapping: {}", searchAliasField.getReference(), aliasMapping);
         }

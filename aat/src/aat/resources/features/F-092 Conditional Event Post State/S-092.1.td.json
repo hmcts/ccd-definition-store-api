@@ -1,0 +1,31 @@
+{
+	"_guid_": "S-092.1",
+	"_extends_": "F-092_Test_Base_data",
+	"title": "must return a negative response in an attempt to import a definition file containing conditional event post state with invalid case field",
+	"specs": [
+    "an active profile in CCD",
+    "contains conditional event post state with invalid case field"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_Invalid_CaseField.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- Unknown field 'TextField55' for event 'approveCase' in post state condition: 'CaseApproved(TextField55=\"showmethemoney\" AND TextField3=\"showpage5\"):1;CaseModified' in CaseEvent tab"
+    }
+  }
+}

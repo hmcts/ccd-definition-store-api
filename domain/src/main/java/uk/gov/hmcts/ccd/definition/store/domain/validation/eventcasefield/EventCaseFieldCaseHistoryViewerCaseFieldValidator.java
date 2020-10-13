@@ -23,7 +23,8 @@ public class EventCaseFieldCaseHistoryViewerCaseFieldValidator implements EventC
                 new EventCaseFieldCaseHistoryViewerCaseFieldValidator.ValidationError(
                     String.format(
                         "'%s' is CaseHistoryViewer type and cannot be editable for event with reference '%s'",
-                        eventCaseFieldEntity.getCaseField() != null ? eventCaseFieldEntity.getCaseField().getReference() : "",
+                        eventCaseFieldEntity.getCaseField() != null
+                            ? eventCaseFieldEntity.getCaseField().getReference() : "",
                         eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""),
                     eventCaseFieldEntity)
             );

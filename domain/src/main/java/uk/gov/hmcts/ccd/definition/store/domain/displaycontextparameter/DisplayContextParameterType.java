@@ -2,7 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter;
 
 import com.google.common.base.Strings;
 
-import java.util.*;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +28,8 @@ public enum DisplayContextParameterType {
         return Optional.empty();
     }
 
-    public static Optional<String> getParameterValueFor(String displayContextParameter) throws IllegalArgumentException {
+    public static Optional<String> getParameterValueFor(String displayContextParameter)
+        throws IllegalArgumentException {
         Matcher m = PATTERN.matcher(displayContextParameter);
         if (m.matches() && !Strings.isNullOrEmpty(m.group(VALUE_GROUP))) {
             return Optional.of(m.group(VALUE_GROUP));

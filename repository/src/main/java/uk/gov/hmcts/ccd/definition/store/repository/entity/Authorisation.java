@@ -1,6 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -8,15 +17,14 @@ import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-
-import org.hibernate.annotations.CreationTimestamp;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @MappedSuperclass
 public abstract class Authorisation implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "case_field_acl_id_seq")
+    @GeneratedValue(strategy = SEQUENCE, generator = "case_field_acl_id_seq")
     private Integer id;
 
     @NotNull

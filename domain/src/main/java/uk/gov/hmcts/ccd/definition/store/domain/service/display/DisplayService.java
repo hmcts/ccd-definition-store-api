@@ -5,8 +5,19 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultDefinition;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,11 +42,13 @@ public class DisplayService {
     }
 
     public SearchResultDefinition findSearchResultDefinitionForCaseType(String caseTypeId) {
-        return mapToSearchResultDefinition(this.genericLayoutRepository.findSearchResultsByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToSearchResultDefinition(
+            this.genericLayoutRepository.findSearchResultsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public SearchInputDefinition findSearchInputDefinitionForCaseType(String caseTypeId) {
-        return mapToSearchInputDefinition(this.genericLayoutRepository.findSearchInputsByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToSearchInputDefinition(
+            this.genericLayoutRepository.findSearchInputsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public CaseTabCollection findTabStructureForCaseType(String caseTypeId) {
@@ -43,19 +56,23 @@ public class DisplayService {
     }
 
     public WorkbasketInputDefinition findWorkBasketInputDefinitionForCaseType(String caseTypeId) {
-        return mapToWorkBasketInputDefinition(this.genericLayoutRepository.findWorkbasketInputByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToWorkBasketInputDefinition(
+            this.genericLayoutRepository.findWorkbasketInputByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public WorkBasketResult findWorkBasketDefinitionForCaseType(String caseTypeId) {
-        return mapToWorkBasketResult(this.genericLayoutRepository.findWorkbasketByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToWorkBasketResult(
+            this.genericLayoutRepository.findWorkbasketByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public SearchCasesResult findSearchCasesResultDefinitionForCaseType(String caseTypeId) {
-        return mapToSearchCasesResult(this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId), caseTypeId);
+        return mapToSearchCasesResult(
+            this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
     public SearchCasesResult findSearchCasesResultDefinitionForCaseType(String caseTypeId, String useCase) {
-        return mapToSearchCasesResult(this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId, useCase), caseTypeId);
+        return mapToSearchCasesResult(
+            this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId, useCase), caseTypeId);
     }
 
 
@@ -80,8 +97,8 @@ public class DisplayService {
         return caseTabCollection;
     }
 
-    private SearchInputDefinition mapToSearchInputDefinition(List<SearchInputCaseFieldEntity> searchInputCaseFieldEntities,
-                                                             String caseTypeId) {
+    private SearchInputDefinition mapToSearchInputDefinition(
+        List<SearchInputCaseFieldEntity> searchInputCaseFieldEntities, String caseTypeId) {
         SearchInputDefinition searchInputDefinition = new SearchInputDefinition();
         searchInputDefinition.setCaseTypeId(caseTypeId);
         searchInputDefinition.setFields(
@@ -92,8 +109,8 @@ public class DisplayService {
         return searchInputDefinition;
     }
 
-    private SearchResultDefinition mapToSearchResultDefinition(List<SearchResultCaseFieldEntity> searchResultCaseFieldEntities,
-                                                               String caseTypeId) {
+    private SearchResultDefinition mapToSearchResultDefinition(
+        List<SearchResultCaseFieldEntity> searchResultCaseFieldEntities, String caseTypeId) {
         SearchResultDefinition searchResultDefinition = new SearchResultDefinition();
         searchResultDefinition.setCaseTypeId(caseTypeId);
         searchResultDefinition.setFields(
@@ -104,8 +121,8 @@ public class DisplayService {
         return searchResultDefinition;
     }
 
-    private WorkbasketInputDefinition mapToWorkBasketInputDefinition(List<WorkBasketInputCaseFieldEntity> workBasketInputCaseFieldEntities,
-                                                             String caseTypeId) {
+    private WorkbasketInputDefinition mapToWorkBasketInputDefinition(
+        List<WorkBasketInputCaseFieldEntity> workBasketInputCaseFieldEntities, String caseTypeId) {
         WorkbasketInputDefinition workbasketInputDefinition = new WorkbasketInputDefinition();
         workbasketInputDefinition.setCaseTypeId(caseTypeId);
         workbasketInputDefinition.setFields(
@@ -129,13 +146,13 @@ public class DisplayService {
     }
 
     private SearchCasesResult mapToSearchCasesResult(List<SearchCasesResultFieldEntity> searchCasesResultFieldEntities,
-                                                   String caseTypeId) {
+                                                     String caseTypeId) {
         SearchCasesResult searchCasesResult = new SearchCasesResult();
         searchCasesResult.setCaseTypeId(caseTypeId);
         searchCasesResult.setFields(
             searchCasesResultFieldEntities.stream()
-            .map(searchCasesResultFieldEntity -> entityToResponseDTOMapper.map(searchCasesResultFieldEntity))
-            .collect(Collectors.toList())
+                .map(searchCasesResultFieldEntity -> entityToResponseDTOMapper.map(searchCasesResultFieldEntity))
+                .collect(Collectors.toList())
         );
         return searchCasesResult;
     }

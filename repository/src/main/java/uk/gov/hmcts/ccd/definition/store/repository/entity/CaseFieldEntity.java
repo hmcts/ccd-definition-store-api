@@ -1,5 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,21 +21,9 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -72,6 +69,9 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
 
     @Column(name = "hidden")
     private Boolean hidden;
+
+    @Column(name = "searchable")
+    private boolean searchable = true;
 
     @Column(name = "security_classification")
     @Type(type = "pgsql_securityclassification_enum")
@@ -155,6 +155,15 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         this.hidden = hidden;
     }
 
+    @Override
+    public boolean isSearchable() {
+        return searchable;
+    }
+
+    public void setSearchable(boolean searchable) {
+        this.searchable = searchable;
+    }
+
     public SecurityClassification getSecurityClassification() {
         return securityClassification;
     }
@@ -219,41 +228,6 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         return this;
     }
 
-    @Transient
-    public Optional<FieldEntity> findNestedElementByPath(String path) {
-        if (StringUtils.isBlank(path)) {
-            return Optional.of(this);
-        }
-        if (this.getFieldType().getChildren().isEmpty()) {
-            Optional.empty();
-        }
-        List<String> pathElements = Arrays.stream(path.trim().split("\\.")).collect(Collectors.toList());
-
-        return reduce(this.getFieldType().getChildren(), pathElements);
-    }
-
-    private Optional<FieldEntity> reduce(List<ComplexFieldEntity> caseFields, List<String> pathElements) {
-        String firstPathElement = pathElements.get(0);
-
-        Optional<FieldEntity> caseField = caseFields.stream()
-                                                    .filter(e -> e.getReference().equals(firstPathElement))
-                                                    .map(e -> (FieldEntity)e)
-                                                    .findFirst();
-
-        if (!caseField.isPresent()) {
-            return Optional.empty();
-        }
-
-        if (pathElements.size() == 1) {
-            return caseField;
-        } else {
-            List<ComplexFieldEntity> complexFieldEntities = caseField.get().getFieldType().getChildren();
-            List<String> tail = pathElements.subList(1, pathElements.size());
-
-            return reduce(complexFieldEntities, tail);
-        }
-    }
-
     @Override
     public boolean isMetadataField() {
         return dataFieldType == DataFieldType.METADATA;
@@ -265,7 +239,8 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     }
 
     private boolean roleEquals(String role, CaseFieldACLEntity e) {
-        return e.getUserRole() == null ? false : (e.getUserRole().getReference() == null ? false : e.getUserRole().getReference().equalsIgnoreCase(role));
+        return e.getUserRole() == null ? false :
+            (e.getUserRole().getReference() == null ? false : e.getUserRole().getReference().equalsIgnoreCase(role));
     }
 
 }

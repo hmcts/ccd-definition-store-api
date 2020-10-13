@@ -33,7 +33,7 @@ public class CaseFieldParserTest extends ParserTestBase {
         init();
 
         parseContext = mock(ParseContext.class);
-        entityToDefinitionDataItemRegistry =  new EntityToDefinitionDataItemRegistry();
+        entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
         caseFieldParser = new CaseFieldParser(parseContext, entityToDefinitionDataItemRegistry);
         caseType = new CaseTypeEntity();
         caseType.setReference(CASE_TYPE_UNDER_TEST);
@@ -41,7 +41,7 @@ public class CaseFieldParserTest extends ParserTestBase {
         definitionSheets.put(SheetName.CASE_FIELD.getName(), definitionSheet);
     }
 
-    @Test (expected = SpreadsheetParsingException.class)
+    @Test(expected = SpreadsheetParsingException.class)
     public void shouldFail_whenNoFieldsAreDefinedForCaseType() {
         try {
             caseFieldParser.parseAll(definitionSheets, caseType);
@@ -66,7 +66,9 @@ public class CaseFieldParserTest extends ParserTestBase {
         assertThat(entity.getReference(), is("Case_Field"));
         assertThat(entity.getLabel(), is("Case Field"));
         assertThat(entity.getFieldType(), is(field));
-        MatcherAssert.assertThat(entityToDefinitionDataItemRegistry.getForEntity(entity), Matchers.is(Optional.of(dataItem)));
+        assertThat(entity.isSearchable(), is(true));
+        MatcherAssert.assertThat(
+            entityToDefinitionDataItemRegistry.getForEntity(entity), Matchers.is(Optional.of(dataItem)));
     }
 
     private DefinitionDataItem buildDefinitionDataItem(final String caseTypeId) {

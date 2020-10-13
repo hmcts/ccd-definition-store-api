@@ -1,13 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.slf4j.*;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.*;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.*;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.*;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
 
-import java.util.*;
+import java.util.Map;
 
 public class SearchCasesResultLayoutParser extends GenericLayoutParser {
     private static final Logger logger = LoggerFactory.getLogger(SearchCasesResultLayoutParser.class);
@@ -46,19 +48,20 @@ public class SearchCasesResultLayoutParser extends GenericLayoutParser {
 
     @Override
     protected void populateSortOrder(GenericLayoutEntity layoutEntity, String sortOrderString) {
-        SearchCasesResultFieldEntity resultCaseFieldEntity = ((SearchCasesResultFieldEntity)layoutEntity);
+        SearchCasesResultFieldEntity resultCaseFieldEntity = ((SearchCasesResultFieldEntity) layoutEntity);
         resultCaseFieldEntity.setSortOrder(getSortOrder(sortOrderString));
     }
 
     @Override
     protected void populateShowCondition(GenericLayoutEntity layoutEntity, String showCondition) {
         throw new MapperException(String.format("showCondition is not supported in worksheet '%s' for "
-            + "caseType '%s'", SheetName.SEARCH_CASES_RESULT_FIELDS.getName(), layoutEntity.getCaseType().getReference()));
+            + "caseType '%s'", SheetName.SEARCH_CASES_RESULT_FIELDS.getName(),
+            layoutEntity.getCaseType().getReference()));
     }
 
     @Override
     protected void populateUseCase(GenericLayoutEntity layoutEntity, String useCase) {
-        SearchCasesResultFieldEntity resultCaseFieldEntity = ((SearchCasesResultFieldEntity)layoutEntity);
+        SearchCasesResultFieldEntity resultCaseFieldEntity = ((SearchCasesResultFieldEntity) layoutEntity);
         resultCaseFieldEntity.setUseCase(useCase.toUpperCase());
     }
 }
