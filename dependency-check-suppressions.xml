@@ -40,17 +40,6 @@
 		<notes>Temporary suppression for on-going developments and master builds</notes>
 		<cve>CVE-2018-17244</cve>
 		<cve>CVE-2018-1258</cve>
-		<cve>CVE-2020-9484</cve>
-		<cve>CVE-2015-9251</cve>
-		<cve>CVE-2019-11358</cve>
-		<cve>CVE-2018-14040</cve>
-		<cve>CVE-2018-14041</cve>
-		<cve>CVE-2018-14042</cve>
-		<cve>CVE-2019-8331</cve>
-		<cve>CVE-2020-13692</cve>
-		<cve>CVE-2020-8022</cve>
-		<cve>CVE-2020-13934</cve>
-		<cve>CVE-2020-13935</cve>
 	</suppress>
 
 	<suppress>
@@ -362,5 +351,82 @@
    ]]></notes>
    <packageUrl regex="true">^pkg:maven/org\.hibernate/hibernate-core@.*$</packageUrl>
    <cve>CVE-2019-14900</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: definition-store-elastic-search-support-1.2.0-SNAPSHOT.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/uk\.gov\.hmcts\.ccd\.definition/elastic-search-support@.*$</packageUrl>
+   <cve>CVE-2020-7019</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: elasticsearch-6.4.2.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.elasticsearch/elasticsearch@.*$</packageUrl>
+   <vulnerabilityName>CVE-2020-7019</vulnerabilityName>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: caffeine-2.7.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.github\.ben-manes\.caffeine/caffeine@.*$</packageUrl>
+   <cve>CVE-2020-10517</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: caffeine-2.7.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.github\.ben-manes\.caffeine/caffeine@.*$</packageUrl>
+   <cve>CVE-2020-10518</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: jcip-annotations-1.0-1.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.github\.stephenc\.jcip/jcip-annotations@.*$</packageUrl>
+   <cve>CVE-2020-10517</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: jcip-annotations-1.0-1.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.github\.stephenc\.jcip/jcip-annotations@.*$</packageUrl>
+   <cve>CVE-2020-10518</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: snakeyaml-1.25.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
+   <cve>CVE-2017-18640</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: curvesapi-1.06.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.github\.virtuald/curvesapi@.*$</packageUrl>
+   <cve>CVE-2020-10517</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: curvesapi-1.06.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.github\.virtuald/curvesapi@.*$</packageUrl>
+   <cve>CVE-2020-10518</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: compiler-0.9.3.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.github\.spullara\.mustache\.java/compiler@.*$</packageUrl>
+   <cve>CVE-2020-10517</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: compiler-0.9.3.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.github\.spullara\.mustache\.java/compiler@.*$</packageUrl>
+   <cve>CVE-2020-10518</cve>
 </suppress>
 </suppressions>

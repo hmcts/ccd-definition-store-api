@@ -34,4 +34,9 @@ public class StubTypeMappingGenerator extends TypeMappingGenerator {
     public boolean shouldIgnore(FieldEntity field) {
         return field.getBaseTypeString().equals("Label");
     }
+
+    @Override
+    protected String disabled() {
+        return "{\"enabled\": false}";
+    }
 }
