@@ -21,23 +21,22 @@ public class HiddenFieldsValidator {
                                                  Map<String, DefinitionSheet> definitionSheets) {
         final DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
         final DefinitionSheet caseFields = definitionSheets.get(SheetName.CASE_FIELD.getName());
-        List<DefinitionDataItem> caseField =
+        List<DefinitionDataItem> caseEventToFieldsList =
             caseFields.getDataItems().stream().filter(caseFieldDataItem ->
                 definitionDataItem.getId().equals(caseFieldDataItem
                     .getString(ColumnName.FIELD_TYPE))
                     || definitionDataItem.getId().equals(caseFieldDataItem
                     .getString(ColumnName.FIELD_TYPE_PARAMETER))).collect(toList());
 
-        validateCaseEventToFields(definitionDataItem, caseEventToFields, caseField);
+        validateCaseEventToFields(definitionDataItem, caseEventToFields, caseEventToFieldsList);
 
-        caseField.forEach(ddi -> {
+        caseEventToFieldsList.forEach(ddi -> {
             Optional<DefinitionDataItem> caseEventToField = caseEventToFields.getDataItems()
                 .stream().filter(definitionDataItem1 -> ddi.getId()
                     .equals(definitionDataItem1.getCaseFieldId())).findFirst();
             caseEventToField.ifPresent(caseEventToFieldDataItem -> {
                 Boolean caseFieldRetainHiddenValue = caseEventToFieldDataItem.getRetainHiddenValue();
-                if (Boolean.TRUE.equals(
-                    isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem))) {
+                if (isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem)) {
                     throw new MapperException(String.format(
                         "'retainHiddenValue' has been incorrectly configured or is invalid for "
                             + "fieldID ['%s'] on ['%s']",
@@ -64,8 +63,7 @@ public class HiddenFieldsValidator {
                 break;
             }
         }
-        if (definitionDataItem.getRetainHiddenValue() != null
-            && !valid) {
+        if (definitionDataItem.getRetainHiddenValue() != null && !valid) {
             throw new MapperException(String.format("'retainHiddenValue' can only be configured "
                     + "for a field that uses a "
                     + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
@@ -80,23 +78,22 @@ public class HiddenFieldsValidator {
         });
     }
 
-    private Boolean isShowConditionNull(String fieldShowCondition, DefinitionDataItem definitionDataItem) {
+    private boolean isShowConditionNull(String fieldShowCondition, DefinitionDataItem definitionDataItem) {
         return (fieldShowCondition == null && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
     }
 
-    private Boolean isShowConditionPopulated(String fieldShowCondition, DefinitionDataItem definitionDataItem) {
+    private boolean isShowConditionPopulated(String fieldShowCondition, DefinitionDataItem definitionDataItem) {
         return (fieldShowCondition != null && definitionDataItem.getRetainHiddenValue() != null);
     }
 
-    private Boolean isSubFieldsIncorrectlyConfigured(Boolean caseFieldRetainHiddenValue,
+    private boolean isSubFieldsIncorrectlyConfigured(Boolean caseFieldRetainHiddenValue,
                                                      DefinitionDataItem definitionDataItem) {
         return (Boolean.FALSE.equals(caseFieldRetainHiddenValue)
             && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
     }
 
     public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem) {
-        if (Boolean.TRUE.equals(isShowConditionNull(
-            definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION), definitionDataItem))) {
+        if (isShowConditionNull(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION), definitionDataItem)) {
             throw new MapperException(String.format(
                 "'retainHiddenValue' can only be configured for a field that uses a "
                     + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
