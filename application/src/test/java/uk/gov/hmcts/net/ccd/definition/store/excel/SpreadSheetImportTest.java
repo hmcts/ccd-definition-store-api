@@ -1,19 +1,11 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matcher;
+import org.json.JSONException;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
@@ -24,6 +16,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
@@ -41,21 +43,6 @@ import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import org.apache.http.HttpStatus;
-import org.hamcrest.Matcher;
-import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 /**
  * Component-level tests for the Core Case Definition Importer API.
@@ -343,26 +330,20 @@ public class SpreadSheetImportTest extends BaseTest {
         return hasColumn(is(key), is(value));
     }
 
-    private void assertBody(String contentAsString) throws IOException, URISyntaxException {
+    private void assertBody(String contentAsString) throws IOException, URISyntaxException, JSONException {
         assertBody(contentAsString, RESPONSE_JSON_V45);
     }
 
     private void assertBody(String contentAsString, String fileName)
-        throws IOException, URISyntaxException {
+        throws IOException, URISyntaxException, JSONException {
 
-        String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
+        String expected = readFileToString(new File(getClass().getClassLoader()
             .getResource(fileName)
-            .toURI())));
+            .toURI()));
         expected = expected.replaceAll("#date",
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-        assertEquals(removeGuids(expected), formatJsonString(removeGuids(contentAsString)));
-    }
-
-    private String formatJsonString(String string) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writerWithDefaultPrettyPrinter()
-            .writeValueAsString(objectMapper.readValue(string, Object.class));
+        JSONAssert.assertEquals(removeGuids(expected), removeGuids(contentAsString), false);
     }
 
     private String removeGuids(String response) throws IOException {

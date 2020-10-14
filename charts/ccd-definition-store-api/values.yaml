@@ -13,7 +13,7 @@ java:
         - storage-account-primary-connection-string
         - AppInsightsInstrumentationKey
   environment:
-    ENABLE_DB_MIGRATE: false
+    FLYWAY_NOOP_STRATEGY: "true"
     DEFINITION_STORE_DB_PORT: 5432
     DEFINITION_STORE_DB_NAME: ccd_definition_store
     DEFINITION_STORE_DB_HOST: ccd-definition-store-api-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
