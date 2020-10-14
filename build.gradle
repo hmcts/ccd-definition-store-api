@@ -39,10 +39,6 @@ apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'se.patrikerdes.use-latest-versions'
 apply plugin: 'pmd'
 
-pmd {
-    toolVersion = '6.11.0'
-}
-
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
 dependencyCheck {
