@@ -62,7 +62,7 @@ public class HiddenFieldsValidator {
 
 
     private void complexTypeHasRetainHiddenValue(DefinitionDataItem definitionDataItem,
-                                                       DefinitionSheet complexType) {
+                                                 DefinitionSheet complexType) {
         List<DefinitionDataItem> complexTypeList = complexType.getDataItems().stream()
             .filter(definitionDataItem1 -> definitionDataItem1.getId()
                 .equals(definitionDataItem.getId()) && definitionDataItem1.getListElementCode()
@@ -70,9 +70,10 @@ public class HiddenFieldsValidator {
 
         boolean match = complexTypeList.stream().noneMatch(ddi -> {
             return ddi.getFieldShowCondition() == null
-                && (ddi.getRetainHiddenValue() != null || ddi.getRetainHiddenValue() == null) ;});
+                && (ddi.getRetainHiddenValue() != null || ddi.getRetainHiddenValue() == null);
+        });
 
-        if (!match){
+        if (!match) {
             throw new MapperException(String.format("'retainHiddenValue' can only be configured "
                     + "for a field that uses a showCondition. Field ['%s'] on ['%s'] "
                     + "does not use a showCondition",
