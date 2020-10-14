@@ -40,7 +40,9 @@ public class BaseTypeControllerTests extends BaseTest {
 
         assertEquals("Unexpected number of Base Types", 20, baseTypes.length);
 
-        assertThat(baseTypes).extracting(FieldType::getId, FieldType::getType, FieldType::getRegularExpression)
+        assertThat(baseTypes)
+            .withFailMessage("Unexpected Base Type and Id")
+            .extracting(FieldType::getId, FieldType::getType, FieldType::getRegularExpression)
             .containsExactlyInAnyOrder(
                 tuple("Text", "Text", null),
                 tuple("Number", "Number", null),
@@ -62,8 +64,7 @@ public class BaseTypeControllerTests extends BaseTest {
                 tuple("FixedRadioList", "FixedRadioList", null),
                 tuple("CaseHistoryViewer", "CaseHistoryViewer", null),
                 tuple("DynamicList", "DynamicList", null)
-            )
-            .withFailMessage("Unexpected Base Type and Id");
+            );
 
     }
 }
