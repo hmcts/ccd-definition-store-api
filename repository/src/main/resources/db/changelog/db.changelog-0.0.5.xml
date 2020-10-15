@@ -5,9 +5,9 @@
     <property name="now" value="now()" dbms="postgresql"/>
 
     <changeSet id="5" author="ccd@hmcts.net">
-
+        <validCheckSum>8:07b4af77ceb0fd4b7e8b5e2a9d78b3c8</validCheckSum>
         <createTable tableName="jurisdiction">
-            <column name="id"  type="serial" >
+            <column autoIncrement="true" name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="created_at"  type="datetime" >
@@ -202,7 +202,7 @@
                                  referencedTableName="webhook"/>
 
         <createTable tableName="case_type">
-            <column name="id"  type="serial" >
+            <column autoIncrement="true" name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="created_at"  type="datetime" >
@@ -306,7 +306,7 @@
                              tableName="case_field"/>
 
         <createTable tableName="state">
-            <column name="id"  type="serial">
+            <column autoIncrement="true" name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(100)" >
@@ -490,7 +490,7 @@
                              tableName="event_case_field"/>
 
         <createTable tableName="workbasket_case_field">
-            <column name="id"  type="serial">
+            <column autoIncrement="true" name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >
@@ -534,7 +534,7 @@
                              tableName="workbasket_case_field"/>
 
         <createTable tableName="search_input_case_field">
-            <column name="id"  type="serial">
+            <column autoIncrement="true" name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >
@@ -578,7 +578,7 @@
                              tableName="search_input_case_field"/>
 
         <createTable tableName="search_result_case_field">
-            <column name="id"  type="serial">
+            <column autoIncrement="true" name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >

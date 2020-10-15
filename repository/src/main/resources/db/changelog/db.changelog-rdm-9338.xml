@@ -5,7 +5,7 @@
     <changeSet id="rdm-9338" author="kiran.yenigala@hmcts.net">
 
         <createTable tableName="noc_config">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="reasons_required" type="boolean">

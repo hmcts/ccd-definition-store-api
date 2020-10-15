@@ -26,15 +26,14 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
     compile "commons-beanutils:commons-beanutils:1.9.3"
     compile "org.apache.commons:commons-lang3:3.7"
-    compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
-    compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    compile "io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}"
     compile "javax.validation:validation-api:2.0.1.Final"
     compile "org.hibernate.validator:hibernate-validator:6.0.10.Final"
     compile "org.glassfish:javax.el:3.0.0"
-    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.3'
+    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.8.9'
     testCompile "org.assertj:assertj-core"
     testCompile project(":commons").sourceSets.main.output
-    compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.3.2'
+    compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.9.13'
 }
 
 pitest {

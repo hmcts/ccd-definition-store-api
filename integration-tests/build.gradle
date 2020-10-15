@@ -16,8 +16,7 @@ dependencies {
     compile project(':rest-api')
     testCompile "org.springframework.boot:spring-boot-starter-web"
     testCompile "org.springframework.boot:spring-boot-starter-actuator"
-    testCompile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
-    testCompile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    testCompile "io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}"
     testCompile  group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 }
 

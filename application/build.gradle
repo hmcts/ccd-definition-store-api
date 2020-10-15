@@ -20,8 +20,7 @@ dependencies {
     compile project(':elastic-search-support')
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
-    compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+    compile "io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}"
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
     runtime "org.liquibase:liquibase-core:3.8.9"
     testCompile project(":app-insights").sourceSets.main.output

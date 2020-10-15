@@ -3,6 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="13" author="ccd@hmcts.net">
+        <validCheckSum>8:cecbe4dfadf0450889899e86fde0f849</validCheckSum>
         <createTable tableName="case_type_user_role">
             <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
