@@ -522,8 +522,9 @@ public class HiddenFieldsValidatorTest {
             validator.parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
             assertThat(ex.getMessage(),
-                is("'retainHiddenValue' can only be configured for a field that uses a showCondition. "
-                    + "Field ['ComplexTypeFieldId'] on ['CaseEventToFields'] does not use a showCondition"));
+                is("'retainHiddenValue' on CaseEventToComplexTypes can only be configured for a field that "
+                    + "uses a showCondition. Field ['ComplexTypeFieldId'] on ['CaseEventToFields'] does not use "
+                    + "a showCondition"));
             throw ex;
         }
 
