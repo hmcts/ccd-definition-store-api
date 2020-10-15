@@ -54,7 +54,7 @@ public class HiddenFieldsValidator {
         if (definitionDataItem.getFieldShowCondition() != null
             && definitionDataItem.getRetainHiddenValue() != null) {
             complexTypeHasRetainHiddenValue(definitionDataItem,
-                definitionSheets.get(SheetName.COMPLEX_TYPES.getName()));
+                definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName()));
         }
 
         return definitionDataItem.getRetainHiddenValue();
@@ -62,22 +62,20 @@ public class HiddenFieldsValidator {
 
 
     private void complexTypeHasRetainHiddenValue(DefinitionDataItem definitionDataItem,
-                                                 DefinitionSheet complexType) {
-        List<DefinitionDataItem> complexTypeList = complexType.getDataItems().stream()
-            .filter(definitionDataItem1 -> definitionDataItem1.getId()
-                .equals(definitionDataItem.getId()) && definitionDataItem1.getListElementCode()
-                .equals(definitionDataItem.getListElementCode())).collect(toList());
+                                                 DefinitionSheet caseEventToFieldsSheet) {
+        List<DefinitionDataItem> caseEventToFields = caseEventToFieldsSheet.getDataItems().stream()
+            .filter(caseEventToField -> caseEventToField.getCaseFieldId()
+                .equals(definitionDataItem.getCaseFieldId()) && caseEventToField.getCaseEventId()
+                .equals(definitionDataItem.getCaseEventId())).collect(toList());
 
-        boolean match = complexTypeList.stream().noneMatch(ddi -> {
-            return ddi.getFieldShowCondition() == null
-                && (ddi.getRetainHiddenValue() != null || ddi.getRetainHiddenValue() == null);
-        });
+        boolean showConditionConfigured = caseEventToFields.stream().noneMatch(ddi ->
+            ddi.getFieldShowCondition() == null);
 
-        if (!match) {
+        if (!showConditionConfigured) {
             throw new MapperException(String.format("'retainHiddenValue' can only be configured "
                     + "for a field that uses a showCondition. Field ['%s'] on ['%s'] "
                     + "does not use a showCondition",
-                definitionDataItem.getCaseFieldId(), SheetName.COMPLEX_TYPES.getName()));
+                definitionDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
         }
     }
 

@@ -16,7 +16,7 @@ import java.util.Map;
 public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser {
 
     private final ShowConditionParser showConditionParser;
-    private HiddenFieldsValidator hiddenFieldsValidator;
+    private final HiddenFieldsValidator hiddenFieldsValidator;
 
     public EventCaseFieldComplexTypeParser(ShowConditionParser showConditionParser,
                                            HiddenFieldsValidator hiddenFieldsValidator) {

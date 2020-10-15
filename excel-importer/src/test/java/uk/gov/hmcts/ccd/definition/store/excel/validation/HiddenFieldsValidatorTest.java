@@ -490,6 +490,7 @@ public class HiddenFieldsValidatorTest {
         definitionDataItem.addAttribute(ColumnName.ID, "ComplexType");
         definitionDataItem.addAttribute(ColumnName.CASE_EVENT_ID, "eventId");
         definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "abc=123");
+        definitionDataItem.addAttribute(ColumnName.CASE_EVENT_ID, "eventId");
         sheetEventComplexTypes.addDataItem(definitionDataItem);
 
         final DefinitionSheet sheetComplexTypes = addDefinitionSheet(SheetName.COMPLEX_TYPES);
@@ -503,9 +504,9 @@ public class HiddenFieldsValidatorTest {
 
         final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
         DefinitionDataItem definitionDataItem1 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
-        definitionDataItem1.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
+        definitionDataItem1.addAttribute(ColumnName.CASE_FIELD_ID, "ComplexTypeFieldId");
         definitionDataItem1.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.TRUE);
-        definitionDataItem1.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "x=yes");
+        definitionDataItem1.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
         definitionDataItem1.addAttribute(ColumnName.CASE_EVENT_ID, "eventId");
         sheetCETF.addDataItem(definitionDataItem1);
 
@@ -522,7 +523,7 @@ public class HiddenFieldsValidatorTest {
         } catch (MapperException ex) {
             assertThat(ex.getMessage(),
                 is("'retainHiddenValue' can only be configured for a field that uses a showCondition. "
-                    + "Field ['ComplexTypeFieldId'] on ['ComplexTypes'] does not use a showCondition"));
+                    + "Field ['ComplexTypeFieldId'] on ['CaseEventToFields'] does not use a showCondition"));
             throw ex;
         }
 
