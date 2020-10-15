@@ -195,6 +195,7 @@ subprojects { subproject ->
     }
 
     dependencies {
+        compile group: 'org.owasp.dependencycheck' version '6.0.1'
         compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
         compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
         compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
