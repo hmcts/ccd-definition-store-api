@@ -12,7 +12,7 @@ public class CaseTypeEntityInvalidUserRoleValidationError extends ValidationErro
     private final AuthorisationValidationContext context;
 
     public CaseTypeEntityInvalidUserRoleValidationError(final CaseTypeACLEntity entity,
-                                                 final AuthorisationValidationContext context) {
+                                                        final AuthorisationValidationContext context) {
 
 
         super(String.format("Invalid UserRole is not defined for case type '%s'",

@@ -19,8 +19,8 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * Parses Field types defined as part of tab `FixedLists`.
- * Because the spreadsheet doesn't specify if a list is intended to be used as a fixed list type or radio list type or multi-select list type,
- * at the moment both version of the type will be created.
+ * Because the spreadsheet doesn't specify if a list is intended to be used as a fixed list type or radio list type or
+ * multi-select list type, at the moment both version of the type will be created.
  */
 public class ListFieldTypeParser {
 
@@ -50,14 +50,16 @@ public class ListFieldTypeParser {
 
     /**
      * Extract list types from `FixedLists` tab.
-     * Because the intent of the list is currently unknown, each list is extracted once as `FixedList` , once as 'FixedRadioList' and once as `MultiSelectList`.
+     * Because the intent of the list is currently unknown, each list is extracted once as `FixedList` ,
+     * once as 'FixedRadioList' and once as `MultiSelectList`.
      *
      * @param definitionSheets - definition sheet
      */
     public ParseResult<FieldTypeEntity> parse(Map<String, DefinitionSheet> definitionSheets) {
         logger.debug("List types parsing...");
 
-        final Map<String, List<DefinitionDataItem>> fixedListsDataItems = definitionSheets.get(SheetName.FIXED_LISTS.getName()).groupDataItemsById();
+        final Map<String, List<DefinitionDataItem>> fixedListsDataItems = definitionSheets
+            .get(SheetName.FIXED_LISTS.getName()).groupDataItemsById();
 
         logger.debug("List types parsing: {} list types detected", fixedListsDataItems.size());
 
@@ -86,7 +88,8 @@ public class ListFieldTypeParser {
         final FieldTypeEntity fixedListType = new FieldTypeEntity();
         fixedListType.setBaseFieldType(fixedListBaseType);
         String fixedListReference = ReferenceUtils.listReference(FIXED_LIST_TYPE, listDataItems.getKey());
-        spreadsheetValidator.validate(SheetName.FIXED_LISTS.getName(), "ID", fixedListReference, FIXED_RADIO_LIST_TYPE);
+        spreadsheetValidator.validate(
+            SheetName.FIXED_LISTS.getName(), "ID", fixedListReference, FIXED_RADIO_LIST_TYPE);
         fixedListType.setReference(fixedListReference);
         fixedListType.setJurisdiction(parseContext.getJurisdiction());
         fixedListType.addListItems(fixedListItems);
@@ -102,7 +105,7 @@ public class ListFieldTypeParser {
         fixedRadioListType.setBaseFieldType(fixedRadioListBaseType);
         String fixedRadioListReference = ReferenceUtils.listReference(FIXED_RADIO_LIST_TYPE, listDataItems.getKey());
         spreadsheetValidator.validate(SheetName.FIXED_LISTS.getName(), "ID",
-                                      fixedRadioListReference, FIXED_RADIO_LIST_TYPE);
+            fixedRadioListReference, FIXED_RADIO_LIST_TYPE);
         fixedRadioListType.setReference(fixedRadioListReference);
         fixedRadioListType.setJurisdiction(parseContext.getJurisdiction());
         fixedRadioListType.addListItems(fixedRadioListItems);
@@ -118,7 +121,7 @@ public class ListFieldTypeParser {
         multiListType.setBaseFieldType(multiListBaseType);
         String multiListTypeReference = ReferenceUtils.listReference(MULTI_LIST_TYPE, listDataItems.getKey());
         spreadsheetValidator.validate(SheetName.FIXED_LISTS.getName(), "ID",
-                                      multiListTypeReference, MULTI_LIST_TYPE);
+            multiListTypeReference, MULTI_LIST_TYPE);
         multiListType.setReference(multiListTypeReference);
         multiListType.setJurisdiction(parseContext.getJurisdiction());
         multiListType.addListItems(multiListItems);

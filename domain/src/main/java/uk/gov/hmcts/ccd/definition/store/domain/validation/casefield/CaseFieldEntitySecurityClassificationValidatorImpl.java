@@ -17,16 +17,19 @@ public class CaseFieldEntitySecurityClassificationValidatorImpl implements CaseF
 
         if (caseField.getSecurityClassification() == null) {
             validationResult.addError(
-                new CaseFieldEntityMissingSecurityClassificationValidationError(caseField, caseFieldEntityValidationContext)
+                new CaseFieldEntityMissingSecurityClassificationValidationError(
+                    caseField, caseFieldEntityValidationContext)
             );
             return validationResult;
         }
 
-        SecurityClassification parentSecurityClassification = caseFieldEntityValidationContext.getParentSecurityClassification();
+        SecurityClassification parentSecurityClassification =
+            caseFieldEntityValidationContext.getParentSecurityClassification();
         if (parentSecurityClassification != null
-                && parentSecurityClassification.isMoreRestrictiveThan(caseField.getSecurityClassification())) {
+            && parentSecurityClassification.isMoreRestrictiveThan(caseField.getSecurityClassification())) {
             validationResult.addError(
-                new CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(caseField, caseFieldEntityValidationContext)
+                new CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
+                    caseField, caseFieldEntityValidationContext)
             );
         }
 

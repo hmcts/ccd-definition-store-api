@@ -16,7 +16,7 @@ public class EventComplexTypeEntityDefaultValueError extends ValidationError {
             String.format(
                 "DefaultValue '%s' is not a valid role for '%s' ",
                 eventComplexTypeEntity.getDefaultValue(),
-                    eventComplexTypeEntity.getReference()
+                eventComplexTypeEntity.getReference()
             )
         );
         this.eventComplexTypeEntity = eventComplexTypeEntity;

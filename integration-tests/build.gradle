@@ -10,14 +10,23 @@ jacocoTestReport {
     }
 }
 
+dependencyCheck {
+    suppressionFile = "${rootDir}/dependency-check-suppressions.xml"
+}
+
 dependencies {
     compile project(':application')
     compile project(':excel-importer')
     compile project(':rest-api')
     testCompile "org.springframework.boot:spring-boot-starter-web"
     testCompile "org.springframework.boot:spring-boot-starter-actuator"
-    testCompile "io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}"
-    testCompile  group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
+    testCompile ("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}") {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    testCompile ("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}") {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    testCompile  group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
 }
 
 // To help obscure gradle problem

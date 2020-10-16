@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.groupingBy;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_EVENT;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT;
@@ -51,12 +52,14 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
             final List<EventACLEntity> parseResults = Lists.newArrayList();
 
             final String eventReference = event.getReference();
-            LOG.debug("Parsing AuthorisationCaseEvent for case type {}, event {}...", caseTypeReference, eventReference);
+            LOG.debug("Parsing AuthorisationCaseEvent for case type {}, event {}...",
+                caseTypeReference, eventReference);
 
             if (null == dataItems) {
                 LOG.warn("No data is found for case type '{} in AuthorisationCaseEvents tab", caseTypeReference);
             } else {
-                LOG.debug("Parsing user roles for case type {}: {} AuthorisationCaseEvents detected", caseTypeReference, dataItems.size());
+                LOG.debug("Parsing user roles for case type {}: {} AuthorisationCaseEvents detected",
+                    caseTypeReference, dataItems.size());
 
                 if (null == collect.get(eventReference)) {
                     LOG.warn("No row is defined for case type '{}', event '{}'", caseTypeReference, eventReference);
@@ -83,10 +86,13 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
         }
     }
 
-    private void validateCaseEvents(Map<String, DefinitionSheet> definitionSheets, DefinitionSheet definitionSheet, String caseTypeReference) {
-        final Map<String, List<DefinitionDataItem>> caseEventsWithAuthorisationInfoThisCaseType = definitionSheet.getDataItems()
-            .stream()
-            .filter(definitionDataItem -> definitionDataItem.getString(ColumnName.CASE_TYPE_ID).equalsIgnoreCase(caseTypeReference))
+    private void validateCaseEvents(Map<String, DefinitionSheet> definitionSheets,
+                                    DefinitionSheet definitionSheet,
+                                    String caseTypeReference) {
+        final Map<String, List<DefinitionDataItem>> caseEventsWithAuthorisationInfoThisCaseType = definitionSheet
+            .getDataItems().stream()
+            .filter(definitionDataItem ->
+                definitionDataItem.getString(ColumnName.CASE_TYPE_ID).equalsIgnoreCase(caseTypeReference))
             .collect(groupingBy(dataItem -> dataItem.getString(ColumnName.CASE_EVENT_ID)));
 
         final List<String> caseEventItemsForThisCaseType = definitionSheets.get(CASE_EVENT.getName())

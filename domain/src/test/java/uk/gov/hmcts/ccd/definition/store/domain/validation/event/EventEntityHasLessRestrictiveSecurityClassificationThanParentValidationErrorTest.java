@@ -26,10 +26,12 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(mockValidationErrorMessageCreator.createErrorMessage(any(EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
+        when(mockValidationErrorMessageCreator.createErrorMessage(
+            any(EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
         classUnderTest = new EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
-            eventEntityWithReferenceAndSecurityClassification("Event Reference", SecurityClassification.PUBLIC),
+            eventEntityWithReferenceAndSecurityClassification(
+                "Event Reference", SecurityClassification.PUBLIC),
             eventEntityValidationContext("Parent Case Name", SecurityClassification.PRIVATE)
         );
     }
@@ -38,8 +40,8 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
     public void testDefaultMessage() {
         assertEquals(
             "Security classification for Event with reference 'Event Reference' "
-                + "has a less restrictive security classification of 'PUBLIC' than its parent CaseType 'Parent Case Name' "
-                + "which is 'PRIVATE'.",
+                + "has a less restrictive security classification of 'PUBLIC' than its parent CaseType "
+                + "'Parent Case Name' which is 'PRIVATE'.",
             classUnderTest.getDefaultMessage()
         );
     }
@@ -50,15 +52,16 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
         verify(mockValidationErrorMessageCreator).createErrorMessage(classUnderTest);
     }
 
-    private EventEntity eventEntityWithReferenceAndSecurityClassification(String eventEntityReference,
-                                                                          SecurityClassification securityClassification) {
+    private EventEntity eventEntityWithReferenceAndSecurityClassification(
+        String eventEntityReference, SecurityClassification securityClassification) {
         EventEntity eventEntity = new EventEntity();
         eventEntity.setSecurityClassification(securityClassification);
         eventEntity.setReference(eventEntityReference);
         return eventEntity;
     }
 
-    private EventEntityValidationContext eventEntityValidationContext(String parentCaseName, SecurityClassification parentSecurityClassification) {
+    private EventEntityValidationContext eventEntityValidationContext(
+        String parentCaseName, SecurityClassification parentSecurityClassification) {
         EventEntityValidationContext eventEntityValidationContext = mock(EventEntityValidationContext.class);
         when(eventEntityValidationContext.getCaseName()).thenReturn(parentCaseName);
         when(eventEntityValidationContext.getParentSecurityClassification()).thenReturn(parentSecurityClassification);

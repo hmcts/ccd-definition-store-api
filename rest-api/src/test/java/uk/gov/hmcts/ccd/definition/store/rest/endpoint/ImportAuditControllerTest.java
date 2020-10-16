@@ -1,5 +1,21 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
+import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
+import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 import static java.util.Collections.emptyList;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.core.Is.is;
@@ -13,23 +29,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
-import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
-import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
 
 class ImportAuditControllerTest {
 
@@ -47,8 +46,8 @@ class ImportAuditControllerTest {
         initMocks(this);
         subject = new ImportAuditController(azureImportAuditsClient);
         mockMvc = standaloneSetup(subject)
-                                 .setControllerAdvice(new RestEndPointExceptionHandler())
-                                 .build();
+            .setControllerAdvice(new RestEndPointExceptionHandler())
+            .build();
     }
 
     @Test
@@ -58,14 +57,14 @@ class ImportAuditControllerTest {
         final MvcResult
             mvcResult =
             mockMvc.perform(get(URL_IMPORT_AUDITS))
-                   .andExpect(status().isOk())
-                   .andExpect(content().contentType(APPLICATION_JSON))
-                   .andReturn();
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(),
-                   is("[{\"filename\":\"filename\",\"uri\":\"https://ffs.blob.core.windows"
-                      + ".net/bugbear/20201015093302_definition_upload\",\"order\":1582934400000,"
-                      + "\"date_imported\":\"2020-02-29\",\"who_imported\":\"Who else\","
-                      + "\"case_type\":\"Some case type\"}]"));
+            is("[{\"filename\":\"filename\",\"uri\":\"https://ffs.blob.core.windows"
+                + ".net/bugbear/20201015093302_definition_upload\",\"order\":1582934400000,"
+                + "\"date_imported\":\"2020-02-29\",\"who_imported\":\"Who else\","
+                + "\"case_type\":\"Some case type\"}]"));
         verify(azureImportAuditsClient).fetchLatestImportAudits();
     }
 
@@ -76,9 +75,9 @@ class ImportAuditControllerTest {
         final MvcResult
             mvcResult =
             mockMvc.perform(get(URL_IMPORT_AUDITS))
-                   .andExpect(status().isOk())
-                   .andExpect(content().contentType(APPLICATION_JSON))
-                   .andReturn();
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(), is("[]"));
         verify(azureImportAuditsClient).fetchLatestImportAudits();
     }

@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.utils;
 
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
-
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
 public class SearchAliasFieldBuilder {
 

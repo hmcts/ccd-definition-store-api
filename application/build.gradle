@@ -1,5 +1,10 @@
 ext.applicationName = 'case-definition-store-api'
 apply plugin: 'info.solidsoft.pitest'
+
+dependencyCheck {
+    suppressionFile = "${rootDir}/dependency-check-suppressions.xml"
+}
+
 jar {
     enabled = true
     baseName = "${applicationName}"
@@ -20,9 +25,14 @@ dependencies {
     compile project(':elastic-search-support')
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}"
+    compile ("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}") {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    compile ("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}") {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
-    runtime "org.liquibase:liquibase-core:3.8.9"
+    runtime "org.liquibase:liquibase-core"
     testCompile project(":app-insights").sourceSets.main.output
     testCompile project(":commons").sourceSets.main.output
 }

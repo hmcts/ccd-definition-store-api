@@ -35,7 +35,7 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseHiddenFields(definitionDataItem);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("retainHiddenValue can only be configured for a field that uses a "
+            assertThat(ex.getMessage(), is("'retainHiddenValue' can only be configured for a field that uses a "
                 + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
             throw ex;
         }
@@ -61,7 +61,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseHiddenFields(definitionDataItem);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'CaseEventToFields'"));
+            assertThat(ex.getMessage(), is(
+                "Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'CaseEventToFields'"));
             throw ex;
         }
     }
@@ -137,7 +138,7 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("retainHiddenValue' has been incorrectly configured or is invalid "
+            assertThat(ex.getMessage(), is("'retainHiddenValue' has been incorrectly configured or is invalid "
                 + "for fieldID ['fieldId'] on ['CaseEventToFields']"));
             throw ex;
         }
@@ -177,7 +178,7 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("retainHiddenValue can only be configured for a field that uses a "
+            assertThat(ex.getMessage(), is("'retainHiddenValue' can only be configured for a field that uses a "
                 + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
             throw ex;
         }
@@ -218,7 +219,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'ComplexTypes'"));
+            assertThat(ex.getMessage(),
+                is("Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'ComplexTypes'"));
             throw ex;
         }
     }

@@ -10,7 +10,13 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.InputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
 
 import java.util.List;
 
@@ -19,7 +25,10 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class GenericLayoutShowConditionValidatorTest {
 
@@ -86,7 +95,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         assertThat(result.getValidationErrors().size(), is(1));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("Invalid show condition 'someShowCondition' for case type 'Case Type I' and case field 'Case Field I'"));
+            is("Invalid show condition 'someShowCondition' for case type 'Case Type I' "
+                + "and case field 'Case Field I'"));
 
     }
 
@@ -95,7 +105,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field(CASE_FIELD2).build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field(CASE_FIELD2).build();
         when(showConditionExtractor.parseShowCondition(SOME_SHOW_CONDITION))
             .thenReturn(validParsedShowCondition);
 
@@ -109,7 +120,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("UnKnownCaseField").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("UnKnownCaseField").build();
         when(showConditionExtractor.parseShowCondition(SOME_SHOW_CONDITION))
             .thenReturn(validParsedShowCondition);
 
@@ -119,7 +131,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         assertThat(result.getValidationErrors().size(), is(1));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("Unknown field 'UnKnownCaseField' for case type 'Case Type I' in show condition: 'someShowCondition'"));
+            is("Unknown field 'UnKnownCaseField' for case type 'Case Type I' "
+                + "in show condition: 'someShowCondition'"));
     }
 
     @Test
@@ -127,7 +140,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field("[CREATED_DATE]").build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("[CREATED_DATE]").build();
         when(showConditionExtractor.parseShowCondition(SOME_SHOW_CONDITION))
             .thenReturn(validParsedShowCondition);
 
@@ -155,7 +169,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         entity.setShowCondition(showCondition);
 
-        ShowCondition validParsedShowCondition = new ShowCondition.Builder().showConditionExpression("parsedSC").field(matchingCaseFieldKey).build();
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field(matchingCaseFieldKey).build();
         when(showConditionExtractor.parseShowCondition(any()))
             .thenReturn(validParsedShowCondition);
 
@@ -195,8 +210,8 @@ public class GenericLayoutShowConditionValidatorTest {
 
         assertThat(result.getValidationErrors().size(), is(1));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("Unknown field 'complexName.LastNameWithSomeCplxFields.ABC' for case type 'Case Type I' in show condition:"
-                + " 'complexName.LastNameWithSomeCplxFields.ABC=\"Mathangi\"'"));
+            is("Unknown field 'complexName.LastNameWithSomeCplxFields.ABC' for case type 'Case Type I' "
+                + "in show condition: 'complexName.LastNameWithSomeCplxFields.ABC=\"Mathangi\"'"));
 
     }
 

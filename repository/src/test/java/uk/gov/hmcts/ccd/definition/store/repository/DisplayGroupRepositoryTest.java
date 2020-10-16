@@ -9,11 +9,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -59,6 +69,7 @@ public class DisplayGroupRepositoryTest {
         caseTypeV3 = versionedCaseTypeRepository.save(caseTypeEntity());
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void shouldReturnDisplayGroupEntityForLatestCaseTypeVersion_whenDisplayGroupEntitesExistAcrossMultipleVersionsOfCaseType() {
 
@@ -66,7 +77,8 @@ public class DisplayGroupRepositoryTest {
         createDisplayGroupsForCase(caseTypeV2);
         createDisplayGroupsForCase(caseTypeV3);
 
-        final List<DisplayGroupEntity> fetched = displayGroupRepository.findTabsByCaseTypeReference(CASE_TYPE_REFERENCE);
+        final List<DisplayGroupEntity> fetched = displayGroupRepository
+            .findTabsByCaseTypeReference(CASE_TYPE_REFERENCE);
 
         assertThat(fetched, hasSize(1));
 
@@ -84,28 +96,35 @@ public class DisplayGroupRepositoryTest {
 
 
         assertThat(fetchedDg.getDisplayGroupCaseFields(), allOf(
-                hasItem(allOf(
-                        hasProperty("order", is(1)),
-                        hasProperty("columnNumber", nullValue()),
-                        hasProperty("caseField", hasProperty("reference", is("cf1")))
-                )),
-                hasItem(allOf(
-                        hasProperty("order", is(2)),
-                        hasProperty("columnNumber", is(2)),
-                        hasProperty("caseField", hasProperty("reference", is("cf2")))
-                ))
-                )
+            hasItem(allOf(
+                hasProperty("order", is(1)),
+                hasProperty("columnNumber", nullValue()),
+                hasProperty("caseField", hasProperty("reference", is("cf1")))
+            )),
+            hasItem(allOf(
+                hasProperty("order", is(2)),
+                hasProperty("columnNumber", is(2)),
+                hasProperty("caseField", hasProperty("reference", is("cf2")))
+            ))
+            )
         );
     }
 
     private void createDisplayGroupsForCase(CaseTypeEntity caseType) {
-        displayGroupRepository.save(createDisplayGroup(caseType, "ref dg page edit", "label dg", "channel dg", 4, PAGE, EDIT, SHOW_CONDITION));
-        displayGroupRepository.save(createDisplayGroup(caseType, "ref dg page view", "label dg", "channel dg", 4, PAGE, VIEW, SHOW_CONDITION));
-        displayGroupRepository.save(createDisplayGroup(caseType, "ref dg tab edit", "label dg", "channel dg", 4, TAB, EDIT, SHOW_CONDITION));
-        displayGroupRepository.save(createDisplayGroup(caseType, "ref dg tab view", "label dg", "channel dg", 4, TAB, VIEW, SHOW_CONDITION));
+        displayGroupRepository.save(createDisplayGroup(
+            caseType, "ref dg page edit", "label dg", "channel dg", 4, PAGE, EDIT, SHOW_CONDITION));
+        displayGroupRepository.save(createDisplayGroup(
+            caseType, "ref dg page view", "label dg", "channel dg", 4, PAGE, VIEW, SHOW_CONDITION));
+        displayGroupRepository.save(createDisplayGroup(
+            caseType, "ref dg tab edit", "label dg", "channel dg", 4, TAB, EDIT, SHOW_CONDITION));
+        displayGroupRepository.save(createDisplayGroup(
+            caseType, "ref dg tab view", "label dg", "channel dg", 4, TAB, VIEW, SHOW_CONDITION));
     }
 
-    private void addDisplayGroupField(final CaseFieldEntity cf, final DisplayGroupEntity dg, final int order, Integer column) {
+    private void addDisplayGroupField(final CaseFieldEntity cf,
+                                      final DisplayGroupEntity dg,
+                                      final int order,
+                                      Integer column) {
         final DisplayGroupCaseFieldEntity dgf = new DisplayGroupCaseFieldEntity();
         dgf.setCaseField(cf);
         dgf.setOrder(order);

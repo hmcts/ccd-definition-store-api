@@ -84,15 +84,15 @@ public class EventCaseFieldShowConditionValidatorImpl implements EventCaseFieldE
         return validationResult;
     }
 
-    private List<EventCaseFieldEntity> allOtherEventCaseFieldEntities(EventCaseFieldEntity eventCaseFieldEntity,
-                                                                      List<EventCaseFieldEntity> allEventCaseFieldEntitiesForEventCase) {
+    private List<EventCaseFieldEntity> allOtherEventCaseFieldEntities(
+        EventCaseFieldEntity eventCaseFieldEntity, List<EventCaseFieldEntity> allEventCaseFieldEntitiesForEventCase) {
         return allEventCaseFieldEntitiesForEventCase.stream()
             .filter(element -> element != eventCaseFieldEntity)
             .collect(Collectors.toList());
     }
 
-    private boolean forShowConditionFieldExistsAtLeastOneEventCaseFieldEntity(String showConditionField,
-                                                                              List<EventCaseFieldEntity> eventCaseFieldEntities) {
+    private boolean forShowConditionFieldExistsAtLeastOneEventCaseFieldEntity(
+        String showConditionField, List<EventCaseFieldEntity> eventCaseFieldEntities) {
         return eventCaseFieldEntities
             .stream()
             .anyMatch(f -> f.getCaseField().getReference().equals(showConditionField));

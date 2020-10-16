@@ -1,13 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.ArrayList;
-import java.util.List;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser {
 
@@ -33,7 +34,8 @@ public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser
             eventComplexTypeEntity.setDefaultValue(definitionDataItem.getString(ColumnName.DEFAULT_VALUE));
             DisplayContextColumn displayContextColumn = definitionDataItem.getDisplayContext();
             eventComplexTypeEntity.setDisplayContext(displayContextColumn.getDisplayContext());
-            eventComplexTypeEntity.setShowCondition(parseShowCondition(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
+            eventComplexTypeEntity.setShowCondition(parseShowCondition(
+                definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
             eventComplexTypeEntities.add(eventComplexTypeEntity);
         }
         return eventComplexTypeEntities;

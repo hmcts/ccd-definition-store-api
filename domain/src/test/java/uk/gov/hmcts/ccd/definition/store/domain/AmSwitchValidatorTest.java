@@ -1,9 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
-
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,9 +8,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.InvalidPropertyException;
 
-import com.google.common.collect.Lists;
-
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
 
 public class AmSwitchValidatorTest {
 
@@ -56,31 +55,31 @@ public class AmSwitchValidatorTest {
         doReturn(amOnlyReadCaseTypes).when(goodApplicationParams).getCaseTypesWithAmReadFromAm();
 
         doReturn(ccdOnlyWriteCaseTypes).when(duplicateConfigForReadApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToCcd();
+            .getCaseTypesWithAmWrittenOnlyToCcd();
         doReturn(amOnlyWriteCaseTypes).when(duplicateConfigForReadApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToAm();
+            .getCaseTypesWithAmWrittenOnlyToAm();
         doReturn(bothWriteCaseTypes).when(duplicateConfigForReadApplicationParams).getCaseTypesWithAmWrittenToBoth();
         doReturn(repeatedCaseTypeList).when(duplicateConfigForReadApplicationParams).getCaseTypesWithAmReadFromCcd();
         doReturn(repeatedCaseTypeList).when(duplicateConfigForReadApplicationParams).getCaseTypesWithAmReadFromAm();
 
         doReturn(repeatedCaseTypeList).when(duplicateConfigForWriteApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToCcd();
+            .getCaseTypesWithAmWrittenOnlyToCcd();
         doReturn(repeatedCaseTypeList).when(duplicateConfigForWriteApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToAm();
+            .getCaseTypesWithAmWrittenOnlyToAm();
         doReturn(repeatedCaseTypeList).when(duplicateConfigForWriteApplicationParams).getCaseTypesWithAmWrittenToBoth();
         doReturn(ccdOnlyReadCaseTypes).when(duplicateConfigForWriteApplicationParams).getCaseTypesWithAmReadFromCcd();
         doReturn(amOnlyReadCaseTypes).when(duplicateConfigForWriteApplicationParams).getCaseTypesWithAmReadFromAm();
 
         doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToCcd();
+            .getCaseTypesWithAmWrittenOnlyToCcd();
         doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmWrittenOnlyToAm();
+            .getCaseTypesWithAmWrittenOnlyToAm();
         doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmWrittenToBoth();
+            .getCaseTypesWithAmWrittenToBoth();
         doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmReadFromCcd();
+            .getCaseTypesWithAmReadFromCcd();
         doReturn(repeatedCaseTypeList).when(duplicateConfigForReadAndWriteApplicationParams)
-                .getCaseTypesWithAmReadFromAm();
+            .getCaseTypesWithAmReadFromAm();
     }
 
     @Test
@@ -95,7 +94,7 @@ public class AmSwitchValidatorTest {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
             () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadApplicationParams));
         assertTrue(invalidPropertyException.getMessage()
-                .endsWith("Duplicate case type configurations detected for Access Management persistence switches."));
+            .endsWith("Duplicate case type configurations detected for Access Management persistence switches."));
     }
 
     @Test
@@ -104,8 +103,8 @@ public class AmSwitchValidatorTest {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
             () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForWriteApplicationParams));
         assertTrue(invalidPropertyException.getMessage()
-                .endsWith("Duplicate case type configurations detected for Access Management persistence switches."
-                ));
+            .endsWith("Duplicate case type configurations detected for Access Management persistence switches."
+            ));
     }
 
     @Test
@@ -114,7 +113,7 @@ public class AmSwitchValidatorTest {
         final InvalidPropertyException invalidPropertyException = assertThrows(InvalidPropertyException.class,
             () -> validator.validateAmPersistenceSwitchesIn(duplicateConfigForReadAndWriteApplicationParams));
         assertTrue(invalidPropertyException.getMessage()
-                .endsWith("Duplicate case type configurations detected for Access Management persistence switches."));
+            .endsWith("Duplicate case type configurations detected for Access Management persistence switches."));
     }
 
 }

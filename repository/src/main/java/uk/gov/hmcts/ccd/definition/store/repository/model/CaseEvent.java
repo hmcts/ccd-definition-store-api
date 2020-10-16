@@ -3,11 +3,10 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 @ApiModel(description = "")
 public class CaseEvent implements HasAcls {
@@ -18,7 +17,7 @@ public class CaseEvent implements HasAcls {
     private Integer order = null;
     private List<CaseEventField> caseFields = new ArrayList<>();
     private List<String> preStates = new ArrayList<>();
-    private String postState = null;
+    private List<EventPostState> postStates = new ArrayList<>();
     private String callBackURLAboutToStartEvent;
     private List<Integer> retriesTimeoutAboutToStartEvent;
     private String callBackURLAboutToSubmitEvent;
@@ -107,13 +106,13 @@ public class CaseEvent implements HasAcls {
      * post state you can expect the case event to move to.
      **/
     @ApiModelProperty(value = "")
-    @JsonProperty("post_state")
-    public String getPostState() {
-        return postState;
+    @JsonProperty("post_states")
+    public List<EventPostState> getPostStates() {
+        return postStates;
     }
 
-    public void setPostState(String postState) {
-        this.postState = postState;
+    public void setPostStates(List<EventPostState> postStates) {
+        this.postStates = postStates;
     }
 
     /**
@@ -161,7 +160,8 @@ public class CaseEvent implements HasAcls {
     @ApiModelProperty(value = "")
     @JsonProperty("retries_timeout_url_about_to_submit_event")
     public List<Integer> getRetriesTimeoutURLAboutToSubmitEvent() {
-        return retriesTimeoutURLAboutToSubmitEvent == null ? Collections.emptyList() : retriesTimeoutURLAboutToSubmitEvent;
+        return retriesTimeoutURLAboutToSubmitEvent == null
+            ? Collections.emptyList() : retriesTimeoutURLAboutToSubmitEvent;
     }
 
     public void setRetriesTimeoutURLAboutToSubmitEvent(List<Integer> retriesTimeoutURLAboutToSubmitEvent) {

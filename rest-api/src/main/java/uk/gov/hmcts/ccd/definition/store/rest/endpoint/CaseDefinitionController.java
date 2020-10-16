@@ -1,10 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -36,8 +44,9 @@ public class CaseDefinitionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(CaseDefinitionController.class);
 
-    @RequestMapping(value = "/data/case-type/{id}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n", response = CaseType.class)
+    @GetMapping(value = "/data/case-type/{id}", produces = {"application/json"})
+    @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n",
+        response = CaseType.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -47,8 +56,10 @@ public class CaseDefinitionController {
         return caseTypeService.findByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
     }
 
-    @RequestMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n", response = CaseType.class)
+    @GetMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}",
+        produces = {"application/json"})
+    @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n",
+        response = CaseType.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
         @ApiResponse(code = 200, message = "Unexpected error")
@@ -60,8 +71,10 @@ public class CaseDefinitionController {
         return caseTypeService.findByCaseTypeId(caseTypeId).orElseThrow(() -> new NotFoundException(caseTypeId));
     }
 
-    @RequestMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles", method = RequestMethod.GET, produces = {"application/json"})
-    @ApiOperation(value = "Get Case Roles for a case type", notes = "Returns list of case roles of a single case type.\n", response = CaseRole.class)
+    @GetMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles",
+        produces = {"application/json"})
+    @ApiOperation(value = "Get Case Roles for a case type",
+        notes = "Returns list of case roles of a single case type.\n", response = CaseRole.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of Case Roles")
     })
@@ -72,7 +85,8 @@ public class CaseDefinitionController {
         return caseRoleService.findByCaseTypeId(caseTypeId);
     }
 
-    @RequestMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type", method = RequestMethod.GET, produces = {"application/json"})
+    @GetMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type",
+        produces = {"application/json"})
     @ApiOperation(value = "Get case types",
         notes = "Get the case types as a list with optional jurisdiction filter",
         response = CaseType.class, responseContainer = "List")
@@ -80,32 +94,31 @@ public class CaseDefinitionController {
         @ApiResponse(code = 200, message = "List of Case Types")
     })
     public List<CaseType> dataJurisdictionsJurisdictionIdCaseTypeGet(
-        @ApiParam(value = "ID for a Jurisdiction", required = true) @PathVariable("jurisdiction_id") String jurisdictionId) {
+        @ApiParam(value = "ID for a Jurisdiction", required = true)
+        @PathVariable("jurisdiction_id") String jurisdictionId) {
         return caseTypeService.findByJurisdictionId(jurisdictionId);
     }
 
-    @RequestMapping(value = "/data/jurisdictions", method = RequestMethod.GET, produces = {"application/json"})
+    @GetMapping(value = "/data/jurisdictions", produces = {"application/json"})
     @ApiOperation(value = "Get jurisdiction details", response = Jurisdiction.class, responseContainer = "List")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "List of jurisdictions")
+        @ApiResponse(code = 200, message = "List of jurisdictions")
     })
     public List<Jurisdiction> findJurisdictions(
-            @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
+        @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
 
         LOG.debug("received find jurisdictions request with ids: {}", idsOptional);
 
         return idsOptional.map(ids -> jurisdictionService.getAll(ids)).orElseGet(jurisdictionService::getAll);
     }
 
-    @RequestMapping(value = "/data/case-type/{ctid}/version",
-                    method = RequestMethod.GET,
-                    produces = {"application/json"})
+    @GetMapping(value = "/data/case-type/{ctid}/version", produces = {"application/json"})
     @ApiOperation(value = "Gets the current version of a Case Type Schema",
-                  response = CaseTypeVersionInformation.class)
+        response = CaseTypeVersionInformation.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "version information"),
-                           @ApiResponse(code = 404, message = "Not Found")})
+        @ApiResponse(code = 404, message = "Not Found")})
     public CaseTypeVersionInformation dataCaseTypeVersionGet(@ApiParam(value = "Case Type ID",
-                                                                       required = true) @PathVariable("ctid")
+        required = true) @PathVariable("ctid")
                                                                  String id) {
         return caseTypeService.findVersionInfoByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
     }

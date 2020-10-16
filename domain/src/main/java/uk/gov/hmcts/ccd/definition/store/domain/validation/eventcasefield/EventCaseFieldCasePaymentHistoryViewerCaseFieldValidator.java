@@ -23,7 +23,8 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator implements
                 new EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator.ValidationError(
                     String.format(
                         "'%s' is CasePaymentHistoryViewer type and cannot be editable for event with reference '%s'",
-                        eventCaseFieldEntity.getCaseField() != null ? eventCaseFieldEntity.getCaseField().getReference() : "",
+                        eventCaseFieldEntity.getCaseField() != null
+                            ? eventCaseFieldEntity.getCaseField().getReference() : "",
                         eventCaseFieldEntity.getEvent() != null ? eventCaseFieldEntity.getEvent().getReference() : ""),
                     eventCaseFieldEntity)
             );
@@ -34,7 +35,8 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator implements
 
 
     private boolean isCasePaymentHistoryViewer(EventCaseFieldEntity eventCaseFieldEntity) {
-        return BASE_CASE_PAYMENT_HISTORY_VIEWER.equals(eventCaseFieldEntity.getCaseField().getFieldType().getReference());
+        return BASE_CASE_PAYMENT_HISTORY_VIEWER.equals(
+            eventCaseFieldEntity.getCaseField().getFieldType().getReference());
     }
 
     public static class ValidationError extends SimpleValidationError<EventCaseFieldEntity> {

@@ -32,7 +32,8 @@ public class CaseRoleServiceImpl implements CaseRoleService {
 
     @Override
     public List<CaseRole> findByCaseTypeId(String caseType) {
-        Integer caseTypeVersion = caseTypeRepository.findLastVersion(caseType).orElseThrow(() -> new NotFoundException(caseType));
+        Integer caseTypeVersion = caseTypeRepository.findLastVersion(caseType)
+            .orElseThrow(() -> new NotFoundException(caseType));
         LOG.debug("CaseType version {} found. for caseType {}...", caseTypeVersion, caseType);
 
         List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findCaseRoleEntitiesByCaseType(caseType);

@@ -17,8 +17,8 @@ import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 public class AsynchronousElasticDefinitionImportListener extends ElasticDefinitionImportListener {
 
     public AsynchronousElasticDefinitionImportListener(CcdElasticSearchProperties config,
-        CaseMappingGenerator mappingGenerator,
-        ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
+                                                       CaseMappingGenerator mappingGenerator,
+                                                       ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
         super(config, mappingGenerator, clientFactory);
     }
 

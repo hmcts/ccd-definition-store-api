@@ -12,9 +12,10 @@ public class EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldErro
 
     private String eventId;
 
-    public EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError(String showConditionField,
-                                                                                EventCaseFieldEntityValidationContext validationContext,
-                                                                                EventCaseFieldEntity eventCaseFieldEntity) {
+    public EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError(
+        String showConditionField,
+        EventCaseFieldEntityValidationContext validationContext,
+        EventCaseFieldEntity eventCaseFieldEntity) {
         super(
             String.format(
                 "Unknown field '%s' for event '%s' in show condition: '%s'",

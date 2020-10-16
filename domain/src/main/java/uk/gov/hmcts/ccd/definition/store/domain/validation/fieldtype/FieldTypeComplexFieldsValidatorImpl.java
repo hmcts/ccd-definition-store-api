@@ -22,7 +22,8 @@ public class FieldTypeComplexFieldsValidatorImpl implements FieldTypeValidator {
     @Override
     public ValidationResult validate(FieldTypeValidationContext context, FieldTypeEntity fieldType) {
         ValidationResult validationResult = new ValidationResult();
-        ComplexFieldValidator.ValidationContext validationContext = new ComplexFieldValidator.ValidationContext(fieldType);
+        ComplexFieldValidator.ValidationContext validationContext =
+            new ComplexFieldValidator.ValidationContext(fieldType);
         for (ComplexFieldEntity complexField : fieldType.getComplexFields()) {
             for (ComplexFieldValidator complexFieldValidator : complexFieldValidators) {
                 validationResult.merge(complexFieldValidator.validate(complexField, validationContext));
