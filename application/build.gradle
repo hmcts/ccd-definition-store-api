@@ -25,10 +25,7 @@ dependencies {
     compile project(':elastic-search-support')
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile ("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}") {
-        exclude group: 'com.google.guava', module: 'guava'
-    }
-    compile ("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}") {
+    compile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
