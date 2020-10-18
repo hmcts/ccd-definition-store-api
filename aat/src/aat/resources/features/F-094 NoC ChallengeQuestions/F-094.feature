@@ -3,10 +3,11 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
 
   Background:
     Given an appropriate test context as detailed in the test data source,
-    And a user [MCA System - with an IDAM role of caseworker CAA],
+#    And a user [MCA System - with an IDAM role of caseworker CAA],
 
   @S-094.1
   Scenario: Must successfully return the contents of the ChallengeQuestion definition
+    And a user [MCA System - with an IDAM role of caseworker CAA],
     Given the request [intends to get the contents of a set of questions],
     And the request [contains a valid CaseType ID],
     And the request [contains a valid Collection Question ID],
@@ -17,6 +18,7 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
 
   @S-094.2
   Scenario: must return an error response (empty list returned) for a malformed CaseType
+    And a user [MCA System - with an IDAM role of caseworker CAA],
     Given a request is prepared with appropriate values,
     And the request [intends to get the contents of a set of questions],
     And the request [contains a malformed CaseType ID for C1],
@@ -28,6 +30,7 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
 
   @S-094.4
   Scenario: must return an error response (empty list returned) for an invalid Collection Question ID
+    And a user [MCA System - with an IDAM role of caseworker CAA],
     Given a request is prepared with appropriate values,
     And the request [intends to get the contents of a set of questions],
     And the request [contains a valid CaseType ID for C1],
@@ -36,3 +39,22 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
     Then a positive response is received,
     And the response [returns an empty questions array]
     And the response has all the details as expected.
+
+
+  @S-094.5
+  Scenario: Must successfully import a definition file containing valid challenge questions
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains valid challenge questions]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a positive response is received
+    And the response has all other details as expected
+
+  @S-094.6 @Ignore
+  Scenario: Must return a negative response in an attempt to import a definition file where a challenge question has an invalid case field
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains a challenge question with an invalid case field]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
