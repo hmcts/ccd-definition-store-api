@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.10.RELEASE'
+        springBootVersion = '2.3.4.RELEASE'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -73,7 +73,7 @@ ext {
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
     tomcatVersion = '9.0.37!!'
-    hibernateVersion = '5.4.18.Final!!'
+    hibernateVersion = '5.4.21.Final!!'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -139,7 +139,7 @@ allprojects {
 
             eachDependency { details ->
                 if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
-                    details.useVersion '3.6.3'
+                    details.useVersion '3.8.9'
                 }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
@@ -194,7 +194,6 @@ subprojects { subproject ->
         compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
         compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
         compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
-        compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.5'
 
         compile group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
         compile (group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.1') {
