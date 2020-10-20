@@ -9,7 +9,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -27,22 +26,6 @@ public class HiddenFieldsValidator {
                     .getString(ColumnName.FIELD_TYPE))
                     || definitionDataItem.getId().equals(caseFieldDataItem
                     .getString(ColumnName.FIELD_TYPE_PARAMETER))).collect(toList());
-
-//        caseEventToFieldsList.forEach(ddi -> {
-//            Optional<DefinitionDataItem> caseEventToField = caseEventToFields.getDataItems()
-//                .stream().filter(definitionDataItem1 -> ddi.getId()
-//                    .equals(definitionDataItem1.getCaseFieldId())).findFirst();
-//            caseEventToField.ifPresent(caseEventToFieldDataItem -> {
-//                Boolean caseFieldRetainHiddenValue = caseEventToFieldDataItem.getRetainHiddenValue();
-//                if (isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem)) {
-//                    throw new MapperException(String.format(
-//                        "'retainHiddenValue' has been incorrectly configured or is invalid for "
-//                            + "fieldID ['%s'] on ['%s']",
-//                        caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
-//                }
-//                retainHiddenValue = definitionDataItem.getRetainHiddenValue();
-//            });
-//        });
 
         validateCaseEventToFields(definitionDataItem, caseEventToFields, caseEventToFieldsList);
         validateSubFieldConfiguration(caseEventToFieldsList, definitionDataItem, caseEventToFields);
