@@ -6,6 +6,7 @@ import org.hamcrest.Matcher;
 import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
@@ -343,7 +344,7 @@ public class SpreadSheetImportTest extends BaseTest {
         expected = expected.replaceAll("#date",
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-        JSONAssert.assertEquals(removeGuids(expected), removeGuids(contentAsString), false);
+        JSONAssert.assertEquals(removeGuids(expected), removeGuids(contentAsString), JSONCompareMode.LENIENT);
     }
 
     private String removeGuids(String response) throws IOException {
