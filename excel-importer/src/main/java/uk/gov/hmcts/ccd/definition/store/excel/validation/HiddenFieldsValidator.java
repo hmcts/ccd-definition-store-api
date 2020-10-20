@@ -72,18 +72,21 @@ public class HiddenFieldsValidator {
         }
     }
 
-    private boolean isAtLeastOneCaseEventToFieldsConfigured(List<DefinitionDataItem> caseEventToFieldList, DefinitionDataItem definitionDataItem) {
+    private boolean isAtLeastOneCaseEventToFieldsConfigured(List<DefinitionDataItem> caseEventToFieldList,
+                                                            DefinitionDataItem definitionDataItem) {
         boolean match;
         if (definitionDataItem.getRetainHiddenValue() != null && definitionDataItem.getFieldShowCondition() != null) {
             match = true;
-        } else if (definitionDataItem.getRetainHiddenValue() != null && definitionDataItem.getFieldShowCondition() == null) {
+        } else if (definitionDataItem.getRetainHiddenValue() != null
+            && definitionDataItem.getFieldShowCondition() == null) {
             List<DefinitionDataItem> caseEventToFieldListFiltered =
-                caseEventToFieldList.stream().filter(dataItem -> dataItem.getString(ColumnName.FIELD_SHOW_CONDITION) != null).collect(toList());
+                caseEventToFieldList.stream().filter(dataItem ->
+                    dataItem.getString(ColumnName.FIELD_SHOW_CONDITION) != null).collect(toList());
             if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())) {
-                match = caseEventToFieldListFiltered.stream().noneMatch(dataItem -> Boolean.FALSE.equals(dataItem.getRetainHiddenValue())
+                match = caseEventToFieldListFiltered.stream().noneMatch(dataItem ->
+                    Boolean.FALSE.equals(dataItem.getRetainHiddenValue())
                     || dataItem.getRetainHiddenValue() == null);
-            }
-            else {
+            } else {
                 match = true;
             }
         } else {
@@ -99,7 +102,7 @@ public class HiddenFieldsValidator {
     private boolean isSubFieldsIncorrectlyConfigured(Boolean caseFieldRetainHiddenValue,
                                                      DefinitionDataItem definitionDataItem) {
         if (definitionDataItem.getRetainHiddenValue() != null && definitionDataItem.getFieldShowCondition() != null) {
-           return Boolean.FALSE.equals(caseFieldRetainHiddenValue) ? true : false;
+            return Boolean.FALSE.equals(caseFieldRetainHiddenValue) ? true : false;
         } else {
             return (Boolean.FALSE.equals(caseFieldRetainHiddenValue)
                 && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
