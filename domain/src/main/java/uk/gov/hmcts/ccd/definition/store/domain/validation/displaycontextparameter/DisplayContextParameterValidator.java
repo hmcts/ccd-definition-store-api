@@ -2,8 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparame
 
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 
-import java.util.regex.*;
-
 public interface DisplayContextParameterValidator {
 
     DisplayContextParameterType getType();

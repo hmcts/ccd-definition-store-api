@@ -9,7 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
 
 import java.util.List;
 
@@ -64,11 +68,13 @@ public class SearchResultObjectGraphTest {
     @Test
     public void saveDisplayGroup() {
 
-        final SearchResultCaseFieldEntity f = createSearchResultCaseField(caseType, getCaseField(caseType, "cf1"), "label dg", 4);
+        final SearchResultCaseFieldEntity f = createSearchResultCaseField(
+            caseType, getCaseField(caseType, "cf1"), "label dg", 4);
 
         searchResultCaseFieldRepository.save(f);
 
-        final List<SearchResultCaseFieldEntity> fetched = searchResultCaseFieldRepository.findByCaseTypeId(caseType.getId());
+        final List<SearchResultCaseFieldEntity> fetched = searchResultCaseFieldRepository
+            .findByCaseTypeId(caseType.getId());
 
         assertThat(fetched, hasSize(1));
 

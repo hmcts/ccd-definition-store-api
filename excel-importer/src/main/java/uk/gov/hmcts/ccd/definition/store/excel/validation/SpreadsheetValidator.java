@@ -1,13 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class SpreadsheetValidator {
@@ -27,13 +27,15 @@ public class SpreadsheetValidator {
     }
 
     public void validate(String sheetName, String columnName, String cellValue, String additionalColumnName) {
-        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum.fromSheetColumnName(sheetName, columnName);
+        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum
+            .fromSheetColumnName(sheetName, columnName);
         String displayColumnName = additionalColumnName + " - " + columnName;
         validate(sheetName, displayColumnName, columnNameEnum, cellValue, "");
     }
 
     public void validate(String sheetName, String columnName, String cellValue, Integer rowNumber) {
-        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum.fromSheetColumnName(sheetName, columnName);
+        SpreadSheetValidationMappingEnum columnNameEnum = SpreadSheetValidationMappingEnum
+            .fromSheetColumnName(sheetName, columnName);
         String rowNumberInfo = " at row number '" + rowNumber + "'";
         validate(sheetName, columnName, columnNameEnum, cellValue, rowNumberInfo);
     }

@@ -11,7 +11,12 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -64,7 +69,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
             );
         }
 
-        final Map<String, List<DefinitionDataItem>> displayGroupsByCaseTypes = definitionSheets.get(this.sheetName.getName()).getDataItems().stream()
+        final Map<String, List<DefinitionDataItem>> displayGroupsByCaseTypes = definitionSheets.get(
+            this.sheetName.getName()).getDataItems().stream()
             .collect(groupingBy(dataItem -> dataItem.getString(ColumnName.CASE_TYPE_ID)));
 
         logger.debug("Display group parsing: {} case types detected", displayGroupsByCaseTypes.size());
@@ -83,12 +89,14 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
                 continue;
             }
 
-            final Map<String, List<DefinitionDataItem>> groupDefinitions = displayGroupItems.stream().collect(groupingBy(dataItem -> {
-                String caseEventId = dataItem.getString(ColumnName.CASE_EVENT_ID);
-                return (caseEventId == null ? "" : caseEventId) + dataItem.getString(displayGroupId);
-            }));
+            final Map<String, List<DefinitionDataItem>> groupDefinitions = displayGroupItems.stream()
+                .collect(groupingBy(dataItem -> {
+                    String caseEventId = dataItem.getString(ColumnName.CASE_EVENT_ID);
+                    return (caseEventId == null ? "" : caseEventId) + dataItem.getString(displayGroupId);
+                }));
 
-            logger.debug("Display group parsing: Case displayGroupType {}: {} groups detected", caseTypeId, groupDefinitions.size());
+            logger.debug("Display group parsing: Case displayGroupType {}: {} groups detected",
+                caseTypeId, groupDefinitions.size());
 
             for (Map.Entry<String, List<DefinitionDataItem>> groupDefinition : groupDefinitions.entrySet()) {
                 final String groupId = groupDefinition.getKey();
@@ -101,7 +109,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
 
                 ParseResult.Entry<DisplayGroupEntity> parseResult = parseGroup(caseType, groupId, groupDefinition);
                 result.add(parseResult);
-                entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(parseResult.getValue(), groupDefinition.getValue().get(0));
+                entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(
+                    parseResult.getValue(), groupDefinition.getValue().get(0));
 
                 logger.info("Display group parsing: Case displayGroupType {}: Group {}: OK", caseTypeId, groupId);
             }
@@ -114,8 +123,10 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         return result;
     }
 
-    protected ParseResult.Entry<DisplayGroupEntity> parseGroup(CaseTypeEntity caseType, String groupId,
-                                                               Map.Entry<String, List<DefinitionDataItem>> groupDefinition) {
+    protected ParseResult.Entry<DisplayGroupEntity> parseGroup(
+        CaseTypeEntity caseType,
+        String groupId,
+        Map.Entry<String, List<DefinitionDataItem>> groupDefinition) {
         final DefinitionDataItem sample = groupDefinition.getValue().get(0);
 
         final DisplayGroupEntity group = new DisplayGroupEntity();
@@ -139,29 +150,36 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
             .collect(toList());
 
         group.addDisplayGroupCaseFields(groupCaseFields);
-        this.groupShowConditionColumn.ifPresent(column -> parseGroupShowCondition(column, group, groupDefinition.getValue()));
+        this.groupShowConditionColumn.ifPresent(column -> parseGroupShowCondition(
+            column, group, groupDefinition.getValue()));
         this.userRoleColumn.ifPresent(column -> parseUserRole(caseType, group, groupDefinition.getValue()));
         return ParseResult.Entry.createNew(group);
     }
 
     private void parseUserRole(CaseTypeEntity caseType,
                                final DisplayGroupEntity group,
-                               final  List<DefinitionDataItem> groupDefinition) {
+                               final List<DefinitionDataItem> groupDefinition) {
         if (hasMultipleUserRoleRowsPerTab(groupDefinition)) {
             throw new MapperException(
-                String.format("Please provide one user role row per tab in worksheet %s on column USER_ROLE for the tab %s",
+                String.format(
+                    "Please provide one user role row per tab in worksheet %s on column USER_ROLE for the tab %s",
                     groupDefinition.get(0).getSheetName(), group.getReference()));
         }
-        Optional<DefinitionDataItem> optionalDDI = groupDefinition.stream().filter(ddi -> StringUtils.isNotEmpty(ddi.getString(USER_ROLE))).findFirst();
+        Optional<DefinitionDataItem> optionalDDI = groupDefinition.stream()
+            .filter(ddi -> StringUtils.isNotEmpty(ddi.getString(USER_ROLE))).findFirst();
         if (optionalDDI.isPresent()) {
             final String userRole = optionalDDI.get().getString(USER_ROLE);
             group.setUserRole(getRoleEntity(caseType, group, groupDefinition, userRole));
         }
     }
 
-    private UserRoleEntity getRoleEntity(CaseTypeEntity caseType, DisplayGroupEntity group, List<DefinitionDataItem> groupDefinition, String userRole) {
+    private UserRoleEntity getRoleEntity(CaseTypeEntity caseType,
+                                         DisplayGroupEntity group,
+                                         List<DefinitionDataItem> groupDefinition,
+                                         String userRole) {
         return parseContext.getRole(caseType.getReference(), userRole)
-            .orElseThrow(() -> new MapperException(String.format("- Invalid idam or case role '%s' in '%s' tab for TabId '%s'",
+            .orElseThrow(() -> new MapperException(
+                String.format("- Invalid idam or case role '%s' in '%s' tab for TabId '%s'",
                 userRole, groupDefinition.get(0).getSheetName(), group.getReference())));
     }
 
@@ -169,17 +187,21 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         return groupDefinition.stream().filter(ddi -> StringUtils.isNotEmpty(ddi.getString(USER_ROLE))).count() > 1;
     }
 
-    private void parseGroupShowCondition(ColumnName column, DisplayGroupEntity group, List<DefinitionDataItem> groupDefinition) {
+    private void parseGroupShowCondition(ColumnName column,
+                                         DisplayGroupEntity group,
+                                         List<DefinitionDataItem> groupDefinition) {
         if (groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).count() > 1) {
             throw new MapperException(
-                String.format("Please provide single condition in %s column in %s for the tab %s", column, groupDefinition.get(0).getSheetName(),
-                              group.getReference()));
+                String.format("Please provide single condition in %s column in %s for the tab %s",
+                    column, groupDefinition.get(0).getSheetName(), group.getReference()));
         }
-        Optional<DefinitionDataItem> definitionDataItemOpt = groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).findFirst();
+        Optional<DefinitionDataItem> definitionDataItemOpt = groupDefinition.stream()
+            .filter(ddi -> ddi.getString(column) != null).findFirst();
         definitionDataItemOpt.ifPresent(ddi -> group.setShowCondition(parseShowCondition(ddi.getString(column))));
     }
 
-    protected DisplayGroupCaseFieldEntity parseGroupCaseField(CaseTypeEntity caseType, DefinitionDataItem groupCaseFieldDefinition) {
+    protected DisplayGroupCaseFieldEntity parseGroupCaseField(CaseTypeEntity caseType,
+                                                              DefinitionDataItem groupCaseFieldDefinition) {
         final String caseFieldId = groupCaseFieldDefinition.getString(ColumnName.CASE_FIELD_ID);
 
         final DisplayGroupCaseFieldEntity groupCaseField = new DisplayGroupCaseFieldEntity();
@@ -189,7 +211,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         groupCaseField.setOrder(groupCaseFieldDefinition.getInteger(this.displayGroupFieldDisplayOrder));
         groupCaseField.setDisplayContextParameter(groupCaseFieldDefinition.getString(this.displayContextParameter));
         this.columnId.ifPresent(cId -> groupCaseField.setColumnNumber(groupCaseFieldDefinition.getInteger(cId)));
-        this.fieldShowConditionColumn.ifPresent(sC -> groupCaseField.setShowCondition(parseShowCondition(groupCaseFieldDefinition.getString(sC))));
+        this.fieldShowConditionColumn.ifPresent(sC -> groupCaseField
+            .setShowCondition(parseShowCondition(groupCaseFieldDefinition.getString(sC))));
 
         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(groupCaseField, groupCaseFieldDefinition);
 

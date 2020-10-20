@@ -72,10 +72,10 @@ public interface FieldEntity extends Serializable {
     }
 
     /**
-     * Determine whether a nested field is searchable. A nested field is considered searchable if every field in the path
-     * is searchable too. For example, for a path of 'LevelOne.LevelTwo.LevelThree', the fields at 'LevelOne', 'LevelOne.LevelTwo'
-     * and 'LevelOne.LevelTwo.LevelThree' must all have the boolean searchable property set to true. If no path is provided,
-     * the searchable value of the top level field is considered.
+     * Determine whether a nested field is searchable. A nested field is considered searchable if every field in the
+     * path is searchable too. For example, for a path of 'LevelOne.LevelTwo.LevelThree', the fields at 'LevelOne',
+     * 'LevelOne.LevelTwo' and 'LevelOne.LevelTwo.LevelThree' must all have the boolean searchable property set to
+     * true. If no path is provided, the searchable value of the top level field is considered.
      * @return Whether the nested field is searchable.
      */
     @Transient
@@ -89,7 +89,8 @@ public interface FieldEntity extends Serializable {
         }
 
         return isSearchable() && findNestedElementByPath(pathElements.get(0)).orElseThrow(() ->
-            new NullPointerException(String.format("Unable to find nested field '%s' within field '%s'.", pathElements.get(0), getReference())))
+            new NullPointerException(String.format(
+                "Unable to find nested field '%s' within field '%s'.", pathElements.get(0), getReference())))
             .isNestedFieldSearchable(getPathElementsTail(pathElements));
     }
 

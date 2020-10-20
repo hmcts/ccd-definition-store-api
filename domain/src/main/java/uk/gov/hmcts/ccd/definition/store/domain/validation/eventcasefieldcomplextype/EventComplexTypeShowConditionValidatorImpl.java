@@ -60,7 +60,8 @@ public class EventComplexTypeShowConditionValidatorImpl implements EventComplexT
                 .collect(Collectors.toList()));
 
         showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
-            if (!allSubTypePossibilities.contains(showConditionField) && !MetadataField.isMetadataField(showConditionField)) {
+            if (!allSubTypePossibilities.contains(showConditionField)
+                && !MetadataField.isMetadataField(showConditionField)) {
                 validationResult.addError(
                     new EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError(
                         showConditionField,

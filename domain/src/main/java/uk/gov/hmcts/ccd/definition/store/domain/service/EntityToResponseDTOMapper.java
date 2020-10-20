@@ -3,16 +3,67 @@ package uk.gov.hmcts.ccd.definition.store.domain.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTypeListItemMapper;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
-import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventFieldComplex;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventLite;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseState;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTab;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTabField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ChallengeQuestion;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ComplexACL;
+import uk.gov.hmcts.ccd.definition.store.repository.model.EventPostState;
+import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.model.Comparators.NULLS_LAST_ORDER_COMPARATOR;
 
+@SuppressWarnings("checkstyle:LineLength")
 @Mapper(componentModel = "spring")
 public interface EntityToResponseDTOMapper {
     EntityToResponseDTOMapper INSTANCE = Mappers.getMapper(EntityToResponseDTOMapper.class);
@@ -64,19 +115,19 @@ public interface EntityToResponseDTOMapper {
     @Mapping(
         expression = "java(eventEntity.isCanCreate() ? java.util.Collections.emptyList() "
             + ": eventEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") "
-            + ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+            + ": eventEntity.getPreStates().stream().map(StateEntity::getReference).collect("
+            + "java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
-    @Mapping(
-        expression = "java(eventEntity.getPostState() == null ? \"*\" : eventEntity.getPostState().getReference())",
-        target = "postState"
-    )
     CaseEvent map(EventEntity eventEntity);
+
+    EventPostState map(EventPostStateEntity eventPostStateEntity);
 
     @Mapping(
         expression = "java(eventLiteEntity.isCanCreate() ? java.util.Collections.emptyList() "
             + ": eventLiteEntity.getPreStates().isEmpty() ? java.util.Arrays.asList(\"*\") "
-            + ": eventLiteEntity.getPreStates().stream().map(StateEntity::getReference).collect(java.util.stream.Collectors.toList()))",
+            + ": eventLiteEntity.getPreStates().stream().map(StateEntity::getReference).collect("
+            + "java.util.stream.Collectors.toList()))",
         target = "preStates"
     )
     @Mapping(source = "eventLiteEntity.reference", target = "id")
@@ -215,15 +266,15 @@ public interface EntityToResponseDTOMapper {
 
         static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
             return eventComplexTypeEntity.stream()
-                                         .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
-                                                                                             complexTypeEntity.getHint(),
-                                                                                             complexTypeEntity.getLabel(),
-                                                                                             complexTypeEntity.getOrder(),
-                                                                                             complexTypeEntity.getDisplayContext(),
-                                                                                             complexTypeEntity.getShowCondition(),
-                                                                                             complexTypeEntity.getDefaultValue()
-                                         ))
-                                         .collect(Collectors.toList());
+                .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
+                    complexTypeEntity.getHint(),
+                    complexTypeEntity.getLabel(),
+                    complexTypeEntity.getOrder(),
+                    complexTypeEntity.getDisplayContext(),
+                    complexTypeEntity.getShowCondition(),
+                    complexTypeEntity.getDefaultValue()
+                ))
+                .collect(Collectors.toList());
         }
     }
 
@@ -232,10 +283,13 @@ public interface EntityToResponseDTOMapper {
     SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
 
     Banner map(BannerEntity bannerEntity);
-    
+
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.reference", target = "id")
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.name", target = "name")
     JurisdictionUiConfig map(JurisdictionUiConfigEntity jurisdictionUiConfigEntity);
+
+    @Mapping(source = "caseType.reference", target = "caseTypeId")
+    ChallengeQuestion map(ChallengeQuestionTabEntity challengeQuestionEntity);
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
@@ -248,23 +302,23 @@ public interface EntityToResponseDTOMapper {
 
         static List<AccessControlList> map(List<? extends Authorisation> authorisation) {
             return authorisation.stream()
-                                .map(auth -> new AccessControlList(auth.getUserRole().getReference(),
-                                                                   auth.getCreate(),
-                                                                   auth.getRead(),
-                                                                   auth.getUpdate(),
-                                                                   auth.getDelete()))
-                                .collect(Collectors.toList());
+                .map(auth -> new AccessControlList(auth.getUserRole().getReference(),
+                    auth.getCreate(),
+                    auth.getRead(),
+                    auth.getUpdate(),
+                    auth.getDelete()))
+                .collect(Collectors.toList());
         }
 
         static List<ComplexACL> mapComplex(List<ComplexFieldACLEntity> complexFieldACLEntities) {
             return complexFieldACLEntities.stream()
-                                          .map(el -> new ComplexACL(el.getUserRole().getReference(),
-                                                                    el.getCreate(),
-                                                                    el.getRead(),
-                                                                    el.getUpdate(),
-                                                                    el.getDelete(),
-                                                                    el.getListElementCode()))
-                                          .collect(Collectors.toList());
+                .map(el -> new ComplexACL(el.getUserRole().getReference(),
+                    el.getCreate(),
+                    el.getRead(),
+                    el.getUpdate(),
+                    el.getDelete(),
+                    el.getListElementCode()))
+                .collect(Collectors.toList());
         }
     }
 
@@ -301,9 +355,9 @@ public interface EntityToResponseDTOMapper {
 
         private static List<CaseField> getCaseFields(List<ComplexFieldEntity> complexFieldEntityList) {
             return complexFieldEntityList.stream()
-                                         .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
-                                         .sorted(NULLS_LAST_ORDER_COMPARATOR)
-                                         .collect(Collectors.toList());
+                .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
+                .sorted(NULLS_LAST_ORDER_COMPARATOR)
+                .collect(Collectors.toList());
         }
 
         private static boolean isComplexField(String reference) {

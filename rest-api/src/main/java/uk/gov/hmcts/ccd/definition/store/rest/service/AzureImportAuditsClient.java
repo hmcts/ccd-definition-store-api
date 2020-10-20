@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
-import static java.util.Collections.sort;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.Lists;
 import com.microsoft.azure.storage.OperationContext;
 import com.microsoft.azure.storage.ResultContinuation;
@@ -17,6 +11,11 @@ import com.microsoft.azure.storage.blob.BlobRequestOptions;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -30,8 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
-import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
+import static java.util.Collections.sort;
 
 @Service
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
@@ -75,12 +73,12 @@ public class AzureImportAuditsClient {
         while (audits.size() < azureImportAuditsGetLimit) {
             currentDateTime = localDateTime.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
             ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(currentDateTime,
-                                                                                          FLAT_BLOB_LISTING,
-                                                                                          ONLY_COMMITTED_BLOBS,
-                                                                                          Integer.MAX_VALUE,
-                                                                                          NO_CONTINUATION_TOKEN,
-                                                                                          NO_OPTIONS,
-                                                                                          NO_OP_CONTEXT);
+                FLAT_BLOB_LISTING,
+                ONLY_COMMITTED_BLOBS,
+                Integer.MAX_VALUE,
+                NO_CONTINUATION_TOKEN,
+                NO_OPTIONS,
+                NO_OP_CONTEXT);
             localDateTime = localDateTime.minus(1, ChronoUnit.DAYS);
             List<ImportAudit> auditsLastBatch = populateListOfAudits(blobsPage);
 
@@ -102,8 +100,8 @@ public class AzureImportAuditsClient {
                 final HashMap<String, String> metadata = cbb.getMetadata();
                 final Date createdTime = properties.getCreatedTime();
                 audit.setDateImported(Instant.ofEpochMilli(createdTime.getTime())
-                                             .atZone(ZoneId.systemDefault())
-                                             .toLocalDate());
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
                 audit.setWhoImported(metadata.get(USER_ID));
                 audit.setCaseType(metadata.get(CASE_TYPES));
                 audit.setFilename(cbb.getName());

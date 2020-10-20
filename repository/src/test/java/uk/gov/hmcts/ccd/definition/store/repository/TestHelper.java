@@ -2,9 +2,11 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
@@ -12,20 +14,21 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
-import java.io.IOException;
-
 @Component
 public class TestHelper {
 
     private final VersionedDefinitionRepositoryDecorator<JurisdictionEntity, Integer> versionedJurisdictionRepository;
     private final VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedTypeRepository;
+    private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
     private final UserRoleRepository userRoleRepository;
 
     @Autowired
     public TestHelper(JurisdictionRepository jurisdictionRepository,
                       FieldTypeRepository fieldTypeRepository,
-                      UserRoleRepository userRoleRepository) {
+                      UserRoleRepository userRoleRepository,
+                      CaseTypeRepository caseTypeRepository) {
         versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository);
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
         versionedTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository);
         this.userRoleRepository = userRoleRepository;
     }
@@ -40,6 +43,18 @@ public class TestHelper {
         jurisdiction.setName(name);
         jurisdiction.setDescription(desc);
         return versionedJurisdictionRepository.save(jurisdiction);
+    }
+
+    public CaseTypeEntity createCaseType(String reference, String name) {
+        JurisdictionEntity jurisdictionEntity = createJurisdiction();
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference(reference);
+        caseType.setName(name);
+        caseType.setVersion(1);
+        caseType.setDescription(name);
+        caseType.setJurisdiction(jurisdictionEntity);
+        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+        return this.versionedCaseTypeRepository.save(caseType);
     }
 
     public FieldTypeEntity createType(JurisdictionEntity jurisdiction) {
@@ -74,7 +89,10 @@ public class TestHelper {
         return userRoleRepository.save(entity);
     }
 
-    public EventCaseFieldEntity createEventCaseField(CaseFieldEntity caseField, DisplayContext displayContext, String showCondition, Boolean ssco) {
+    public EventCaseFieldEntity createEventCaseField(CaseFieldEntity caseField,
+                                                     DisplayContext displayContext,
+                                                     String showCondition,
+                                                     Boolean ssco) {
         EventCaseFieldEntity ecf = new EventCaseFieldEntity();
         ecf.setCaseField(caseField);
         ecf.setDisplayContext(displayContext);

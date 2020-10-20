@@ -35,7 +35,7 @@ class CaseRoleServiceImplTest {
     private CaseRoleEntity caseRoleEntity1 = new CaseRoleEntity();
     private CaseRoleEntity caseRoleEntity2 = new CaseRoleEntity();
     private CaseRoleEntity caseRoleEntity3 = new CaseRoleEntity();
-    private CaseRole caseRole1 =  new CaseRole();
+    private CaseRole caseRole1 = new CaseRole();
     private CaseRole caseRole2 = new CaseRole();
     private CaseRole caseRole3 = new CaseRole();
 

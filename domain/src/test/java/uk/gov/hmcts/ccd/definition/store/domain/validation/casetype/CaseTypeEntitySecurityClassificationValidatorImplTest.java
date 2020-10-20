@@ -25,6 +25,7 @@ public class CaseTypeEntitySecurityClassificationValidatorImplTest {
         assertEquals(0, validationResult.getValidationErrors().size());
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void securityClassificationIsNull_invalidValidationResultContainingCaseTypeEntityMissingSecurityClassificationValidationErrorReturned() {
 
@@ -40,7 +41,8 @@ public class CaseTypeEntitySecurityClassificationValidatorImplTest {
             instanceof CaseTypeEntityMissingSecurityClassificationValidationError);
         assertEquals(
             caseTypeEntity,
-            ((CaseTypeEntityMissingSecurityClassificationValidationError) validationResult.getValidationErrors().get(0)).getCaseTypeEntity()
+            ((CaseTypeEntityMissingSecurityClassificationValidationError) validationResult
+                .getValidationErrors().get(0)).getCaseTypeEntity()
         );
     }
 

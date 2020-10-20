@@ -47,7 +47,8 @@ public class SpreadsheetParser {
         final Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
         importWarnings = new ArrayList<>();
 
-        try (InputStream is = inputStream) { // Java's try-with-resource requires a named local variable, even though unused.
+        try (InputStream is = inputStream) {
+            // Java's try-with-resource requires a named local variable, even though unused.
             Workbook workbook = new XSSFWorkbook(inputStream);
             workbook.sheetIterator().forEachRemaining(sheet -> {
                 DefinitionSheet definitionSheet = new DefinitionSheet();
@@ -56,13 +57,15 @@ public class SpreadsheetParser {
                 // attribute.
                 List<String> headings = new ArrayList<>();
 
-                // Use a filtered iterator to ignore any rows that are not valid, i.e. ones that have no non-empty cells.
+                //Use a filtered iterator to ignore any rows that are not valid, i.e. ones that have no non-empty cells.
                 Iterator<Row> validRowIterator = IteratorUtils.filteredIterator(sheet.iterator(), row -> {
                     Iterator<Cell> cellIterator = row.cellIterator();
                     boolean validRow = false;
                     while (!validRow && cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
-                        if (cell != null && cell.getCellTypeEnum() != CellType.BLANK && !((XSSFCell) cell).getRawValue().isEmpty()) {
+                        if (cell != null
+                            && cell.getCellTypeEnum() != CellType.BLANK
+                            && !((XSSFCell) cell).getRawValue().isEmpty()) {
                             validRow = true;
                         }
                     }
@@ -75,10 +78,11 @@ public class SpreadsheetParser {
                         // Set the Definition Sheet name from the first cell (A1, usually).
                         definitionSheet.setName(row.getCell(0).getStringCellValue());
                         logger.debug("Processing Definition Sheet: " + definitionSheet.getName());
-                    } else if (row.getRowNum() > 1) { // Ignore the second row because it doesn't contain any data to process.
+                    } else if (row.getRowNum() > 1) {
+                        // Ignore the second row because it doesn't contain any data to process.
                         if (row.getRowNum() == 2) {
-                            // This is the header row. Use a non-filtered iterator because this row defines the boundary,
-                            // i.e. all cells in this row are regarded valid.
+                            // This is the header row. Use a non-filtered iterator because this row defines the
+                            // boundary, i.e. all cells in this row are regarded valid.
                             row.iterator().forEachRemaining(cell -> {
                                 final String cellValue = cell.getStringCellValue();
                                 if (cellValue.equals(DEFAULT_HIDDEN.toString())) {
@@ -104,13 +108,14 @@ public class SpreadsheetParser {
                                         cellValue = cell.getBooleanCellValue();
                                         break;
                                     case NUMERIC:
-                                        cellValue = DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue() : formatNumberAsString(cell);
+                                        cellValue = DateUtil.isCellDateFormatted(cell)
+                                            ? cell.getDateCellValue() : formatNumberAsString(cell);
                                         break;
                                     case STRING:
                                         cellValue = cell.getStringCellValue();
                                         String columnHeaderName = headings.get(cell.getColumnIndex());
                                         spreadsheetValidator.validate(sheet.getSheetName(), columnHeaderName,
-                                                                      (String) cellValue, cell.getRowIndex() + 1);
+                                            (String) cellValue, cell.getRowIndex() + 1);
                                         break;
                                     default:
                                         cellValue = null;

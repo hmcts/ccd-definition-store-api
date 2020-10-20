@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,11 +17,16 @@ import uk.gov.hmcts.ccd.definition.store.security.idam.IdamRepository;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -55,11 +56,11 @@ class SecurityUtilsTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        final GrantedAuthority[] authorities = new GrantedAuthority[] { newAuthority("role1"), newAuthority("role2")};
+        final GrantedAuthority[] authorities = new GrantedAuthority[] {newAuthority("role1"), newAuthority("role2")};
 
         when(serviceTokenGenerator.generate()).thenReturn(SERVICE_JWT);
 
-        Jwt jwt =   Jwt.withTokenValue(USER_JWT)
+        Jwt jwt = Jwt.withTokenValue(USER_JWT)
             .claim("aClaim", "aClaim")
             .header("aHeader", "aHeader")
             .build();
@@ -86,7 +87,7 @@ class SecurityUtilsTest {
         final HttpHeaders headers = securityUtils.authorizationHeaders();
 
         assertAll(
-            () -> assertHeader(headers, "ServiceAuthorization",  SERVICE_JWT)
+            () -> assertHeader(headers, "ServiceAuthorization", SERVICE_JWT)
         );
     }
 

@@ -25,7 +25,8 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImpl
         Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
 
     @Autowired
-    public GenericLayoutEntityDisplayContextParameterValidatorImpl(final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
+    public GenericLayoutEntityDisplayContextParameterValidatorImpl(
+        final DisplayContextParameterValidatorFactory displayContextParameterValidatorFactory) {
         super(displayContextParameterValidatorFactory, ALLOWED_TYPES, ALLOWED_FIELD_TYPES, ALLOWED_FIELD_TYPES);
     }
 
@@ -61,7 +62,9 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImpl
 
     private boolean isUnsupportedForGenericLayoutEntity(final DisplayContextParameter displayContextParameter,
                                                         final GenericLayoutEntity entity) {
-        return (getSheetName(entity).contains("Input") && displayContextParameter.getType() == DisplayContextParameterType.DATETIMEDISPLAY)
-            || (getSheetName(entity).contains("Result") && displayContextParameter.getType() == DisplayContextParameterType.DATETIMEENTRY);
+        return (getSheetName(entity).contains("Input")
+            && displayContextParameter.getType() == DisplayContextParameterType.DATETIMEDISPLAY)
+            || (getSheetName(entity).contains("Result")
+            && displayContextParameter.getType() == DisplayContextParameterType.DATETIMEENTRY);
     }
 }

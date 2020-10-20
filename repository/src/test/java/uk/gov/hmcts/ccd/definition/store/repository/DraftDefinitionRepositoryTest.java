@@ -13,7 +13,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import javax.persistence.EntityManager;
-
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;

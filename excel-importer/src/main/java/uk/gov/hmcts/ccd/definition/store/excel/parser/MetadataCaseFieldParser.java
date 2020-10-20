@@ -32,7 +32,8 @@ public class MetadataCaseFieldParser {
 
         parseContext.registerMetadataFields(caseFields);
 
-        logger.info("Parsing metadata fields for case type {}: OK: {} metadata fields parsed", caseType.getReference(), caseFields.size());
+        logger.info("Parsing metadata fields for case type {}: OK: {} metadata fields parsed",
+            caseType.getReference(), caseFields.size());
 
         return caseFields;
     }

@@ -21,27 +21,35 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
 
     public static final String ORDER_SUMMARY = "OrderSummary";
-    private final EventCaseFieldOrderSummaryCaseFieldValidator classUnderTest = new EventCaseFieldOrderSummaryCaseFieldValidator();
+    private final EventCaseFieldOrderSummaryCaseFieldValidator classUnderTest =
+        new EventCaseFieldOrderSummaryCaseFieldValidator();
 
     @Test
     public void shouldPassValidationIfFieldIsNotLabelType() {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotOrderSummary"), null, DisplayContext.MANDATORY), null).isValid());
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotOrderSummary"), null, DisplayContext.OPTIONAL), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(
+            caseField("NotOrderSummary"), null, DisplayContext.MANDATORY),
+            null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(
+            caseField("NotOrderSummary"), null, DisplayContext.OPTIONAL),
+            null).isValid());
 
     }
 
     @Test
     public void shouldPassValidationIfFieldTypeMandatory() throws Exception {
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY), null, DisplayContext.MANDATORY), null).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntity(
+            caseField(ORDER_SUMMARY), null, DisplayContext.MANDATORY), null)
+            .isValid());
 
     }
 
     @Test
     public void shouldPassValidationIfDisplayContextIsNull() throws Exception {
 
-        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY), null, null), null);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(
+            caseField(ORDER_SUMMARY), null, null), null);
 
         assertAll(
             () -> assertTrue(validationResult.isValid()),
@@ -58,11 +66,11 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
-                             hasItem(
-                                 hasProperty("defaultMessage",
-                                     equalTo("'OrderSummary' is OrderSummary type and "
-                                         + "has to be mandatory (not editable but has to be added to a form in UI) "
-                                         + "for event with reference 'Event Reference'"))))
+                hasItem(
+                    hasProperty("defaultMessage",
+                        equalTo("'OrderSummary' is OrderSummary type and "
+                            + "has to be mandatory (not editable but has to be added to a form in UI) "
+                            + "for event with reference 'Event Reference'"))))
         );
     }
 
@@ -76,10 +84,11 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
             () -> assertThat(validationResult.isValid(), is(false)),
             () -> assertThat(validationResult.getValidationErrors(), hasSize(1)),
             () -> assertThat(validationResult.getValidationErrors(),
-                             hasItem(
-                                 hasProperty("defaultMessage",
-                                     equalTo("'OrderSummary' is OrderSummary type and has to be mandatory "
-                                         + "(not editable but has to be added to a form in UI) for event with reference 'Event Reference'"))))
+                hasItem(
+                    hasProperty("defaultMessage",
+                        equalTo("'OrderSummary' is OrderSummary type and has to be mandatory "
+                            + "(not editable but has to be added to a form in UI) "
+                            + "for event with reference 'Event Reference'"))))
         );
     }
 
@@ -98,7 +107,9 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
         return eventEntity;
     }
 
-    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField, EventEntity event, DisplayContext displayContext) {
+    private EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseField,
+                                                      EventEntity event,
+                                                      DisplayContext displayContext) {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setCaseField(caseField);
         eventCaseFieldEntity.setEvent(event);

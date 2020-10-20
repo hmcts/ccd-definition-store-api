@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 
-import static java.lang.String.format;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import static java.lang.String.format;
 
 @Service
 public class DisplayGroupAdapterService {
@@ -49,10 +48,12 @@ public class DisplayGroupAdapterService {
     public WizardPageCollection findWizardPagesByCaseTypeId(String caseTypeReference, String eventReference) {
         Optional<CaseTypeEntity> caseTypeEntity = caseTypeRepository.findCurrentVersionForReference(caseTypeReference);
         if (caseTypeEntity.isPresent()) {
-            List<EventEntity> events = eventRepository.findByReferenceAndCaseTypeId(eventReference, caseTypeEntity.get().getId());
+            List<EventEntity> events = eventRepository.findByReferenceAndCaseTypeId(
+                eventReference, caseTypeEntity.get().getId());
             if (events.size() == 1) {
-                final List<DisplayGroupEntity> displayGroupEntityList = displayGroupRepository.findByTypeAndCaseTypeIdAndEventOrderByOrder(
-                    DisplayGroupType.PAGE, caseTypeEntity.get().getId(), events.get(0));
+                final List<DisplayGroupEntity> displayGroupEntityList = displayGroupRepository
+                    .findByTypeAndCaseTypeIdAndEventOrderByOrder(
+                        DisplayGroupType.PAGE, caseTypeEntity.get().getId(), events.get(0));
 
                 WizardPageCollection wizardPageCollection = new WizardPageCollection(caseTypeReference, eventReference);
                 wizardPageCollection.getWizardPages().addAll(displayGroupEntityList.stream()
@@ -81,7 +82,8 @@ public class DisplayGroupAdapterService {
         wizardPage.setShowCondition(displayGroupEntity.getShowCondition());
         wizardPage.getWizardPageFields().addAll(
             displayGroupEntity.getDisplayGroupCaseFields().stream()
-                .map(displayGroupCaseFieldEntity -> createWizardCaseField(displayGroupEntity, allSubTypePossibilities, displayGroupCaseFieldEntity))
+                .map(displayGroupCaseFieldEntity -> createWizardCaseField(
+                    displayGroupEntity, allSubTypePossibilities, displayGroupCaseFieldEntity))
                 .collect(Collectors.toList()));
 
         return wizardPage;
@@ -105,7 +107,8 @@ public class DisplayGroupAdapterService {
                 .map(eventComplexTypeEntity -> createWizardPageComplexFieldOverride(reference, eventComplexTypeEntity))
                 .collect(Collectors.toList()));
 
-            wizardPageField.addAllComplexFieldOverrides(determineHiddenFieldsOverrides(allSubTypePossibilities, displayGroupCaseFieldEntity, wizardPageField)
+            wizardPageField.addAllComplexFieldOverrides(determineHiddenFieldsOverrides(
+                allSubTypePossibilities, displayGroupCaseFieldEntity, wizardPageField)
                 .stream()
                 .map(DisplayGroupAdapterService::hiddenWizardPageComplexFieldOverride)
                 .collect(Collectors.toList()));
@@ -129,7 +132,8 @@ public class DisplayGroupAdapterService {
             .collect(Collectors.toList());
     }
 
-    private WizardPageComplexFieldOverride createWizardPageComplexFieldOverride(final String reference, final EventComplexTypeEntity eventComplexTypeEntity) {
+    private WizardPageComplexFieldOverride createWizardPageComplexFieldOverride(
+        final String reference, final EventComplexTypeEntity eventComplexTypeEntity) {
         WizardPageComplexFieldOverride override = new WizardPageComplexFieldOverride();
         override.setComplexFieldElementId(reference + "." + eventComplexTypeEntity.getReference());
         override.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
@@ -141,10 +145,11 @@ public class DisplayGroupAdapterService {
     }
 
     private List<String> createAllSubtypeLeafCombinations(final DisplayGroupEntity displayGroupEntity) {
-        return displayGroupEntity.getEvent().getEventCaseFields() != null && !displayGroupEntity.getEvent().getEventCaseFields().isEmpty()
-            ? caseFieldEntityUtil.buildDottedComplexFieldPossibilities(displayGroupEntity.getEvent().getEventCaseFields()
-            .stream().map(EventCaseFieldEntity::getCaseField)
-            .collect(Collectors.toList())) : Collections.emptyList();
+        return displayGroupEntity.getEvent().getEventCaseFields() != null
+            && !displayGroupEntity.getEvent().getEventCaseFields().isEmpty()
+            ? caseFieldEntityUtil.buildDottedComplexFieldPossibilities(
+                displayGroupEntity.getEvent().getEventCaseFields().stream().map(EventCaseFieldEntity::getCaseField)
+                    .collect(Collectors.toList())) : Collections.emptyList();
     }
 
     private EventCaseFieldEntity getEventCaseFieldEntityByReference(String reference, EventEntity event) {

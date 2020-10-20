@@ -1,15 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +9,16 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -49,7 +49,8 @@ public class JurisdictionRepositoryTest {
     @Test
     public void getSpecificJurisdictionDefinitions() {
 
-        List<JurisdictionEntity> result = jurisdictionRepository.findAllLatestVersionByReference(newArrayList("ref1", "ref2", "ref4"));
+        List<JurisdictionEntity> result = jurisdictionRepository.findAllLatestVersionByReference(
+            newArrayList("ref1", "ref2", "ref4"));
 
         assertAll(
             () -> assertThat(result, hasSize(3)),

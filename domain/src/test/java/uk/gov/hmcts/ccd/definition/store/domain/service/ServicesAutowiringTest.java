@@ -1,10 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -17,11 +15,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
 import uk.gov.hmcts.ccd.definition.store.AppInsights;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
@@ -41,6 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityACLV
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCreateEventValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEventCaseFieldsValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityPostStateValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntitySecurityClassificationValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldDisplayContextValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldLabelCaseFieldValidator;
@@ -51,24 +45,31 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeVa
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldNameValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.ChallengeQuestionTabRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
+import uk.gov.hmcts.ccd.definition.store.repository.NoCConfigRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionUiConfigRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DraftDefinitionRepositoryDecorator;
-import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionUiConfigRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
-import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -135,7 +136,8 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
             EventEntitySecurityClassificationValidatorImpl.class,
             EventEntityCrudValidatorImpl.class,
             EventEntityACLValidatorImpl.class,
-            EventEntityCreateEventValidator.class
+            EventEntityCreateEventValidator.class,
+            EventEntityPostStateValidator.class
         );
 
         // Check the EventEntityEventCaseFieldsValidatorImpl class has the required validator(s) wired in
@@ -237,6 +239,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
 
         @Bean
         @Primary
+        public ChallengeQuestionTabRepository challengeQuestionTabRepository() {
+            return mock(ChallengeQuestionTabRepository.class);
+        }
+
+        @Bean
+        @Primary
         public CaseTypeLiteRepository caseTypeLiteRepository() {
             return mock(CaseTypeLiteRepository.class);
         }
@@ -246,6 +254,13 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         public BannerRepository bannerRepository() {
             return mock(BannerRepository.class);
         }
+
+        @Bean
+        @Primary
+        public NoCConfigRepository noCConfigRepository() {
+            return mock(NoCConfigRepository.class);
+        }
+
 
         @Bean
         @Primary

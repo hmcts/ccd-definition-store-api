@@ -1,10 +1,14 @@
+dependencyCheck {
+    suppressionFile = "${rootDir}/dependency-check-suppressions.xml"
+}
+
 jar {
     enabled = true
     manifest {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
     }
-    
+
 }
 
 bootJar {

@@ -15,7 +15,8 @@ public class EventCaseFieldEntityValidationContext implements ValidationContext 
     private final List<String> caseRoles;
 
     public EventCaseFieldEntityValidationContext(String eventId,
-                                                 List<EventCaseFieldEntity> allEventCaseFieldEntitiesForEventCase, List<String> caseRoles) {
+                                                 List<EventCaseFieldEntity> allEventCaseFieldEntitiesForEventCase,
+                                                 List<String> caseRoles) {
         this.eventId = eventId;
         this.allEventCaseFieldEntitiesForEventCase = allEventCaseFieldEntitiesForEventCase;
         this.caseRoles = caseRoles;

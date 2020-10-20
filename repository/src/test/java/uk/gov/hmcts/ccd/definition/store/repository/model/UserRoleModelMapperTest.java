@@ -1,5 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import org.junit.Test;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
 import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -7,10 +11,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-
-import org.junit.Test;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 
 public class UserRoleModelMapperTest {

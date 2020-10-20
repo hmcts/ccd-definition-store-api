@@ -40,7 +40,8 @@ public class CaseRoleEntityFieldValueValidatorImpl implements CaseRoleEntityVali
                     caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
         } else if (caseRoleEntity.getName().trim().length() < 1) {
             validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
-                String.format("CaseRole name must be non-empty characters for case type '%s'", caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
+                String.format("CaseRole name must be non-empty characters for case type '%s'",
+                    caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
         }
         return validationResult;
     }

@@ -24,7 +24,8 @@ public class ComplexFieldEntityMissingSecurityClassificationValidationErrorTest 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(mockValidationErrorMessageCreator.createErrorMessage(any(ComplexFieldEntityMissingSecurityClassificationValidationError.class)))
+        when(mockValidationErrorMessageCreator.createErrorMessage(
+            any(ComplexFieldEntityMissingSecurityClassificationValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
         classUnderTest = new ComplexFieldEntityMissingSecurityClassificationValidationError(
             complexFieldEntityWithReference("Complex Field Reference")

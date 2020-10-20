@@ -1,9 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 

@@ -3,19 +3,18 @@ package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
-import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
-import uk.gov.hmcts.ccd.definitionstore.tests.helper.ImportDefinitonDataSetup;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
+import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
+import uk.gov.hmcts.ccd.definitionstore.tests.helper.ImportDefinitonDataSetup;
 
 class ImportDefinitionTest extends BaseTest {
 
@@ -41,6 +40,39 @@ class ImportDefinitionTest extends BaseTest {
             .post("/import");
         assert (response.getBody().jsonPath().get("message").toString()
             .contains("At least one case field must be defined for case type"));
+    }
+
+    @Test
+    @DisplayName("Should Not import definition with invalid noc config for case type")
+    void shouldNotImportDefinitionWithInvalidNocConfig() {
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        Response response = asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Invalid_NoC_Config.xlsx"))
+            .expect()
+            .statusCode(400)
+            .response()
+            .when()
+            .post("/import");
+        assert (response.getBody().prettyPrint()
+            .contains("Only one NoC config is allowed per case type(s) "
+                + "AATPUBLIC,AATRESTRICTED"));
+    }
+
+    @Test
+    @DisplayName("Should Not import definition with invalid case type id defined in noc config")
+    void shouldNotImportDefinitionWithInvalidCaseTypeIdNocConfig() {
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        Response response = asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Invalid_Case_Type_NoC_Config.xlsx"))
+            .expect()
+            .statusCode(400)
+            .response()
+            .when()
+            .post("/import");
+        assert (response.getBody().prettyPrint()
+            .contains("Unknown Case Type(s) 'AATPUBLIC1' in worksheet 'NoticeOfChangeConfig'"));
     }
 
     @Disabled("This test case is breaking the master build. Marking it ignored to unblock the other developers."
