@@ -145,45 +145,6 @@ public class HiddenFieldsValidatorTest {
         }
     }
 
-//    @Test(expected = MapperException.class)
-//    public void shouldFail_whenNoShowConditionInCaseEventToFieldsForComplexTypes() {
-//
-//        final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
-//        addDataItem(sheetJ);
-//
-//        final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
-//        addDataItem(sheetCT);
-//
-//        final DefinitionSheet sheetComplexTypes = addDefinitionSheet(SheetName.COMPLEX_TYPES);
-//        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
-//        definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.TRUE);
-//        definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "ComplexTypeFieldId");
-//        definitionDataItem.addAttribute(ColumnName.LIST_ELEMENT_CODE, "");
-//        definitionDataItem.addAttribute(ColumnName.ID, "ComplexType");
-//        sheetComplexTypes.addDataItem(definitionDataItem);
-//
-//        final DefinitionSheet sheetCETF = addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
-//        DefinitionDataItem definitionDataItem1 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
-//        definitionDataItem1.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
-//        definitionDataItem1.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
-//        sheetCETF.addDataItem(definitionDataItem1);
-//
-//        final DefinitionSheet sheetCF = addDefinitionSheet(SheetName.CASE_FIELD);
-//        DefinitionDataItem definitionDataItem2 = new DefinitionDataItem(SheetName.CASE_FIELD.getName());
-//        definitionDataItem2.addAttribute(ColumnName.ID, "fieldId");
-//        definitionDataItem2.addAttribute(ColumnName.FIELD_TYPE, "ComplexType");
-//        sheetCF.addDataItem(definitionDataItem2);
-//
-//        addDefinitionSheet(SheetName.FIXED_LISTS);
-//
-//        try {
-//            validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
-//        } catch (MapperException ex) {
-//            assertThat(ex.getMessage(), is("'retainHiddenValue' can only be configured for a field that uses a "
-//                + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
-//            throw ex;
-//        }
-//    }
 
     @Test(expected = Test.None.class)
     public void shouldValidate_whenMultipleReferencesOfCaseFieldsInCaseEvents() {
