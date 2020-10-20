@@ -118,6 +118,7 @@ public class HiddenFieldsValidatorTest {
         definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.TRUE);
         definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "ComplexTypeFieldId");
         definitionDataItem.addAttribute(ColumnName.LIST_ELEMENT_CODE, "");
+        definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
         definitionDataItem.addAttribute(ColumnName.ID, "ComplexType");
         sheetComplexTypes.addDataItem(definitionDataItem);
 
@@ -139,8 +140,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("'retainHiddenValue' has been incorrectly configured or is invalid "
-                + "for fieldID ['fieldId'] on ['CaseEventToFields']"));
+            assertThat(ex.getMessage(), is("'retainHiddenValue' can only be configured for a field that uses a "
+                + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
             throw ex;
         }
     }

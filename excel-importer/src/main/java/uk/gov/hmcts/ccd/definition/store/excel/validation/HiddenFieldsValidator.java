@@ -28,25 +28,50 @@ public class HiddenFieldsValidator {
                     || definitionDataItem.getId().equals(caseFieldDataItem
                     .getString(ColumnName.FIELD_TYPE_PARAMETER))).collect(toList());
 
-        caseEventToFieldsList.forEach(ddi -> {
-            Optional<DefinitionDataItem> caseEventToField = caseEventToFields.getDataItems()
-                .stream().filter(definitionDataItem1 -> ddi.getId()
-                    .equals(definitionDataItem1.getCaseFieldId())).findFirst();
-            caseEventToField.ifPresent(caseEventToFieldDataItem -> {
-                Boolean caseFieldRetainHiddenValue = caseEventToFieldDataItem.getRetainHiddenValue();
-                if (isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem)) {
-                    throw new MapperException(String.format(
-                        "'retainHiddenValue' has been incorrectly configured or is invalid for "
-                            + "fieldID ['%s'] on ['%s']",
-                        caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
-                }
-                retainHiddenValue = definitionDataItem.getRetainHiddenValue();
-            });
-        });
+//        caseEventToFieldsList.forEach(ddi -> {
+//            Optional<DefinitionDataItem> caseEventToField = caseEventToFields.getDataItems()
+//                .stream().filter(definitionDataItem1 -> ddi.getId()
+//                    .equals(definitionDataItem1.getCaseFieldId())).findFirst();
+//            caseEventToField.ifPresent(caseEventToFieldDataItem -> {
+//                Boolean caseFieldRetainHiddenValue = caseEventToFieldDataItem.getRetainHiddenValue();
+//                if (isSubFieldsIncorrectlyConfigured(caseFieldRetainHiddenValue, definitionDataItem)) {
+//                    throw new MapperException(String.format(
+//                        "'retainHiddenValue' has been incorrectly configured or is invalid for "
+//                            + "fieldID ['%s'] on ['%s']",
+//                        caseEventToFieldDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
+//                }
+//                retainHiddenValue = definitionDataItem.getRetainHiddenValue();
+//            });
+//        });
 
         validateCaseEventToFields(definitionDataItem, caseEventToFields, caseEventToFieldsList);
+        validateSubFieldConfiguration(caseEventToFieldsList, definitionDataItem, caseEventToFields);
 
         return definitionDataItem.getRetainHiddenValue();
+    }
+
+    private void validateSubFieldConfiguration(List<DefinitionDataItem> caseField,
+                                               DefinitionDataItem definitionDataItem,
+                                               DefinitionSheet caseEventToFields) {
+
+        boolean valid = true;
+        String caseFieldId = null;
+        for (DefinitionDataItem cf : caseField) {
+            List<DefinitionDataItem> caseEventToFieldList = caseEventToFields.getDataItems()
+                .stream().filter(definitionDataItem1 -> cf.getId()
+                    .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
+            caseFieldId = cf.getId();
+            valid = isAtLeastOneCaseEventToFieldsConfigured(caseEventToFieldList, definitionDataItem);
+            if (valid) {
+                break;
+            }
+        }
+        if (definitionDataItem.getRetainHiddenValue() != null && !valid) {
+            throw new MapperException(String.format("'retainHiddenValue' can only be configured "
+                    + "for a field that uses a "
+                    + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
+                caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
+        }
     }
 
     private void validateCaseEventToFields(DefinitionDataItem definitionDataItem,
@@ -59,7 +84,7 @@ public class HiddenFieldsValidator {
                 .stream().filter(definitionDataItem1 -> cf.getId()
                     .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
             caseFieldId = cf.getId();
-            valid = isAtLeastOneCaseEventToFieldsConfigured(caseEventToFieldList, definitionDataItem);
+            valid = isSubFieldsIncorrectlyConfigured(definitionDataItem, caseEventToFieldList);
             if (valid) {
                 break;
             }
@@ -85,7 +110,7 @@ public class HiddenFieldsValidator {
             if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())) {
                 match = caseEventToFieldListFiltered.stream().noneMatch(dataItem ->
                     Boolean.FALSE.equals(dataItem.getRetainHiddenValue())
-                    || dataItem.getRetainHiddenValue() == null);
+                        || dataItem.getRetainHiddenValue() == null);
             } else {
                 match = true;
             }
@@ -99,14 +124,29 @@ public class HiddenFieldsValidator {
         return (fieldShowCondition == null && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
     }
 
-    private boolean isSubFieldsIncorrectlyConfigured(Boolean caseFieldRetainHiddenValue,
-                                                     DefinitionDataItem definitionDataItem) {
-        if (definitionDataItem.getRetainHiddenValue() != null && definitionDataItem.getFieldShowCondition() != null) {
-            return Boolean.FALSE.equals(caseFieldRetainHiddenValue) ? true : false;
-        } else {
-            return (Boolean.FALSE.equals(caseFieldRetainHiddenValue)
-                && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
-        }
+    private boolean isSubFieldsIncorrectlyConfigured(DefinitionDataItem definitionDataItem,
+                                                     List<DefinitionDataItem> caseEventToFieldList) {
+        return caseEventToFieldList.stream().anyMatch(definitionDataItem1 -> {
+            Boolean caseFieldRetainHiddenValue = definitionDataItem1.getRetainHiddenValue();
+            String caseFieldShowConditionValue = definitionDataItem1.getFieldShowCondition();
+            if (definitionDataItem.getRetainHiddenValue() != null
+                && definitionDataItem.getFieldShowCondition() != null) {
+                return (caseFieldShowConditionValue == null
+                    || Boolean.FALSE.equals(caseFieldRetainHiddenValue)) ? true : false;
+            } else if (definitionDataItem.getRetainHiddenValue() != null
+                && definitionDataItem.getFieldShowCondition() == null) {
+                if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())
+                    && (caseFieldShowConditionValue == null
+                    || Boolean.FALSE.equals(caseFieldRetainHiddenValue))) {
+                    return true;
+                } else {
+                    return caseFieldShowConditionValue == null ? false : true;
+                }
+            } else {
+                return (Boolean.FALSE.equals(caseFieldRetainHiddenValue)
+                    && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
+            }
+        });
     }
 
     public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem) {
