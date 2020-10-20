@@ -197,6 +197,10 @@ public class DefinitionDataItem {
         return getString(ColumnName.DISPLAY_CONTEXT_PARAMETER);
     }
 
+    public String getFieldShowCondition() {
+        return getString(ColumnName.FIELD_SHOW_CONDITION);
+    }
+
     public String getUseCase() {
         return getString(ColumnName.USE_CASE);
     }
