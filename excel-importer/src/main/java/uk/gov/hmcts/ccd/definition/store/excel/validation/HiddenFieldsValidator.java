@@ -121,7 +121,7 @@ public class HiddenFieldsValidator {
                 if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())
                     && (caseFieldShowConditionValue == null
                     || Boolean.FALSE.equals(caseFieldRetainHiddenValue))) {
-                    return true;
+                    return false;
                 } else {
                     return caseFieldShowConditionValue == null ? false : true;
                 }
