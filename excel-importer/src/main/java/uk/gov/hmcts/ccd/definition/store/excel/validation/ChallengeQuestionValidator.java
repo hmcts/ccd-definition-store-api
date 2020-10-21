@@ -84,9 +84,8 @@ public class ChallengeQuestionValidator {
         caseTypeQuestionItems.keySet()
             .forEach(triple -> {
                 if (caseTypeQuestionItems.get(triple).size() > 1) {
-                    throw new InvalidImportException(ChallengeQuestionValidator.ERROR_MESSAGE + " value: "
-                        + triple.getRight() + " is not a valid " + ColumnName.CHALLENGE_QUESTION_QUESTION_ID
-                        + " value, QuestionId cannot be duplicated with in case type and challenge question.");
+                    throw new InvalidImportException("QuestionId cannot be duplicated within case type "
+                        + "and challenge question in ChallengeQuestion tab");
                 }
             });
     }
@@ -103,9 +102,8 @@ public class ChallengeQuestionValidator {
         challengeQuestionDisplayOrder.keySet()
             .forEach(triple -> {
                 if (challengeQuestionDisplayOrder.get(triple).size() > 1) {
-                    throw new InvalidImportException(ChallengeQuestionValidator.ERROR_MESSAGE + " value: "
-                        + triple.getRight() + " is not a valid " + ColumnName.DISPLAY_ORDER
-                        + " value, DisplayOrder cannot be duplicated with in case type and challenge question.");
+                    throw new InvalidImportException("DisplayOrder cannot be duplicated within case type"
+                        + " and challenge question in ChallengeQuestion tab");
                 }
             });
     }

@@ -244,8 +244,8 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
                         QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId")));
         } catch (Exception exception) {
             assertThat(exception.getMessage(),
-                is("ChallengeQuestionTab Invalid value: questionId is not a valid QuestionId value, "
-                    + "QuestionId cannot be duplicated with in case type and challenge question."));
+                is("QuestionId cannot be duplicated within case type "
+                    + "and challenge question in ChallengeQuestion tab"));
             throw exception;
         }
     }
@@ -261,8 +261,8 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
                         QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId2")));
         } catch (Exception exception) {
             assertThat(exception.getMessage(),
-                is("ChallengeQuestionTab Invalid value: 2 is not a valid DisplayOrder value, "
-                    + "DisplayOrder cannot be duplicated with in case type and challenge question."));
+                is("DisplayOrder cannot be duplicated within case type "
+                    + "and challenge question in ChallengeQuestion tab"));
             throw exception;
         }
     }
