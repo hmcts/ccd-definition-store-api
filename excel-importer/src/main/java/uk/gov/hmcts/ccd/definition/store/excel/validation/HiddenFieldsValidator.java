@@ -50,8 +50,8 @@ public class HiddenFieldsValidator {
             }
         }
         if (definitionDataItem.getRetainHiddenValue() != null && !valid) {
-            throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or is invalid for "
-                    + "fieldID ['%s'] on ['%s']",
+            throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or "
+                    + "is invalid for fieldID ['%s'] on ['%s']",
                 caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
         }
     }
