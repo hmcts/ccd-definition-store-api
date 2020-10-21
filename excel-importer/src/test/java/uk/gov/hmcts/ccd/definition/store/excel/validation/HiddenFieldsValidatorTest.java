@@ -383,7 +383,7 @@ public class HiddenFieldsValidatorTest {
 
 
     @Test(expected = MapperException.class)
-    public void shouldValidate_whenCaseFieldsInCaseEventHasRetainHiddenValueOfNullAtTopLevel() {
+    public void shouldFail_whenCaseFieldsInCaseEventHasRetainHiddenValueOfNullAtTopLevel() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -418,8 +418,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("'retainHiddenValue' has been incorrectly configured or is invalid "
-                + "for fieldID ['fieldId'] on ['CaseEventToFields']"));
+            assertThat(ex.getMessage(), is("'retainHiddenValue' can only be configured for a field that uses a "
+                + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
             throw ex;
         }
     }

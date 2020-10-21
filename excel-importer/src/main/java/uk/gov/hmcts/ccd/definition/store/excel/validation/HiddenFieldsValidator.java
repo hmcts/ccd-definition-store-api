@@ -37,7 +37,7 @@ public class HiddenFieldsValidator {
                                                DefinitionDataItem definitionDataItem,
                                                DefinitionSheet caseEventToFields) {
 
-        boolean valid = true;
+        boolean valid = false;
         String caseFieldId = null;
         for (DefinitionDataItem cf : caseField) {
             List<DefinitionDataItem> caseEventToFieldList = caseEventToFields.getDataItems()
@@ -45,11 +45,11 @@ public class HiddenFieldsValidator {
                     .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
             caseFieldId = cf.getId();
             valid = isAtLeastOneCaseEventToFieldsConfigured(caseEventToFieldList, definitionDataItem);
-            if (valid) {
+            if (!valid) {
                 break;
             }
         }
-        if (definitionDataItem.getRetainHiddenValue() != null && !valid) {
+        if (valid) {
             throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or "
                     + "is invalid for fieldID ['%s'] on ['%s']",
                 caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
@@ -83,21 +83,20 @@ public class HiddenFieldsValidator {
                                                             DefinitionDataItem definitionDataItem) {
         boolean match;
         if (definitionDataItem.getRetainHiddenValue() != null && definitionDataItem.getFieldShowCondition() != null) {
-            match = true;
+            match = false;
         } else if (definitionDataItem.getRetainHiddenValue() != null
             && definitionDataItem.getFieldShowCondition() == null) {
             List<DefinitionDataItem> caseEventToFieldListFiltered =
                 caseEventToFieldList.stream().filter(dataItem ->
                     dataItem.getString(ColumnName.FIELD_SHOW_CONDITION) != null).collect(toList());
             if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())) {
-                match = caseEventToFieldListFiltered.stream().noneMatch(dataItem ->
-                    Boolean.FALSE.equals(dataItem.getRetainHiddenValue())
-                        || dataItem.getRetainHiddenValue() == null);
+                match = (caseEventToFieldListFiltered.stream().anyMatch(dataItem ->
+                    Boolean.TRUE.equals(dataItem.getRetainHiddenValue()))) ? false : true;
             } else {
-                match = true;
+                match = false;
             }
         } else {
-            match = true;
+            match = false;
         }
         return match;
     }
@@ -113,12 +112,12 @@ public class HiddenFieldsValidator {
             String caseFieldShowConditionValue = definitionDataItem1.getFieldShowCondition();
             if (definitionDataItem.getRetainHiddenValue() != null
                 && definitionDataItem.getFieldShowCondition() != null) {
-                return (caseFieldShowConditionValue == null
+                return (caseFieldRetainHiddenValue == null
                     || Boolean.FALSE.equals(caseFieldRetainHiddenValue)) ? true : false;
             } else if (definitionDataItem.getRetainHiddenValue() != null
                 && definitionDataItem.getFieldShowCondition() == null) {
                 if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())
-                    && (caseFieldShowConditionValue == null
+                    && (caseFieldRetainHiddenValue == null
                     || Boolean.FALSE.equals(caseFieldRetainHiddenValue))) {
                     return false;
                 } else {
