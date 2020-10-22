@@ -245,7 +245,7 @@ public class ChallengeQuestionValidator {
             Integer.parseInt(displayOrder);
         } catch (NumberFormatException numberFormatException) {
             throw new InvalidImportException(
-                ERROR_MESSAGE + " value: " + displayOrder + NOT_VALID + " DisplayOrder.");
+                ERROR_MESSAGE + " value: " + displayOrder + NOT_VALID + "DisplayOrder.");
         }
     }
 
