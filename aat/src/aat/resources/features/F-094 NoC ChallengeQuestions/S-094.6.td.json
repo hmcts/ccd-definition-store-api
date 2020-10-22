@@ -1,7 +1,7 @@
 {
 	"_guid_": "S-094.6",
 	"_extends_": "F-094_Definition_Import_Test_Base_data",
-	"title": "must return a negative response in an attempt to import a definition file where a challenge question has an invalid case field",
+	"title": "must return a negative response in an attempt to import a definition file with an invalid case field",
 	"specs": [
     "an active profile in CCD",
     "contains a challenge question with an invalid case field"
@@ -11,7 +11,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_Invalid_CaseField.xlsx"
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_ChallengeQuestion_InvalidCaseField.xlsx"
         }
       ]
     }
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- Unknown field 'TextField55' for event 'approveCase' in post state condition: 'CaseApproved(TextField55=\"showmethemoney\" AND TextField3=\"showpage5\"):1;CaseModified' in CaseEvent tab"
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- ChallengeQuestionTab Invalid value: ${InvalidCaseField}:[Defendant] is not a valid Answer value. The expression dot notation values should be valid caseTypes fields."
     }
   }
 }
