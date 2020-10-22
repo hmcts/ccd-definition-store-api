@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-9031" author="tobias.derose@hmcts.net">
-
+        <validCheckSum>8:26c77c3c08dbfe1fc07827f01ba96610</validCheckSum>
         <createTable tableName="challenge_question">
 
             <column autoIncrement="true" name="id"  type="serial" >
