@@ -25,6 +25,7 @@ plugins {
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
     id "info.solidsoft.pitest" version '1.4.0' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
+    id 'uk.gov.hmcts.java' version '0.12.0'
 }
 
 apply plugin: 'java'
