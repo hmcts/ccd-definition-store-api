@@ -49,15 +49,6 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-094.6 @Ignore
-  Scenario: Must return a negative response in an attempt to import a definition file with an invalid case field
-    Given a user with [an active profile in CCD]
-    When a request is prepared with appropriate values
-    And the request [contains a challenge question with an invalid case field]
-    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
-    Then a negative response is received
-    And the response has all other details as expected
-
   @S-094.7
   Scenario: Must return a negative response in an attempt to import a definition file with duplicate display order
     Given a user with [an active profile in CCD]
@@ -75,7 +66,6 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
     And the response has all other details as expected
-
 
   @S-094.9
   Scenario: Must return a negative response in an attempt to import a definition file with missing question group id
