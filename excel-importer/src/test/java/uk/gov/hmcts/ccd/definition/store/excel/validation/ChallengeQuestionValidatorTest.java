@@ -194,8 +194,9 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
                 Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
                     QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer,"questionId")));
         } catch (Exception exception) {
-            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: XXXX is not a valid Answer"
-                + " value, The expression dot notation values should be valid caseTypes fields."));
+            assertThat(exception.getMessage(), is("ChallengeQuestionTab Invalid value: ${OrganisationField.XXXX} "
+                + "is not a valid Answer value. "
+                + "The expression dot notation values should be valid caseTypes fields."));
             throw exception;
         }
     }
