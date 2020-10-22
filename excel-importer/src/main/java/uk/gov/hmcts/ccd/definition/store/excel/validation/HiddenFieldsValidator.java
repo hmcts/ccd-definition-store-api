@@ -7,6 +7,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,15 +21,24 @@ public class HiddenFieldsValidator {
                                                  Map<String, DefinitionSheet> definitionSheets) {
         final DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
         final DefinitionSheet caseFields = definitionSheets.get(SheetName.CASE_FIELD.getName());
-        List<DefinitionDataItem> caseEventToFieldsList =
+        List<DefinitionDataItem> caseFieldList =
             caseFields.getDataItems().stream().filter(caseFieldDataItem ->
                 definitionDataItem.getId().equals(caseFieldDataItem
                     .getString(ColumnName.FIELD_TYPE))
                     || definitionDataItem.getId().equals(caseFieldDataItem
                     .getString(ColumnName.FIELD_TYPE_PARAMETER))).collect(toList());
 
-        validateCaseEventToFields(definitionDataItem, caseEventToFields, caseEventToFieldsList);
-        validateSubFieldConfiguration(caseEventToFieldsList, definitionDataItem, caseEventToFields);
+        List<DefinitionDataItem> caseEventToFieldListFiltered = new ArrayList<>();
+        for (DefinitionDataItem cf : caseFieldList){
+            for (DefinitionDataItem cetf : caseEventToFields.getDataItems()){
+                if (cetf.getCaseFieldId().equals(cf.getId())) {
+                    caseEventToFieldListFiltered.add(cetf);
+                }
+            }
+        }
+
+        validateCaseEventToFields(definitionDataItem, definitionSheets, caseFieldList, caseEventToFieldListFiltered);
+        validateSubFieldConfiguration(caseFieldList, definitionDataItem, caseEventToFields);
 
         return definitionDataItem.getRetainHiddenValue();
     }
@@ -57,8 +67,11 @@ public class HiddenFieldsValidator {
     }
 
     private void validateCaseEventToFields(DefinitionDataItem definitionDataItem,
-                                           DefinitionSheet caseEventToFields,
-                                           List<DefinitionDataItem> caseField) {
+                                           Map<String, DefinitionSheet> definitionSheets,
+                                           List<DefinitionDataItem> caseField,
+                                           List<DefinitionDataItem> caseEventToFieldsList) {
+        DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
+
         boolean valid = true;
         String caseFieldId = null;
         for (DefinitionDataItem cf : caseField) {
@@ -71,6 +84,18 @@ public class HiddenFieldsValidator {
                 break;
             }
         }
+
+        if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())) {
+           boolean invalidMatch =  caseEventToFieldsList.stream()
+               .noneMatch(definitionDataItem1 -> Boolean.TRUE.equals(definitionDataItem1.getRetainHiddenValue()));
+                if (invalidMatch) {
+                    throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or "
+                            + "is invalid for fieldID ['%s'] on ['%s']",
+                        caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
+                }
+            }
+
+
         if (definitionDataItem.getRetainHiddenValue() != null && !valid) {
             throw new MapperException(String.format("'retainHiddenValue' can only be configured "
                     + "for a field that uses a "

@@ -140,8 +140,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("'retainHiddenValue' can only be configured for a field that uses a "
-                + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
+            assertThat(ex.getMessage(), is("'retainHiddenValue' has been incorrectly configured or is invalid "
+                + "for fieldID ['fieldId'] on ['CaseEventToFields']"));
             throw ex;
         }
     }
@@ -356,7 +356,7 @@ public class HiddenFieldsValidatorTest {
 
         final DefinitionSheet sheetComplexTypes = addDefinitionSheet(SheetName.COMPLEX_TYPES);
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
-        definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.TRUE);
+        definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.FALSE);
         definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "abc=123");
         definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "ComplexTypeFieldId");
         definitionDataItem.addAttribute(ColumnName.LIST_ELEMENT_CODE, "");
@@ -378,7 +378,7 @@ public class HiddenFieldsValidatorTest {
 
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+        assertFalse(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
     }
 
 
@@ -418,8 +418,8 @@ public class HiddenFieldsValidatorTest {
         try {
             validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
         } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("'retainHiddenValue' can only be configured for a field that uses a "
-                + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
+            assertThat(ex.getMessage(), is("'retainHiddenValue' has been incorrectly configured or is invalid "
+                + "for fieldID ['fieldId'] on ['CaseEventToFields']"));
             throw ex;
         }
     }
