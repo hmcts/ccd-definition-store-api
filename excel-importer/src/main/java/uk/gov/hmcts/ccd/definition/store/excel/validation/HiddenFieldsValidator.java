@@ -15,8 +15,6 @@ import static java.util.stream.Collectors.toList;
 
 @Component
 public class HiddenFieldsValidator {
-    Boolean retainHiddenValue;
-
     public Boolean parseComplexTypesHiddenFields(DefinitionDataItem definitionDataItem,
                                                  Map<String, DefinitionSheet> definitionSheets) {
         final DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
@@ -29,8 +27,8 @@ public class HiddenFieldsValidator {
                     .getString(ColumnName.FIELD_TYPE_PARAMETER))).collect(toList());
 
         List<DefinitionDataItem> caseEventToFieldListFiltered = new ArrayList<>();
-        for (DefinitionDataItem cf : caseFieldList){
-            for (DefinitionDataItem cetf : caseEventToFields.getDataItems()){
+        for (DefinitionDataItem cf : caseFieldList) {
+            for (DefinitionDataItem cetf : caseEventToFields.getDataItems()) {
                 if (cetf.getCaseFieldId().equals(cf.getId())) {
                     caseEventToFieldListFiltered.add(cetf);
                 }
@@ -86,14 +84,14 @@ public class HiddenFieldsValidator {
         }
 
         if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())) {
-           boolean invalidMatch =  caseEventToFieldsList.stream()
-               .noneMatch(definitionDataItem1 -> Boolean.TRUE.equals(definitionDataItem1.getRetainHiddenValue()));
-                if (invalidMatch) {
-                    throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or "
-                            + "is invalid for fieldID ['%s'] on ['%s']",
-                        caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
-                }
+            boolean invalidMatch = caseEventToFieldsList.stream()
+                .noneMatch(definitionDataItem1 -> Boolean.TRUE.equals(definitionDataItem1.getRetainHiddenValue()));
+            if (invalidMatch) {
+                throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or "
+                        + "is invalid for fieldID ['%s'] on ['%s']",
+                    caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
             }
+        }
 
 
         if (definitionDataItem.getRetainHiddenValue() != null && !valid) {
