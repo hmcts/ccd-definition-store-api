@@ -46,6 +46,13 @@
 		<notes> NEW CVE og4j-to-slf4j-2.11.1.jar :2.3:a:apache:log4j</notes>
 		<cve>CVE-2020-9488</cve>
 	</suppress>
+	
+	<suppress>
+		<notes> Supressions for RDM-9302 ci/cd release, these can be removed from develop/20.1 release</notes>
+		<cve>CVE-2007-1651</cve>
+		<cve>CVE-2007-1652</cve>
+		<cve>CVE-2020-5421</cve>
+	</suppress>
 
 	<suppress>
 		<notes><![CDATA[
