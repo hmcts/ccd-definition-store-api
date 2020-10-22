@@ -25,14 +25,11 @@ dependencies {
     compile project(':elastic-search-support')
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile ("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}") {
-        exclude group: 'com.google.guava', module: 'guava'
-    }
-    compile ("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}") {
+    compile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
-    runtime "org.liquibase:liquibase-core"
+    runtime group: 'org.liquibase', name: 'liquibase-core', version: '3.8.9'
     testCompile project(":app-insights").sourceSets.main.output
     testCompile project(":commons").sourceSets.main.output
 }

@@ -40,48 +40,52 @@
 			"Vary": "Accept-Encoding",
 			"Request-Context": "[[ANY_NULLABLE]]"
 		},
-		"body": {
-			"status": "UP",
-			"components": {
-				"db": {
-					"status": "UP",
-					"details": {
-						"database": "PostgreSQL",
-						"result": 1,
-						"validationQuery": "SELECT 1"
-					}
-				},
-				"discoveryComposite": {
-					"description": "Discovery Client not initialized",
-					"status": "UNKNOWN",
-					"components": {
-						"discoveryClient": {
-							"description": "Discovery Client not initialized",
-							"status": "UNKNOWN"
-						}
-					}
-				},
-				"diskSpace": {
-					"status": "UP",
-					"details": {
-						"total": "[[ANYTHING_PRESENT]]",
-						"free": "[[ANYTHING_PRESENT]]",
-						"threshold": "[[ANYTHING_PRESENT]]"
-					}
-				},
-				"liveness": {
-					"status": "UP"
-				},
-				"ping": {
-					"status": "UP"
-				},
-				"refreshScope": {
-					"status": "UP"
-				},
-				"serviceAuth": {
-					"status": "UP"
-				}
-			}
-		}
+    "body" : {
+      "status" : "UP",
+      "components" : {
+        "db" : {
+          "status" : "UP",
+          "details" : {
+            "database" : "PostgreSQL",
+            "validationQuery" : "isValid()"
+          }
+        },
+        "discoveryComposite" : {
+          "description" : "Discovery Client not initialized",
+          "status" : "UNKNOWN",
+          "components" : {
+            "discoveryClient" : {
+              "description" : "Discovery Client not initialized",
+              "status" : "UNKNOWN"
+            }
+          }
+        },
+        "diskSpace" : {
+          "status" : "UP",
+          "details" : {
+            "total": "[[ANYTHING_PRESENT]]",
+            "free": "[[ANYTHING_PRESENT]]",
+            "threshold": "[[ANYTHING_PRESENT]]",
+            "exists" : true
+          }
+        },
+        "livenessState" : {
+          "status" : "UP"
+        },
+        "ping" : {
+          "status" : "UP"
+        },
+        "readinessState" : {
+          "status" : "UP"
+        },
+        "refreshScope" : {
+          "status" : "UP"
+        },
+        "serviceAuth" : {
+          "status" : "UP"
+        }
+      },
+      "groups" : [ "liveness", "readiness" ]
+    }
 	}
 }
