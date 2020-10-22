@@ -39,17 +39,7 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
     And the response [returns an empty questions array]
     And the response has all the details as expected.
 
-
-  @S-094.5 @Ignore
-  Scenario: Must successfully import a definition file containing valid challenge questions
-    Given a user with [an active profile in CCD]
-    When a request is prepared with appropriate values
-    And the request [contains valid challenge questions]
-    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
-    Then a positive response is received
-    And the response has all other details as expected
-
-  @S-094.7
+  @S-094.5
   Scenario: Must return a negative response in an attempt to import a definition file with duplicate display order
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -58,7 +48,7 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-094.8
+  @S-094.6
   Scenario: Must return a negative response in an attempt to import a definition file with duplicate question id
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -67,7 +57,7 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-094.9
+  @S-094.7
   Scenario: Must return a negative response in an attempt to import a definition file with missing question group id
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
