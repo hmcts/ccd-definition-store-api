@@ -17,6 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.ChallengeQuestionValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 @Component
 public class ChallengeQuestionParser {
@@ -67,10 +68,15 @@ public class ChallengeQuestionParser {
             .stream()
             .filter(caseTypeEntity -> caseTypeEntity.getReference().equals(caseType))
             .findAny();
-        challengeQuestionTabEntity.setCaseType(caseTypeEntityOptional.get());
+        if (caseTypeEntityOptional.isPresent()) {
+            challengeQuestionTabEntity.setCaseType(caseTypeEntityOptional.get());
+        }
 
         final String fieldType = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD_TYPE);
-        challengeQuestionTabEntity.setAnswerFieldType(parseContext.getType(fieldType).get());
+        Optional<FieldTypeEntity> fieldTypeEntity = parseContext.getType(fieldType);
+        if (fieldTypeEntity.isPresent()) {
+            challengeQuestionTabEntity.setAnswerFieldType(fieldTypeEntity.get());
+        }
 
         challengeQuestionTabEntity.setChallengeQuestionId(definitionDataItem.getString(ColumnName.ID));
         challengeQuestionTabEntity.setQuestionText(definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_TEXT));

@@ -15,7 +15,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -37,6 +36,7 @@ public class ChallengeQuestionValidator {
     private static final String ANSWER_FIELD_MATCHER
         = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
     private static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
+    private static final String NOT_VALID = " is not a valid ";
     private ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
 
     @Autowired
@@ -59,7 +59,7 @@ public class ChallengeQuestionValidator {
         this.parseContext = parseContext;
         validateUniqueIds(questionItems);
         validateUniqueDisplayOrder(questionItems);
-        questionItems.forEach(questionItem -> validate(questionItem));
+        questionItems.forEach(this::validate);
     }
 
     private void validate(DefinitionDataItem definitionDataItem) {
@@ -131,7 +131,7 @@ public class ChallengeQuestionValidator {
                                           CaseTypeEntity caseTypeEntity,
                                           String currentAnswerExpression) {
         String errorMessage = ERROR_MESSAGE + " value: %s"
-            + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+            + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
             + ", Please check the expression format and the roles.";
         final String[] answersFields = currentAnswerExpression.split(Pattern.quote(ANSWER_FIELD_SEPARATOR));
         Arrays.asList(answersFields).stream().forEach(answersField -> {
@@ -181,9 +181,9 @@ public class ChallengeQuestionValidator {
                         attributesDotNotation[index], fieldType.getComplexFields(), attributesDotNotation, index);
                 });
             }
-        } catch (SpreadsheetParsingException spe) {
+        } catch (Exception spe) {
             throw new InvalidImportException(ERROR_MESSAGE + " value: "
-                + expression + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+                + expression + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
                 + " value. The expression dot notation values should be valid caseTypes fields.");
         }
     }
@@ -201,7 +201,7 @@ public class ChallengeQuestionValidator {
                                     String[] attributesDotNotation,
                                     int currentIndex) {
         String errorMessage = ERROR_MESSAGE + " value: "
-            + currentAttribute + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+            + currentAttribute + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
             + " value, The expression dot notation values should be valid caseTypes fields.";
 
         final Optional<ComplexFieldEntity> result = getComplexFieldEntity(complexFieldACLEntity, currentAttribute);
@@ -245,7 +245,7 @@ public class ChallengeQuestionValidator {
             Integer.parseInt(displayOrder);
         } catch (NumberFormatException numberFormatException) {
             throw new InvalidImportException(
-                ERROR_MESSAGE + " value: " + displayOrder + " is not a valid DisplayOrder.");
+                ERROR_MESSAGE + " value: " + displayOrder + NOT_VALID + " DisplayOrder.");
         }
     }
 
