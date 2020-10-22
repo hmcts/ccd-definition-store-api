@@ -3,9 +3,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-2835" author="fatih.ozceylan@hmcts.net">
-
+        <validCheckSum>8:b491b1fb9455de0f56f74bf6f5edc68b</validCheckSum>
         <createTable tableName="case_role">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(40)" >

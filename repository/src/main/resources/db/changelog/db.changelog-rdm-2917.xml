@@ -3,11 +3,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-2917" author="fatih.ozceylan@hmcts.net">
-
+        <validCheckSum>8:fb383cf908770c22c17098f72481e929</validCheckSum>
         <!-- START - role table -->
         <!-- create the new role table -->
         <createTable tableName="role">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(255)" >
@@ -83,7 +83,7 @@
         <!-- START - case_field_acl table -->
         <!-- create the new case_field_acl table -->
         <createTable tableName="case_field_acl">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="case_field_id" type="integer">
@@ -182,7 +182,7 @@
         <!-- START - case_type_acl table -->
         <!-- create the new case_type_acl table -->
         <createTable tableName="case_type_acl">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="case_type_id" type="integer">
@@ -280,7 +280,7 @@
         <!-- START - event_acl table -->
         <!-- create the new event_acl table -->
         <createTable tableName="event_acl">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="event_id" type="integer">
@@ -378,7 +378,7 @@
         <!-- START - state_acl table -->
         <!-- create the new state_acl table -->
         <createTable tableName="state_acl">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="state_id" type="integer">
