@@ -135,6 +135,7 @@ public class ImportServiceImpl implements ImportService {
 
         final ParseContext parseContext = new ParseContext();
         parseContext.registerUserRoles(userRoleRepository.findAll());
+        userRoleRepository.testLongQuery();
 
         /*
             1 - Jurisdiction
