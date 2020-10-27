@@ -59,7 +59,7 @@ public class ImportController {
         System.out.println(message +" " + dtf.format(now));
     }
 
-    @Transactional(timeout = 2)
+    @Transactional()
     @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
     public ResponseEntity processUpload(@RequestParam("file") MultipartFile file) throws IOException {
         print("Beginning:");
