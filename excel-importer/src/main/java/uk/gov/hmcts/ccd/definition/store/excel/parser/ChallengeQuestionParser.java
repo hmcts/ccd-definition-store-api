@@ -1,5 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
@@ -11,14 +15,9 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.ChallengeQuestionValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashMap;
-import java.util.Collections;
-import java.util.stream.Collectors;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 @Component
 public class ChallengeQuestionParser {
@@ -36,12 +35,14 @@ public class ChallengeQuestionParser {
         try {
             final List<DefinitionDataItem> questionItems = definitionSheets
                 .get(SheetName.CHALLENGE_QUESTION_TAB.getName()).getDataItems();
-            validateUniqueIds(questionItems);
-            challengeQuestionValidator.setDisplayOrderList(new HashMap<>());
+            challengeQuestionValidator.validate(parseContext, questionItems);
             final List<ChallengeQuestionTabEntity> newChallengeQuestionEntities = questionItems
                 .stream()
                 .map(questionItem -> {
-                    return challengeQuestionValidator.validate(parseContext, questionItem);
+                    ChallengeQuestionTabEntity questionTabEntity =
+                        createChallengeQuestionEntity(parseContext, questionItem);
+                    challengeQuestionValidator.validateDisplayContext(questionTabEntity);
+                    return questionTabEntity;
                 }).collect(Collectors.toList());
             return newChallengeQuestionEntities;
         } catch (InvalidImportException invalidImportException) {
@@ -56,23 +57,34 @@ public class ChallengeQuestionParser {
         }
     }
 
-    private void validateUniqueIds(List<DefinitionDataItem> questionItems) {
-        final List<String> questionsIds = questionItems.stream().map(questionItem -> {
-            return questionItem.getString(ColumnName.CHALLENGE_QUESTION_QUESTION_ID);
-        }).collect(Collectors.toList());
+    public ChallengeQuestionTabEntity createChallengeQuestionEntity(ParseContext parseContext,
+                                                                    DefinitionDataItem definitionDataItem) {
+        final String questionId = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_QUESTION_ID);
+        ChallengeQuestionTabEntity challengeQuestionTabEntity = new ChallengeQuestionTabEntity();
+        challengeQuestionTabEntity.setQuestionId(questionId);
 
-        final Set<String> duplicatedQuestionIds = findDuplicateByFrequency(questionsIds);
-        if (!duplicatedQuestionIds.isEmpty()) {
-            throw new InvalidImportException(ChallengeQuestionValidator.ERROR_MESSAGE + " value: "
-                    + duplicatedQuestionIds.toString() + " is not a valid " + ColumnName.CHALLENGE_QUESTION_QUESTION_ID
-                    + " value, QuestionId cannot be duplicated.");
+        final String caseType = definitionDataItem.getString(ColumnName.CASE_TYPE_ID);
+        Optional<CaseTypeEntity> caseTypeEntityOptional = parseContext.getCaseTypes()
+            .stream()
+            .filter(caseTypeEntity -> caseTypeEntity.getReference().equals(caseType))
+            .findAny();
+        if (caseTypeEntityOptional.isPresent()) {
+            challengeQuestionTabEntity.setCaseType(caseTypeEntityOptional.get());
         }
-    }
 
-    public <T> Set<T> findDuplicateByFrequency(List<T> list) {
+        final String fieldType = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD_TYPE);
+        Optional<FieldTypeEntity> fieldTypeEntity = parseContext.getType(fieldType);
+        if (fieldTypeEntity.isPresent()) {
+            challengeQuestionTabEntity.setAnswerFieldType(fieldTypeEntity.get());
+        }
 
-        return list.stream().filter(i -> Collections.frequency(list, i) > 1)
-                .collect(Collectors.toSet());
-
+        challengeQuestionTabEntity.setChallengeQuestionId(definitionDataItem.getString(ColumnName.ID));
+        challengeQuestionTabEntity.setQuestionText(definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_TEXT));
+        challengeQuestionTabEntity.setOrder(Integer.parseInt(definitionDataItem.getString(ColumnName.DISPLAY_ORDER)));
+        challengeQuestionTabEntity.setAnswerField(definitionDataItem
+            .getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD));
+        challengeQuestionTabEntity.setDisplayContextParameter(definitionDataItem
+            .getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
+        return challengeQuestionTabEntity;
     }
 }

@@ -3,9 +3,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-9338" author="kiran.yenigala@hmcts.net">
-
+        <validCheckSum>8:f5bc6c458eede72de1c23e11efe6913e</validCheckSum>
         <createTable tableName="noc_config">
-            <column name="id" type="serial">
+            <column autoIncrement="true" name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="reasons_required" type="boolean">

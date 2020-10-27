@@ -33,20 +33,17 @@ dependencies {
     }
     compile "commons-beanutils:commons-beanutils:1.9.4"
     compile "org.apache.commons:commons-lang3:3.11"
-    compile ("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}") {
-        exclude group: 'com.google.guava', module: 'guava'
-    }
-    compile ("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}") {
+    compile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
     compile "com.google.guava:guava:28.1-jre"
     compile "javax.validation:validation-api:2.0.1.Final"
     compile "org.hibernate.validator:hibernate-validator:6.0.10.Final"
     compile "org.glassfish:javax.el:3.0.0"
-    compile "org.liquibase:liquibase-core"
+    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.8.9'
     testCompile "org.assertj:assertj-core"
     testCompile project(":commons").sourceSets.main.output
-    compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.3.2'
+    compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.9.13'
 }
 
 pitest {
