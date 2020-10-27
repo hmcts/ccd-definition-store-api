@@ -82,12 +82,12 @@ public class CaseTypeLiteRepositoryTest {
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertTrue(caseTypeEntityOptional.size() == 2);
 
-        CaseTypeLiteEntity caseTypeLite1 = caseTypeEntityOptional.get(0);
+        CaseTypeLiteEntity caseTypeLite1 = caseTypeEntityOptional.get(1);
         assertEquals(3, caseTypeLite1.getVersion().intValue());
         assertEquals("Test case", caseTypeLite1.getName());
         assertEquals("Some case type", caseTypeLite1.getDescription());
 
-        CaseTypeLiteEntity caseTypeLite2 = caseTypeEntityOptional.get(1);
+        CaseTypeLiteEntity caseTypeLite2 = caseTypeEntityOptional.get(0);
         assertEquals(2, caseTypeLite2.getVersion().intValue());
         assertEquals("Test case 2", caseTypeLite2.getName());
         assertEquals("Another case type", caseTypeLite2.getDescription());
