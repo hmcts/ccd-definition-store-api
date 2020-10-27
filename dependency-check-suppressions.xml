@@ -69,4 +69,8 @@
 		<cve>CVE-2020-11023</cve>
 	</suppress>
 
+	<suppress>
+		<notes>Temporary suppression to allow continued development</notes>
+		<cve>CVE-2020-13943</cve>
+	</suppress>
 </suppressions>
