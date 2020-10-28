@@ -78,7 +78,6 @@ public class ImportController {
                 for (String warning : importService.getImportWarnings()) {
                     LOG.warn(warning);
                 }
-
                 return ResponseEntity.status(HttpStatus.CREATED)
                     .header(IMPORT_WARNINGS_HEADER, importService.getImportWarnings().toArray(new String[0]))
                     .body(responseBody);
