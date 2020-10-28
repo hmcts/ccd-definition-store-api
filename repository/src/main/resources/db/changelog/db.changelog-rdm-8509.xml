@@ -3,9 +3,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-8509" author="rebecca.baker@hmcts.net">
-        <validCheckSum>8:5b04f14a50ccb26edf8be115d5e1159d</validCheckSum>
         <createTable tableName="search_cases_result_fields">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >

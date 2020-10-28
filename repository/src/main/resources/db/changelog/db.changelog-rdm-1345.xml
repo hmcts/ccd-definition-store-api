@@ -3,9 +3,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-1345" author="fatih.ozceylan@hmcts.net">
-        <validCheckSum>8:2ebe550aaeefec07e826e9b8115182e8</validCheckSum>
+
         <createTable tableName="workbasket_input_case_field">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date">

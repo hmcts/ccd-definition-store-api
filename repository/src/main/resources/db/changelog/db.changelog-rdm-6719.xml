@@ -3,9 +3,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-6719" author="kiran.yenigala@hmcts.net">
-        <validCheckSum>8:da90a716443274c7445bb8d849e7567c</validCheckSum>
+
         <createTable tableName="banner">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="banner_enabled" type="boolean">

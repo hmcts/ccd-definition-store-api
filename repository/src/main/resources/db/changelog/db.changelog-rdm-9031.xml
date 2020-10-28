@@ -6,7 +6,7 @@
         <validCheckSum>8:26c77c3c08dbfe1fc07827f01ba96610</validCheckSum>
         <createTable tableName="challenge_question">
 
-            <column autoIncrement="true" name="id"  type="serial" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
 

@@ -5,9 +5,9 @@
     <property name="now" value="now()" dbms="postgresql"/>
 
     <changeSet id="5" author="ccd@hmcts.net">
-        <validCheckSum>8:07b4af77ceb0fd4b7e8b5e2a9d78b3c8</validCheckSum>
+
         <createTable tableName="jurisdiction">
-            <column autoIncrement="true" name="id"  type="serial" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="created_at"  type="datetime" >
@@ -42,7 +42,7 @@
                              tableName="jurisdiction"/>
 
         <createTable tableName="field_type">
-            <column autoIncrement="true" name="id"  type="serial" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="created_at"  type="datetime" >
@@ -101,7 +101,7 @@
                              tableName="field_type"/>
 
         <createTable tableName="complex_field">
-            <column autoIncrement="true" name="id"  type="serial" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(40)" >
@@ -146,7 +146,7 @@
                              tableName="complex_field"/>
 
         <createTable tableName="field_type_list_item">
-            <column autoIncrement="true" name="id"  type="serial" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="value"  type="varchar(40)" >
@@ -171,7 +171,7 @@
                                  referencedTableName="field_type"/>
 
         <createTable tableName="webhook">
-            <column autoIncrement="true" name="id"  type="serial">
+            <column name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="url"  type="text">
@@ -202,7 +202,7 @@
                                  referencedTableName="webhook"/>
 
         <createTable tableName="case_type">
-            <column autoIncrement="true" name="id"  type="serial" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="created_at"  type="datetime" >
@@ -255,7 +255,7 @@
                              tableName="case_type"/>
 
         <createTable tableName="case_field">
-            <column autoIncrement="true" name="id"  type="serial" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(40)" >
@@ -306,7 +306,7 @@
                              tableName="case_field"/>
 
         <createTable tableName="state">
-            <column autoIncrement="true" name="id"  type="serial">
+            <column name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(100)" >
@@ -347,7 +347,7 @@
                              tableName="state"/>
 
         <createTable tableName="event">
-            <column autoIncrement="true" name="id"  type="serial" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
             <column name="reference"  type="varchar(40)" >
@@ -452,7 +452,7 @@
                                  referencedTableName="state"/>
 
         <createTable tableName="event_case_field">
-            <column autoIncrement="true" name="id"  type="serial">
+            <column name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="event_id"  type="integer">
@@ -490,7 +490,7 @@
                              tableName="event_case_field"/>
 
         <createTable tableName="workbasket_case_field">
-            <column autoIncrement="true" name="id"  type="serial">
+            <column name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >
@@ -534,7 +534,7 @@
                              tableName="workbasket_case_field"/>
 
         <createTable tableName="search_input_case_field">
-            <column autoIncrement="true" name="id"  type="serial">
+            <column name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >
@@ -578,7 +578,7 @@
                              tableName="search_input_case_field"/>
 
         <createTable tableName="search_result_case_field">
-            <column autoIncrement="true" name="id"  type="serial">
+            <column name="id"  type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >
@@ -622,7 +622,7 @@
                              tableName="search_result_case_field"/>
 
         <createTable tableName="display_group">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="reference" type="varchar(40)" >
@@ -668,7 +668,7 @@
                              tableName="display_group"/>
 
         <createTable tableName="display_group_case_field">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="live_from" type="date" >
