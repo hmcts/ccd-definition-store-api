@@ -6,7 +6,7 @@
 
         <createTable tableName="challenge_question">
 
-            <column autoIncrement="true" name="id"  type="serial" >
+            <column name="id"  type="serial" >
                 <constraints nullable="false"/>
             </column>
 

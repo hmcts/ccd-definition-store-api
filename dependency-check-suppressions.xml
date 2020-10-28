@@ -10,8 +10,8 @@
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
-	<!-- !!!!!!! This suppression should not be removed until the elastic search 
-		client is updated to 7. Before updating the elastic client make sure that 
+	<!-- !!!!!!! This suppression should not be removed until the elastic search
+		client is updated to 7. Before updating the elastic client make sure that
 		the server has been updated to 7 !!!!! -->
 	<suppress>
 		<notes><![CDATA[
@@ -67,6 +67,7 @@
 		<cve>CVE-2019-11358</cve>
 		<cve>CVE-2020-11022</cve>
 		<cve>CVE-2020-11023</cve>
+		<cve>CVE-2020-13943</cve>
 	</suppress>
 
 </suppressions>
