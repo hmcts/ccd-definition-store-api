@@ -22,8 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.URI_IMPORT;
 
@@ -52,17 +50,9 @@ public class ImportController {
         this.azureStorageConfiguration = azureStorageConfiguration;
     }
 
-    private void print(String message){
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        System.out.println(message +" " + dtf.format(now));
-    }
-
     @Transactional
     @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
     public ResponseEntity processUpload(@RequestParam("file") MultipartFile file) throws IOException {
-        print("Beginning:");
         if (file == null || file.getSize() == 0) {
             throw new IOException("No file present or file has zero length");
         } else {
@@ -88,12 +78,12 @@ public class ImportController {
                 for (String warning : importService.getImportWarnings()) {
                     LOG.warn(warning);
                 }
-                print("Ending:");
+
                 return ResponseEntity.status(HttpStatus.CREATED)
                     .header(IMPORT_WARNINGS_HEADER, importService.getImportWarnings().toArray(new String[0]))
                     .body(responseBody);
             }
-            print("Ending:");
+
             return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
         }
     }

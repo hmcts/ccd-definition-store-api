@@ -46,10 +46,12 @@ class ApplicationConfiguration {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf,@Value("${ccd.tx-timeouts.default}") String timeout) {
+    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf,
+                                                         @Value("${ccd.tx-timeouts.default}") String timeout) {
         final CustomTransactionManager transactionManager = new CustomTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
-        transactionManager.configureTxTimeout(ImportController.class, "processUpload", Integer.parseInt(timeout));
+        transactionManager.configureTxTimeout(
+            ImportController.class, "processUpload", Integer.parseInt(timeout));
         return transactionManager;
     }
 }
