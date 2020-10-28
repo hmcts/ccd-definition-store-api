@@ -18,4 +18,9 @@ public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Intege
         value = "SELECT * FROM role r WHERE r.dtype='USERROLE'",
         nativeQuery = true)
     List<UserRoleEntity> findAll();
+
+    @Query(
+        value = "SELECT * FROM role r, pg_sleep(5) WHERE r.dtype='USERROLE'",
+        nativeQuery = true)
+    List<UserRoleEntity> testLongQuery();
 }
