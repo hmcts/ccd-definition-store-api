@@ -385,6 +385,10 @@
 							"label": null,
 							"hint_text": null,
 							"case_fields_complex": [
+                {
+                  "__ordering__": "unordered",
+                  "__elementId__": "reference,order"
+                },
 								{
 									"reference": "OrganisationToAdd.OrganisationID",
 									"hint": null,
