@@ -64,6 +64,9 @@ public class EventComplexTypeEntity implements Serializable {
     @JoinColumn(name = "event_case_field_id", nullable = false)
     private EventCaseFieldEntity complexFieldType;
 
+    @Column(name = "retain_hidden_value")
+    private Boolean retainHiddenValue;
+
     public String getReference() {
         return reference;
     }
@@ -144,4 +147,11 @@ public class EventComplexTypeEntity implements Serializable {
         this.defaultValue = defaultValue;
     }
 
+    public Boolean getRetainHiddenValue() {
+        return retainHiddenValue;
+    }
+
+    public void setRetainHiddenValue(Boolean retainHiddenValue) {
+        this.retainHiddenValue = retainHiddenValue;
+    }
 }

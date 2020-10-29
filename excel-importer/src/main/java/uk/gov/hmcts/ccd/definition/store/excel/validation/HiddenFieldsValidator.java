@@ -102,6 +102,40 @@ public class HiddenFieldsValidator {
         }
     }
 
+    public Boolean parseCaseEventComplexTypesHiddenFields(DefinitionDataItem definitionDataItem,
+                                                          Map<String, DefinitionSheet> definitionSheets) {
+        if (definitionDataItem.getFieldShowCondition() != null
+            && definitionDataItem.getRetainHiddenValue() != null) {
+            verifyEventFieldHasRetainHiddenValue(definitionDataItem,
+                definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName()));
+        }
+
+        return definitionDataItem.getRetainHiddenValue();
+    }
+
+
+    private void verifyEventFieldHasRetainHiddenValue(DefinitionDataItem definitionDataItem,
+                                                 DefinitionSheet caseEventToFieldsSheet) {
+        List<DefinitionDataItem> caseEventToFields = caseEventToFieldsSheet.getDataItems().stream()
+            .filter(caseEventToField -> caseEventToField.getCaseFieldId()
+                .equals(definitionDataItem.getCaseFieldId()) && caseEventToField.getCaseEventId()
+                .equals(definitionDataItem.getCaseEventId())).collect(toList());
+
+        boolean showConditionConfigured = caseEventToFields.stream().noneMatch(ddi ->
+            ddi.getFieldShowCondition() == null);
+
+        if (!showConditionConfigured) {
+            throw new MapperException(String.format("'retainHiddenValue' on CaseEventToComplexTypes can only be "
+                    + "configured for a field that uses a showCondition. Field ['%s'] on ['%s'] "
+                    + "does not use a showCondition",
+                definitionDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
+        }
+    }
+
+    private Boolean isShowConditionPopulated(String fieldShowCondition, DefinitionDataItem definitionDataItem) {
+        return (fieldShowCondition == null && Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue()));
+    }
+
     private boolean isAtLeastOneCaseEventToFieldsConfigured(List<DefinitionDataItem> caseEventToFieldList,
                                                             DefinitionDataItem definitionDataItem) {
         boolean match;

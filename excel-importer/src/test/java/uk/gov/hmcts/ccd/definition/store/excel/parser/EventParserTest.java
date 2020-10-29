@@ -19,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -57,6 +58,9 @@ public class EventParserTest extends ParserTestBase {
 
     @Mock
     private EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser;
+
+    @Mock
+    private HiddenFieldsValidator hiddenFieldsValidator;
 
     @Mock
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
@@ -243,13 +247,12 @@ public class EventParserTest extends ParserTestBase {
         when(eventCaseFieldParser.parseEventCaseField(any(), any())).thenReturn(eventCaseFieldEntity);
 
         EventComplexTypeEntity eventComplexTypeEntityMock = mock(EventComplexTypeEntity.class);
-        when(eventCaseFieldComplexTypeParser.parseEventCaseFieldComplexType(any()))
+        when(eventCaseFieldComplexTypeParser.parseEventCaseFieldComplexType(any(), any()))
             .thenReturn(Arrays.asList(eventComplexTypeEntityMock));
 
         final Collection<EventEntity> events = eventParser.parseAll(definitionSheets, caseType);
-
         verify(eventCaseFieldComplexTypeParser)
-            .parseEventCaseFieldComplexType(singletonList(caseEventToComplexTypesDataItem));
+            .parseEventCaseFieldComplexType(singletonList(caseEventToComplexTypesDataItem), definitionSheets);
 
         assertThat(events.size(), is(1));
         entity = new ArrayList<>(events).get(0);
