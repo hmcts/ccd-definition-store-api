@@ -20,8 +20,7 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
+                                "ignore_above": 256
                             }
                         }
                     },
@@ -42,8 +41,7 @@
                                         "fields": {
                                             "keyword": {
                                                 "type": "keyword",
-                                                "ignore_above": 256,
-                                                "normalizer": "lowercase_normalizer"
+                                                "ignore_above": 256
                                             }
                                         }
                                     }
@@ -66,8 +64,7 @@
                                                 "fields": {
                                                     "keyword": {
                                                         "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
+                                                        "ignore_above": 256
                                                     }
                                                 }
                                             },
@@ -76,8 +73,7 @@
                                                 "fields": {
                                                     "keyword": {
                                                         "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
+                                                        "ignore_above": 256
                                                     }
                                                 }
                                             }
@@ -98,8 +94,7 @@
                                                 "fields": {
                                                     "keyword": {
                                                         "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
+                                                        "ignore_above": 256
                                                     }
                                                 }
                                             },
@@ -108,8 +103,7 @@
                                                 "fields": {
                                                     "keyword": {
                                                         "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
+                                                        "ignore_above": 256
                                                     }
                                                 }
                                             }
@@ -142,8 +136,7 @@
                                                 "fields": {
                                                     "keyword": {
                                                         "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
+                                                        "ignore_above": 256
                                                     }
                                                 }
                                             }
@@ -164,8 +157,7 @@
                                                 "fields": {
                                                     "keyword": {
                                                         "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
+                                                        "ignore_above": 256
                                                     }
                                                 }
                                             },
@@ -186,8 +178,7 @@
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
-                                        "ignore_above": 256,
-                                        "normalizer": "lowercase_normalizer"
+                                        "ignore_above": 256
                                     }
                                 }
                             }
@@ -360,8 +351,7 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
+                                "ignore_above": 256
                             }
                         }
                     },
@@ -378,22 +368,19 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
+                                "ignore_above": 256
                             }
                         }
                     },
                     "security_classification": {
-                        "type": "keyword",
-                        "normalizer": "lowercase_normalizer"
+                        "type": "keyword"
                     },
                     "state": {
                         "type": "text",
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
+                                "ignore_above": 256
                             }
                         }
                     }
@@ -425,16 +412,6 @@
                             ],
                             "type": "custom",
                             "tokenizer": "keyword"
-                        }
-                    },
-                    "normalizer": {
-                        "lowercase_normalizer": {
-                            "type": "custom",
-                            "char_filter": [],
-                            "filter": [
-                                "lowercase",
-                                "asciifolding"
-                            ]
                         }
                     }
                 },

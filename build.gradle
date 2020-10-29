@@ -22,7 +22,7 @@ plugins {
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
     id "info.solidsoft.pitest" version '1.4.0' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
-    id 'uk.gov.hmcts.java' version '0.11.0'
+    id 'uk.gov.hmcts.java' version '0.12.0'
 }
 
 apply plugin: 'java'
@@ -36,12 +36,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'se.patrikerdes.use-latest-versions'
-apply plugin: 'pmd'
 apply from: 'liquibase.gradle'
-
-pmd {
-    toolVersion = '6.11.0'
-}
 
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
@@ -267,7 +262,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.14.1'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.15.1'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
