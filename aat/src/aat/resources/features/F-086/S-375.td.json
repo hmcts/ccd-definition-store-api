@@ -127,13 +127,8 @@
               "page_column_no": null,
               "complex_field_overrides": [
                 {
-                  "complex_field_element_id": "OrganisationPolicyField1.OrgPolicyReference",
-                  "display_context": "OPTIONAL",
-                  "label": null,
-                  "hint_text": null,
-                  "show_condition": null,
-                  "default_value": null,
-                  "retain_hidden_value": null
+                  "__ordering__": "unordered",
+                  "__elementId__": "complex_field_element_id"
                 },
                 {
                   "complex_field_element_id": "OrganisationPolicyField1.Organisation.OrganisationID",
@@ -161,6 +156,15 @@
                   "show_condition": null,
                   "default_value": "[Claimant]",
                   "retain_hidden_value": null
+                },
+                {
+                  "complex_field_element_id": "OrganisationPolicyField1.OrgPolicyReference",
+                  "display_context": "OPTIONAL",
+                  "label": null,
+                  "hint_text": null,
+                  "show_condition": null,
+                  "default_value": null,
+                  "retain_hidden_value": null
                 }
               ]
             },
@@ -169,6 +173,10 @@
               "order": 1,
               "page_column_no": null,
               "complex_field_overrides": [
+                {
+                  "__ordering__": "unordered",
+                  "__elementId__": "complex_field_element_id"
+                },
                 {
                   "complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationID",
                   "display_context": "OPTIONAL",
