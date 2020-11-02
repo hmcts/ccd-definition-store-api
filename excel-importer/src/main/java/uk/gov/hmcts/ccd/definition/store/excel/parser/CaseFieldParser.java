@@ -76,6 +76,7 @@ public class CaseFieldParser {
         caseField.setHint(caseFieldDefinition.getString(ColumnName.HINT_TEXT));
         caseField.setLiveFrom(caseFieldDefinition.getLocalDate(ColumnName.LIVE_FROM));
         caseField.setLiveTo(caseFieldDefinition.getLocalDate(ColumnName.LIVE_TO));
+        caseField.setSearchable(caseFieldDefinition.getBooleanOrDefault(ColumnName.SEARCHABLE, true));
 
         return caseField;
     }

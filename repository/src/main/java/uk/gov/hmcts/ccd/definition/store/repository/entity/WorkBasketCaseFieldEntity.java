@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
+
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -22,5 +24,10 @@ public class WorkBasketCaseFieldEntity extends GenericLayoutEntity {
     @Override
     public String getSheetName() {
         return "WorkBasketResultFields";
+    }
+
+    @Override
+    public LayoutSheetType getLayoutSheetType() {
+        return LayoutSheetType.RESULT;
     }
 }
