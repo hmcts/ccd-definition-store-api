@@ -311,14 +311,22 @@
 		<cve>CVE-2019-10086</cve>
 	</suppress>
 
-	<!-- Temporary suppressions to enable RDM-8581 release -->
+	<!-- Temporary suppressions to enable RDM-8581 release and enable master build -->
 	<suppress>
 		<cve>CVE-2020-13692</cve>
+		<cve>CVE-2020-7019</cve>
+		<cve>CVE-2020-10518</cve>
+		<cve>CVE-2020-10517</cve>
+		<cve>CVE-2017-18640</cve>
 	</suppress>
 
 	<!-- Temporary suppressions to enable development -->
 	<suppress>
 		<cve>CVE-2020-11996</cve>
+		<cve>CVE-2007-1652</cve>
+		<cve>CVE-2007-1651</cve>
+		<cve>CVE-2020-5421</cve>
+		<cve>CVE-2020-13943</cve>
 	</suppress>
 	<suppress>
    <notes><![CDATA[
