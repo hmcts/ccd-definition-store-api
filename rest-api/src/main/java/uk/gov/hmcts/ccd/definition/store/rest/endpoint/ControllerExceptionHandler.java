@@ -75,7 +75,7 @@ class ControllerExceptionHandler {
     @ResponseBody
     Map<String, String> elasticSearchInitialisationException(ElasticSearchInitialisationException e) {
         LOG.error("ElasticSearch initialisation exception", e);
-        return getMessage(e, "ElasticSearch initialisation exception:%s");
+        return getMessage(e, "ElasticSearch initialisation exception: %s");
     }
 
 
