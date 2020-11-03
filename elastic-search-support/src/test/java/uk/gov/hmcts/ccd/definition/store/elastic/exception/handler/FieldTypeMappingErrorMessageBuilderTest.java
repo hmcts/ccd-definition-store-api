@@ -30,8 +30,9 @@ class FieldTypeMappingErrorMessageBuilderTest {
         String result = messageBuilder.doBuildMessage(error);
 
         assertAll(
-            () -> assertThat(result, is("Field 'data.FieldName' in case type 'CaseTypeId' does not match the field type of the field with "
-                + "this id in the previous definition version. Please check the field type change is intended and request an Elasticsearch reindex. "
+            () -> assertThat(result, is("Field 'data.FieldName' in case type 'CaseTypeId' does not match the field "
+                + "type of the field with this id in the previous definition version. Please check the field type "
+                + "change is intended and request an Elasticsearch reindex. "
                 + "Previous Elasticsearch type was 'date', new type is 'keyword'."))
         );
     }
@@ -43,8 +44,9 @@ class FieldTypeMappingErrorMessageBuilderTest {
         String result = messageBuilder.doBuildMessage(error);
 
         assertAll(
-            () -> assertThat(result, is("Field 'data_classification.FieldName' in case type 'CaseTypeId' does not match the field type of the field with "
-                + "this id in the previous definition version. Please check the field type change is intended and request an Elasticsearch reindex. "
+            () -> assertThat(result, is("Field 'data_classification.FieldName' in case type 'CaseTypeId' does not "
+                + "match the field type of the field with this id in the previous definition version. Please check the "
+                + "field type change is intended and request an Elasticsearch reindex. "
                 + "Previous Elasticsearch type was 'date', new type is 'keyword'."))
         );
     }
@@ -56,15 +58,17 @@ class FieldTypeMappingErrorMessageBuilderTest {
         String result = messageBuilder.doBuildMessage(error);
 
         assertAll(
-            () -> assertThat(result, is("Field 'security_classification' in case type 'CaseTypeId' does not match the expected Elasticsearch type. "
-            + "Please request an Elasticsearch reindex for this case type. Previous Elasticsearch type was 'text', new type is 'keyword'."))
+            () -> assertThat(result, is("Field 'security_classification' in case type 'CaseTypeId' does not "
+                + "match the expected Elasticsearch type. Please request an Elasticsearch reindex for this case type. "
+                + "Previous Elasticsearch type was 'text', new type is 'keyword'."))
         );
     }
 
     private ElasticsearchError createNativeEsError(String mapperName, String currentType, String mergedType) {
         return new ElasticsearchError(
             new ElasticsearchStatusException(String.format("Elasticsearch exception [type=illegal_argument_exception, "
-            + "reason=mapper [%s] of different type, current_type [%s], merged_type [%s]]", mapperName, currentType, mergedType), RestStatus.BAD_REQUEST),
+            + "reason=mapper [%s] of different type, current_type [%s], merged_type [%s]]",
+                mapperName, currentType, mergedType), RestStatus.BAD_REQUEST),
             caseType);
     }
 }
