@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
 @Getter
 public class ElasticsearchError {
 
-    private static final Pattern MESSAGE_PATTERN = Pattern.compile("Elasticsearch exception \\[type=(.*), reason=(.*)\\.*]");
+    private static final Pattern MESSAGE_PATTERN
+        = Pattern.compile("Elasticsearch exception \\[type=(.*), reason=(.*)\\.*]");
 
     private ElasticsearchStatusException exception;
     private CaseTypeEntity caseType;
@@ -19,7 +20,8 @@ public class ElasticsearchError {
     private String errorType;
     private String reason;
 
-    private ElasticsearchError() { }
+    private ElasticsearchError() {
+    }
 
     public ElasticsearchError(@NonNull ElasticsearchStatusException exception, @NonNull CaseTypeEntity caseType) {
         initValues(exception, caseType);

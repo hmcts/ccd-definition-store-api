@@ -16,7 +16,8 @@ class ElasticsearchErrorTest {
     @Test
     void shouldCreateErrorObjectWithAllValues() {
         ElasticsearchStatusException exception =
-            new ElasticsearchStatusException("Elasticsearch exception [type=TYPE, reason=REASON]", RestStatus.BAD_REQUEST);
+            new ElasticsearchStatusException("Elasticsearch exception [type=TYPE, reason=REASON]",
+                RestStatus.BAD_REQUEST);
         CaseTypeEntity caseType = new CaseTypeBuilder().withReference("CaseTypeId").build();
 
         ElasticsearchError result = new ElasticsearchError(exception, caseType);

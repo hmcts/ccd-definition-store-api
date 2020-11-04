@@ -9,7 +9,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 class ElasticsearchErrorMessageBuilderTest {
 
@@ -41,7 +43,8 @@ class ElasticsearchErrorMessageBuilderTest {
             () -> messageBuilder.doBuildMessage(error));
 
         assertAll(
-            () -> assertThat(exception.getMessage(), is("This error message builder does not support errors with the provided reason 'INVALID'."))
+            () -> assertThat(exception.getMessage(),
+                is("This error message builder does not support errors with the provided reason 'INVALID'."))
         );
     }
 
@@ -69,7 +72,8 @@ class ElasticsearchErrorMessageBuilderTest {
 
     private ElasticsearchError elasticsearchError(String reason) {
         return new ElasticsearchError(
-            new ElasticsearchStatusException("Elasticsearch exception [type=TYPE, reason=" + reason + "]", RestStatus.BAD_REQUEST),
+            new ElasticsearchStatusException("Elasticsearch exception [type=TYPE, reason=" + reason + "]",
+                RestStatus.BAD_REQUEST),
             caseTypeEntity);
     }
 }

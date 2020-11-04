@@ -16,7 +16,8 @@ public abstract class ElasticsearchErrorMessageBuilder {
     public final String doBuildMessage(ElasticsearchError error) {
         if (!canHandleError(error)) {
             throw new IllegalArgumentException(
-                String.format("This error message builder does not support errors with the provided reason '%s'.", error.getReason()));
+                String.format("This error message builder does not support errors with the provided reason '%s'.",
+                    error.getReason()));
         }
 
         return buildMessage(error);
