@@ -82,19 +82,19 @@ public class CaseTypeLiteRepositoryTest {
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertTrue(caseTypeEntityOptional.size() == 2);
 
-        CaseTypeLiteEntity caseTypeLite1 = caseTypeEntityOptional.get(1);
-        assertEquals(3, caseTypeLite1.getVersion().intValue());
-        assertEquals("Test case", caseTypeLite1.getName());
-        assertEquals("Some case type", caseTypeLite1.getDescription());
+        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx1 = caseTypeEntityOptional.get(1);
+        assertEquals(3, caseTypeJurisdictionIdVersionReferenceIdx1.getVersion().intValue());
+        assertEquals("Test case", caseTypeJurisdictionIdVersionReferenceIdx1.getName());
+        assertEquals("Some case type", caseTypeJurisdictionIdVersionReferenceIdx1.getDescription());
 
-        CaseTypeLiteEntity caseTypeLite2 = caseTypeEntityOptional.get(0);
-        assertEquals(2, caseTypeLite2.getVersion().intValue());
-        assertEquals("Test case 2", caseTypeLite2.getName());
-        assertEquals("Another case type", caseTypeLite2.getDescription());
-        assertEquals(1, caseTypeLite2.getStates().size());
-        assertEquals("s1", caseTypeLite2.getStates().get(0).getReference());
-        assertEquals("State 1", caseTypeLite2.getStates().get(0).getName());
-        assertEquals("A description", caseTypeLite2.getStates().get(0).getDescription());
+        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx2 = caseTypeEntityOptional.get(0);
+        assertEquals(2, caseTypeJurisdictionIdVersionReferenceIdx2.getVersion().intValue());
+        assertEquals("Test case 2", caseTypeJurisdictionIdVersionReferenceIdx2.getName());
+        assertEquals("Another case type", caseTypeJurisdictionIdVersionReferenceIdx2.getDescription());
+        assertEquals(1, caseTypeJurisdictionIdVersionReferenceIdx2.getStates().size());
+        assertEquals("s1", caseTypeJurisdictionIdVersionReferenceIdx2.getStates().get(0).getReference());
+        assertEquals("State 1", caseTypeJurisdictionIdVersionReferenceIdx2.getStates().get(0).getName());
+        assertEquals("A description", caseTypeJurisdictionIdVersionReferenceIdx2.getStates().get(0).getDescription());
     }
 
     @Test
