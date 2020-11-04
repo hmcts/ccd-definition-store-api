@@ -21,6 +21,7 @@ public class CaseTypeValidationException extends RuntimeException {
 
     /**
      * Get list of errors.
+     *
      * @return the list of errors
      */
     public Set<String> getErrors() {

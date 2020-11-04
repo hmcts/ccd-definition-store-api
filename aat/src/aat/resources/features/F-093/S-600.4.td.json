@@ -1,0 +1,34 @@
+{
+  "_guid_": "S-600.4",
+  "_extends_": "F-093_Test_Base_data",
+  "title": "must fail to import definition file",
+  "specs": [
+    "contains configuration on the 'retainHiddenValue' column for a field that does not contain a showCondition",
+    "provides a clear validation message describing why the definition import has failed, for example, retainHiddenValue  can only be configured for a field that uses a showCondition. Field [FieldID] on [TabName] does not use a showCondition",
+    "contains configuration for a 'complexField' is configured with \"retainHiddenValue\" to \"No\" and some of those subfields are configured with \"retainHiddenValue\" to \"Yes\"]",
+    "contains configuration for a 'complexField' configured with a show condition, and with some of its subfields configured with show conditions",
+    "contains configuration for a 'complexField' is configured with \"retainHiddenValue\" to \"No\" and some of those subfields are configured with \"retainHiddenValue\" to \"Yes\""
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid_retain_hidden_for_subfields_of_complex_type.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "'retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['AddressField'] on ['CaseEventToFields']"
+    }
+  }
+}

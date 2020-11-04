@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.not;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {CaseDataAPIApplication.class},
-                webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 0)
 @TestPropertySource(locations = "classpath:integration_tests.properties")
 abstract class IntegrationTest {
@@ -50,6 +50,7 @@ abstract class IntegrationTest {
     @Autowired
     protected TestRestTemplate restTemplate;
 
+    @SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
     @TestConfiguration
     static class Configuration extends ContextCleanupListener {
 

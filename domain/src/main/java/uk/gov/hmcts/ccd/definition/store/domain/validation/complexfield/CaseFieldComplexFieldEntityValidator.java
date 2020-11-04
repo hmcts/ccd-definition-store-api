@@ -1,9 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import uk.gov.hmcts.ccd.definition.store.domain.validation.*;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.List;
 

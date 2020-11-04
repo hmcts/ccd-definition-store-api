@@ -112,8 +112,8 @@ public class CaseFieldEntityUtilTest {
                 complexFieldEntity("LastNameWithSomeCplxFields", fieldTypeEntity("FullName1",
                     asList(
                         complexFieldEntity("LastName", fieldTypeEntity("Text", emptyList()))
-                          )))
-                  ));
+                    )))
+            ));
     }
 
     private static CaseFieldEntity caseFieldEntity(String reference, FieldTypeEntity fieldTypeEntity) {

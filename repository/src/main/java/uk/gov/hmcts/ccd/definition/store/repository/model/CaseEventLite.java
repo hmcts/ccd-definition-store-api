@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A "lite" version of the {@link CaseEvent} class that contains selected Event fields (id, name, and description) for

@@ -25,8 +25,11 @@ import java.util.Collection;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
@@ -81,13 +84,16 @@ public class CaseTypeEntityEventValidatorImplTest {
 
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void caseFields1And3AreInvalid_allValidatorsCalledWithContextBuiltFromCaseType_ValidationResultWithErrorsForCaseFieldEntity1And3Returned() {
 
         when(eventEntityValidator1.validate(eq(eventEntity1), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("eventEntityValidator1 failed for eventEntity1")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "eventEntityValidator1 failed for eventEntity1")));
         when(eventEntityValidator2.validate(eq(eventEntity3), any()))
-            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage("eventEntityValidator3 failed for eventEntity3")));
+            .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(
+                "eventEntityValidator3 failed for eventEntity3")));
 
         ValidationResult validationResult = classUnderTest.validate(caseType);
 
@@ -142,19 +148,21 @@ public class CaseTypeEntityEventValidatorImplTest {
         );
     }
 
-    private <T> Matcher<T> matchesEventEntityValidationContext(String caseTypeName, SecurityClassification securityClassification) {
+    private <T> Matcher<T> matchesEventEntityValidationContext(String caseTypeName,
+                                                               SecurityClassification securityClassification) {
         return new BaseMatcher<T>() {
             @Override
             public boolean matches(Object o) {
                 return o instanceof EventEntityValidationContext
                     && ((EventEntityValidationContext) o).getCaseName() == caseTypeName
-                        && ((EventEntityValidationContext) o).getParentSecurityClassification() == securityClassification;
+                    && ((EventEntityValidationContext) o).getParentSecurityClassification() == securityClassification;
             }
 
             @Override
             public void describeTo(Description description) {
                 description.appendText(
-                    " a EventEntityValidationContext containing the reference to the Case Type Name and SecurityClassification of the CaseType");
+                    " a EventEntityValidationContext containing the reference to the Case Type Name "
+                        + "and SecurityClassification of the CaseType");
             }
         };
     }

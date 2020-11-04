@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Map;
-
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+
+import java.util.Map;
 
 public class FieldsTypeParser {
 

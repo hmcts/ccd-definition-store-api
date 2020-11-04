@@ -50,7 +50,7 @@ public class ProxyController {
     @SuppressWarnings("squid:S1313")
     private HttpClientConnectionManager createHttpClientConnectionManager() {
 
-        Map<String,String> hostToIp = new HashMap<>();
+        Map<String, String> hostToIp = new HashMap<>();
         hostToIp.put("ccd-user-profile-api-nonprod.service.core-compute-nonprod.internal", "51.140.33.54");
 
         return new PoolingHttpClientConnectionManager(
@@ -66,7 +66,7 @@ public class ProxyController {
                     if (hostToIp.containsKey(host)) {
                         String ip = hostToIp.get(host);
                         LOG.info(String.format("Resolved %s to %s internally", host, ip));
-                        return new InetAddress[]{InetAddress.getByName(ip)};
+                        return new InetAddress[] {InetAddress.getByName(ip)};
                     } else {
                         try {
                             return super.resolve(host);

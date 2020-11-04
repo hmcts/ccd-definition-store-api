@@ -17,7 +17,7 @@ public class ComplexFieldEntitySecurityClassificationValidatorImpl implements Ca
 
         if (complexField.getSecurityClassification() == null) {
             validationResult.addError(
-                 new ComplexFieldEntityMissingSecurityClassificationValidationError(complexField)
+                new ComplexFieldEntityMissingSecurityClassificationValidationError(complexField)
             );
         }
 
@@ -38,10 +38,11 @@ public class ComplexFieldEntitySecurityClassificationValidatorImpl implements Ca
         SecurityClassification parentSecurityClassification = validationContext.getParentSecurityClassification();
 
         if (isNotPredefinedComplexType(complexField, validationContext.getPreDefinedComplexTypes())
-                && parentSecurityClassification != null
-                    && parentSecurityClassification.isMoreRestrictiveThan(complexField.getSecurityClassification())) {
+            && parentSecurityClassification != null
+            && parentSecurityClassification.isMoreRestrictiveThan(complexField.getSecurityClassification())) {
             validationResult.addError(
-                new ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(complexField, validationContext)
+                new ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError(
+                    complexField, validationContext)
             );
         }
 
@@ -49,9 +50,10 @@ public class ComplexFieldEntitySecurityClassificationValidatorImpl implements Ca
 
     }
 
-    private boolean isNotPredefinedComplexType(ComplexFieldEntity complexField, List<FieldTypeEntity> predefinedComplexTypes) {
+    private boolean isNotPredefinedComplexType(ComplexFieldEntity complexField,
+                                               List<FieldTypeEntity> predefinedComplexTypes) {
         return complexField.getComplexFieldType() == null
             || !predefinedComplexTypes.stream().map(FieldTypeEntity::getReference)
-                .collect(Collectors.toList()).contains(complexField.getComplexFieldType().getReference());
+            .collect(Collectors.toList()).contains(complexField.getComplexFieldType().getReference());
     }
 }

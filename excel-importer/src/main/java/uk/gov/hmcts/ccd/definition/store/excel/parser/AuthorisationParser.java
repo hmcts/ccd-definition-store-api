@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -11,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
 
 import static java.util.stream.Collectors.groupingBy;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
@@ -46,14 +45,17 @@ interface AuthorisationParser {
         entity.setDelete(crudUpperCase.contains("D"));
     }
 
-    default void validateCaseTypes(Map<String, DefinitionSheet> definitionSheets, Map<String, List<DefinitionDataItem>> dataItemMap) {
-        final Map<String, List<DefinitionDataItem>> caseTypeItems = definitionSheets.get(CASE_TYPE.getName()).groupDataItemsById();
+    default void validateCaseTypes(Map<String, DefinitionSheet> definitionSheets,
+                                   Map<String, List<DefinitionDataItem>> dataItemMap) {
+        final Map<String, List<DefinitionDataItem>> caseTypeItems = definitionSheets
+            .get(CASE_TYPE.getName()).groupDataItemsById();
         final Optional<String> unknownCaseType = dataItemMap.keySet()
             .stream()
             .filter(typeName -> !caseTypeItems.containsKey(typeName))
             .findFirst();
         if (unknownCaseType.isPresent()) {
-            throw new MapperException(String.format("Unknown Case Type '%s' in worksheet '%s'", unknownCaseType.get(), getSheetName()));
+            throw new MapperException(String.format(
+                "Unknown Case Type '%s' in worksheet '%s'", unknownCaseType.get(), getSheetName()));
         }
     }
 
@@ -67,10 +69,14 @@ interface AuthorisationParser {
         return definitionSheet;
     }
 
-    default void validateCaseFields(Map<String, DefinitionSheet> definitionSheets, DefinitionSheet definitionSheet, String caseTypeReference) {
-        final Map<String, List<DefinitionDataItem>> casefieldsWithAuthorisationInfoThisCaseType = definitionSheet.getDataItems()
+    default void validateCaseFields(Map<String, DefinitionSheet> definitionSheets,
+                                    DefinitionSheet definitionSheet,
+                                    String caseTypeReference) {
+        final Map<String, List<DefinitionDataItem>> casefieldsWithAuthorisationInfoThisCaseType
+            = definitionSheet.getDataItems()
             .stream()
-            .filter(definitionDataItem -> definitionDataItem.getString(ColumnName.CASE_TYPE_ID).equalsIgnoreCase(caseTypeReference))
+            .filter(definitionDataItem ->
+                definitionDataItem.getString(ColumnName.CASE_TYPE_ID).equalsIgnoreCase(caseTypeReference))
             .collect(groupingBy(dataItem -> dataItem.getString(ColumnName.CASE_FIELD_ID)));
 
         final List<String> caseFieldItemsForThisCaseType = definitionSheets.get(CASE_FIELD.getName())

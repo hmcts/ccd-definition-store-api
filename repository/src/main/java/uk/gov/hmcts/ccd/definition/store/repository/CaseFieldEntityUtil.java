@@ -1,5 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,10 +11,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-
-import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 @Component
 public class CaseFieldEntityUtil {
@@ -29,11 +29,14 @@ public class CaseFieldEntityUtil {
         return buildAllDottedComplexFieldPossibilities(caseFieldEntities, true);
     }
 
-    public List<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(List<? extends FieldEntity> caseFieldEntities) {
-        return removeElementsThatAreCaseFields(buildAllDottedComplexFieldPossibilities(caseFieldEntities, false), caseFieldEntities);
+    public List<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(
+        List<? extends FieldEntity> caseFieldEntities) {
+        return removeElementsThatAreCaseFields(buildAllDottedComplexFieldPossibilities(
+            caseFieldEntities, false), caseFieldEntities);
     }
 
-    private List<String> buildAllDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities, boolean leavesOnly) {
+    private List<String> buildAllDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities,
+                                                                 boolean leavesOnly) {
         List<String> allSubTypePossibilities = new ArrayList<>();
         List<? extends FieldEntity> fieldEntities = caseFieldEntities.stream()
             .filter(Objects::nonNull)
@@ -42,15 +45,16 @@ public class CaseFieldEntityUtil {
         return allSubTypePossibilities;
     }
 
-    private List<String> removeElementsThatAreCaseFields(List<String> allSubTypePossibilities, List<? extends FieldEntity> caseFieldEntities) {
+    private List<String> removeElementsThatAreCaseFields(
+        List<String> allSubTypePossibilities, List<? extends FieldEntity> caseFieldEntities) {
         return allSubTypePossibilities.stream()
             .filter(e -> caseFieldEntities.stream().noneMatch(element -> element.getReference().equalsIgnoreCase(e)))
             .collect(Collectors.toList());
     }
 
     private void prepare(List<String> allSubTypePossibilities,
-                                String startingString,
-                                List<? extends FieldEntity> caseFieldEntities, boolean leavesOnly) {
+                         String startingString,
+                         List<? extends FieldEntity> caseFieldEntities, boolean leavesOnly) {
 
         String concatenationCharacter = isBlank(startingString) ? "" : ".";
         caseFieldEntities.forEach(caseFieldEntity -> {

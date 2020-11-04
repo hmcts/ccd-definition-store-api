@@ -1,20 +1,5 @@
 package uk.gov.hmcts.net.ccd.definition.store.rest;
 
-import java.io.InputStream;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PRIVATE;
-import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
-import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.http.HttpStatus;
@@ -24,8 +9,33 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import uk.gov.hmcts.ccd.definition.store.repository.model.*;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
+
+import java.io.InputStream;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PRIVATE;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
 
 public class MultipleControllersEndpointIT extends BaseTest {
     private static final String WIZARD_PAGE_STRUCTURE_URL_1 =
@@ -57,19 +67,24 @@ public class MultipleControllersEndpointIT extends BaseTest {
             final CaseType caseType = mapper.readValue(result.getResponse()
                 .getContentAsString(), TypeFactory.defaultInstance().constructType(CaseType.class));
             assertAll(
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
                     hasProperty("caseFields", hasItem(allOf(
                         hasProperty("showSummaryContentOption", equalTo(2)),
                         hasProperty("caseFieldId", containsString("PersonFirstName")))))),
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
                     hasProperty("caseFields", hasItem(allOf(
                         hasProperty("showSummaryContentOption", equalTo(1)),
                         hasProperty("caseFieldId", containsString("PersonLastName")))))),
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("createCase")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("createCase")).findFirst().get(),
                     hasProperty("showEventNotes", equalTo(true))),
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
                     hasProperty("showEventNotes", equalTo(false))),
-                () -> assertThat(caseType.getEvents().stream().filter(e -> e.getId().equals("stopCase")).findFirst().get(),
+                () -> assertThat(caseType.getEvents().stream().filter(
+                    e -> e.getId().equals("stopCase")).findFirst().get(),
                     hasProperty("showEventNotes", nullValue()))
             );
         }
@@ -81,8 +96,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                                  .file(file)
-                                                  .header(AUTHORIZATION, "Bearer testUser"))
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestAddressBookCase";
@@ -92,16 +107,17 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
             .andReturn();
 
-        final WorkbasketInputDefinition workbasketInputDefinition = mapper.readValue(result.getResponse().getContentAsString(),
-                                                                                 TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
+        final WorkbasketInputDefinition workbasketInputDefinition = mapper.readValue(
+            result.getResponse().getContentAsString(),
+            TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
         assertAll(
             () -> assertThat(workbasketInputDefinition.getFields(), hasSize(3)),
             () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
-                                                                                        containsString("First Name")))),
+                containsString("First Name")))),
             () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
-                                                                                        containsString("Last Name")))),
+                containsString("Last Name")))),
             () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
-                                                                                        containsString("Address"))))
+                containsString("Address"))))
         );
     }
 
@@ -110,8 +126,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                                  .file(file)
-                                                  .header(AUTHORIZATION, "Bearer testUser"))
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestAddressBookCase";
@@ -123,17 +139,20 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andReturn();
 
         CaseTabCollection caseTabCollection = mapper.readValue(result.getResponse().getContentAsString(),
-                                                               TypeFactory.defaultInstance().constructType(CaseTabCollection.class));
+            TypeFactory.defaultInstance().constructType(CaseTabCollection.class));
         assertAll(
             () -> assertThat(caseTabCollection.getTabs(), hasSize(5)),
-            () -> assertThat(caseTabCollection.getTabs(), hasItem(allOf(hasProperty("showCondition", containsString("PersonLastName=\"Sparrow\"")),
-                                                                        hasProperty("id", containsString("NameTab")),
-                                                                        hasProperty("label", containsString("Name"))))),
+            () -> assertThat(caseTabCollection.getTabs(), hasItem(allOf(
+                hasProperty("showCondition", containsString("PersonLastName=\"Sparrow\"")),
+                hasProperty("id", containsString("NameTab")),
+                hasProperty("label", containsString("Name"))))),
             () -> {
-                assertThat(caseTabCollection.getTabs().stream().filter(t -> t.getId().equals("NameTab")).findFirst().get(),
-                           hasProperty("tabFields", hasItem(allOf(
-                               hasProperty("showCondition", containsString("PersonFirstName=\"Jack\"")),
-                               hasProperty("caseField", hasProperty("id", containsString("PersonLastName")))))));
+                assertThat(caseTabCollection.getTabs().stream()
+                        .filter(t -> t.getId().equals("NameTab")).findFirst().get(),
+                    hasProperty("tabFields", hasItem(allOf(
+                        hasProperty("showCondition", containsString("PersonFirstName=\"Jack\"")),
+                        hasProperty("caseField",
+                            hasProperty("id", containsString("PersonLastName")))))));
             }
         );
     }
@@ -143,8 +162,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                                  .file(file)
-                                                  .header(AUTHORIZATION, "Bearer testUser"))
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestAddressBookCase";
@@ -158,15 +177,15 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andReturn();
 
         WizardPageCollection wizardPageCollection = mapper.readValue(result.getResponse().getContentAsString(),
-                                                                     TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
+            TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
         assertAll(
             () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(3)),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
-                                                                                        containsString("Personal Information")))),
+                containsString("Personal Information")))),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
-                                                                                        containsString("Address Information")))),
+                containsString("Address Information")))),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
-                                                                                        containsString("A Label"))))
+                containsString("A Label"))))
         );
     }
 
@@ -175,8 +194,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                                                  .file(file)
-                                                  .header(AUTHORIZATION, "Bearer testUser"))
+            .file(file)
+            .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestComplexAddressBookCase";
@@ -189,14 +208,15 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(jsonPath("$.wizard_pages").isArray())
             .andReturn();
         final WizardPageCollection wizardPageCollection = mapper.readValue(result.getResponse().getContentAsString(),
-                                                                           TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
+            TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
         assertAll(
             () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(1)),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
-                                                                                        containsString("Contact Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("id", containsString("createCaseContactPage")))),
+                containsString("Contact Information")))),
+            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(
+                hasProperty("id", containsString("createCaseContactPage")))),
             () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("wizardPageFields",
-                                                                                        hasItem(hasProperty("caseFieldId", containsString("ContectEmail"))))))
+                hasItem(hasProperty("caseFieldId", containsString("ContectEmail"))))))
         );
     }
 
@@ -208,8 +228,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
         final List<UserRole> userRoles = mapper.readValue(result.getResponse().getContentAsString(),
-                                                          TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
-                                                          }));
+            TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+            }));
         assertAll(
             () -> assertThat(userRoles, hasSize(3)),
             () -> assertThat(userRoles.get(0).getSecurityClassification(), is(PUBLIC)),
@@ -246,8 +266,8 @@ public class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
         final List<UserRole> userRoles = mapper.readValue(result.getResponse().getContentAsString(),
-                                                          TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
-                                                          }));
+            TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+            }));
         assertAll(
             () -> assertThat(userRoles, hasSize(0))
         );

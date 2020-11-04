@@ -9,14 +9,15 @@ public class DisplayGroupInvalidTabFieldShowCondition extends ValidationError {
     private String showConditionField;
     private DisplayGroupCaseFieldEntity displayGroupCaseField;
 
-    public DisplayGroupInvalidTabFieldShowCondition(String showConditionField, DisplayGroupCaseFieldEntity displayGroupCaseField) {
+    public DisplayGroupInvalidTabFieldShowCondition(String showConditionField,
+                                                    DisplayGroupCaseFieldEntity displayGroupCaseField) {
         super(
-                String.format(
-                        "Invalid show condition '%s' for tab field '%s': unknown field '%s'",
-                        displayGroupCaseField.getShowCondition(),
-                        displayGroupCaseField.getCaseField().getReference(),
-                        showConditionField
-                )
+            String.format(
+                "Invalid show condition '%s' for tab field '%s': unknown field '%s'",
+                displayGroupCaseField.getShowCondition(),
+                displayGroupCaseField.getCaseField().getReference(),
+                showConditionField
+            )
         );
 
         this.showConditionField = showConditionField;
@@ -25,11 +26,11 @@ public class DisplayGroupInvalidTabFieldShowCondition extends ValidationError {
 
     public DisplayGroupInvalidTabFieldShowCondition(DisplayGroupCaseFieldEntity displayGroupCaseField) {
         super(
-                String.format(
-                        "Unable to parse show condition '%s' for tab field '%s'",
-                        displayGroupCaseField.getShowCondition(),
-                        displayGroupCaseField.getCaseField().getReference()
-                )
+            String.format(
+                "Unable to parse show condition '%s' for tab field '%s'",
+                displayGroupCaseField.getShowCondition(),
+                displayGroupCaseField.getCaseField().getReference()
+            )
         );
 
         this.displayGroupCaseField = displayGroupCaseField;

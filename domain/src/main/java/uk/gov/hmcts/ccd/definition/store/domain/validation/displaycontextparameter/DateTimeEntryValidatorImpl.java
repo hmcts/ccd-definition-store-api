@@ -30,7 +30,8 @@ public class DateTimeEntryValidatorImpl implements DisplayContextParameterValida
 
     @Override
     public void validate(final String parameterValue, String fieldType) throws InvalidDateTimeFormatException {
-        Pattern pattern = ((fieldType.equals(BASE_DATE)) ? NOT_ALLOWED_CHARACTERS_PATTERN_DATE : NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME);
+        Pattern pattern = ((fieldType.equals(BASE_DATE))
+            ? NOT_ALLOWED_CHARACTERS_PATTERN_DATE : NOT_ALLOWED_CHARACTERS_PATTERN_DATETIME);
         dateTimeFormatParser.parseDateTimeFormat(parameterValue, pattern);
     }
 }

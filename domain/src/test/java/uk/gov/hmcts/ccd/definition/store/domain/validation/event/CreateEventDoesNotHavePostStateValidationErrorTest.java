@@ -24,7 +24,8 @@ public class CreateEventDoesNotHavePostStateValidationErrorTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(mockValidationErrorMessageCreator.createErrorMessage(any(CreateEventDoesNotHavePostStateValidationError.class)))
+        when(mockValidationErrorMessageCreator.createErrorMessage(
+            any(CreateEventDoesNotHavePostStateValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
         classUnderTest = new CreateEventDoesNotHavePostStateValidationError(
             eventEntityWithReference("Event Reference")

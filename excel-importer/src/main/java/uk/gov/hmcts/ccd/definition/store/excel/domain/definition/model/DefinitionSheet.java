@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
 
 import java.util.ArrayList;
 import java.util.List;

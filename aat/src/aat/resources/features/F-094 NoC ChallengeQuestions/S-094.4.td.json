@@ -1,0 +1,22 @@
+{
+  "_guid_" : "S-094.4",
+  "_extends_": "F-094_Test_Base_data",
+  "specs" : [
+    "contains a valid CaseType ID for C1",
+    "contains a Collection Question ID that does not correspond to a tab containing a valid CaseTypeId",
+    "returns an empty questions array"
+  ],
+  "request" : {
+    "pathVariables": {
+      "ctid": "FT_ComplexOrganisation",
+      "id": "invalidid"
+    }
+  },
+
+  "expectedResponse" : {
+    "_extends_" : "Common_200_Response",
+    "body" : {
+      "questions" : []
+    }
+  }
+}

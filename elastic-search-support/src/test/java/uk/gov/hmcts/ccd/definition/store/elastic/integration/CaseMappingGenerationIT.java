@@ -76,7 +76,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
         String mapping = mappingGenerator.generateMapping(caseType);
 
         assertThat(mapping, equalToJSONInFile(
-                readFileFromClasspath("integration/case_type_mapping.json")));
+            readFileFromClasspath("integration/case_type_mapping.json")));
     }
 
     private CaseTypeEntity createCaseType() {
@@ -88,10 +88,10 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
         CaseFieldEntity dynamicField = newField("dynamicList", FieldTypeUtils.BASE_DYNAMIC_LIST).build();
 
         return caseTypeBuilder.addField(baseTypeField)
-                .addField(complexOfComplex)
-                .addField(complexOfCollection)
-                .addField(collectionOfBaseType)
-                .addField(dynamicField).build();
+            .addField(complexOfComplex)
+            .addField(complexOfCollection)
+            .addField(collectionOfBaseType)
+            .addField(dynamicField).build();
     }
 
     private CaseFieldEntity newComplexFieldOfComplex() {
@@ -111,7 +111,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
         CaseFieldBuilder complexField = newField("appealReasons", "appealReasons");
 
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .addFieldToCollection(textFieldType()).buildCollection();
+            .addFieldToCollection(textFieldType()).buildCollection();
 
         complexField.addFieldToComplex("reasons", collectionFieldType);
         return complexField.buildComplex();
@@ -119,7 +119,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
 
     private CaseFieldEntity newCollectionFieldOfBaseType() {
         FieldTypeEntity collectionFieldType = newType("reasons-51503ee8-ac6d-4b57-845e-4806332a9820")
-                .addFieldToCollection(textFieldType()).buildCollection();
+            .addFieldToCollection(textFieldType()).buildCollection();
 
         CaseFieldEntity collectionField = new CaseFieldEntity();
         collectionField.setReference("Aliases");

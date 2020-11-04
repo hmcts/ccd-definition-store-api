@@ -70,10 +70,14 @@ public class AdminWebAuthorization {
 
             if (adminWebAuthorizationProperties.isEnabled()) {
                 final List<String> idamRoles = asList(idamProperties.getRoles());
-                adminWebAuthorization.setCanManageUserProfile(evaluateRole(adminWebAuthorizationProperties.getManageUserProfile(), idamRoles));
-                adminWebAuthorization.setCanImportDefinition(evaluateRole(adminWebAuthorizationProperties.getImportDefinition(), idamRoles));
-                adminWebAuthorization.setCanManageDefinition(evaluateRole(adminWebAuthorizationProperties.getManageDefinition(), idamRoles));
-                adminWebAuthorization.setCanManageUserRole(evaluateRole(adminWebAuthorizationProperties.getManageUserRole(), idamRoles));
+                adminWebAuthorization.setCanManageUserProfile(evaluateRole(
+                    adminWebAuthorizationProperties.getManageUserProfile(), idamRoles));
+                adminWebAuthorization.setCanImportDefinition(evaluateRole(
+                    adminWebAuthorizationProperties.getImportDefinition(), idamRoles));
+                adminWebAuthorization.setCanManageDefinition(evaluateRole(
+                    adminWebAuthorizationProperties.getManageDefinition(), idamRoles));
+                adminWebAuthorization.setCanManageUserRole(evaluateRole(
+                    adminWebAuthorizationProperties.getManageUserRole(), idamRoles));
                 return adminWebAuthorization;
             } else {
                 adminWebAuthorization.setCanImportDefinition(true);

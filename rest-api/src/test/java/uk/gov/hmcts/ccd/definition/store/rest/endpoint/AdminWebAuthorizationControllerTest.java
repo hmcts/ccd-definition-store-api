@@ -43,10 +43,10 @@ class AdminWebAuthorizationControllerTest {
     void setUp() {
         given(idamProfileClient.getLoggedInUserDetails()).willReturn(buildIdamProperties());
         final AdminWebAuthorizationController controller = new AdminWebAuthorizationController(idamProfileClient,
-                                                                                               adminWebAuthorizationProperties);
+            adminWebAuthorizationProperties);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                                 .setControllerAdvice(new RestEndPointExceptionHandler())
-                                 .build();
+            .setControllerAdvice(new RestEndPointExceptionHandler())
+            .build();
     }
 
     @DisplayName("Should get old behaviour if admin web authorization feature is not enabled")

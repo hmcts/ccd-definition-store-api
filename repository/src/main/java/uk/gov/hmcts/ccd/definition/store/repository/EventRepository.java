@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface EventRepository extends DefinitionRepository<EventEntity, Integer> {
 
-    List<EventEntity> findByReferenceAndCaseTypeId(@Param("reference")String eventReference, @Param("caseTypeId")Integer caseTypeId);
+    List<EventEntity> findByReferenceAndCaseTypeId(@Param("reference") String eventReference,
+                                                   @Param("caseTypeId") Integer caseTypeId);
 
 }

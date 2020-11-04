@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.groupingBy;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.STATE_ID;
@@ -31,7 +32,7 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     AuthorisationCaseStateParser(ParseContext parseContext,
-                                        EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+                                 EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
         this.parseContext = parseContext;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
     }
@@ -57,7 +58,8 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
         } else {
             LOG.debug("Parsing user roles for case state {}: {} AuthorisationCaseSate detected",
                 stateReference, dataItems.size());
-            final Map<String, List<DefinitionDataItem>> collect = dataItems.stream().collect(groupingBy(d -> d.getString(STATE_ID)));
+            final Map<String, List<DefinitionDataItem>> collect = dataItems
+                .stream().collect(groupingBy(d -> d.getString(STATE_ID)));
             if (null == collect.get(stateReference)) {
                 LOG.warn("No row is defined for case type '{}', state '{}'", caseTypeReference, stateReference);
                 // and let validation handles this Exception
@@ -80,10 +82,13 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
         return parseResults;
     }
 
-    private void validateStates(Map<String, DefinitionSheet> definitionSheets, DefinitionSheet definitionSheet, String caseTypeReference) {
-        final Map<String, List<DefinitionDataItem>> statesWithAuthorisationInfoThisCaseType = definitionSheet.getDataItems()
-            .stream()
-            .filter(definitionDataItem -> definitionDataItem.getString(ColumnName.CASE_TYPE_ID).equalsIgnoreCase(caseTypeReference))
+    private void validateStates(Map<String, DefinitionSheet> definitionSheets,
+                                DefinitionSheet definitionSheet,
+                                String caseTypeReference) {
+        final Map<String, List<DefinitionDataItem>> statesWithAuthorisationInfoThisCaseType = definitionSheet
+            .getDataItems().stream()
+            .filter(definitionDataItem ->
+                definitionDataItem.getString(ColumnName.CASE_TYPE_ID).equalsIgnoreCase(caseTypeReference))
             .collect(groupingBy(dataItem -> dataItem.getString(ColumnName.STATE_ID)));
 
         final List<String> stateItemsForThisCaseType = definitionSheets.get(STATE.getName())
