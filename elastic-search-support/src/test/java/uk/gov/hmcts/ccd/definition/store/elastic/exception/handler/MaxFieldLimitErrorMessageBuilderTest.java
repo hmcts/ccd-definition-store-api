@@ -25,11 +25,17 @@ class MaxFieldLimitErrorMessageBuilderTest {
 
     @Test
     void shouldBuildMessageWhenReasonMatchesPattern() {
+<<<<<<< HEAD
         ElasticsearchError error = new ElasticsearchError(
             new ElasticsearchStatusException("Elasticsearch exception [type=illegal_argument_exception, "
                 + "reason=Limit of total fields [5000] in index [casetypeid_cases-000001] has been exceeded]",
                 RestStatus.BAD_REQUEST),
             caseType);
+=======
+        ElasticsearchError error = new ElasticsearchError(new ElasticsearchStatusException(
+            "Elasticsearch exception [type=illegal_argument_exception, reason=Limit of total fields [5000] "
+                + "in index [casetypeid_cases-000001] has been exceeded]", RestStatus.BAD_REQUEST), caseType);
+>>>>>>> refs/heads/master
 
         String result = messageBuilder.doBuildMessage(error);
 

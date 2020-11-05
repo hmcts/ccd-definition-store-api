@@ -29,6 +29,7 @@ public enum SheetName {
     SEARCH_ALIAS("SearchAlias"),
     BANNER("Banner"),
     CHALLENGE_QUESTION_TAB("ChallengeQuestion");
+
     private final String name;
 
     SheetName(String sheetName) {

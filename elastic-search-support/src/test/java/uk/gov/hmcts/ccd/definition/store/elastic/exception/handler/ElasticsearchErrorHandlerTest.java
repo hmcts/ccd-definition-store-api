@@ -16,7 +16,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-
 class ElasticsearchErrorHandlerTest {
 
     private ElasticsearchErrorHandler errorHandler;
@@ -39,8 +38,8 @@ class ElasticsearchErrorHandlerTest {
 
     @Test
     void shouldCreateExceptionForKnownReason() {
-        ElasticsearchStatusException exception
-            = elasticException("Elasticsearch exception [type=TYPE, reason=PATTERN TWO REASON]");
+        ElasticsearchStatusException exception =
+            elasticException("Elasticsearch exception [type=TYPE, reason=PATTERN TWO REASON]");
 
         ElasticSearchInitialisationException result = errorHandler.createException(exception, caseTypeEntity);
 
@@ -51,8 +50,8 @@ class ElasticsearchErrorHandlerTest {
 
     @Test
     void shouldCreateExceptionForUnhandledReasonMatchingErrorPattern() {
-        ElasticsearchStatusException exception
-            = elasticException("Elasticsearch exception [type=TYPE, reason=UNHANDLED REASON]");
+        ElasticsearchStatusException exception =
+            elasticException("Elasticsearch exception [type=TYPE, reason=UNHANDLED REASON]");
 
         ElasticSearchInitialisationException result = errorHandler.createException(exception, caseTypeEntity);
 

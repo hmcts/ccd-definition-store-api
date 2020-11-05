@@ -12,7 +12,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
 class ElasticsearchErrorMessageBuilderTest {
 
     private ElasticsearchErrorMessageBuilder messageBuilder;

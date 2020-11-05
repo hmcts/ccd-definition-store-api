@@ -23,7 +23,7 @@ public class ElasticsearchErrorHandler {
         this.errorMessageBuilders = errorMessageBuilders;
     }
 
-    public ElasticSearchInitialisationException createException(ElasticsearchStatusException exception,
+    public ElasticSearchInitialisationException createException(ElasticsearchStatusException exception, 
                                                                 CaseTypeEntity caseType) {
         ElasticsearchError error = new ElasticsearchError(exception, caseType);
 
