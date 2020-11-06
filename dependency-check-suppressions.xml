@@ -67,7 +67,12 @@
 		<cve>CVE-2019-11358</cve>
 		<cve>CVE-2020-11022</cve>
 		<cve>CVE-2020-11023</cve>
-		<cve>CVE-2020-13943</cve>
 	</suppress>
-
+	<suppress> <!-- Temporary -->
+		<cve>CVE-2020-13943</cve>
+		<cve>CVE-2020-11996</cve>
+		<cve>CVE-2007-1652</cve>
+		<cve>CVE-2007-1651</cve>
+		<cve>CVE-2020-5421</cve>
+  </suppress>
 </suppressions>
