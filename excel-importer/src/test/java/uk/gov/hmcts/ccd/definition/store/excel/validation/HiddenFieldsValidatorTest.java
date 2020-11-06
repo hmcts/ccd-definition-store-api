@@ -815,7 +815,6 @@ public class HiddenFieldsValidatorTest {
     }
 
     private void addDataItem(final DefinitionSheet sheetCT) {
-
         sheetCT.addDataItem(new DefinitionDataItem("ngitb"));
     }
 
