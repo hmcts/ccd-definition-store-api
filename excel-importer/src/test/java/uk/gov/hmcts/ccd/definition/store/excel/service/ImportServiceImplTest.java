@@ -82,9 +82,12 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_R
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_BASE_LOCATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_REGION_LOCATION;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -176,6 +179,9 @@ public class ImportServiceImplTest {
     private FieldTypeEntity fixedListRadioTypeBaseType;
     private FieldTypeEntity dynamicListBaseType;
     private FieldTypeEntity changeOrganisationRequest;
+    private FieldTypeEntity caseLocation;
+    private FieldTypeEntity baseLocation;
+    private FieldTypeEntity baseRegion;
 
     @Before
     public void setup() {
@@ -228,6 +234,9 @@ public class ImportServiceImplTest {
         caseHistoryViewerBaseType = buildBaseType(BASE_CASE_HISTORY_VIEWER);
         fixedListRadioTypeBaseType = buildBaseType(BASE_RADIO_FIXED_LIST);
         changeOrganisationRequest = buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST);
+        baseLocation = buildBaseType(PREDEFINED_COMPLEX_BASE_LOCATION);
+        baseRegion = buildBaseType(PREDEFINED_COMPLEX_REGION_LOCATION);
+        caseLocation = buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -278,7 +287,10 @@ public class ImportServiceImplTest {
             caseHistoryViewerBaseType,
             fixedListRadioTypeBaseType,
             dynamicListBaseType,
-            changeOrganisationRequest));
+            changeOrganisationRequest,
+            baseLocation,
+            baseRegion,
+            caseLocation));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -322,7 +334,10 @@ public class ImportServiceImplTest {
             caseHistoryViewerBaseType,
             fixedListRadioTypeBaseType,
             dynamicListBaseType,
-            changeOrganisationRequest));
+            changeOrganisationRequest,
+            baseLocation,
+            baseRegion,
+            caseLocation));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
