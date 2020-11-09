@@ -77,7 +77,7 @@
         </insert>
 
         <insert tableName="complex_field">
-            <column name="reference" value="Location" />
+            <column name="reference" value="baseLocation" />
             <column name="label" value="Organisation To Add" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id"
@@ -92,7 +92,7 @@
         </insert>
 
         <insert tableName="complex_field">
-            <column name="reference" value="Region" />
+            <column name="reference" value="region" />
             <column name="label" value="Organisation To Remove" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id"
