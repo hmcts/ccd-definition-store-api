@@ -3,10 +3,10 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-4084" author="fatih.ozceylan@hmcts.net">
-        <validCheckSum>8:bb49ac213c4199418c9d231457d69b67</validCheckSum>
+
         <!-- create the new complex_field_acl table -->
         <createTable tableName="complex_field_acl">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="case_field_id" type="integer">

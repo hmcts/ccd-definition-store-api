@@ -29,7 +29,8 @@ dependencies {
         exclude group: 'com.google.guava', module: 'guava'
     }
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
-    runtime group: 'org.liquibase', name: 'liquibase-core', version: '3.8.9'
+    runtime group: 'org.liquibase', name: 'liquibase-core', version: '3.10.3'
+
     testCompile project(":app-insights").sourceSets.main.output
     testCompile project(":commons").sourceSets.main.output
 }
