@@ -5,7 +5,7 @@
     <changeSet id="rdm-9555" author="kiran.yenigala@hmcts.net">
 
         <createTable tableName="event_post_state">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="enabling_condition" type="varchar(2000)">
