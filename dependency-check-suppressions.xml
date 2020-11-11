@@ -70,6 +70,7 @@
 	</suppress>
 
 	<suppress> <!-- Temporary -->
+		<cve>CVE-2020-7020</cve>
 		<cve>CVE-2020-13943</cve>
 		<cve>CVE-2020-11996</cve>
 		<cve>CVE-2007-1652</cve>
