@@ -206,32 +206,19 @@
               "__elementId__": "role"
             },
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-caa",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-caa"
             },
             {
-              "role": "[DEFENDANTSOLICITOR]",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "[DEFENDANTSOLICITOR]"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "show_summary": true,
@@ -339,25 +326,15 @@
               "__elementId__": "role"
             },
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-caa",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-caa"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "show_summary": true,
@@ -385,32 +362,22 @@
               "__elementId__": "role"
             },
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-caa",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-caa"
             },
             {
+              "_extends_" : "AccessControlList",
               "role": "[CLAIMANTSOLICITOR]",
               "create": false,
-              "read": true,
               "update": false,
               "delete": false
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ]
         },
@@ -422,18 +389,11 @@
           "title_display": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-caa",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-caa"
             }
           ]
         }
@@ -445,32 +405,19 @@
           "__elementId__": "role"
         },
         {
-          "role": "caseworker-befta_master",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
+          "_extends_" : "AccessControlList"
         },
         {
-          "role": "caseworker-caa",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
+          "_extends_" : "AccessControlList",
+          "role": "caseworker-caa"
         },
         {
-          "role": "[CLAIMANT]",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
+          "_extends_" : "AccessControlList",
+          "role": "[CLAIMANT]"
         },
         {
-          "role": "caseworker-befta_master-solicitor",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
+          "_extends_" : "AccessControlList",
+          "role": "caseworker-befta_master-solicitor"
         }
       ],
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
@@ -540,18 +487,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -723,25 +663,15 @@
               "__elementId__": "role"
             },
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-caa",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-caa"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -913,25 +843,15 @@
               "__elementId__": "role"
             },
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-caa",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-caa"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -962,18 +882,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1004,18 +917,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1062,18 +968,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1104,18 +1003,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1146,18 +1038,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1188,18 +1073,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1230,18 +1108,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1272,18 +1143,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1335,18 +1199,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1567,18 +1424,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1618,18 +1468,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1696,18 +1539,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1738,18 +1574,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1780,18 +1609,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1931,18 +1753,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -1973,18 +1788,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -2015,18 +1823,11 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             },
             {
-              "role": "caseworker-befta_master-solicitor",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList",
+              "role": "caseworker-befta_master-solicitor"
             }
           ],
           "complexACLs": [],
@@ -2057,11 +1858,7 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ],
           "complexACLs": [],
@@ -2309,11 +2106,7 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ],
           "complexACLs": [],
