@@ -126,40 +126,25 @@
                   "__elementId__": "reference"
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationID",
-                  "hint": null,
-                  "label": null,
-                  "order": 3,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 3
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationName",
-                  "hint": null,
-                  "label": null,
-                  "order": 4,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 4
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyCaseAssignedRole",
-                  "hint": null,
-                  "label": null,
                   "order": 5,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
                   "defaultValue": "[Claimant]"
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyReference",
-                  "hint": null,
-                  "label": null,
-                  "order": 6,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 6
                 }
               ]
             },
@@ -174,40 +159,25 @@
                   "__elementId__": "reference"
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationID",
-                  "hint": null,
-                  "label": null,
-                  "order": 7,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 7
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationName",
-                  "hint": null,
-                  "label": null,
-                  "order": 8,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 8
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyCaseAssignedRole",
-                  "hint": null,
-                  "label": null,
                   "order": 9,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
                   "defaultValue": "[Defendant]"
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyReference",
-                  "hint": null,
-                  "label": null,
-                  "order": 10,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 10
                 }
               ]
             },
@@ -291,40 +261,25 @@
                   "__elementId__": "reference"
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationID",
-                  "hint": null,
-                  "label": null,
-                  "order": 3,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 3
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationName",
-                  "hint": null,
-                  "label": null,
-                  "order": 4,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 4
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyCaseAssignedRole",
-                  "hint": null,
-                  "label": null,
                   "order": 5,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
                   "defaultValue": "[Defendant]"
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyReference",
-                  "hint": null,
-                  "label": null,
-                  "order": 6,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 6
                 }
               ]
             },
@@ -339,40 +294,25 @@
                   "__elementId__": "reference"
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationID",
-                  "hint": null,
-                  "label": null,
-                  "order": 7,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 7
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationName",
-                  "hint": null,
-                  "label": null,
-                  "order": 8,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 8
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyCaseAssignedRole",
-                  "hint": null,
-                  "label": null,
                   "order": 9,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
                   "defaultValue": "[Claimant]"
                 },
                 {
+                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyReference",
-                  "hint": null,
-                  "label": null,
-                  "order": 10,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
+                  "order": 10
                 }
               ]
             }
