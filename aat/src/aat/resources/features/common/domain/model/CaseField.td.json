@@ -3,18 +3,11 @@
 
   "metadata": false,
   "id": "",
-  "case_type_id": "",
+  "case_type_id": null,
   "label": "",
   "hint_text": null,
   "field_type": {
-    "id": "Text",
-    "type": "Text",
-    "min": null,
-    "max": null,
-    "regular_expression": null,
-    "fixed_list_items": [],
-    "complex_fields": [],
-    "collection_field_type": null
+    "_extends_" : "FieldType"
   },
   "hidden": false,
   "security_classification": "PUBLIC",

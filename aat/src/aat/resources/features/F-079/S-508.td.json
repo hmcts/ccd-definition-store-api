@@ -497,7 +497,6 @@
                 {
                   "_extends_" : "CaseField",
                   "id": "LabelField",
-                  "case_type_id": null,
                   "label": "[[ANY_STRING_NOT_NULLABLE]]",
                   "hint_text": "Label Field",
                   "field_type": {
@@ -510,7 +509,6 @@
                 {
                   "_extends_" : "CaseField",
                   "id": "DateField",
-                  "case_type_id": null,
                   "label": "MM-yyyy formatted date field",
                   "hint_text": "Date Field",
                   "field_type": {
@@ -524,7 +522,6 @@
                 {
                   "_extends_" : "CaseField",
                   "id": "DateTimeField",
-                  "case_type_id": null,
                   "label": "yyyy-MM-ddTHH:mm formatted DateTime",
                   "hint_text": "DateTime Field",
                   "field_type": {
@@ -538,7 +535,6 @@
                 {
                   "_extends_" : "CaseField",
                   "id": "StandardDate",
-                  "case_type_id": null,
                   "label": "A `Date` field",
                   "hint_text": "Date Field",
                   "field_type": {
@@ -551,7 +547,6 @@
                 {
                   "_extends_" : "CaseField",
                   "id": "StandardDateTime",
-                  "case_type_id": null,
                   "label": "A `DateTime` field",
                   "hint_text": "DateTime Field",
                   "field_type": {
@@ -564,7 +559,6 @@
                 {
                   "_extends_" : "CaseField",
                   "id": "NestedComplex",
-                  "case_type_id": null,
                   "label": "Format Nested Complex",
                   "field_type": {
                     "id": "FormatNestedComplex",
@@ -573,7 +567,6 @@
                       {
                         "_extends_" : "CaseField",
                         "id": "DateField",
-                        "case_type_id": null,
                         "label": "MM-yyyy formatted date field",
                         "hint_text": "Date Field",
                         "field_type": {
@@ -587,7 +580,6 @@
                       {
                         "_extends_" : "CaseField",
                         "id": "DateTimeField",
-                        "case_type_id": null,
                         "label": "yyyy-MM-DDTHH:mm formatted DateTime",
                         "hint_text": "DateTime Field",
                         "field_type": {
@@ -601,7 +593,6 @@
                       {
                         "_extends_" : "CaseField",
                         "id": "StandardDate",
-                        "case_type_id": null,
                         "label": "A `Date` field",
                         "hint_text": "Date Field",
                         "field_type": {
@@ -614,7 +605,6 @@
                       {
                         "_extends_" : "CaseField",
                         "id": "StandardDateTime",
-                        "case_type_id": null,
                         "label": "A `DateTime` field",
                         "hint_text": "DateTime Field",
                         "field_type": {
@@ -656,7 +646,6 @@
               {
                 "_extends_" : "CaseField",
                 "id": "LabelField",
-                "case_type_id": null,
                 "label": "[[ANY_STRING_NOT_NULLABLE]]",
                 "hint_text": "Label Field",
                 "field_type": {
@@ -669,7 +658,6 @@
               {
                 "_extends_" : "CaseField",
                 "id": "DateField",
-                "case_type_id": null,
                 "label": "MM-yyyy formatted date field",
                 "hint_text": "Date Field",
                 "field_type": {
@@ -683,7 +671,6 @@
               {
                 "_extends_" : "CaseField",
                 "id": "DateTimeField",
-                "case_type_id": null,
                 "label": "yyyy-MM-ddTHH:mm formatted DateTime",
                 "hint_text": "DateTime Field",
                 "field_type": {
@@ -697,7 +684,6 @@
               {
                 "_extends_" : "CaseField",
                 "id": "StandardDate",
-                "case_type_id": null,
                 "label": "A `Date` field",
                 "hint_text": "Date Field",
                 "field_type": {
@@ -710,7 +696,6 @@
               {
                 "_extends_" : "CaseField",
                 "id": "StandardDateTime",
-                "case_type_id": null,
                 "label": "A `DateTime` field",
                 "hint_text": "DateTime Field",
                 "field_type": {
@@ -723,7 +708,6 @@
               {
                 "_extends_" : "CaseField",
                 "id": "NestedComplex",
-                "case_type_id": null,
                 "label": "Format Nested Complex",
                 "field_type": {
                   "id": "FormatNestedComplex",
@@ -732,7 +716,6 @@
                     {
                       "_extends_" : "CaseField",
                       "id": "DateField",
-                      "case_type_id": null,
                       "label": "MM-yyyy formatted date field",
                       "hint_text": "Date Field",
                       "field_type": {
@@ -746,7 +729,6 @@
                     {
                       "_extends_" : "CaseField",
                       "id": "DateTimeField",
-                      "case_type_id": null,
                       "label": "yyyy-MM-DDTHH:mm formatted DateTime",
                       "hint_text": "DateTime Field",
                       "field_type": {
@@ -760,7 +742,6 @@
                     {
                       "_extends_" : "CaseField",
                       "id": "StandardDate",
-                      "case_type_id": null,
                       "label": "A `Date` field",
                       "hint_text": "Date Field",
                       "field_type": {
@@ -773,7 +754,6 @@
                     {
                       "_extends_" : "CaseField",
                       "id": "StandardDateTime",
-                      "case_type_id": null,
                       "label": "A `DateTime` field",
                       "hint_text": "DateTime Field",
                       "field_type": {
@@ -961,7 +941,6 @@
           "_extends_" : "CaseField",
           "metadata": true,
           "id": "[LAST_STATE_MODIFIED_DATE]",
-          "case_type_id": null,
           "label": "Last State Modified Date",
           "field_type": {
             "id": "DateTime",
@@ -973,7 +952,6 @@
           "_extends_" : "CaseField",
           "metadata": true,
           "id": "[LAST_MODIFIED_DATE]",
-          "case_type_id": null,
           "label": "Last Modified Date",
           "field_type": {
             "id": "DateTime",
@@ -985,7 +963,6 @@
           "_extends_" : "CaseField",
           "metadata": true,
           "id": "[CREATED_DATE]",
-          "case_type_id": null,
           "label": "Created Date",
           "field_type": {
             "id": "DateTime",
@@ -997,7 +974,6 @@
           "_extends_" : "CaseField",
           "metadata": true,
           "id": "[JURISDICTION]",
-          "case_type_id": null,
           "label": "Jurisdiction",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
         },
@@ -1005,7 +981,6 @@
           "_extends_" : "CaseField",
           "metadata": true,
           "id": "[CASE_TYPE]",
-          "case_type_id": null,
           "label": "Case Type",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
         },
@@ -1013,7 +988,6 @@
           "_extends_" : "CaseField",
           "metadata": true,
           "id": "[SECURITY_CLASSIFICATION]",
-          "case_type_id": null,
           "label": "Security Classification",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
         },
@@ -1021,7 +995,6 @@
           "_extends_" : "CaseField",
           "metadata": true,
           "id": "[CASE_REFERENCE]",
-          "case_type_id": null,
           "label": "Case Reference",
           "field_type": {
             "id": "Number",
