@@ -269,15 +269,6 @@
                   "defaultValue": null
                 },
                 {
-                  "reference": "Organisation.OrganisationName",
-                  "hint": null,
-                  "label": null,
-                  "order": 4,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
-                },
-                {
                   "reference": "OrgPolicyCaseAssignedRole",
                   "hint": null,
                   "label": null,
@@ -318,15 +309,6 @@
                   "hint": null,
                   "label": null,
                   "order": 7,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
-                },
-                {
-                  "reference": "Organisation.OrganisationName",
-                  "hint": null,
-                  "label": null,
-                  "order": 8,
                   "displayContext": "OPTIONAL",
                   "showCondition": null,
                   "defaultValue": null
@@ -454,15 +436,6 @@
                   "defaultValue": null
                 },
                 {
-                  "reference": "Organisation.OrganisationName",
-                  "hint": null,
-                  "label": null,
-                  "order": 4,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
-                },
-                {
                   "reference": "OrgPolicyCaseAssignedRole",
                   "hint": null,
                   "label": null,
@@ -503,15 +476,6 @@
                   "hint": null,
                   "label": null,
                   "order": 7,
-                  "displayContext": "OPTIONAL",
-                  "showCondition": null,
-                  "defaultValue": null
-                },
-                {
-                  "reference": "Organisation.OrganisationName",
-                  "hint": null,
-                  "label": null,
-                  "order": 8,
                   "displayContext": "OPTIONAL",
                   "showCondition": null,
                   "defaultValue": null
@@ -834,33 +798,6 @@
                       "show_condition": null,
                       "display_context_parameter": null,
                       "retain_hidden_value": null
-                    },
-                    {
-                      "metadata": false,
-                      "id": "OrganisationName",
-                      "case_type_id": null,
-                      "label": "Name",
-                      "hint_text": null,
-                      "field_type": {
-                        "id": "Text",
-                        "type": "Text",
-                        "min": null,
-                        "max": null,
-                        "regular_expression": null,
-                        "fixed_list_items": [],
-                        "complex_fields": [],
-                        "collection_field_type": null
-                      },
-                      "hidden": null,
-                      "security_classification": "PUBLIC",
-                      "live_from": null,
-                      "live_until": null,
-                      "acls": null,
-                      "complexACLs": [],
-                      "order": null,
-                      "show_condition": null,
-                      "display_context_parameter": null,
-                      "retain_hidden_value": null
                     }
                   ],
                   "collection_field_type": null
@@ -1003,33 +940,6 @@
                       "id": "OrganisationID",
                       "case_type_id": null,
                       "label": "Organisation ID",
-                      "hint_text": null,
-                      "field_type": {
-                        "id": "Text",
-                        "type": "Text",
-                        "min": null,
-                        "max": null,
-                        "regular_expression": null,
-                        "fixed_list_items": [],
-                        "complex_fields": [],
-                        "collection_field_type": null
-                      },
-                      "hidden": null,
-                      "security_classification": "PUBLIC",
-                      "live_from": null,
-                      "live_until": null,
-                      "acls": null,
-                      "complexACLs": [],
-                      "order": null,
-                      "show_condition": null,
-                      "display_context_parameter": null,
-                      "retain_hidden_value": null
-                    },
-                    {
-                      "metadata": false,
-                      "id": "OrganisationName",
-                      "case_type_id": null,
-                      "label": "Name",
                       "hint_text": null,
                       "field_type": {
                         "id": "Text",
