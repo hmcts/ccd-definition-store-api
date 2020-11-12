@@ -30,7 +30,7 @@
 		"fields": [
 			{
 				"__ordering__": "unordered",
-				"__elementId__": "case_field_id"
+				"__elementId__": "case_field_id,case_field_element_path"
 			},
 			{
 			 "metadata": true,
