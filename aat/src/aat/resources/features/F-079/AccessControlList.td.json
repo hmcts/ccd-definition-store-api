@@ -1,0 +1,9 @@
+{
+  "_guid_" : "AccessControlList",
+
+  "role": "caseworker-befta_master",
+  "create": true,
+  "read": true,
+  "update": true,
+  "delete": true
+}

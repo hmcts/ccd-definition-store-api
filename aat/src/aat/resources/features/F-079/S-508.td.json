@@ -77,11 +77,7 @@
           "security_classification": "PUBLIC",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ],
           "show_summary": true,
@@ -168,11 +164,7 @@
           "security_classification": "PUBLIC",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ],
           "show_summary": true,
@@ -253,11 +245,7 @@
           "security_classification": "PUBLIC",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ],
           "show_summary": true,
@@ -346,11 +334,7 @@
           "security_classification": "PUBLIC",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ],
           "show_summary": true,
@@ -373,11 +357,7 @@
           "title_display": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -389,11 +369,7 @@
           "title_display": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -405,22 +381,14 @@
           "title_display": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         }
       ],
       "acls": [
         {
-          "role": "caseworker-befta_master",
-          "create": true,
-          "read": true,
-          "update": true,
-          "delete": true
+          "_extends_" : "AccessControlList"
         }
       ],
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
@@ -472,11 +440,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -625,11 +589,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -773,11 +733,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -799,11 +755,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -825,11 +777,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -846,11 +794,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -867,11 +811,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -888,11 +828,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -909,11 +845,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
@@ -929,11 +861,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "role": "caseworker-befta_master",
-              "create": true,
-              "read": true,
-              "update": true,
-              "delete": true
+              "_extends_" : "AccessControlList"
             }
           ]
         },
