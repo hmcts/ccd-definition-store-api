@@ -74,5 +74,6 @@
 		<cve>CVE-2007-1652</cve>
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2020-5421</cve>
+		<cve>CVE-2020-7020</cve>
   </suppress>
 </suppressions>
