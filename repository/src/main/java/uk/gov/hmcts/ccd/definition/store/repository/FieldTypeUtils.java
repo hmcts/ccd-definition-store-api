@@ -32,7 +32,7 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST = "ChangeOrganisationRequest";
     public static final String PREDEFINED_COMPLEX_CASE_LOCATION = "CaseLocation";
     public static final String PREDEFINED_COMPLEX_BASE_LOCATION = "BaseLocation";
-    public static final String PREDEFINED_COMPLEX_REGION_LOCATION = "BaseRegion";
+    public static final String PREDEFINED_COMPLEX_REGION_LOCATION = "Region";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference)

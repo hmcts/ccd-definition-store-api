@@ -3,6 +3,13 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-10041" author="rebecca.baker@hmcts.net">
+        <!-- FixedList40 -->
+        <insert tableName="field_type">
+            <column name="created_at" value="${now}" />
+            <column name="reference" value="FixedList40" />
+            <column name="version" value="1" />
+            <column name="maximum" value="40" />
+        </insert>
 
         <!-- Region -->
         <insert tableName="field_type">
@@ -23,7 +30,7 @@
             <column name="label" value="The ID of a region" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type
-            where reference = 'TextMax150'
+            where reference = 'FixedList40'
             and version = 1
             and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
@@ -31,7 +38,6 @@
                         and version = 1
                         and jurisdiction_id is null)" />
         </insert>
-
 
         <!-- BaseLocation -->
         <insert tableName="field_type">
@@ -52,7 +58,7 @@
             <column name="label" value="The ID of a court" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type
-            where reference = 'TextMax150'
+            where reference = 'FixedList40'
             and version = 1
             and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
@@ -107,5 +113,4 @@
         </insert>
 
     </changeSet>
-
 </databaseChangeLog>

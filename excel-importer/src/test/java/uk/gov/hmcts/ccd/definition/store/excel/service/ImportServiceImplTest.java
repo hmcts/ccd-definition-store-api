@@ -181,7 +181,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity changeOrganisationRequest;
     private FieldTypeEntity caseLocation;
     private FieldTypeEntity baseLocation;
-    private FieldTypeEntity baseRegion;
+    private FieldTypeEntity region;
 
     @Before
     public void setup() {
@@ -235,7 +235,7 @@ public class ImportServiceImplTest {
         fixedListRadioTypeBaseType = buildBaseType(BASE_RADIO_FIXED_LIST);
         changeOrganisationRequest = buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST);
         baseLocation = buildBaseType(PREDEFINED_COMPLEX_BASE_LOCATION);
-        baseRegion = buildBaseType(PREDEFINED_COMPLEX_REGION_LOCATION);
+        region = buildBaseType(PREDEFINED_COMPLEX_REGION_LOCATION);
         caseLocation = buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
@@ -289,7 +289,7 @@ public class ImportServiceImplTest {
             dynamicListBaseType,
             changeOrganisationRequest,
             baseLocation,
-            baseRegion,
+            region,
             caseLocation));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
@@ -336,7 +336,7 @@ public class ImportServiceImplTest {
             dynamicListBaseType,
             changeOrganisationRequest,
             baseLocation,
-            baseRegion,
+            region,
             caseLocation));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
