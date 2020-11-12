@@ -84,7 +84,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="baseLocation" />
-            <column name="label" value="Organisation To Add" />
+            <column name="label" value="court location" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id"
                     valueComputed="(select id from field_type
@@ -99,7 +99,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="region" />
-            <column name="label" value="Organisation To Remove" />
+            <column name="label" value="region" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id"
                     valueComputed="(select id from field_type
