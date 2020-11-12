@@ -29,6 +29,10 @@
 		"case_type_id": "FT_DateTimeFormats",
 		"fields": [
 			{
+				"__ordering__": "unordered",
+				"__elementId__": "case_field_id,case_field_element_path"
+			},
+			{
 			 "metadata": true,
 			 "case_field_id": "[CASE_REFERENCE]",
 			 "case_field_element_path": null,
