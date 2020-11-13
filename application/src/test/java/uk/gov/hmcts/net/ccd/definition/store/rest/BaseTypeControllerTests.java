@@ -118,5 +118,7 @@ public class BaseTypeControllerTests extends BaseTest {
         assertEquals("Unexpected Base Type", "DynamicList", baseTypes[19].getType());
         assertEquals("Unexpected Base Type Id", "DynamicList", baseTypes[19].getId());
         assertNull("Unexpected Reg Ex", baseTypes[19].getRegularExpression());
+
+
     }
 }

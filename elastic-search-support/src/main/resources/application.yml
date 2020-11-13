@@ -70,7 +70,6 @@ elasticsearch:
     Postcode: ${elasticsearch.elasticMappings.defaultKeyword}
     Document: ${elasticsearch.elasticMappings.ccdDocument}
     FixedList: ${elasticsearch.elasticMappings.defaultText}
-    FixedList40: ${elasticsearch.elasticMappings.defaultText}
     FixedListEdit: ${elasticsearch.elasticMappings.defaultText}
     MultiSelectList: ${elasticsearch.elasticMappings.defaultText}
     FixedRadioList: ${elasticsearch.elasticMappings.defaultText}
