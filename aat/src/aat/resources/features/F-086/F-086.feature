@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-375
+@S-375 @Ignore
 Scenario: must return the Case Wizard Page Collection for a given case type
 
     Given a user with [an active profile in CCD]
