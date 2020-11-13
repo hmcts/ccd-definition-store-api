@@ -56,6 +56,7 @@ public class SecurityConfiguration
             "/v2/**",
             "/health",
             "/health/liveness",
+            "/health/readiness",
             "/status/health",
             "/",
             "/loggers/**");
