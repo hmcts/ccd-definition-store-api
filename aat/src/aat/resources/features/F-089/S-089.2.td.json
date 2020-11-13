@@ -336,6 +336,10 @@
                   "__elementId__": "reference,order"
                 },
 								{
+									"__ordering__": "unordered",
+									"__elementId__": "reference,order"
+								},
+								{
 									"reference": "OrganisationToAdd.OrganisationID",
 									"hint": null,
 									"label": null,

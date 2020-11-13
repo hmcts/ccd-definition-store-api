@@ -13,7 +13,7 @@ Feature: F-090: 'ChangeOrganisationRequest' Base Complex Type
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-090.3
+  @S-090.3 @Ignore
   Scenario: Must return all details successfully for a case type containing ChangeOrganisationRequest fields
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
