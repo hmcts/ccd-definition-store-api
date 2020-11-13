@@ -7,9 +7,9 @@
             delete from complex_field
             where reference = 'OrganisationName'
             and complex_field_type_id = (
-            select id from field_type
-            where reference = 'Organisation'
-            and jurisdiction_id is null
+                select id from field_type
+                where reference = 'Organisation'
+                and jurisdiction_id is null
             );
         </sql>
     </changeSet>
