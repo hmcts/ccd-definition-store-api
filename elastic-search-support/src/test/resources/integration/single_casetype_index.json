@@ -421,8 +421,8 @@
                     "analyzer": {
                         "phone_number_analyzer": {
                             "filter": [
-                              "shingle_filter",
-                              "whitespace_remove"
+                                "shingle_filter",
+                                "whitespace_remove"
                             ],
                             "type": "custom",
                             "tokenizer": "keyword"
