@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-080.1
+@S-080.1 @Ignore
 Scenario: must return case type details for the request
 
     Given a user with [an active profile in CCD]

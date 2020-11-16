@@ -32,7 +32,7 @@
           },
           "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
           "challenge_question_id": "NoCChallenge",
-          "answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Claimant],${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
+          "answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Claimant],${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
           "question_id": "NoCChallengeQ1"
         },
         {
@@ -51,7 +51,7 @@
           },
           "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
           "challenge_question_id": "NoCChallenge",
-          "answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
+          "answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
           "question_id": "NoCChallengeQ2"
         },
         {

@@ -262,6 +262,7 @@ subprojects { subproject ->
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
         testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: 'RDM-8934-testData'
+
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
