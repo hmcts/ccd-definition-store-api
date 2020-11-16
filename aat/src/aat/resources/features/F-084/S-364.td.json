@@ -33,6 +33,7 @@
 				"__elementId__": "case_field_id,case_field_element_path"
 			},
 			{
+       "_extends_" : "SearchResultsField",
 			 "metadata": true,
 			 "case_field_id": "[CASE_REFERENCE]",
 			 "label": "Case Reference",
