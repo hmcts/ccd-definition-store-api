@@ -132,11 +132,6 @@
                 },
                 {
                   "_extends_" : "CaseEventFieldComplex",
-                  "reference": "Organisation.OrganisationName",
-                  "order": 4
-                },
-                {
-                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyCaseAssignedRole",
                   "order": 5,
                   "defaultValue": "[Claimant]"
@@ -162,11 +157,6 @@
                   "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationID",
                   "order": 7
-                },
-                {
-                  "_extends_" : "CaseEventFieldComplex",
-                  "reference": "Organisation.OrganisationName",
-                  "order": 8
                 },
                 {
                   "_extends_" : "CaseEventFieldComplex",
@@ -254,11 +244,6 @@
                 },
                 {
                   "_extends_" : "CaseEventFieldComplex",
-                  "reference": "Organisation.OrganisationName",
-                  "order": 4
-                },
-                {
-                  "_extends_" : "CaseEventFieldComplex",
                   "reference": "OrgPolicyCaseAssignedRole",
                   "order": 5,
                   "defaultValue": "[Defendant]"
@@ -284,11 +269,6 @@
                   "_extends_" : "CaseEventFieldComplex",
                   "reference": "Organisation.OrganisationID",
                   "order": 7
-                },
-                {
-                  "_extends_" : "CaseEventFieldComplex",
-                  "reference": "Organisation.OrganisationName",
-                  "order": 8
                 },
                 {
                   "_extends_" : "CaseEventFieldComplex",
@@ -494,13 +474,6 @@
                       "label": "Organisation ID",
                       "hidden": null,
                       "acls": null
-                    },
-                    {
-                      "_extends_" : "CaseField",
-                      "id": "OrganisationName",
-                      "label": "Name",
-                      "hidden": null,
-                      "acls": null
                     }
                   ]
                 },
@@ -563,13 +536,6 @@
                       "_extends_" : "CaseField",
                       "id": "OrganisationID",
                       "label": "Organisation ID",
-                      "hidden": null,
-                      "acls": null
-                    },
-                    {
-                      "_extends_" : "CaseField",
-                      "id": "OrganisationName",
-                      "label": "Name",
                       "hidden": null,
                       "acls": null
                     }

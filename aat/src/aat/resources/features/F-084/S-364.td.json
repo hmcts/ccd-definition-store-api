@@ -29,7 +29,6 @@
 		"case_type_id": "FT_DateTimeFormats",
 		"fields": [
 			{
-        "_extends_" : "SearchResultsField",
 			 "metadata": true,
 			 "case_field_id": "[CASE_REFERENCE]",
 			 "label": "Case Reference",
