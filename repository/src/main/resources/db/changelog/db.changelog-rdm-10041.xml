@@ -19,7 +19,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="RegionId" />
-            <column name="label" value="The region in which the case is processed" />
+            <column name="label" value="The ID of a region" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type
             where reference = 'FixedList'
@@ -47,7 +47,7 @@
 
         <insert tableName="complex_field">
             <column name="reference" value="BaseLocationId" />
-            <column name="label" value="The court in which the case is processed" />
+            <column name="label" value="The ID of a court" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id" valueComputed="(select id from field_type
             where reference = 'FixedList'
