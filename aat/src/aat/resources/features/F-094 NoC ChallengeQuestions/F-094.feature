@@ -4,7 +4,7 @@ Feature: F-094 Retrieve ChallengeQuestions for Notice of Change
   Background:
     Given an appropriate test context as detailed in the test data source,
 
-  @S-094.1
+  @S-094.1 @Ignore
   Scenario: Must successfully return the contents of the ChallengeQuestion definition
     Given a user [MCA System - with an IDAM role of caseworker CAA],
     And the request [intends to get the contents of a set of questions],
