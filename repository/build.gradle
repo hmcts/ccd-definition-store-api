@@ -31,7 +31,7 @@ dependencies {
     compile (group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0') {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    compile "commons-beanutils:commons-beanutils:1.9.4"
+    compile "commons-beanutils:commons-beanutils:20030211.134440"
     compile "org.apache.commons:commons-lang3:3.11"
     compile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
