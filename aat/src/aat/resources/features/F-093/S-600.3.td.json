@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "'retainHiddenValue' can only be configured for a field that uses a showCondition. Field ['AddressField'] on ['CaseEventToFields'] does not use a showCondition"
+      "__plainTextValue__" : "'retainHiddenValue' can only be configured for a field that uses a showCondition. Field ['TextField'] on ['CaseEventToFields'] does not use a showCondition"
     }
   }
 }
