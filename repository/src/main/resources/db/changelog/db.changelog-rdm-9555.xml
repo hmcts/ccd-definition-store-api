@@ -3,9 +3,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-9555" author="kiran.yenigala@hmcts.net">
-        <validCheckSum>8:afb2314b9e59954d82b6f97ae516f681</validCheckSum>
         <createTable tableName="event_post_state">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="enabling_condition" type="varchar(2000)">

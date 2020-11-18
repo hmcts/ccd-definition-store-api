@@ -55,7 +55,7 @@ ext['hibernate-validator.version'] = '6.0.10.Final'
 ext['spring-security.version'] = '5.3.4.RELEASE'
 ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
-ext['liquibase.version'] = '3.6.3'
+ext['liquibase.version'] = '3.10.3'
 ext['postgresql.version'] = '42.2.16'
 ext['oauth2-oidc-sdk.version'] = '8.22'
 //overriding log4j2 default version 2.7 because of vulnerability issues
@@ -139,7 +139,7 @@ allprojects {
 
             eachDependency { details ->
                 if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
-                    details.useVersion '3.8.9'
+                    details.useVersion '3.10.3'
                 }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
@@ -261,7 +261,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.16.1'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.21.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024

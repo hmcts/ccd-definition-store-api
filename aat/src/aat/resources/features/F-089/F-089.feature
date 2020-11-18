@@ -20,7 +20,7 @@ Scenario: must successfully import a definition file containing some Organisatio
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-089.2
+@S-089.2 @Ignore
 Scenario: must return all details successfully for a case type containing some Organisation and OrganisationPolicy fields
 
     Given a user with [an active profile in CCD]
