@@ -1,0 +1,21 @@
+{
+  "_guid_": "BaseTestData",
+
+  "productName": "CCD Definition Store",
+  "operationName": "",
+  "method": "GET",
+  "uri": "",
+  "users": {
+    "invokingUser": {
+      "username": "master.caseworker@gmail.com",
+      "password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
+    }
+  },
+  "request": {
+    "headers": {
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "application/json"
+    }
+  }
+}
