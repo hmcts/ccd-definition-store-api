@@ -106,6 +106,10 @@
 					 },
 					 {
              "_extends_": "WizardPageComplexFieldOverride",
+						"complex_field_element_id": "OrganisationPolicyField1.Organisation.OrganisationName"
+					 },
+					 {
+             "_extends_": "WizardPageComplexFieldOverride",
 						"complex_field_element_id": "OrganisationPolicyField1.OrgPolicyCaseAssignedRole",
 						"default_value": "[Claimant]"
 					 },
@@ -127,6 +131,14 @@
               "_extends_": "WizardPageComplexFieldOverride",
               "complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationID"
             },
+					 {
+             "_extends_": "WizardPageComplexFieldOverride",
+						"complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationID"
+					 },
+					 {
+             "_extends_": "WizardPageComplexFieldOverride",
+						"complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationName"
+					 },
 					 {
              "_extends_": "WizardPageComplexFieldOverride",
 						"complex_field_element_id": "OrganisationPolicyField2.OrgPolicyCaseAssignedRole",
