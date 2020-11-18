@@ -85,6 +85,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_Y
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -176,6 +177,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity fixedListRadioTypeBaseType;
     private FieldTypeEntity dynamicListBaseType;
     private FieldTypeEntity changeOrganisationRequest;
+    private FieldTypeEntity previousOrganisationBaseType;
 
     @Before
     public void setup() {
@@ -228,6 +230,7 @@ public class ImportServiceImplTest {
         caseHistoryViewerBaseType = buildBaseType(BASE_CASE_HISTORY_VIEWER);
         fixedListRadioTypeBaseType = buildBaseType(BASE_RADIO_FIXED_LIST);
         changeOrganisationRequest = buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST);
+        previousOrganisationBaseType = buildBaseType(PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -278,7 +281,8 @@ public class ImportServiceImplTest {
             caseHistoryViewerBaseType,
             fixedListRadioTypeBaseType,
             dynamicListBaseType,
-            changeOrganisationRequest));
+            changeOrganisationRequest,
+            previousOrganisationBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -322,7 +326,8 @@ public class ImportServiceImplTest {
             caseHistoryViewerBaseType,
             fixedListRadioTypeBaseType,
             dynamicListBaseType,
-            changeOrganisationRequest));
+            changeOrganisationRequest,
+            previousOrganisationBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
