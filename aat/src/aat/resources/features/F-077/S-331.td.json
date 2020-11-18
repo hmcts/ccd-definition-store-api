@@ -24,101 +24,101 @@
 					"__ordering__": "unordered"
 				},
 				{
-          "_extends_": "FieldType"
+          "_extends_": "BaseTextFieldType"
         },
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "Number",
 					"type": "Number"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "Email",
 					"type": "Email"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "YesOrNo",
 					"type": "YesOrNo"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "Date",
 					"type": "Date"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "FixedList",
 					"type": "FixedList"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "Postcode",
 					"type": "Postcode",
 					"regular_expression": "^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "MoneyGBP",
 					"type": "MoneyGBP"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "PhoneUK",
 					"type": "PhoneUK",
 					"regular_expression": "^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "TextArea",
 					"type": "TextArea"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "Complex",
 					"type": "Complex"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "Collection",
 					"type": "Collection"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "MultiSelectList",
 					"type": "MultiSelectList"
 				},
-				{"_extends_": "FieldType",
+				{"_extends_": "CommonFieldType",
 					"id": "Document",
 					"type": "Document"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "Label",
 					"type": "Label"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "DateTime",
 					"type": "DateTime"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "CasePaymentHistoryViewer",
 					"type": "CasePaymentHistoryViewer"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "FixedRadioList",
 					"type": "FixedRadioList"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "CaseHistoryViewer",
 					"type": "CaseHistoryViewer"
 				},
 				{
-          "_extends_": "FieldType",
+          "_extends_": "CommonFieldType",
 					"id": "DynamicList",
 					"type": "DynamicList"
 				}

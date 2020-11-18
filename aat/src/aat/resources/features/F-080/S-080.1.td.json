@@ -906,7 +906,7 @@
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "Collection",
             "collection_field_type": {
-              "_extends_" : "FieldType"
+              "_extends_" : "BaseTextFieldType"
             }
           },
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
@@ -929,7 +929,7 @@
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "Collection",
             "collection_field_type": {
-              "_extends_" : "FieldType"
+              "_extends_" : "BaseTextFieldType"
             }
           },
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]"

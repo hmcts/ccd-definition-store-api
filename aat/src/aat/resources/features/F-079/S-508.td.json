@@ -454,9 +454,7 @@
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "Collection",
             "collection_field_type": {
-              "_extends_" : "FieldType",
-              "id": "FormatComplex",
-              "type": "Complex",
+              "_extends_" : "BaseComplexFieldType",
               "complex_fields": [
                 {
                   "_extends_" : "CaseField",
@@ -747,9 +745,7 @@
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "Collection",
             "collection_field_type": {
-              "_extends_" : "FieldType",
-              "id": "DateTime",
-              "type": "DateTime"
+              "_extends_" : "BaseDateTimeFieldType"
             }
           },
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
@@ -769,9 +765,7 @@
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "Collection",
             "collection_field_type": {
-              "_extends_" : "FieldType",
-              "id": "Date",
-              "type": "Date"
+              "_extends_" : "BaseDateFieldType"
             }
           },
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
