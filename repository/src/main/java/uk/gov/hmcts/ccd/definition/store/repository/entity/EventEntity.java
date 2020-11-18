@@ -34,6 +34,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
+import static org.apache.commons.lang3.BooleanUtils.toBooleanDefaultIfNull;
 import static org.hibernate.annotations.FetchMode.SUBSELECT;
 
 @Table(name = "event")
@@ -119,6 +120,9 @@ public class EventEntity implements Serializable {
 
     @Column(name = "can_save_draft")
     private Boolean canSaveDraft;
+
+    @Column(name = "publish")
+    private Boolean publish = Boolean.TRUE;
 
     public Integer getId() {
         return id;
@@ -296,6 +300,14 @@ public class EventEntity implements Serializable {
 
     public void setCanSaveDraft(Boolean canSaveDraft) {
         this.canSaveDraft = canSaveDraft;
+    }
+
+    public Boolean getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Boolean publish) {
+        this.publish = toBooleanDefaultIfNull(publish, true);
     }
 
     public List<EventPostStateEntity> getPostStates() {

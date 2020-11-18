@@ -90,6 +90,7 @@ public class EventParser {
         event.setDescription(eventDefinition.getString(ColumnName.DESCRIPTION));
         event.setOrder(eventDefinition.getInteger(ColumnName.DISPLAY_ORDER));
         event.setShowSummary(eventDefinition.getBoolean(ColumnName.SHOW_SUMMARY));
+        event.setPublish(eventDefinition.getBoolean(ColumnName.PUBLISH));
         event.setShowEventNotes(eventDefinition.getBoolean(ColumnName.SHOW_EVENT_NOTES));
         event.setCanSaveDraft(eventDefinition.getBoolean(ColumnName.CAN_SAVE_DRAFT));
         event.setEndButtonLabel(eventDefinition.getString(ColumnName.END_BUTTON_LABEL));

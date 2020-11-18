@@ -31,7 +31,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -261,6 +261,7 @@ public class EventParserTest extends ParserTestBase {
         assertThat(entity.getDescription(), is("event Description"));
         assertThat(entity.getEndButtonLabel(), is("End Button Label"));
         assertThat(entity.getCanSaveDraft(), is(true));
+        assertThat(entity.getPublish(), is(false));
     }
 
     private DefinitionDataItem buildSimpleDefinitionDataItem() {
@@ -271,6 +272,7 @@ public class EventParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.DESCRIPTION.toString(), "event Description");
         item.addAttribute(ColumnName.END_BUTTON_LABEL.toString(), "End Button Label");
         item.addAttribute(ColumnName.CAN_SAVE_DRAFT.toString(), "Y");
+        item.addAttribute(ColumnName.PUBLISH.toString(), "N");
         return item;
     }
 
