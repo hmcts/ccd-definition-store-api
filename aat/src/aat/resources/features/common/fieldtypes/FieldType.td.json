@@ -1,8 +1,8 @@
 {
-  "_guid_": "FieldType",
+  "_guid_": "CommonFieldType",
 
-  "id": "Text",
-  "type": "Text",
+  "id": "",
+  "type": "",
   "min": null,
   "max": null,
   "regular_expression": null,
