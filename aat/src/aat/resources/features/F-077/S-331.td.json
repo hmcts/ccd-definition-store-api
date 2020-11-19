@@ -27,36 +27,23 @@
           "_extends_": "BaseTextFieldType"
         },
 				{
-          "_extends_": "CommonFieldType",
-					"id": "Number",
-					"type": "Number"
+          "_extends_": "BaseNumberFieldType"
 				},
 				{
-          "_extends_": "CommonFieldType",
-					"id": "Email",
-					"type": "Email"
+          "_extends_": "BaseEmailFieldType"
 				},
 				{
-          "_extends_": "CommonFieldType",
-					"id": "YesOrNo",
-					"type": "YesOrNo"
+          "_extends_": "BaseYesOrNoFieldType"
 				},
 				{
-          "_extends_": "CommonFieldType",
-					"id": "Date",
-					"type": "Date"
+          "_extends_": "BaseDateFieldType"
 				},
 				{
-          "_extends_": "CommonFieldType",
-					"id": "FixedList",
-					"type": "FixedList"
+          "_extends_": "BaseFixedListFieldType"
 				},
 				{
-          "_extends_": "CommonFieldType",
-					"id": "Postcode",
-					"type": "Postcode",
-					"regular_expression": "^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$"
-				},
+          "_extends_": "BasePostcodeFieldType"
+        },
 				{
           "_extends_": "CommonFieldType",
 					"id": "MoneyGBP",
