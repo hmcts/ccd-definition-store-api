@@ -261,7 +261,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.20.0'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.15.1'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
@@ -344,7 +344,7 @@ sonarqube {
     properties {
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
         property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/junitPlatformTest.exec"
-        property "sonar.exclusions", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/AdminWebAuthorizationProperties.java,**/ProxyController.java,**/ReadinessHealthIndicator.java"
+        property "sonar.exclusions", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/AdminWebAuthorizationProperties.java,**/ProxyController.java"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
         property "sonar.jacoco.excludes", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java"
         property "sonar.coverage.exclusions", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/CaseTypeItem.java,**/ApplicationParams.java,**/CaseTypePresentationControllerService.java,**/DisplayService.java,**/DisplayItemAdapterService.java,**/DisplayApiPresentationControllerService.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/JacksonUtils.java,**/SwaggerConfiguration.java,**/ProxyController.java"

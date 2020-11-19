@@ -141,6 +141,14 @@
 						"default_value": null
 					 },
 					 {
+						"complex_field_element_id": "OrganisationPolicyField1.Organisation.OrganisationName",
+						"display_context": "OPTIONAL",
+						"label": null,
+						"hint_text": null,
+						"show_condition": null,
+						"default_value": null
+					 },
+					 {
 						"complex_field_element_id": "OrganisationPolicyField1.OrgPolicyCaseAssignedRole",
 						"display_context": "OPTIONAL",
 						"label": null,
@@ -169,6 +177,14 @@
 					 },
 					 {
 						"complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationID",
+						"display_context": "OPTIONAL",
+						"label": null,
+						"hint_text": null,
+						"show_condition": null,
+						"default_value": null
+					 },
+					 {
+						"complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationName",
 						"display_context": "OPTIONAL",
 						"label": null,
 						"hint_text": null,
