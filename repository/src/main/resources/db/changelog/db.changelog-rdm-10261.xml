@@ -1,0 +1,11 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-10261" author="rafal.kalita@hmcts.net">
+        <sql>
+            UPDATE complex_field Set field_type_id = (SELECT id from field_type WHERE field_type.reference = 'DynamicList' and version = 1 and jurisdiction_id is null)
+            WHERE reference = 'CaseRoleId' AND complex_field_type_id = (select id from field_type where reference = 'ChangeOrganisationRequest' and version = 1 and jurisdiction_id is null);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
