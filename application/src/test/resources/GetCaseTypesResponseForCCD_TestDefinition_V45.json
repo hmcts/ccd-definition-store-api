@@ -131,7 +131,7 @@
       "delete" : false
     } ],
     "show_summary" : true,
-    "publish" : true,
+    "publish" : false,
     "show_event_notes" : true,
     "can_save_draft" : true,
     "end_button_label" : "Save"
@@ -217,7 +217,7 @@
       "delete" : false
     } ],
     "show_summary" : false,
-    "publish" : true,
+    "publish" : false,
     "show_event_notes" : false,
     "can_save_draft" : null,
     "end_button_label" : "Create Draft"
@@ -254,7 +254,7 @@
       "delete" : false
     } ],
     "show_summary" : false,
-    "publish" : true,
+    "publish" : false,
     "show_event_notes" : null,
     "can_save_draft" : null,
     "end_button_label" : null

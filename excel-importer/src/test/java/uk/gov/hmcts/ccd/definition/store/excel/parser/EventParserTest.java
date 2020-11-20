@@ -78,8 +78,8 @@ public class EventParserTest extends ParserTestBase {
             parseContext,
             eventCaseFieldParser,
             eventCaseFieldComplexTypeParser,
-            entityToDefinitionDataItemRegistry
-        );
+            entityToDefinitionDataItemRegistry,
+            true);
 
         caseType = new CaseTypeEntity();
         caseType.setReference(CASE_TYPE_UNDER_TEST);
@@ -255,13 +255,41 @@ public class EventParserTest extends ParserTestBase {
         entity = new ArrayList<>(events).get(0);
     }
 
+    @Test
+    public void shouldAssignDefaultPublishIfColumnNotExists() {
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertThat(entity.getPublish(), is(true));
+    }
+
+    @Test
+    public void shouldAssignDefaultPublishIfColumnHasNullValue() {
+        item.addAttribute(ColumnName.PUBLISH.toString(), null);
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertThat(entity.getPublish(), is(true));
+    }
+
+    @Test
+    public void shouldAssignPublishValueFromColumn() {
+        item.addAttribute(ColumnName.PUBLISH.toString(), "N");
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertThat(entity.getPublish(), is(false));
+    }
+
     private void assertEvent(final EventEntity entity) {
         assertThat(entity.getReference(), is(EVENT_ID));
         assertThat(entity.getName(), is("event name"));
         assertThat(entity.getDescription(), is("event Description"));
         assertThat(entity.getEndButtonLabel(), is("End Button Label"));
         assertThat(entity.getCanSaveDraft(), is(true));
-        assertThat(entity.getPublish(), is(false));
     }
 
     private DefinitionDataItem buildSimpleDefinitionDataItem() {
@@ -272,7 +300,6 @@ public class EventParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.DESCRIPTION.toString(), "event Description");
         item.addAttribute(ColumnName.END_BUTTON_LABEL.toString(), "End Button Label");
         item.addAttribute(ColumnName.CAN_SAVE_DRAFT.toString(), "Y");
-        item.addAttribute(ColumnName.PUBLISH.toString(), "N");
         return item;
     }
 
