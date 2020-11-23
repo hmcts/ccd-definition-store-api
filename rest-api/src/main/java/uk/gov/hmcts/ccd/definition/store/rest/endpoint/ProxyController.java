@@ -17,6 +17,7 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +34,7 @@ public class ProxyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProxyController.class);
 
+    @Transactional
     @RequestMapping(value = "/proxy", method = RequestMethod.POST, produces = {"application/json"})
     public String proxyRequest(@RequestBody String url) throws IOException {
         HttpGet request = new HttpGet(url);
