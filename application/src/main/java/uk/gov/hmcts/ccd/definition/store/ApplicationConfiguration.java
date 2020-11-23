@@ -40,5 +40,4 @@ class ApplicationConfiguration {
     public CacheManagerCustomizer<CaffeineCacheManager> cacheManagerCustomizer() {
         return cacheManager -> cacheManager.setAllowNullValues(false);
     }
-
 }
