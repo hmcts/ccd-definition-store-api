@@ -171,7 +171,12 @@
 				"delete" : true
 			} ],
 			"searchAliasFields" : [ ],
-			"case_fields" : [ {
+			"case_fields" : [
+				{
+					"__ordering__": "UNORDERED",
+					"__elementId__": "id"
+				},
+				{
 				"metadata" : true,
 				"id" : "[STATE]",
 				"case_type_id" : "FT_MultiplePages",
