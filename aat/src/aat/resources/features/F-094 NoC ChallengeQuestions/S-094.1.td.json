@@ -17,6 +17,10 @@
     "body" : {
       "questions": [
         {
+          "__ordering__": "UNORDERED",
+          "__elementId__": "order"
+        },
+        {
           "case_type_id": "FT_ComplexOrganisation",
           "order": 1,
           "question_text": "What's the name of the party you wish to represent?",
