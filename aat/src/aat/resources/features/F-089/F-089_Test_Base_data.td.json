@@ -1,28 +1,6 @@
 {
-	"_guid_": "F-089_Test_Base_data",
+  "_guid_": "F-089_Test_Base_data",
+  "_extends_": "BaseTestDataPost",
 
-	"productName": "CCD Definition Store",
-	"operationName": "POST Case Definition File",
-
-	"method": "POST",
-	"uri": "/import",
-
-	"specs": [
-	 "an active profile in CCD"
-	],
-
-	"users": {
-	 "invokingUser": {
-		"username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
-		"password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
-	 }
-	},
-
-	"request": {
-	 "headers": {
-		"Authorization": "[[DEFAULT_AUTO_VALUE]]",
-		"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-		"Content-Type": "multipart/form-data"
-	 }
-	}
+  "operationName": "POST Case Definition File"
 }
