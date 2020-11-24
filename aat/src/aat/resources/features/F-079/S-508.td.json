@@ -454,7 +454,9 @@
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "Collection",
             "collection_field_type": {
-              "_extends_" : "BaseComplexFieldType",
+              "_extends_": "CommonFieldType",
+              "id": "FormatComplex",
+              "type": "Complex",
               "complex_fields": [
                 {
                   "_extends_" : "CaseField",

@@ -1,23 +1,17 @@
 {
-  "_guid_": "BaseTestDataPost",
+  "_guid_": "Post_Operation_Base_Data_on_Definition_Store",
 
   "productName": "CCD Definition Store",
-  "operationName": "",
-
   "method": "POST",
   "uri": "/import",
-
   "specs": [
     "an active profile in CCD"
   ],
-
   "users": {
     "invokingUser": {
-      "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
-      "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
+      "_extends_": "AutoUser"
     }
   },
-
   "request": {
     "headers": {
       "Authorization": "[[DEFAULT_AUTO_VALUE]]",
@@ -25,5 +19,4 @@
       "Content-Type": "multipart/form-data"
     }
   }
-
 }

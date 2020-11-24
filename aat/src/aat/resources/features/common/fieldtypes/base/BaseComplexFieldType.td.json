@@ -3,6 +3,6 @@
 
   "_extends_": "CommonFieldType",
 
-  "id": "FormatComplex",
+  "id": "Complex",
   "type": "Complex"
 }

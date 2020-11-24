@@ -1,7 +1,6 @@
 {
   "_guid_" : "CaseEventField",
 
-  "case_field_id": "",
   "display_context": "OPTIONAL",
   "display_context_parameter": null,
   "retain_hidden_value": null,

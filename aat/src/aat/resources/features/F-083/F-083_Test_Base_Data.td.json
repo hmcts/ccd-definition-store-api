@@ -1,6 +1,6 @@
 {
 	"_guid_": "F-083_Test_Base_Data",
-  "_extends_": "BaseTestDataGet",
+  "_extends_": "Get_Operation_Base_Data_on_Definition_Store",
 
 	"operationName": "Fetch UI definition for Search Inputs by CaseType",
 	"uri": "/api/display/search-input-definition/{id}",
