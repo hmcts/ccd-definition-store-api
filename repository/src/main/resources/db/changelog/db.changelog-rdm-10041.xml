@@ -3,63 +3,6 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-10041" author="rebecca.baker@hmcts.net">
-        <!-- Region -->
-        <insert tableName="field_type">
-            <column name="created_at" value="${now}" />
-            <column name="reference" value="Region" />
-            <column name="version" value="1" />
-            <column name="base_field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Complex'
-                        and jurisdiction_id is null
-                        and version = (select max(version)
-                        from field_type where reference = 'Complex'
-                        and jurisdiction_id is null
-                        and base_field_type_id is null))" />
-        </insert>
-
-        <insert tableName="complex_field">
-            <column name="reference" value="RegionId" />
-            <column name="label" value="The ID of a region" />
-            <column name="security_classification" value="PUBLIC" />
-            <column name="field_type_id" valueComputed="(select id from field_type
-            where reference = 'FixedList'
-            and version = 1
-            and jurisdiction_id is null)" />
-            <column name="complex_field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Region'
-                        and version = 1
-                        and jurisdiction_id is null)" />
-        </insert>
-
-        <!-- BaseLocation -->
-        <insert tableName="field_type">
-            <column name="created_at" value="${now}" />
-            <column name="reference" value="BaseLocation" />
-            <column name="version" value="1" />
-            <column name="base_field_type_id"
-                    valueComputed="(select id from field_type where reference = 'Complex'
-                        and jurisdiction_id is null
-                        and version = (select max(version)
-                        from field_type where reference = 'Complex'
-                        and jurisdiction_id is null
-                        and base_field_type_id is null))" />
-        </insert>
-
-        <insert tableName="complex_field">
-            <column name="reference" value="BaseLocationId" />
-            <column name="label" value="The ID of a court" />
-            <column name="security_classification" value="PUBLIC" />
-            <column name="field_type_id" valueComputed="(select id from field_type
-            where reference = 'FixedList'
-            and version = 1
-            and jurisdiction_id is null)" />
-            <column name="complex_field_type_id"
-                    valueComputed="(select id from field_type where reference = 'BaseLocation'
-                        and version = 1
-                        and jurisdiction_id is null)" />
-        </insert>
-
-
         <!-- CaseLocation -->
         <insert tableName="field_type">
             <column name="created_at" value="${now}"/>
@@ -75,12 +18,12 @@
         </insert>
 
         <insert tableName="complex_field">
-            <column name="reference" value="baseLocation" />
+            <column name="reference" value="BaseLocationId" />
             <column name="label" value="The court in which the case is processed" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id"
                     valueComputed="(select id from field_type
-                        where reference = 'BaseLocation'
+                        where reference = 'FixedList'
                         and version = 1
                         and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
@@ -90,12 +33,12 @@
         </insert>
 
         <insert tableName="complex_field">
-            <column name="reference" value="region" />
+            <column name="reference" value="RegionId" />
             <column name="label" value="The region in which the case is processed" />
             <column name="security_classification" value="PUBLIC" />
             <column name="field_type_id"
                     valueComputed="(select id from field_type
-                        where reference = 'Region'
+                        where reference = 'FixedList'
                         and version = 1
                         and jurisdiction_id is null)" />
             <column name="complex_field_type_id"
