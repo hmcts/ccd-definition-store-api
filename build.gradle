@@ -229,9 +229,7 @@ subprojects { subproject ->
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
         testCompile "org.postgresql:postgresql:42.2.16"
-        testCompile (group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.3') {
-            exclude group: 'org.postgresql', module: 'postgresql'
-        }
+        testCompile "org.testcontainers:postgresql:1.15.0"
         testCompile "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
