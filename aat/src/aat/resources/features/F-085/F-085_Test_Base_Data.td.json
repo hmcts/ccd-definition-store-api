@@ -1,6 +1,6 @@
 {
 	"_guid_": "F-085_Test_Base_Data",
-  "_extends_": "BaseTestData",
+  "_extends_": "BaseTestDataGet",
 
 	"operationName": "Tab Structure By CaseType",
 	"uri": "/api/display/tab-structure/{id}",

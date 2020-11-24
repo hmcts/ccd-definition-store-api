@@ -1,6 +1,6 @@
 {
 	"_guid_": "F-077_Test_Base_Data",
-  "_extends_": "BaseTestData",
+  "_extends_": "BaseTestDataGet",
 
 	"operationName": "Fetch All Base Types",
 	"uri": "/api/base-types"

@@ -1,6 +1,6 @@
 {
 	"_guid_": "F-088_Test_Base_Data",
-  "_extends_": "BaseTestData",
+  "_extends_": "BaseTestDataGet",
 
 	"operationName": "Fetch UI definition Work Basket results by CaseType",
 	"uri": "/api/display/work-basket-definition/{id}",

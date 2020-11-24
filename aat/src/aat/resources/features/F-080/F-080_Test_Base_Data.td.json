@@ -1,6 +1,6 @@
 {
 	"_guid_": "F-080_Test_Base_Data",
-  "_extends_": "BaseTestData",
+  "_extends_": "BaseTestDataGet",
 
 	"operationName": "Get Case Type Details",
 	"uri": "/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}",

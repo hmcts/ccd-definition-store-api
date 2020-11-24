@@ -1,6 +1,6 @@
 {
 	"_guid_": "F-081_Test_Base_Data",
-  "_extends_": "BaseTestData",
+  "_extends_": "BaseTestDataGet",
 
 	"operationName": "Get Jurisdiction Details",
 	"uri": "/api/data/jurisdictions",

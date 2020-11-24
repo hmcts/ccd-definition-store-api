@@ -1,6 +1,6 @@
 {
 	"_guid_": "F-084_Test_Base_Data",
-  "_extends_": "BaseTestData",
+  "_extends_": "BaseTestDataGet",
 
 	"operationName": "Fetch UI definition for Search Results By CaseType",
 	"uri": "/api/display/search-result-definition/{id}",

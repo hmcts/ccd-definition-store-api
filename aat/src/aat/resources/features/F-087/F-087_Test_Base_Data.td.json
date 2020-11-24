@@ -1,6 +1,6 @@
 {
 	"_guid_": "F-087_Test_Base_Data",
-  "_extends_": "BaseTestData",
+  "_extends_": "BaseTestDataGet",
 
 	"operationName": "Fetch UI definition for Work Basket Inputs By CaseType",
 	"uri": "/api/display/work-basket-input-definition/{id}",

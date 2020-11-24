@@ -1,6 +1,6 @@
 {
   "_guid_": "F-079_Test_Base_Data",
-  "_extends_": "BaseTestData",
+  "_extends_": "BaseTestDataGet",
   "operationName": "fetch a Case Type Schema",
   "uri": "/api/data/case-type/{id}",
   "request": {
