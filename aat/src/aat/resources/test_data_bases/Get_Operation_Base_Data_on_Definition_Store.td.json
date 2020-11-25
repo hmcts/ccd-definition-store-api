@@ -1,6 +1,0 @@
-{
-  "_guid_": "Get_Operation_Base_Data_on_Definition_Store",
-  "_extends_": "Test_Base_Data_on_Definition_Store",
-
-  "method": "GET"
-}
