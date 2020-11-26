@@ -206,18 +206,18 @@
               "__elementId__": "role"
             },
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-caa"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "[DEFENDANTSOLICITOR]"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ],
@@ -326,14 +326,14 @@
               "__elementId__": "role"
             },
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-caa"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ],
@@ -362,21 +362,21 @@
               "__elementId__": "role"
             },
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-caa"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "[CLAIMANTSOLICITOR]",
               "create": false,
               "update": false,
               "delete": false
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -389,10 +389,10 @@
           "title_display": null,
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-caa"
             }
           ]
@@ -405,18 +405,18 @@
           "__elementId__": "role"
         },
         {
-          "_extends_" : "AccessControlList"
+          "_extends_" : "AllGrantedAccessControlList"
         },
         {
-          "_extends_" : "AccessControlList",
+          "_extends_" : "AllGrantedAccessControlList",
           "role": "caseworker-caa"
         },
         {
-          "_extends_" : "AccessControlList",
+          "_extends_" : "AllGrantedAccessControlList",
           "role": "[CLAIMANT]"
         },
         {
-          "_extends_" : "AccessControlList",
+          "_extends_" : "AllGrantedAccessControlList",
           "role": "caseworker-befta_master-solicitor"
         }
       ],
@@ -463,10 +463,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -530,14 +530,14 @@
               "__elementId__": "role"
             },
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-caa"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -601,14 +601,14 @@
               "__elementId__": "role"
             },
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-caa"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -625,10 +625,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -645,10 +645,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -682,10 +682,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -702,10 +702,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -722,10 +722,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -742,10 +742,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -762,10 +762,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -782,10 +782,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -824,10 +824,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -923,10 +923,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -946,10 +946,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -980,10 +980,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -1000,10 +1000,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -1021,10 +1021,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -1071,10 +1071,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -1091,10 +1091,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -1111,10 +1111,10 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             },
             {
-              "_extends_" : "AccessControlList",
+              "_extends_" : "AllGrantedAccessControlList",
               "role": "caseworker-befta_master-solicitor"
             }
           ]
@@ -1127,7 +1127,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             }
           ]
         },
@@ -1221,7 +1221,7 @@
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "acls": [
             {
-              "_extends_" : "AccessControlList"
+              "_extends_" : "AllGrantedAccessControlList"
             }
           ]
         }
