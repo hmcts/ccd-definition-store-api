@@ -10,8 +10,8 @@ public interface SearchAliasFieldRepository extends JpaRepository<SearchAliasFie
 
     @Query("select s from SearchAliasFieldEntity s "
         + "where s.reference=?1 "
-        + "and s.caseType.id = (select c.id from CaseTypeEntity c "
-        + "where s.caseType.id=c.id "
+        + "and s.caseType = (select c from CaseTypeEntity c "
+        + "where c.reference=s.caseType.reference "
         + "and c.version = (select max(cm.version) from CaseTypeEntity as cm "
         + "where cm.reference = c.reference))")
     List<SearchAliasFieldEntity> findByReference(String reference);
