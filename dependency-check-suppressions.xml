@@ -46,34 +46,15 @@
 		<cve>CVE-2007-1652</cve>
 	</suppress>
 
-	<suppress>
-		<notes><![CDATA[
-			Jars: liquibase-core-3.6.3.jar: bootstrap.js (pkg:javascript/bootstrap@3.1.1)
-				  liquibase-core-3.6.3.jar: bootstrap.min.js (pkg:javascript/bootstrap@3.1.1)
-			Analysis: Upgrading liquibase is invalidating the DB schemas in changelog
-		]]></notes>
-		<cve>CVE-2018-14040</cve>
-		<cve>CVE-2018-14041</cve>
-		<cve>CVE-2018-14042</cve>
-		<cve>CVE-2019-8331</cve>
-	</suppress>
+
 
 	<suppress>
-		<notes><![CDATA[
-			Jar: liquibase-core-3.6.3.jar: jquery-1.11.0.min.js (pkg:javascript/jquery@1.11.0.min)
-			Analysis: Upgrading liquibase is invalidating the DB schemas in changelog
-		]]></notes>
-		<cve>CVE-2015-9251</cve>
-		<cve>CVE-2019-11358</cve>
-		<cve>CVE-2020-11022</cve>
-		<cve>CVE-2020-11023</cve>
-	</suppress>
-	<suppress> <!-- Temporary -->
-		<cve>CVE-2020-13943</cve>
-		<cve>CVE-2020-11996</cve>
-		<cve>CVE-2007-1652</cve>
-		<cve>CVE-2007-1651</cve>
-		<cve>CVE-2020-5421</cve>
+		<notes>Elastic Search CVE's</notes>
+		<cve>CVE-2015-3337</cve>
+		<cve>CVE-2015-5377</cve>
+		<cve>CVE-2015-5531</cve>
+		<cve>CVE-2014-6439</cve>
+		<cve>CVE-2015-1427</cve>
 		<cve>CVE-2020-7020</cve>
-  </suppress>
+	</suppress>
 </suppressions>
