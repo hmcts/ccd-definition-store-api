@@ -4,7 +4,7 @@ java:
   applicationPort: 4451
   aadIdentityName: ccd
   autoscaling:
-    enabled: true 
+    enabled: true
     maxReplicas: 4
   keyVaults:
     ccd:

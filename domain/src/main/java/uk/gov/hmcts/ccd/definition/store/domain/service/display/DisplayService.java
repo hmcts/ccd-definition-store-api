@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
@@ -41,41 +42,48 @@ public class DisplayService {
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
     }
 
+    @Transactional
     public SearchResultDefinition findSearchResultDefinitionForCaseType(String caseTypeId) {
         return mapToSearchResultDefinition(
             this.genericLayoutRepository.findSearchResultsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
+    @Transactional
     public SearchInputDefinition findSearchInputDefinitionForCaseType(String caseTypeId) {
         return mapToSearchInputDefinition(
             this.genericLayoutRepository.findSearchInputsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
+    @Transactional
     public CaseTabCollection findTabStructureForCaseType(String caseTypeId) {
         return mapToCaseTabCollection(this.displayGroupRepository.findTabsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
+    @Transactional
     public WorkbasketInputDefinition findWorkBasketInputDefinitionForCaseType(String caseTypeId) {
         return mapToWorkBasketInputDefinition(
             this.genericLayoutRepository.findWorkbasketInputByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
+    @Transactional
     public WorkBasketResult findWorkBasketDefinitionForCaseType(String caseTypeId) {
         return mapToWorkBasketResult(
             this.genericLayoutRepository.findWorkbasketByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
+    @Transactional
     public SearchCasesResult findSearchCasesResultDefinitionForCaseType(String caseTypeId) {
         return mapToSearchCasesResult(
             this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId), caseTypeId);
     }
 
+    @Transactional
     public SearchCasesResult findSearchCasesResultDefinitionForCaseType(String caseTypeId, String useCase) {
         return mapToSearchCasesResult(
             this.genericLayoutRepository.findSearchCasesResultsByCaseTypeReference(caseTypeId, useCase), caseTypeId);
     }
 
-
+    @Transactional
     public WizardPageCollection findWizardPageForCaseType(String caseTypeId, String eventReference) {
         return displayGroupAdapterService.findWizardPagesByCaseTypeId(caseTypeId, eventReference);
     }
