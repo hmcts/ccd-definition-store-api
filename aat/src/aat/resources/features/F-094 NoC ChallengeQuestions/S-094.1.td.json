@@ -1,83 +1,82 @@
 {
-  "_guid_" : "S-094.1",
-  "_extends_": "F-094_Test_Base_data",
-  "specs" : [
-    "contains a valid CaseType ID",
-    "contains a valid Collection Question ID"
-  ],
-  "request" : {
-    "pathVariables": {
-      "ctid": "FT_ComplexOrganisation",
-      "id": "NoCChallenge"
-    }
-  },
-
-  "expectedResponse" : {
-    "_extends_" : "Common_200_Response",
-    "body" : {
-      "questions": [
-        {
-          "__ordering__": "UNORDERED",
-          "__elementId__": "order"
-        },
-        {
-          "case_type_id": "FT_ComplexOrganisation",
-          "order": 1,
-          "question_text": "What's the name of the party you wish to represent?",
-          "answer_field_type": {
-            "id": "Date",
-            "type": "Date",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [],
-            "complex_fields": [],
-            "collection_field_type": null
-          },
-          "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
-          "challenge_question_id": "NoCChallenge",
-          "answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Claimant],${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
-          "question_id": "NoCChallengeQ1"
-        },
-        {
-          "case_type_id": "FT_ComplexOrganisation",
-          "order": 2,
-          "question_text": "What's xxxx?",
-          "answer_field_type": {
-            "id": "DateTime",
-            "type": "DateTime",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [],
-            "complex_fields": [],
-            "collection_field_type": null
-          },
-          "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
-          "challenge_question_id": "NoCChallenge",
-          "answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
-          "question_id": "NoCChallengeQ2"
-        },
-        {
-          "case_type_id": "FT_ComplexOrganisation",
-          "order": 3,
-          "question_text": "What  time is it?",
-          "answer_field_type": {
-            "id": "DateTime",
-            "type": "DateTime",
-            "min": null,
-            "max": null,
-            "regular_expression": null,
-            "fixed_list_items": [],
-            "complex_fields": [],
-            "collection_field_type": null
-          },
-          "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
-          "challenge_question_id": "NoCChallenge",
-          "answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
-          "question_id": "NoCChallengeQ3"
-        }
-      ]
-    }
-  }
+	"_guid_": "S-094.1",
+	"_extends_": "F-094_Test_Base_data",
+	"specs": [
+		"contains a valid CaseType ID",
+		"contains a valid Collection Question ID"
+	],
+	"request": {
+		"pathVariables": {
+			"ctid": "FT_ComplexOrganisation",
+			"id": "NoCChallenge"
+		}
+	},
+	"expectedResponse": {
+		"_extends_": "Common_200_Response",
+		"body": {
+			"questions": [
+				{
+					"__ordering__": "unordered",
+					"__elementId__": "question_id"
+				},
+				{
+					"case_type_id": "FT_ComplexOrganisation",
+					"order": 1,
+					"question_text": "What's the name of the party you wish to represent?",
+					"answer_field_type": {
+						"id": "Date",
+						"type": "Date",
+						"min": null,
+						"max": null,
+						"regular_expression": null,
+						"fixed_list_items": [],
+						"complex_fields": [],
+						"collection_field_type": null
+					},
+					"display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
+					"challenge_question_id": "NoCChallenge",
+					"answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Claimant],${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
+					"question_id": "NoCChallengeQ1"
+				},
+				{
+					"case_type_id": "FT_ComplexOrganisation",
+					"order": 2,
+					"question_text": "What's xxxx?",
+					"answer_field_type": {
+						"id": "DateTime",
+						"type": "DateTime",
+						"min": null,
+						"max": null,
+						"regular_expression": null,
+						"fixed_list_items": [],
+						"complex_fields": [],
+						"collection_field_type": null
+					},
+					"display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
+					"challenge_question_id": "NoCChallenge",
+					"answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
+					"question_id": "NoCChallengeQ2"
+				},
+				{
+					"case_type_id": "FT_ComplexOrganisation",
+					"order": 3,
+					"question_text": "What  time is it?",
+					"answer_field_type": {
+						"id": "DateTime",
+						"type": "DateTime",
+						"min": null,
+						"max": null,
+						"regular_expression": null,
+						"fixed_list_items": [],
+						"complex_fields": [],
+						"collection_field_type": null
+					},
+					"display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
+					"challenge_question_id": "NoCChallenge",
+					"answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
+					"question_id": "NoCChallengeQ3"
+				}
+			]
+		}
+	}
 }
