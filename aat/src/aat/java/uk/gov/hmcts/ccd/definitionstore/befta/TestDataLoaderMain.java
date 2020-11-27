@@ -5,6 +5,6 @@ public final class TestDataLoaderMain {
     }
 
     public static void main(String[] args) {
-        new DefinitionStoreTestAutomationAdapter();
+        new DefinitionStoreTestAutomationAdapter().getDataLoader().loadTestDataIfNecessary();
     }
 }

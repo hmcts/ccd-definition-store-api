@@ -113,7 +113,6 @@ cucumberReports {
 
 bootJar {
     enabled = false
-
 }
 
 jar {
