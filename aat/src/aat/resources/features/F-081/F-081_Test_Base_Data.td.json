@@ -1,25 +1,10 @@
 {
 	"_guid_": "F-081_Test_Base_Data",
+  "_extends_": "Get_Operation_Base_Data_on_Definition_Store",
 
-	"productName": "CCD Definition Store",
 	"operationName": "Get Jurisdiction Details",
-
-	"method": "GET",
 	"uri": "/api/data/jurisdictions",
-
-	"users": {
-	 "invokingUser": {
-		"username": "master.caseworker@gmail.com",
-		"password": "[[$CCD_BEFTA_MASTER_CASEWORKER_PWD]]"
-	 }
-	},
-
 	"request": {
-	 "headers": {
-		"Authorization": "[[DEFAULT_AUTO_VALUE]]",
-		"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-		"Content-Type": "application/json"
-	 },
 	 "queryParams": {
 		"ids": "BEFTA_MASTER"
 	 }

@@ -3,9 +3,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="rdm-6965" author="daniel.lysiak1@hmcts.net">
-        <validCheckSum>8:7343a36cb619211bdc5c2e8b5ddf01b3</validCheckSum>
         <createTable tableName="jurisdiction_ui_config">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="shuttered" type="boolean">

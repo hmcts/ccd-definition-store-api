@@ -42,39 +42,6 @@ class ImportDefinitionTest extends BaseTest {
             .contains("At least one case field must be defined for case type"));
     }
 
-    @Test
-    @DisplayName("Should Not import definition with invalid noc config for case type")
-    void shouldNotImportDefinitionWithInvalidNocConfig() {
-        Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        Response response = asUser.get()
-            .given()
-            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Invalid_NoC_Config.xlsx"))
-            .expect()
-            .statusCode(400)
-            .response()
-            .when()
-            .post("/import");
-        assert (response.getBody().prettyPrint()
-            .contains("Only one NoC config is allowed per case type(s) "
-                + "AATPUBLIC,AATRESTRICTED"));
-    }
-
-    @Test
-    @DisplayName("Should Not import definition with invalid case type id defined in noc config")
-    void shouldNotImportDefinitionWithInvalidCaseTypeIdNocConfig() {
-        Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        Response response = asUser.get()
-            .given()
-            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Invalid_Case_Type_NoC_Config.xlsx"))
-            .expect()
-            .statusCode(400)
-            .response()
-            .when()
-            .post("/import");
-        assert (response.getBody().prettyPrint()
-            .contains("Unknown Case Type(s) 'AATPUBLIC1' in worksheet 'NoticeOfChangeConfig'"));
-    }
-
     @Disabled("This test case is breaking the master build. Marking it ignored to unblock the other developers."
         + "Fix will follow in next pull request")
     @Test

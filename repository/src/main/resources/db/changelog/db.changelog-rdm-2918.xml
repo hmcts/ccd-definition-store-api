@@ -5,13 +5,12 @@
     <property name="now" value="now()" dbms="postgresql"/>
 
     <changeSet id="rdm-2918" author="daniel.lam@hmcts.net">
-        <validCheckSum>8:1232c0c31d43aad7e50e5732832745b9</validCheckSum>
         <sql>
             CREATE TYPE definitionStatus AS ENUM ('DRAFT', 'PUBLISHED');
         </sql>
 
         <createTable tableName="definition_designer">
-            <column autoIncrement="true" name="id" type="serial">
+            <column name="id" type="serial">
                 <constraints nullable="false"/>
             </column>
             <column name="jurisdiction_id" type="integer">
