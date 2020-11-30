@@ -64,6 +64,12 @@ public class EventComplexTypeEntity implements Serializable {
     @JoinColumn(name = "event_case_field_id", nullable = false)
     private EventCaseFieldEntity complexFieldType;
 
+    @Column(name = "publish")
+    private Boolean publish;
+
+    @Column(name = "publish_as")
+    private String publishAs;
+
     public String getReference() {
         return reference;
     }
@@ -144,4 +150,19 @@ public class EventComplexTypeEntity implements Serializable {
         this.defaultValue = defaultValue;
     }
 
+    public Boolean getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Boolean publish) {
+        this.publish = publish;
+    }
+
+    public String getPublishAs() {
+        return publishAs;
+    }
+
+    public void setPublishAs(String publishAs) {
+        this.publishAs = publishAs;
+    }
 }

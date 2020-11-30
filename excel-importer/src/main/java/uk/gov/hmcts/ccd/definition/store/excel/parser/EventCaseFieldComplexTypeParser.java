@@ -36,6 +36,10 @@ public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser
             eventComplexTypeEntity.setDisplayContext(displayContextColumn.getDisplayContext());
             eventComplexTypeEntity.setShowCondition(parseShowCondition(
                 definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
+
+            eventComplexTypeEntity.setPublish(definitionDataItem.getBooleanOrDefault(ColumnName.PUBLISH, false));
+            eventComplexTypeEntity.setPublishAs(definitionDataItem.getString(ColumnName.PUBLISH_AS));
+
             eventComplexTypeEntities.add(eventComplexTypeEntity);
         }
         return eventComplexTypeEntities;

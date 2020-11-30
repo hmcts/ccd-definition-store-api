@@ -47,6 +47,9 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
         eventCaseField.setHintText(eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_FIELD_HINT));
         eventCaseField.setRetainHiddenValue(hiddenFieldsValidator.parseHiddenFields(eventCaseFieldDefinition));
 
+        eventCaseField.setPublish(eventCaseFieldDefinition.getBooleanOrDefault(ColumnName.PUBLISH, false));
+        eventCaseField.setPublishAs(eventCaseFieldDefinition.getString(ColumnName.PUBLISH_AS));
+
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(
             eventCaseField, eventCaseFieldDefinition);
 

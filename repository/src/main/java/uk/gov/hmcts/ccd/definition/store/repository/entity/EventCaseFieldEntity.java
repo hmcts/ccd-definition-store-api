@@ -76,6 +76,13 @@ public class EventCaseFieldEntity implements Serializable {
     @Column(name = "retain_hidden_value")
     private Boolean retainHiddenValue;
 
+    @Column(name = "publish")
+    private Boolean publish;
+
+    @Column(name = "publish_as")
+    private String publishAs;
+
+
     public DisplayContext getDisplayContext() {
         return displayContext;
     }
@@ -167,5 +174,21 @@ public class EventCaseFieldEntity implements Serializable {
 
     public void setRetainHiddenValue(Boolean retainHiddenValue) {
         this.retainHiddenValue = retainHiddenValue;
+    }
+
+    public Boolean getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Boolean publish) {
+        this.publish = publish;
+    }
+
+    public String getPublishAs() {
+        return publishAs;
+    }
+
+    public void setPublishAs(String publishAs) {
+        this.publishAs = publishAs;
     }
 }
