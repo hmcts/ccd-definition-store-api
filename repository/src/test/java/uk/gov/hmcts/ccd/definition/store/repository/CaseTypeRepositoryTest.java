@@ -195,7 +195,7 @@ public class CaseTypeRepositoryTest {
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertEquals(7, caseTypeEntities.size());
-        assertEquals(3, caseTypeEntities.get(0).getVersion().intValue());
+        assertEquals(1, caseTypeEntities.get(0).getVersion().intValue());
     }
 
     @Test
