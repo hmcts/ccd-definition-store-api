@@ -1,5 +1,6 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matcher;
@@ -345,6 +346,12 @@ public class SpreadSheetImportTest extends BaseTest {
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         JSONAssert.assertEquals(removeGuids(expected), removeGuids(contentAsString), JSONCompareMode.LENIENT);
+    }
+
+    private String formatJsonString(String string) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writerWithDefaultPrettyPrinter()
+            .writeValueAsString(objectMapper.readValue(string, Object.class));
     }
 
     private String removeGuids(String response) throws IOException {

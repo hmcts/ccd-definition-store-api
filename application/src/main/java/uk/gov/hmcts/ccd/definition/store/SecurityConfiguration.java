@@ -50,12 +50,13 @@ public class SecurityConfiguration
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/swagger-ui.html",
-            "/webjars/springfox-swagger-ui/**",
-            "/swagger-resources/**",
+        web.ignoring().antMatchers("/swagger-resources/**",
+            "/swagger-ui/**",
+            "/webjars/**",
             "/v2/**",
             "/health",
             "/health/liveness",
+            "/health/readiness",
             "/status/health",
             "/",
             "/loggers/**");
