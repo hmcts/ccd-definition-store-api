@@ -62,15 +62,14 @@ SET default_tablespace = '';
 -- Name: banner; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.banner
-(
-    id                 integer                                   NOT NULL,
-    banner_enabled     boolean                                   NOT NULL,
-    banner_description character varying(300)                    NOT NULL,
-    banner_url_text    character varying(50),
-    banner_url         character varying(300),
-    created_at         timestamp without time zone DEFAULT now() NOT NULL,
-    jurisdiction_id    integer                                   NOT NULL
+CREATE TABLE public.banner (
+                               id integer NOT NULL,
+                               banner_enabled boolean NOT NULL,
+                               banner_description character varying(300) NOT NULL,
+                               banner_url_text character varying(50),
+                               banner_url character varying(300),
+                               created_at timestamp without time zone DEFAULT now() NOT NULL,
+                               jurisdiction_id integer NOT NULL
 );
 
 
@@ -97,20 +96,19 @@ ALTER SEQUENCE public.banner_id_seq OWNED BY public.banner.id;
 -- Name: case_field; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.case_field
-(
-    id                      integer                                                        NOT NULL,
-    reference               character varying(70)                                          NOT NULL,
-    live_from               date,
-    live_to                 date,
-    label                   text                                                           NOT NULL,
-    hint                    text,
-    hidden                  boolean,
-    security_classification public.security_classification                                 NOT NULL,
-    field_type_id           integer                                                        NOT NULL,
-    case_type_id            integer,
-    data_field_type         public.datafieldtype DEFAULT 'CASE_DATA'::public.datafieldtype NOT NULL,
-    searchable              boolean              DEFAULT true                              NOT NULL
+CREATE TABLE public.case_field (
+                                   id integer NOT NULL,
+                                   reference character varying(70) NOT NULL,
+                                   live_from date,
+                                   live_to date,
+                                   label text NOT NULL,
+                                   hint text,
+                                   hidden boolean,
+                                   security_classification public.security_classification NOT NULL,
+                                   field_type_id integer NOT NULL,
+                                   case_type_id integer,
+                                   data_field_type public.datafieldtype DEFAULT 'CASE_DATA'::public.datafieldtype NOT NULL,
+                                   searchable boolean DEFAULT true NOT NULL
 );
 
 
@@ -118,18 +116,17 @@ CREATE TABLE public.case_field
 -- Name: case_field_acl; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.case_field_acl
-(
-    id            integer                                   NOT NULL,
-    case_field_id integer                                   NOT NULL,
-    "create"      boolean                                   NOT NULL,
-    read          boolean                                   NOT NULL,
-    update        boolean                                   NOT NULL,
-    delete        boolean                                   NOT NULL,
-    live_from     date,
-    live_to       date,
-    created_at    timestamp without time zone DEFAULT now() NOT NULL,
-    role_id       integer                                   NOT NULL
+CREATE TABLE public.case_field_acl (
+                                       id integer NOT NULL,
+                                       case_field_id integer NOT NULL,
+                                       "create" boolean NOT NULL,
+                                       read boolean NOT NULL,
+                                       update boolean NOT NULL,
+                                       delete boolean NOT NULL,
+                                       live_from date,
+                                       live_to date,
+                                       created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                       role_id integer NOT NULL
 );
 
 
@@ -175,19 +172,18 @@ ALTER SEQUENCE public.case_field_id_seq OWNED BY public.case_field.id;
 -- Name: case_type; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.case_type
-(
-    id                      integer                        NOT NULL,
-    created_at              timestamp without time zone    NOT NULL,
-    reference               character varying(70)          NOT NULL,
-    version                 integer                        NOT NULL,
-    live_from               date,
-    live_to                 date,
-    name                    character varying(30)          NOT NULL,
-    description             character varying(100),
-    print_webhook_id        integer,
-    jurisdiction_id         integer                        NOT NULL,
-    security_classification public.security_classification NOT NULL
+CREATE TABLE public.case_type (
+                                  id integer NOT NULL,
+                                  created_at timestamp without time zone NOT NULL,
+                                  reference character varying(70) NOT NULL,
+                                  version integer NOT NULL,
+                                  live_from date,
+                                  live_to date,
+                                  name character varying(30) NOT NULL,
+                                  description character varying(100),
+                                  print_webhook_id integer,
+                                  jurisdiction_id integer NOT NULL,
+                                  security_classification public.security_classification NOT NULL
 );
 
 
@@ -195,18 +191,17 @@ CREATE TABLE public.case_type
 -- Name: case_type_acl; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.case_type_acl
-(
-    id           integer                                   NOT NULL,
-    case_type_id integer                                   NOT NULL,
-    "create"     boolean                                   NOT NULL,
-    read         boolean                                   NOT NULL,
-    update       boolean                                   NOT NULL,
-    delete       boolean                                   NOT NULL,
-    live_from    date,
-    live_to      date,
-    created_at   timestamp without time zone DEFAULT now() NOT NULL,
-    role_id      integer                                   NOT NULL
+CREATE TABLE public.case_type_acl (
+                                      id integer NOT NULL,
+                                      case_type_id integer NOT NULL,
+                                      "create" boolean NOT NULL,
+                                      read boolean NOT NULL,
+                                      update boolean NOT NULL,
+                                      delete boolean NOT NULL,
+                                      live_from date,
+                                      live_to date,
+                                      created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                      role_id integer NOT NULL
 );
 
 
@@ -252,17 +247,16 @@ ALTER SEQUENCE public.case_type_id_seq OWNED BY public.case_type.id;
 -- Name: challenge_question; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.challenge_question
-(
-    id                        integer                 NOT NULL,
-    case_type_id              integer                 NOT NULL,
-    display_order             integer                 NOT NULL,
-    question_text             character varying(1000) NOT NULL,
-    answer_field_type         integer                 NOT NULL,
-    display_context_parameter character varying(1000),
-    challenge_question_id     character varying(70)   NOT NULL,
-    answer_field              character varying(1000) NOT NULL,
-    question_id               character varying(70)   NOT NULL
+CREATE TABLE public.challenge_question (
+                                           id integer NOT NULL,
+                                           case_type_id integer NOT NULL,
+                                           display_order integer NOT NULL,
+                                           question_text character varying(1000) NOT NULL,
+                                           answer_field_type integer NOT NULL,
+                                           display_context_parameter character varying(1000),
+                                           challenge_question_id character varying(70) NOT NULL,
+                                           answer_field character varying(1000) NOT NULL,
+                                           question_id character varying(70) NOT NULL
 );
 
 
@@ -289,21 +283,20 @@ ALTER SEQUENCE public.challenge_question_id_seq OWNED BY public.challenge_questi
 -- Name: complex_field; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.complex_field
-(
-    id                        integer                        NOT NULL,
-    reference                 character varying(70)          NOT NULL,
-    label                     character varying(200)         NOT NULL,
-    hint                      text,
-    hidden                    boolean,
-    security_classification   public.security_classification NOT NULL,
-    field_type_id             integer                        NOT NULL,
-    complex_field_type_id     integer                        NOT NULL,
-    show_condition            character varying(1000),
-    display_order             integer,
-    display_context_parameter character varying(1000),
-    searchable                boolean DEFAULT true           NOT NULL,
-    retain_hidden_value       boolean
+CREATE TABLE public.complex_field (
+                                      id integer NOT NULL,
+                                      reference character varying(70) NOT NULL,
+                                      label character varying(200) NOT NULL,
+                                      hint text,
+                                      hidden boolean,
+                                      security_classification public.security_classification NOT NULL,
+                                      field_type_id integer NOT NULL,
+                                      complex_field_type_id integer NOT NULL,
+                                      show_condition character varying(1000),
+                                      display_order integer,
+                                      display_context_parameter character varying(1000),
+                                      searchable boolean DEFAULT true NOT NULL,
+                                      retain_hidden_value boolean
 );
 
 
@@ -311,19 +304,18 @@ CREATE TABLE public.complex_field
 -- Name: complex_field_acl; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.complex_field_acl
-(
-    id                integer                                   NOT NULL,
-    case_field_id     integer                                   NOT NULL,
-    list_element_code character varying(1000)                   NOT NULL,
-    role_id           integer                                   NOT NULL,
-    "create"          boolean                                   NOT NULL,
-    read              boolean                                   NOT NULL,
-    update            boolean                                   NOT NULL,
-    delete            boolean                                   NOT NULL,
-    live_from         date,
-    live_to           date,
-    created_at        timestamp without time zone DEFAULT now() NOT NULL
+CREATE TABLE public.complex_field_acl (
+                                          id integer NOT NULL,
+                                          case_field_id integer NOT NULL,
+                                          list_element_code character varying(1000) NOT NULL,
+                                          role_id integer NOT NULL,
+                                          "create" boolean NOT NULL,
+                                          read boolean NOT NULL,
+                                          update boolean NOT NULL,
+                                          delete boolean NOT NULL,
+                                          live_from date,
+                                          live_to date,
+                                          created_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -368,20 +360,19 @@ ALTER SEQUENCE public.complex_field_id_seq OWNED BY public.complex_field.id;
 -- Name: definition_designer; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.definition_designer
-(
-    id              integer                                   NOT NULL,
-    jurisdiction_id integer                                   NOT NULL,
-    case_types      character varying(100),
-    description     character varying(100)                    NOT NULL,
-    version         integer                                   NOT NULL,
-    status          public.definitionstatus                   NOT NULL,
-    data            jsonb                                     NOT NULL,
-    author          character varying(70)                     NOT NULL,
-    created_at      timestamp without time zone DEFAULT now() NOT NULL,
-    last_modified   timestamp without time zone DEFAULT now() NOT NULL,
-    deleted         boolean                     DEFAULT false NOT NULL,
-    optimistic_lock integer                                   NOT NULL
+CREATE TABLE public.definition_designer (
+                                            id integer NOT NULL,
+                                            jurisdiction_id integer NOT NULL,
+                                            case_types character varying(100),
+                                            description character varying(100) NOT NULL,
+                                            version integer NOT NULL,
+                                            status public.definitionstatus NOT NULL,
+                                            data jsonb NOT NULL,
+                                            author character varying(70) NOT NULL,
+                                            created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                            last_modified timestamp without time zone DEFAULT now() NOT NULL,
+                                            deleted boolean DEFAULT false NOT NULL,
+                                            optimistic_lock integer NOT NULL
 );
 
 
@@ -408,24 +399,21 @@ ALTER SEQUENCE public.definition_designer_id_seq OWNED BY public.definition_desi
 -- Name: display_group; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.display_group
-(
-    id                   integer               NOT NULL,
-    reference            character varying(70) NOT NULL,
-    label                character varying(200),
-    channel              character varying(64),
-    display_order        integer,
-    type                 character varying(16) NOT NULL,
-    purpose              character varying(16) NOT NULL,
-    case_type_id         integer               NOT NULL,
-    event_id             integer,
-    show_condition       character varying(1000),
-    webhook_mid_event_id integer,
-    role_id              integer,
-    CONSTRAINT enum_display_group_purpose CHECK (((purpose)::text = ANY
-                                                  ((ARRAY ['VIEW'::character varying, 'EDIT'::character varying])::text[]))),
-    CONSTRAINT enum_display_group_type CHECK (((type)::text = ANY
-                                               ((ARRAY ['TAB'::character varying, 'PAGE'::character varying, 'EXPAND'::character varying])::text[])))
+CREATE TABLE public.display_group (
+                                      id integer NOT NULL,
+                                      reference character varying(70) NOT NULL,
+                                      label character varying(200),
+                                      channel character varying(64),
+                                      display_order integer,
+                                      type character varying(16) NOT NULL,
+                                      purpose character varying(16) NOT NULL,
+                                      case_type_id integer NOT NULL,
+                                      event_id integer,
+                                      show_condition character varying(1000),
+                                      webhook_mid_event_id integer,
+                                      role_id integer,
+                                      CONSTRAINT enum_display_group_purpose CHECK (((purpose)::text = ANY ((ARRAY['VIEW'::character varying, 'EDIT'::character varying])::text[]))),
+                                      CONSTRAINT enum_display_group_type CHECK (((type)::text = ANY ((ARRAY['TAB'::character varying, 'PAGE'::character varying, 'EXPAND'::character varying])::text[])))
 );
 
 
@@ -433,17 +421,16 @@ CREATE TABLE public.display_group
 -- Name: display_group_case_field; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.display_group_case_field
-(
-    id                        integer NOT NULL,
-    live_from                 date,
-    live_to                   date,
-    display_order             integer,
-    display_group_id          integer NOT NULL,
-    case_field_id             integer NOT NULL,
-    page_column_no            integer,
-    show_condition            character varying(1000),
-    display_context_parameter character varying(1000)
+CREATE TABLE public.display_group_case_field (
+                                                 id integer NOT NULL,
+                                                 live_from date,
+                                                 live_to date,
+                                                 display_order integer,
+                                                 display_group_id integer NOT NULL,
+                                                 case_field_id integer NOT NULL,
+                                                 page_column_no integer,
+                                                 show_condition character varying(1000),
+                                                 display_context_parameter character varying(1000)
 );
 
 
@@ -489,22 +476,21 @@ ALTER SEQUENCE public.display_group_id_seq OWNED BY public.display_group.id;
 -- Name: event; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.event
-(
-    id                      integer                        NOT NULL,
-    reference               character varying(70)          NOT NULL,
-    live_from               date,
-    live_to                 date,
-    name                    character varying(30)          NOT NULL,
-    description             character varying(100),
-    can_create              boolean                        NOT NULL,
-    display_order           integer,
-    case_type_id            integer                        NOT NULL,
-    security_classification public.security_classification NOT NULL,
-    show_summary            boolean,
-    end_button_label        character varying(200),
-    show_event_notes        boolean,
-    can_save_draft          boolean
+CREATE TABLE public.event (
+                              id integer NOT NULL,
+                              reference character varying(70) NOT NULL,
+                              live_from date,
+                              live_to date,
+                              name character varying(30) NOT NULL,
+                              description character varying(100),
+                              can_create boolean NOT NULL,
+                              display_order integer,
+                              case_type_id integer NOT NULL,
+                              security_classification public.security_classification NOT NULL,
+                              show_summary boolean,
+                              end_button_label character varying(200),
+                              show_event_notes boolean,
+                              can_save_draft boolean
 );
 
 
@@ -512,18 +498,17 @@ CREATE TABLE public.event
 -- Name: event_acl; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.event_acl
-(
-    id         integer                                   NOT NULL,
-    event_id   integer                                   NOT NULL,
-    "create"   boolean                                   NOT NULL,
-    read       boolean                                   NOT NULL,
-    update     boolean                                   NOT NULL,
-    delete     boolean                                   NOT NULL,
-    live_from  date,
-    live_to    date,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    role_id    integer                                   NOT NULL
+CREATE TABLE public.event_acl (
+                                  id integer NOT NULL,
+                                  event_id integer NOT NULL,
+                                  "create" boolean NOT NULL,
+                                  read boolean NOT NULL,
+                                  update boolean NOT NULL,
+                                  delete boolean NOT NULL,
+                                  live_from date,
+                                  live_to date,
+                                  created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                  role_id integer NOT NULL
 );
 
 
@@ -550,19 +535,18 @@ ALTER SEQUENCE public.event_acl_id_seq OWNED BY public.event_acl.id;
 -- Name: event_case_field; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.event_case_field
-(
-    id                          integer               NOT NULL,
-    event_id                    integer               NOT NULL,
-    case_field_id               integer               NOT NULL,
-    show_condition              character varying(1000),
-    show_summary_change_option  boolean,
-    display_context             public.displaycontext NOT NULL,
-    show_summary_content_option integer,
-    label                       text,
-    hint_text                   text,
-    display_context_parameter   character varying(1000),
-    retain_hidden_value         boolean
+CREATE TABLE public.event_case_field (
+                                         id integer NOT NULL,
+                                         event_id integer NOT NULL,
+                                         case_field_id integer NOT NULL,
+                                         show_condition character varying(1000),
+                                         show_summary_change_option boolean,
+                                         display_context public.displaycontext NOT NULL,
+                                         show_summary_content_option integer,
+                                         label text,
+                                         hint_text text,
+                                         display_context_parameter character varying(1000),
+                                         retain_hidden_value boolean
 );
 
 
@@ -570,19 +554,18 @@ CREATE TABLE public.event_case_field
 -- Name: event_case_field_complex_type; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.event_case_field_complex_type
-(
-    id                  integer               NOT NULL,
-    reference           character varying(70) NOT NULL,
-    live_from           date,
-    live_to             date,
-    label               character varying(200),
-    hint                text,
-    display_order       integer,
-    display_context     public.displaycontext NOT NULL,
-    show_condition      character varying(1000),
-    event_case_field_id integer               NOT NULL,
-    default_value       character varying(200)
+CREATE TABLE public.event_case_field_complex_type (
+                                                      id integer NOT NULL,
+                                                      reference character varying(70) NOT NULL,
+                                                      live_from date,
+                                                      live_to date,
+                                                      label character varying(200),
+                                                      hint text,
+                                                      display_order integer,
+                                                      display_context public.displaycontext NOT NULL,
+                                                      show_condition character varying(1000),
+                                                      event_case_field_id integer NOT NULL,
+                                                      default_value character varying(200)
 );
 
 
@@ -647,13 +630,12 @@ ALTER SEQUENCE public.event_id_seq OWNED BY public.event.id;
 -- Name: event_post_state; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.event_post_state
-(
-    id                   integer NOT NULL,
-    enabling_condition   character varying(2000),
-    priority             integer,
-    case_event_id        integer NOT NULL,
-    post_state_reference character varying(70)
+CREATE TABLE public.event_post_state (
+                                         id integer NOT NULL,
+                                         enabling_condition character varying(2000),
+                                         priority integer,
+                                         case_event_id integer NOT NULL,
+                                         post_state_reference character varying(70)
 );
 
 
@@ -680,10 +662,9 @@ ALTER SEQUENCE public.event_post_state_id_seq OWNED BY public.event_post_state.i
 -- Name: event_pre_state; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.event_pre_state
-(
-    event_id integer NOT NULL,
-    state_id integer NOT NULL
+CREATE TABLE public.event_pre_state (
+                                        event_id integer NOT NULL,
+                                        state_id integer NOT NULL
 );
 
 
@@ -691,12 +672,11 @@ CREATE TABLE public.event_pre_state
 -- Name: event_webhook; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.event_webhook
-(
-    id           integer             NOT NULL,
-    webhook_id   integer             NOT NULL,
-    event_id     integer             NOT NULL,
-    webhook_type public.webhook_type NOT NULL
+CREATE TABLE public.event_webhook (
+                                      id integer NOT NULL,
+                                      webhook_id integer NOT NULL,
+                                      event_id integer NOT NULL,
+                                      webhook_type public.webhook_type NOT NULL
 );
 
 
@@ -723,18 +703,17 @@ ALTER SEQUENCE public.event_webhook_id_seq OWNED BY public.event_webhook.id;
 -- Name: field_type; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.field_type
-(
-    id                       integer                     NOT NULL,
-    created_at               timestamp without time zone NOT NULL,
-    reference                character varying(70)       NOT NULL,
-    version                  integer                     NOT NULL,
-    minimum                  text,
-    maximum                  text,
-    regular_expression       text,
-    jurisdiction_id          integer,
-    base_field_type_id       integer,
-    collection_field_type_id integer
+CREATE TABLE public.field_type (
+                                   id integer NOT NULL,
+                                   created_at timestamp without time zone NOT NULL,
+                                   reference character varying(70) NOT NULL,
+                                   version integer NOT NULL,
+                                   minimum text,
+                                   maximum text,
+                                   regular_expression text,
+                                   jurisdiction_id integer,
+                                   base_field_type_id integer,
+                                   collection_field_type_id integer
 );
 
 
@@ -761,13 +740,12 @@ ALTER SEQUENCE public.field_type_id_seq OWNED BY public.field_type.id;
 -- Name: field_type_list_item; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.field_type_list_item
-(
-    id            integer                NOT NULL,
-    value         character varying(150) NOT NULL,
-    label         character varying      NOT NULL,
-    field_type_id integer                NOT NULL,
-    display_order integer
+CREATE TABLE public.field_type_list_item (
+                                             id integer NOT NULL,
+                                             value character varying(150) NOT NULL,
+                                             label character varying NOT NULL,
+                                             field_type_id integer NOT NULL,
+                                             display_order integer
 );
 
 
@@ -794,16 +772,15 @@ ALTER SEQUENCE public.field_type_list_item_id_seq OWNED BY public.field_type_lis
 -- Name: jurisdiction; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.jurisdiction
-(
-    id          integer                     NOT NULL,
-    created_at  timestamp without time zone NOT NULL,
-    reference   character varying(70)       NOT NULL,
-    version     integer                     NOT NULL,
-    live_from   timestamp without time zone,
-    live_to     timestamp without time zone,
-    name        character varying(30)       NOT NULL,
-    description character varying(100)
+CREATE TABLE public.jurisdiction (
+                                     id integer NOT NULL,
+                                     created_at timestamp without time zone NOT NULL,
+                                     reference character varying(70) NOT NULL,
+                                     version integer NOT NULL,
+                                     live_from timestamp without time zone,
+                                     live_to timestamp without time zone,
+                                     name character varying(30) NOT NULL,
+                                     description character varying(100)
 );
 
 
@@ -830,11 +807,10 @@ ALTER SEQUENCE public.jurisdiction_id_seq OWNED BY public.jurisdiction.id;
 -- Name: jurisdiction_ui_config; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.jurisdiction_ui_config
-(
-    id              integer NOT NULL,
-    shuttered       boolean NOT NULL,
-    jurisdiction_id integer NOT NULL
+CREATE TABLE public.jurisdiction_ui_config (
+                                               id integer NOT NULL,
+                                               shuttered boolean NOT NULL,
+                                               jurisdiction_id integer NOT NULL
 );
 
 
@@ -861,13 +837,12 @@ ALTER SEQUENCE public.jurisdiction_ui_config_id_seq OWNED BY public.jurisdiction
 -- Name: noc_config; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.noc_config
-(
-    id                                 integer                                   NOT NULL,
-    reasons_required                   boolean                                   NOT NULL,
-    noc_action_interpretation_required boolean                                   NOT NULL,
-    created_at                         timestamp without time zone DEFAULT now() NOT NULL,
-    case_type_id                       integer                                   NOT NULL
+CREATE TABLE public.noc_config (
+                                   id integer NOT NULL,
+                                   reasons_required boolean NOT NULL,
+                                   noc_action_interpretation_required boolean NOT NULL,
+                                   created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                   case_type_id integer NOT NULL
 );
 
 
@@ -894,26 +869,25 @@ ALTER SEQUENCE public.noc_config_id_seq OWNED BY public.noc_config.id;
 -- Name: role; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.role
-(
-    id                      integer                                                                         NOT NULL,
-    reference               character varying(255)                                                          NOT NULL,
-    name                    character varying(255)                                                          NOT NULL,
-    description             character varying(255),
-    case_type_id            integer,
-    created_at              timestamp without time zone    DEFAULT now()                                    NOT NULL,
-    user_role_id            integer,
-    security_classification public.security_classification DEFAULT 'PUBLIC'::public.security_classification NOT NULL,
-    dtype                   character varying(10)                                                           NOT NULL,
-    CONSTRAINT case_type_id_check CHECK ((
-            CASE
-                WHEN ((dtype)::text = 'CASEROLE'::text) THEN
-                    CASE
-                        WHEN (case_type_id IS NOT NULL) THEN 1
-                        ELSE 0
-                        END
-                ELSE 1
-                END = 1))
+CREATE TABLE public.role (
+                             id integer NOT NULL,
+                             reference character varying(255) NOT NULL,
+                             name character varying(255) NOT NULL,
+                             description character varying(255),
+                             case_type_id integer,
+                             created_at timestamp without time zone DEFAULT now() NOT NULL,
+                             user_role_id integer,
+                             security_classification public.security_classification DEFAULT 'PUBLIC'::public.security_classification NOT NULL,
+                             dtype character varying(10) NOT NULL,
+                             CONSTRAINT case_type_id_check CHECK ((
+                                     CASE
+                                         WHEN ((dtype)::text = 'CASEROLE'::text) THEN
+                                             CASE
+                                                 WHEN (case_type_id IS NOT NULL) THEN 1
+                                                 ELSE 0
+                                                 END
+                                         ELSE 1
+                                         END = 1))
 );
 
 
@@ -940,13 +914,12 @@ ALTER SEQUENCE public.role_id_seq OWNED BY public.role.id;
 -- Name: search_alias_field; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.search_alias_field
-(
-    id              integer                NOT NULL,
-    reference       character varying(40)  NOT NULL,
-    case_type_id    integer                NOT NULL,
-    case_field_path character varying(500) NOT NULL,
-    field_type_id   integer                NOT NULL
+CREATE TABLE public.search_alias_field (
+                                           id integer NOT NULL,
+                                           reference character varying(40) NOT NULL,
+                                           case_type_id integer NOT NULL,
+                                           case_field_path character varying(500) NOT NULL,
+                                           field_type_id integer NOT NULL
 );
 
 
@@ -973,22 +946,21 @@ ALTER SEQUENCE public.search_alias_field_id_seq OWNED BY public.search_alias_fie
 -- Name: search_cases_result_fields; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.search_cases_result_fields
-(
-    id                        integer                NOT NULL,
-    live_from                 date,
-    live_to                   date,
-    case_type_id              integer,
-    case_field_element_path   character varying(300),
-    role_id                   integer,
-    case_field_id             integer                NOT NULL,
-    label                     character varying(200) NOT NULL,
-    hint                      text,
-    use_case                  text,
-    display_order             integer,
-    sort_order_direction      character varying(10),
-    sort_order_priority       integer,
-    display_context_parameter character varying(1000)
+CREATE TABLE public.search_cases_result_fields (
+                                                   id integer NOT NULL,
+                                                   live_from date,
+                                                   live_to date,
+                                                   case_type_id integer,
+                                                   case_field_element_path character varying(300),
+                                                   role_id integer,
+                                                   case_field_id integer NOT NULL,
+                                                   label character varying(200) NOT NULL,
+                                                   hint text,
+                                                   use_case text,
+                                                   display_order integer,
+                                                   sort_order_direction character varying(10),
+                                                   sort_order_priority integer,
+                                                   display_context_parameter character varying(1000)
 );
 
 
@@ -1015,19 +987,18 @@ ALTER SEQUENCE public.search_cases_result_fields_id_seq OWNED BY public.search_c
 -- Name: search_input_case_field; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.search_input_case_field
-(
-    id                        integer NOT NULL,
-    live_from                 date,
-    live_to                   date,
-    case_type_id              integer NOT NULL,
-    case_field_id             integer NOT NULL,
-    label                     character varying(200),
-    display_order             integer,
-    case_field_element_path   character varying(300),
-    role_id                   integer,
-    show_condition            character varying(1000),
-    display_context_parameter character varying(1000)
+CREATE TABLE public.search_input_case_field (
+                                                id integer NOT NULL,
+                                                live_from date,
+                                                live_to date,
+                                                case_type_id integer NOT NULL,
+                                                case_field_id integer NOT NULL,
+                                                label character varying(200),
+                                                display_order integer,
+                                                case_field_element_path character varying(300),
+                                                role_id integer,
+                                                show_condition character varying(1000),
+                                                display_context_parameter character varying(1000)
 );
 
 
@@ -1054,20 +1025,19 @@ ALTER SEQUENCE public.search_input_case_field_id_seq OWNED BY public.search_inpu
 -- Name: search_result_case_field; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.search_result_case_field
-(
-    id                        integer NOT NULL,
-    live_from                 date,
-    live_to                   date,
-    case_type_id              integer NOT NULL,
-    case_field_id             integer NOT NULL,
-    label                     character varying(200),
-    display_order             integer,
-    case_field_element_path   character varying(300),
-    role_id                   integer,
-    sort_order_direction      character varying(10),
-    sort_order_priority       integer,
-    display_context_parameter character varying(1000)
+CREATE TABLE public.search_result_case_field (
+                                                 id integer NOT NULL,
+                                                 live_from date,
+                                                 live_to date,
+                                                 case_type_id integer NOT NULL,
+                                                 case_field_id integer NOT NULL,
+                                                 label character varying(200),
+                                                 display_order integer,
+                                                 case_field_element_path character varying(300),
+                                                 role_id integer,
+                                                 sort_order_direction character varying(10),
+                                                 sort_order_priority integer,
+                                                 display_context_parameter character varying(1000)
 );
 
 
@@ -1094,17 +1064,16 @@ ALTER SEQUENCE public.search_result_case_field_id_seq OWNED BY public.search_res
 -- Name: state; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.state
-(
-    id            integer                NOT NULL,
-    reference     character varying(70)  NOT NULL,
-    live_from     date,
-    live_to       date,
-    name          character varying(100) NOT NULL,
-    description   character varying(100),
-    display_order integer,
-    case_type_id  integer                NOT NULL,
-    title_display character varying(100)
+CREATE TABLE public.state (
+                              id integer NOT NULL,
+                              reference character varying(70) NOT NULL,
+                              live_from date,
+                              live_to date,
+                              name character varying(100) NOT NULL,
+                              description character varying(100),
+                              display_order integer,
+                              case_type_id integer NOT NULL,
+                              title_display character varying(100)
 );
 
 
@@ -1112,18 +1081,17 @@ CREATE TABLE public.state
 -- Name: state_acl; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.state_acl
-(
-    id         integer                                   NOT NULL,
-    state_id   integer                                   NOT NULL,
-    "create"   boolean                                   NOT NULL,
-    read       boolean                                   NOT NULL,
-    update     boolean                                   NOT NULL,
-    delete     boolean                                   NOT NULL,
-    live_from  date,
-    live_to    date,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    role_id    integer                                   NOT NULL
+CREATE TABLE public.state_acl (
+                                  id integer NOT NULL,
+                                  state_id integer NOT NULL,
+                                  "create" boolean NOT NULL,
+                                  read boolean NOT NULL,
+                                  update boolean NOT NULL,
+                                  delete boolean NOT NULL,
+                                  live_from date,
+                                  live_to date,
+                                  created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                  role_id integer NOT NULL
 );
 
 
@@ -1169,12 +1137,11 @@ ALTER SEQUENCE public.state_id_seq OWNED BY public.state.id;
 -- Name: webhook; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.webhook
-(
-    id       integer   NOT NULL,
-    url      text      NOT NULL,
-    timeouts integer[] NOT NULL,
-    CONSTRAINT webhook_timeouts_check CHECK ((array_position(timeouts, NULL::integer) IS NULL))
+CREATE TABLE public.webhook (
+                                id integer NOT NULL,
+                                url text NOT NULL,
+                                timeouts integer[] NOT NULL,
+                                CONSTRAINT webhook_timeouts_check CHECK ((array_position(timeouts, NULL::integer) IS NULL))
 );
 
 
@@ -1201,20 +1168,19 @@ ALTER SEQUENCE public.webhook_id_seq OWNED BY public.webhook.id;
 -- Name: workbasket_case_field; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.workbasket_case_field
-(
-    id                        integer NOT NULL,
-    live_from                 date,
-    live_to                   date,
-    case_type_id              integer NOT NULL,
-    case_field_id             integer NOT NULL,
-    label                     character varying(200),
-    display_order             integer,
-    case_field_element_path   character varying(300),
-    role_id                   integer,
-    sort_order_direction      character varying(10),
-    sort_order_priority       integer,
-    display_context_parameter character varying(1000)
+CREATE TABLE public.workbasket_case_field (
+                                              id integer NOT NULL,
+                                              live_from date,
+                                              live_to date,
+                                              case_type_id integer NOT NULL,
+                                              case_field_id integer NOT NULL,
+                                              label character varying(200),
+                                              display_order integer,
+                                              case_field_element_path character varying(300),
+                                              role_id integer,
+                                              sort_order_direction character varying(10),
+                                              sort_order_priority integer,
+                                              display_context_parameter character varying(1000)
 );
 
 
@@ -1241,19 +1207,18 @@ ALTER SEQUENCE public.workbasket_case_field_id_seq OWNED BY public.workbasket_ca
 -- Name: workbasket_input_case_field; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.workbasket_input_case_field
-(
-    id                        integer NOT NULL,
-    live_from                 date,
-    live_to                   date,
-    case_type_id              integer NOT NULL,
-    case_field_id             integer NOT NULL,
-    label                     character varying(200),
-    display_order             integer,
-    case_field_element_path   character varying(300),
-    role_id                   integer,
-    show_condition            character varying(1000),
-    display_context_parameter character varying(1000)
+CREATE TABLE public.workbasket_input_case_field (
+                                                    id integer NOT NULL,
+                                                    live_from date,
+                                                    live_to date,
+                                                    case_type_id integer NOT NULL,
+                                                    case_field_id integer NOT NULL,
+                                                    label character varying(200),
+                                                    display_order integer,
+                                                    case_field_element_path character varying(300),
+                                                    role_id integer,
+                                                    show_condition character varying(1000),
+                                                    display_context_parameter character varying(1000)
 );
 
 
@@ -1280,256 +1245,224 @@ ALTER SEQUENCE public.workbasket_input_case_field_id_seq OWNED BY public.workbas
 -- Name: banner id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.banner
-    ALTER COLUMN id SET DEFAULT nextval('public.banner_id_seq'::regclass);
+ALTER TABLE ONLY public.banner ALTER COLUMN id SET DEFAULT nextval('public.banner_id_seq'::regclass);
 
 
 --
 -- Name: case_field id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_field
-    ALTER COLUMN id SET DEFAULT nextval('public.case_field_id_seq'::regclass);
+ALTER TABLE ONLY public.case_field ALTER COLUMN id SET DEFAULT nextval('public.case_field_id_seq'::regclass);
 
 
 --
 -- Name: case_field_acl id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_field_acl
-    ALTER COLUMN id SET DEFAULT nextval('public.case_field_acl_id_seq'::regclass);
+ALTER TABLE ONLY public.case_field_acl ALTER COLUMN id SET DEFAULT nextval('public.case_field_acl_id_seq'::regclass);
 
 
 --
 -- Name: case_type id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_type
-    ALTER COLUMN id SET DEFAULT nextval('public.case_type_id_seq'::regclass);
+ALTER TABLE ONLY public.case_type ALTER COLUMN id SET DEFAULT nextval('public.case_type_id_seq'::regclass);
 
 
 --
 -- Name: case_type_acl id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_type_acl
-    ALTER COLUMN id SET DEFAULT nextval('public.case_type_acl_id_seq'::regclass);
+ALTER TABLE ONLY public.case_type_acl ALTER COLUMN id SET DEFAULT nextval('public.case_type_acl_id_seq'::regclass);
 
 
 --
 -- Name: challenge_question id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.challenge_question
-    ALTER COLUMN id SET DEFAULT nextval('public.challenge_question_id_seq'::regclass);
+ALTER TABLE ONLY public.challenge_question ALTER COLUMN id SET DEFAULT nextval('public.challenge_question_id_seq'::regclass);
 
 
 --
 -- Name: complex_field id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.complex_field
-    ALTER COLUMN id SET DEFAULT nextval('public.complex_field_id_seq'::regclass);
+ALTER TABLE ONLY public.complex_field ALTER COLUMN id SET DEFAULT nextval('public.complex_field_id_seq'::regclass);
 
 
 --
 -- Name: complex_field_acl id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.complex_field_acl
-    ALTER COLUMN id SET DEFAULT nextval('public.complex_field_acl_id_seq'::regclass);
+ALTER TABLE ONLY public.complex_field_acl ALTER COLUMN id SET DEFAULT nextval('public.complex_field_acl_id_seq'::regclass);
 
 
 --
 -- Name: definition_designer id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.definition_designer
-    ALTER COLUMN id SET DEFAULT nextval('public.definition_designer_id_seq'::regclass);
+ALTER TABLE ONLY public.definition_designer ALTER COLUMN id SET DEFAULT nextval('public.definition_designer_id_seq'::regclass);
 
 
 --
 -- Name: display_group id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.display_group
-    ALTER COLUMN id SET DEFAULT nextval('public.display_group_id_seq'::regclass);
+ALTER TABLE ONLY public.display_group ALTER COLUMN id SET DEFAULT nextval('public.display_group_id_seq'::regclass);
 
 
 --
 -- Name: display_group_case_field id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.display_group_case_field
-    ALTER COLUMN id SET DEFAULT nextval('public.display_group_case_field_id_seq'::regclass);
+ALTER TABLE ONLY public.display_group_case_field ALTER COLUMN id SET DEFAULT nextval('public.display_group_case_field_id_seq'::regclass);
 
 
 --
 -- Name: event id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.event
-    ALTER COLUMN id SET DEFAULT nextval('public.event_id_seq'::regclass);
+ALTER TABLE ONLY public.event ALTER COLUMN id SET DEFAULT nextval('public.event_id_seq'::regclass);
 
 
 --
 -- Name: event_acl id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.event_acl
-    ALTER COLUMN id SET DEFAULT nextval('public.event_acl_id_seq'::regclass);
+ALTER TABLE ONLY public.event_acl ALTER COLUMN id SET DEFAULT nextval('public.event_acl_id_seq'::regclass);
 
 
 --
 -- Name: event_case_field id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.event_case_field
-    ALTER COLUMN id SET DEFAULT nextval('public.event_case_field_id_seq'::regclass);
+ALTER TABLE ONLY public.event_case_field ALTER COLUMN id SET DEFAULT nextval('public.event_case_field_id_seq'::regclass);
 
 
 --
 -- Name: event_case_field_complex_type id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.event_case_field_complex_type
-    ALTER COLUMN id SET DEFAULT nextval('public.event_case_field_complex_type_id_seq'::regclass);
+ALTER TABLE ONLY public.event_case_field_complex_type ALTER COLUMN id SET DEFAULT nextval('public.event_case_field_complex_type_id_seq'::regclass);
 
 
 --
 -- Name: event_post_state id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.event_post_state
-    ALTER COLUMN id SET DEFAULT nextval('public.event_post_state_id_seq'::regclass);
+ALTER TABLE ONLY public.event_post_state ALTER COLUMN id SET DEFAULT nextval('public.event_post_state_id_seq'::regclass);
 
 
 --
 -- Name: event_webhook id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.event_webhook
-    ALTER COLUMN id SET DEFAULT nextval('public.event_webhook_id_seq'::regclass);
+ALTER TABLE ONLY public.event_webhook ALTER COLUMN id SET DEFAULT nextval('public.event_webhook_id_seq'::regclass);
 
 
 --
 -- Name: field_type id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.field_type
-    ALTER COLUMN id SET DEFAULT nextval('public.field_type_id_seq'::regclass);
+ALTER TABLE ONLY public.field_type ALTER COLUMN id SET DEFAULT nextval('public.field_type_id_seq'::regclass);
 
 
 --
 -- Name: field_type_list_item id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.field_type_list_item
-    ALTER COLUMN id SET DEFAULT nextval('public.field_type_list_item_id_seq'::regclass);
+ALTER TABLE ONLY public.field_type_list_item ALTER COLUMN id SET DEFAULT nextval('public.field_type_list_item_id_seq'::regclass);
 
 
 --
 -- Name: jurisdiction id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.jurisdiction
-    ALTER COLUMN id SET DEFAULT nextval('public.jurisdiction_id_seq'::regclass);
+ALTER TABLE ONLY public.jurisdiction ALTER COLUMN id SET DEFAULT nextval('public.jurisdiction_id_seq'::regclass);
 
 
 --
 -- Name: jurisdiction_ui_config id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.jurisdiction_ui_config
-    ALTER COLUMN id SET DEFAULT nextval('public.jurisdiction_ui_config_id_seq'::regclass);
+ALTER TABLE ONLY public.jurisdiction_ui_config ALTER COLUMN id SET DEFAULT nextval('public.jurisdiction_ui_config_id_seq'::regclass);
 
 
 --
 -- Name: noc_config id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.noc_config
-    ALTER COLUMN id SET DEFAULT nextval('public.noc_config_id_seq'::regclass);
+ALTER TABLE ONLY public.noc_config ALTER COLUMN id SET DEFAULT nextval('public.noc_config_id_seq'::regclass);
 
 
 --
 -- Name: role id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.role
-    ALTER COLUMN id SET DEFAULT nextval('public.role_id_seq'::regclass);
+ALTER TABLE ONLY public.role ALTER COLUMN id SET DEFAULT nextval('public.role_id_seq'::regclass);
 
 
 --
 -- Name: search_alias_field id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.search_alias_field
-    ALTER COLUMN id SET DEFAULT nextval('public.search_alias_field_id_seq'::regclass);
+ALTER TABLE ONLY public.search_alias_field ALTER COLUMN id SET DEFAULT nextval('public.search_alias_field_id_seq'::regclass);
 
 
 --
 -- Name: search_cases_result_fields id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.search_cases_result_fields
-    ALTER COLUMN id SET DEFAULT nextval('public.search_cases_result_fields_id_seq'::regclass);
+ALTER TABLE ONLY public.search_cases_result_fields ALTER COLUMN id SET DEFAULT nextval('public.search_cases_result_fields_id_seq'::regclass);
 
 
 --
 -- Name: search_input_case_field id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.search_input_case_field
-    ALTER COLUMN id SET DEFAULT nextval('public.search_input_case_field_id_seq'::regclass);
+ALTER TABLE ONLY public.search_input_case_field ALTER COLUMN id SET DEFAULT nextval('public.search_input_case_field_id_seq'::regclass);
 
 
 --
 -- Name: search_result_case_field id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.search_result_case_field
-    ALTER COLUMN id SET DEFAULT nextval('public.search_result_case_field_id_seq'::regclass);
+ALTER TABLE ONLY public.search_result_case_field ALTER COLUMN id SET DEFAULT nextval('public.search_result_case_field_id_seq'::regclass);
 
 
 --
 -- Name: state id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.state
-    ALTER COLUMN id SET DEFAULT nextval('public.state_id_seq'::regclass);
+ALTER TABLE ONLY public.state ALTER COLUMN id SET DEFAULT nextval('public.state_id_seq'::regclass);
 
 
 --
 -- Name: state_acl id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.state_acl
-    ALTER COLUMN id SET DEFAULT nextval('public.state_acl_id_seq'::regclass);
+ALTER TABLE ONLY public.state_acl ALTER COLUMN id SET DEFAULT nextval('public.state_acl_id_seq'::regclass);
 
 
 --
 -- Name: webhook id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.webhook
-    ALTER COLUMN id SET DEFAULT nextval('public.webhook_id_seq'::regclass);
+ALTER TABLE ONLY public.webhook ALTER COLUMN id SET DEFAULT nextval('public.webhook_id_seq'::regclass);
 
 
 --
 -- Name: workbasket_case_field id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.workbasket_case_field
-    ALTER COLUMN id SET DEFAULT nextval('public.workbasket_case_field_id_seq'::regclass);
+ALTER TABLE ONLY public.workbasket_case_field ALTER COLUMN id SET DEFAULT nextval('public.workbasket_case_field_id_seq'::regclass);
 
 
 --
 -- Name: workbasket_input_case_field id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.workbasket_input_case_field
-    ALTER COLUMN id SET DEFAULT nextval('public.workbasket_input_case_field_id_seq'::regclass);
+ALTER TABLE ONLY public.workbasket_input_case_field ALTER COLUMN id SET DEFAULT nextval('public.workbasket_input_case_field_id_seq'::regclass);
 
 --
 -- Name: event_webhook event_webhook_id_key; Type: CONSTRAINT; Schema: public; Owner: -
@@ -1939,10 +1872,94 @@ CREATE INDEX case_field_case_type_id_idx ON public.case_field USING btree (case_
 
 
 --
+-- Name: case_field_field_type_id_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX case_field_field_type_id_id_idx ON public.case_field USING btree (field_type_id, id);
+
+
+--
+-- Name: case_field_field_type_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX case_field_field_type_id_idx ON public.case_field USING btree (field_type_id);
+
+
+--
+-- Name: case_type_jurisdiction_id_version_reference_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX case_type_jurisdiction_id_version_reference_idx ON public.case_type USING btree (jurisdiction_id, version, reference);
+
+
+--
+-- Name: case_type_reference_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX case_type_reference_idx ON public.case_type USING btree (reference);
+
+
+--
+-- Name: complex_field_complex_field_type_id_field_type_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX complex_field_complex_field_type_id_field_type_id_idx ON public.complex_field USING btree (complex_field_type_id, field_type_id);
+
+
+--
 -- Name: display_group_case_type_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX display_group_case_type_id_idx ON public.display_group USING btree (case_type_id);
+
+
+--
+-- Name: event_case_field_case_field_id_event_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_case_field_case_field_id_event_id_idx ON public.event_case_field USING btree (case_field_id, event_id);
+
+
+--
+-- Name: event_case_field_case_field_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_case_field_case_field_id_idx ON public.event_case_field USING btree (case_field_id);
+
+
+--
+-- Name: event_case_field_event_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_case_field_event_id_idx ON public.event_case_field USING btree (event_id);
+
+
+--
+-- Name: event_case_type_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_case_type_id_idx ON public.event USING btree (case_type_id);
+
+
+--
+-- Name: event_pre_state_state_id_event_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_pre_state_state_id_event_id_idx ON public.event_pre_state USING btree (event_id, state_id);
+
+
+--
+-- Name: field_type_id_base_field_type_id_collection_field_type_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX field_type_id_base_field_type_id_collection_field_type_id_idx ON public.field_type USING btree (id, base_field_type_id, collection_field_type_id);
+
+
+--
+-- Name: field_type_list_item_field_type_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX field_type_list_item_field_type_id_idx ON public.field_type_list_item USING btree (field_type_id);
 
 
 --
@@ -1960,13 +1977,6 @@ CREATE INDEX idx_case_type__id__jurisdiction_id__version__reference ON public.ca
 
 
 --
--- Name: idx_complex_field__id__complex_field_type_id__field_type_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_complex_field__id__complex_field_type_id__field_type_id ON public.complex_field USING btree (id, complex_field_type_id, field_type_id);
-
-
---
 -- Name: idx_display_group_case_field__case_field_id__display_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1978,13 +1988,6 @@ CREATE INDEX idx_display_group_case_field__case_field_id__display_group_id ON pu
 --
 
 CREATE INDEX idx_event__case_type_id ON public.event USING btree (case_type_id);
-
-
---
--- Name: idx_event_case_field__case_field_id__event_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_event_case_field__case_field_id__event_id ON public.event_case_field USING btree (case_field_id, event_id);
 
 
 --
@@ -2065,11 +2068,18 @@ CREATE INDEX idx_version ON public.case_type USING btree (version);
 
 
 --
+-- Name: jurisdiction_id_reference_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX jurisdiction_id_reference_idx ON public.jurisdiction USING btree (id, reference);
+
+
+--
 -- Name: event_webhook event_webhook_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.event_webhook
-    ADD CONSTRAINT event_webhook_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event (id);
+    ADD CONSTRAINT event_webhook_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id);
 
 
 --
@@ -2077,7 +2087,7 @@ ALTER TABLE ONLY public.event_webhook
 --
 
 ALTER TABLE ONLY public.event_webhook
-    ADD CONSTRAINT event_webhook_webhook_id_fkey FOREIGN KEY (webhook_id) REFERENCES public.webhook (id);
+    ADD CONSTRAINT event_webhook_webhook_id_fkey FOREIGN KEY (webhook_id) REFERENCES public.webhook(id);
 
 
 --
@@ -2085,7 +2095,7 @@ ALTER TABLE ONLY public.event_webhook
 --
 
 ALTER TABLE ONLY public.banner
-    ADD CONSTRAINT fk_banner_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction (id);
+    ADD CONSTRAINT fk_banner_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction(id);
 
 
 --
@@ -2093,7 +2103,7 @@ ALTER TABLE ONLY public.banner
 --
 
 ALTER TABLE ONLY public.case_field_acl
-    ADD CONSTRAINT fk_case_field_acl_case_field_id_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field (id);
+    ADD CONSTRAINT fk_case_field_acl_case_field_id_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field(id);
 
 
 --
@@ -2101,7 +2111,7 @@ ALTER TABLE ONLY public.case_field_acl
 --
 
 ALTER TABLE ONLY public.case_field_acl
-    ADD CONSTRAINT fk_case_field_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_case_field_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2109,7 +2119,7 @@ ALTER TABLE ONLY public.case_field_acl
 --
 
 ALTER TABLE ONLY public.case_field
-    ADD CONSTRAINT fk_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2117,7 +2127,7 @@ ALTER TABLE ONLY public.case_field
 --
 
 ALTER TABLE ONLY public.case_field
-    ADD CONSTRAINT fk_case_field_field_type_id FOREIGN KEY (field_type_id) REFERENCES public.field_type (id);
+    ADD CONSTRAINT fk_case_field_field_type_id FOREIGN KEY (field_type_id) REFERENCES public.field_type(id);
 
 
 --
@@ -2125,7 +2135,7 @@ ALTER TABLE ONLY public.case_field
 --
 
 ALTER TABLE ONLY public.case_type_acl
-    ADD CONSTRAINT fk_case_type_acl_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_case_type_acl_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2133,7 +2143,7 @@ ALTER TABLE ONLY public.case_type_acl
 --
 
 ALTER TABLE ONLY public.case_type_acl
-    ADD CONSTRAINT fk_case_type_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_case_type_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2141,7 +2151,7 @@ ALTER TABLE ONLY public.case_type_acl
 --
 
 ALTER TABLE ONLY public.case_type
-    ADD CONSTRAINT fk_case_type_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction (id);
+    ADD CONSTRAINT fk_case_type_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction(id);
 
 
 --
@@ -2149,7 +2159,7 @@ ALTER TABLE ONLY public.case_type
 --
 
 ALTER TABLE ONLY public.case_type
-    ADD CONSTRAINT fk_case_type_print_webhook_id FOREIGN KEY (print_webhook_id) REFERENCES public.webhook (id);
+    ADD CONSTRAINT fk_case_type_print_webhook_id FOREIGN KEY (print_webhook_id) REFERENCES public.webhook(id);
 
 
 --
@@ -2157,7 +2167,7 @@ ALTER TABLE ONLY public.case_type
 --
 
 ALTER TABLE ONLY public.challenge_question
-    ADD CONSTRAINT fk_challenge_question_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_challenge_question_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2165,7 +2175,7 @@ ALTER TABLE ONLY public.challenge_question
 --
 
 ALTER TABLE ONLY public.challenge_question
-    ADD CONSTRAINT fk_challenge_question_field_type_id FOREIGN KEY (answer_field_type) REFERENCES public.field_type (id);
+    ADD CONSTRAINT fk_challenge_question_field_type_id FOREIGN KEY (answer_field_type) REFERENCES public.field_type(id);
 
 
 --
@@ -2173,7 +2183,7 @@ ALTER TABLE ONLY public.challenge_question
 --
 
 ALTER TABLE ONLY public.complex_field_acl
-    ADD CONSTRAINT fk_complex_field_acl_case_field_id_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field (id);
+    ADD CONSTRAINT fk_complex_field_acl_case_field_id_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field(id);
 
 
 --
@@ -2181,7 +2191,7 @@ ALTER TABLE ONLY public.complex_field_acl
 --
 
 ALTER TABLE ONLY public.complex_field_acl
-    ADD CONSTRAINT fk_complex_field_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_complex_field_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2189,7 +2199,7 @@ ALTER TABLE ONLY public.complex_field_acl
 --
 
 ALTER TABLE ONLY public.complex_field
-    ADD CONSTRAINT fk_complex_field_complex_field_type_id FOREIGN KEY (complex_field_type_id) REFERENCES public.field_type (id);
+    ADD CONSTRAINT fk_complex_field_complex_field_type_id FOREIGN KEY (complex_field_type_id) REFERENCES public.field_type(id);
 
 
 --
@@ -2197,7 +2207,7 @@ ALTER TABLE ONLY public.complex_field
 --
 
 ALTER TABLE ONLY public.complex_field
-    ADD CONSTRAINT fk_complex_field_field_type_id FOREIGN KEY (field_type_id) REFERENCES public.field_type (id);
+    ADD CONSTRAINT fk_complex_field_field_type_id FOREIGN KEY (field_type_id) REFERENCES public.field_type(id);
 
 
 --
@@ -2205,7 +2215,7 @@ ALTER TABLE ONLY public.complex_field
 --
 
 ALTER TABLE ONLY public.definition_designer
-    ADD CONSTRAINT fk_definition_designer_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction (id);
+    ADD CONSTRAINT fk_definition_designer_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction(id);
 
 
 --
@@ -2213,7 +2223,7 @@ ALTER TABLE ONLY public.definition_designer
 --
 
 ALTER TABLE ONLY public.display_group_case_field
-    ADD CONSTRAINT fk_display_group_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field (id);
+    ADD CONSTRAINT fk_display_group_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field(id);
 
 
 --
@@ -2221,7 +2231,7 @@ ALTER TABLE ONLY public.display_group_case_field
 --
 
 ALTER TABLE ONLY public.display_group_case_field
-    ADD CONSTRAINT fk_display_group_case_field_display_group_id FOREIGN KEY (display_group_id) REFERENCES public.display_group (id);
+    ADD CONSTRAINT fk_display_group_case_field_display_group_id FOREIGN KEY (display_group_id) REFERENCES public.display_group(id);
 
 
 --
@@ -2229,7 +2239,7 @@ ALTER TABLE ONLY public.display_group_case_field
 --
 
 ALTER TABLE ONLY public.display_group
-    ADD CONSTRAINT fk_display_group_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_display_group_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2237,7 +2247,7 @@ ALTER TABLE ONLY public.display_group
 --
 
 ALTER TABLE ONLY public.display_group
-    ADD CONSTRAINT fk_display_group_event_id FOREIGN KEY (event_id) REFERENCES public.event (id);
+    ADD CONSTRAINT fk_display_group_event_id FOREIGN KEY (event_id) REFERENCES public.event(id);
 
 
 --
@@ -2245,7 +2255,7 @@ ALTER TABLE ONLY public.display_group
 --
 
 ALTER TABLE ONLY public.display_group
-    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2253,7 +2263,7 @@ ALTER TABLE ONLY public.display_group
 --
 
 ALTER TABLE ONLY public.search_input_case_field
-    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2261,7 +2271,7 @@ ALTER TABLE ONLY public.search_input_case_field
 --
 
 ALTER TABLE ONLY public.search_result_case_field
-    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2269,7 +2279,7 @@ ALTER TABLE ONLY public.search_result_case_field
 --
 
 ALTER TABLE ONLY public.workbasket_input_case_field
-    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2277,7 +2287,7 @@ ALTER TABLE ONLY public.workbasket_input_case_field
 --
 
 ALTER TABLE ONLY public.workbasket_case_field
-    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_display_group_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2285,7 +2295,7 @@ ALTER TABLE ONLY public.workbasket_case_field
 --
 
 ALTER TABLE ONLY public.display_group
-    ADD CONSTRAINT fk_display_group_webhook_mid_event_id FOREIGN KEY (webhook_mid_event_id) REFERENCES public.webhook (id);
+    ADD CONSTRAINT fk_display_group_webhook_mid_event_id FOREIGN KEY (webhook_mid_event_id) REFERENCES public.webhook(id);
 
 
 --
@@ -2293,7 +2303,7 @@ ALTER TABLE ONLY public.display_group
 --
 
 ALTER TABLE ONLY public.event_acl
-    ADD CONSTRAINT fk_event_acl_event_id FOREIGN KEY (event_id) REFERENCES public.event (id);
+    ADD CONSTRAINT fk_event_acl_event_id FOREIGN KEY (event_id) REFERENCES public.event(id);
 
 
 --
@@ -2301,7 +2311,7 @@ ALTER TABLE ONLY public.event_acl
 --
 
 ALTER TABLE ONLY public.event_acl
-    ADD CONSTRAINT fk_event_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_event_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2309,7 +2319,7 @@ ALTER TABLE ONLY public.event_acl
 --
 
 ALTER TABLE ONLY public.event_case_field
-    ADD CONSTRAINT fk_event_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field (id);
+    ADD CONSTRAINT fk_event_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field(id);
 
 
 --
@@ -2317,7 +2327,7 @@ ALTER TABLE ONLY public.event_case_field
 --
 
 ALTER TABLE ONLY public.event_case_field_complex_type
-    ADD CONSTRAINT fk_event_case_field_complex_type_event_case_field_id FOREIGN KEY (event_case_field_id) REFERENCES public.event_case_field (id);
+    ADD CONSTRAINT fk_event_case_field_complex_type_event_case_field_id FOREIGN KEY (event_case_field_id) REFERENCES public.event_case_field(id);
 
 
 --
@@ -2325,7 +2335,7 @@ ALTER TABLE ONLY public.event_case_field_complex_type
 --
 
 ALTER TABLE ONLY public.event_case_field
-    ADD CONSTRAINT fk_event_case_field_event_id FOREIGN KEY (event_id) REFERENCES public.event (id);
+    ADD CONSTRAINT fk_event_case_field_event_id FOREIGN KEY (event_id) REFERENCES public.event(id);
 
 
 --
@@ -2333,7 +2343,7 @@ ALTER TABLE ONLY public.event_case_field
 --
 
 ALTER TABLE ONLY public.event
-    ADD CONSTRAINT fk_event_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_event_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2341,7 +2351,7 @@ ALTER TABLE ONLY public.event
 --
 
 ALTER TABLE ONLY public.event_post_state
-    ADD CONSTRAINT fk_event_post_state_case_event_id FOREIGN KEY (case_event_id) REFERENCES public.event (id);
+    ADD CONSTRAINT fk_event_post_state_case_event_id FOREIGN KEY (case_event_id) REFERENCES public.event(id);
 
 
 --
@@ -2349,7 +2359,7 @@ ALTER TABLE ONLY public.event_post_state
 --
 
 ALTER TABLE ONLY public.event_pre_state
-    ADD CONSTRAINT fk_event_pre_state_event_id FOREIGN KEY (event_id) REFERENCES public.event (id);
+    ADD CONSTRAINT fk_event_pre_state_event_id FOREIGN KEY (event_id) REFERENCES public.event(id);
 
 
 --
@@ -2357,7 +2367,7 @@ ALTER TABLE ONLY public.event_pre_state
 --
 
 ALTER TABLE ONLY public.event_pre_state
-    ADD CONSTRAINT fk_event_pre_state_state_id FOREIGN KEY (state_id) REFERENCES public.state (id);
+    ADD CONSTRAINT fk_event_pre_state_state_id FOREIGN KEY (state_id) REFERENCES public.state(id);
 
 
 --
@@ -2365,7 +2375,7 @@ ALTER TABLE ONLY public.event_pre_state
 --
 
 ALTER TABLE ONLY public.field_type
-    ADD CONSTRAINT fk_field_type_base_field_type_id FOREIGN KEY (base_field_type_id) REFERENCES public.field_type (id);
+    ADD CONSTRAINT fk_field_type_base_field_type_id FOREIGN KEY (base_field_type_id) REFERENCES public.field_type(id);
 
 
 --
@@ -2373,7 +2383,7 @@ ALTER TABLE ONLY public.field_type
 --
 
 ALTER TABLE ONLY public.field_type
-    ADD CONSTRAINT fk_field_type_collection_field_type_id FOREIGN KEY (collection_field_type_id) REFERENCES public.field_type (id);
+    ADD CONSTRAINT fk_field_type_collection_field_type_id FOREIGN KEY (collection_field_type_id) REFERENCES public.field_type(id);
 
 
 --
@@ -2381,7 +2391,7 @@ ALTER TABLE ONLY public.field_type
 --
 
 ALTER TABLE ONLY public.field_type
-    ADD CONSTRAINT fk_field_type_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction (id);
+    ADD CONSTRAINT fk_field_type_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction(id);
 
 
 --
@@ -2389,7 +2399,7 @@ ALTER TABLE ONLY public.field_type
 --
 
 ALTER TABLE ONLY public.field_type_list_item
-    ADD CONSTRAINT fk_field_type_list_item_field_type_id FOREIGN KEY (field_type_id) REFERENCES public.field_type (id);
+    ADD CONSTRAINT fk_field_type_list_item_field_type_id FOREIGN KEY (field_type_id) REFERENCES public.field_type(id);
 
 
 --
@@ -2397,7 +2407,7 @@ ALTER TABLE ONLY public.field_type_list_item
 --
 
 ALTER TABLE ONLY public.jurisdiction_ui_config
-    ADD CONSTRAINT fk_jurisdiction_ui_config_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction (id);
+    ADD CONSTRAINT fk_jurisdiction_ui_config_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction(id);
 
 
 --
@@ -2405,7 +2415,7 @@ ALTER TABLE ONLY public.jurisdiction_ui_config
 --
 
 ALTER TABLE ONLY public.noc_config
-    ADD CONSTRAINT fk_noc_config_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_noc_config_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2413,7 +2423,7 @@ ALTER TABLE ONLY public.noc_config
 --
 
 ALTER TABLE ONLY public.role
-    ADD CONSTRAINT fk_role_case_type_id_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_role_case_type_id_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2421,7 +2431,7 @@ ALTER TABLE ONLY public.role
 --
 
 ALTER TABLE ONLY public.search_alias_field
-    ADD CONSTRAINT fk_search_alias_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_search_alias_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2429,7 +2439,7 @@ ALTER TABLE ONLY public.search_alias_field
 --
 
 ALTER TABLE ONLY public.search_alias_field
-    ADD CONSTRAINT fk_search_alias_field_field_type_id FOREIGN KEY (field_type_id) REFERENCES public.field_type (id);
+    ADD CONSTRAINT fk_search_alias_field_field_type_id FOREIGN KEY (field_type_id) REFERENCES public.field_type(id);
 
 
 --
@@ -2437,7 +2447,7 @@ ALTER TABLE ONLY public.search_alias_field
 --
 
 ALTER TABLE ONLY public.search_cases_result_fields
-    ADD CONSTRAINT fk_search_cases_result_fields_case_field_id_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field (id);
+    ADD CONSTRAINT fk_search_cases_result_fields_case_field_id_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field(id);
 
 
 --
@@ -2445,7 +2455,7 @@ ALTER TABLE ONLY public.search_cases_result_fields
 --
 
 ALTER TABLE ONLY public.search_cases_result_fields
-    ADD CONSTRAINT fk_search_cases_result_fields_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_search_cases_result_fields_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2453,7 +2463,7 @@ ALTER TABLE ONLY public.search_cases_result_fields
 --
 
 ALTER TABLE ONLY public.search_cases_result_fields
-    ADD CONSTRAINT fk_search_cases_result_fields_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_search_cases_result_fields_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2461,7 +2471,7 @@ ALTER TABLE ONLY public.search_cases_result_fields
 --
 
 ALTER TABLE ONLY public.search_input_case_field
-    ADD CONSTRAINT fk_search_input_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field (id);
+    ADD CONSTRAINT fk_search_input_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field(id);
 
 
 --
@@ -2469,7 +2479,7 @@ ALTER TABLE ONLY public.search_input_case_field
 --
 
 ALTER TABLE ONLY public.search_input_case_field
-    ADD CONSTRAINT fk_search_input_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_search_input_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2477,7 +2487,7 @@ ALTER TABLE ONLY public.search_input_case_field
 --
 
 ALTER TABLE ONLY public.search_result_case_field
-    ADD CONSTRAINT fk_search_result_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field (id);
+    ADD CONSTRAINT fk_search_result_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field(id);
 
 
 --
@@ -2485,7 +2495,7 @@ ALTER TABLE ONLY public.search_result_case_field
 --
 
 ALTER TABLE ONLY public.search_result_case_field
-    ADD CONSTRAINT fk_search_result_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_search_result_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2493,7 +2503,7 @@ ALTER TABLE ONLY public.search_result_case_field
 --
 
 ALTER TABLE ONLY public.state_acl
-    ADD CONSTRAINT fk_state_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role (id);
+    ADD CONSTRAINT fk_state_acl_role_id_role_id FOREIGN KEY (role_id) REFERENCES public.role(id);
 
 
 --
@@ -2501,7 +2511,7 @@ ALTER TABLE ONLY public.state_acl
 --
 
 ALTER TABLE ONLY public.state_acl
-    ADD CONSTRAINT fk_state_acl_state_id_state_id FOREIGN KEY (state_id) REFERENCES public.state (id);
+    ADD CONSTRAINT fk_state_acl_state_id_state_id FOREIGN KEY (state_id) REFERENCES public.state(id);
 
 
 --
@@ -2509,7 +2519,7 @@ ALTER TABLE ONLY public.state_acl
 --
 
 ALTER TABLE ONLY public.state
-    ADD CONSTRAINT fk_state_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_state_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2517,7 +2527,7 @@ ALTER TABLE ONLY public.state
 --
 
 ALTER TABLE ONLY public.workbasket_case_field
-    ADD CONSTRAINT fk_workbasket_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field (id);
+    ADD CONSTRAINT fk_workbasket_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field(id);
 
 
 --
@@ -2525,7 +2535,7 @@ ALTER TABLE ONLY public.workbasket_case_field
 --
 
 ALTER TABLE ONLY public.workbasket_case_field
-    ADD CONSTRAINT fk_workbasket_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_workbasket_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -2533,7 +2543,7 @@ ALTER TABLE ONLY public.workbasket_case_field
 --
 
 ALTER TABLE ONLY public.workbasket_input_case_field
-    ADD CONSTRAINT fk_workbasket_input_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field (id);
+    ADD CONSTRAINT fk_workbasket_input_case_field_case_field_id FOREIGN KEY (case_field_id) REFERENCES public.case_field(id);
 
 
 --
@@ -2541,7 +2551,7 @@ ALTER TABLE ONLY public.workbasket_input_case_field
 --
 
 ALTER TABLE ONLY public.workbasket_input_case_field
-    ADD CONSTRAINT fk_workbasket_input_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type (id);
+    ADD CONSTRAINT fk_workbasket_input_case_field_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
@@ -3042,3 +3052,5 @@ INSERT INTO public.case_field (reference, live_from, label, hidden, security_cla
 VALUES ('[LAST_STATE_MODIFIED_DATE]', now(), 'Last State Modified Date', 'false', 'PUBLIC',
         (select id from field_type where reference = 'DateTime' and jurisdiction_id is null order by version limit 1),
         'METADATA');
+
+
