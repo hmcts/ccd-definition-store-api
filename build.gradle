@@ -44,7 +44,7 @@ dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
 
     // Ignore these non-runtime configurations
-    skipConfigurations = ['codacy']
+   // skipConfigurations = ['codacy']
 }
 
 //spring boot dependency override
@@ -72,7 +72,7 @@ ext {
     reformLogging= '5.1.1-BETA'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
-    tomcatVersion = '9.0.37!!'
+    tomcatVersion = '9.0.38!!'
     hibernateVersion = '5.4.21.Final!!'
     limits = [
             'instruction': 99,
@@ -261,7 +261,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.21.0'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '6.1.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024

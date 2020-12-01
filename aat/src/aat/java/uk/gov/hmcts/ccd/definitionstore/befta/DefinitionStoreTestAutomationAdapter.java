@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definitionstore.befta;
 
-import io.restassured.RestAssured;
 import uk.gov.hmcts.befta.BeftaMain;
+import uk.gov.hmcts.befta.BeftaTestDataLoader;
+import uk.gov.hmcts.befta.DefaultBeftaTestDataLoader;
 import uk.gov.hmcts.befta.DefaultTestAutomationAdapter;
 import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
 import uk.gov.hmcts.befta.player.BackEndFunctionalTestScenarioContext;
@@ -23,10 +24,14 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
 
 
     @Override
-    public void doLoadTestData() {
-        RestAssured.useRelaxedHTTPSValidation();
-        loader.addCcdRoles();
-        loader.importDefinitions();
+    protected BeftaTestDataLoader buildTestDataLoader() {
+        return new DefaultBeftaTestDataLoader() {
+            @Override
+            public void doLoadTestData() {
+                DefinitionStoreTestAutomationAdapter.this.loader.addCcdRoles();
+                DefinitionStoreTestAutomationAdapter.this.loader.importDefinitions();
+            }
+        };
     }
 
 }
