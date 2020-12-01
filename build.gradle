@@ -137,9 +137,6 @@ allprojects {
             }
 
             eachDependency { details ->
-                if (details.requested.group == 'org.liquibase' && details.requested.name == 'liquibase-core') {
-                    details.useVersion '3.10.3'
-                }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
                 }
