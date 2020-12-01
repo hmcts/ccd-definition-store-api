@@ -2,18 +2,12 @@ package uk.gov.hmcts.net.ccd.definition.store.excel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matcher;
+import org.json.JSONException;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
@@ -24,6 +18,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
@@ -264,20 +268,20 @@ public class SpreadSheetImportTest extends BaseTest {
         return hasColumn(is(key), is(value));
     }
 
-    private void assertBody(String contentAsString) throws IOException, URISyntaxException {
+    private void assertBody(String contentAsString) throws IOException, URISyntaxException, JSONException {
         assertBody(contentAsString, RESPONSE_JSON_V45);
     }
 
     private void assertBody(String contentAsString, String fileName)
-        throws IOException, URISyntaxException {
+        throws IOException, URISyntaxException, JSONException {
 
-        String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
+        String expected = readFileToString(new File(getClass().getClassLoader()
             .getResource(fileName)
-            .toURI())));
+            .toURI()));
         expected = expected.replaceAll("#date",
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-        assertEquals(removeGuids(expected), formatJsonString(removeGuids(contentAsString)));
+        JSONAssert.assertEquals(removeGuids(expected), removeGuids(contentAsString), JSONCompareMode.LENIENT);
     }
 
     private String formatJsonString(String string) throws IOException {
@@ -742,5 +746,10 @@ public class SpreadSheetImportTest extends BaseTest {
     private int getIdForTestJurisdiction() {
         return jdbcTemplate.queryForObject("SELECT id FROM jurisdiction WHERE reference = 'TEST' AND version = 1",
             Integer.class);
+    }
+
+    private void assertNoCConfig() {
+        List<Map<String, Object>> nocConfig = jdbcTemplate.queryForList("SELECT * FROM noc_config");
+        assertThat(nocConfig, hasSize(1));
     }
 }
