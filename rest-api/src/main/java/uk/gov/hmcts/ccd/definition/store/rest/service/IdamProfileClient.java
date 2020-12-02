@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
@@ -16,6 +17,7 @@ public class IdamProfileClient {
         this.securityUtils = securityUtils;
     }
 
+    @Transactional
     public IdamProperties getLoggedInUserDetails() {
         return toIdamProperties(securityUtils.getUserInfo());
     }

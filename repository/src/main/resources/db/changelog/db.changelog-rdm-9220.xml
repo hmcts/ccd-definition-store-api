@@ -1,0 +1,201 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="RDM-9220-1" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="case_field_field_type_id_id_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="case_field_field_type_id_id_idx"
+                     schemaName="public"
+                     tableName="case_field">
+            <column name="field_type_id"/>
+            <column name="id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-2" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="case_field_field_type_id_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="case_field_field_type_id_idx"
+                     schemaName="public"
+                     tableName="case_field">
+            <column name="field_type_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-3" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="case_type_jurisdiction_id_version_reference_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="case_type_jurisdiction_id_version_reference_idx"
+                     schemaName="public"
+                     tableName="case_type">
+            <column name="jurisdiction_id"/>
+            <column name="version"/>
+            <column name="reference"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-5" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="case_type_reference_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="case_type_reference_idx"
+                     schemaName="public"
+                     tableName="case_type">
+            <column name="reference"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-6" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="complex_field_complex_field_type_id_field_type_id_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="complex_field_complex_field_type_id_field_type_id_idx"
+                     schemaName="public"
+                     tableName="complex_field">
+            <column name="complex_field_type_id"/>
+            <column name="field_type_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-7" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="event_case_type_id_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="event_case_type_id_idx"
+                     schemaName="public"
+                     tableName="event">
+            <column name="case_type_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-8" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="event_case_field_case_field_id_event_id_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="event_case_field_case_field_id_event_id_idx"
+                     schemaName="public"
+                     tableName="event_case_field">
+            <column name="case_field_id"/>
+            <column name="event_id"/>
+        </createIndex>
+        <createIndex indexName="event_case_field_case_field_id_idx"
+                     schemaName="public"
+                     tableName="event_case_field">
+            <column name="case_field_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-9" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="event_case_field_event_id_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="event_case_field_event_id_idx"
+                     schemaName="public"
+                     tableName="event_case_field">
+            <column name="event_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-10" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="event_pre_state_state_id_event_id_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="event_pre_state_state_id_event_id_idx"
+                     schemaName="public"
+                     tableName="event_pre_state">
+            <column name="event_id"/>
+            <column name="state_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-11" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="field_type_id_base_field_type_id_collection_field_type_id_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="field_type_id_base_field_type_id_collection_field_type_id_idx"
+                     schemaName="public"
+                     tableName="field_type">
+            <column name="id"/>
+            <column name="base_field_type_id"/>
+            <column name="collection_field_type_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-12" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="field_type_list_item_field_type_id_idx"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="field_type_list_item_field_type_id_idx"
+                     schemaName="public"
+                     tableName="field_type_list_item">
+            <column name="field_type_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="RDM-9220-13" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="jurisdiction_id_reference_idx"/>
+            </not>
+        </preConditions>
+
+        <createIndex indexName="jurisdiction_id_reference_idx"
+                     schemaName="public"
+                     tableName="jurisdiction">
+            <column name="id"/>
+            <column name="reference"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="RDM-9220-14" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="case_field" indexName="case_field_id_field_type_id_idx"/>
+        </preConditions>
+        <dropIndex tableName="case_field" indexName="case_field_id_field_type_id_idx"/>
+    </changeSet>
+    <changeSet id="RDM-9220-15" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="case_field" indexName="case_field_id_field_type_id_idx1"/>
+        </preConditions>
+        <dropIndex tableName="case_field" indexName="case_field_id_field_type_id_idx1"/>
+    </changeSet>
+    <changeSet id="RDM-9220-16" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="case_field" indexName="case_field_id_field_type_id_idx2"/>
+        </preConditions>
+        <dropIndex tableName="case_field" indexName="case_field_id_field_type_id_idx2"/>
+    </changeSet>
+    <changeSet id="RDM-9220-17" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="event_case_field" indexName="event_case_field_case_field_id_event_id_idx1"/>
+        </preConditions>
+        <dropIndex tableName="event_case_field" indexName="event_case_field_case_field_id_event_id_idx1"/>
+    </changeSet>
+    <changeSet id="RDM-9220-18" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="event_case_field" indexName="idx_event_case_field__case_field_id__event_id"/>
+        </preConditions>
+        <dropIndex tableName="event_case_field" indexName="idx_event_case_field__case_field_id__event_id"/>
+    </changeSet>
+    <changeSet id="RDM-9220-19" author="suman.sreenivasan@hmcts.net">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="complex_field" indexName="idx_complex_field__id__complex_field_type_id__field_type_id"/>
+        </preConditions>
+        <dropIndex tableName="complex_field" indexName="idx_complex_field__id__complex_field_type_id__field_type_id"/>
+    </changeSet>
+</databaseChangeLog>

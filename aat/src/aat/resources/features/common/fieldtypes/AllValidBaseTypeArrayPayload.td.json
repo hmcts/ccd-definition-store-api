@@ -1,0 +1,70 @@
+{
+  "_guid_": "AllValidBaseTypeArrayPayload",
+
+  "arrayInMap": [
+    {
+      "__operator__": "equivalent",
+      "__ordering__": "unordered"
+    },
+    {
+      "_extends_": "BaseTextFieldType"
+    },
+    {
+      "_extends_": "BaseNumberFieldType"
+    },
+    {
+      "_extends_": "BaseEmailFieldType"
+    },
+    {
+      "_extends_": "BaseYesOrNoFieldType"
+    },
+    {
+      "_extends_": "BaseDateFieldType"
+    },
+    {
+      "_extends_": "BaseFixedListFieldType"
+    },
+    {
+      "_extends_": "BasePostcodeFieldType"
+    },
+    {
+      "_extends_": "BaseMoneyGBPFieldType"
+    },
+    {
+      "_extends_": "BasePhoneUKFieldType"
+    },
+    {
+      "_extends_": "BaseTextAreaFieldType"
+    },
+    {
+      "_extends_": "BaseComplexFieldType"
+    },
+    {
+      "_extends_": "BaseCollectionFieldType"
+    },
+    {
+      "_extends_": "BaseMultiSelectListFieldType"
+    },
+    {
+      "_extends_": "BaseDocumentFieldType"
+    },
+    {
+      "_extends_": "BaseLabelFieldType"
+    },
+    {
+      "_extends_": "BaseDateTimeFieldType"
+    },
+    {
+      "_extends_": "BaseCasePaymentHistoryViewerFieldType"
+    },
+    {
+      "_extends_": "BaseFixedRadioListFieldType"
+    },
+    {
+      "_extends_": "BaseCaseHistoryViewerFieldType"
+    },
+    {
+      "_extends_": "BaseDynamicListFieldType"
+    }
+  ]
+}
