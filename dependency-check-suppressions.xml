@@ -9,29 +9,6 @@
 		]]></notes>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
-
-	<!-- !!!!!!! This suppression should not be removed until the elastic search
-		client is updated to 7. Before updating the elastic client make sure that
-		the server has been updated to 7 !!!!! -->
-	<suppress>
-		<notes> NEW CVE og4j-to-slf4j-2.11.1.jar :2.3:a:apache:log4j</notes>
-		<cve>CVE-2020-9488</cve>
-	</suppress>
-
-	<suppress>
-		<notes> Supressions for RDM-9302 ci/cd release, these can be removed from develop/20.1 release</notes>
-		<cve>CVE-2020-7020</cve>
-	</suppress>
-
-	<suppress>
-		<notes><![CDATA[
-   file name: dom4j-2.1.1.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.dom4j/dom4j@.*$
-		</packageUrl>
-		<cve>CVE-2020-10683</cve>
-	</suppress>
-
 	<suppress>
 		<notes><![CDATA[
                A permission issue was found in Elasticsearch versions before 5.6.15 and 6.6.1 when Field Level Security and Document Level
@@ -51,16 +28,10 @@
       		  Jar: org.elasticsearch/elasticsearch@6.4.3
       		  Analysis: These CVEs expected to be fixed as part of RDM-9054
    		]]></notes>
-		<cve>CVE-2019-7611</cve>
 		<cve>CVE-2019-7614</cve>
 		<cve>CVE-2020-7019</cve>
-		<cve>CVE-2015-3337</cve>
-		<cve>CVE-2015-5377</cve>
-		<cve>CVE-2015-5531</cve>
-		<cve>CVE-2014-6439</cve>
-		<cve>CVE-2015-1427</cve>
+		<cve>CVE-2020-7020</cve>
 	</suppress>
-
 	<suppress>
 		<notes><![CDATA[
 			Jar: com.nimbusds:oauth2-oidc-sdk-8.22.jar
@@ -69,61 +40,4 @@
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
 	</suppress>
-
-<suppress>
-   <notes><![CDATA[
-   file name: definition-store-elastic-search-support-1.2.0-SNAPSHOT.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/uk\.gov\.hmcts\.ccd\.definition/elastic-search-support@.*$</packageUrl>
-   <cve>CVE-2020-7019</cve>
-</suppress>
-	<suppress>
-   <notes><![CDATA[
-   file name: elasticsearch-6.4.2.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.elasticsearch/elasticsearch@.*$</packageUrl>
-   <vulnerabilityName>CVE-2020-7019</vulnerabilityName>
-</suppress>
-	<suppress>
-   <notes><![CDATA[
-   file name: caffeine-2.7.0.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/com\.github\.ben-manes\.caffeine/caffeine@.*$</packageUrl>
-   <cve>CVE-2020-10517</cve>
-</suppress>
-	<suppress>
-   <notes><![CDATA[
-   file name: caffeine-2.7.0.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/com\.github\.ben-manes\.caffeine/caffeine@.*$</packageUrl>
-   <cve>CVE-2020-10518</cve>
-</suppress>
-	<suppress>
-   <notes><![CDATA[
-   file name: jcip-annotations-1.0-1.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/com\.github\.stephenc\.jcip/jcip-annotations@.*$</packageUrl>
-   <cve>CVE-2020-10517</cve>
-</suppress>
-	<suppress>
-   <notes><![CDATA[
-   file name: jcip-annotations-1.0-1.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/com\.github\.stephenc\.jcip/jcip-annotations@.*$</packageUrl>
-   <cve>CVE-2020-10518</cve>
-</suppress>
-	<suppress>
-   <notes><![CDATA[
-   file name: snakeyaml-1.25.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
-   <cve>CVE-2017-18640</cve>
-</suppress>
-	<suppress>
-   <notes><![CDATA[
-   file name: curvesapi-1.06.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/com\.github\.virtuald/curvesapi@.*$</packageUrl>
-   <cve>CVE-2020-10517</cve>
-</suppress>
 </suppressions>
