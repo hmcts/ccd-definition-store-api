@@ -32,10 +32,6 @@
           "asciifolding"
         ]
       }
-  },
-  "mapping" : {
-    "total_fields" : {
-      "limit" : "8000"
     }
   }
 }
