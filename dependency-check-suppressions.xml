@@ -70,26 +70,6 @@
 		<cve>CVE-2007-1652</cve>
 	</suppress>
 
-
-
-	<!-- Temporary suppressions to enable release 18.1 -->
-	<suppress>
-		<cve>CVE-2020-10683</cve>
-		<cve>CVE-2020-5408</cve>
-		<cve>CVE-2020-5407</cve>
-		<cve>CVE-2020-9484</cve>
-		<cve>CVE-2018-10237</cve>
-		<cve>CVE-2019-10086</cve>
-	</suppress>
-
-	<!-- Temporary suppressions to enable RDM-8581 release and enable master build -->
-	<suppress>
-		<cve>CVE-2020-13692</cve>
-		<cve>CVE-2020-7019</cve>
-		<cve>CVE-2020-10518</cve>
-		<cve>CVE-2020-10517</cve>
-		<cve>CVE-2017-18640</cve>
-	</suppress>
 <suppress>
    <notes><![CDATA[
    file name: definition-store-elastic-search-support-1.2.0-SNAPSHOT.jar
@@ -145,12 +125,5 @@
    ]]></notes>
    <packageUrl regex="true">^pkg:maven/com\.github\.virtuald/curvesapi@.*$</packageUrl>
    <cve>CVE-2020-10517</cve>
-</suppress>
-	<suppress>
-   <notes><![CDATA[
-   file name: curvesapi-1.06.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/com\.github\.virtuald/curvesapi@.*$</packageUrl>
-   <cve>CVE-2020-10518</cve>
 </suppress>
 </suppressions>
