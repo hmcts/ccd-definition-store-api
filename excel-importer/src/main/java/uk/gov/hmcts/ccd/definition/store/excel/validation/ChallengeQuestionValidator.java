@@ -1,5 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
+import com.microsoft.applicationinsights.boot.dependencies.apachecommons.lang3.tuple.Triple;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ChallengeQuestionDisplayContextParameterValidator;
@@ -7,7 +15,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -16,14 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Pattern;
-import java.util.stream.IntStream;
+import static java.util.stream.Collectors.groupingBy;
 
 @Component
 public class ChallengeQuestionValidator {
@@ -35,9 +35,9 @@ public class ChallengeQuestionValidator {
     private static final String ANSWER_FIELD_ROLE_SEPARATOR = ":";
     private static final String ANSWER_FIELD_MATCHER
         = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
-    public static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
+    private static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
+    private static final String NOT_VALID = " is not a valid ";
     private ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
-    private HashMap<String, List<String>> displayOrderList = new HashMap<>();
 
     @Autowired
     public ChallengeQuestionValidator(
@@ -45,66 +45,108 @@ public class ChallengeQuestionValidator {
         this.challengeQuestionDisplayContextParameterValidator = challengeQuestionDisplayContextParameterValidator;
     }
 
-    public ChallengeQuestionTabEntity validate(ParseContext parseContext, DefinitionDataItem definitionDataItem) {
+    public void validateDisplayContext(ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+        final ValidationResult validationResult = challengeQuestionDisplayContextParameterValidator.validate(
+            challengeQuestionTabEntity,
+            Collections.EMPTY_LIST
+        );
+        if (!validationResult.isValid()) {
+            throw new ValidationException(validationResult);
+        }
+    }
 
+    public void validate(ParseContext parseContext, List<DefinitionDataItem> questionItems) {
         this.parseContext = parseContext;
+        validateUniqueIds(questionItems);
+        validateUniqueDisplayOrder(questionItems);
+        questionItems.forEach(this::validate);
+    }
+
+    private void validate(DefinitionDataItem definitionDataItem) {
         validateQuestionId(definitionDataItem);
-        final String questionId = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_QUESTION_ID);
-        ChallengeQuestionTabEntity challengeQuestionTabEntity = new ChallengeQuestionTabEntity();
-        challengeQuestionTabEntity.setQuestionId(questionId);
-        challengeQuestionTabEntity.setCaseType(getCaseTypeEntity(definitionDataItem));
-        challengeQuestionTabEntity.setAnswerFieldType(getFieldTypeEntity(definitionDataItem));
-        validateID(definitionDataItem, challengeQuestionTabEntity);
-        validateDisplayOrder(definitionDataItem, challengeQuestionTabEntity);
-        validateQuestionText(definitionDataItem, challengeQuestionTabEntity);
-        validateAnswer(definitionDataItem, challengeQuestionTabEntity);
-        validateDisplayContext(definitionDataItem, challengeQuestionTabEntity);
-        return challengeQuestionTabEntity;
+        validateID(definitionDataItem);
+        validateFieldType(definitionDataItem);
+        validateDisplayOrder(definitionDataItem);
+        validateQuestionText(definitionDataItem);
+        CaseTypeEntity caseTypeEntity = validateCaseType(definitionDataItem);
+        validateAnswer(definitionDataItem, caseTypeEntity);
+    }
+
+    private void validateUniqueIds(List<DefinitionDataItem> questionItems) {
+        Map<Triple<String, String, String>, List<DefinitionDataItem>> caseTypeQuestionItems =
+            questionItems
+                .stream()
+                .collect(groupingBy(p ->
+                    Triple.of(p.getString(ColumnName.CASE_TYPE_ID),
+                        p.getString(ColumnName.ID),
+                        p.getString(ColumnName.CHALLENGE_QUESTION_QUESTION_ID))));
+
+        caseTypeQuestionItems.keySet()
+            .forEach(triple -> {
+                if (caseTypeQuestionItems.get(triple).size() > 1) {
+                    throw new InvalidImportException("QuestionId cannot be duplicated within case type "
+                        + "and challenge question in ChallengeQuestion tab");
+                }
+            });
+    }
+
+    private void validateUniqueDisplayOrder(List<DefinitionDataItem> questionItems) {
+        Map<Triple<String, String, String>, List<DefinitionDataItem>> challengeQuestionDisplayOrder =
+            questionItems
+                .stream()
+                .collect(groupingBy(p ->
+                    Triple.of(p.getString(ColumnName.CASE_TYPE_ID),
+                        p.getString(ColumnName.ID),
+                        p.getString(ColumnName.DISPLAY_ORDER))));
+
+        challengeQuestionDisplayOrder.keySet()
+            .forEach(triple -> {
+                if (challengeQuestionDisplayOrder.get(triple).size() > 1) {
+                    throw new InvalidImportException("DisplayOrder cannot be duplicated within case type"
+                        + " and challenge question in ChallengeQuestion tab");
+                }
+            });
     }
 
     private void validateQuestionId(DefinitionDataItem definitionDataItem) {
         final String questionId = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_QUESTION_ID);
         validateNullValue(questionId, ERROR_MESSAGE + " value: questionId cannot be null.");
-
     }
 
-    private void validateAnswer(DefinitionDataItem definitionDataItem,
-                                ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+    private void validateAnswer(DefinitionDataItem definitionDataItem, CaseTypeEntity caseTypeEntity) {
         final String answers = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD);
         validateNullValue(answers, ERROR_MESSAGE + " value: answer cannot be null.");
         final String[] answersRules = answers.split(ANSWER_MAIN_SEPARATOR);
 
         if (answersRules.length > 0 && answersRules.length != 1) {
             Arrays.asList(answersRules).stream().forEach(currentAnswerExpression -> {
-                validateAnswerExpression(definitionDataItem, challengeQuestionTabEntity, currentAnswerExpression);
+                validateAnswerExpression(definitionDataItem, caseTypeEntity, currentAnswerExpression);
             });
         } else {
-            validateAnswerExpression(definitionDataItem, challengeQuestionTabEntity, answers);
+            validateAnswerExpression(definitionDataItem, caseTypeEntity, answers);
         }
-        challengeQuestionTabEntity.setAnswerField(answers);
     }
 
     private void validateAnswerExpression(DefinitionDataItem definitionDataItem,
-                                          ChallengeQuestionTabEntity challengeQuestionTabEntity,
+                                          CaseTypeEntity caseTypeEntity,
                                           String currentAnswerExpression) {
-
+        String errorMessage = ERROR_MESSAGE + " value: %s"
+            + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+            + ", Please check the expression format and the roles.";
         final String[] answersFields = currentAnswerExpression.split(Pattern.quote(ANSWER_FIELD_SEPARATOR));
         Arrays.asList(answersFields).stream().forEach(answersField -> {
             //validate the format.
             if (!answersField.matches(ANSWER_FIELD_MATCHER)) {
-                throw new InvalidImportException(ERROR_MESSAGE + " value: "
-                        + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                        + ", Please check the expression format and the roles.");
+                throw new InvalidImportException(String.format(errorMessage, answersField));
             }
             //validate the roles.
             if (answersField.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
                 final String role = answersField.split(ANSWER_FIELD_ROLE_SEPARATOR)[1];
                 final Optional<UserRoleEntity> result = this.parseContext.getRole(
-                    challengeQuestionTabEntity.getCaseType().getReference(), role);
+                    caseTypeEntity.getReference(),
+                    role);
                 if (!result.isPresent()) {
-                    throw new InvalidImportException(ERROR_MESSAGE + " value: "
-                            + answersField + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                            + " value. Please check the expression format and the roles.");
+                    throw new InvalidImportException(String.format(errorMessage, answersField));
                 }
             }
             // validate dot notation content.
@@ -113,23 +155,20 @@ public class ChallengeQuestionValidator {
     }
 
     private void validateAnswerFieldExpression(String currentCaseType, String expression) {
-        final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: "
-                + expression + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                + " value. The expression dot notation values should be valid caseTypes fields.");
-
         // remove previous validated ${} notation
         final String dotNotationExpression = expression.replace("$", "")
-                .replace("{", "")
-                .replace("}", "");
+            .replace("{", "")
+            .replace("}", "");
 
-        if (!dotNotationExpression.contains(ANSWER_FIELD_DOT_SEPARATOR)) {
-            validateSingleExpression(dotNotationExpression, invalidImportException, currentCaseType);
-        } else {
-            final String[] splittedDotNotationExpression = dotNotationExpression
-                .split(Pattern.quote(ANSWER_FIELD_DOT_SEPARATOR));
-            try {
+        try {
+            if (!dotNotationExpression.contains(ANSWER_FIELD_DOT_SEPARATOR)) {
+                validateSingleExpression(dotNotationExpression, currentCaseType);
+            } else {
+                final String[] splittedDotNotationExpression = dotNotationExpression
+                    .split(Pattern.quote(ANSWER_FIELD_DOT_SEPARATOR));
                 final FieldTypeEntity fieldType = parseContext.getCaseFieldType(
-                    currentCaseType, splittedDotNotationExpression[0]);
+                    currentCaseType,
+                    splittedDotNotationExpression[0]);
                 final String[] attributesDotNotation = Arrays.copyOfRange(
                     splittedDotNotationExpression, 1, splittedDotNotationExpression.length);
                 IntStream.range(0, attributesDotNotation.length).forEach(index -> {
@@ -139,28 +178,21 @@ public class ChallengeQuestionValidator {
                             .substring(0, attributesDotNotation[index].indexOf(":"));
                     }
                     validateAttributes(
-                        attributesDotNotation[index], fieldType.getComplexFields(), attributesDotNotation,index);
+                        attributesDotNotation[index], fieldType.getComplexFields(), attributesDotNotation, index);
                 });
-            } catch (SpreadsheetParsingException exception) {
-                throw invalidImportException;
             }
+        } catch (Exception spe) {
+            throw new InvalidImportException(ERROR_MESSAGE + " value: "
+                + expression + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+                + " value. The expression dot notation values should be valid caseTypes fields.");
         }
     }
 
     private void validateSingleExpression(String singleExpression,
-                                          InvalidImportException invalidImportException,
                                           String currentCaseType) {
-
         if (singleExpression.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
             String attribute = singleExpression.substring(0, singleExpression.indexOf(":"));
-            try {
-                final FieldTypeEntity fieldType = parseContext.getCaseFieldType(currentCaseType, attribute);
-                if (fieldType == null) {
-                    throw invalidImportException;
-                }
-            } catch (SpreadsheetParsingException spreadsheetParsingException) {
-                throw invalidImportException;
-            }
+            parseContext.getCaseFieldType(currentCaseType, attribute);
         }
     }
 
@@ -168,15 +200,15 @@ public class ChallengeQuestionValidator {
                                     List<ComplexFieldEntity> complexFieldACLEntity,
                                     String[] attributesDotNotation,
                                     int currentIndex) {
-        final InvalidImportException invalidImportException = new InvalidImportException(ERROR_MESSAGE + " value: "
-                + currentAttribute + " is not a valid " + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
-                + " value, The expression dot notation values should be valid caseTypes fields.");
+        String errorMessage = ERROR_MESSAGE + " value: "
+            + currentAttribute + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+            + " value, The expression dot notation values should be valid caseTypes fields.";
 
         final Optional<ComplexFieldEntity> result = getComplexFieldEntity(complexFieldACLEntity, currentAttribute);
 
         if (!result.isPresent()) {
             if (currentIndex - 1 < 0) {
-                throw invalidImportException;
+                throw new InvalidImportException(errorMessage);
             }
             //It means that there is a parent component.;
             final Optional<ComplexFieldEntity> parent = getComplexFieldEntity(
@@ -185,7 +217,7 @@ public class ChallengeQuestionValidator {
                 final Optional<ComplexFieldEntity> attributeDefinition = getComplexFieldEntity(
                     parent.get().getFieldType().getComplexFields(), currentAttribute);
                 if (!attributeDefinition.isPresent()) {
-                    throw invalidImportException;
+                    throw new InvalidImportException(errorMessage);
                 }
             }
         }
@@ -197,48 +229,27 @@ public class ChallengeQuestionValidator {
                 complexFieldACLEItem.getReference().equals(currentAttribute)).findAny();
     }
 
-    private void validateDisplayContext(DefinitionDataItem definitionDataItem,
-                                        ChallengeQuestionTabEntity challengeQuestionTabEntity) {
-
-        final String displayContext = definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER);
-        challengeQuestionTabEntity.setDisplayContextParameter(displayContext);
-        final ValidationResult validationResult = challengeQuestionDisplayContextParameterValidator.validate(
-            challengeQuestionTabEntity,
-            Collections.EMPTY_LIST
-        );
-        if (!validationResult.isValid()) {
-            throw new ValidationException(validationResult);
-        }
-    }
-
-    private void validateQuestionText(DefinitionDataItem definitionDataItem,
-                                      ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+    private void validateQuestionText(DefinitionDataItem definitionDataItem) {
         final String questionText = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_TEXT);
         validateNullValue(questionText, ERROR_MESSAGE + " value: QuestionText cannot be null.");
-        challengeQuestionTabEntity.setQuestionText(questionText);
     }
 
-    private void validateID(DefinitionDataItem definitionDataItem,
-                            ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+    private void validateID(DefinitionDataItem definitionDataItem) {
         final String id = definitionDataItem.getString(ColumnName.ID);
         validateNullValue(id, ERROR_MESSAGE + " value: ID cannot be null.");
-        challengeQuestionTabEntity.setChallengeQuestionId(id);
     }
 
-    private void validateDisplayOrder(DefinitionDataItem definitionDataItem,
-                                      ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+    private void validateDisplayOrder(DefinitionDataItem definitionDataItem) {
         final String displayOrder = definitionDataItem.getString(ColumnName.DISPLAY_ORDER);
         try {
-            challengeQuestionTabEntity.setOrder(Integer.parseInt(displayOrder));
-            addInDisplayOrderMap(challengeQuestionTabEntity.getChallengeQuestionId(),displayOrder);
+            Integer.parseInt(displayOrder);
         } catch (NumberFormatException numberFormatException) {
             throw new InvalidImportException(
-                ERROR_MESSAGE + " value: " + displayOrder + " is not a valid DisplayOrder.");
+                ERROR_MESSAGE + " value: " + displayOrder + NOT_VALID + "DisplayOrder.");
         }
     }
 
-    private CaseTypeEntity getCaseTypeEntity(DefinitionDataItem questionItem) {
-
+    private CaseTypeEntity validateCaseType(DefinitionDataItem questionItem) {
         final String caseType = questionItem.getString(ColumnName.CASE_TYPE_ID);
         Optional<CaseTypeEntity> caseTypeEntityOptional = parseContext.getCaseTypes()
             .stream()
@@ -249,8 +260,7 @@ public class ChallengeQuestionValidator {
         );
     }
 
-    private FieldTypeEntity getFieldTypeEntity(DefinitionDataItem questionItem) {
-
+    private FieldTypeEntity validateFieldType(DefinitionDataItem questionItem) {
         final String fieldType = questionItem.getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD_TYPE);
         Optional<FieldTypeEntity> fieldTypeEntity = parseContext.getType(fieldType);
 
@@ -262,27 +272,5 @@ public class ChallengeQuestionValidator {
         if (value == null) {
             throw new InvalidImportException(message);
         }
-    }
-
-    private void addInDisplayOrderMap(String questionGroup, String displayOrder) {
-        List<String> listOfDisplayOrder = displayOrderList.get(questionGroup);
-
-        if (listOfDisplayOrder == null) {
-            listOfDisplayOrder = new ArrayList<>();
-            listOfDisplayOrder.add(displayOrder);
-            displayOrderList.put(questionGroup, listOfDisplayOrder);
-        } else {
-            if (listOfDisplayOrder.contains(displayOrder)) {
-                throw new InvalidImportException(ERROR_MESSAGE
-                        + " value: " + displayOrder + ". The " + ColumnName.DISPLAY_ORDER
-                        + " values must be unique in the question group " + questionGroup);
-            } else {
-                listOfDisplayOrder.add(displayOrder);
-            }
-        }
-    }
-
-    public void setDisplayOrderList(HashMap<String, List<String>> displayOrderList) {
-        this.displayOrderList = displayOrderList;
     }
 }
