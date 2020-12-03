@@ -74,7 +74,6 @@ public class ImportServiceImpl implements ImportService {
     private final IdamProfileClient idamProfileClient;
     private final BannerService bannerService;
     private final JurisdictionUiConfigService jurisdictionUiConfigService;
-    private final NoCConfigService noCConfigService;
     private final ChallengeQuestionTabService challengeQuestionTabService;
 
     @Autowired
