@@ -46,6 +46,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+
+
 /**
  * Component-level tests for the Core Case Definition Importer API.
  *
@@ -62,7 +64,9 @@ public class SpreadSheetImportTest extends BaseTest {
         "/CCD_TestDefinition_Invalid_PostState_DuplicatePriorities.xlsx";
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
-    private static final String RESPONSE_JSON_V45 = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
+    private static final String
+
+    5 = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
 
     private Map<Object, Object> caseTypesId;
     private Map<Object, Object> fieldTypesId;
@@ -255,6 +259,7 @@ public class SpreadSheetImportTest extends BaseTest {
             .andExpect(resultMatcher)
             .andReturn();
     }
+
 
     /**
      * returns a version of the 'hasEntry' matcher that is unchecked. This allows mixing of different types of
