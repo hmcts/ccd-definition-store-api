@@ -28,8 +28,8 @@ dependencies {
     compile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
+    compile "org.flywaydb:flyway-core:6.5.7"
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
-    runtime group: 'org.liquibase', name: 'liquibase-core', version: '3.10.3'
 
     testCompile project(":app-insights").sourceSets.main.output
     testCompile project(":commons").sourceSets.main.output

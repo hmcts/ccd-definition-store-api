@@ -9,10 +9,6 @@
 		]]></notes>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
-
-	<!-- !!!!!!! This suppression should not be removed until the elastic search
-		client is updated to 7. Before updating the elastic client make sure that
-		the server has been updated to 7 !!!!! -->
 	<suppress>
 		<notes><![CDATA[
                A permission issue was found in Elasticsearch versions before 5.6.15 and 6.6.1 when Field Level Security and Document Level
@@ -32,11 +28,10 @@
       		  Jar: org.elasticsearch/elasticsearch@6.4.3
       		  Analysis: These CVEs expected to be fixed as part of RDM-9054
    		]]></notes>
-		<cve>CVE-2019-7611</cve>
 		<cve>CVE-2019-7614</cve>
 		<cve>CVE-2020-7019</cve>
+		<cve>CVE-2020-7020</cve>
 	</suppress>
-
 	<suppress>
 		<notes><![CDATA[
 			Jar: com.nimbusds:oauth2-oidc-sdk-8.22.jar
@@ -44,17 +39,5 @@
 		]]></notes>
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
-	</suppress>
-
-
-
-	<suppress>
-		<notes>Elastic Search CVE's</notes>
-		<cve>CVE-2015-3337</cve>
-		<cve>CVE-2015-5377</cve>
-		<cve>CVE-2015-5531</cve>
-		<cve>CVE-2014-6439</cve>
-		<cve>CVE-2015-1427</cve>
-		<cve>CVE-2020-7020</cve>
 	</suppress>
 </suppressions>
