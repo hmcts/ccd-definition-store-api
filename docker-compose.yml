@@ -12,7 +12,7 @@ services:
       - DEFINITION_STORE_DB_USERNAME=definition_store
       - DEFINITION_STORE_DB_PASSWORD=definition_store
       - DEFINITION_STORE_IDAM_KEY
-      - DEFINITION_STORE_S2S_AUTHORISED_SERVICES=ccd_data,ccd_gw
+      - DEFINITION_STORE_S2S_AUTHORISED_SERVICES=ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp,aac_manage_case_assignment
       - USER_PROFILE_HOST
       - IDAM_USER_URL
       - IDAM_S2S_URL

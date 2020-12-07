@@ -1,0 +1,7 @@
+{
+  "_guid_": "BaseLabelFieldType",
+  "_extends_": "CommonFieldType",
+
+  "id": "Label",
+  "type": "Label"
+}

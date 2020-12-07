@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
@@ -30,6 +31,7 @@ public class CaseRoleServiceImpl implements CaseRoleService {
         this.dtoMapper = dtoMapper;
     }
 
+    @Transactional
     @Override
     public List<CaseRole> findByCaseTypeId(String caseType) {
         Integer caseTypeVersion = caseTypeRepository.findLastVersion(caseType)
