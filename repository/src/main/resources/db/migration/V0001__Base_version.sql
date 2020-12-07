@@ -833,37 +833,6 @@ CREATE SEQUENCE public.jurisdiction_ui_config_id_seq
 ALTER SEQUENCE public.jurisdiction_ui_config_id_seq OWNED BY public.jurisdiction_ui_config.id;
 
 
---
--- Name: noc_config; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.noc_config (
-                                   id integer NOT NULL,
-                                   reasons_required boolean NOT NULL,
-                                   noc_action_interpretation_required boolean NOT NULL,
-                                   created_at timestamp without time zone DEFAULT now() NOT NULL,
-                                   case_type_id integer NOT NULL
-);
-
-
---
--- Name: noc_config_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.noc_config_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: noc_config_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.noc_config_id_seq OWNED BY public.noc_config.id;
-
 
 --
 -- Name: role; Type: TABLE; Schema: public; Owner: -
@@ -1387,12 +1356,6 @@ ALTER TABLE ONLY public.jurisdiction ALTER COLUMN id SET DEFAULT nextval('public
 
 ALTER TABLE ONLY public.jurisdiction_ui_config ALTER COLUMN id SET DEFAULT nextval('public.jurisdiction_ui_config_id_seq'::regclass);
 
-
---
--- Name: noc_config id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.noc_config ALTER COLUMN id SET DEFAULT nextval('public.noc_config_id_seq'::regclass);
 
 
 --
@@ -2408,14 +2371,6 @@ ALTER TABLE ONLY public.field_type_list_item
 
 ALTER TABLE ONLY public.jurisdiction_ui_config
     ADD CONSTRAINT fk_jurisdiction_ui_config_jurisdiction_id FOREIGN KEY (jurisdiction_id) REFERENCES public.jurisdiction(id);
-
-
---
--- Name: noc_config fk_noc_config_case_type_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.noc_config
-    ADD CONSTRAINT fk_noc_config_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 
 --
