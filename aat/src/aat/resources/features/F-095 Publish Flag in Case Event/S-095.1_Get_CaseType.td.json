@@ -34,7 +34,12 @@
 				"name" : "Add Details",
 				"description" : "Add extra details to the case",
 				"order" : 1,
-				"case_fields" : [ {
+				"case_fields" : [
+					{
+						"__ordering__": "UNORDERED",
+						"__elementId__": "case_field_id"
+					},
+					{
 					"case_field_id" : "Age",
 					"display_context" : "OPTIONAL",
 					"display_context_parameter" : null,
@@ -76,7 +81,12 @@
 				"name" : "Create a case",
 				"description" : "Create a case",
 				"order" : 1,
-				"case_fields" : [ {
+				"case_fields" : [
+					{
+						"__ordering__": "UNORDERED",
+						"__elementId__": "case_field_id"
+					},
+					{
 					"case_field_id" : "TextFieldFName",
 					"display_context" : "OPTIONAL",
 					"display_context_parameter" : null,
