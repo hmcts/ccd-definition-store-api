@@ -44,7 +44,7 @@ dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
 
     // Ignore these non-runtime configurations
-  //  skipConfigurations = ['codacy']
+    // skipConfigurations = ['codacy']
 }
 
 //spring boot dependency override
