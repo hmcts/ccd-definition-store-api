@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.PublishFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.util.PublishFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
@@ -12,7 +12,19 @@ public class EventCaseFieldPublishValidatorImpl implements EventCaseFieldEntityV
     public ValidationResult validate(EventCaseFieldEntity eventCaseFieldEntity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
         final ValidationResult validationResult = new ValidationResult();
-        this.validatePublishAsField(validationResult, eventCaseFieldEntityValidationContext, eventCaseFieldEntity.getPublishAs());
+        this.validatePublishAsField(
+            validationResult,
+            eventCaseFieldEntityValidationContext,
+            eventCaseFieldEntity.getPublishAs(),
+            eventCaseFieldEntity.getCaseField().getReference()
+        );
+        this.validatePublishField(
+            validationResult,
+            eventCaseFieldEntityValidationContext,
+            eventCaseFieldEntity.getPublishAs(),
+            eventCaseFieldEntity.getCaseField().getReference(),
+            eventCaseFieldEntity.getPublish()
+        );
         return validationResult;
     }
 }
