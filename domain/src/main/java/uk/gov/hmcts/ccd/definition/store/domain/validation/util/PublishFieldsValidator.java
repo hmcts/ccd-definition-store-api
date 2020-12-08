@@ -16,53 +16,71 @@ public interface PublishFieldsValidator {
     String PUBLISH_COLUMN = "Publish";
 
     default void validatePublishAsField(ValidationResult validationResult,
-                                        EventCaseFieldEntityValidationContext validationContext, String publishAs, String reference) {
+                                        EventCaseFieldEntityValidationContext validationContext,
+                                        String publishAs, String reference) {
+
+        final String errorDueToSpaces = String.format(PUBLISH_AS_COLUMN
+            + " column cannot have spaces, reference '%s'", reference);
+
+        final String errorDuplicatedElements =
+            String.format(PUBLISH_AS_COLUMN + " column has an invalid value '%s',  reference '%s'. "
+                    + "This value must be unique across CaseEventToFields and EventToComplexTypes for the case type. ",
+                publishAs, reference);
 
         if (publishAs == null || publishAs.isEmpty()) {
             return;
         }
         // Incorrect value for the PublishAs field is defined as a field having spaces (Not permitted)
-        if (publishAs.contains(" ")) {
-            validationResult.addError(
-                new PublishError(String.format(PUBLISH_AS_COLUMN + " column cannot have spaces, reference '%s'", reference))
-            );
+        if (publishAs.contains(errorDueToSpaces)) {
+            validationResult.addError(new PublishError(errorDueToSpaces));
         }
 
         if (isCurrentPublishAsDuplicated(validationContext, publishAs)) {
-            validationResult.addError(new PublishError(
-                String.format(PUBLISH_AS_COLUMN + " column has an invalid value '%s',  reference '%s'. " +
-                        "This value must be unique across CaseEventToFields and EventToComplexTypes for the case type. ",
-                    publishAs, reference)
-            ));
+            validationResult.addError(new PublishError(errorDuplicatedElements));
         }
         return;
     }
-    private boolean isCurrentPublishAsDuplicated(EventCaseFieldEntityValidationContext validationContext, String publishAs){
 
-        final List<EventCaseFieldEntity> publishesAsInCaseFields = findPublishAsInEventCaseFields(validationContext, publishAs);
-        final List<EventComplexTypeEntity> publishesAsInEventComplexTypes = findPublishAsInEventComplexTypes(validationContext, publishAs);
+    private boolean isCurrentPublishAsDuplicated(
+                                                    EventCaseFieldEntityValidationContext validationContext,
+                                                    String publishAs
+                                                 ) {
+
+        final List<EventCaseFieldEntity> publishesAsInCaseFields =
+                    findPublishAsInEventCaseFields(validationContext, publishAs);
+
+        final List<EventComplexTypeEntity> publishesAsInEventComplexTypes =
+                    findPublishAsInEventComplexTypes(validationContext, publishAs);
+
         //case 1 repeated in each TAB  EventCaseField or in EventComplexType
-        if ( publishesAsInCaseFields.size() > 1 || publishesAsInEventComplexTypes.size() > 1){
+        if (publishesAsInCaseFields.size() > 1 || publishesAsInEventComplexTypes.size() > 1) {
             return true;
         }
         //case 2 same publishAs value in TAB  EventCaseField and in EventComplexType
-        if ( publishesAsInCaseFields.size() == 1 && publishesAsInEventComplexTypes.size() == 1){
+        if (publishesAsInCaseFields.size() == 1 && publishesAsInEventComplexTypes.size() == 1) {
             return true;
         }
         return false;
     }
-    private List<EventComplexTypeEntity> findPublishAsInEventComplexTypes(EventCaseFieldEntityValidationContext validationContext, String publishAs) {
+
+    private List<EventComplexTypeEntity> findPublishAsInEventComplexTypes(
+        EventCaseFieldEntityValidationContext validationContext,
+        String publishAs
+    ) {
 
         return validationContext.getAllEventCaseFieldEntitiesForEventCase().stream()
-                .map(eventCaseFieldEntity ->
-                    eventCaseFieldEntity.getEventComplexTypes().stream().filter(eventComplexTypeEntity ->
-                        publishAs.equals(eventComplexTypeEntity.getPublishAs())
-                    ).collect(Collectors.toList())
-                ).flatMap(Collection::stream)
-             .collect(Collectors.toList());
+            .map(eventCaseFieldEntity ->
+                eventCaseFieldEntity.getEventComplexTypes().stream().filter(eventComplexTypeEntity ->
+                    publishAs.equals(eventComplexTypeEntity.getPublishAs())
+                ).collect(Collectors.toList())
+            ).flatMap(Collection::stream)
+            .collect(Collectors.toList());
     }
 
-    private List<EventCaseFieldEntity> findPublishAsInEventCaseFields(EventCaseFieldEntityValidationContext validationContext, String publishAs) {
+    private List<EventCaseFieldEntity> findPublishAsInEventCaseFields(
+        EventCaseFieldEntityValidationContext validationContext,
+        String publishAs
+    ) {
         return validationContext.getAllEventCaseFieldEntitiesForEventCase().stream()
             .filter(eventCaseFieldEntity -> publishAs.equals(eventCaseFieldEntity.getPublishAs()))
             .collect(Collectors.toList());
@@ -70,9 +88,8 @@ public interface PublishFieldsValidator {
 
     default void validatePublishField(ValidationResult validationResult,
                                       EventCaseFieldEntityValidationContext validationContext, String publishAs,
-                                      String reference, Boolean publish ) {
+                                      String reference, Boolean publish) {
 
         return;
     }
 }
-

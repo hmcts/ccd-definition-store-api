@@ -12,8 +12,9 @@ public class EventComplexTypePublishValidatorImpl implements EventComplexTypeEnt
     @Override
     public ValidationResult validate(EventComplexTypeEntity eventComplexTypeEntity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
-        final String reference = eventComplexTypeEntity.getComplexFieldType().getCaseField().getReference() +
-            "." + eventComplexTypeEntity.getReference();
+
+        final String reference = eventComplexTypeEntity.getComplexFieldType().getCaseField().getReference()
+            + "." + eventComplexTypeEntity.getReference();
         final ValidationResult validationResult = new ValidationResult();
 
         this.validatePublishAsField(
