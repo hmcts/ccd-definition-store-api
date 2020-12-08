@@ -3,6 +3,9 @@ java:
   ingressHost: ccd-definition-store-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   applicationPort: 4451
   aadIdentityName: ccd
+  autoscaling:
+    enabled: true 
+    maxReplicas: 4
   keyVaults:
     ccd:
       secrets:
@@ -13,7 +16,7 @@ java:
         - storage-account-primary-connection-string
         - AppInsightsInstrumentationKey
   environment:
-    ENABLE_DB_MIGRATE: false
+    FLYWAY_NOOP_STRATEGY: true
     DEFINITION_STORE_DB_PORT: 5432
     DEFINITION_STORE_DB_NAME: ccd_definition_store
     DEFINITION_STORE_DB_HOST: ccd-definition-store-api-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
