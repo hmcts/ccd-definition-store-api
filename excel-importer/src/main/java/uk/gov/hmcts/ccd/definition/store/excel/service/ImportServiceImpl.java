@@ -107,7 +107,6 @@ public class ImportServiceImpl implements ImportService {
         this.applicationEventPublisher = applicationEventPublisher;
         this.bannerService = bannerService;
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
-
         this.challengeQuestionTabService = challengeQuestionTabService;
     }
 

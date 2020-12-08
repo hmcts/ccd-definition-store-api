@@ -1,5 +1,34 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import org.apache.http.HttpStatus;
+import org.hamcrest.Matcher;
+import org.json.JSONException;
+import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -17,34 +46,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import org.apache.http.HttpStatus;
-import org.hamcrest.Matcher;
-import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.client.WireMock;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
-
 /**
  * Component-level tests for the Core Case Definition Importer API.
  *
@@ -55,18 +56,13 @@ public class SpreadSheetImportTest extends BaseTest {
     private static final String TEST_CASE_TYPE = "TestAddressBookCase";
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
         + TEST_CASE_TYPE;
-    public static final String EXCEL_FILE_NOC_CONFIG = "/CCD_TestDefinition_NOC_CONFIG.xlsx";
     public static final String EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT =
         "/CCD_TestDefinition_Invalid_PostState_NoDefault.xlsx";
     public static final String EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES =
         "/CCD_TestDefinition_Invalid_PostState_DuplicatePriorities.xlsx";
-    public static final String EXCEL_FILE_INVALID_NOC_CONFIG = "/CCD_TestDefinition_Invalid_NOC_CONFIG.xlsx";
-    public static final String EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG =
-        "/CCD_TestDefinition_Invalid_Case_Type_NOC_CONFIG.xlsx";
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
     private static final String RESPONSE_JSON_V45 = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
-    private static final String RESPONSE_JSON_V46 = "GetCaseTypesResponseForCCD_TestDefinition_V46.json";
 
     private Map<Object, Object> caseTypesId;
     private Map<Object, Object> fieldTypesId;
@@ -273,20 +269,20 @@ public class SpreadSheetImportTest extends BaseTest {
         return hasColumn(is(key), is(value));
     }
 
-    private void assertBody(String contentAsString) throws IOException, URISyntaxException {
+    private void assertBody(String contentAsString) throws IOException, URISyntaxException, JSONException {
         assertBody(contentAsString, RESPONSE_JSON_V45);
     }
 
     private void assertBody(String contentAsString, String fileName)
-        throws IOException, URISyntaxException {
+        throws IOException, URISyntaxException, JSONException {
 
-        String expected = formatJsonString(readFileToString(new File(getClass().getClassLoader()
+        String expected = readFileToString(new File(getClass().getClassLoader()
             .getResource(fileName)
-            .toURI())));
+            .toURI()));
         expected = expected.replaceAll("#date",
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-        assertEquals(removeGuids(expected), formatJsonString(removeGuids(contentAsString)));
+        JSONAssert.assertEquals(removeGuids(expected), removeGuids(contentAsString), JSONCompareMode.LENIENT);
     }
 
     private String formatJsonString(String string) throws IOException {
