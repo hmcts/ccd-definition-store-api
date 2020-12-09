@@ -8,6 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificationColumn;
@@ -30,15 +33,18 @@ public class EventParser {
     private final EventCaseFieldParser eventCaseFieldParser;
     private final EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser;
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
+    private ShowConditionParser showConditionParser;
 
     public EventParser(ParseContext parseContext,
                        EventCaseFieldParser eventCaseFieldParser,
                        EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser,
-                       EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+                       EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
+                       ShowConditionParser showConditionParser) {
         this.parseContext = parseContext;
         this.eventCaseFieldParser = eventCaseFieldParser;
         this.eventCaseFieldComplexTypeParser = eventCaseFieldComplexTypeParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
+        this.showConditionParser = showConditionParser;
     }
 
     public Collection<EventEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseType) {
@@ -118,6 +124,9 @@ public class EventParser {
         final String postStateId = eventDefinition.getString(ColumnName.POST_CONDITION_STATE);
         event.addEventPostStates(postStateParser.parse(postStateId));
 
+        // event enabling condition
+        event.setEventEnablingCondition(parseEventEnablingCondition(eventDefinition));
+
         // Webhooks
         event.setWebhookStart(parseWebhook(eventDefinition,
             ColumnName.CALLBACK_URL_ABOUT_TO_START_EVENT,
@@ -130,6 +139,19 @@ public class EventParser {
             ColumnName.RETRIES_TIMEOUT_URL_SUBMITTED_EVENT));
 
         return event;
+    }
+
+    public String parseEventEnablingCondition(DefinitionDataItem eventDefinition) {
+        String eventEnablingCondition = eventDefinition.getString(ColumnName.EVENT_ENABLING_CONDITION);
+        if (StringUtils.isNotEmpty(eventEnablingCondition)) {
+            try {
+                ShowCondition condition = this.showConditionParser.parseShowCondition(eventEnablingCondition);
+                return condition.getShowConditionExpression();
+            } catch (InvalidShowConditionException e) {
+                throw new SpreadsheetParsingException("Invalid Event enabling Condition " + eventEnablingCondition);
+            }
+        }
+        return eventEnablingCondition;
     }
 
     private void parseEventCaseFields(CaseTypeEntity caseType,

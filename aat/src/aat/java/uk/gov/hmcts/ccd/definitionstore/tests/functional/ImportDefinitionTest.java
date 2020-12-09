@@ -200,4 +200,21 @@ class ImportDefinitionTest extends BaseTest {
         }
         assert (matchingACLRecords == 5);
     }
+
+    @Test
+    @DisplayName("Should return import definition with valid event enabling condition.")
+    void shouldImportDefinitionWithValidEventEnablingCondition() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        Response response = asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Event_Enabling_Condition_Test.xlsx"))
+            .expect()
+            .statusCode(201)
+            .when()
+            .post("/import");
+
+        assert (response.getBody().prettyPrint()
+            .equals("Case Definition data successfully imported"));
+    }
 }
