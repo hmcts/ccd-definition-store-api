@@ -11,7 +11,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_Invalid_CaseField.xlsx"
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_Invalid_Event_Enabling_Condition.xlsx"
         }
       ]
     }
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- Unknown field 'TextField55' for event 'approveCase' in event enabling condition: 'CaseApproved(TextField55=\"showmethemoney\" AND TextField3=\"showpage5\"):1;CaseModified' in CaseEvent tab"
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- Unknown field 'TextField55' for event 'approveCase' in event enabling condition: 'TextField55=\"showmethemoney\" AND TextField3=\"showpage5\"' in CaseEvent tab"
     }
   }
 }

@@ -1,5 +1,5 @@
 @F-095
-Feature: F-092: Event Enabling condition
+Feature: F-095: Event Enabling condition
 
   Background:
     Given an appropriate test context as detailed in the test data source

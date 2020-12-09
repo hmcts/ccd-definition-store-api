@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
+import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,11 +28,7 @@ import static org.mockito.Mockito.mock;
 
 public class EventEntityEnablingConditionValidatorTest {
 
-    private static final String STATE_APPROVAL_REQUIRED = "ApprovalRequired";
-
-    private static final String ENABLING_CONDITION = "FieldA!=\"\" AND FieldB=\"I'm innocent\"";
-
-    private EventEntityPostStateValidator classUnderTest;
+    private EventEntityEnablingConditionValidator classUnderTest;
 
     @Mock
     private ShowConditionParser showConditionExtractor;
@@ -45,7 +42,7 @@ public class EventEntityEnablingConditionValidatorTest {
     @Before
     public void setUp() throws InvalidShowConditionException {
         MockitoAnnotations.initMocks(this);
-        classUnderTest = new EventEntityPostStateValidator(showConditionExtractor, caseTypeEntityUtil);
+        classUnderTest = new EventEntityEnablingConditionValidator(showConditionExtractor, caseTypeEntityUtil);
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("TestCaseType");
         eventEntityValidationContext = new EventEntityValidationContext(caseTypeEntity);
@@ -64,14 +61,27 @@ public class EventEntityEnablingConditionValidatorTest {
     }
 
     @Test
-    public void shouldFailWhenNoDefaultPostStatePresent() {
-        EventEntity eventEntity = createEventWithEnablingCondition(ENABLING_CONDITION);
+    public void shouldFailWhenCaseFieldIsNotDefined() throws InvalidShowConditionException {
+        mockShowCondition(Sets.newHashSet("FieldA", "FieldC"), new ArrayList<>());
+        String matchingConditionFieldNotDefined = "FieldA!=\"\" AND FieldC=\"I'm innocent\"";
+
+        EventEntity eventEntity = createEvent(matchingConditionFieldNotDefined);
         ValidationResult validationResult = classUnderTest.validate(eventEntity, eventEntityValidationContext);
 
         assertNotNull(validationResult, "validation result should not be null");
         assertThat(validationResult.getValidationErrors().size(), is(1));
-        assertThat(validationResult.getValidationErrors().get(0).getDefaultMessage(),
-            is("Non-conditional post state is required for case type 'TestCaseType', event 'createCase'"));
+        assertThat(validationResult.getValidationErrors().get(0).toString(),
+            is("validationError: Unknown field 'FieldC' for event "
+                + "'createCase' in post state condition: "
+                + "'FieldA!=\"\" AND FieldC=\"I'm innocent\"'"));
+    }
+
+    private EventEntity createEvent(String matchingCondition) {
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setCaseType(createCaseTypeEntity());
+        eventEntity.setReference("createCase");
+        eventEntity.setEventEnablingCondition(matchingCondition);
+        return eventEntity;
     }
 
     private ShowCondition mockShowCondition() throws InvalidShowConditionException {
