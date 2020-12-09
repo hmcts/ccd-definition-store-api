@@ -89,7 +89,6 @@ public enum ColumnName {
     CHALLENGE_QUESTION_CASE_ROLE_ID("CaseRoleId"),
     CHALLENGE_QUESTION_QUESTION_ID("QuestionId"),
     CHALLENGE_QUESTION_ANSWER_FIELD("Answer"),
-    PUBLISH("Publish"),
     PUBLISH_AS("PublishAs");
 
     private final String name;

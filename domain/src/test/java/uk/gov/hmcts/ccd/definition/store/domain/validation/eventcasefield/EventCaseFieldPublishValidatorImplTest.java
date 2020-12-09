@@ -6,6 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,13 @@ public class EventCaseFieldPublishValidatorImplTest {
 
     private void setupEventCaseFieldEntity() {
         final CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+        final EventEntity eventEntity = new EventEntity();
         caseFieldEntity.setReference("caseFieldReference");
+        eventEntity.setName(eventId);
         eventCaseFieldEntity.setCaseField(caseFieldEntity);
+        eventCaseFieldEntity.setPublish(false);
+        eventEntity.setPublish(false);
+        eventCaseFieldEntity.setEvent(eventEntity);
     }
 
     private void addPublishAsInEventComplexTypeEntity(String publishAsEventComplexType, String publishAsEventCaseFieldEntity) {
@@ -125,12 +131,24 @@ public class EventCaseFieldPublishValidatorImplTest {
         assertForFailTest(expectedError);
     }
 
+    @Test
+    public void should_fail_due_to_EventPublishFalse_and_EventCaseFieldEntityPublishTrue() {
+
+        final String expectedError = "Publish column has an invalid value 'true',  reference 'caseFieldReference'. If the Event is set to false, CaseEventToFields and EventToComplexTypes cannot have Publish columns as true for the case type.";
+
+        setupEventCaseFieldEntity();
+        eventCaseFieldEntity.setPublishAs("Test");
+        eventCaseFieldEntity.setPublish(true);
+        addPublishAsInEventComplexTypeEntity("Test", null);
+        assertForFailTest(expectedError);
+    }
+
     private void assertForFailTest(String expectedError) {
         final ValidationResult validationResult = classUnderTest.validate(
             eventCaseFieldEntity, eventCaseFieldEntityValidationContext);
 
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
-        assertTrue(validationResult.getValidationErrors().get(0).getDefaultMessage().equals(expectedError));
+        assertEquals(validationResult.getValidationErrors().get(0).getDefaultMessage(),expectedError);
     }
 }

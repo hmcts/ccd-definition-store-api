@@ -5,6 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +32,7 @@ public interface PublishFieldsValidator {
             return;
         }
         // Incorrect value for the PublishAs field is defined as a field having spaces (Not permitted)
-        if (publishAs.contains(errorDueToSpaces)) {
+        if (publishAs.contains(" ")) {
             validationResult.addError(new PublishError(errorDueToSpaces));
         }
 
@@ -87,9 +88,18 @@ public interface PublishFieldsValidator {
     }
 
     default void validatePublishField(ValidationResult validationResult,
-                                      EventCaseFieldEntityValidationContext validationContext, String publishAs,
+                                      EventCaseFieldEntityValidationContext validationContext, EventEntity eventEntity,
                                       String reference, Boolean publish) {
 
+        final String errorEventSetToFalse =
+            String.format(PUBLISH_COLUMN + " column has an invalid value '%s',  reference '%s'. "
+                    + "If the Event is set to false, CaseEventToFields and EventToComplexTypes cannot have "
+                    + PUBLISH_COLUMN + " columns as true for the case type.",
+                publish, reference);
+
+        if (eventEntity.getPublish() == false && publish == true) {
+            validationResult.addError(new PublishError(errorEventSetToFalse));
+        }
         return;
     }
 }

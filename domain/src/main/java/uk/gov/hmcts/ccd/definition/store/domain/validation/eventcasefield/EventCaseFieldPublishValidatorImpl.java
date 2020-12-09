@@ -21,7 +21,7 @@ public class EventCaseFieldPublishValidatorImpl implements EventCaseFieldEntityV
         this.validatePublishField(
             validationResult,
             eventCaseFieldEntityValidationContext,
-            eventCaseFieldEntity.getPublishAs(),
+            eventCaseFieldEntity.getEvent(),
             eventCaseFieldEntity.getCaseField().getReference(),
             eventCaseFieldEntity.getPublish()
         );

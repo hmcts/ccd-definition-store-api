@@ -27,7 +27,7 @@ public class EventComplexTypePublishValidatorImpl implements EventComplexTypeEnt
         this.validatePublishField(
             validationResult,
             eventCaseFieldEntityValidationContext,
-            eventComplexTypeEntity.getPublishAs(),
+            eventComplexTypeEntity.getComplexFieldType().getEvent(),
             reference,
             eventComplexTypeEntity.getPublish()
         );
