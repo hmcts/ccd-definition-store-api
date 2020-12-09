@@ -30,7 +30,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidDefaultPostStateError;
@@ -181,6 +180,4 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(EventEntityInvalidDefaultPostStateError classUnderTest);
 
     String createErrorMessage(EventEntityShowConditionReferencesInvalidCaseFieldError classUnderTest);
-
-    String createErrorMessage(EventEntityEnableConditionReferencesInvalidCaseFieldError classUnderTest);
 }

@@ -87,8 +87,7 @@ public enum ColumnName {
     CHALLENGE_QUESTION_ANSWER_FIELD_TYPE("AnswerFieldType"),
     CHALLENGE_QUESTION_CASE_ROLE_ID("CaseRoleId"),
     CHALLENGE_QUESTION_QUESTION_ID("QuestionId"),
-    CHALLENGE_QUESTION_ANSWER_FIELD("Answer"),
-    EVENT_ENABLING_CONDITION("EventEnablingCondition");
+    CHALLENGE_QUESTION_ANSWER_FIELD("Answer");
 
     private final String name;
 

@@ -9,20 +9,27 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
 
 @Component
-public class EventEntityPostStateValidator extends AbstractShowConditionValidator {
+public class EventEntityPostStateValidator implements EventEntityValidator {
+
+    private final ShowConditionParser showConditionExtractor;
+    private final CaseFieldEntityUtil caseFieldEntityUtil;
 
     @Autowired
     public EventEntityPostStateValidator(final ShowConditionParser showConditionExtractor,
                                          CaseFieldEntityUtil caseFieldEntityUtil) {
-        super(showConditionExtractor, caseFieldEntityUtil);
+        this.showConditionExtractor = showConditionExtractor;
+        this.caseFieldEntityUtil = caseFieldEntityUtil;
     }
 
     @Override
@@ -58,9 +65,40 @@ public class EventEntityPostStateValidator extends AbstractShowConditionValidato
         postStateEntities
             .stream()
             .filter(postStateEntity -> postStateEntity.getEnablingCondition() != null)
-            .forEach(entity -> validateShowConditionFields(eventEntity,
-                validationResult,
-                entity.getEnablingCondition()));
+            .forEach(entity -> {
+                try {
+                    ShowCondition showCondition = showConditionExtractor
+                        .parseShowCondition(entity.getEnablingCondition());
+
+                    List<String> allSubTypePossibilities = caseFieldEntityUtil
+                        .buildDottedComplexFieldPossibilities(eventEntity.getCaseType().getCaseFields());
+
+                    showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
+                        if (!allSubTypePossibilities.contains(showConditionField)) {
+                            validationResult.addError(new EventEntityShowConditionReferencesInvalidCaseFieldError(
+                                showConditionField,
+                                eventEntity,
+                                entity.getEnablingCondition()
+                            ));
+                        }
+                    });
+
+                    showCondition.getFields().forEach(showConditionField -> {
+                        if (!forShowConditionFieldExistsAtLeastOneCaseFieldEntity(
+                            showConditionField,
+                            eventEntity.getCaseType().getCaseFields())
+                            && !MetadataField.isMetadataField(showConditionField)) {
+                            validationResult.addError(new EventEntityShowConditionReferencesInvalidCaseFieldError(
+                                showConditionField,
+                                eventEntity,
+                                entity.getEnablingCondition()
+                            ));
+                        }
+                    });
+                } catch (InvalidShowConditionException e) {
+                    // this is handled during parsing. here no exceptions will be thrown
+                }
+            });
     }
 
     private void validateNonConditionalPostState(EventEntity event,
@@ -97,16 +135,15 @@ public class EventEntityPostStateValidator extends AbstractShowConditionValidato
         }
     }
 
+    private boolean forShowConditionFieldExistsAtLeastOneCaseFieldEntity(String showConditionField,
+                                                                         List<CaseFieldEntity> caseFieldEntities) {
+        return caseFieldEntities
+            .stream()
+            .anyMatch(f -> f.getReference().equals(showConditionField));
+    }
+
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Map<Object, Boolean> duplicates = new ConcurrentHashMap<>();
         return t -> duplicates.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }
-
-    public ValidationError getValidationError(String showConditionField,
-                                              EventEntity eventEntity,
-                                              String showCondition) {
-        return new EventEntityShowConditionReferencesInvalidCaseFieldError(showConditionField,
-            eventEntity,
-            showCondition);
     }
 }

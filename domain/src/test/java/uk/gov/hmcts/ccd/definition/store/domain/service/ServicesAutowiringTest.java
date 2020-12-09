@@ -33,7 +33,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield.ComplexF
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCreateEventValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCrudValidatorImpl;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnablingConditionValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEventCaseFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityPostStateValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntitySecurityClassificationValidatorImpl;
@@ -137,8 +136,7 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
             EventEntityCrudValidatorImpl.class,
             EventEntityACLValidatorImpl.class,
             EventEntityCreateEventValidator.class,
-            EventEntityPostStateValidator.class,
-            EventEntityEnablingConditionValidator.class
+            EventEntityPostStateValidator.class
         );
 
         // Check the EventEntityEventCaseFieldsValidatorImpl class has the required validator(s) wired in
