@@ -38,6 +38,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidDefaultPostStateError;
@@ -629,12 +630,36 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     public String createErrorMessage(EventEntityShowConditionReferencesInvalidCaseFieldError error) {
         return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
             String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
-            return String.format("Unknown field '%s' for event '%s' in post state condition: '%s' in %s tab",
+            return formattedErrorMessage("Unknown field '%s' for event '%s' in post state condition: '%s' in %s tab",
                 error.getShowConditionField(),
                 error.getEventEntity().getReference(),
                 StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
                 def.getSheetName());
         });
+    }
+
+    @Override
+    public String createErrorMessage(EventEntityEnableConditionReferencesInvalidCaseFieldError error) {
+        return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
+            String condition = def.getString(ColumnName.EVENT_ENABLING_CONDITION);
+            return formattedErrorMessage("Unknown field '%s' for event '%s' in event enabling condition: '%s' in %s tab",
+                error.getShowConditionField(),
+                error.getEventEntity().getReference(),
+                StringUtils.isEmpty(condition) ? "not defined" : condition,
+                def.getSheetName());
+        });
+    }
+
+    private String formattedErrorMessage(String message,
+                                         String showConditionField,
+                                         String eventReference,
+                                         String condition,
+                                         String sheetName) {
+        return String.format(message,
+            showConditionField,
+            eventReference,
+            StringUtils.isEmpty(condition) ? "not defined" : condition,
+            sheetName);
     }
 
     private String withWorkSheetName(SimpleValidationError<?> error) {
