@@ -3,7 +3,7 @@
   "description" : "Test Address Book Case",
   "version" : {
     "number" : 1,
-    "live_from" : "2017-01-01T00:00:00.000+00:00",
+    "live_from" : "2017-01-01T00:00:00.000+0000",
     "live_until" : null
   },
   "name" : "Test Address Book Case",
@@ -11,7 +11,7 @@
     "id" : "TEST",
     "name" : "Test",
     "description" : "Content for the Test Jurisdiction.",
-    "live_from" : "2017-01-01T00:00:00.000+00:00",
+    "live_from" : "2017-01-01T00:00:00.000+0000",
     "live_until" : null,
     "case_types" : [ ]
   },
