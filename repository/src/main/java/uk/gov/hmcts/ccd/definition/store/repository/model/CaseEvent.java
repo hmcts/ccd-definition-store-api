@@ -30,6 +30,7 @@ public class CaseEvent implements HasAcls {
     private Boolean showEventNotes = null;
     private Boolean canSaveDraft = null;
     private String endButtonLabel = null;
+    private String eventEnablingCondition;
 
     /**
      * id of a particular case event.
@@ -257,5 +258,15 @@ public class CaseEvent implements HasAcls {
 
     public void setCanSaveDraft(Boolean canSaveDraft) {
         this.canSaveDraft = canSaveDraft;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("event_enabling_condition")
+    public String getEventEnablingCondition() {
+        return eventEnablingCondition;
+    }
+
+    public void setEventEnablingCondition(String eventEnablingCondition) {
+        this.eventEnablingCondition = eventEnablingCondition;
     }
 }

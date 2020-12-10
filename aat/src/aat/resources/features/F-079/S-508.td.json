@@ -83,7 +83,8 @@
           "show_summary": true,
           "show_event_notes": null,
           "can_save_draft": null,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         },
         {
           "id": "COMPLETE",
@@ -170,7 +171,8 @@
           "show_summary": true,
           "show_event_notes": null,
           "can_save_draft": null,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         },
         {
           "id": "UPDATE",
@@ -251,7 +253,8 @@
           "show_summary": true,
           "show_event_notes": null,
           "can_save_draft": null,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         },
         {
           "id": "CREATE",
@@ -340,7 +343,8 @@
           "show_summary": true,
           "show_event_notes": null,
           "can_save_draft": null,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         }
       ],
       "states": [
