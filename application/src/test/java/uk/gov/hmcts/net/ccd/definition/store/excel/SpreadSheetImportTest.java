@@ -63,7 +63,6 @@ public class SpreadSheetImportTest extends BaseTest {
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
     private static final String RESPONSE_JSON_V45 = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
-    private static final String RESPONSE_JSON_V46 = "GetCaseTypesResponseForCCD_TestDefinition_V46.json";
 
     private Map<Object, Object> caseTypesId;
     private Map<Object, Object> fieldTypesId;
@@ -256,7 +255,7 @@ public class SpreadSheetImportTest extends BaseTest {
             .andExpect(resultMatcher)
             .andReturn();
     }
-
+  
     /**
      * returns a version of the 'hasEntry' matcher that is unchecked. This allows mixing of different types of
      * matchers for a of Map String, Object, which would otherwise be not possible due to compilation issues
