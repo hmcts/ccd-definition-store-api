@@ -32,6 +32,13 @@ public class ApplicationParams {
     @Value("${azure.storage.import_audits.get-limit}")
     private String azureImportAuditsGetLimit;
 
+    @Value("${case.event.default.publish:false}")
+    private boolean defaultPublish;
+
+    public boolean isDefaultPublish() {
+        return defaultPublish;
+    }
+
     public String userProfilePutURL() {
         return userProfileHost + "/user-profile/users";
     }
