@@ -48,7 +48,8 @@ public class EventComplexTypePublishValidatorImplTest {
         eventComplexTypeEntity.setComplexFieldType(eventCaseFieldEntity);
     }
 
-    private void addPublishAsInEventComplexTypeEntity(String publishAsEventComplexType, String publishAsEventCaseFieldEntity) {
+    private void addPublishAsInEventComplexTypeEntity(String publishAsEventComplexType,
+                                                      String publishAsEventCaseFieldEntity) {
 
         final EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         final EventComplexTypeEntity eventComplexTypeEntity = new EventComplexTypeEntity();
@@ -97,9 +98,9 @@ public class EventComplexTypePublishValidatorImplTest {
     @Test
     public void should_fail_due_to_duplicated_publishAs_in_EventComplexTypeEntity() {
 
-        final String expectedError = "PublishAs column has an invalid value 'Test',  reference " +
-            "'caseFieldReference.reference'. This value must be unique across CaseEventToFields and EventToComplexTypes" +
-            " for the case type. ";
+        final String expectedError = "PublishAs column has an invalid value 'Test',  reference "
+            + "'caseFieldReference.reference'. This value must be unique across "
+            + "CaseEventToFields and EventToComplexTypes     for the case type. ";
 
         setupEventCaseFieldEntity();
         eventComplexTypeEntity.setPublishAs("Test");
@@ -113,9 +114,9 @@ public class EventComplexTypePublishValidatorImplTest {
     @Test
     public void should_fail_due_to_duplicated_publishAs_in_EventCaseFieldEntity() {
 
-        final String expectedError = "PublishAs column has an invalid value 'Test',  reference " +
-            "'caseFieldReference.reference'. This value must be unique across CaseEventToFields and EventToComplexTypes" +
-            " for the case type. ";
+        final String expectedError = "PublishAs column has an invalid value 'Test',  reference "
+            + "'caseFieldReference.reference'. This value must be unique across "
+            + "CaseEventToFields and EventToComplexTypes for the case type. ";
 
         setupEventCaseFieldEntity();
         eventComplexTypeEntity.setPublishAs("Test");
@@ -128,9 +129,9 @@ public class EventComplexTypePublishValidatorImplTest {
     @Test
     public void should_fail_due_to_duplicated_publishAs_in_EventCaseFieldEntity_and_EventComplexTypeEntity() {
 
-        final String expectedError = "PublishAs column has an invalid value 'Test',  reference " +
-            "'caseFieldReference.reference'. This value must be unique across CaseEventToFields and EventToComplexTypes" +
-            " for the case type. ";
+        final String expectedError = "PublishAs column has an invalid value 'Test',  reference "
+            + "'caseFieldReference.reference'. This value must be unique across "
+            + "CaseEventToFields and EventToComplexTypes for the case type. ";
 
         setupEventCaseFieldEntity();
         eventComplexTypeEntity.setPublishAs("Test");
