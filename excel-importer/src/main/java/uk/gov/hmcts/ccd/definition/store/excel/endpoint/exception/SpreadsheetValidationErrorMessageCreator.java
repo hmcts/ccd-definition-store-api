@@ -633,7 +633,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             return formattedErrorMessage("Unknown field '%s' for event '%s' in post state condition: '%s' in %s tab",
                 error.getShowConditionField(),
                 error.getEventEntity().getReference(),
-                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
+                postConditionValue,
                 def.getSheetName());
         });
     }
@@ -642,10 +642,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     public String createErrorMessage(EventEntityEnableConditionReferencesInvalidCaseFieldError error) {
         return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
             String condition = def.getString(ColumnName.EVENT_ENABLING_CONDITION);
-            return formattedErrorMessage("Unknown field '%s' for event '%s' in event enabling condition: '%s' in %s tab",
+            return formattedErrorMessage("Unknown field '%s' for event '%s'"
+                    + " in event enabling condition: '%s' in %s tab",
                 error.getShowConditionField(),
                 error.getEventEntity().getReference(),
-                StringUtils.isEmpty(condition) ? "not defined" : condition,
+                condition,
                 def.getSheetName());
         });
     }

@@ -33,7 +33,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -272,7 +271,7 @@ public class EventParserTest extends ParserTestBase {
         assertEvent(entity);
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFailParseEventWithEmptyEventEnablingCondition() {
         final String validEventEnablingCondition = " ";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
@@ -285,13 +284,11 @@ public class EventParserTest extends ParserTestBase {
 
     @Test(expected = SpreadsheetParsingException.class)
     public void shouldFailParseEventWithInvalidEventEnablingCondition() {
+        assertEntityAddedToRegistry = false;
         final String validEventEnablingCondition = "aaa. x.bbb=\"some-value\"";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
         definitionSheet.addDataItem(item);
-        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
-        assertThat(eventEntities.size(), is(1));
-        entity = new ArrayList<>(eventEntities).get(0);
-        assertEvent(entity);
+        eventParser.parseAll(definitionSheets, caseType);
     }
 
     private void assertEvent(final EventEntity entity) {

@@ -1,13 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import ch.qos.logback.classic.spi.LoggingEvent;
-import org.mockito.ArgumentCaptor;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.mockito.ArgumentCaptor;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import static org.junit.Assert.fail;
 
