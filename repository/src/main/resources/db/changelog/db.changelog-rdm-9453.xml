@@ -1,9 +1,0 @@
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-
-    <changeSet id="rdm-9453" author="alex.ross@hmcts.net">
-        <modifyDataType tableName="search_cases_result_fields" columnName="label" newDataType="varChar(200)"/>
-        <modifyDataType tableName="workbasket_input_case_field" columnName="label" newDataType="varChar(200)"/>
-    </changeSet>
-</databaseChangeLog>

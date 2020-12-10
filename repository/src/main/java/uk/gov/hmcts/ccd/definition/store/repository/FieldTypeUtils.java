@@ -30,6 +30,7 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_ORGANISATION = "Organisation";
     public static final String PREDEFINED_COMPLEX_ORGANISATION_POLICY = "OrganisationPolicy";
     public static final String PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST = "ChangeOrganisationRequest";
+    public static final String PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION = "PreviousOrganisation";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference)
