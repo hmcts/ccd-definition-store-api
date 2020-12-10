@@ -18,6 +18,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
@@ -149,6 +150,9 @@ public class ImportServiceImplTest {
     private NoCConfigService noCConfigService;
 
     @Mock
+    private ApplicationParams applicationParams;
+
+    @Mock
     private ChallengeQuestionParser challengeQuestionParser;
     @Mock
     private ChallengeQuestionTabService challengeQuestionTabService;
@@ -184,7 +188,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser);
+            challengeQuestionParser, applicationParams);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -358,7 +362,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
-            hiddenFieldsValidator,challengeQuestionParser);
+            hiddenFieldsValidator,challengeQuestionParser, applicationParams);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
