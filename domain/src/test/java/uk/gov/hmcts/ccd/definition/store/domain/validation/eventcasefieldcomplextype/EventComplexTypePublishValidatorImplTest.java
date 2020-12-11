@@ -100,7 +100,7 @@ public class EventComplexTypePublishValidatorImplTest {
 
         final String expectedError = "PublishAs column has an invalid value 'Test',  reference "
             + "'caseFieldReference.reference'. This value must be unique across "
-            + "CaseEventToFields and EventToComplexTypes     for the case type. ";
+            + "CaseEventToFields and EventToComplexTypes for the case type. ";
 
         setupEventCaseFieldEntity();
         eventComplexTypeEntity.setPublishAs("Test");
