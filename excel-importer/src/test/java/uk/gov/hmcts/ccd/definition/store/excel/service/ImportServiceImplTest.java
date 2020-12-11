@@ -1,58 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
-import com.google.common.collect.Lists;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.context.ApplicationEventPublisher;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
-import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
-import uk.gov.hmcts.ccd.definition.store.domain.service.nocconfig.NoCConfigService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
-import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.NoCConfigEntity;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
-import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -86,6 +33,61 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_Y
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
+
+import com.google.common.collect.Lists;
+
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
+import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -147,9 +149,6 @@ public class ImportServiceImplTest {
     private JurisdictionUiConfigService jurisdictionUiConfigService;
 
     @Mock
-    private NoCConfigService noCConfigService;
-
-    @Mock
     private ApplicationParams applicationParams;
 
     @Mock
@@ -180,6 +179,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity fixedListRadioTypeBaseType;
     private FieldTypeEntity dynamicListBaseType;
     private FieldTypeEntity changeOrganisationRequest;
+    private FieldTypeEntity previousOrganisationBaseType;
 
     @Before
     public void setup() {
@@ -206,7 +206,6 @@ public class ImportServiceImplTest {
             idamProfileClient,
             bannerService,
             jurisdictionUiConfigService,
-            noCConfigService,
             challengeQuestionTabService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
@@ -232,6 +231,7 @@ public class ImportServiceImplTest {
         caseHistoryViewerBaseType = buildBaseType(BASE_CASE_HISTORY_VIEWER);
         fixedListRadioTypeBaseType = buildBaseType(BASE_RADIO_FIXED_LIST);
         changeOrganisationRequest = buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST);
+        previousOrganisationBaseType = buildBaseType(PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -282,7 +282,8 @@ public class ImportServiceImplTest {
             caseHistoryViewerBaseType,
             fixedListRadioTypeBaseType,
             dynamicListBaseType,
-            changeOrganisationRequest));
+            changeOrganisationRequest,
+            previousOrganisationBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -326,7 +327,8 @@ public class ImportServiceImplTest {
             caseHistoryViewerBaseType,
             fixedListRadioTypeBaseType,
             dynamicListBaseType,
-            changeOrganisationRequest));
+            changeOrganisationRequest,
+            previousOrganisationBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -352,7 +354,6 @@ public class ImportServiceImplTest {
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
-        verify(noCConfigService).save(any(NoCConfigEntity.class));
     }
 
     @Test
@@ -380,7 +381,6 @@ public class ImportServiceImplTest {
             idamProfileClient,
             bannerService,
             jurisdictionUiConfigService,
-            noCConfigService,
             challengeQuestionTabService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
