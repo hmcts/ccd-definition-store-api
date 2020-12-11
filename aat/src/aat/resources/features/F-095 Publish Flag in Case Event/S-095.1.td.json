@@ -1,0 +1,30 @@
+{
+  "_guid_": "S-095.1",
+  "_extends_": "Import_Base_data",
+  "title": "Must successfully import a definition file containing a valid value in Publish Events column",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid value configured in Publish Events column"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/excel/BEFTA_Master_Definition.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Case Definition data successfully imported"
+    }
+  }
+}
