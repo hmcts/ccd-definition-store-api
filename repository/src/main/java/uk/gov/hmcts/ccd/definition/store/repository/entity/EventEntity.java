@@ -120,6 +120,9 @@ public class EventEntity implements Serializable {
     @Column(name = "can_save_draft")
     private Boolean canSaveDraft;
 
+    @Column(name = "publish")
+    private Boolean publish;
+
     public Integer getId() {
         return id;
     }
@@ -296,6 +299,14 @@ public class EventEntity implements Serializable {
 
     public void setCanSaveDraft(Boolean canSaveDraft) {
         this.canSaveDraft = canSaveDraft;
+    }
+
+    public Boolean getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Boolean publish) {
+        this.publish = publish;
     }
 
     public List<EventPostStateEntity> getPostStates() {
