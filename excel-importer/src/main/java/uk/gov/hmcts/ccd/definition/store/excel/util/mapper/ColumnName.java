@@ -60,6 +60,7 @@ public enum ColumnName {
     SHUTTERED("Shuttered"),
     SHOW_SUMMARY("ShowSummary"),
     PUBLISH("Publish"),
+    PUBLISH_AS("PublishAs"),
     SHOW_EVENT_NOTES("ShowEventNotes"),
     SHOW_SUMMARY_CHANGE_OPTION("ShowSummaryChangeOption"),
     SHOW_SUMMARY_CONTENT_OPTION("ShowSummaryContentOption"),
@@ -88,8 +89,7 @@ public enum ColumnName {
     CHALLENGE_QUESTION_ANSWER_FIELD_TYPE("AnswerFieldType"),
     CHALLENGE_QUESTION_CASE_ROLE_ID("CaseRoleId"),
     CHALLENGE_QUESTION_QUESTION_ID("QuestionId"),
-    CHALLENGE_QUESTION_ANSWER_FIELD("Answer"),
-    PUBLISH_AS("PublishAs");
+    CHALLENGE_QUESTION_ANSWER_FIELD("Answer");
 
     private final String name;
 

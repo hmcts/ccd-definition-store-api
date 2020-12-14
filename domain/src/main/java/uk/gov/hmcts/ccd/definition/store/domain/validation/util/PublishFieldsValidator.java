@@ -20,23 +20,22 @@ public interface PublishFieldsValidator {
                                         EventCaseFieldEntityValidationContext validationContext,
                                         String publishAs, String reference) {
 
-        final String errorDueToSpaces = String.format(PUBLISH_AS_COLUMN
-            + " column cannot have spaces, reference '%s'", reference);
-
-        final String errorDuplicatedElements =
-            String.format(PUBLISH_AS_COLUMN + " column has an invalid value '%s',  reference '%s'. "
-                    + "This value must be unique across CaseEventToFields and EventToComplexTypes for the case type. ",
-                publishAs, reference);
-
         if (publishAs == null || publishAs.isEmpty()) {
             return;
         }
         // Incorrect value for the PublishAs field is defined as a field having spaces (Not permitted)
         if (publishAs.contains(" ")) {
+            final String errorDueToSpaces = String.format(PUBLISH_AS_COLUMN
+                + " column cannot have spaces, reference '%s'", reference);
             validationResult.addError(new PublishError(errorDueToSpaces));
         }
 
         if (isCurrentPublishAsDuplicated(validationContext, publishAs)) {
+            final String errorDuplicatedElements =
+                String.format(PUBLISH_AS_COLUMN + " column has an invalid value '%s',  reference '%s'. "
+                        + "This value must be unique across CaseEventToFields "
+                        + "and EventToComplexTypes for the case type. ",
+                    publishAs, reference);
             validationResult.addError(new PublishError(errorDuplicatedElements));
         }
         return;
@@ -91,13 +90,12 @@ public interface PublishFieldsValidator {
                                       EventCaseFieldEntityValidationContext validationContext, EventEntity eventEntity,
                                       String reference, Boolean publish) {
 
-        final String errorEventSetToFalse =
-            String.format(PUBLISH_COLUMN + " column has an invalid value '%s',  reference '%s'. "
-                    + "If the Event is set to false, CaseEventToFields and EventToComplexTypes cannot have "
-                    + PUBLISH_COLUMN + " columns as true for the case type.",
-                publish, reference);
-
         if (eventEntity.getPublish() == false && publish == true) {
+            final String errorEventSetToFalse =
+                String.format(PUBLISH_COLUMN + " column has an invalid value '%s',  reference '%s'. "
+                        + "If the Event is set to false, CaseEventToFields and EventToComplexTypes cannot have "
+                        + PUBLISH_COLUMN + " columns as true for the case type.",
+                    publish, reference);
             validationResult.addError(new PublishError(errorEventSetToFalse));
         }
         return;
