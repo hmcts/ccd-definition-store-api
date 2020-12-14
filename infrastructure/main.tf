@@ -45,7 +45,9 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
 
 module "definition-store-db" {
   source          = "git@github.com:hmcts/cnp-module-postgres?ref=master"
-  product         = "${local.app_full_name}-postgres-db"
+  product         = var.product
+  component       = var.component
+  name            = "${local.app_full_name}-postgres-db"
   location        = "${var.location}"
   env             = "${var.env}"
   subscription    = "${var.subscription}"
