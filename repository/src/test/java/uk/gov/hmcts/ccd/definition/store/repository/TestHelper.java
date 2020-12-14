@@ -98,6 +98,7 @@ public class TestHelper {
         ecf.setDisplayContext(displayContext);
         ecf.setShowCondition(showCondition);
         ecf.setShowSummaryChangeOption(ssco);
+        ecf.setPublish(false);
         return ecf;
     }
 
