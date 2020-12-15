@@ -19,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.apache.commons.lang3.BooleanUtils.toBooleanDefaultIfNull;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.WebhookParser.parseWebhook;
 
 public class EventParser {
@@ -30,15 +31,18 @@ public class EventParser {
     private final EventCaseFieldParser eventCaseFieldParser;
     private final EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser;
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
+    private final boolean defaultPublish;
 
     public EventParser(ParseContext parseContext,
                        EventCaseFieldParser eventCaseFieldParser,
                        EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser,
-                       EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
+                       EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
+                       boolean defaultPublish) {
         this.parseContext = parseContext;
         this.eventCaseFieldParser = eventCaseFieldParser;
         this.eventCaseFieldComplexTypeParser = eventCaseFieldComplexTypeParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
+        this.defaultPublish = defaultPublish;
     }
 
     public Collection<EventEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseType) {
@@ -90,6 +94,7 @@ public class EventParser {
         event.setDescription(eventDefinition.getString(ColumnName.DESCRIPTION));
         event.setOrder(eventDefinition.getInteger(ColumnName.DISPLAY_ORDER));
         event.setShowSummary(eventDefinition.getBoolean(ColumnName.SHOW_SUMMARY));
+        event.setPublish(toBooleanDefaultIfNull(eventDefinition.getBoolean(ColumnName.PUBLISH), defaultPublish));
         event.setShowEventNotes(eventDefinition.getBoolean(ColumnName.SHOW_EVENT_NOTES));
         event.setCanSaveDraft(eventDefinition.getBoolean(ColumnName.CAN_SAVE_DRAFT));
         event.setEndButtonLabel(eventDefinition.getString(ColumnName.END_BUTTON_LABEL));
