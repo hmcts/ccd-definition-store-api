@@ -150,11 +150,15 @@ public class ImportServiceImplTest {
 
     @Mock
     private ApplicationParams applicationParams;
-
+  
     @Mock
     private ChallengeQuestionParser challengeQuestionParser;
+
     @Mock
     private ChallengeQuestionTabService challengeQuestionTabService;
+
+    @Mock
+    private ApplicationParams applicationParams;
 
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
