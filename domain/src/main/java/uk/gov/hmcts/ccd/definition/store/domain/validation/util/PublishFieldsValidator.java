@@ -15,6 +15,7 @@ public interface PublishFieldsValidator {
 
     String PUBLISH_AS_COLUMN = "PublishAs";
     String PUBLISH_COLUMN = "Publish";
+    int PUBLISH_AS_COLUMN_SIZE = 70;
 
     default void validatePublishAsField(ValidationResult validationResult,
                                         EventCaseFieldEntityValidationContext validationContext,
@@ -27,6 +28,14 @@ public interface PublishFieldsValidator {
         if (publishAs.contains(" ")) {
             final String errorDueToSpaces = String.format(PUBLISH_AS_COLUMN
                 + " column cannot have spaces, reference '%s'", reference);
+            validationResult.addError(new PublishError(errorDueToSpaces));
+        }
+
+        // Incorrect size for the PublishAs field
+        if (publishAs.length() > PUBLISH_AS_COLUMN_SIZE) {
+            final String errorDueToSpaces = String.format(PUBLISH_AS_COLUMN
+                + " column cannot have values greater than " + PUBLISH_AS_COLUMN_SIZE
+                + " characters, reference '%s'", reference);
             validationResult.addError(new PublishError(errorDueToSpaces));
         }
 
@@ -46,7 +55,7 @@ public interface PublishFieldsValidator {
                                                     String publishAs
                                                  ) {
 
-        final List<EventCaseFieldEntity> publishesAsInCaseFields =
+            final List<EventCaseFieldEntity> publishesAsInCaseFields =
                     findPublishAsInEventCaseFields(validationContext, publishAs);
 
         final List<EventComplexTypeEntity> publishesAsInEventComplexTypes =
