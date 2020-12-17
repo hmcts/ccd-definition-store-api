@@ -36,6 +36,8 @@
 		<cve>CVE-2019-7614</cve>
 		<cve>CVE-2020-7019</cve>
 		<cve>CVE-2020-7020</cve>
+		<cve>CVE-2020-8908</cve>
+
 	</suppress>
 	<suppress>
 		<notes><![CDATA[
@@ -44,6 +46,7 @@
 		]]></notes>
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
+		<cve>CVE-2020-8908</cve>
 	</suppress>
 
 </suppressions>

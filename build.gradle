@@ -457,6 +457,7 @@ cucumberReports {
 task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     baselineOnMigrate = true
     baselineVersion = '0001'
+    outOfOrder = true
     if (project.hasProperty("dburl")) {
         url = "jdbc:postgresql://${dburl}"
     }
