@@ -36,7 +36,7 @@ dependencies {
     compile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    compile "com.google.guava:guava:28.1-jre"
+    compile "com.google.guava:guava:30.0-jre"
     compile "javax.validation:validation-api:2.0.1.Final"
     compile "org.hibernate.validator:hibernate-validator:6.0.10.Final"
     compile "org.glassfish:javax.el:3.0.0"
