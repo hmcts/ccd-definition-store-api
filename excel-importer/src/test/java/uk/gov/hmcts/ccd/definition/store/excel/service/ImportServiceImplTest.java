@@ -87,6 +87,10 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_REGION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_BASE_LOCATION;
+
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -182,6 +186,8 @@ public class ImportServiceImplTest {
     private FieldTypeEntity dynamicListBaseType;
     private FieldTypeEntity changeOrganisationRequest;
     private FieldTypeEntity caseLocationBaseType;
+    private FieldTypeEntity regionBaseType;
+    private FieldTypeEntity baseLocationBaseType;
 
     @Before
     public void setup() {
@@ -235,6 +241,9 @@ public class ImportServiceImplTest {
         fixedListRadioTypeBaseType = buildBaseType(BASE_RADIO_FIXED_LIST);
         changeOrganisationRequest = buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST);
         caseLocationBaseType = buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION);
+        regionBaseType = buildBaseType(BASE_REGION);
+        baseLocationBaseType = buildBaseType(BASE_BASE_LOCATION);
+
 
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
@@ -287,7 +296,9 @@ public class ImportServiceImplTest {
             fixedListRadioTypeBaseType,
             dynamicListBaseType,
             changeOrganisationRequest,
-            caseLocationBaseType));
+            caseLocationBaseType,
+            regionBaseType,
+            baseLocationBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
