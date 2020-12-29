@@ -79,7 +79,7 @@ elasticsearch:
   casesIndexType: _doc
   # casePredefinedMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.case-predefined-mappings.defaultText property
   casePredefinedMappings:
-    reference: ${elasticsearch.elasticMappings.defaultText}
+    reference: '{"type" : "text", "analyzer": "standard", "search_analyzer": "case_id_analyzer"}'
     jurisdiction: ${elasticsearch.elasticMappings.defaultText}
     id: ${elasticsearch.elasticMappings.defaultLong}
     state: ${elasticsearch.elasticMappings.defaultText}
