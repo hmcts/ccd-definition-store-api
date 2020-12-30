@@ -1,5 +1,5 @@
 {
-	"_guid_": "S-095.2",
+	"_guid_": "S-095.2.EEC",
 	"_extends_": "F-095_Test_Base_data",
 	"title": "must successfully import a definition file containing  a valid event enabling condition",
 	"specs": [

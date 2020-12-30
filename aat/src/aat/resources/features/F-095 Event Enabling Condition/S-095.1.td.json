@@ -1,5 +1,5 @@
 {
-	"_guid_": "S-095.1",
+	"_guid_": "S-095.1.EEC",
 	"_extends_": "F-095_Test_Base_data",
 	"title": "must return a negative response in an attempt to import a definition file containing invalid event enabling condition",
 	"specs": [
