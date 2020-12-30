@@ -255,7 +255,7 @@ public class SpreadSheetImportTest extends BaseTest {
             .andExpect(resultMatcher)
             .andReturn();
     }
-  
+
     /**
      * returns a version of the 'hasEntry' matcher that is unchecked. This allows mixing of different types of
      * matchers for a of Map String, Object, which would otherwise be not possible due to compilation issues

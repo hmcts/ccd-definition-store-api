@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -64,6 +65,7 @@ public class Jurisdiction {
      **/
     @ApiModelProperty(value = "")
     @JsonProperty("live_from")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     public Date getLiveFrom() {
         return liveFrom;
     }

@@ -32,7 +32,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -83,8 +83,8 @@ public class EventParserTest extends ParserTestBase {
             eventCaseFieldParser,
             eventCaseFieldComplexTypeParser,
             entityToDefinitionDataItemRegistry,
-            showConditionParser
-        );
+            showConditionParser,
+            true);
 
         caseType = new CaseTypeEntity();
         caseType.setReference(CASE_TYPE_UNDER_TEST);
@@ -289,6 +289,35 @@ public class EventParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
         definitionSheet.addDataItem(item);
         eventParser.parseAll(definitionSheets, caseType);
+    }
+
+    @Test
+    public void shouldAssignDefaultPublishIfColumnNotExists() {
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertThat(entity.getPublish(), is(true));
+    }
+
+    @Test
+    public void shouldAssignDefaultPublishIfColumnHasNullValue() {
+        item.addAttribute(ColumnName.PUBLISH.toString(), null);
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertThat(entity.getPublish(), is(true));
+    }
+
+    @Test
+    public void shouldAssignPublishValueFromColumn() {
+        item.addAttribute(ColumnName.PUBLISH.toString(), "N");
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertThat(entity.getPublish(), is(false));
     }
 
     private void assertEvent(final EventEntity entity) {

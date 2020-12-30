@@ -36,6 +36,8 @@
 		<cve>CVE-2019-7614</cve>
 		<cve>CVE-2020-7019</cve>
 		<cve>CVE-2020-7020</cve>
+		<cve>CVE-2020-8908</cve>
+
 	</suppress>
 	<suppress>
 		<notes><![CDATA[
@@ -44,24 +46,7 @@
 		]]></notes>
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
-	</suppress>
-
-	<suppress>
-		<notes>Elastic Search CVE's</notes>
-		<cve>CVE-2015-3337</cve>
-		<cve>CVE-2015-5377</cve>
-		<cve>CVE-2015-5531</cve>
-		<cve>CVE-2014-6439</cve>
-		<cve>CVE-2015-1427</cve>
-		<cve>CVE-2020-7020</cve>
-	</suppress>
-
-	<suppress>
-		<notes>Temporary suppressions to unblock pipelines.</notes>
-		<cve>CVE-2020-25638</cve>
-		<cve>CVE-2020-13956</cve>
-		<cve>CVE-2020-17527</cve>
-		<cve>CVE-2020-25649</cve>
+		<cve>CVE-2020-8908</cve>
 	</suppress>
 
 </suppressions>

@@ -81,6 +81,7 @@
             }
           ],
           "show_summary": true,
+          "publish" : false,
           "show_event_notes": null,
           "can_save_draft": null,
           "end_button_label": null,
@@ -169,6 +170,7 @@
             }
           ],
           "show_summary": true,
+          "publish" : false,
           "show_event_notes": null,
           "can_save_draft": null,
           "end_button_label": null,
@@ -251,6 +253,7 @@
             }
           ],
           "show_summary": true,
+          "publish" : false,
           "show_event_notes": null,
           "can_save_draft": null,
           "end_button_label": null,
@@ -341,6 +344,7 @@
             }
           ],
           "show_summary": true,
+          "publish" : false,
           "show_event_notes": null,
           "can_save_draft": null,
           "end_button_label": null,

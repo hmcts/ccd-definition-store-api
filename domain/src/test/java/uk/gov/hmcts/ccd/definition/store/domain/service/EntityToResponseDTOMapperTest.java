@@ -219,6 +219,7 @@ class  EntityToResponseDTOMapperTest {
             EventEntity eventEntity = new EventEntity();
             eventEntity.setShowEventNotes(true);
             eventEntity.setCanSaveDraft(true);
+            eventEntity.setPublish(true);
 
             CaseEvent caseEvent = spyOnClassUnderTest.map(
                 eventEntity
@@ -226,7 +227,8 @@ class  EntityToResponseDTOMapperTest {
 
             assertAll(
                 () -> assertEquals(eventEntity.getShowEventNotes(), caseEvent.getShowEventNotes()),
-                () -> assertEquals(eventEntity.getCanSaveDraft(), caseEvent.getCanSaveDraft())
+                () -> assertEquals(eventEntity.getCanSaveDraft(), caseEvent.getCanSaveDraft()),
+                () -> assertEquals(eventEntity.getPublish(), caseEvent.getPublish())
             );
         }
     }
