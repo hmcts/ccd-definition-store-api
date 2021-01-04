@@ -72,15 +72,11 @@
                         "type": "date",
                         "ignore_malformed": true
                     },
-                    "reference": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    },
+                  "reference": {
+                    "type": "text",
+                    "analyzer": "standard",
+                    "search_analyzer": "case_id_analyzer"
+                  },
                     "security_classification": {
                         "type": "keyword"
                     },
@@ -205,16 +201,12 @@
                         "type": "date",
                         "ignore_malformed": true
                     },
-                    "reference": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    },
-                    "security_classification": {
+                  "reference": {
+                    "type": "text",
+                    "analyzer": "standard",
+                    "search_analyzer": "case_id_analyzer"
+                  },
+                  "security_classification": {
                         "type": "keyword"
                     },
                     "state": {

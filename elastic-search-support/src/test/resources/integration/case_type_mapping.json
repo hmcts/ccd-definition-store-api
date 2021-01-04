@@ -3,12 +3,8 @@
   "properties": {
     "reference": {
       "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256
-        }
-      }
+      "analyzer": "standard",
+      "search_analyzer": "case_id_analyzer"
     },
     "jurisdiction": {
       "type": "text",
