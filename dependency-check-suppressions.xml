@@ -34,8 +34,7 @@
 	</suppress>
 	<suppress>
 		<notes><![CDATA[
-			Jar: com.nimbusds:oauth2-oidc-sdk-8.22.jar
-			Analysis: No fix or work around available
+			SOLO UN TEST IN MASTER !
 		]]></notes>
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
