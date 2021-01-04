@@ -63,7 +63,9 @@ public class BaseTypeControllerTests extends BaseTest {
                 tuple("CasePaymentHistoryViewer", "CasePaymentHistoryViewer", null),
                 tuple("FixedRadioList", "FixedRadioList", null),
                 tuple("CaseHistoryViewer", "CaseHistoryViewer", null),
-                tuple("DynamicList", "DynamicList", null)
+                tuple("DynamicList", "DynamicList", null),
+                tuple("Region", "Region", null),
+                tuple("BaseLocation", "BaseLocation", null)
             );
 
     }
