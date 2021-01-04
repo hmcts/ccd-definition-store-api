@@ -38,7 +38,7 @@ public class BaseTypeControllerTests extends BaseTest {
 
         FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
 
-        assertEquals("Unexpected number of Base Types", 20, baseTypes.length);
+        assertEquals("Unexpected number of Base Types", 22, baseTypes.length);
 
         assertThat(baseTypes)
             .withFailMessage("Unexpected Base Type and Id")
