@@ -147,14 +147,15 @@ public class ImportServiceImplTest {
 
     @Mock
     private JurisdictionUiConfigService jurisdictionUiConfigService;
+  
+    @Mock
+    private ChallengeQuestionParser challengeQuestionParser;
+
+    @Mock
+    private ChallengeQuestionTabService challengeQuestionTabService;
 
     @Mock
     private ApplicationParams applicationParams;
-
-    @Mock
-    private ChallengeQuestionParser challengeQuestionParser;
-    @Mock
-    private ChallengeQuestionTabService challengeQuestionTabService;
 
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
