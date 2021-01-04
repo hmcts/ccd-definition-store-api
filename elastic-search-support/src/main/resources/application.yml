@@ -74,6 +74,8 @@ elasticsearch:
     MultiSelectList: ${elasticsearch.elasticMappings.defaultText}
     FixedRadioList: ${elasticsearch.elasticMappings.defaultText}
     DynamicList: ${elasticsearch.elasticMappings.ccdDynamicList}
+    Region: ${elasticsearch.elasticMappings.defaultText}
+    BaseLocation: ${elasticsearch.elasticMappings.defaultText}
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_cases}
   casesIndexMappingFieldsLimit: ${ELASTIC_SEARCH_CASE_INDEX_MAPPING_FIELDS_LIMIT:8000}
   casesIndexType: _doc
