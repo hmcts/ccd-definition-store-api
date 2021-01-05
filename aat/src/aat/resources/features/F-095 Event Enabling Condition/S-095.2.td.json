@@ -4,7 +4,7 @@
 	"title": "must successfully import a definition file containing  a valid event enabling condition",
 	"specs": [
 		"an active profile in CCD",
-		"contains a valid conditional event post state"
+		"contains a valid event enabling condition"
 	],
   "request": {
     "body": {
