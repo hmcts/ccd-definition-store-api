@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
+import java.util.Optional;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
@@ -39,10 +40,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCaseHistoryViewerCaseFieldValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator;
@@ -82,8 +85,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
-
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -1568,6 +1569,41 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             caseTypeEntity,
             definitionDataItem(SheetName.CASE_TYPE, ColumnName.CASE_TYPE_ID, "Other Case Type Reference"));
 
+    }
+
+    @Test
+    public void testEventShowCondition_customMessageReturned() {
+
+        EventEntityShowConditionReferencesInvalidCaseFieldError error =
+            mock(EventEntityShowConditionReferencesInvalidCaseFieldError.class);
+        EventEntity eventEntity = eventEntity("Event Reference", null);
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT.toString());
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity))).thenReturn(Optional.of(definitionDataItem));
+        when(error.getEventEntity()).thenReturn(eventEntity);
+        when(error.getShowConditionField()).thenReturn("TestField");
+        String errorMessage = this.classUnderTest.createErrorMessage(error);
+        assertEquals("Unknown field 'TestField' for event 'Event Reference' "
+                + "in post state condition: 'not defined' in CaseEvent tab",
+            errorMessage);
+    }
+
+    @Test
+    public void testEventEnablingCondition_customMessageReturned() {
+
+        EventEntityEnableConditionReferencesInvalidCaseFieldError error =
+            mock(EventEntityEnableConditionReferencesInvalidCaseFieldError.class);
+        EventEntity eventEntity = eventEntity("Event Reference", null);
+        DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
+        when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT.toString());
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity))).thenReturn(Optional.of(definitionDataItem));
+        when(error.getEventEntity()).thenReturn(eventEntity);
+        when(error.getShowConditionField()).thenReturn("TestField");
+        String errorMessage = this.classUnderTest.createErrorMessage(error);
+        assertEquals("Unknown field 'TestField' for event 'Event Reference' "
+                + "in event enabling condition: "
+                + "'not defined' in CaseEvent tab",
+            errorMessage);
     }
 
     private CaseTypeEntity caseTypeEntity(String reference) {
