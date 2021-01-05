@@ -1579,7 +1579,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         EventEntity eventEntity = eventEntity("Event Reference", null);
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT.toString());
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity))).thenReturn(Optional.of(definitionDataItem));
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity)))
+            .thenReturn(Optional.of(definitionDataItem));
         when(error.getEventEntity()).thenReturn(eventEntity);
         when(error.getShowConditionField()).thenReturn("TestField");
         String errorMessage = this.classUnderTest.createErrorMessage(error);
@@ -1596,7 +1597,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         EventEntity eventEntity = eventEntity("Event Reference", null);
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT.toString());
-        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity))).thenReturn(Optional.of(definitionDataItem));
+        when(entityToDefinitionDataItemRegistry.getForEntity(eq(eventEntity)))
+            .thenReturn(Optional.of(definitionDataItem));
         when(error.getEventEntity()).thenReturn(eventEntity);
         when(error.getShowConditionField()).thenReturn("TestField");
         String errorMessage = this.classUnderTest.createErrorMessage(error);
