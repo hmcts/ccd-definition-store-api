@@ -28,7 +28,7 @@ public interface PublishFieldsValidator {
         if (publishAs.contains(" ")) {
             final String errorDueToSpaces = String.format(PUBLISH_AS_COLUMN
                 + " column cannot have spaces, reference '%s'", reference);
-            validationResult.addError(new PublishError(errorDueToSpaces));
+            validationResult.addError(new PublishFieldError(errorDueToSpaces));
         }
 
         // Incorrect size for the PublishAs field
@@ -36,7 +36,7 @@ public interface PublishFieldsValidator {
             final String errorDueToSpaces = String.format(PUBLISH_AS_COLUMN
                 + " column cannot have values greater than " + PUBLISH_AS_COLUMN_SIZE
                 + " characters, reference '%s'", reference);
-            validationResult.addError(new PublishError(errorDueToSpaces));
+            validationResult.addError(new PublishFieldError(errorDueToSpaces));
         }
 
         if (isCurrentPublishAsDuplicated(validationContext, publishAs)) {
@@ -45,7 +45,7 @@ public interface PublishFieldsValidator {
                         + "This value must be unique across CaseEventToFields "
                         + "and EventToComplexTypes for the case type. ",
                     publishAs, reference);
-            validationResult.addError(new PublishError(errorDuplicatedElements));
+            validationResult.addError(new PublishFieldError(errorDuplicatedElements));
         }
         return;
     }
@@ -105,7 +105,7 @@ public interface PublishFieldsValidator {
                         + "If the Event is set to false, CaseEventToFields and EventToComplexTypes cannot have "
                         + PUBLISH_COLUMN + " columns as true for the case type.",
                     publish, reference);
-            validationResult.addError(new PublishError(errorEventSetToFalse));
+            validationResult.addError(new PublishFieldError(errorEventSetToFalse));
         }
         return;
     }

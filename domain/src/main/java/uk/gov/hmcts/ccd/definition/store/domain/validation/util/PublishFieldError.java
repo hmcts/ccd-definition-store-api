@@ -3,9 +3,9 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.util;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 
-public class PublishError extends ValidationError {
+public class PublishFieldError extends ValidationError {
 
-    public PublishError(String message) {
+    public PublishFieldError(String message) {
         super(message);
     }
 
