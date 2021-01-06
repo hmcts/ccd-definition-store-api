@@ -55,7 +55,7 @@ public interface PublishFieldsValidator {
                                                     String publishAs
                                                  ) {
 
-            final List<EventCaseFieldEntity> publishesAsInCaseFields =
+        final List<EventCaseFieldEntity> publishesAsInCaseFields =
                     findPublishAsInEventCaseFields(validationContext, publishAs);
 
         final List<EventComplexTypeEntity> publishesAsInEventComplexTypes =
