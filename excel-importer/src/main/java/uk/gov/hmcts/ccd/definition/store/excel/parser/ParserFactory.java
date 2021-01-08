@@ -1,13 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
+
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
-
-import java.util.Map;
 
 @Component
 public class ParserFactory {
@@ -18,6 +21,7 @@ public class ParserFactory {
     private final SpreadsheetValidator spreadsheetValidator;
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
+    private final ApplicationParams applicationParams;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
@@ -25,13 +29,14 @@ public class ParserFactory {
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
                          SpreadsheetValidator spreadsheetValidator,
                          HiddenFieldsValidator hiddenFieldsValidator,
-                         ChallengeQuestionParser challengeQuestionParser) {
+                         ChallengeQuestionParser challengeQuestionParser, ApplicationParams applicationParams) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
         this.spreadsheetValidator = spreadsheetValidator;
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
+        this.applicationParams = applicationParams;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -67,8 +72,8 @@ public class ParserFactory {
                     hiddenFieldsValidator
                 ),
                 new EventCaseFieldComplexTypeParser(showConditionParser),
-                entityToDefinitionDataItemRegistry
-            ),
+                entityToDefinitionDataItemRegistry,
+                applicationParams.isDefaultPublish()),
             new AuthorisationCaseTypeParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseFieldParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationComplexTypeParser(context, entityToDefinitionDataItemRegistry),
@@ -100,10 +105,6 @@ public class ParserFactory {
 
     public JurisdictionUiConfigParser createJurisdictionUiConfigParser(ParseContext context) {
         return new JurisdictionUiConfigParser(context);
-    }
-
-    public NoCConfigParser createNoCConfigParser(ParseContext context) {
-        return new NoCConfigParser(context);
     }
 
     public ChallengeQuestionParser createNewChallengeQuestionParser() {
