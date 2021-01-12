@@ -70,6 +70,16 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     }
 
     @Test
+    void testListeningToDefinitionImportedEventWithDynamicLists() throws IOException {
+        CaseTypeEntity caseType = createCaseTypeWithDynamicLists();
+
+        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
+
+        verify(client).createIndex(anyString(), anyString());
+        verify(client).upsertMapping(anyString(), anyString());
+    }
+
+    @Test
     void testMappingGeneration() {
         CaseTypeEntity caseType = createCaseType();
 
@@ -92,6 +102,18 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
             .addField(complexOfCollection)
             .addField(collectionOfBaseType)
             .addField(dynamicField).build();
+    }
+
+    private CaseTypeEntity createCaseTypeWithDynamicLists() {
+        CaseTypeEntity caseTypeEntity = createCaseType();
+        CaseFieldEntity dynamicRadioField = newField("dynamicList",
+            FieldTypeUtils.BASE_DYNAMIC_RADIO_LIST).build();
+        CaseFieldEntity dynamicMultiSelectField = newField("dynamicList",
+            FieldTypeUtils.BASE_DYNAMIC_MULTI_SELECT_LIST).build();
+
+        caseTypeEntity.addCaseField(dynamicRadioField);
+        caseTypeEntity.addCaseField(dynamicMultiSelectField);
+        return caseTypeEntity;
     }
 
     private CaseFieldEntity newComplexFieldOfComplex() {

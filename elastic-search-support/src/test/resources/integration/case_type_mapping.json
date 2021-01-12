@@ -161,6 +161,66 @@
               "enabled": false
             }
           }
+        },
+        "dynamicRadioList": {
+          "properties": {
+            "value": {
+              "properties": {
+                "code": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    }
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    }
+                  }
+                }
+              }
+            },
+            "list_items": {
+              "type": "object",
+              "enabled": false
+            }
+          }
+        },
+        "dynamicMultiSelectList": {
+          "properties": {
+            "value": {
+              "properties": {
+                "code": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    }
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256
+                    }
+                  }
+                }
+              }
+            },
+            "list_items": {
+              "type": "object",
+              "enabled": false
+            }
+          }
         }
       }
     },
