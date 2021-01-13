@@ -59,6 +59,7 @@
 				"callback_url_submitted_event" : null,
 				"retries_timeout_url_submitted_event" : [ ],
 				"security_classification" : "PUBLIC",
+        "event_enabling_condition": null,
 				"acls" : [ {
 					"role" : "caseworker-befta_master",
 					"create" : true,

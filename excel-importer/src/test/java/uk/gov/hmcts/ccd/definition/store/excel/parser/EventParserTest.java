@@ -15,6 +15,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -70,15 +71,19 @@ public class EventParserTest extends ParserTestBase {
 
     private EventEntity entity;
 
+    private ShowConditionParser showConditionParser;
+
     @Before
     public void setup() {
         init();
         parseContext = mock(ParseContext.class);
+        showConditionParser = new ShowConditionParser();
         eventParser = new EventParser(
             parseContext,
             eventCaseFieldParser,
             eventCaseFieldComplexTypeParser,
             entityToDefinitionDataItemRegistry,
+            showConditionParser,
             true);
 
         caseType = new CaseTypeEntity();
@@ -253,6 +258,37 @@ public class EventParserTest extends ParserTestBase {
 
         assertThat(events.size(), is(1));
         entity = new ArrayList<>(events).get(0);
+    }
+
+    @Test
+    public void shouldParseEventWithEventEnablingCondition() {
+        final String validEventEnablingCondition = "FieldA!=\"\" AND FieldB=\"I'm innocent\"";
+        item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertEvent(entity);
+    }
+
+    @Test
+    public void shouldFailParseEventWithEmptyEventEnablingCondition() {
+        final String validEventEnablingCondition = " ";
+        item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertEvent(entity);
+    }
+
+    @Test(expected = SpreadsheetParsingException.class)
+    public void shouldFailParseEventWithInvalidEventEnablingCondition() {
+        assertEntityAddedToRegistry = false;
+        final String validEventEnablingCondition = "aaa. x.bbb=\"some-value\"";
+        item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
+        definitionSheet.addDataItem(item);
+        eventParser.parseAll(definitionSheets, caseType);
     }
 
     @Test

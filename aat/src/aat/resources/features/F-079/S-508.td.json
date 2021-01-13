@@ -84,7 +84,8 @@
           "publish" : false,
           "show_event_notes": null,
           "can_save_draft": null,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         },
         {
           "id": "COMPLETE",
@@ -172,7 +173,8 @@
           "publish" : false,
           "show_event_notes": null,
           "can_save_draft": null,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         },
         {
           "id": "UPDATE",
@@ -254,7 +256,8 @@
           "publish" : false,
           "show_event_notes": null,
           "can_save_draft": null,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         },
         {
           "id": "CREATE",
@@ -344,7 +347,8 @@
           "publish" : false,
           "show_event_notes": null,
           "can_save_draft": null,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         }
       ],
       "states": [

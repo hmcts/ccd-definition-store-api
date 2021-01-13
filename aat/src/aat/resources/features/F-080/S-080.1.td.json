@@ -224,7 +224,8 @@
           "show_summary": true,
           "show_event_notes": null,
           "can_save_draft": false,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         },
         {
           "id": "updateCase",
@@ -340,7 +341,8 @@
           "show_summary": true,
           "show_event_notes": null,
           "can_save_draft": false,
-          "end_button_label": null
+          "end_button_label": null,
+          "event_enabling_condition": null
         }
       ],
       "states": [
