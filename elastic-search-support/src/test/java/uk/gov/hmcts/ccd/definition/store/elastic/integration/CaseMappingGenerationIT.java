@@ -106,9 +106,9 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
 
     private CaseTypeEntity createCaseTypeWithDynamicLists() {
         CaseTypeEntity caseTypeEntity = createCaseType();
-        CaseFieldEntity dynamicRadioField = newField("dynamicList",
+        CaseFieldEntity dynamicRadioField = newField("dynamicRadioList",
             FieldTypeUtils.BASE_DYNAMIC_RADIO_LIST).build();
-        CaseFieldEntity dynamicMultiSelectField = newField("dynamicList",
+        CaseFieldEntity dynamicMultiSelectField = newField("dynamicMultiSelectList",
             FieldTypeUtils.BASE_DYNAMIC_MULTI_SELECT_LIST).build();
 
         caseTypeEntity.addCaseField(dynamicRadioField);
