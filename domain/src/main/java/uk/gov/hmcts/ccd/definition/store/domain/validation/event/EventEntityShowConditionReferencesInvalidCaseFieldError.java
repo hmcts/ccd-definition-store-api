@@ -3,7 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
-public class EventEntityShowConditionReferencesInvalidCaseFieldError extends ShowConditionReferencesInvalidCaseFieldError {
+public class EventEntityShowConditionReferencesInvalidCaseFieldError
+    extends ShowConditionReferencesInvalidCaseFieldError {
 
     public EventEntityShowConditionReferencesInvalidCaseFieldError(String showConditionField,
                                                                    EventEntity eventEntity,
