@@ -20,7 +20,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -35,7 +36,8 @@
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
-                                        "ignore_above": 256
+                                        "ignore_above": 256,
+                                        "normalizer": "lowercase_normalizer"
                                     }
                                 }
                             }
@@ -60,7 +62,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -72,20 +75,29 @@
                         "type": "date",
                         "ignore_malformed": true
                     },
-                  "reference": {
-                    "type": "text",
-                    "analyzer": "standard",
-                    "search_analyzer": "case_id_analyzer"
-                  },
+                    "reference": {
+                        "type": "text",
+                        "analyzer": "standard",
+                        "search_analyzer": "case_id_analyzer",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
+                            }
+                        }
+                    },
                     "security_classification": {
-                        "type": "keyword"
+                        "type": "keyword",
+                        "normalizer": "lowercase_normalizer"
                     },
                     "state": {
                         "type": "text",
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     }
@@ -113,10 +125,21 @@
                     "analyzer": {
                         "phone_number_analyzer": {
                             "filter": [
+                                "shingle_filter",
                                 "whitespace_remove"
                             ],
                             "type": "custom",
                             "tokenizer": "keyword"
+                        }
+                    },
+                    "normalizer": {
+                        "lowercase_normalizer": {
+                            "type": "custom",
+                            "char_filter": [],
+                            "filter": [
+                                "lowercase",
+                                "asciifolding"
+                            ]
                         }
                     }
                 },
@@ -149,7 +172,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -164,7 +188,8 @@
                                 "fields": {
                                     "keyword": {
                                         "type": "keyword",
-                                        "ignore_above": 256
+                                        "ignore_above": 256,
+                                        "normalizer": "lowercase_normalizer"
                                     }
                                 }
                             }
@@ -189,7 +214,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     },
@@ -201,12 +227,19 @@
                         "type": "date",
                         "ignore_malformed": true
                     },
-                  "reference": {
-                    "type": "text",
-                    "analyzer": "standard",
-                    "search_analyzer": "case_id_analyzer"
-                  },
-                  "security_classification": {
+                    "reference": {
+                        "type": "text",
+                        "analyzer": "standard",
+                        "search_analyzer": "case_id_analyzer",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
+                            }
+                        }
+                    },
+                    "security_classification": {
                         "type": "keyword"
                     },
                     "state": {
@@ -214,7 +247,8 @@
                         "fields": {
                             "keyword": {
                                 "type": "keyword",
-                                "ignore_above": 256
+                                "ignore_above": 256,
+                                "normalizer": "lowercase_normalizer"
                             }
                         }
                     }
@@ -242,10 +276,21 @@
                     "analyzer": {
                         "phone_number_analyzer": {
                             "filter": [
+                                "shingle_filter",
                                 "whitespace_remove"
                             ],
                             "type": "custom",
                             "tokenizer": "keyword"
+                        }
+                    },
+                    "normalizer": {
+                        "lowercase_normalizer": {
+                            "type": "custom",
+                            "char_filter": [],
+                            "filter": [
+                                "lowercase",
+                                "asciifolding"
+                            ]
                         }
                     }
                 },

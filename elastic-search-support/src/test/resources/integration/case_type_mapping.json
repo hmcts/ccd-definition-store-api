@@ -4,14 +4,22 @@
     "reference": {
       "type": "text",
       "analyzer": "standard",
-      "search_analyzer": "case_id_analyzer"
+      "search_analyzer": "case_id_analyzer",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
+        }
+      }
     },
     "jurisdiction": {
       "type": "text",
       "fields": {
         "keyword": {
           "type": "keyword",
-          "ignore_above": 256
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
         }
       }
     },
@@ -23,7 +31,8 @@
       "fields":{
         "keyword":{
           "type":"keyword",
-          "ignore_above":256
+          "ignore_above":256,
+          "normalizer": "lowercase_normalizer"
         }
       }
     },
@@ -36,14 +45,16 @@
       "ignore_malformed": true
     },
     "security_classification": {
-      "type": "keyword"
+      "type": "keyword",
+      "normalizer": "lowercase_normalizer"
     },
     "case_type_id": {
       "type":"text",
       "fields":{
         "keyword":{
           "type":"keyword",
-          "ignore_above":256
+          "ignore_above":256,
+          "normalizer": "lowercase_normalizer"
         }
       }
     },
@@ -67,7 +78,8 @@
           "fields": {
             "keyword": {
               "type": "keyword",
-              "ignore_above": 256
+              "ignore_above": 256,
+              "normalizer": "lowercase_normalizer"
             }
           }
         },
@@ -80,7 +92,8 @@
                   "fields": {
                     "keyword": {
                       "type": "keyword",
-                      "ignore_above": 256
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
                     }
                   }
                 },
@@ -104,7 +117,8 @@
                   "fields": {
                     "keyword": {
                       "type": "keyword",
-                      "ignore_above": 256
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
                     }
                   }
                 }
@@ -122,7 +136,8 @@
               "fields": {
                 "keyword": {
                   "type": "keyword",
-                  "ignore_above": 256
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
                 }
               }
             }
@@ -137,7 +152,8 @@
                   "fields": {
                     "keyword": {
                       "type": "keyword",
-                      "ignore_above": 256
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
                     }
                   }
                 },
@@ -146,7 +162,8 @@
                   "fields": {
                     "keyword": {
                       "type": "keyword",
-                      "ignore_above": 256
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
                     }
                   }
                 }
