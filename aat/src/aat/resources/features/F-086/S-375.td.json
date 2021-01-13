@@ -28,192 +28,131 @@
 			 "order": 1,
 			 "wizard_page_fields": [
 				{
-					"case_field_id": "TextField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "TextField"
 				},
 				{
-					"case_field_id": "TextAreaField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "TextAreaField"
 				},
 				{
-					"case_field_id": "DateField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "DateField"
 				},
 				{
+          "_extends_": "WizardPageField",
 					"case_field_id": "AddressField",
-					"order": 2,
-					"page_column_no": null,
-					"complex_field_overrides": []
+					"order": 2
 				},
 				{
-					"case_field_id": "PhoneField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "PhoneField"
 				},
 				{
-					"case_field_id": "NumberField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "NumberField"
 				},
 				{
-					"case_field_id": "YesNoField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "YesNoField"
 				},
 				{
-					"case_field_id": "CollectionFieldMan",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "CollectionFieldMan"
 				},
 				{
-					"case_field_id": "CollectionField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "CollectionField"
 				},
 				{
-					"case_field_id": "AddressUKField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "AddressUKField"
 				},
 				{
-					"case_field_id": "MarritalStatus",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "MarritalStatus"
 				},
 				{
-					"case_field_id": "MoneyField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "MoneyField"
 				},
 				{
-					"case_field_id": "DocumentField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "DocumentField"
 				},
 				{
-					"case_field_id": "EmailField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "EmailField"
 				},
 				{
-					"case_field_id": "MultiSelectField",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "MultiSelectField"
 				},
 				{
-					"case_field_id": "DynamicList",
-					"order": 1,
-					"page_column_no": null,
-					"complex_field_overrides": []
+          "_extends_": "WizardPageField",
+					"case_field_id": "DynamicList"
 				},
 				{
+          "_extends_": "WizardPageField",
 					"case_field_id": "OrganisationPolicyField1",
-					"order": 1,
-					"page_column_no": null,
 					"complex_field_overrides": [
 					 {
 						"__ordering__": "unordered",
 						"__elementId__": "complex_field_element_id"
 					 },
 					 {
-						"complex_field_element_id": "OrganisationPolicyField1.Organisation.OrganisationID",
-						"display_context": "OPTIONAL",
-						"label": null,
-						"hint_text": null,
-						"show_condition": null,
-						"default_value": null
+             "_extends_": "WizardPageComplexFieldOverride",
+						"complex_field_element_id": "OrganisationPolicyField1.Organisation.OrganisationID"
 					 },
 					 {
-						"complex_field_element_id": "OrganisationPolicyField1.Organisation.OrganisationName",
-						"display_context": "OPTIONAL",
-						"label": null,
-						"hint_text": null,
-						"show_condition": null,
-						"default_value": null
+             "_extends_": "WizardPageComplexFieldOverride",
+						"complex_field_element_id": "OrganisationPolicyField1.Organisation.OrganisationName"
 					 },
 					 {
+             "_extends_": "WizardPageComplexFieldOverride",
 						"complex_field_element_id": "OrganisationPolicyField1.OrgPolicyCaseAssignedRole",
-						"display_context": "OPTIONAL",
-						"label": null,
-						"hint_text": null,
-						"show_condition": null,
 						"default_value": "[Claimant]"
 					 },
 					 {
-						"complex_field_element_id": "OrganisationPolicyField1.OrgPolicyReference",
-						"display_context": "OPTIONAL",
-						"label": null,
-						"hint_text": null,
-						"show_condition": null,
-						"default_value": null
+             "_extends_": "WizardPageComplexFieldOverride",
+						"complex_field_element_id": "OrganisationPolicyField1.OrgPolicyReference"
 					 }
 					]
 				},
 				{
+          "_extends_": "WizardPageField",
 					"case_field_id": "OrganisationPolicyField2",
-					"order": 1,
-					"page_column_no": null,
 					"complex_field_overrides": [
 					 {
 						"__ordering__": "unordered",
 						"__elementId__": "complex_field_element_id"
 					 },
+            {
+              "_extends_": "WizardPageComplexFieldOverride",
+              "complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationID"
+            },
 					 {
-						"complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationID",
-						"display_context": "OPTIONAL",
-						"label": null,
-						"hint_text": null,
-						"show_condition": null,
-						"default_value": null
+             "_extends_": "WizardPageComplexFieldOverride",
+						"complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationID"
 					 },
 					 {
-						"complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationName",
-						"display_context": "OPTIONAL",
-						"label": null,
-						"hint_text": null,
-						"show_condition": null,
-						"default_value": null
+             "_extends_": "WizardPageComplexFieldOverride",
+						"complex_field_element_id": "OrganisationPolicyField2.Organisation.OrganisationName"
 					 },
 					 {
+             "_extends_": "WizardPageComplexFieldOverride",
 						"complex_field_element_id": "OrganisationPolicyField2.OrgPolicyCaseAssignedRole",
-						"display_context": "OPTIONAL",
-						"label": null,
-						"hint_text": null,
-						"show_condition": null,
 						"default_value": "[Defendant]"
 					 },
 					 {
-						"complex_field_element_id": "OrganisationPolicyField2.OrgPolicyReference",
-						"display_context": "OPTIONAL",
-						"label": null,
-						"hint_text": null,
-						"show_condition": null,
-						"default_value": null
+             "_extends_": "WizardPageComplexFieldOverride",
+						"complex_field_element_id": "OrganisationPolicyField2.OrgPolicyReference"
 					 }
 					]
 				},
          {
-           "case_field_id": "CaseLinkField",
-           "order": 1,
-           "page_column_no": null,
-           "complex_field_overrides": []
+           "_extends_": "WizardPageField",
+           "case_field_id": "CaseLinkField"
          }
 			 ],
 			 "show_condition": null,

@@ -1,0 +1,10 @@
+{
+  "_guid_" : "CaseEventFieldComplex",
+
+  "hint": null,
+  "label": null,
+  "order": null,
+  "displayContext": "OPTIONAL",
+  "showCondition": null,
+  "defaultValue": null
+}

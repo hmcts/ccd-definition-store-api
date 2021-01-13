@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionUiConfigRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
@@ -43,6 +44,7 @@ public class JurisdictionUiConfigServiceImpl implements JurisdictionUiConfigServ
         this.repository.save(entityDB);
     }
 
+    @Transactional
     @Override
     public List<JurisdictionUiConfig> getAll(List<String> references) {
         List<JurisdictionUiConfigEntity> entities = repository.findAllByReference(references);

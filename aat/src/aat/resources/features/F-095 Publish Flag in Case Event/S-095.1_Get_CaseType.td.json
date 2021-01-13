@@ -29,7 +29,11 @@
 				"live_until" : null,
 				"case_types" : [ ]
 			},
-			"events" : [ {
+			"events" : [
+				{
+						"__ordering__": "UNORDERED"
+				},
+        {
 				"id" : "addExtraInfo",
 				"name" : "Add Details",
 				"description" : "Add extra details to the case",
