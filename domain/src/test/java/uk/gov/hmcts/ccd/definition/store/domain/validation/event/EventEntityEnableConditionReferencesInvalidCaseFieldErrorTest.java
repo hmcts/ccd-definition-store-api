@@ -36,7 +36,7 @@ public class EventEntityEnableConditionReferencesInvalidCaseFieldErrorTest {
     @Test
     public void testDefaultMessage() {
         assertEquals(
-            "Unknown field 'TextField' for event 'Event Reference' in post state condition: 'TextFieldA='Test''",
+            "Unknown field 'TextField' for event 'Event Reference' in event enabling condition: 'TextFieldA='Test''",
             classUnderTest.getDefaultMessage()
         );
     }

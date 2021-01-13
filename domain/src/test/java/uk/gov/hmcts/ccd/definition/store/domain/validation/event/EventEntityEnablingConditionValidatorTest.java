@@ -19,7 +19,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
@@ -72,7 +71,7 @@ public class EventEntityEnablingConditionValidatorTest {
         assertThat(validationResult.getValidationErrors().size(), is(1));
         assertThat(validationResult.getValidationErrors().get(0).toString(),
             is("validationError: Unknown field 'FieldC' for event "
-                + "'createCase' in post state condition: "
+                + "'createCase' in event enabling condition: "
                 + "'FieldA!=\"\" AND FieldC=\"I'm innocent\"'"));
     }
 
@@ -96,27 +95,6 @@ public class EventEntityEnablingConditionValidatorTest {
         Mockito.when(showCondition.getShowConditionExpression()).thenReturn("");
         Mockito.when(showConditionExtractor.parseShowCondition(ArgumentMatchers.any())).thenReturn(showCondition);
         return showCondition;
-    }
-
-    private EventEntity createEventWithEnablingCondition(String enablingCondition) {
-        EventEntity eventEntity = new EventEntity();
-        eventEntity.setCaseType(createCaseTypeEntity());
-        eventEntity.setReference("createCase");
-
-        eventEntity.setEventEnablingCondition(enablingCondition);
-        return eventEntity;
-    }
-
-    private EventPostStateEntity createEventPostStateEntity(String postStateReference,
-                                                            String matchingCondition,
-                                                            EventEntity eventEntity,
-                                                            int priority) {
-        EventPostStateEntity postStateEntity = new EventPostStateEntity();
-        postStateEntity.setPostStateReference(postStateReference);
-        postStateEntity.setEnablingCondition(matchingCondition);
-        postStateEntity.setPriority(priority);
-        postStateEntity.setEventEntity(eventEntity);
-        return postStateEntity;
     }
 
     private CaseTypeEntity createCaseTypeEntity() {
