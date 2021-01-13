@@ -376,14 +376,7 @@
                     "reference": {
                       "type": "text",
                       "analyzer": "standard",
-                      "search_analyzer": "case_id_analyzer",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
-                        }
+                      "search_analyzer": "case_id_analyzer"
                     },
                     "security_classification": {
                         "type": "keyword",
