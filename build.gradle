@@ -259,7 +259,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '6.3.0'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.23.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
@@ -457,7 +457,6 @@ cucumberReports {
 task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     baselineOnMigrate = true
     baselineVersion = '0001'
-    outOfOrder = true
     if (project.hasProperty("dburl")) {
         url = "jdbc:postgresql://${dburl}"
     }

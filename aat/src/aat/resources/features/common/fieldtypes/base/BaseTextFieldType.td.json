@@ -1,8 +1,0 @@
-{
-  "_guid_": "BaseTextFieldType",
-
-  "_extends_": "CommonFieldType",
-
-  "id": "Text",
-  "type": "Text"
-}

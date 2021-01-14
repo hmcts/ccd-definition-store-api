@@ -1,7 +1,0 @@
-{
-  "_guid_": "BaseCaseHistoryViewerFieldType",
-  "_extends_": "CommonFieldType",
-
-  "id": "CaseHistoryViewer",
-  "type": "CaseHistoryViewer"
-}

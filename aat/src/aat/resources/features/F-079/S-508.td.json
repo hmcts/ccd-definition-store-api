@@ -49,12 +49,30 @@
               "__elementId__": "case_field_id"
             },
             {
-              "_extends_" : "CaseEventField",
-              "case_field_id": "DateField"
+              "case_field_id": "DateField",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
-              "case_field_id": "DateTimeField"
+              "case_field_id": "DateTimeField",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             }
           ],
           "pre_states": [
@@ -77,7 +95,11 @@
           "security_classification": "PUBLIC",
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
           "show_summary": true,
@@ -98,51 +120,121 @@
               "__elementId__": "case_field_id"
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "MetaLabelField",
-              "display_context": "READONLY"
+              "display_context": "READONLY",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "DateField",
               "display_context": "READONLY",
-              "display_context_parameter": "#DATETIMEDISPLAY(MM-yyyy)"
+              "display_context_parameter": "#DATETIMEDISPLAY(MM-yyyy)",
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "DateTimeField",
               "display_context": "READONLY",
-              "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm)"
+              "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm)",
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
-              "case_field_id": "StandardDate"
+              "case_field_id": "StandardDate",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
-              "case_field_id": "StandardDateTime"
+              "case_field_id": "StandardDateTime",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDate",
               "display_context": "READONLY",
-              "display_context_parameter": "#DATETIMEDISPLAY(dd-MM-yyyy)"
+              "display_context_parameter": "#DATETIMEDISPLAY(dd-MM-yyyy)",
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDateTime",
               "display_context": "READONLY",
-              "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd)"
+              "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd)",
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "ComplexDateTime",
-              "display_context": "READONLY"
+              "display_context": "READONLY",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionComplexDateTime",
-              "display_context": "READONLY"
+              "display_context": "READONLY",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             }
           ],
           "pre_states": [
@@ -165,7 +257,11 @@
           "security_classification": "PUBLIC",
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
           "show_summary": true,
@@ -186,45 +282,121 @@
               "__elementId__": "case_field_id"
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "MetaLabelField",
-              "display_context": "READONLY"
+              "display_context": "READONLY",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "DateField",
-              "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)"
+              "display_context": "OPTIONAL",
+              "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "DateTimeField",
-              "display_context_parameter": "#DATETIMEENTRY(yyyy-mm-dd'T-'HH:mm)"
+              "display_context": "OPTIONAL",
+              "display_context_parameter": "#DATETIMEENTRY(yyyy-mm-dd'T-'HH:mm)",
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
-              "case_field_id": "StandardDate"
+              "case_field_id": "StandardDate",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
-              "case_field_id": "StandardDateTime"
+              "case_field_id": "StandardDateTime",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDate",
-              "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)"
+              "display_context": "OPTIONAL",
+              "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDateTime",
-              "display_context_parameter": "#DATETIMEENTRY(yyyy-MM-dd)"
+              "display_context": "OPTIONAL",
+              "display_context_parameter": "#DATETIMEENTRY(yyyy-MM-dd)",
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
-              "case_field_id": "ComplexDateTime"
+              "case_field_id": "ComplexDateTime",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
-              "case_field_id": "CollectionComplexDateTime"
+              "case_field_id": "CollectionComplexDateTime",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             }
           ],
           "pre_states": [
@@ -247,7 +419,11 @@
           "security_classification": "PUBLIC",
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
           "show_summary": true,
@@ -268,54 +444,121 @@
               "__elementId__": "case_field_id"
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "MetaLabelField",
               "display_context": "READONLY",
-              "show_summary_change_option": false
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": false,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "DateField",
+              "display_context": "OPTIONAL",
               "display_context_parameter": "#DATETIMEENTRY(dd)",
-              "show_summary_change_option": false
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": false,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "DateTimeField",
+              "display_context": "OPTIONAL",
               "display_context_parameter": "#DATETIMEENTRY(yyyy-mm-dd)",
-              "show_summary_change_option": false
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": false,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "StandardDate",
-              "show_summary_change_option": false
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": false,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "StandardDateTime",
-              "show_summary_change_option": false
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": false,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDate",
+              "display_context": "OPTIONAL",
               "display_context_parameter": "#DATETIMEENTRY(MM)",
-              "show_summary_change_option": false
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": false,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDateTime",
+              "display_context": "OPTIONAL",
               "display_context_parameter": "#DATETIMEENTRY(yyyy-MM)",
-              "show_summary_change_option": false
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": false,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "ComplexDateTime",
-              "show_summary_change_option": false
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": false,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             },
             {
-              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionComplexDateTime",
-              "show_summary_change_option": false
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": false,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "case_fields_complex": [
+              ]
             }
           ],
           "pre_states": [
@@ -337,7 +580,11 @@
           "security_classification": "PUBLIC",
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ],
           "show_summary": true,
@@ -361,7 +608,11 @@
           "title_display": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ]
         },
@@ -373,7 +624,11 @@
           "title_display": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ]
         },
@@ -385,14 +640,22 @@
           "title_display": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
           ]
         }
       ],
       "acls": [
         {
-          "_extends_" : "AllGrantedAccessControlList"
+          "role": "caseworker-befta_master",
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true
         }
       ],
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
@@ -403,14 +666,17 @@
           "__elementId__": "id"
         },
         {
-          "_extends_" : "CaseField",
           "metadata": true,
           "id": "[STATE]",
           "case_type_id": "FT_DateTimeFormats",
           "label": "State",
+          "hint_text": null,
           "field_type": {
             "id": "FixedList-FT_DateTimeFormats[STATE]",
             "type": "FixedList",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
             "fixed_list_items": [
               {
                 "code": "DONE",
@@ -427,29 +693,64 @@
                 "label": "To do",
                 "order": null
               }
-            ]
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "HistoryComponentField",
           "case_type_id": "FT_DateTimeFormats",
           "label": "A `HistoryComponent` field",
           "hint_text": "History tab component",
           "field_type": {
             "id": "CaseHistoryViewer",
-            "type": "CaseHistoryViewer"
+            "type": "CaseHistoryViewer",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "CollectionComplexDateTime",
           "case_type_id": "FT_DateTimeFormats",
           "label": "Formatted Date in Collection",
@@ -457,148 +758,348 @@
           "field_type": {
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "Collection",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
             "collection_field_type": {
-              "_extends_": "CommonFieldType",
               "id": "FormatComplex",
               "type": "Complex",
+              "min": null,
+              "max": null,
+              "regular_expression": null,
+              "fixed_list_items": [
+              ],
               "complex_fields": [
                 {
-                  "_extends_" : "CaseField",
+                  "metadata": false,
                   "id": "LabelField",
+                  "case_type_id": null,
                   "label": "[[ANY_STRING_NOT_NULLABLE]]",
                   "hint_text": "Label Field",
                   "field_type": {
                     "id": "Label",
-                    "type": "Label"
+                    "type": "Label",
+                    "min": null,
+                    "max": null,
+                    "regular_expression": null,
+                    "fixed_list_items": [
+                    ],
+                    "complex_fields": [
+                    ],
+                    "collection_field_type": null
                   },
                   "hidden": null,
-                  "acls": null
+                  "security_classification": "PUBLIC",
+                  "live_from": null,
+                  "live_until": null,
+                  "acls": null,
+                  "complexACLs": [
+                  ],
+                  "order": null,
+                  "show_condition": null,
+                  "display_context_parameter": null,
+                  "retain_hidden_value": null
                 },
                 {
-                  "_extends_" : "CaseField",
+                  "metadata": false,
                   "id": "DateField",
+                  "case_type_id": null,
                   "label": "MM-yyyy formatted date field",
                   "hint_text": "Date Field",
                   "field_type": {
                     "id": "Date",
-                    "type": "Date"
+                    "type": "Date",
+                    "min": null,
+                    "max": null,
+                    "regular_expression": null,
+                    "fixed_list_items": [
+                    ],
+                    "complex_fields": [
+                    ],
+                    "collection_field_type": null
                   },
                   "hidden": null,
+                  "security_classification": "PUBLIC",
+                  "live_from": null,
+                  "live_until": null,
                   "acls": null,
-                  "display_context_parameter": "#DATETIMEENTRY(dd-MM),#DATETIMEDISPLAY(yyyy)"
+                  "complexACLs": [
+                  ],
+                  "order": null,
+                  "show_condition": null,
+                  "display_context_parameter": "#DATETIMEENTRY(dd-MM),#DATETIMEDISPLAY(yyyy)",
+                  "retain_hidden_value": null
                 },
                 {
-                  "_extends_" : "CaseField",
+                  "metadata": false,
                   "id": "DateTimeField",
+                  "case_type_id": null,
                   "label": "yyyy-MM-ddTHH:mm formatted DateTime",
                   "hint_text": "DateTime Field",
                   "field_type": {
                     "id": "DateTime",
-                    "type": "DateTime"
+                    "type": "DateTime",
+                    "min": null,
+                    "max": null,
+                    "regular_expression": null,
+                    "fixed_list_items": [
+                    ],
+                    "complex_fields": [
+                    ],
+                    "collection_field_type": null
                   },
                   "hidden": null,
+                  "security_classification": "PUBLIC",
+                  "live_from": null,
+                  "live_until": null,
                   "acls": null,
-                  "display_context_parameter": "#DATETIMEENTRY(MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy MM dd HH:mm)"
+                  "complexACLs": [
+                  ],
+                  "order": null,
+                  "show_condition": null,
+                  "display_context_parameter": "#DATETIMEENTRY(MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy MM dd HH:mm)",
+                  "retain_hidden_value": null
                 },
                 {
-                  "_extends_" : "CaseField",
+                  "metadata": false,
                   "id": "StandardDate",
+                  "case_type_id": null,
                   "label": "A `Date` field",
                   "hint_text": "Date Field",
                   "field_type": {
                     "id": "Date",
-                    "type": "Date"
+                    "type": "Date",
+                    "min": null,
+                    "max": null,
+                    "regular_expression": null,
+                    "fixed_list_items": [
+                    ],
+                    "complex_fields": [
+                    ],
+                    "collection_field_type": null
                   },
                   "hidden": null,
-                  "acls": null
+                  "security_classification": "PUBLIC",
+                  "live_from": null,
+                  "live_until": null,
+                  "acls": null,
+                  "complexACLs": [
+                  ],
+                  "order": null,
+                  "show_condition": null,
+                  "display_context_parameter": null,
+                  "retain_hidden_value": null
                 },
                 {
-                  "_extends_" : "CaseField",
+                  "metadata": false,
                   "id": "StandardDateTime",
+                  "case_type_id": null,
                   "label": "A `DateTime` field",
                   "hint_text": "DateTime Field",
                   "field_type": {
                     "id": "DateTime",
-                    "type": "DateTime"
+                    "type": "DateTime",
+                    "min": null,
+                    "max": null,
+                    "regular_expression": null,
+                    "fixed_list_items": [
+                    ],
+                    "complex_fields": [
+                    ],
+                    "collection_field_type": null
                   },
                   "hidden": null,
-                  "acls": null
+                  "security_classification": "PUBLIC",
+                  "live_from": null,
+                  "live_until": null,
+                  "acls": null,
+                  "complexACLs": [
+                  ],
+                  "order": null,
+                  "show_condition": null,
+                  "display_context_parameter": null,
+                  "retain_hidden_value": null
                 },
                 {
-                  "_extends_" : "CaseField",
+                  "metadata": false,
                   "id": "NestedComplex",
+                  "case_type_id": null,
                   "label": "Format Nested Complex",
+                  "hint_text": null,
                   "field_type": {
                     "id": "FormatNestedComplex",
                     "type": "Complex",
+                    "min": null,
+                    "max": null,
+                    "regular_expression": null,
+                    "fixed_list_items": [
+                    ],
                     "complex_fields": [
                       {
-                        "_extends_" : "CaseField",
+                        "metadata": false,
                         "id": "DateField",
+                        "case_type_id": null,
                         "label": "MM-yyyy formatted date field",
                         "hint_text": "Date Field",
                         "field_type": {
                           "id": "Date",
-                          "type": "Date"
+                          "type": "Date",
+                          "min": null,
+                          "max": null,
+                          "regular_expression": null,
+                          "fixed_list_items": [
+                          ],
+                          "complex_fields": [
+                          ],
+                          "collection_field_type": null
                         },
                         "hidden": null,
+                        "security_classification": "PUBLIC",
+                        "live_from": null,
+                        "live_until": null,
                         "acls": null,
-                        "display_context_parameter": "#DATETIMEENTRY(MM-yyyy),#DATETIMEDISPLAY(MM-yyyy)"
+                        "complexACLs": [
+                        ],
+                        "order": null,
+                        "show_condition": null,
+                        "display_context_parameter": "#DATETIMEENTRY(MM-yyyy),#DATETIMEDISPLAY(MM-yyyy)",
+                        "retain_hidden_value": null
                       },
                       {
-                        "_extends_" : "CaseField",
+                        "metadata": false,
                         "id": "DateTimeField",
+                        "case_type_id": null,
                         "label": "yyyy-MM-DDTHH:mm formatted DateTime",
                         "hint_text": "DateTime Field",
                         "field_type": {
                           "id": "DateTime",
-                          "type": "DateTime"
+                          "type": "DateTime",
+                          "min": null,
+                          "max": null,
+                          "regular_expression": null,
+                          "fixed_list_items": [
+                          ],
+                          "complex_fields": [
+                          ],
+                          "collection_field_type": null
                         },
                         "hidden": null,
+                        "security_classification": "PUBLIC",
+                        "live_from": null,
+                        "live_until": null,
                         "acls": null,
-                        "display_context_parameter": "#DATETIMEENTRY(yyyy-MM-dd),#DATETIMEDISPLAY(yyyy-MM-dd)"
+                        "complexACLs": [
+                        ],
+                        "order": null,
+                        "show_condition": null,
+                        "display_context_parameter": "#DATETIMEENTRY(yyyy-MM-dd),#DATETIMEDISPLAY(yyyy-MM-dd)",
+                        "retain_hidden_value": null
                       },
                       {
-                        "_extends_" : "CaseField",
+                        "metadata": false,
                         "id": "StandardDate",
+                        "case_type_id": null,
                         "label": "A `Date` field",
                         "hint_text": "Date Field",
                         "field_type": {
                           "id": "Date",
-                          "type": "Date"
+                          "type": "Date",
+                          "min": null,
+                          "max": null,
+                          "regular_expression": null,
+                          "fixed_list_items": [
+                          ],
+                          "complex_fields": [
+                          ],
+                          "collection_field_type": null
                         },
                         "hidden": null,
-                        "acls": null
+                        "security_classification": "PUBLIC",
+                        "live_from": null,
+                        "live_until": null,
+                        "acls": null,
+                        "complexACLs": [
+                        ],
+                        "order": null,
+                        "show_condition": null,
+                        "display_context_parameter": null,
+                        "retain_hidden_value": null
                       },
                       {
-                        "_extends_" : "CaseField",
+                        "metadata": false,
                         "id": "StandardDateTime",
+                        "case_type_id": null,
                         "label": "A `DateTime` field",
                         "hint_text": "DateTime Field",
                         "field_type": {
                           "id": "DateTime",
-                          "type": "DateTime"
+                          "type": "DateTime",
+                          "min": null,
+                          "max": null,
+                          "regular_expression": null,
+                          "fixed_list_items": [
+                          ],
+                          "complex_fields": [
+                          ],
+                          "collection_field_type": null
                         },
                         "hidden": null,
-                        "acls": null
+                        "security_classification": "PUBLIC",
+                        "live_from": null,
+                        "live_until": null,
+                        "acls": null,
+                        "complexACLs": [
+                        ],
+                        "order": null,
+                        "show_condition": null,
+                        "display_context_parameter": null,
+                        "retain_hidden_value": null
                       }
-                    ]
+                    ],
+                    "collection_field_type": null
                   },
                   "hidden": null,
-                  "acls": null
+                  "security_classification": "PUBLIC",
+                  "live_from": null,
+                  "live_until": null,
+                  "acls": null,
+                  "complexACLs": [
+                  ],
+                  "order": null,
+                  "show_condition": null,
+                  "display_context_parameter": null,
+                  "retain_hidden_value": null
                 }
-              ]
+              ],
+              "collection_field_type": null
             }
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "ComplexDateTime",
           "case_type_id": "FT_DateTimeFormats",
           "label": "Formatted Date in ComplexType",
@@ -606,143 +1107,337 @@
           "field_type": {
             "id": "FormatComplex",
             "type": "Complex",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
             "complex_fields": [
               {
-                "_extends_" : "CaseField",
+                "metadata": false,
                 "id": "LabelField",
+                "case_type_id": null,
                 "label": "[[ANY_STRING_NOT_NULLABLE]]",
                 "hint_text": "Label Field",
                 "field_type": {
                   "id": "Label",
-                  "type": "Label"
+                  "type": "Label",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [
+                  ],
+                  "complex_fields": [
+                  ],
+                  "collection_field_type": null
                 },
                 "hidden": null,
-                "acls": null
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [
+                ],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
-                "_extends_" : "CaseField",
+                "metadata": false,
                 "id": "DateField",
+                "case_type_id": null,
                 "label": "MM-yyyy formatted date field",
                 "hint_text": "Date Field",
                 "field_type": {
                   "id": "Date",
-                  "type": "Date"
+                  "type": "Date",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [
+                  ],
+                  "complex_fields": [
+                  ],
+                  "collection_field_type": null
                 },
                 "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
                 "acls": null,
-                "display_context_parameter": "#DATETIMEENTRY(dd-MM),#DATETIMEDISPLAY(yyyy)"
+                "complexACLs": [
+                ],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": "#DATETIMEENTRY(dd-MM),#DATETIMEDISPLAY(yyyy)",
+                "retain_hidden_value": null
               },
               {
-                "_extends_" : "CaseField",
+                "metadata": false,
                 "id": "DateTimeField",
+                "case_type_id": null,
                 "label": "yyyy-MM-ddTHH:mm formatted DateTime",
                 "hint_text": "DateTime Field",
                 "field_type": {
                   "id": "DateTime",
-                  "type": "DateTime"
+                  "type": "DateTime",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [
+                  ],
+                  "complex_fields": [
+                  ],
+                  "collection_field_type": null
                 },
                 "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
                 "acls": null,
-                "display_context_parameter": "#DATETIMEENTRY(MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy MM dd HH:mm)"
+                "complexACLs": [
+                ],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": "#DATETIMEENTRY(MM-dd'T'HH:mm),#DATETIMEDISPLAY(yyyy MM dd HH:mm)",
+                "retain_hidden_value": null
               },
               {
-                "_extends_" : "CaseField",
+                "metadata": false,
                 "id": "StandardDate",
+                "case_type_id": null,
                 "label": "A `Date` field",
                 "hint_text": "Date Field",
                 "field_type": {
                   "id": "Date",
-                  "type": "Date"
+                  "type": "Date",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [
+                  ],
+                  "complex_fields": [
+                  ],
+                  "collection_field_type": null
                 },
                 "hidden": null,
-                "acls": null
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [
+                ],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
-                "_extends_" : "CaseField",
+                "metadata": false,
                 "id": "StandardDateTime",
+                "case_type_id": null,
                 "label": "A `DateTime` field",
                 "hint_text": "DateTime Field",
                 "field_type": {
                   "id": "DateTime",
-                  "type": "DateTime"
+                  "type": "DateTime",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [
+                  ],
+                  "complex_fields": [
+                  ],
+                  "collection_field_type": null
                 },
                 "hidden": null,
-                "acls": null
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [
+                ],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               },
               {
-                "_extends_" : "CaseField",
+                "metadata": false,
                 "id": "NestedComplex",
+                "case_type_id": null,
                 "label": "Format Nested Complex",
+                "hint_text": null,
                 "field_type": {
                   "id": "FormatNestedComplex",
                   "type": "Complex",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [
+                  ],
                   "complex_fields": [
                     {
-                      "_extends_" : "CaseField",
+                      "metadata": false,
                       "id": "DateField",
+                      "case_type_id": null,
                       "label": "MM-yyyy formatted date field",
                       "hint_text": "Date Field",
                       "field_type": {
                         "id": "Date",
-                        "type": "Date"
+                        "type": "Date",
+                        "min": null,
+                        "max": null,
+                        "regular_expression": null,
+                        "fixed_list_items": [
+                        ],
+                        "complex_fields": [
+                        ],
+                        "collection_field_type": null
                       },
                       "hidden": null,
+                      "security_classification": "PUBLIC",
+                      "live_from": null,
+                      "live_until": null,
                       "acls": null,
-                      "display_context_parameter": "#DATETIMEENTRY(MM-yyyy),#DATETIMEDISPLAY(MM-yyyy)"
+                      "complexACLs": [
+                      ],
+                      "order": null,
+                      "show_condition": null,
+                      "display_context_parameter": "#DATETIMEENTRY(MM-yyyy),#DATETIMEDISPLAY(MM-yyyy)",
+                      "retain_hidden_value": null
                     },
                     {
-                      "_extends_" : "CaseField",
+                      "metadata": false,
                       "id": "DateTimeField",
+                      "case_type_id": null,
                       "label": "yyyy-MM-DDTHH:mm formatted DateTime",
                       "hint_text": "DateTime Field",
                       "field_type": {
                         "id": "DateTime",
-                        "type": "DateTime"
+                        "type": "DateTime",
+                        "min": null,
+                        "max": null,
+                        "regular_expression": null,
+                        "fixed_list_items": [
+                        ],
+                        "complex_fields": [
+                        ],
+                        "collection_field_type": null
                       },
                       "hidden": null,
+                      "security_classification": "PUBLIC",
+                      "live_from": null,
+                      "live_until": null,
                       "acls": null,
-                      "display_context_parameter": "#DATETIMEENTRY(yyyy-MM-dd),#DATETIMEDISPLAY(yyyy-MM-dd)"
+                      "complexACLs": [
+                      ],
+                      "order": null,
+                      "show_condition": null,
+                      "display_context_parameter": "#DATETIMEENTRY(yyyy-MM-dd),#DATETIMEDISPLAY(yyyy-MM-dd)",
+                      "retain_hidden_value": null
                     },
                     {
-                      "_extends_" : "CaseField",
+                      "metadata": false,
                       "id": "StandardDate",
+                      "case_type_id": null,
                       "label": "A `Date` field",
                       "hint_text": "Date Field",
                       "field_type": {
                         "id": "Date",
-                        "type": "Date"
+                        "type": "Date",
+                        "min": null,
+                        "max": null,
+                        "regular_expression": null,
+                        "fixed_list_items": [
+                        ],
+                        "complex_fields": [
+                        ],
+                        "collection_field_type": null
                       },
                       "hidden": null,
-                      "acls": null
+                      "security_classification": "PUBLIC",
+                      "live_from": null,
+                      "live_until": null,
+                      "acls": null,
+                      "complexACLs": [
+                      ],
+                      "order": null,
+                      "show_condition": null,
+                      "display_context_parameter": null,
+                      "retain_hidden_value": null
                     },
                     {
-                      "_extends_" : "CaseField",
+                      "metadata": false,
                       "id": "StandardDateTime",
+                      "case_type_id": null,
                       "label": "A `DateTime` field",
                       "hint_text": "DateTime Field",
                       "field_type": {
                         "id": "DateTime",
-                        "type": "DateTime"
+                        "type": "DateTime",
+                        "min": null,
+                        "max": null,
+                        "regular_expression": null,
+                        "fixed_list_items": [
+                        ],
+                        "complex_fields": [
+                        ],
+                        "collection_field_type": null
                       },
                       "hidden": null,
-                      "acls": null
+                      "security_classification": "PUBLIC",
+                      "live_from": null,
+                      "live_until": null,
+                      "acls": null,
+                      "complexACLs": [
+                      ],
+                      "order": null,
+                      "show_condition": null,
+                      "display_context_parameter": null,
+                      "retain_hidden_value": null
                     }
-                  ]
+                  ],
+                  "collection_field_type": null
                 },
                 "hidden": null,
-                "acls": null
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [
+                ],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null
               }
-            ]
+            ],
+            "collection_field_type": null
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "CollectionDateTime",
           "case_type_id": "FT_DateTimeFormats",
           "label": "yyyy-MM-dd formatted collection DateTime",
@@ -750,19 +1445,48 @@
           "field_type": {
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "Collection",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
             "collection_field_type": {
-              "_extends_" : "BaseDateTimeFieldType"
+              "id": "DateTime",
+              "type": "DateTime",
+              "min": null,
+              "max": null,
+              "regular_expression": null,
+              "fixed_list_items": [
+              ],
+              "complex_fields": [
+              ],
+              "collection_field_type": null
             }
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "CollectionDate",
           "case_type_id": "FT_DateTimeFormats",
           "label": "MM-yyyy formatted collection date",
@@ -770,165 +1494,452 @@
           "field_type": {
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "Collection",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
             "collection_field_type": {
-              "_extends_" : "BaseDateFieldType"
+              "id": "Date",
+              "type": "Date",
+              "min": null,
+              "max": null,
+              "regular_expression": null,
+              "fixed_list_items": [
+              ],
+              "complex_fields": [
+              ],
+              "collection_field_type": null
             }
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "StandardDateTime",
           "case_type_id": "FT_DateTimeFormats",
           "label": "A `DateTime` field",
           "hint_text": "DateTime Field",
           "field_type": {
             "id": "DateTime",
-            "type": "DateTime"
+            "type": "DateTime",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "StandardDate",
           "case_type_id": "FT_DateTimeFormats",
           "label": "A `Date` field",
           "hint_text": "Date Field",
           "field_type": {
             "id": "Date",
-            "type": "Date"
+            "type": "Date",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "DateTimeField",
           "case_type_id": "FT_DateTimeFormats",
           "label": "yyyy-MM-ddTHH:mm formatted DateTime",
           "hint_text": "DateTime Field",
           "field_type": {
             "id": "DateTime",
-            "type": "DateTime"
+            "type": "DateTime",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "DateField",
           "case_type_id": "FT_DateTimeFormats",
           "label": "MM-yyyy formatted date field",
           "hint_text": "Date Field",
           "field_type": {
             "id": "Date",
-            "type": "Date"
+            "type": "Date",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
+          "metadata": false,
           "id": "MetaLabelField",
           "case_type_id": "FT_DateTimeFormats",
           "label": "[[ANY_STRING_NOT_NULLABLE]]",
+          "hint_text": null,
           "field_type": {
             "id": "Label",
-            "type": "Label"
+            "type": "Label",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
+          "hidden": false,
+          "security_classification": "PUBLIC",
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
           "acls": [
             {
-              "_extends_" : "AllGrantedAccessControlList"
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
             }
-          ]
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
           "metadata": true,
           "id": "[LAST_STATE_MODIFIED_DATE]",
+          "case_type_id": null,
           "label": "Last State Modified Date",
+          "hint_text": null,
           "field_type": {
             "id": "DateTime",
-            "type": "DateTime"
+            "type": "DateTime",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
           "metadata": true,
           "id": "[LAST_MODIFIED_DATE]",
+          "case_type_id": null,
           "label": "Last Modified Date",
+          "hint_text": null,
           "field_type": {
             "id": "DateTime",
-            "type": "DateTime"
+            "type": "DateTime",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
           "metadata": true,
           "id": "[CREATED_DATE]",
+          "case_type_id": null,
           "label": "Created Date",
+          "hint_text": null,
           "field_type": {
             "id": "DateTime",
-            "type": "DateTime"
+            "type": "DateTime",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
           "metadata": true,
           "id": "[JURISDICTION]",
+          "case_type_id": null,
           "label": "Jurisdiction",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
+          "hint_text": null,
+          "field_type": {
+            "id": "Text",
+            "type": "Text",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
           "metadata": true,
           "id": "[CASE_TYPE]",
+          "case_type_id": null,
           "label": "Case Type",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
+          "hint_text": null,
+          "field_type": {
+            "id": "Text",
+            "type": "Text",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
           "metadata": true,
           "id": "[SECURITY_CLASSIFICATION]",
+          "case_type_id": null,
           "label": "Security Classification",
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
+          "hint_text": null,
+          "field_type": {
+            "id": "Text",
+            "type": "Text",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
+          },
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         },
         {
-          "_extends_" : "CaseField",
           "metadata": true,
           "id": "[CASE_REFERENCE]",
+          "case_type_id": null,
           "label": "Case Reference",
+          "hint_text": null,
           "field_type": {
             "id": "Number",
-            "type": "Number"
+            "type": "Number",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [
+            ],
+            "complex_fields": [
+            ],
+            "collection_field_type": null
           },
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+          "acls": [
+          ],
+          "complexACLs": [
+          ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null
         }
       ],
       "printable_document_url": "[[ANYTHING_PRESENT]]",

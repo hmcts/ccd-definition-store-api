@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
@@ -43,7 +42,6 @@ public class JurisdictionServiceImpl implements JurisdictionService {
         return repository.findFirstByReferenceOrderByVersionDesc(reference);
     }
 
-    @Transactional
     @Override
     public List<Jurisdiction> getAll() {
         List<JurisdictionEntity> jurisdictionEntities = repository.findAllLatestVersion();
@@ -53,7 +51,6 @@ public class JurisdictionServiceImpl implements JurisdictionService {
             .collect(toList());
     }
 
-    @Transactional
     @Override
     public List<Jurisdiction> getAll(List<String> references) {
         LOG.debug("retrieving jurisdictions {}", references);

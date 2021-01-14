@@ -1,8 +1,0 @@
-{
-  "_guid_": "BaseComplexFieldType",
-
-  "_extends_": "CommonFieldType",
-
-  "id": "Complex",
-  "type": "Complex"
-}

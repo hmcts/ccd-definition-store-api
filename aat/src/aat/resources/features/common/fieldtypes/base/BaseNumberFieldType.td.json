@@ -1,7 +1,0 @@
-{
-  "_extends_": "CommonFieldType",
-  "_guid_": "BaseNumberFieldType",
-
-  "id": "Number",
-  "type": "Number"
-}

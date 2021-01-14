@@ -1,7 +1,0 @@
-{
-  "_guid_": "BaseDocumentFieldType",
-  "_extends_": "CommonFieldType",
-
-  "id": "Document",
-  "type": "Document"
-}
