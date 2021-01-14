@@ -79,16 +79,6 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
         verify(client).upsertMapping(anyString(), anyString());
     }
 
-    @Test
-    void testMappingGeneration() {
-        CaseTypeEntity caseType = createCaseType();
-
-        String mapping = mappingGenerator.generateMapping(caseType);
-
-        assertThat(mapping, equalToJSONInFile(
-            readFileFromClasspath("integration/case_type_mapping.json")));
-    }
-
     private CaseTypeEntity createCaseType() {
         CaseTypeBuilder caseTypeBuilder = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
         CaseFieldEntity baseTypeField = newTextField("forename").build();
