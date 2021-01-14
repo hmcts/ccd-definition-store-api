@@ -9,19 +9,20 @@ elasticsearch:
   dynamic: ${ELASTIC_SEARCH_DYNAMIC:true}
   elasticMappings:
     disabled: '{"enabled": false}'
-    defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}}'
-    defaultKeyword: '{"type" : "keyword"}'
+    defaultText: '{"type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "lowercase_normalizer"}}}'
+    defaultKeyword: '{"type" : "keyword", "normalizer": "lowercase_normalizer"}'
+    defaultKeywordWithoutNormalizer: '{"type" : "keyword"}'
     defaultDate: '{"type" : "date", "ignore_malformed": true}'
     defaultBoolean: '{"type" : "boolean"}'
     defaultLong: '{"type" : "long"}'
     defaultDouble: '{"type" : "double"}'
-    ccdPhoneUK: '{"type" : "text", "analyzer": "standard", "search_analyzer": "phone_number_analyzer"}'
+    ccdPhoneUK: '{"type" : "text", "analyzer": "phone_number_analyzer"}'
     ccdDocument: '{
                     "properties":{
-                       "document_binary_url":{
+                        "document_binary_url":{
                           "type":"text",
                           "index":false
-                       },
+                        },
                        "document_filename":{
                           "type":"text"
                        },
@@ -38,10 +39,10 @@ elasticsearch:
                             "value": {
                                 "properties": {
                                     "code": {
-                                      "type": "text" , "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}
+                                      "type": "text" , "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "lowercase_normalizer"}}
                                     },
                                     "label": {
-                                      "type": "text" , "fields": { "keyword": { "type": "keyword", "ignore_above": 256}}
+                                      "type": "text" , "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "lowercase_normalizer"}}
                                     }
                                 }
                             },
@@ -92,4 +93,4 @@ elasticsearch:
     '[@timestamp]': ${elasticsearch.elasticMappings.disabled}
     '[@version]': ${elasticsearch.elasticMappings.disabled}
     index_id: ${elasticsearch.elasticMappings.disabled}
-  securityClassificationMapping: ${elasticsearch.elasticMappings.defaultKeyword}
+  securityClassificationMapping: ${elasticsearch.elasticMappings.defaultKeywordWithoutNormalizer}
