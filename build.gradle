@@ -334,7 +334,7 @@ subprojects { subproject ->
         }
     }
 
-    check.dependsOn jacocoTestReport
+
 }
 // end::subprojects[]
 
@@ -406,25 +406,6 @@ task smoke(type: Test, dependsOn: ":aat:smoke")
 
 task functional(type: Test, dependsOn: ":aat:functional")
 
-task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
-
-    // Gather execution data from all subprojects
-    // (change this if you e.g. want to calculate unit test/integration test coverage separately)
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    // Add all relevant sourcesets from the subprojects
-    allprojects.each {
-        sourceSets it.sourceSets.main
-    }
-
-    reports {
-        csv.enabled = false
-        html.enabled = true
-        html.destination = file("${buildDir}/reports/jacoco/html")
-        xml.enabled = true
-        xml.destination = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
-    }
-}
 
 // for cnp pipeline
 task dependencyCheck(dependsOn: dependencyCheckAnalyze)
@@ -437,17 +418,7 @@ repositories {
 dependencies {
     codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
 }
-task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
-    main = "com.codacy.CodacyCoverageReporter"
-    classpath = configurations.codacy
-    args = [
-            "report",
-            "-l",
-            "Java",
-            "-r",
-            "${buildDir}/reports/jacoco/jacocoTestReport.xml"
-    ]
-}
+
 
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
