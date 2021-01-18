@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.springframework.beans.factory.ObjectFactory;
