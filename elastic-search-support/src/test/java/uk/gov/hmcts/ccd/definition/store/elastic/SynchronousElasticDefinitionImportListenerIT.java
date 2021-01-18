@@ -43,78 +43,76 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         deleteElasticsearchIndices(WILDCARD);
     }
 
-    //    @Test
-    //    @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
-    //    void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException, JSONException {
-    //        CaseFieldEntity baseTypeField = newTextField("TextField").build();
-    //        CaseFieldEntity complexField = newComplexField("ComplexField");
-    //        CaseFieldEntity collectionField = newCollectionFieldOfBaseType(
-    //            "CollectionField", "BaseCollectionType");
-    //        CaseFieldEntity complexCollectionField = newCollectionOfComplexField(
-    //            "ComplexCollectionField", "ComplexCollectionType");
-    //
-    //        CaseFieldEntity nonSearchableBaseTypeField = newTextField("NonSearchableTextField")
-    //            .withSearchable(false).build();
-    //        CaseFieldEntity nonSearchableComplexField = newComplexField("NonSearchableComplexField");
-    //        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
-    //            .getComplexFields().get(1).setSearchable(false);
-    //        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
-    //            .getComplexFields().get(2).setSearchable(false);
-    //
-    //        CaseFieldEntity nonSearchableCollectionField = newCollectionField(
-    //            "NonSearchableCollectionField", "NonSearchableCollectionType");
-    //        nonSearchableCollectionField.setSearchable(false);
-    //
-    //        CaseFieldEntity nonSearchableComplexCollectionField = newCollectionOfComplexField(
-    //            "NonSearchableComplexCollectionField", "NonSearchableComplexCollectionType");
-    //        nonSearchableComplexCollectionField.getCollectionFieldType().getComplexFields().get(0).setSearchable(false);
-    //        nonSearchableComplexCollectionField.getCollectionFieldType().getComplexFields().get(2).setSearchable(false);
-    //
-    //        CaseTypeEntity caseTypeEntity = caseTypeBuilder
-    //            .addField(baseTypeField)
-    //            .addField(complexField)
-    //            .addField(collectionField)
-    //            .addField(complexCollectionField)
-    //            .addField(nonSearchableBaseTypeField)
-    //            .addField(nonSearchableComplexField)
-    //            .addField(nonSearchableCollectionField)
-    //            .addField(nonSearchableComplexCollectionField).build();
-    //
-    //        DefinitionImportedEvent event = new DefinitionImportedEvent(Collections.singletonList(caseTypeEntity));
-    //
-    //        definitionImportListener.onDefinitionImported(event);
-    //
-    //        String response = getElasticsearchIndices(CASE_TYPE_A);
-    //
-    //        assertThat(response, equalToJSONInFile(
-    //            readFileFromClasspath("integration/single_casetype_index.json"),
-    //            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))));
-    //    }
+    @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
+    void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException, JSONException {
+        CaseFieldEntity baseTypeField = newTextField("TextField").build();
+        CaseFieldEntity complexField = newComplexField("ComplexField");
+        CaseFieldEntity collectionField = newCollectionFieldOfBaseType(
+            "CollectionField", "BaseCollectionType");
+        CaseFieldEntity complexCollectionField = newCollectionOfComplexField(
+            "ComplexCollectionField", "ComplexCollectionType");
 
-    //    @Test
-    //    void shouldCreateElasticsearchIndexForAllCaseTypes() throws IOException, JSONException {
-    //        CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
-    //        CaseFieldEntity baseTypeField2 = newTextField("TextField2").build();
-    //
-    //        CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
-    //            .addField(baseTypeField1)
-    //            .build();
-    //        CaseTypeEntity caseTypeEntity2 = new CaseTypeBuilder()
-    //            .withJurisdiction("JUR")
-    //            .withReference(CASE_TYPE_B)
-    //            .addField(baseTypeField2)
-    //            .build();
-    //
-    //        DefinitionImportedEvent event = new DefinitionImportedEvent(Arrays.asList(caseTypeEntity1, caseTypeEntity2));
-    //
-    //        definitionImportListener.onDefinitionImported(event);
-    //
-    //        String response = getElasticsearchIndices(CASE_TYPE_A, CASE_TYPE_B);
-    //
-    //        assertThat(response, equalToJSONInFile(
-    //            readFileFromClasspath("integration/multi_casetypes_indices.json"),
-    //            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))));
-    //    }
+        CaseFieldEntity nonSearchableBaseTypeField = newTextField("NonSearchableTextField")
+            .withSearchable(false).build();
+        CaseFieldEntity nonSearchableComplexField = newComplexField("NonSearchableComplexField");
+        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
+            .getComplexFields().get(1).setSearchable(false);
+        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
+            .getComplexFields().get(2).setSearchable(false);
+
+        CaseFieldEntity nonSearchableCollectionField = newCollectionField(
+            "NonSearchableCollectionField", "NonSearchableCollectionType");
+        nonSearchableCollectionField.setSearchable(false);
+
+        CaseFieldEntity nonSearchableComplexCollectionField = newCollectionOfComplexField(
+            "NonSearchableComplexCollectionField", "NonSearchableComplexCollectionType");
+        nonSearchableComplexCollectionField.getCollectionFieldType().getComplexFields().get(0).setSearchable(false);
+        nonSearchableComplexCollectionField.getCollectionFieldType().getComplexFields().get(2).setSearchable(false);
+
+        CaseTypeEntity caseTypeEntity = caseTypeBuilder
+            .addField(baseTypeField)
+            .addField(complexField)
+            .addField(collectionField)
+            .addField(complexCollectionField)
+            .addField(nonSearchableBaseTypeField)
+            .addField(nonSearchableComplexField)
+            .addField(nonSearchableCollectionField)
+            .addField(nonSearchableComplexCollectionField).build();
+
+        DefinitionImportedEvent event = new DefinitionImportedEvent(Collections.singletonList(caseTypeEntity));
+
+        definitionImportListener.onDefinitionImported(event);
+
+        String response = getElasticsearchIndices(CASE_TYPE_A);
+
+        assertThat(response, equalToJSONInFile(
+            readFileFromClasspath("integration/single_casetype_index.json"),
+            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))));
+    }
+
+    void shouldCreateElasticsearchIndexForAllCaseTypes() throws IOException, JSONException {
+        CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
+        CaseFieldEntity baseTypeField2 = newTextField("TextField2").build();
+
+        CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
+            .addField(baseTypeField1)
+            .build();
+        CaseTypeEntity caseTypeEntity2 = new CaseTypeBuilder()
+            .withJurisdiction("JUR")
+            .withReference(CASE_TYPE_B)
+            .addField(baseTypeField2)
+            .build();
+
+        DefinitionImportedEvent event = new DefinitionImportedEvent(Arrays.asList(caseTypeEntity1, caseTypeEntity2));
+
+        definitionImportListener.onDefinitionImported(event);
+
+        String response = getElasticsearchIndices(CASE_TYPE_A, CASE_TYPE_B);
+
+        assertThat(response, equalToJSONInFile(
+            readFileFromClasspath("integration/multi_casetypes_indices.json"),
+            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))));
+    }
 
     private String[] getDynamicIndexResponseFields(String... indexNames) {
         return Arrays.stream(indexNames)
