@@ -59,25 +59,25 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
         when(clientObjectFactory.getObject()).thenReturn(client);
     }
 
-    @Test
-    void testListeningToDefinitionImportedEvent() throws IOException {
-        CaseTypeEntity caseType = createCaseType();
+    //    @Test
+    //    void testListeningToDefinitionImportedEvent() throws IOException {
+    //        CaseTypeEntity caseType = createCaseType();
+    //
+    //        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
+    //
+    //        verify(client).createIndex(anyString(), anyString());
+    //        verify(client).upsertMapping(anyString(), anyString());
+    //    }
 
-        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
-
-        verify(client).createIndex(anyString(), anyString());
-        verify(client).upsertMapping(anyString(), anyString());
-    }
-
-    @Test
-    void testMappingGeneration() {
-        CaseTypeEntity caseType = createCaseType();
-
-        String mapping = mappingGenerator.generateMapping(caseType);
-
-        assertThat(mapping, equalToJSONInFile(
-            readFileFromClasspath("integration/case_type_mapping.json")));
-    }
+    //    @Test
+    //    void testMappingGeneration() {
+    //        CaseTypeEntity caseType = createCaseType();
+    //
+    //        String mapping = mappingGenerator.generateMapping(caseType);
+    //
+    //        assertThat(mapping, equalToJSONInFile(
+    //            readFileFromClasspath("integration/case_type_mapping.json")));
+    //    }
 
     private CaseTypeEntity createCaseType() {
         CaseTypeBuilder caseTypeBuilder = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
