@@ -1,0 +1,17 @@
+java:
+  keyVaults:
+    ccd:
+      secrets:
+        - definition-store-api-POSTGRES-PASS-V11
+        - ccd-definition-s2s-secret
+        - ccd-ELASTIC-SEARCH-URL
+        - ccd-ELASTIC-SEARCH-PASSWORD
+        - storage-account-primary-connection-string
+        - AppInsightsInstrumentationKey
+  environment:
+    FLYWAY_NOOP_STRATEGY: true
+      DEFINITION_STORE_DB_PORT: 5432
+      DEFINITION_STORE_DB_NAME: ccd_definition_store-v11
+      DEFINITION_STORE_DB_HOST: ccd-definition-store-api-postgres-db-v11-{{ .Values.global.environment }}.postgres.database.azure.com
+      DEFINITION_STORE_DB_USERNAME: ccd@ccd-definition-store-api-postgres-db-v11-{{ .Values.global.environment }}
+      DEFINITION_STORE_DB_OPTIONS: "?sslmode=require&gssEncMode=disable"
