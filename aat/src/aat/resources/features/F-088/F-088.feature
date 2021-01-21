@@ -1,5 +1,5 @@
 #===================================================================
-@F-088
+@F-088 @Ignore
 Feature: F-088: Fetch UI Definition Work Basket Results by Case Type
 #===================================================================
 
@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-385
+@S-385 @Ignore
 Scenario: must return the UI definition of work basket results for a given case type
 
     Given a user with [an active profile in CCD]
