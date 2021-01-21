@@ -267,12 +267,14 @@ public interface EntityToResponseDTOMapper {
         static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
             return eventComplexTypeEntity.stream()
                 .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
-                    complexTypeEntity.getHint(),
-                    complexTypeEntity.getLabel(),
-                    complexTypeEntity.getOrder(),
-                    complexTypeEntity.getDisplayContext(),
-                    complexTypeEntity.getShowCondition(),
-                    complexTypeEntity.getDefaultValue()
+                                                                    complexTypeEntity.getHint(),
+                                                                    complexTypeEntity.getLabel(),
+                                                                    complexTypeEntity.getOrder(),
+                                                                    complexTypeEntity.getDisplayContext(),
+                                                                    complexTypeEntity.getShowCondition(),
+                                                                    complexTypeEntity.getDefaultValue(),
+                                                                    complexTypeEntity.getPublish(),
+                                                                    complexTypeEntity.getPublishAs()
                 ))
                 .collect(Collectors.toList());
         }

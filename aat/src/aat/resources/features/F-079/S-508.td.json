@@ -58,6 +58,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -71,6 +73,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             }
@@ -129,6 +133,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -142,6 +148,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -155,6 +163,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -168,6 +178,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -181,6 +193,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -194,6 +208,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -207,6 +223,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -220,6 +238,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -233,6 +253,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             }
@@ -291,6 +313,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -304,6 +328,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -317,6 +343,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -330,6 +358,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -343,6 +373,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -356,6 +388,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -369,6 +403,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -382,6 +418,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -395,6 +433,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             }
@@ -453,6 +493,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -466,6 +508,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -479,6 +523,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -492,6 +538,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -505,6 +553,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -518,6 +568,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -531,6 +583,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -544,6 +598,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             },
@@ -557,6 +613,8 @@
               "show_summary_content_option": null,
               "label": null,
               "hint_text": null,
+              "publish" : false,
+              "publish_as" : null,
               "case_fields_complex": [
               ]
             }

@@ -49,6 +49,8 @@
 					"show_summary_content_option" : null,
 					"label" : null,
 					"hint_text" : null,
+          "publish" : false,
+          "publish_as" : null,
 					"case_fields_complex" : [ ]
 				} ],
 				"pre_states" : [ "CaseCreated" ],
@@ -96,6 +98,8 @@
 					"show_summary_content_option" : null,
 					"label" : null,
 					"hint_text" : null,
+          "publish" : false,
+          "publish_as" : null,
 					"case_fields_complex" : [ ]
 				}, {
 					"case_field_id" : "TextFieldMName",
@@ -107,6 +111,8 @@
 					"show_summary_content_option" : null,
 					"label" : null,
 					"hint_text" : null,
+          "publish" : false,
+          "publish_as" : null,
 					"case_fields_complex" : [ ]
 				}, {
 					"case_field_id" : "TextFieldLName",
@@ -118,6 +124,8 @@
 					"show_summary_content_option" : null,
 					"label" : null,
 					"hint_text" : null,
+          "publish" : false,
+          "publish_as" : null,
 					"case_fields_complex" : [ ]
 				} ],
 				"pre_states" : [ ],
