@@ -10,7 +10,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -90,7 +89,8 @@ public class HiddenFieldsValidator {
             boolean invalidMatch = caseEventToFieldsList.stream()
                 .noneMatch(definitionDataItem1 -> Boolean.TRUE.equals(definitionDataItem1.getRetainHiddenValue()));
             List<DefinitionDataItem> complexType = complexTypes.getDataItems().stream().filter(nestedComplexType ->
-                nestedComplexType.getString(ColumnName.FIELD_TYPE).equals(definitionDataItem.getId())).collect(toList());
+                nestedComplexType.getString(ColumnName.FIELD_TYPE)
+                    .equals(definitionDataItem.getId())).collect(toList());
 
             for (DefinitionDataItem cf : complexType) {
                 List<DefinitionDataItem> caseFieldList =
