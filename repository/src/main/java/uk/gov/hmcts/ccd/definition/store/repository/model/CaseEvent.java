@@ -27,9 +27,11 @@ public class CaseEvent implements HasAcls {
     private SecurityClassification securityClassification;
     private List<AccessControlList> acls = new ArrayList<>();
     private Boolean showSummary = null;
+    private Boolean publish;
     private Boolean showEventNotes = null;
     private Boolean canSaveDraft = null;
     private String endButtonLabel = null;
+    private String eventEnablingCondition;
 
     /**
      * id of a particular case event.
@@ -226,6 +228,16 @@ public class CaseEvent implements HasAcls {
         this.showSummary = showSummary;
     }
 
+    @ApiModelProperty(value = "flag to publish an event to message queue")
+    @JsonProperty("publish")
+    public Boolean getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Boolean publish) {
+        this.publish = publish;
+    }
+
     /**
      * should the event notes be displayed.
      */
@@ -257,5 +269,15 @@ public class CaseEvent implements HasAcls {
 
     public void setCanSaveDraft(Boolean canSaveDraft) {
         this.canSaveDraft = canSaveDraft;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("event_enabling_condition")
+    public String getEventEnablingCondition() {
+        return eventEnablingCondition;
+    }
+
+    public void setEventEnablingCondition(String eventEnablingCondition) {
+        this.eventEnablingCondition = eventEnablingCondition;
     }
 }

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +35,7 @@ public class BaseTypeController {
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
     }
 
+    @Transactional
     @RequestMapping(value = "/base-types", method = RequestMethod.GET, produces = {"application/json"})
     @ApiOperation(value = "Fetch all Base Types", response = FieldType.class, responseContainer = "List")
     @ApiResponses(value = {

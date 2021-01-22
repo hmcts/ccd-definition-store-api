@@ -16,5 +16,5 @@ bootJar {
 }
 
 dependencies {
-    compile "com.fasterxml.jackson.core:jackson-databind:2.10.3"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.11.1"
 }

@@ -120,6 +120,12 @@ public class EventEntity implements Serializable {
     @Column(name = "can_save_draft")
     private Boolean canSaveDraft;
 
+    @Column(name = "event_enabling_condition")
+    private String eventEnablingCondition;
+
+    @Column(name = "publish")
+    private Boolean publish;
+
     public Integer getId() {
         return id;
     }
@@ -298,6 +304,14 @@ public class EventEntity implements Serializable {
         this.canSaveDraft = canSaveDraft;
     }
 
+    public Boolean getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Boolean publish) {
+        this.publish = publish;
+    }
+
     public List<EventPostStateEntity> getPostStates() {
         return postStates;
     }
@@ -325,5 +339,13 @@ public class EventEntity implements Serializable {
     private WebhookEntity getWebhook(WebhookType type) {
         EventWebhookEntity ewh = webhooks.get(type);
         return ewh == null ? null : ewh.getWebhook();
+    }
+
+    public String getEventEnablingCondition() {
+        return eventEnablingCondition;
+    }
+
+    public void setEventEnablingCondition(String eventEnablingCondition) {
+        this.eventEnablingCondition = eventEnablingCondition;
     }
 }

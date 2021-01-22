@@ -36,11 +36,11 @@ dependencies {
     compile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    compile "com.google.guava:guava:28.1-jre"
+    compile "com.google.guava:guava:30.0-jre"
     compile "javax.validation:validation-api:2.0.1.Final"
     compile "org.hibernate.validator:hibernate-validator:6.0.10.Final"
     compile "org.glassfish:javax.el:3.0.0"
-    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.10.3'
+    compile "org.flywaydb:flyway-core:6.5.7"
     testCompile "org.assertj:assertj-core"
     testCompile project(":commons").sourceSets.main.output
     compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.9.13'

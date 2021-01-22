@@ -1,0 +1,18 @@
+{
+  "_guid_": "Get_Operation_Base_Data_on_Definition_Store",
+
+  "productName": "CCD Definition Store",
+  "method": "GET",
+  "users": {
+    "invokingUser": {
+      "_extends_": "MasterCaseworker"
+    }
+  },
+  "request": {
+    "headers": {
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "_guid_": "BaseDynamicListFieldType",
+
+  "_extends_": "CommonFieldType",
+
+  "id": "DynamicList",
+  "type": "DynamicList"
+}
