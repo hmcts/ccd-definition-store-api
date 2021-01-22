@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -68,7 +69,9 @@ public class HiddenFieldsValidator {
                                            Map<String, DefinitionSheet> definitionSheets,
                                            List<DefinitionDataItem> caseField,
                                            List<DefinitionDataItem> caseEventToFieldsList) {
+        DefinitionSheet complexTypes = definitionSheets.get(SheetName.COMPLEX_TYPES.getName());
         DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        DefinitionSheet caseFields = definitionSheets.get(SheetName.CASE_FIELD.getName());
 
         boolean valid = true;
         String caseFieldId = null;
@@ -86,7 +89,29 @@ public class HiddenFieldsValidator {
         if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())) {
             boolean invalidMatch = caseEventToFieldsList.stream()
                 .noneMatch(definitionDataItem1 -> Boolean.TRUE.equals(definitionDataItem1.getRetainHiddenValue()));
-            if (invalidMatch) {
+            List<DefinitionDataItem> complexType = complexTypes.getDataItems().stream().filter(nestedComplexType ->
+                nestedComplexType.getString(ColumnName.FIELD_TYPE).equals(definitionDataItem.getId())).collect(toList());
+
+            for (DefinitionDataItem cf : complexType) {
+                List<DefinitionDataItem> caseFieldList =
+                    caseFields.getDataItems().stream().filter(caseFieldDataItem ->
+                        cf.getId().equals(caseFieldDataItem
+                            .getString(ColumnName.FIELD_TYPE))
+                            || cf.getId().equals(caseFieldDataItem
+                            .getString(ColumnName.FIELD_TYPE_PARAMETER))).collect(toList());
+
+                for (DefinitionDataItem cfl : caseFieldList) {
+                    List<DefinitionDataItem> caseEventToFieldList = caseEventToFields.getDataItems()
+                        .stream().filter(definitionDataItem1 -> cfl.getId()
+                            .equals(definitionDataItem1.getCaseFieldId())).collect(toList());
+                    caseFieldId = cfl.getId();
+                    valid = isSubFieldsIncorrectlyConfigured(definitionDataItem, caseEventToFieldList);
+                    if (valid) {
+                        break;
+                    }
+                }
+            }
+            if (!valid && invalidMatch) {
                 throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or "
                         + "is invalid for fieldID ['%s'] on ['%s']",
                     caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
