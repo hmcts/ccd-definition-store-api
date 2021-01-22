@@ -3,11 +3,11 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
@@ -30,23 +30,24 @@ import static java.lang.String.format;
 public class DisplayGroupAdapterService {
 
     private DisplayGroupRepository displayGroupRepository;
-    private CaseTypeRepository caseTypeRepository;
+    private CaseTypeLiteRepository caseTypeLiteRepository;
     private EventRepository eventRepository;
     private CaseFieldEntityUtil caseFieldEntityUtil;
 
     @Autowired
     public DisplayGroupAdapterService(DisplayGroupRepository displayGroupRepository,
-                                      CaseTypeRepository caseTypeRepository,
+                                      CaseTypeLiteRepository caseTypeLiteRepository,
                                       EventRepository eventRepository,
                                       CaseFieldEntityUtil caseFieldEntityUtil) {
         this.displayGroupRepository = displayGroupRepository;
-        this.caseTypeRepository = caseTypeRepository;
+        this.caseTypeLiteRepository = caseTypeLiteRepository;
         this.eventRepository = eventRepository;
         this.caseFieldEntityUtil = caseFieldEntityUtil;
     }
 
     public WizardPageCollection findWizardPagesByCaseTypeId(String caseTypeReference, String eventReference) {
-        Optional<CaseTypeEntity> caseTypeEntity = caseTypeRepository.findCurrentVersionForReference(caseTypeReference);
+        Optional<CaseTypeLiteEntity> caseTypeEntity =
+            caseTypeLiteRepository.findCurrentVersionForReference(caseTypeReference);
         if (caseTypeEntity.isPresent()) {
             List<EventEntity> events = eventRepository.findByReferenceAndCaseTypeId(
                 eventReference, caseTypeEntity.get().getId());
