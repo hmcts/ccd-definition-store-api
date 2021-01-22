@@ -1676,8 +1676,8 @@ class  EntityToResponseDTOMapperTest {
             return fieldTypeEntity;
         }
 
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        private CaseTypeLiteEntity caseTypeEntity(String reference) {
+            CaseTypeLiteEntity caseTypeEntity = new CaseTypeLiteEntity();
             caseTypeEntity.setReference("Reference");
             return caseTypeEntity;
         }

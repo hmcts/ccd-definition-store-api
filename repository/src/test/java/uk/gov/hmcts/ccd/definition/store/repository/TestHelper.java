@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity.toCaseTypeLiteEntity;
 
 @Component
 public class TestHelper {
@@ -55,6 +58,11 @@ public class TestHelper {
         caseType.setJurisdiction(jurisdictionEntity);
         caseType.setSecurityClassification(SecurityClassification.PUBLIC);
         return this.versionedCaseTypeRepository.save(caseType);
+    }
+
+    public CaseTypeLiteEntity createCaseTypeLiteEntity(String reference, String name) {
+        CaseTypeEntity caseType = createCaseType(reference, name);
+        return toCaseTypeLiteEntity(caseType);
     }
 
     public FieldTypeEntity createType(JurisdictionEntity jurisdiction) {
