@@ -56,18 +56,13 @@ public class SpreadSheetImportTest extends BaseTest {
     private static final String TEST_CASE_TYPE = "TestAddressBookCase";
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
         + TEST_CASE_TYPE;
-    public static final String EXCEL_FILE_NOC_CONFIG = "/CCD_TestDefinition_NOC_CONFIG.xlsx";
     public static final String EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT =
         "/CCD_TestDefinition_Invalid_PostState_NoDefault.xlsx";
     public static final String EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES =
         "/CCD_TestDefinition_Invalid_PostState_DuplicatePriorities.xlsx";
-    public static final String EXCEL_FILE_INVALID_NOC_CONFIG = "/CCD_TestDefinition_Invalid_NOC_CONFIG.xlsx";
-    public static final String EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG =
-        "/CCD_TestDefinition_Invalid_Case_Type_NOC_CONFIG.xlsx";
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
     private static final String RESPONSE_JSON_V45 = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
-    private static final String RESPONSE_JSON_V46 = "GetCaseTypesResponseForCCD_TestDefinition_V46.json";
 
     private Map<Object, Object> caseTypesId;
     private Map<Object, Object> fieldTypesId;
@@ -211,51 +206,6 @@ public class SpreadSheetImportTest extends BaseTest {
             jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
     }
 
-    /**
-     * API test for successful import of a valid Case Definition with Noc Config spreadsheet.
-     *
-     * @throws Exception On error running test
-     */
-    @Test
-    @Transactional
-    public void importValidDefinitionFileContainsNocConfig() throws Exception {
-
-        try (final InputStream inputStream =
-                 new ClassPathResource(EXCEL_FILE_NOC_CONFIG, getClass()).getInputStream()) {
-            MockMultipartFile file = new MockMultipartFile("file", inputStream);
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                .file(file)
-                .header(AUTHORIZATION, "Bearer testUser")) //
-                .andReturn();
-
-            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
-        }
-
-        // Check the HTTP GET request for the imported Case Type returns the correct response.
-        MvcResult getCaseTypesMvcResult = mockMvc.perform(MockMvcRequestBuilders.get(CASE_TYPE_DEF_URL)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
-        assertBody(getCaseTypesMvcResult.getResponse().getContentAsString(), RESPONSE_JSON_V46);
-
-        assertDatabaseIsCorrect();
-        assertNoCConfig();
-    }
-
-    @Test
-    @Transactional
-    public void importInvalidNoCConfigDefinitionFile() throws Exception {
-        InputStream inputStream = new ClassPathResource(EXCEL_FILE_INVALID_NOC_CONFIG,
-            getClass()).getInputStream();
-        final MvcResult result = performAndGetMvcResult(inputStream);
-
-        // Check the error response message.
-        assertThat("Incorrect HTTP status message for bad request",
-            result.getResponse().getContentAsString(),
-            containsString("Only one NoC config is allowed per case type(s) "
-                + "TestAddressBookCase,TestComplexAddressBookCase"));
-    }
-
     @Test
     @Transactional
     public void importInvalidEventPostStateConditionWithNoDefaultState() throws Exception {
@@ -304,20 +254,6 @@ public class SpreadSheetImportTest extends BaseTest {
             .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(resultMatcher)
             .andReturn();
-    }
-
-    @Test
-    @Transactional
-    public void importInvalidCaseTypeNoCConfigDefinitionFile() throws Exception {
-        InputStream inputStream = new ClassPathResource(EXCEL_FILE_INVALID_CASE_TYPE_NOC_CONFIG,
-            getClass()).getInputStream();
-        final MvcResult result = performAndGetMvcResult(inputStream);
-
-        // Check the error response message.
-        assertThat("Incorrect HTTP status message for bad request",
-            result.getResponse().getContentAsString(),
-            containsString(
-                "Unknown Case Type(s) 'TestComplexAddressBookCase1' in worksheet 'NoticeOfChangeConfig'"));
     }
 
     /**

@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation;
 
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
@@ -8,9 +10,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparamet
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class ChallengeQuestionDisplayContextParameterValidator

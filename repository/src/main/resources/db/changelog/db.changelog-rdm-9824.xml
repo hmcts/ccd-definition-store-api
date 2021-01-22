@@ -1,0 +1,13 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="rdm-9824" author="kiran.yenigala@hmcts.net">
+
+        <addUniqueConstraint
+                columnNames="id, case_type_id, display_order, question_id"
+                constraintName="challenge_question_unique_constraint"
+                tableName="challenge_question" />
+
+    </changeSet>
+</databaseChangeLog>
