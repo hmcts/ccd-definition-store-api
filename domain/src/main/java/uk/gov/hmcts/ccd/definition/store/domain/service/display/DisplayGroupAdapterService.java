@@ -141,6 +141,7 @@ public class DisplayGroupAdapterService {
         override.setHintText(eventComplexTypeEntity.getHint());
         override.setShowCondition(eventComplexTypeEntity.getShowCondition());
         override.setDefaultValue(eventComplexTypeEntity.getDefaultValue());
+        override.setRetainHiddenValue(eventComplexTypeEntity.getRetainHiddenValue());
         return override;
     }
 
