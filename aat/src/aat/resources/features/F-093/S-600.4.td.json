@@ -28,7 +28,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "'retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['AddressField'] on ['CaseEventToFields']"
+      "__plainTextValue__" : "'retainHiddenValue' has been incorrectly configured or is invalid for fieldID ['MyCompany'] on ['CaseEventToFields']"
     }
   }
 }
