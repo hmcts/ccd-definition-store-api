@@ -25,8 +25,8 @@ dependencies {
     testCompile project(":domain").sourceSets.main.output
     testCompile project(":repository").sourceSets.test.output
     testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
-    testCompile "org.testcontainers:elasticsearch:1.14.3"
-    testCompile "org.testcontainers:junit-jupiter:1.14.3"
+    testCompile "org.testcontainers:elasticsearch:1.15.1"
+    testCompile "org.testcontainers:junit-jupiter:1.15.1"
 }
 
 pitest {

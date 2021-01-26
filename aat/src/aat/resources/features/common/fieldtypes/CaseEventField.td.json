@@ -1,0 +1,15 @@
+{
+  "_guid_" : "CaseEventField",
+
+  "display_context": "OPTIONAL",
+  "display_context_parameter": null,
+  "retain_hidden_value": null,
+  "show_condition": null,
+  "show_summary_change_option": true,
+  "show_summary_content_option": null,
+  "label": null,
+  "hint_text": null,
+  "publish" : false,
+  "publish_as" : null,
+  "case_fields_complex": []
+}

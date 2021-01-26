@@ -40,16 +40,8 @@
 						"__elementId__": "case_field_id"
 					},
 					{
-					"case_field_id" : "Age",
-					"display_context" : "OPTIONAL",
-					"display_context_parameter" : null,
-					"retain_hidden_value" : null,
-					"show_condition" : null,
-					"show_summary_change_option" : true,
-					"show_summary_content_option" : null,
-					"label" : null,
-					"hint_text" : null,
-					"case_fields_complex" : [ ]
+            "_extends_" : "CaseEventField",
+					  "case_field_id" : "Age"
 				} ],
 				"pre_states" : [ "CaseCreated" ],
 				"post_states" : [ {
@@ -87,38 +79,14 @@
 						"__elementId__": "case_field_id"
 					},
 					{
-					"case_field_id" : "TextFieldFName",
-					"display_context" : "OPTIONAL",
-					"display_context_parameter" : null,
-					"retain_hidden_value" : null,
-					"show_condition" : null,
-					"show_summary_change_option" : true,
-					"show_summary_content_option" : null,
-					"label" : null,
-					"hint_text" : null,
-					"case_fields_complex" : [ ]
+            "_extends_" : "CaseEventField",
+					  "case_field_id" : "TextFieldFName"
 				}, {
-					"case_field_id" : "TextFieldMName",
-					"display_context" : "OPTIONAL",
-					"display_context_parameter" : null,
-					"retain_hidden_value" : null,
-					"show_condition" : null,
-					"show_summary_change_option" : true,
-					"show_summary_content_option" : null,
-					"label" : null,
-					"hint_text" : null,
-					"case_fields_complex" : [ ]
+            "_extends_" : "CaseEventField",
+					  "case_field_id" : "TextFieldMName"
 				}, {
-					"case_field_id" : "TextFieldLName",
-					"display_context" : "OPTIONAL",
-					"display_context_parameter" : null,
-					"retain_hidden_value" : null,
-					"show_condition" : null,
-					"show_summary_change_option" : true,
-					"show_summary_content_option" : null,
-					"label" : null,
-					"hint_text" : null,
-					"case_fields_complex" : [ ]
+            "_extends_" : "CaseEventField",
+					  "case_field_id" : "TextFieldLName"
 				} ],
 				"pre_states" : [ ],
 				"post_states" : [ {

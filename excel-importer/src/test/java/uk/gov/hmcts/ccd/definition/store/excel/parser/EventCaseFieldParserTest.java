@@ -19,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.any;
@@ -69,7 +70,7 @@ public class EventCaseFieldParserTest {
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(
-            caseFieldId, displayContext, originalShowCondition, label, hint, false, null, null);
+            caseFieldId, displayContext, originalShowCondition, label, hint, false, false, null, null);
         when(hiddenFieldsValidator.parseHiddenFields(definitionDataItem)).thenReturn(Boolean.FALSE);
         EventCaseFieldEntity eventCaseFieldEntity = classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem);
 
@@ -77,6 +78,8 @@ public class EventCaseFieldParserTest {
         assertEquals(displayContext.getDisplayContext(), eventCaseFieldEntity.getDisplayContext());
         assertEquals(PARSED_SHOW_CONDITION, eventCaseFieldEntity.getShowCondition());
         assertFalse(eventCaseFieldEntity.getRetainHiddenValue());
+        assertFalse(eventCaseFieldEntity.getPublish());
+        assertNull(eventCaseFieldEntity.getPublishAs());
         assertEquals(label, eventCaseFieldEntity.getLabel());
         assertEquals(hint, eventCaseFieldEntity.getHintText());
 
@@ -95,10 +98,11 @@ public class EventCaseFieldParserTest {
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
         String originalShowCondition = "Original Show Condition";
+        String publishAs = "publishAsTest";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition,
-            null, null, true, null, null);
+            null, null, true, true, publishAs, null);
 
         when(showConditionParser.parseShowCondition(any())).thenThrow(
             new InvalidShowConditionException("")
@@ -110,6 +114,8 @@ public class EventCaseFieldParserTest {
         assertEquals(displayContext.getDisplayContext(), eventCaseFieldEntity.getDisplayContext());
         assertEquals(originalShowCondition, eventCaseFieldEntity.getShowCondition());
         assertTrue(eventCaseFieldEntity.getRetainHiddenValue());
+        assertEquals(Boolean.TRUE, eventCaseFieldEntity.getPublish());
+        assertEquals(publishAs, eventCaseFieldEntity.getPublishAs());
 
         verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(
             eq(eventCaseFieldEntity), eq(definitionDataItem));
@@ -128,7 +134,7 @@ public class EventCaseFieldParserTest {
         DisplayContextColumn displayContext = new DisplayContextColumn("COMPLEX", DisplayContext.COMPLEX);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, null,
-            null, null, true, true, caseEventId);
+            null, null, true, true, null, caseEventId);
 
         MapperException exception = assertThrows(MapperException.class,
             () -> classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem));
@@ -143,6 +149,7 @@ public class EventCaseFieldParserTest {
                                                   String hint,
                                                   Boolean retainHiddenValue,
                                                   Boolean publish,
+                                                  String publishAs,
                                                   String caseEventId) {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
 
@@ -152,8 +159,9 @@ public class EventCaseFieldParserTest {
         when(definitionDataItem.getBoolean(eq(ColumnName.RETAIN_HIDDEN_VALUE))).thenReturn(retainHiddenValue);
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_LABEL)).thenReturn(label);
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_HINT)).thenReturn(hint);
-        when(definitionDataItem.getBoolean(ColumnName.PUBLISH)).thenReturn(publish);
+        when(definitionDataItem.getBooleanOrDefault(ColumnName.PUBLISH, false)).thenReturn(publish);
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_ID)).thenReturn(caseEventId);
+        when(definitionDataItem.getString(ColumnName.PUBLISH_AS)).thenReturn(publishAs);
 
         return definitionDataItem;
     }
