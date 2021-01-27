@@ -3,22 +3,29 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser {
 
     private final ShowConditionParser showConditionParser;
+    private final HiddenFieldsValidator hiddenFieldsValidator;
 
-    public EventCaseFieldComplexTypeParser(ShowConditionParser showConditionParser) {
+    public EventCaseFieldComplexTypeParser(ShowConditionParser showConditionParser,
+                                           HiddenFieldsValidator hiddenFieldsValidator) {
         this.showConditionParser = showConditionParser;
+        this.hiddenFieldsValidator = hiddenFieldsValidator;
     }
 
-    public List<EventComplexTypeEntity> parseEventCaseFieldComplexType(List<DefinitionDataItem> dataItems) {
+    public List<EventComplexTypeEntity> parseEventCaseFieldComplexType(List<DefinitionDataItem> dataItems,
+                                                                       Map<String, DefinitionSheet> definitionSheets) {
 
         List<EventComplexTypeEntity> eventComplexTypeEntities = new ArrayList<>();
         for (DefinitionDataItem definitionDataItem : dataItems) {
@@ -37,6 +44,8 @@ public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser
             eventComplexTypeEntity.setShowCondition(parseShowCondition(
                 definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
             eventComplexTypeEntities.add(eventComplexTypeEntity);
+            eventComplexTypeEntity.setRetainHiddenValue(hiddenFieldsValidator
+                .parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets));
         }
         return eventComplexTypeEntities;
     }
