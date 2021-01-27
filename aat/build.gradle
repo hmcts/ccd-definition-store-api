@@ -1,5 +1,5 @@
 apply plugin: 'com.github.spacialcircumstances.gradle-cucumber-reporting'
-//apply plugin: 'info.solidsoft.pitest'
+ //apply plugin: 'info.solidsoft.pitest'
 
 dependencyCheck {
     suppressionFile = "${rootDir}/dependency-check-suppressions.xml"
