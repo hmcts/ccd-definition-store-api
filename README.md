@@ -48,6 +48,9 @@ The following environment variables are required:
 
 The project uses [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html). 
 
+This project uses [TestContainers](https://www.testcontainers.org/usage/database_containers.html#jdbc-url) for the database testing support.
+Docker must be installed on the machine you are running tests. 
+
 To build project please execute the following command:
 
 ```bash
