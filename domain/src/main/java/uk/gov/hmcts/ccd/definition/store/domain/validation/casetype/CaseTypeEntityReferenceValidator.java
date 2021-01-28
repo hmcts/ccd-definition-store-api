@@ -32,7 +32,7 @@ public class CaseTypeEntityReferenceValidator implements CaseTypeEntityValidator
         return validationResult;
     }
 
-    public static class ReferenceValidationError extends ValidationError {
+    private static class ReferenceValidationError extends ValidationError {
         public ReferenceValidationError(String defaultMessage) {
             super(defaultMessage);
         }
