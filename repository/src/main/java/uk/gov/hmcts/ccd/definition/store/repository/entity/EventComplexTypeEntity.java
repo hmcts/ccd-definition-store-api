@@ -69,6 +69,7 @@ public class EventComplexTypeEntity implements Serializable {
 
     @Column(name = "publish_as")
     private String publishAs;
+
     @Column(name = "retain_hidden_value")
     private Boolean retainHiddenValue;
 
