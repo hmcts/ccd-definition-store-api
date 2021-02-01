@@ -167,6 +167,7 @@ public class EventComplexTypeEntity implements Serializable {
 
     public void setPublishAs(String publishAs) {
         this.publishAs = publishAs;
+    }
 
     public Boolean getRetainHiddenValue() {
         return retainHiddenValue;
