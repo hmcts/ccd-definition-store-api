@@ -19,6 +19,8 @@ public class CaseEventField {
     private Integer showSummaryContentOption = null;
     private String label = null;
     private String hintText = null;
+    private Boolean publish;
+    private String publishAs;
     private List<CaseEventFieldComplex> caseEventFieldComplex = new ArrayList<>();
 
     /**
@@ -136,6 +138,32 @@ public class CaseEventField {
 
     public void setRetainHiddenValue(Boolean retainHiddenValue) {
         this.retainHiddenValue = retainHiddenValue;
+    }
+
+    /**
+     * whenever we want to publish this event field.
+     **/
+    @ApiModelProperty(value = "whenever we want to publish this event field")
+    @JsonProperty("publish")
+    public Boolean getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Boolean publish) {
+        this.publish = publish;
+    }
+
+    /**
+     * the form of this event field we want to publish.
+     **/
+    @ApiModelProperty(value = "the form of this event field we want to publish")
+    @JsonProperty("publish_as")
+    public String getPublishAs() {
+        return publishAs;
+    }
+
+    public void setPublishAs(String publishAs) {
+        this.publishAs = publishAs;
     }
 
     @ApiModelProperty(value = "")
