@@ -52,6 +52,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.Generic
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.userprofile.UserProfileValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.util.PublishFieldError;
 
 public interface ValidationErrorMessageCreator {
 
@@ -119,6 +120,8 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(EventComplexTypeEntityDefaultValueError
                                   eventComplexTypeEntityDefaultValueError);
+
+    String createErrorMessage(PublishFieldError publishError);
 
     String createErrorMessage(EventEntityMissingForPageTypeDisplayGroupError
                                   eventEntityMissingForPageTypeDisplayGroupError);

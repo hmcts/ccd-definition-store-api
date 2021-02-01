@@ -206,6 +206,7 @@ subprojects { subproject ->
         compile "org.springframework.boot:spring-boot-starter-oauth2-client"
         compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
         compile "com.nimbusds:nimbus-jose-jwt"
+
         implementation "io.github.openfeign:feign-httpclient:10.7.0"
 
         compile('org.springframework.boot:spring-boot-starter-web')
@@ -223,6 +224,7 @@ subprojects { subproject ->
         compile (group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0') {
             exclude group: 'com.google.guava', module: 'guava'
         }
+        compile "org.bouncycastle:bcprov-jdk15on:1.61", "org.bouncycastle:bcpkix-jdk15on:1.61"
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
@@ -457,6 +459,7 @@ cucumberReports {
 task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     baselineOnMigrate = true
     baselineVersion = '0001'
+    ignoreMissingMigrations = true
     if (project.hasProperty("dburl")) {
         url = "jdbc:postgresql://${dburl}"
     }
