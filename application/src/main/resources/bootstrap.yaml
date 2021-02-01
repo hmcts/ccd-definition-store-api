@@ -7,6 +7,6 @@ spring:
         ccd-definition-s2s-secret: DEFINITION_STORE_IDAM_KEY
         ccd-ELASTIC-SEARCH-URL: ELASTIC_SEARCH_HOST
         ccd-ELASTIC-SEARCH-PASSWORD: ELASTIC_SEARCH_PASSWORD
-        definition-store-api-POSTGRES-PASS-V11: DEFINITION_STORE_DB_PASSWORD
+        definition-store-api-POSTGRES-PASS: DEFINITION_STORE_DB_PASSWORD
         storage-account-primary-connection-string: AZURE_STORAGE_CONNECTION_STRING
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
