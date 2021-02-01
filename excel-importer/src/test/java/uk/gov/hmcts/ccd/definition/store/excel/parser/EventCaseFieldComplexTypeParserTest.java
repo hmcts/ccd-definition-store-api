@@ -93,6 +93,7 @@ public class EventCaseFieldComplexTypeParserTest {
                      eventComplexTypeEntities.get(0).getPublish());
         assertEquals(definitionDataItem.getString(ColumnName.PUBLISH_AS),
                      eventComplexTypeEntities.get(0).getPublishAs());
+        assertFalse(eventComplexTypeEntities.get(0).getRetainHiddenValue());
     }
 
     private DefinitionDataItem definitionDataItem(String caseFieldId,
@@ -117,6 +118,7 @@ public class EventCaseFieldComplexTypeParserTest {
         when(definitionDataItem.getString(ColumnName.LIST_ELEMENT_CODE)).thenReturn(REFERENCE_ID);
         when(definitionDataItem.getBooleanOrDefault(ColumnName.PUBLISH, false)).thenReturn(publish);
         when(definitionDataItem.getString(ColumnName.PUBLISH_AS)).thenReturn(publishAs);
+        when(definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE)).thenReturn(false);
         return definitionDataItem;
     }
 }
