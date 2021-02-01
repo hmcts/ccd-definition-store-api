@@ -69,6 +69,8 @@ public class EventComplexTypeEntity implements Serializable {
 
     @Column(name = "publish_as")
     private String publishAs;
+    @Column(name = "retain_hidden_value")
+    private Boolean retainHiddenValue;
 
     public String getReference() {
         return reference;
@@ -164,5 +166,13 @@ public class EventComplexTypeEntity implements Serializable {
 
     public void setPublishAs(String publishAs) {
         this.publishAs = publishAs;
+    }
+
+    public Boolean getRetainHiddenValue() {
+        return retainHiddenValue;
+    }
+
+    public void setRetainHiddenValue(Boolean retainHiddenValue) {
+        this.retainHiddenValue = retainHiddenValue;
     }
 }
