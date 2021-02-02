@@ -1,5 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -36,6 +43,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
@@ -66,20 +74,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
+import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfile;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -1673,6 +1674,52 @@ class  EntityToResponseDTOMapperTest {
         private CaseTypeEntity caseTypeEntity(String reference) {
             CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
             caseTypeEntity.setReference("Reference");
+            return caseTypeEntity;
+        }
+    }
+
+    @Nested
+    @DisplayName("Should return RoleToAccessProfile model whose fields match those in the RoleToAccessProfileEntity")
+    class MapRoleToAccessProfilesTests {
+
+        @Test
+        void testMapRoleToAccessProfileEntity() {
+            RoleToAccessProfileEntity roleToAccessProfileEntity = new RoleToAccessProfileEntity();
+            roleToAccessProfileEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+
+
+            RoleToAccessProfile roleToAccessProfile = classUnderTest.map(roleToAccessProfileEntity);
+
+            assertEquals(roleToAccessProfile.getCaseTypeId(), roleToAccessProfileEntity.getCaseType().getReference());
+            assertEquals(roleToAccessProfile.getRoleName(), roleToAccessProfileEntity.getRoleName());
+            assertEquals(roleToAccessProfile.getLiveTo(), roleToAccessProfileEntity.getLiveTo());
+            assertEquals(roleToAccessProfile.getLiveFrom(), roleToAccessProfileEntity.getLiveFrom());
+            assertEquals(roleToAccessProfile.getReadOnly(), roleToAccessProfileEntity.getReadOnly());
+            assertEquals(roleToAccessProfile.getDisabled(), roleToAccessProfileEntity.getDisabled());
+            assertEquals(roleToAccessProfile.getAuthorisation(), roleToAccessProfileEntity.getAuthorisation());
+            assertEquals(roleToAccessProfile.getAccessProfiles(), roleToAccessProfileEntity.getAccessProfiles());
+        }
+
+        @Test
+        void testMapEmptyRoleToAccessProfileEntity() {
+            RoleToAccessProfileEntity roleToAccessProfileEntity = new RoleToAccessProfileEntity();
+
+            RoleToAccessProfile roleToAccessProfile = classUnderTest.map(roleToAccessProfileEntity);
+
+            assertNull(roleToAccessProfile.getAccessProfiles());
+            assertNull(roleToAccessProfile.getCaseTypeId());
+            assertNull(roleToAccessProfile.getAuthorisation());
+            assertNull(roleToAccessProfile.getDisabled());
+            assertNull(roleToAccessProfile.getReadOnly());
+            assertNull(roleToAccessProfile.getLiveFrom());
+            assertNull(roleToAccessProfile.getLiveTo());
+            assertNull(roleToAccessProfile.getRoleName());
+        }
+
+
+        private CaseTypeEntity caseTypeEntity(String reference) {
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference(reference);
             return caseTypeEntity;
         }
     }

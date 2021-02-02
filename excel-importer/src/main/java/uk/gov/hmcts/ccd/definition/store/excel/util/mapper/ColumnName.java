@@ -89,7 +89,12 @@ public enum ColumnName {
     CHALLENGE_QUESTION_ANSWER_FIELD_TYPE("AnswerFieldType"),
     CHALLENGE_QUESTION_CASE_ROLE_ID("CaseRoleId"),
     CHALLENGE_QUESTION_QUESTION_ID("QuestionId"),
-    CHALLENGE_QUESTION_ANSWER_FIELD("Answer");
+    CHALLENGE_QUESTION_ANSWER_FIELD("Answer"),
+    ROLE_NAME("RoleName"),
+    AUTHORISATION("Authorisation"),
+    READ_ONLY("ReadOnly"),
+    DISABLED("Disabled"),
+    ACCESS_PROFILES("AccessProfiles");
 
     private final String name;
 
