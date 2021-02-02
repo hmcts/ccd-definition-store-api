@@ -60,6 +60,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout.Generic
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.userprofile.UserProfileValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.util.PublishFieldError;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -410,6 +411,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
 
     @Override
     public String createErrorMessage(EventComplexTypeEntityDefaultValueError error) {
+        return error.toString();
+    }
+
+    @Override
+    public String createErrorMessage(PublishFieldError error) {
         return error.toString();
     }
 
