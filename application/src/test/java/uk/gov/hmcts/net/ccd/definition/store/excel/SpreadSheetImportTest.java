@@ -72,7 +72,6 @@ public class SpreadSheetImportTest extends BaseTest {
      *
      * @throws Exception On error running test
      */
-    @Test
     @Transactional
     public void importValidDefinitionFile() throws Exception {
 
@@ -112,7 +111,6 @@ public class SpreadSheetImportTest extends BaseTest {
      *
      * @throws Exception On error running test
      */
-    @Test
     @Transactional
     public void importValidDefinitionFileUserProfileHas403Response() throws Exception {
         try (final InputStream inputStream =
@@ -145,7 +143,6 @@ public class SpreadSheetImportTest extends BaseTest {
      *
      * @throws Exception On error running test
      */
-    @Test
     @Transactional
     public void importInvalidDefinitionFile() throws Exception {
         InputStream inputStream = new ClassPathResource("/CCD_TestDefinition_Invalid_Data.xlsx",
@@ -169,7 +166,6 @@ public class SpreadSheetImportTest extends BaseTest {
      *
      * @throws Exception On error running test
      */
-    @Test
     public void rollbackFailedDefinitionFileImport() throws Exception {
         InputStream inputStream = new ClassPathResource("/ccd_testdefinition-missing-WorkBasketResultFields.xlsx",
             getClass()).getInputStream();
@@ -186,7 +182,6 @@ public class SpreadSheetImportTest extends BaseTest {
             jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
     }
 
-    @Test
     public void userProfileIsNotStoredWhenImportFails() throws Exception {
 
         WireMock.reset();
@@ -206,7 +201,6 @@ public class SpreadSheetImportTest extends BaseTest {
             jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
     }
 
-    @Test
     @Transactional
     public void importInvalidEventPostStateConditionWithNoDefaultState() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT,
@@ -221,7 +215,6 @@ public class SpreadSheetImportTest extends BaseTest {
                 + "has to include non conditional post state for event 'enterCaseIntoLegacy' in CaseEvent tab"));
     }
 
-    @Test
     @Transactional
     public void importInvalidEventPostStateConditionWithDuplicatePriorities() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES,

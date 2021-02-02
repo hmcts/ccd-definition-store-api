@@ -29,7 +29,6 @@ public class BaseTypeControllerTests extends BaseTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
-    @Test
     public void getBaseTypesTest() throws Exception {
 
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(GET_BASE_TYPES))

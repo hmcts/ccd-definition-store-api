@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SwaggerGeneratorTest extends BaseTest {
 
     @DisplayName("Generate swagger documentation for all APIs")
-    @Test
     public void generateDocs() throws Exception {
         ResultActions perform = mockMvc.perform(get("/v2/api-docs"));
         byte[] specs = perform

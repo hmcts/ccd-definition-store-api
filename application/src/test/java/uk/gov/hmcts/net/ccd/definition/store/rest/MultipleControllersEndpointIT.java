@@ -47,7 +47,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
     private static final String JURISDICTIONS_URL = "/api/data/jurisdictions";
     private static final String CASE_TYPE_URL = "/api/data/case-type/%s";
 
-    @Test
     public void shouldReturnCaseType() throws Exception {
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
@@ -91,7 +90,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     // To be @Nested - DisplayAPI Controller
-    @Test
     public void shouldReturnThreeWorkbasketInputFieldsForTestAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -121,7 +119,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
         );
     }
 
-    @Test
     public void shouldReturnTabsForTestAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -157,7 +154,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
         );
     }
 
-    @Test
     public void shouldReturnThreeWizardPagesForTestAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -189,7 +185,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
         );
     }
 
-    @Test
     public void shouldReturnSingleWizardPageForTestComplexAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -221,7 +216,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     // To be @Nested - UserRoleController
-    @Test
     public void shouldReturnUserRolesForDefinedRoles() throws Exception {
         final String URL = String.format(ROLES_URL, "CaseWorker1,CaseWorker2,CaseWorker3,Nayab,Fatih,Andrzej,Mario");
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
@@ -238,7 +232,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
         );
     }
 
-    @Test
     public void shouldSaveUserRole() throws Exception {
         final String URL = ROLES_URL.substring(0, ROLES_URL.length() - 4);
         MvcResult result = mockMvc
@@ -259,7 +252,6 @@ public class MultipleControllersEndpointIT extends BaseTest {
         );
     }
 
-    @Test
     public void shouldReturnNoUserRolesWhenUndefinedRolesQueried() throws Exception {
         final String URL = String.format(ROLES_URL, "Nayab,Fatih,Andrzej,Mario");
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
@@ -274,12 +266,10 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     // To be @Nested - CaseDefinition Controller
-    @Test
     public void shouldReturnJurisdictionsUpperCase() throws Exception {
         shouldReturnJurisdictions("TEST");
     }
 
-    @Test
     public void shouldReturnJurisdictionsLowerCase() throws Exception {
         shouldReturnJurisdictions("test");
     }
