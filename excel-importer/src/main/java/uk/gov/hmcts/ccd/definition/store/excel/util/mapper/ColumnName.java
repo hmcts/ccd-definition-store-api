@@ -60,6 +60,7 @@ public enum ColumnName {
     SHUTTERED("Shuttered"),
     SHOW_SUMMARY("ShowSummary"),
     PUBLISH("Publish"),
+    PUBLISH_AS("PublishAs"),
     SHOW_EVENT_NOTES("ShowEventNotes"),
     SHOW_SUMMARY_CHANGE_OPTION("ShowSummaryChangeOption"),
     SHOW_SUMMARY_CONTENT_OPTION("ShowSummaryContentOption"),

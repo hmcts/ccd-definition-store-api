@@ -50,10 +50,12 @@ public class EventCaseFieldComplexTypeParserTest {
         String label = "label";
         String hint = "hint";
         String displayContextParameter = "Display Context Parameter";
+        String publishAsTest = "publishAsTest";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
-        DefinitionDataItem definitionDataItem = definitionDataItem(
-            caseFieldId, displayContext, originalShowCondition, label, hint, displayContextParameter);
+        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition,
+                                                                   label, hint, displayContextParameter, true,
+                                                                   publishAsTest);
 
         List<DefinitionDataItem> definitionDataItems = singletonList(definitionDataItem);
 
@@ -74,6 +76,11 @@ public class EventCaseFieldComplexTypeParserTest {
         assertEquals(definitionDataItem.getInteger(ColumnName.FIELD_DISPLAY_ORDER),
             eventComplexTypeEntities.get(0).getOrder());
         assertEquals(DisplayContext.OPTIONAL, eventComplexTypeEntities.get(0).getDisplayContext());
+        assertEquals(definitionDataItem.getBooleanOrDefault(ColumnName.PUBLISH, false),
+                     eventComplexTypeEntities.get(0).getPublish());
+        assertEquals(definitionDataItem.getString(ColumnName.PUBLISH_AS),
+                     eventComplexTypeEntities.get(0).getPublishAs());
+        assertFalse(eventComplexTypeEntities.get(0).getRetainHiddenValue());
     }
 
     private DefinitionDataItem definitionDataItem(String caseFieldId,
@@ -81,7 +88,9 @@ public class EventCaseFieldComplexTypeParserTest {
                                                   String showCondition,
                                                   String label,
                                                   String hint,
-                                                  String displayContextParameter) {
+                                                  String displayContextParameter,
+                                                  Boolean publish,
+                                                  String publishAs) {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
 
         when(definitionDataItem.getString(eq(ColumnName.CASE_FIELD_ID))).thenReturn(caseFieldId);
@@ -94,6 +103,9 @@ public class EventCaseFieldComplexTypeParserTest {
         when(definitionDataItem.getLocalDate(ColumnName.LIVE_FROM)).thenReturn(LIVE_FROM);
         when(definitionDataItem.getLocalDate(ColumnName.LIVE_TO)).thenReturn(LIVE_TO);
         when(definitionDataItem.getString(ColumnName.LIST_ELEMENT_CODE)).thenReturn(REFERENCE_ID);
+        when(definitionDataItem.getBooleanOrDefault(ColumnName.PUBLISH, false)).thenReturn(publish);
+        when(definitionDataItem.getString(ColumnName.PUBLISH_AS)).thenReturn(publishAs);
+        when(definitionDataItem.getBoolean(ColumnName.RETAIN_HIDDEN_VALUE)).thenReturn(false);
         return definitionDataItem;
     }
 }

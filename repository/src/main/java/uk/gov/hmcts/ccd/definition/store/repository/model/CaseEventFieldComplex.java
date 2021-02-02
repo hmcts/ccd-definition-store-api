@@ -18,6 +18,10 @@ public class CaseEventFieldComplex {
 
     private String defaultValue;
 
+    private Boolean publish;
+
+    private String publishAs;
+
     public CaseEventFieldComplex() {
     }
 
@@ -27,7 +31,9 @@ public class CaseEventFieldComplex {
                                  Integer order,
                                  DisplayContext displayContext,
                                  String showCondition,
-                                 String defaultValue) {
+                                 String defaultValue,
+                                 Boolean publish,
+                                 String publishAs) {
         this.reference = reference;
         this.hint = hint;
         this.label = label;
@@ -35,6 +41,8 @@ public class CaseEventFieldComplex {
         this.displayContext = displayContext;
         this.showCondition = showCondition;
         this.defaultValue = defaultValue;
+        this.publish = publish;
+        this.publishAs = publishAs;
     }
 
     public String getReference() {
@@ -87,5 +95,21 @@ public class CaseEventFieldComplex {
 
     public String getDefaultValue() {
         return defaultValue;
+    }
+
+    public Boolean getPublish() {
+        return publish;
+    }
+
+    public void setPublish(Boolean publish) {
+        this.publish = publish;
+    }
+
+    public String getPublishAs() {
+        return publishAs;
+    }
+
+    public void setPublishAs(String publishAs) {
+        this.publishAs = publishAs;
     }
 }

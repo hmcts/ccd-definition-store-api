@@ -35,16 +35,9 @@
 				"description" : "Create a case",
 				"order" : 1,
 				"case_fields" : [ {
+          "_extends_" : "CaseEventField",
 					"case_field_id" : "TextField",
-					"display_context" : "MANDATORY",
-					"display_context_parameter" : null,
-					"retain_hidden_value" : null,
-					"show_condition" : null,
-					"show_summary_change_option" : true,
-					"show_summary_content_option" : null,
-					"label" : null,
-					"hint_text" : null,
-					"case_fields_complex" : [ ]
+					"display_context" : "MANDATORY"
 				} ],
 				"pre_states" : [ ],
 				"post_states" : [ {

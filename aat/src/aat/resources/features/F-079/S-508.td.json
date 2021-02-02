@@ -137,13 +137,13 @@
             },
             {
               "_extends_" : "CaseEventField",
-              "case_field_id": "ComplexDateTime",
-              "display_context": "READONLY"
+              "display_context": "READONLY",
+              "case_field_id": "ComplexDateTime"
             },
             {
               "_extends_" : "CaseEventField",
-              "case_field_id": "CollectionComplexDateTime",
-              "display_context": "READONLY"
+              "display_context": "READONLY",
+              "case_field_id": "CollectionComplexDateTime"
             }
           ],
           "pre_states": [
