@@ -86,16 +86,6 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
         Assertions.assertThrows(ValidationException.class, () -> parser.parse(definitionSheets, parseContext));
     }
 
-    @Test
-    void shouldThrowExceptionWhenAccessProfileNotFound() {
-        when(parseContext.getRole(anyString(), anyString())).thenReturn(Optional.empty());
-        definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_1,
-            "Test Role 1", "judge", "Y", "N"));
-        definitionSheet.addDataItem(buildDefinitionDataItem("InvalidCaseTypeId3",
-            "Test Role 2", "solicitor", "Y", "TT"));
-        Assertions.assertThrows(ValidationException.class, () -> parser.parse(definitionSheets, parseContext));
-    }
-
     private DefinitionDataItem buildDefinitionDataItem(String caseTypeId,
                                                        String roleName, String accessProfiles,
                                                        String readOnly, String disabled) {

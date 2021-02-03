@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
@@ -22,10 +24,12 @@ public class AccessProfileValidator {
 
     private void validate(RoleToAccessProfileEntity entity,
                          ParseContext parseContext) {
+        ValidationResult validationResult = new ValidationResult();
         String accessProfiles = entity.getAccessProfiles();
         String caseTypeRef = entity.getCaseType().getReference();
         if (StringUtils.isEmpty(accessProfiles)) {
-            throw new InvalidImportException("Access Profiles should not be null or empty");
+            createErrorMessage(validationResult, "Access Profiles should not be null or empty");
+            throw new ValidationException(validationResult);
         }
 
         Arrays.stream(accessProfiles.split(","))
@@ -33,8 +37,18 @@ public class AccessProfileValidator {
                 Optional<UserRoleEntity> userRoleEntity = parseContext.getRole(caseTypeRef, accessProfile);
                 if (userRoleEntity.isEmpty()) {
                     String message = String.format("Access Profile '%s' not found", accessProfile);
-                    throw new InvalidImportException(message);
+                    createErrorMessage(validationResult, message);
+                    throw new ValidationException(validationResult);
                 }
             });
+    }
+
+    private void createErrorMessage(ValidationResult validationResult, String message) {
+        validationResult.addError(new ValidationError(message) {
+            @Override
+            public String toString() {
+                return getDefaultMessage();
+            }
+        });
     }
 }
