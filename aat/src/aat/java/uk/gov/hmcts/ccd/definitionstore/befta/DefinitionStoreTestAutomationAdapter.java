@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definitionstore.befta;
 
-import io.restassured.RestAssured;
 import uk.gov.hmcts.befta.BeftaMain;
 import uk.gov.hmcts.befta.DefaultTestAutomationAdapter;
 import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
@@ -19,14 +18,6 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
             return key.toString().replace("no_dynamic_injection_","");
         }
         return super.calculateCustomValue(scenarioContext, key);
-    }
-
-
-    @Override
-    public void doLoadTestData() {
-        RestAssured.useRelaxedHTTPSValidation();
-        loader.addCcdRoles();
-        loader.importDefinitions();
     }
 
 }
