@@ -19,6 +19,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -80,7 +81,7 @@ public class EventCaseFieldComplexTypeParserTest {
                      eventComplexTypeEntities.get(0).getPublish());
         assertEquals(definitionDataItem.getString(ColumnName.PUBLISH_AS),
                      eventComplexTypeEntities.get(0).getPublishAs());
-        assertFalse(eventComplexTypeEntities.get(0).getRetainHiddenValue());
+        assertNull(eventComplexTypeEntities.get(0).getRetainHiddenValue());
     }
 
     private DefinitionDataItem definitionDataItem(String caseFieldId,
