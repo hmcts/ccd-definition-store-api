@@ -1,7 +1,7 @@
 {
 	"_guid_": "S-096.5",
 	"_extends_": "F-096_Test_Base_data",
-	"title": "Must successfully import a definition file containing  a valid Role to access profiles",
+	"title": "Must successfully import a definition file containing a valid Role to access profiles",
 	"specs": [
 		"an active profile in CCD",
 		"contains a valid role to access profiles"

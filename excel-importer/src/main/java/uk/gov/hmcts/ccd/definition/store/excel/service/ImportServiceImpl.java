@@ -38,6 +38,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.AccessProfileValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -50,6 +51,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
@@ -282,8 +284,11 @@ public class ImportServiceImpl implements ImportService {
         if (definitionSheets.get(SheetName.ROLE_TO_ACCESS_PROFILES.getName()) != null) {
             logger.debug("Importing spreadsheet: RoleToAccessProfiles...");
             final RoleToAccessProfilesParser parser = parserFactory.createRoleToAccessProfilesParser();
+            List<RoleToAccessProfileEntity> accessProfileEntities = parser.parse(definitionSheets, parseContext);
+            final AccessProfileValidator accessProfileValidator = parserFactory.createAccessProfileValidator();
+            accessProfileValidator.validate(accessProfileEntities, parseContext);
 
-            roleToAccessProfileService.saveAll(parser.parse(definitionSheets, parseContext));
+            roleToAccessProfileService.saveAll(accessProfileEntities);
             logger.debug("Importing spreadsheet: RoleToAccessProfiles...: OK");
         }
     }

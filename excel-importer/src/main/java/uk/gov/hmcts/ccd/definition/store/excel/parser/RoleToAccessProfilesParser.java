@@ -1,11 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -16,7 +13,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 public class RoleToAccessProfilesParser {
 
@@ -59,26 +55,9 @@ public class RoleToAccessProfilesParser {
         roleToAccessProfileEntity.setReadOnly(definitionDataItem.getBoolean(ColumnName.READ_ONLY));
         roleToAccessProfileEntity.setDisabled(definitionDataItem.getBoolean(ColumnName.DISABLED));
         String accessProfiles = definitionDataItem.getString(ColumnName.ACCESS_PROFILES);
-        validateAccessProfiles(caseType, accessProfiles, parseContext);
         roleToAccessProfileEntity.setAccessProfiles(accessProfiles);
         roleToAccessProfileEntity.setAuthorisation(definitionDataItem.getString(ColumnName.AUTHORISATION));
 
         return roleToAccessProfileEntity;
-    }
-
-    private void validateAccessProfiles(String caseType,
-                                        String accessProfiles,
-                                        ParseContext parseContext) {
-        if (StringUtils.isEmpty(accessProfiles)) {
-            throw new InvalidImportException("Access Profiles should not be null or empty");
-        }
-
-        Arrays.stream(accessProfiles.split(","))
-            .forEach(accessProfile -> {
-                Optional<UserRoleEntity> userRoleEntity = parseContext.getRole(caseType, accessProfile);
-                if (userRoleEntity.isEmpty()) {
-                    throw new InvalidImportException(String.format("Access Profile '%s' not found", accessProfile));
-                }
-            });
     }
 }
