@@ -2,13 +2,17 @@ package uk.gov.hmcts.ccd.definition.store.elastic.endpoint;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
@@ -48,10 +52,22 @@ public class ElasticsearchIndexController {
         @ApiResponse(code = 400, message = "An error occurred during creation of indices"),
         @ApiResponse(code = 404, message = "Endpoint is disabled")
     })
-    public IndicesCreationResult createElasticsearchIndices() {
-        log.info("Creating Elasticsearch indices for latest versions of all known case types.");
-        List<CaseTypeEntity> allCaseTypes = caseTypeRepository.findAllLatestVersions();
-        elasticDefinitionImportListener.initialiseElasticSearch(allCaseTypes);
-        return new IndicesCreationResult(allCaseTypes);
+    public IndicesCreationResult createElasticsearchIndices(@ApiParam("Comma separated list of case types for which "
+                                                            + " Elastic indices should be created. If no values are "
+                                                            + "provided, all case types' indices are created.")
+                                                            @RequestParam(value = "ctid", required = false)
+                                                            List<String> caseTypeIds) {
+        log.info("Creating Elasticsearch indices for latest versions of case types.");
+        List<CaseTypeEntity> caseTypesToIndex = CollectionUtils.isEmpty(caseTypeIds)
+            ? caseTypeRepository.findAllLatestVersions()
+            : caseTypeRepository.findAllLatestVersions(caseTypeIds);
+        elasticDefinitionImportListener.initialiseElasticSearch(caseTypesToIndex);
+        return new IndicesCreationResult(caseTypesToIndex);
+    }
+
+    @GetMapping("/elastic-support/case-types")
+    @ApiOperation("Returns the list of unique case type references across all jurisdictions.")
+    public List<String> getAllCaseTypeReferences() {
+        return caseTypeRepository.findAllCaseTypeIds();
     }
 }
