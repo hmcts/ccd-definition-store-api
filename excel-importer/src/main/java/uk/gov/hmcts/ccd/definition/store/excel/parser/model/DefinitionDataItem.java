@@ -205,6 +205,14 @@ public class DefinitionDataItem {
         return getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
     }
 
+    public String getFieldShowCondition() {
+        return getString(ColumnName.FIELD_SHOW_CONDITION);
+    }
+
+    public String getCaseEventId() {
+        return getString(ColumnName.CASE_EVENT_ID);
+    }
+
     public String getCaseFieldId() {
         return getString(ColumnName.CASE_FIELD_ID) != null ? getString(ColumnName.CASE_FIELD_ID) :
             new StringBuilder()
