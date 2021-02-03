@@ -49,7 +49,7 @@ Feature: F-New: 'Retain hidden field'
     Given an appropriate test context as detailed in the test data source
     When a user with [permissions to import case definition files]
     And a request is prepared with appropriate values
-    And the request [contains incorrectly configured 'retainHiddenValue' column, see notes below]
+    And the request [contains incorrectly configured 'retainHiddenValue' column, invalid value in the retainHiddenValue column]
     And it is submitted to call the [POST Case Definition File] operation of [CCD Definition Store Api]
     Then a negative response is received
     And the response has all the details as expected

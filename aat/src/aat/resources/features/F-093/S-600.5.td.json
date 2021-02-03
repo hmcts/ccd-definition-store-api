@@ -3,7 +3,7 @@
   "_extends_": "F-093_Test_Base_data",
   "title": "must fail to import definition file",
   "specs": [
-    "contains configuration on the 'retainHiddenValue' column for a field that does not contain a showCondition",
+    "contains incorrectly configured 'retainHiddenValue' column, invalid value in the retainHiddenValue column",
     "provides a clear validation message describing why the definition import has failed, for example, \"'retainHiddenValue' has been incorrectly configured or is invalid for fieldID [FieldID] on [TabName]\""
   ],
   "request": {
