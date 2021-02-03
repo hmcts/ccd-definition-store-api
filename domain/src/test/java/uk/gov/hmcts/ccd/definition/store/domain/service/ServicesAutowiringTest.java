@@ -59,6 +59,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionUiConfigRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -348,6 +349,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public SearchAliasFieldRepository searchAliasFieldRepository() {
             return mock(SearchAliasFieldRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public RoleToAccessProfileRepository roleToAccessProfileRepository() {
+            return mock(RoleToAccessProfileRepository.class);
         }
     }
 }
