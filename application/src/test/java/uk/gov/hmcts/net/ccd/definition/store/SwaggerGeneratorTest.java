@@ -1,6 +1,5 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.test.web.servlet.ResultActions;
 

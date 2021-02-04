@@ -1,7 +1,6 @@
 package uk.gov.hmcts.net.ccd.definition.store.rest;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
