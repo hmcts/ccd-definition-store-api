@@ -4,7 +4,7 @@
 	"title": "Must return a negative response in an attempt to import a definition file containing invalid disabled value in RoleToAccessProfiles",
 	"specs": [
 		"an active profile in CCD",
-		"contains conditional event post state with missing priority"
+		"contains invalid disabled value"
 	],
   "request": {
     "body": {
