@@ -52,8 +52,8 @@ public class RoleToAccessProfilesParser {
         roleToAccessProfileEntity.setRoleName(definitionDataItem.getString(ColumnName.ROLE_NAME));
         roleToAccessProfileEntity.setLiveFrom(definitionDataItem.getDate(ColumnName.LIVE_FROM));
         roleToAccessProfileEntity.setLiveTo(definitionDataItem.getDate(ColumnName.LIVE_TO));
-        roleToAccessProfileEntity.setReadOnly(definitionDataItem.getBoolean(ColumnName.READ_ONLY));
-        roleToAccessProfileEntity.setDisabled(definitionDataItem.getBoolean(ColumnName.DISABLED));
+        roleToAccessProfileEntity.setReadOnly(definitionDataItem.getBooleanOrDefault(ColumnName.READ_ONLY, false));
+        roleToAccessProfileEntity.setDisabled(definitionDataItem.getBooleanOrDefault(ColumnName.DISABLED, false));
         String accessProfiles = definitionDataItem.getString(ColumnName.ACCESS_PROFILES);
         roleToAccessProfileEntity.setAccessProfiles(accessProfiles);
         roleToAccessProfileEntity.setAuthorisation(definitionDataItem.getString(ColumnName.AUTHORISATION));

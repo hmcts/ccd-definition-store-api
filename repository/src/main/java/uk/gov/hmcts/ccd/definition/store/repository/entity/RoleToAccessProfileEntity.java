@@ -42,10 +42,10 @@ public class RoleToAccessProfileEntity implements Serializable {
     private String accessProfiles;
 
     @Column(name = "read_only")
-    private Boolean readOnly = false;
+    private Boolean readOnly;
 
     @Column(name = "disabled")
-    private Boolean disabled = false;
+    private Boolean disabled;
 
     public Integer getId() {
         return id;
