@@ -1,5 +1,5 @@
 @F-093
-Feature: F-New: 'Retain hidden field'
+Feature: F-093: 'Retain hidden field'
 
   Background:
     Given an appropriate test context as detailed in the test data source
