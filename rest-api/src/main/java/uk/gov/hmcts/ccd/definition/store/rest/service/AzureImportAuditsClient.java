@@ -14,6 +14,7 @@ import com.microsoft.azure.storage.blob.ListBlobItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
@@ -61,7 +62,7 @@ public class AzureImportAuditsClient {
      * @return import audits in reverse chronological order based on AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT
      * @throws StorageException Exception thrown when trying to connect to Azure Blob store
      */
-
+    @Transactional
     public List<ImportAudit> fetchLatestImportAudits() throws StorageException {
 
         List<ImportAudit> audits = new ArrayList<>();

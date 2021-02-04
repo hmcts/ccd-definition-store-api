@@ -1,0 +1,7 @@
+{
+  "_extends_": "CommonFieldType",
+  "_guid_": "BaseEmailFieldType",
+
+  "id": "Email",
+  "type": "Email"
+}

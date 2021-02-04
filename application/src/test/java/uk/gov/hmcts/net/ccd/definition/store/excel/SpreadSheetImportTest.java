@@ -747,9 +747,4 @@ public class SpreadSheetImportTest extends BaseTest {
         return jdbcTemplate.queryForObject("SELECT id FROM jurisdiction WHERE reference = 'TEST' AND version = 1",
             Integer.class);
     }
-
-    private void assertNoCConfig() {
-        List<Map<String, Object>> nocConfig = jdbcTemplate.queryForList("SELECT * FROM noc_config");
-        assertThat(nocConfig, hasSize(1));
-    }
 }
