@@ -21,14 +21,10 @@
     "responseMessage": "Bad Request",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
-      "Content-Type": "application/json"
+      "Content-Type": "[[ANYTHING_PRESENT]]"
     },
     "body" : {
-      "timestamp" : "[[ANYTHING_PRESENT]]",
-      "status" : 400,
-      "error" : "Bad Request",
-      "message" : "Invalid value 'INVALID' is found in column 'Disabled' in the sheet 'RoleToAccessProfiles'",
-      "path" : "/import"
+      "__plainTextValue__" : "Invalid value 'INVALID' is found in column 'Disabled' in the sheet 'RoleToAccessProfiles'"
     }
   }
 }
