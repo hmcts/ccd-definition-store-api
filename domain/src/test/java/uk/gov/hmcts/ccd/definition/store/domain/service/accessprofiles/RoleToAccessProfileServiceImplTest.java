@@ -100,7 +100,8 @@ class RoleToAccessProfileServiceImplTest {
         doReturn("CaseTYPE_1").when(caseTypeEntity).getReference();
 
         RoleToAccessProfileEntity roleToAccessProfileEntityDB = mock(RoleToAccessProfileEntity.class);
-        doReturn(Optional.of(roleToAccessProfileEntityDB)).when(repository).findByRoleNmeAndCaseType(anyString(), anyString());
+        doReturn(Optional.of(roleToAccessProfileEntityDB)).when(repository)
+            .findByRoleNmeAndCaseType(anyString(), anyString());
 
         classUnderTest.saveAll(Lists.newArrayList(roleToAccessProfileEntity));
         verify(roleToAccessProfileEntityDB, times(1)).copy(eq(roleToAccessProfileEntity));
