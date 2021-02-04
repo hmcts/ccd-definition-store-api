@@ -11,6 +11,7 @@ public class WizardPageComplexFieldOverride {
     private String hintText;
     private String showCondition;
     private String defaultValue;
+    private Boolean retainHiddenValue;
 
     @JsonProperty("complex_field_element_id")
     public String getComplexFieldElementId() {
@@ -28,6 +29,15 @@ public class WizardPageComplexFieldOverride {
 
     public void setDisplayContext(String displayContext) {
         this.displayContext = displayContext;
+    }
+
+    @JsonProperty("retain_hidden_value")
+    public Boolean getRetainHiddenValue() {
+        return retainHiddenValue;
+    }
+
+    public void setRetainHiddenValue(Boolean retainHiddenValue) {
+        this.retainHiddenValue = retainHiddenValue;
     }
 
     @JsonProperty("label")

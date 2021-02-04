@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -80,6 +73,14 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -122,6 +123,8 @@ class  EntityToResponseDTOMapperTest {
             eventCaseFieldEntity.setShowSummaryContentOption(2);
             eventCaseFieldEntity.setDisplayContext(DisplayContext.MANDATORY);
             eventCaseFieldEntity.setRetainHiddenValue(true);
+            eventCaseFieldEntity.setPublish(true);
+            eventCaseFieldEntity.setPublishAs("PublishAs test");
 
             CaseEventField caseEventField = spyOnClassUnderTest.map(
                 eventCaseFieldEntity
@@ -129,16 +132,20 @@ class  EntityToResponseDTOMapperTest {
 
             assertAll(
                 () -> assertEquals("displayContext", eventCaseFieldEntity.getDisplayContext().name(),
-                    caseEventField.getDisplayContext()),
+                                   caseEventField.getDisplayContext()),
                 () -> assertEquals("showCondition", eventCaseFieldEntity.getShowCondition(),
-                    caseEventField.getShowCondition()),
+                                   caseEventField.getShowCondition()),
                 () -> assertEquals("showSummaryChangeOption", eventCaseFieldEntity.getShowSummaryChangeOption(),
-                    caseEventField.getShowSummaryChangeOption()),
+                                   caseEventField.getShowSummaryChangeOption()),
                 () -> assertEquals("showSummaryContentOption",
-                    eventCaseFieldEntity.getShowSummaryContentOption(),
-                    caseEventField.getShowSummaryContentOption()),
+                                   eventCaseFieldEntity.getShowSummaryContentOption(),
+                                   caseEventField.getShowSummaryContentOption()),
                 () -> assertEquals("retainHiddenValue", eventCaseFieldEntity.getRetainHiddenValue(),
-                    caseEventField.getRetainHiddenValue())
+                                   caseEventField.getRetainHiddenValue()),
+                () -> assertEquals("publish", eventCaseFieldEntity.getPublish(),
+                                   caseEventField.getPublish()),
+                () -> assertEquals("publishAs", eventCaseFieldEntity.getPublishAs(),
+                                   caseEventField.getPublishAs())
             );
         }
 
@@ -150,6 +157,9 @@ class  EntityToResponseDTOMapperTest {
             eventComplexTypeEntity1.setShowCondition("PersonFirstName=\"Anna\"");
             eventComplexTypeEntity1.setOrder(1);
             eventComplexTypeEntity1.setDisplayContext(DisplayContext.MANDATORY);
+            eventComplexTypeEntity1.setHint("Hint text");
+            eventComplexTypeEntity1.setPublish(true);
+            eventComplexTypeEntity1.setPublishAs("PublishAs text");
             eventComplexTypeEntity1.setHint("Hint text");
             eventComplexTypeEntity1.setLabel("Label text");
             eventComplexTypeEntity1.setDefaultValue("DefaultValue1");
@@ -190,6 +200,14 @@ class  EntityToResponseDTOMapperTest {
                 () -> assertEquals("DefaultValue1",
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDefaultValue(),
                     findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDefaultValue()),
+
+                () -> assertEquals("publish",
+                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getPublish(),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getPublish()),
+
+                () -> assertEquals("publishAs",
+                    findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getPublishAs(),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getPublishAs()),
 
                 () -> assertEquals("order",
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getOrder(),
