@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,9 +24,24 @@ public class RoleToAccessProfileServiceImpl implements RoleToAccessProfileServic
         this.dtoMapper = dtoMapper;
     }
 
+    private void save(RoleToAccessProfileEntity entity) {
+        String caseTypeReference = entity.getCaseType().getReference();
+        Optional<RoleToAccessProfileEntity> entityDBObj = repository
+            .findByRoleNmeAndCaseType(entity.getRoleName(), caseTypeReference);
+
+        RoleToAccessProfileEntity dbEntity = entity;
+        if (entityDBObj.isPresent()) {
+            dbEntity = entityDBObj.get();
+            dbEntity.copy(entity);
+        }
+        this.repository.save(dbEntity);
+    }
+
     @Override
-    public void saveAll(List<RoleToAccessProfileEntity> entity) {
-        repository.saveAll(entity);
+    public void saveAll(List<RoleToAccessProfileEntity> entityList) {
+        entityList
+            .stream()
+            .forEach(entity -> save(entity));
     }
 
     @Override

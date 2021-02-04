@@ -34,3 +34,5 @@ ALTER SEQUENCE public.role_to_access_profile_id_seq OWNED BY public.role_to_acce
 ALTER TABLE ONLY public.role_to_access_profile
 ADD CONSTRAINT fk_case_field_role_to_access_profile FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
+ALTER TABLE ONLY public.role_to_access_profile
+ADD CONSTRAINT unique_role_name_case_type_id_role_to_access_profile UNIQUE (role_name, case_type_id);

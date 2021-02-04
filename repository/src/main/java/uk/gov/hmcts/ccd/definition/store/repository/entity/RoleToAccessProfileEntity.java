@@ -42,10 +42,10 @@ public class RoleToAccessProfileEntity implements Serializable {
     private String accessProfiles;
 
     @Column(name = "read_only")
-    private Boolean readOnly;
+    private Boolean readOnly = false;
 
     @Column(name = "disabled")
-    private Boolean disabled;
+    private Boolean disabled = false;
 
     public Integer getId() {
         return id;
@@ -117,5 +117,15 @@ public class RoleToAccessProfileEntity implements Serializable {
 
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
+    }
+
+    public void copy(RoleToAccessProfileEntity entity) {
+        this.setAuthorisation(entity.getAuthorisation());
+        this.setLiveTo(entity.getLiveTo());
+        this.setLiveFrom(entity.getLiveFrom());
+        this.setReadOnly(entity.getReadOnly());
+        this.setDisabled(entity.getDisabled());
+        this.setAccessProfiles(entity.getAccessProfiles());
+        this.setCaseType(entity.getCaseType());
     }
 }

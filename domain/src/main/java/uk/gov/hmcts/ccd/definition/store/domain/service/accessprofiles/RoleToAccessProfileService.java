@@ -6,7 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfile;
 
 public interface RoleToAccessProfileService {
 
-    void saveAll(List<RoleToAccessProfileEntity> entity);
+    void saveAll(List<RoleToAccessProfileEntity> entityList);
 
     List<RoleToAccessProfile> findByRoleName(String roleName);
 
