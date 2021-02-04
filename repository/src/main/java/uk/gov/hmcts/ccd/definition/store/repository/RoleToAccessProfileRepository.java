@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,8 +14,4 @@ public interface RoleToAccessProfileRepository extends JpaRepository<RoleToAcces
     @Query("select ap from RoleToAccessProfileEntity ap where ap.roleName in :roleName")
     List<RoleToAccessProfileEntity> findByRoleNme(@Param("roleName") String roleName);
 
-    @Query("select ap from RoleToAccessProfileEntity ap where ap.roleName = :roleName"
-        + " and ap.caseType.reference = :caseTypeReference")
-    Optional<RoleToAccessProfileEntity> findByRoleNmeAndCaseType(@Param("roleName") String roleName,
-                                                                 @Param("caseTypeReference") String caseTypeReference);
 }

@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -80,32 +79,10 @@ class RoleToAccessProfileServiceImplTest {
         "Should save the passed entities")
     void shouldSaveEntity() {
         RoleToAccessProfileEntity roleToAccessProfileEntity = mock(RoleToAccessProfileEntity.class);
-        CaseTypeEntity caseTypeEntity = mock(CaseTypeEntity.class);
-        doReturn(caseTypeEntity).when(roleToAccessProfileEntity).getCaseType();
-        doReturn("CaseTYPE_1").when(caseTypeEntity).getReference();
-        classUnderTest.saveAll(Lists.newArrayList(roleToAccessProfileEntity));
-        verify(repository, times(1)).save(eq(roleToAccessProfileEntity));
-    }
-
-    @Test
-    @DisplayName(
-        "Should Save role to access profiles and invoke coppy")
-    void shouldSaveCopyRoleToAccessProfilesEntity() {
-        RoleToAccessProfileEntity roleToAccessProfileEntity = mock(RoleToAccessProfileEntity.class);
         List<RoleToAccessProfileEntity> entitiesToSave = new ArrayList<>();
         entitiesToSave.add(roleToAccessProfileEntity);
-        CaseTypeEntity caseTypeEntity = mock(CaseTypeEntity.class);
-        doReturn(caseTypeEntity).when(roleToAccessProfileEntity).getCaseType();
-        doReturn("TestRole").when(roleToAccessProfileEntity).getRoleName();
-        doReturn("CaseTYPE_1").when(caseTypeEntity).getReference();
-
-        RoleToAccessProfileEntity roleToAccessProfileEntityDB = mock(RoleToAccessProfileEntity.class);
-        doReturn(Optional.of(roleToAccessProfileEntityDB)).when(repository)
-            .findByRoleNmeAndCaseType(anyString(), anyString());
-
-        classUnderTest.saveAll(Lists.newArrayList(roleToAccessProfileEntity));
-        verify(roleToAccessProfileEntityDB, times(1)).copy(eq(roleToAccessProfileEntity));
-        verify(repository, times(1)).save(eq(roleToAccessProfileEntityDB));
+        classUnderTest.saveAll(entitiesToSave);
+        verify(repository, times(1)).saveAll(eq(entitiesToSave));
     }
 
     private RoleToAccessProfileEntity createRoleToAccessProfile(String roleName, String accessProfiles) {

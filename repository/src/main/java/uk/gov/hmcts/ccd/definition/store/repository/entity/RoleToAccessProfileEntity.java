@@ -118,14 +118,4 @@ public class RoleToAccessProfileEntity implements Serializable {
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
     }
-
-    public void copy(RoleToAccessProfileEntity entity) {
-        this.setAuthorisation(entity.getAuthorisation());
-        this.setLiveTo(entity.getLiveTo());
-        this.setLiveFrom(entity.getLiveFrom());
-        this.setReadOnly(entity.getReadOnly());
-        this.setDisabled(entity.getDisabled());
-        this.setAccessProfiles(entity.getAccessProfiles());
-        this.setCaseType(entity.getCaseType());
-    }
 }
