@@ -1,0 +1,7 @@
+{
+  "_guid_": "BaseCasePaymentHistoryViewerFieldType",
+  "_extends_": "CommonFieldType",
+
+  "id": "CasePaymentHistoryViewer",
+  "type": "CasePaymentHistoryViewer"
+}

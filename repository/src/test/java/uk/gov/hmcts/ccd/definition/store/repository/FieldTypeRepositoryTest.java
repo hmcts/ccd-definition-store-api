@@ -36,6 +36,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -222,7 +223,7 @@ public class FieldTypeRepositoryTest {
 
         List<FieldTypeEntity> predefinedComplexTypes = fieldTypeRepository.findPredefinedComplexTypes();
 
-        assertEquals(8, predefinedComplexTypes.size());
+        assertEquals(9, predefinedComplexTypes.size());
 
         assertThat(predefinedComplexTypes, hasItems(
             fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL),
@@ -231,7 +232,8 @@ public class FieldTypeRepositoryTest {
             fieldTypeWithReference(PREDEFINED_COMPLEX_ORDER_SUMMARY),
             fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION),
             fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION_POLICY),
-            fieldTypeWithReference(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST)
+            fieldTypeWithReference(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION)
             )
         );
     }
