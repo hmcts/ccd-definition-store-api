@@ -35,6 +35,9 @@ public class ApplicationParams {
     @Value("${case.event.default.publish:false}")
     private boolean defaultPublish;
 
+    @Value("${role.to.access.profiles.mapping:false}")
+    private boolean roleToAccessProfileMapping;
+
     public boolean isDefaultPublish() {
         return defaultPublish;
     }
@@ -65,6 +68,10 @@ public class ApplicationParams {
 
     public Integer getAzureImportAuditsGetLimit() {
         return Integer.valueOf(azureImportAuditsGetLimit);
+    }
+
+    public boolean isRoleToAccessProfileMapping() {
+        return roleToAccessProfileMapping;
     }
 
     @PostConstruct

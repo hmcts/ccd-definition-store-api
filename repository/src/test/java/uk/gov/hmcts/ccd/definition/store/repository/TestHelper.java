@@ -3,9 +3,13 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
@@ -13,6 +17,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+
+import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
 @Component
 public class TestHelper {
@@ -128,5 +134,75 @@ public class TestHelper {
         definitionEntity.setAuthor("ccd@hmcts");
         definitionEntity.setDeleted(false);
         return definitionEntity;
+    }
+
+    public CaseTypeEntity createCaseTypeEntity(String reference, String name, Integer version, JurisdictionEntity jurisdiction) {
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference(reference);
+        caseType.setName(name);
+        caseType.setVersion(version);
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(PUBLIC);
+        return caseType;
+    }
+
+    public CaseTypeEntity createCaseTypeEntityWithCaseTypeACL(String reference,
+                                                               String name,
+                                                               Integer version,
+                                                               JurisdictionEntity jurisdiction,
+                                                               Collection<CaseTypeACLEntity> caseTypeACLList) {
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference(reference);
+        caseType.setName(name);
+        caseType.setVersion(version);
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(PUBLIC);
+        caseType.addCaseTypeACLEntities(caseTypeACLList);
+        return caseType;
+    }
+
+    public Collection<CaseTypeACLEntity> createCaseTypeACL() {
+        CaseTypeACLEntity caseTypeACLWithCreateOnly = caseTypeACLWithUserRoleEntity(
+            "role-with-create-only", true, false, false, false,
+            "User Role 1", "User Role 1", SecurityClassification.RESTRICTED);
+        CaseTypeACLEntity caseTypeACLWithReadOnly = caseTypeACLWithUserRoleEntity(
+            "role-with-read-only", false, true, false, false,
+            "User Role 2", "User Role 2", SecurityClassification.PRIVATE);
+        CaseTypeACLEntity caseTypeACLWithUpdateOnly = caseTypeACLWithUserRoleEntity(
+            "role-with-update-only", false, false, true, false,
+            "User Role 3", "User Role 3", SecurityClassification.RESTRICTED);
+        CaseTypeACLEntity caseTypeACLWithDeleteOnly = caseTypeACLWithUserRoleEntity(
+            "role-with-delete-only", false, false, false, true,
+            "User Role 4", "User Role 4", SecurityClassification.PUBLIC);
+        return (Arrays.asList(
+            caseTypeACLWithCreateOnly, caseTypeACLWithReadOnly, caseTypeACLWithUpdateOnly, caseTypeACLWithDeleteOnly));
+    }
+
+    public Collection<CaseTypeACLEntity> createCaseTypeACLWithFullAccess() {
+        CaseTypeACLEntity caseTypeACLWithFullAccess = caseTypeACLWithUserRoleEntity(
+            "role-with-full-access", true, true, true, true,
+            "User Role Full Access", "User Role Full Access", SecurityClassification.PUBLIC);
+        return (Collections.singletonList(caseTypeACLWithFullAccess));
+    }
+
+    public CaseTypeACLEntity caseTypeACLWithUserRoleEntity(String reference,
+                                                            Boolean create,
+                                                            Boolean read,
+                                                            Boolean update,
+                                                            Boolean delete,
+                                                            String userRoleReference,
+                                                            String userRoleName,
+                                                            SecurityClassification sc) {
+        CaseTypeACLEntity caseTypeACLEntity = new CaseTypeACLEntity();
+        caseTypeACLEntity.setUserRole(createUserRoleEntity(userRoleReference, userRoleName, sc));
+        caseTypeACLEntity.setCreate(create);
+        caseTypeACLEntity.setRead(read);
+        caseTypeACLEntity.setUpdate(update);
+        caseTypeACLEntity.setDelete(delete);
+        return caseTypeACLEntity;
+    }
+
+    private UserRoleEntity createUserRoleEntity(String reference, String userRoleName, SecurityClassification sc) {
+        return createUserRole(reference, userRoleName, sc);
     }
 }
