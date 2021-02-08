@@ -49,30 +49,12 @@
               "__elementId__": "case_field_id"
             },
             {
-              "case_field_id": "DateField",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "_extends_" : "CaseEventField",
+              "case_field_id": "DateField"
             },
             {
-              "case_field_id": "DateTimeField",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "_extends_" : "CaseEventField",
+              "case_field_id": "DateTimeField"
             }
           ],
           "pre_states": [
@@ -120,121 +102,51 @@
               "__elementId__": "case_field_id"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "MetaLabelField",
-              "display_context": "READONLY",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context": "READONLY"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "DateField",
               "display_context": "READONLY",
-              "display_context_parameter": "#DATETIMEDISPLAY(MM-yyyy)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context_parameter": "#DATETIMEDISPLAY(MM-yyyy)"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "DateTimeField",
               "display_context": "READONLY",
-              "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd'T'HH:mm)"
             },
             {
-              "case_field_id": "StandardDate",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "_extends_" : "CaseEventField",
+              "case_field_id": "StandardDate"
             },
             {
-              "case_field_id": "StandardDateTime",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "_extends_" : "CaseEventField",
+              "case_field_id": "StandardDateTime"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDate",
               "display_context": "READONLY",
-              "display_context_parameter": "#DATETIMEDISPLAY(dd-MM-yyyy)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context_parameter": "#DATETIMEDISPLAY(dd-MM-yyyy)"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDateTime",
               "display_context": "READONLY",
-              "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context_parameter": "#DATETIMEDISPLAY(yyyy-MM-dd)"
             },
             {
-              "case_field_id": "ComplexDateTime",
+              "_extends_" : "CaseEventField",
               "display_context": "READONLY",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_field_id": "ComplexDateTime"
             },
             {
-              "case_field_id": "CollectionComplexDateTime",
+              "_extends_" : "CaseEventField",
               "display_context": "READONLY",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "case_field_id": "CollectionComplexDateTime"
             }
           ],
           "pre_states": [
@@ -282,121 +194,45 @@
               "__elementId__": "case_field_id"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "MetaLabelField",
-              "display_context": "READONLY",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context": "READONLY"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "DateField",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "DateTimeField",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": "#DATETIMEENTRY(yyyy-mm-dd'T-'HH:mm)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context_parameter": "#DATETIMEENTRY(yyyy-mm-dd'T-'HH:mm)"
             },
             {
-              "case_field_id": "StandardDate",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "_extends_" : "CaseEventField",
+              "case_field_id": "StandardDate"
             },
             {
-              "case_field_id": "StandardDateTime",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "_extends_" : "CaseEventField",
+              "case_field_id": "StandardDateTime"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDate",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context_parameter": "#DATETIMEENTRY(dd-MM-yyyy)"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDateTime",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": "#DATETIMEENTRY(yyyy-MM-dd)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "display_context_parameter": "#DATETIMEENTRY(yyyy-MM-dd)"
             },
             {
-              "case_field_id": "ComplexDateTime",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "_extends_" : "CaseEventField",
+              "case_field_id": "ComplexDateTime"
             },
             {
-              "case_field_id": "CollectionComplexDateTime",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": true,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "_extends_" : "CaseEventField",
+              "case_field_id": "CollectionComplexDateTime"
             }
           ],
           "pre_states": [
@@ -444,121 +280,54 @@
               "__elementId__": "case_field_id"
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "MetaLabelField",
               "display_context": "READONLY",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": false,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "show_summary_change_option": false
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "DateField",
-              "display_context": "OPTIONAL",
               "display_context_parameter": "#DATETIMEENTRY(dd)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": false,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "show_summary_change_option": false
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "DateTimeField",
-              "display_context": "OPTIONAL",
               "display_context_parameter": "#DATETIMEENTRY(yyyy-mm-dd)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": false,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "show_summary_change_option": false
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "StandardDate",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": false,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "show_summary_change_option": false
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "StandardDateTime",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": false,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "show_summary_change_option": false
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDate",
-              "display_context": "OPTIONAL",
               "display_context_parameter": "#DATETIMEENTRY(MM)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": false,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "show_summary_change_option": false
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionDateTime",
-              "display_context": "OPTIONAL",
               "display_context_parameter": "#DATETIMEENTRY(yyyy-MM)",
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": false,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "show_summary_change_option": false
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "ComplexDateTime",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": false,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "show_summary_change_option": false
             },
             {
+              "_extends_" : "CaseEventField",
               "case_field_id": "CollectionComplexDateTime",
-              "display_context": "OPTIONAL",
-              "display_context_parameter": null,
-              "retain_hidden_value": null,
-              "show_condition": null,
-              "show_summary_change_option": false,
-              "show_summary_content_option": null,
-              "label": null,
-              "hint_text": null,
-              "case_fields_complex": [
-              ]
+              "show_summary_change_option": false
             }
           ],
           "pre_states": [
