@@ -116,7 +116,9 @@ class RoleToAccessProfileMappingServiceImplTest {
         when(caseTypeRepository.findCurrentVersionForReference(anyString())).thenReturn(Optional.of(caseTypeEntity));
 
         when(getCaseTypeRolesRepository.findCaseTypeRoles(anyInt()))
-            .thenReturn(Sets.newHashSet("caseworker-divorce-master", "caseworker-divorce-master-1", "caseworker-divorce-master-2"));
+            .thenReturn(Sets.newHashSet("caseworker-divorce-master",
+                "caseworker-divorce-master-1",
+                "caseworker-divorce-master-2"));
 
         RoleToAccessProfileEntity roleToAccessProfileEntity = mock(RoleToAccessProfileEntity.class);
         when(roleToAccessProfileEntity.getRoleName()).thenReturn("caseworker-divorce-master-1");

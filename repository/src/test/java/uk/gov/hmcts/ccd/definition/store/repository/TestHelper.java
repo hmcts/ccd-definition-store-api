@@ -136,7 +136,10 @@ public class TestHelper {
         return definitionEntity;
     }
 
-    public CaseTypeEntity createCaseTypeEntity(String reference, String name, Integer version, JurisdictionEntity jurisdiction) {
+    public CaseTypeEntity createCaseTypeEntity(String reference,
+                                               String name,
+                                               Integer version,
+                                               JurisdictionEntity jurisdiction) {
         final CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference(reference);
         caseType.setName(name);

@@ -39,7 +39,8 @@ public class RoleToAccessProfileController {
     public ResponseEntity createAccessProfileMapping(@ApiParam(value = "Comma separated list of case type ID(s) "
         + "or empty if the mapping should be applied on any existing case type", required = true)
                                                          @RequestParam("ctid") List<String> caseTypeIds) {
-        String message = this.roleToAccessProfileMappingService.createAccessProfileMapping(Sets.newHashSet(caseTypeIds));
+        String message = this.roleToAccessProfileMappingService
+            .createAccessProfileMapping(Sets.newHashSet(caseTypeIds));
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 

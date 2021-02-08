@@ -68,7 +68,7 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
         return MAPPING_NOT_REQUIRED;
     }
 
-    private Set<String>  filterMappingCompletedRoles(String caseTypeReference, Set<String> caseTypeRoles) {
+    private Set<String> filterMappingCompletedRoles(String caseTypeReference, Set<String> caseTypeRoles) {
         List<RoleToAccessProfileEntity> caseTypeMappings = roleToAccessProfileRepository
             .findByCaseTypeReference(Lists.newArrayList(caseTypeReference));
 
@@ -76,14 +76,13 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
             .map(entity -> entity.getRoleName())
             .collect(Collectors.toSet());
 
-       return caseTypeRoles.stream()
+        return caseTypeRoles.stream()
             .filter(role -> !caseTypeRoleNames.contains(role))
             .collect(Collectors.toSet());
     }
 
     private List<RoleToAccessProfileEntity> createRoleToAccessProfileEntities(Set<String> userAndCaseRoles) {
-        return userAndCaseRoles.
-            stream()
+        return userAndCaseRoles.stream()
             .map(role -> createRoleToAccessProfileEntity(role))
             .collect(Collectors.toList());
     }
