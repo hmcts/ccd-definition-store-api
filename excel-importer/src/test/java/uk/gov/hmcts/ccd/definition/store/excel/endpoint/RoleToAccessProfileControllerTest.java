@@ -8,17 +8,19 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.hmcts.ccd.definition.store.excel.service.RoleToAccessProfileService;
+import uk.gov.hmcts.ccd.definition.store.excel.service.RoleToAccessProfileMappingService;
 
+import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class RoleToAccessProfileControllerTest {
 
-    private static final String URL = "/access-profile/mapping/";
+    private static final String URL = "/access-profile/mapping";
 
     @Mock
-    private RoleToAccessProfileService roleToAccessProfileService;
+    private RoleToAccessProfileMappingService roleToAccessProfileMappingService;
 
     @InjectMocks
     RoleToAccessProfileController roleToAccessProfileController;
@@ -33,8 +35,11 @@ class RoleToAccessProfileControllerTest {
 
     @DisplayName("Create Role to access profiles mapping")
     @Test
-    void validUploadAzureEnabled() throws Exception {
-        mockMvc.perform(put(URL + "CaseType_1")).andExpect(status().isCreated());
+    void shouldCreateRoleToAccessProfileMapping() throws Exception {
+        when(roleToAccessProfileMappingService.createAccessProfileMapping(anySet()))
+            .thenReturn("Role to access profile mapping completed successfully");
+
+        mockMvc.perform(put(URL).param("ctid", "CaseType_1")).andExpect(status().isOk());
     }
 
 }
