@@ -31,7 +31,7 @@ public class AccessProfileValidator {
         String caseTypeRef = entity.getCaseType().getReference();
         if (StringUtils.isEmpty(accessProfiles)) {
             String message = String.format("Access Profiles should not be null or empty in column '%s' "
-                    + "in the sheet '%s'", ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES );
+                    + "in the sheet '%s'", ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES);
             createErrorMessage(validationResult, message);
             throw new ValidationException(validationResult);
         }
@@ -42,7 +42,7 @@ public class AccessProfileValidator {
                 if (userRoleEntity.isEmpty()) {
                     String message = String.format("Access Profile '%s' not found in column '%s' "
                         + "in the sheet '%s'",
-                        accessProfile, ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES );
+                        accessProfile, ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES);
                     createErrorMessage(validationResult, message);
                     throw new ValidationException(validationResult);
                 }
