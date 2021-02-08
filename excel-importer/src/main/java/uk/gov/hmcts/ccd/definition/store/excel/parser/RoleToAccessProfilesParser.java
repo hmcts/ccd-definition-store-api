@@ -48,7 +48,7 @@ public class RoleToAccessProfilesParser {
             .findAny()
             .orElseThrow(() -> {
                 String message = String.format("Case Type not found %s in column '%s' in the sheet '%s'",
-                    caseType, ColumnName.CASE_TYPE_ID, SheetName.ROLE_TO_ACCESS_PROFILES );
+                    caseType, ColumnName.CASE_TYPE_ID, SheetName.ROLE_TO_ACCESS_PROFILES);
                 throw new InvalidImportException(message);
 
             });
