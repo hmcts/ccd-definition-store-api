@@ -9,6 +9,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
@@ -28,7 +30,9 @@ public class AccessProfileValidator {
         String accessProfiles = entity.getAccessProfiles();
         String caseTypeRef = entity.getCaseType().getReference();
         if (StringUtils.isEmpty(accessProfiles)) {
-            createErrorMessage(validationResult, "Access Profiles should not be null or empty");
+            String message = String.format("Access Profiles should not be null or empty in column '%s' "
+                    + "in the sheet '%s'", ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES );
+            createErrorMessage(validationResult, message);
             throw new ValidationException(validationResult);
         }
 
@@ -36,7 +40,9 @@ public class AccessProfileValidator {
             .forEach(accessProfile -> {
                 Optional<UserRoleEntity> userRoleEntity = parseContext.getRole(caseTypeRef, accessProfile);
                 if (userRoleEntity.isEmpty()) {
-                    String message = String.format("Access Profile '%s' not found", accessProfile);
+                    String message = String.format("Access Profile '%s' not found in column '%s' "
+                        + "in the sheet '%s'",
+                        accessProfile, ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES );
                     createErrorMessage(validationResult, message);
                     throw new ValidationException(validationResult);
                 }

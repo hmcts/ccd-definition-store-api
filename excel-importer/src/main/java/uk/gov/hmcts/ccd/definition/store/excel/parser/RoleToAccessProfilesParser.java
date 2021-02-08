@@ -46,7 +46,12 @@ public class RoleToAccessProfilesParser {
             .stream()
             .filter(entity -> entity.getReference().equals(caseType))
             .findAny()
-            .orElseThrow(() -> new InvalidImportException("Case Type not found " + caseType));
+            .orElseThrow(() -> {
+                String message = String.format("Case Type not found %s in column '%s' in the sheet '%s'",
+                    caseType, ColumnName.CASE_TYPE_ID, SheetName.ROLE_TO_ACCESS_PROFILES );
+                throw new InvalidImportException(message);
+
+            });
         roleToAccessProfileEntity.setCaseType(caseTypeEntity);
 
         roleToAccessProfileEntity.setRoleName(definitionDataItem.getString(ColumnName.ROLE_NAME));
