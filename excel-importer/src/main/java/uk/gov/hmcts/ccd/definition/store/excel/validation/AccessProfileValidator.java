@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.validation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
@@ -24,9 +25,22 @@ public class AccessProfileValidator {
             .forEach(entity -> validate(entity, parseContext));
     }
 
+    private void validateDuplicateRoleNameCaseType(final List<RoleToAccessProfileEntity> roleToAccessProfileEntities) {
+         final List<Pair<String, Object>> attributes;
+
+    }
+
     private void validate(RoleToAccessProfileEntity entity,
                          ParseContext parseContext) {
         ValidationResult validationResult = new ValidationResult();
+
+        if (StringUtils.isEmpty(entity.getRoleName())) {
+            String message = String.format("Role name should not be null or empty in column '%s' "
+                + "in the sheet '%s'", ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES);
+            createErrorMessage(validationResult, message);
+            throw new ValidationException(validationResult);
+        }
+
         String accessProfiles = entity.getAccessProfiles();
         String caseTypeRef = entity.getCaseType().getReference();
         if (StringUtils.isEmpty(accessProfiles)) {
