@@ -20,12 +20,12 @@ import uk.gov.hmcts.ccd.definition.store.excel.service.RoleToAccessProfileMappin
 @RestController
 @RequestMapping(value = "/access-profile")
 @Api(value = "/access-profile")
-public class RoleToAccessProfileController {
+public class RoleToAccessProfileMappingController {
 
     private RoleToAccessProfileMappingService roleToAccessProfileMappingService;
 
     @Autowired
-    public RoleToAccessProfileController(RoleToAccessProfileMappingService roleToAccessProfileMappingService) {
+    public RoleToAccessProfileMappingController(RoleToAccessProfileMappingService roleToAccessProfileMappingService) {
         this.roleToAccessProfileMappingService = roleToAccessProfileMappingService;
     }
 

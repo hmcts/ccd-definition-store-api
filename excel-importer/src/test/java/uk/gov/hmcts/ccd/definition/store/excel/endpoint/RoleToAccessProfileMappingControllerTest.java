@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class RoleToAccessProfileControllerTest {
+class RoleToAccessProfileMappingControllerTest {
 
     private static final String URL = "/access-profile/mapping";
 
@@ -23,14 +23,14 @@ class RoleToAccessProfileControllerTest {
     private RoleToAccessProfileMappingService roleToAccessProfileMappingService;
 
     @InjectMocks
-    RoleToAccessProfileController roleToAccessProfileController;
+    RoleToAccessProfileMappingController roleToAccessProfileMappingController;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(roleToAccessProfileController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(roleToAccessProfileMappingController).build();
     }
 
     @DisplayName("Create Role to access profiles mapping")
