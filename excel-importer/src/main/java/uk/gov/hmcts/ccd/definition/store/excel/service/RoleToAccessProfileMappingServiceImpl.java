@@ -58,7 +58,8 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
                 if (caseTypeEntity.isPresent()) {
                     Set<String> caseTypeRoles = getCaseTypeRolesRepository
                         .findCaseTypeRoles(caseTypeEntity.get().getId());
-                    caseTypeRoles = filterMappingCompletedRoles(caseTypeReference, caseTypeRoles);
+
+                    deleteExistingMappings(caseTypeReference, caseTypeRoles);
 
                     roleToAccessProfileRepository.saveAll(createRoleToAccessProfileEntities(caseTypeRoles));
                 }
@@ -75,17 +76,18 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
             .collect(Collectors.toSet());
     }
 
-    private Set<String> filterMappingCompletedRoles(String caseTypeReference, Set<String> caseTypeRoles) {
+    private void deleteExistingMappings(String caseTypeReference, Set<String> caseTypeRoles) {
         List<RoleToAccessProfileEntity> caseTypeMappings = roleToAccessProfileRepository
             .findByCaseTypeReference(Lists.newArrayList(caseTypeReference));
 
-        Set<String> caseTypeRoleNames = caseTypeMappings.stream()
-            .map(entity -> entity.getRoleName())
-            .collect(Collectors.toSet());
+        List<RoleToAccessProfileEntity> idamRolesAndCaseRoles = caseTypeMappings.stream()
+            .filter(entity -> {
+                String roleName = entity.getRoleName();
+                return roleName.startsWith("idam:") || CaseRoleServiceImpl.isCaseRole(roleName);
+            })
+            .collect(Collectors.toList());
 
-        return caseTypeRoles.stream()
-            .filter(role -> !caseTypeRoleNames.contains(role))
-            .collect(Collectors.toSet());
+        roleToAccessProfileRepository.deleteAll(idamRolesAndCaseRoles);
     }
 
     private List<RoleToAccessProfileEntity> createRoleToAccessProfileEntities(Set<String> userAndCaseRoles) {

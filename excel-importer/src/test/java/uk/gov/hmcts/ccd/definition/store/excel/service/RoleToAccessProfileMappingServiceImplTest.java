@@ -108,10 +108,10 @@ class RoleToAccessProfileMappingServiceImplTest {
                 "caseworker-divorce-master-2"));
 
         RoleToAccessProfileEntity roleToAccessProfileEntity = mock(RoleToAccessProfileEntity.class);
-        when(roleToAccessProfileEntity.getRoleName()).thenReturn("caseworker-divorce-master-1");
+        when(roleToAccessProfileEntity.getRoleName()).thenReturn("idam:caseworker-divorce-master-1");
 
         RoleToAccessProfileEntity roleToAccessProfileEntity2 = mock(RoleToAccessProfileEntity.class);
-        when(roleToAccessProfileEntity2.getRoleName()).thenReturn("caseworker-divorce-master-2");
+        when(roleToAccessProfileEntity2.getRoleName()).thenReturn("idam:caseworker-divorce-master-2");
 
         when(roleToAccessProfileRepository.findByCaseTypeReference(anyList()))
             .thenReturn(Lists.newArrayList(roleToAccessProfileEntity, roleToAccessProfileEntity2));
@@ -120,9 +120,14 @@ class RoleToAccessProfileMappingServiceImplTest {
         verify(caseTypeRepository, times(1)).findCurrentVersionForReference(anyString());
         verify(getCaseTypeRolesRepository, times(1)).findCaseTypeRoles(anyInt());
         verify(roleToAccessProfileRepository, times(1)).findByCaseTypeReference(anyList());
+
+        ArgumentCaptor<List> deleteCaptor = ArgumentCaptor.forClass(List.class);
+        verify(roleToAccessProfileRepository, times(1)).deleteAll(deleteCaptor.capture());
+        assertEquals(2, deleteCaptor.getValue().size());
+
         ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
         verify(roleToAccessProfileRepository, times(1)).saveAll(captor.capture());
-        assertEquals(1, captor.getValue().size());
+        assertEquals(3, captor.getValue().size());
     }
 
     @Test
@@ -155,24 +160,36 @@ class RoleToAccessProfileMappingServiceImplTest {
         when(getCaseTypeRolesRepository.findCaseTypeRoles(anyInt()))
             .thenReturn(Sets.newHashSet("caseworker-divorce-master",
                 "caseworker-divorce-master-1",
-                "caseworker-divorce-master-2"));
+                "caseworker-divorce-master-2",
+                "[DEFENDENT]"));
 
         RoleToAccessProfileEntity roleToAccessProfileEntity = mock(RoleToAccessProfileEntity.class);
-        when(roleToAccessProfileEntity.getRoleName()).thenReturn("caseworker-divorce-master-1");
+        when(roleToAccessProfileEntity.getRoleName()).thenReturn("idam:caseworker-divorce-master-1");
 
         RoleToAccessProfileEntity roleToAccessProfileEntity2 = mock(RoleToAccessProfileEntity.class);
-        when(roleToAccessProfileEntity2.getRoleName()).thenReturn("caseworker-divorce-master-2");
+        when(roleToAccessProfileEntity2.getRoleName()).thenReturn("idam:caseworker-divorce-master-2");
+
+        RoleToAccessProfileEntity roleToAccessProfileEntity3 = mock(RoleToAccessProfileEntity.class);
+        when(roleToAccessProfileEntity3.getRoleName()).thenReturn("[DEFENDENT]");
 
         when(roleToAccessProfileRepository.findByCaseTypeReference(anyList()))
-            .thenReturn(Lists.newArrayList(roleToAccessProfileEntity, roleToAccessProfileEntity2));
+            .thenReturn(Lists.newArrayList(roleToAccessProfileEntity,
+                roleToAccessProfileEntity2,
+                roleToAccessProfileEntity3));
 
         roleToAccessProfileService.createAccessProfileMapping(caseTypeIds);
 
         verify(caseTypeRepository, times(2)).findCurrentVersionForReference(anyString());
         verify(getCaseTypeRolesRepository, times(2)).findCaseTypeRoles(anyInt());
         verify(roleToAccessProfileRepository, times(2)).findByCaseTypeReference(anyList());
+
+        ArgumentCaptor<List> deleteCaptor = ArgumentCaptor.forClass(List.class);
+        verify(roleToAccessProfileRepository, times(2)).deleteAll(deleteCaptor.capture());
+        assertEquals(3, deleteCaptor.getValue().size());
+
+
         ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
         verify(roleToAccessProfileRepository, times(2)).saveAll(captor.capture());
-        assertEquals(1, captor.getValue().size());
+        assertEquals(4, captor.getValue().size());
     }
 }
