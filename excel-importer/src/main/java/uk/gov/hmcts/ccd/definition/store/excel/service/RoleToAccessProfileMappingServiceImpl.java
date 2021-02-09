@@ -22,8 +22,6 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
 
     private static final Logger LOG = LoggerFactory.getLogger(RoleToAccessProfileMappingServiceImpl.class);
 
-    private static final String MAPPING_NOT_REQUIRED = "Empty list of case type ids received, mapping is not required";
-
     private static final String MAPPING_COMPLETED = "Role to access profile mapping completed successfully";
 
     private GetCaseTypeRolesRepository getCaseTypeRolesRepository;
@@ -47,25 +45,34 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
 
     @Override
     public String createAccessProfileMapping(Set<String> caseTypeIds) {
-        if (caseTypeIds != null && caseTypeIds.size() > 0) {
-            if (applicationParams.isRoleToAccessProfileMapping()) {
-                caseTypeIds.stream().forEach(caseTypeReference -> {
-                    LOG.info("Create Access Profile mapping for case type {}", caseTypeReference);
-                    Optional<CaseTypeEntity> caseTypeEntity = caseTypeRepository
-                        .findCurrentVersionForReference(caseTypeReference);
-
-                    if (caseTypeEntity.isPresent()) {
-                        Set<String> caseTypeRoles = getCaseTypeRolesRepository
-                            .findCaseTypeRoles(caseTypeEntity.get().getId());
-                        caseTypeRoles = filterMappingCompletedRoles(caseTypeReference, caseTypeRoles);
-
-                        roleToAccessProfileRepository.saveAll(createRoleToAccessProfileEntities(caseTypeRoles));
-                    }
-                });
-                return MAPPING_COMPLETED;
-            }
+        if (caseTypeIds == null || caseTypeIds.size() == 0) {
+            caseTypeIds = getAllCaseTypes();
         }
-        return MAPPING_NOT_REQUIRED;
+
+        if (applicationParams.isRoleToAccessProfileMapping()) {
+            caseTypeIds.stream().forEach(caseTypeReference -> {
+                LOG.info("Create Access Profile mapping for case type {}", caseTypeReference);
+                Optional<CaseTypeEntity> caseTypeEntity = caseTypeRepository
+                    .findCurrentVersionForReference(caseTypeReference);
+
+                if (caseTypeEntity.isPresent()) {
+                    Set<String> caseTypeRoles = getCaseTypeRolesRepository
+                        .findCaseTypeRoles(caseTypeEntity.get().getId());
+                    caseTypeRoles = filterMappingCompletedRoles(caseTypeReference, caseTypeRoles);
+
+                    roleToAccessProfileRepository.saveAll(createRoleToAccessProfileEntities(caseTypeRoles));
+                }
+            });
+        }
+        return MAPPING_COMPLETED;
+    }
+
+    private Set<String> getAllCaseTypes() {
+        LOG.info("Get all existing case types");
+        List<CaseTypeEntity> caseTypeEntities = caseTypeRepository.findAllLatestVersions();
+        return caseTypeEntities.stream()
+            .map(entity -> entity.getReference())
+            .collect(Collectors.toSet());
     }
 
     private Set<String> filterMappingCompletedRoles(String caseTypeReference, Set<String> caseTypeRoles) {

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,20 +53,6 @@ class RoleToAccessProfileMappingServiceImplTest {
             caseTypeRepository,
             roleToAccessProfileRepository,
             applicationParams);
-    }
-
-    @Test
-    @DisplayName("Should not invoke isRoleToAccessProfileMapping when case type set is null")
-    void shouldNotInvokeRoleToAccessProfileMappingOnApplicationParamsNull() {
-        roleToAccessProfileService.createAccessProfileMapping(null);
-        verify(applicationParams, times(0)).isRoleToAccessProfileMapping();
-    }
-
-    @Test
-    @DisplayName("Should not invoke isRoleToAccessProfileMapping when case type set is empty")
-    void shouldNotInvokeRoleToAccessProfileMappingOnApplicationParamsEmpty() {
-        roleToAccessProfileService.createAccessProfileMapping(Sets.newHashSet());
-        verify(applicationParams, times(0)).isRoleToAccessProfileMapping();
     }
 
     @Test
@@ -135,6 +122,57 @@ class RoleToAccessProfileMappingServiceImplTest {
         verify(roleToAccessProfileRepository, times(1)).findByCaseTypeReference(anyList());
         ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
         verify(roleToAccessProfileRepository, times(1)).saveAll(captor.capture());
+        assertEquals(1, captor.getValue().size());
+    }
+
+    @Test
+    @DisplayName("Should not invoke isRoleToAccessProfileMapping when case type set is null")
+    void shouldInvokeRoleToAccessProfileMappingOnApplicationParamsNull() {
+        invokeRoleMappingAndValidate(null);
+
+    }
+
+    @Test
+    @DisplayName("Should not invoke isRoleToAccessProfileMapping when case type set is empty")
+    void shouldInvokeRoleToAccessProfileMappingOnApplicationParamsEmpty() {
+        invokeRoleMappingAndValidate(Sets.newHashSet());
+    }
+
+    private void invokeRoleMappingAndValidate(Set<String> caseTypeIds) {
+        when(applicationParams.isRoleToAccessProfileMapping()).thenReturn(true);
+        CaseTypeEntity caseTypeEntity = mock(CaseTypeEntity.class);
+        when(caseTypeRepository.findCurrentVersionForReference(anyString())).thenReturn(Optional.of(caseTypeEntity));
+
+        CaseTypeEntity entity1 = mock(CaseTypeEntity.class);
+        when(entity1.getReference()).thenReturn("CaseType_1");
+
+        CaseTypeEntity entity2 = mock(CaseTypeEntity.class);
+        when(entity2.getReference()).thenReturn("CaseType_2");
+
+        when(caseTypeRepository.findAllLatestVersions()).thenReturn(Lists.newArrayList(entity1, entity2));
+
+
+        when(getCaseTypeRolesRepository.findCaseTypeRoles(anyInt()))
+            .thenReturn(Sets.newHashSet("caseworker-divorce-master",
+                "caseworker-divorce-master-1",
+                "caseworker-divorce-master-2"));
+
+        RoleToAccessProfileEntity roleToAccessProfileEntity = mock(RoleToAccessProfileEntity.class);
+        when(roleToAccessProfileEntity.getRoleName()).thenReturn("caseworker-divorce-master-1");
+
+        RoleToAccessProfileEntity roleToAccessProfileEntity2 = mock(RoleToAccessProfileEntity.class);
+        when(roleToAccessProfileEntity2.getRoleName()).thenReturn("caseworker-divorce-master-2");
+
+        when(roleToAccessProfileRepository.findByCaseTypeReference(anyList()))
+            .thenReturn(Lists.newArrayList(roleToAccessProfileEntity, roleToAccessProfileEntity2));
+
+        roleToAccessProfileService.createAccessProfileMapping(caseTypeIds);
+
+        verify(caseTypeRepository, times(2)).findCurrentVersionForReference(anyString());
+        verify(getCaseTypeRolesRepository, times(2)).findCaseTypeRoles(anyInt());
+        verify(roleToAccessProfileRepository, times(2)).findByCaseTypeReference(anyList());
+        ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+        verify(roleToAccessProfileRepository, times(2)).saveAll(captor.capture());
         assertEquals(1, captor.getValue().size());
     }
 }
