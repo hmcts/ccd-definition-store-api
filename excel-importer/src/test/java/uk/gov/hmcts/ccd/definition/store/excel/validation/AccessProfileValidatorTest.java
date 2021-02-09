@@ -59,16 +59,57 @@ class AccessProfileValidatorTest {
         validator.validate(createEntities(), parseContext);
     }
 
+    @Test
+    void shouldThrowExceptionOnDuplicateRoleNameAndCaseType() {
+        UserRoleEntity userRoleEntity = mock(UserRoleEntity.class);
+        when(parseContext.getRole(anyString(), anyString())).thenReturn(Optional.of(userRoleEntity));
+        Assertions.assertThrows(ValidationException.class, () -> validator
+            .validate(createDuplicateRoleNameAndCaseTypeEntities(), parseContext));
+    }
+
+    @Test
+    void shouldThrowExceptionOnEmptyRoleName() {
+        UserRoleEntity userRoleEntity = mock(UserRoleEntity.class);
+        when(parseContext.getRole(anyString(), anyString())).thenReturn(Optional.of(userRoleEntity));
+        Assertions.assertThrows(ValidationException.class, () -> validator
+            .validate(createEntityWithEmptyRoleName(), parseContext));
+    }
+
     private List<RoleToAccessProfileEntity> createEntities() {
         RoleToAccessProfileEntity entity1 = mock(RoleToAccessProfileEntity.class);
         when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
         when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
+        when(entity1.getRoleName()).thenReturn("Role1");
 
         RoleToAccessProfileEntity entity2 = mock(RoleToAccessProfileEntity.class);
         when(entity2.getAccessProfiles()).thenReturn("caseworker");
         when(entity2.getCaseType()).thenReturn(caseTypeEntity2);
+        when(entity2.getRoleName()).thenReturn("Role2");
 
         return Lists.newArrayList(entity1, entity2);
+    }
+
+    private List<RoleToAccessProfileEntity> createDuplicateRoleNameAndCaseTypeEntities() {
+        RoleToAccessProfileEntity entity1 = mock(RoleToAccessProfileEntity.class);
+        when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
+        when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
+        when(entity1.getRoleName()).thenReturn("Role1");
+
+        RoleToAccessProfileEntity entity2 = mock(RoleToAccessProfileEntity.class);
+        when(entity2.getAccessProfiles()).thenReturn("caseworker");
+        when(entity2.getCaseType()).thenReturn(caseTypeEntity1);
+        when(entity2.getRoleName()).thenReturn("Role1");
+
+        return Lists.newArrayList(entity1, entity2);
+    }
+
+    private List<RoleToAccessProfileEntity> createEntityWithEmptyRoleName() {
+        RoleToAccessProfileEntity entity1 = mock(RoleToAccessProfileEntity.class);
+        when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
+        when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
+        when(entity1.getRoleName()).thenReturn("");
+
+        return Lists.newArrayList(entity1);
     }
 
 }
