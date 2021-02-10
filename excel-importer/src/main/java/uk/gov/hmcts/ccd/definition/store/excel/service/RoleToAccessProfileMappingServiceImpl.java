@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEn
 public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfileMappingService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RoleToAccessProfileMappingServiceImpl.class);
+
+    private static final Pattern RESTRICT_GRANTED_ROLES_PATTERN
+        = Pattern.compile(".+-solicitor$|.+-panelmember$|^citizen(-.*)?$|^letter-holder$|^caseworker-."
+        + "+-localAuthority$");
 
     private static final String MAPPING_COMPLETED = "Role to access profile mapping completed successfully";
 
@@ -45,11 +50,10 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
 
     @Override
     public String createAccessProfileMapping(Set<String> caseTypeIds) {
-        if (caseTypeIds == null || caseTypeIds.size() == 0) {
-            caseTypeIds = getAllCaseTypes();
-        }
-
         if (applicationParams.isRoleToAccessProfileMapping()) {
+            if (caseTypeIds == null || caseTypeIds.size() == 0) {
+                caseTypeIds = getAllCaseTypes();
+            }
             caseTypeIds.stream().forEach(caseTypeReference -> {
                 LOG.info("Create Access Profile mapping for case type {}", caseTypeReference);
                 Optional<CaseTypeEntity> caseTypeEntity = caseTypeRepository
@@ -104,6 +108,7 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
         entity.setAccessProfiles(role);
         entity.setReadOnly(false);
         entity.setDisabled(false);
+        entity.setRequiresCaseRole(RESTRICT_GRANTED_ROLES_PATTERN.matcher(role).matches());
         return entity;
     }
 }
