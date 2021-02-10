@@ -47,7 +47,7 @@ public class CaseFieldEntityCORValidatorImplTest {
         assertThat(result.getValidationErrors().get(0),
             instanceOf(CaseFieldEntityCORValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("Change Organisation Request is defined more than once for case type 'case type'. "));
+            is("Change Organisation Request is defined more than once for case type 'case type'"));
     }
 
     @Test

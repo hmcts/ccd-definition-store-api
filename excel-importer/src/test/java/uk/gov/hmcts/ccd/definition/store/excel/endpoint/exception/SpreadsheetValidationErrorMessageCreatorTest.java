@@ -722,7 +722,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             = new CaseFieldEntityCORValidationError(
             caseField1);
 
-        assertEquals("Change Organisation Request is defined more than once for case type 'case type'. ",
+        assertEquals("Change Organisation Request is defined more than once for case type 'case type'",
             classUnderTest.createErrorMessage(error));
     }
 

@@ -12,7 +12,7 @@ public class CaseFieldEntityCORValidationError extends ValidationError {
 
     public CaseFieldEntityCORValidationError(CaseFieldEntity caseField) {
 
-        super(String.format("Change Organisation Request is defined more than once for case type '%s'. ",
+        super(String.format("Change Organisation Request is defined more than once for case type '%s'",
             defaultString(caseField.getCaseType().getReference())));
         this.caseField = caseField;
     }

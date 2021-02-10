@@ -647,7 +647,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(CaseFieldEntityCORValidationError error) {
         return newMessageIfDefinitionExists(error, error.getCaseFieldEntity(),
-            def -> String.format("%s. WorkSheet '%s'", error.getDefaultMessage(), def.getSheetName()));
+            def -> String.format("%s in worksheet '%s'", error.getDefaultMessage(), def.getSheetName()));
     }
 
     private String withWorkSheetName(SimpleValidationError<?> error) {
