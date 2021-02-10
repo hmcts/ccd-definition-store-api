@@ -3,5 +3,6 @@ java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
 
-  ELASTIC_SEARCH_HOST: http://ccd-data-store-api-aat.service.core-compute-aat.internal
+  environment:
+    ELASTIC_SEARCH_HOST: http://ccd-data-store-api-aat.service.core-compute-aat.internal
 
