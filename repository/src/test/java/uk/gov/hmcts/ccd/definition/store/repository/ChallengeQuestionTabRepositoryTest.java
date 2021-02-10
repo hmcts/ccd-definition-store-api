@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import com.vladmihalcea.sql.SQLStatementCountValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
@@ -18,7 +19,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @RunWith(SpringRunner.class)
@@ -39,16 +40,16 @@ public class ChallengeQuestionTabRepositoryTest {
     @Autowired
     private TestHelper testHelper;
 
-    private CaseTypeEntity oldCaseType;
-    private CaseTypeEntity latestCaseType;
-    private CaseTypeEntity otherCaseType;
+    private CaseTypeLiteEntity oldCaseType;
+    private CaseTypeLiteEntity latestCaseType;
+    private CaseTypeLiteEntity otherCaseType;
     private FieldTypeEntity fieldType;
 
     @Before
     public void setUp() {
-        oldCaseType = testHelper.createCaseType(CASE_TYPE_REFERENCE, CASE_TYPE_REFERENCE);
-        latestCaseType = testHelper.createCaseType(CASE_TYPE_REFERENCE, CASE_TYPE_REFERENCE);
-        otherCaseType = testHelper.createCaseType("OtherCaseType", "Other");
+        oldCaseType = testHelper.createCaseTypeLiteEntity(CASE_TYPE_REFERENCE, CASE_TYPE_REFERENCE);
+        latestCaseType = testHelper.createCaseTypeLiteEntity(CASE_TYPE_REFERENCE, CASE_TYPE_REFERENCE);
+        otherCaseType = testHelper.createCaseTypeLiteEntity("OtherCaseType", "Other");
         fieldType = testHelper.createType(testHelper.createJurisdiction());
 
         createChallengeQuestion(oldCaseType, "QuestionId1", CHALLENGE_QUESTION_ID, "1");
@@ -86,7 +87,21 @@ public class ChallengeQuestionTabRepositoryTest {
         );
     }
 
-    private ChallengeQuestionTabEntity createChallengeQuestion(CaseTypeEntity caseType,
+    @Test
+    public void checkSQLStatementCounts() {
+
+        SQLStatementCountValidator.reset();
+
+        List<ChallengeQuestionTabEntity> result = challengeQuestionTabRepository
+            .getChallengeQuestions(CASE_TYPE_REFERENCE, CHALLENGE_QUESTION_ID);
+
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0).getCaseType().getReference(), is(CASE_TYPE_REFERENCE));
+
+        SQLStatementCountValidator.assertSelectCount(1);
+    }
+
+    private ChallengeQuestionTabEntity createChallengeQuestion(CaseTypeLiteEntity caseType,
                                                                String questionId,
                                                                String challengeQuestionId,
                                                                String suffix) {

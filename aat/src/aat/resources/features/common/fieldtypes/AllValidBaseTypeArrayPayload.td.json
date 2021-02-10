@@ -65,6 +65,12 @@
     },
     {
       "_extends_": "BaseDynamicListFieldType"
+    },
+    {
+      "_extends_": "BaseDynamicRadioListFieldType"
+    },
+    {
+      "_extends_": "BaseDynamicMultiSelectListFieldType"
     }
   ]
 }

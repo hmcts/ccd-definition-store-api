@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
@@ -48,11 +48,11 @@ class DisplayGroupAdapterServiceTest {
     @Mock
     private DisplayGroupRepository displayGroupRepository;
     @Mock
-    private CaseTypeRepository caseTypeRepository;
+    private CaseTypeLiteRepository caseTypeLiteRepository;
     @Mock
     private EventRepository eventRepository;
     @Mock
-    private CaseTypeEntity caseTypeEntity;
+    private CaseTypeLiteEntity caseTypeEntity;
 
     private DisplayGroupAdapterService classUnderTest;
 
@@ -60,7 +60,7 @@ class DisplayGroupAdapterServiceTest {
     public void setUpMocks() {
         MockitoAnnotations.initMocks(this);
         classUnderTest = new DisplayGroupAdapterService(displayGroupRepository,
-            caseTypeRepository,
+            caseTypeLiteRepository,
             eventRepository,
             new CaseFieldEntityUtil());
     }
@@ -82,7 +82,7 @@ class DisplayGroupAdapterServiceTest {
                 singletonList(displayGroupCaseField(caseFieldEntity("someRef"))));
 
             given(caseTypeEntity.getId()).willReturn(caseTypeEntityId);
-            given(caseTypeRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
+            given(caseTypeLiteRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
                 .willReturn(Optional.of(caseTypeEntity));
 
             given(eventRepository.findByReferenceAndCaseTypeId(EVENT_REFERENCE, caseTypeEntityId))
@@ -191,7 +191,7 @@ class DisplayGroupAdapterServiceTest {
                     displayGroupCaseField(caseFieldEntity("finalReturnOther"))));
 
             given(caseTypeEntity.getId()).willReturn(caseTypeEntityId);
-            given(caseTypeRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
+            given(caseTypeLiteRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
                 .willReturn(Optional.of(caseTypeEntity));
 
             given(eventRepository.findByReferenceAndCaseTypeId(EVENT_REFERENCE, caseTypeEntityId))
@@ -258,7 +258,8 @@ class DisplayGroupAdapterServiceTest {
 
         @Test
         public void findWizardPagesByCaseTypeIdReturnsNullWhenNoCaseTypeFound() {
-            given(caseTypeRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE)).willReturn(Optional.empty());
+            given(caseTypeLiteRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
+                .willReturn(Optional.empty());
 
             WizardPageCollection wizardPagesByCaseTypeId = classUnderTest.findWizardPagesByCaseTypeId(
                 CASE_TYPE_REFERENCE,
@@ -269,7 +270,7 @@ class DisplayGroupAdapterServiceTest {
 
         @Test
         public void findWizardPagesByCaseTypeIdReturnsNullWhenNoEventFound() {
-            given(caseTypeRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
+            given(caseTypeLiteRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
                 .willReturn(Optional.of(caseTypeEntity));
             given(eventRepository.findByReferenceAndCaseTypeId(anyString(), anyInt())).willReturn(emptyList());
 
