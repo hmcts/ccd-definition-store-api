@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
@@ -702,6 +703,26 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             new CaseFieldEntityValidationContext(caseTypeEntity));
 
         assertEquals("Invalid metadata field 'case field' declaration for case type 'case type'",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void shouldHaveValidationMessageForCaseFieldEntityCORValidationError() {
+
+        FieldTypeEntity fieldType = new FieldTypeEntity();
+        fieldType.setReference("ChangeOrganisationRequest");
+        CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("case type");
+
+        CaseFieldEntity caseField1 = new CaseFieldEntity();
+        caseField1.setFieldType(fieldType);
+        caseField1.setCaseType(caseType);
+
+        CaseFieldEntityCORValidationError error
+            = new CaseFieldEntityCORValidationError(
+            caseField1);
+
+        assertEquals("Change Organisation Request is defined more than once for case type 'case type'. ",
             classUnderTest.createErrorMessage(error));
     }
 

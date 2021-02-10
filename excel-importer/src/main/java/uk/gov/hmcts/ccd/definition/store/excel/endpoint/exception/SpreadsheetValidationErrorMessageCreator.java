@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
@@ -641,6 +642,12 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                 StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
                 def.getSheetName());
         });
+    }
+
+    @Override
+    public String createErrorMessage(CaseFieldEntityCORValidationError error) {
+        return newMessageIfDefinitionExists(error, error.getCaseFieldEntity(),
+            def -> String.format("%s. WorkSheet '%s'", error.getDefaultMessage(), def.getSheetName()));
     }
 
     private String withWorkSheetName(SimpleValidationError<?> error) {

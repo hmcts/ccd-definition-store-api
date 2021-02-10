@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation;
 
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
@@ -177,6 +178,8 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(
         CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError validationError);
+
+    String createErrorMessage(CaseFieldEntityCORValidationError validationError);
 
     String createErrorMessage(EventEntityInvalidPostStatePriorityError classUnderTest);
 
