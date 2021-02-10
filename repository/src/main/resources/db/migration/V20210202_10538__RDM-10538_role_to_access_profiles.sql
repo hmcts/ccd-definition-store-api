@@ -20,7 +20,8 @@ CREATE TABLE public.role_to_access_profile (
   access_profiles character varying(2000) NOT NULL,
   authorisation character varying(2000),
   read_only boolean DEFAULT FALSE,
-  disabled boolean DEFAULT FALSE
+  disabled boolean DEFAULT FALSE,
+  requires_case_role boolean DEFAULT FALSE
 );
 
 

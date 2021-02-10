@@ -47,6 +47,9 @@ public class RoleToAccessProfileEntity implements Serializable {
     @Column(name = "disabled")
     private Boolean disabled;
 
+    @Column(name = "requires_case_role")
+    private Boolean requiresCaseRole;
+
     public Integer getId() {
         return id;
     }
@@ -117,5 +120,13 @@ public class RoleToAccessProfileEntity implements Serializable {
 
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
+    }
+
+    public Boolean getRequiresCaseRole() {
+        return requiresCaseRole;
+    }
+
+    public void setRequiresCaseRole(Boolean requiresCaseRole) {
+        this.requiresCaseRole = requiresCaseRole;
     }
 }
