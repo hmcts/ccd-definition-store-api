@@ -149,6 +149,7 @@
 				"delete" : true
 			} ],
 			"searchAliasFields" : [ ],
+      "accessProfiles" : [ ],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",
