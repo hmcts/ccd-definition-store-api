@@ -1,5 +1,5 @@
 @F-095
-Feature: F-095: Publish and PublishAs columns in CaseEvent, CaseEventToFields and CaseEventToComplexType
+Feature: F-095: Publish Events column
 
   Background:
     Given an appropriate test context as detailed in the test data source
