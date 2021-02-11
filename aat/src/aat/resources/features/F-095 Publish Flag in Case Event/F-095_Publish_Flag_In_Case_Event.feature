@@ -77,6 +77,7 @@ Feature: F-095: Publish Events column
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a positive response is received
     And the response has all other details as expected
+    And a call [fetch a Case Type Schema] will get the expected response as in [S-095.8_Get_CaseType].
 
   @S-095.9
   Scenario: Must return a negative response in an attempt to import a definition file containing invalid value in PublishAs column of CaseEventToFields
