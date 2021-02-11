@@ -1,0 +1,31 @@
+{
+	"_guid_": "S-095.6",
+	"_extends_": "Import_Base_data",
+	"title": "Must return a negative response in an attempt to import a definition file where Publish column is set to No in CaseEvent but set to Yes in CaseEventToFields",
+	"specs": [
+		"an active profile in CCD",
+		"contains No in CaseEvent Publish column and Yes in CaseEventToFields Publish column"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid_CaseEvent_No_CaseEventToFields_Yes_Publish_Column.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- validationError: Publish column has an invalid value 'true',  reference 'TextFieldFName'. If the Event is set to false, CaseEventToFields and EventToComplexTypes cannot have Publish columns as true for the case type."
+    }
+  }
+}

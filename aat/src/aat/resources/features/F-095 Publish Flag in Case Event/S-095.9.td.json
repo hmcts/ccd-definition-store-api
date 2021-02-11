@@ -1,0 +1,31 @@
+{
+	"_guid_": "S-095.9",
+	"_extends_": "Import_Base_data",
+	"title": "Must return a negative response in an attempt to import a definition file containing invalid value in PublishAs column of CaseEventToFields",
+	"specs": [
+		"an active profile in CCD",
+		"contains invalid value in PublishAs column of CaseEventToFields"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid_CaseEventToField_PublishAs_Column.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- validationError: PublishAs column cannot have spaces, reference 'TextFieldFName'"
+    }
+  }
+}
