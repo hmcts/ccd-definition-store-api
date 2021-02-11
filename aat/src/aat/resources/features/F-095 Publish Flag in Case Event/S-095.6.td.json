@@ -17,7 +17,7 @@
     }
   },
   "expectedResponse": {
-    "responseCode": 400,
+    "responseCode": 422,
     "responseMessage": "Bad Request",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
