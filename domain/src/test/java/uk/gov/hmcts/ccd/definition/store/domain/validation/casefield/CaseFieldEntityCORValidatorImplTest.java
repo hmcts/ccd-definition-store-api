@@ -69,4 +69,26 @@ public class CaseFieldEntityCORValidatorImplTest {
 
         assertThat(result.getValidationErrors(), hasSize(0));
     }
+
+    @Test
+    @DisplayName(
+        "Should return no exception when ChangeOrganisationRequest ID has a Non-COR FieldType")
+    void shouldReturnValidationResultWithNoError_whenNonCORDefined() {
+
+        FieldTypeEntity fieldType = new FieldTypeEntity();
+        fieldType.setReference("Address1");
+        CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("CaseType");
+        CaseFieldEntity caseField = new CaseFieldEntity();
+        caseField.setReference("ChangeOrganisationRequest");
+        caseField.setFieldType(fieldType);
+        caseField.setCaseType(caseType);
+
+        CaseFieldEntityValidationContext context = mock(CaseFieldEntityValidationContext.class);
+        when(context.getCaseReference()).thenReturn("case ref");
+
+        ValidationResult result = validator.validate(caseField, context);
+
+        assertThat(result.getValidationErrors(), hasSize(0));
+    }
 }
