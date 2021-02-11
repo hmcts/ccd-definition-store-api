@@ -63,9 +63,10 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
                     Set<String> caseTypeRoles = getCaseTypeRolesRepository
                         .findCaseTypeRoles(caseTypeEntity.get().getId());
 
-                    deleteExistingMappings(caseTypeReference, caseTypeRoles);
+                    deleteExistingMappings(caseTypeReference);
 
-                    roleToAccessProfileRepository.saveAll(createRoleToAccessProfileEntities(caseTypeRoles));
+                    roleToAccessProfileRepository
+                        .saveAll(createRoleToAccessProfileEntities(caseTypeRoles, caseTypeEntity.get()));
                 }
             });
         }
@@ -80,7 +81,7 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
             .collect(Collectors.toSet());
     }
 
-    private void deleteExistingMappings(String caseTypeReference, Set<String> caseTypeRoles) {
+    private void deleteExistingMappings(String caseTypeReference) {
         List<RoleToAccessProfileEntity> caseTypeMappings = roleToAccessProfileRepository
             .findByCaseTypeReference(Lists.newArrayList(caseTypeReference));
 
@@ -92,19 +93,22 @@ public class RoleToAccessProfileMappingServiceImpl implements RoleToAccessProfil
             .collect(Collectors.toList());
 
         roleToAccessProfileRepository.deleteAll(idamRolesAndCaseRoles);
+        roleToAccessProfileRepository.flush();
     }
 
-    private List<RoleToAccessProfileEntity> createRoleToAccessProfileEntities(Set<String> userAndCaseRoles) {
+    private List<RoleToAccessProfileEntity> createRoleToAccessProfileEntities(Set<String> userAndCaseRoles,
+                                                                              CaseTypeEntity caseTypeEntity) {
         return userAndCaseRoles.stream()
-            .map(role -> createRoleToAccessProfileEntity(role))
+            .map(role -> createRoleToAccessProfileEntity(caseTypeEntity, role))
             .collect(Collectors.toList());
     }
 
-    private RoleToAccessProfileEntity createRoleToAccessProfileEntity(String role) {
+    private RoleToAccessProfileEntity createRoleToAccessProfileEntity(CaseTypeEntity caseTypeEntity, String role) {
         boolean isCaseRole = CaseRoleServiceImpl.isCaseRole(role);
         String roleName = isCaseRole ? role : "idam:" + role;
         RoleToAccessProfileEntity entity = new RoleToAccessProfileEntity();
         entity.setRoleName(roleName);
+        entity.setCaseType(caseTypeEntity);
         entity.setAccessProfiles(role);
         entity.setReadOnly(false);
         entity.setDisabled(false);

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store;
 
+import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +20,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
 import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIndexController;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.RoleToAccessProfileMappingController;
 import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
 import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
-
-import javax.inject.Inject;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -71,7 +71,9 @@ public class SecurityConfiguration
             .formLogin().disable()
             .logout().disable()
             .authorizeRequests()
-            .antMatchers(ImportController.URI_IMPORT, ElasticsearchIndexController.ELASTIC_INDEX_URI)
+            .antMatchers(ImportController.URI_IMPORT,
+                ElasticsearchIndexController.ELASTIC_INDEX_URI,
+                RoleToAccessProfileMappingController.ACCESS_PROFILE_URI)
             .hasAuthority("ccd-import")
             .anyRequest()
             .authenticated()

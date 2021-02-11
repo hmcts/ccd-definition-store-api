@@ -12,15 +12,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.excel.service.RoleToAccessProfileMappingService;
 
 @RestController
-@RequestMapping(value = "/access-profile")
-@Api(value = "/access-profile")
+@Api(value = RoleToAccessProfileMappingController.ACCESS_PROFILE_URI)
 public class RoleToAccessProfileMappingController {
+
+    public static final String ACCESS_PROFILE_URI = "/access-profile/mapping";
 
     private RoleToAccessProfileMappingService roleToAccessProfileMappingService;
 
@@ -30,7 +30,7 @@ public class RoleToAccessProfileMappingController {
     }
 
     @Transactional
-    @PutMapping(value = "/mapping", produces = {"application/json"})
+    @PutMapping(value = ACCESS_PROFILE_URI,  produces = {"application/json"})
     @ApiOperation(value = "Create Role to Access Profile mapping for user roles and case roles",
         response = ResponseEntity.class)
     @ApiResponses(value = {

@@ -16,7 +16,9 @@ import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PUT;
 import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.URI_IMPORT;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.RoleToAccessProfileMappingController.ACCESS_PROFILE_URI;
 
 @Ignore
 // FIXME : RDM-7631 - has to mock opendId jwks responses with proper Key set (RS256 public / private key).
@@ -37,6 +39,24 @@ public class IdamIT extends IntegrationTest {
         final ResponseEntity<String>
             response =
             restTemplate.exchange(URI_IMPORT, GET, validRequestEntity(), String.class);
+
+        assertHappyPath(response);
+        verify(getRequestedFor(urlEqualTo(IDAM_DETAILS)).withHeader(AUTHORIZATION,
+            equalTo(VALID_IDAM_TOKEN)));
+    }
+
+    /**
+     * <pre>
+     *     Given a user with ccd-import role.
+     *     When accessing role to access profile mapping end point
+     *     Then user is on happy path
+     * </pre>
+     */
+    @Test
+    public void shouldBeOnHappyPathGivenCCDImportUserWhenAccessingRoleToAccessProfileMappingEndPoint() {
+        final ResponseEntity<String>
+            response =
+            restTemplate.exchange(ACCESS_PROFILE_URI, PUT, validRequestEntity(), String.class);
 
         assertHappyPath(response);
         verify(getRequestedFor(urlEqualTo(IDAM_DETAILS)).withHeader(AUTHORIZATION,
@@ -93,6 +113,27 @@ public class IdamIT extends IntegrationTest {
         final ResponseEntity<String>
             response =
             restTemplate.exchange(URI_IMPORT, GET, invalidRequestEntity(), String.class);
+
+        assertThat(response.getStatusCodeValue(), is(SC_FORBIDDEN));
+        verify(getRequestedFor(urlEqualTo(IDAM_DETAILS)).withHeader(AUTHORIZATION,
+            equalTo(INVALID_IDAM_TOKEN)));
+    }
+
+    /**
+     * <pre>
+     *     Given a user with no ccd-import role.
+     *     When accessing import end point
+     *     Then 403 response
+     * </pre>
+     */
+    @Test
+    public void should403GivenNoRolesUserWhenAccessingRoleToAccessProfileMappingEndPoint() {
+        stubFor(get(urlEqualTo(IDAM_DETAILS)).withHeader(AUTHORIZATION, equalTo(INVALID_IDAM_TOKEN))
+            .willReturn(aResponse().withStatus(SC_FORBIDDEN)));
+
+        final ResponseEntity<String>
+            response =
+            restTemplate.exchange(ACCESS_PROFILE_URI, PUT, invalidRequestEntity(), String.class);
 
         assertThat(response.getStatusCodeValue(), is(SC_FORBIDDEN));
         verify(getRequestedFor(urlEqualTo(IDAM_DETAILS)).withHeader(AUTHORIZATION,
