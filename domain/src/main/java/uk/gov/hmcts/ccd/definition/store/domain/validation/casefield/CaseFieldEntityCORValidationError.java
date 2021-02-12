@@ -4,15 +4,16 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 
+import static org.apache.commons.lang3.StringUtils.defaultString;
+
 public class CaseFieldEntityCORValidationError extends ValidationError {
 
     private final CaseFieldEntity caseField;
 
     public CaseFieldEntityCORValidationError(CaseFieldEntity caseField) {
 
-        super(String.format("The Change Organisation Request FieldType must be associated with an ID of "
-                + "'ChangeOrganisationRequest' instead of '%s' and may only be defined once in CaseType '%s'",
-            caseField.getReference(), caseField.getCaseType().getReference()));
+        super(String.format("Change Organisation Request is defined more than once for case type '%s'",
+            defaultString(caseField.getCaseType().getReference())));
         this.caseField = caseField;
     }
 

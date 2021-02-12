@@ -712,18 +712,17 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference("ChangeOrganisationRequest");
         CaseTypeEntity caseType = new CaseTypeEntity();
-        caseType.setReference("CaseType");
-        CaseFieldEntity caseField = new CaseFieldEntity();
-        caseField.setReference("invalid ID");
-        caseField.setFieldType(fieldType);
-        caseField.setCaseType(caseType);
+        caseType.setReference("case type");
+
+        CaseFieldEntity caseField1 = new CaseFieldEntity();
+        caseField1.setFieldType(fieldType);
+        caseField1.setCaseType(caseType);
 
         CaseFieldEntityCORValidationError error
             = new CaseFieldEntityCORValidationError(
-            caseField);
+            caseField1);
 
-        assertEquals("The Change Organisation Request FieldType must be associated with an ID of "
-            + "'ChangeOrganisationRequest' instead of 'invalid ID' and may only be defined once in CaseType 'CaseType'",
+        assertEquals("Change Organisation Request is defined more than once for case type 'case type'",
             classUnderTest.createErrorMessage(error));
     }
 

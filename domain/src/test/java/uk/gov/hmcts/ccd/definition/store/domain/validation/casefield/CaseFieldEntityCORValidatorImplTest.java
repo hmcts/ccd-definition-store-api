@@ -21,46 +21,48 @@ public class CaseFieldEntityCORValidatorImplTest {
 
     @Test
     @DisplayName(
-        "Should return validation result with exception when Change of Request field is associated with an invalid ID")
-    void shouldReturnValidationResultWithError_whenCORFieldDefinedWithInvalidID() {
+        "Should return validation result with exception when Change of Request field is defined twice in one case type")
+    void shouldReturnValidationResultWithError_whenCORDefinedTwiceInCaseType() {
 
         FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference("ChangeOrganisationRequest");
         CaseTypeEntity caseType = new CaseTypeEntity();
-        caseType.setReference("Any Case Type");
-        CaseFieldEntity caseField = new CaseFieldEntity();
-        caseField.setReference("random ID");
-        caseField.setFieldType(fieldType);
-        caseField.setCaseType(caseType);
+        caseType.setReference("case type");
+
+        CaseFieldEntity caseField1 = new CaseFieldEntity();
+        caseField1.setFieldType(fieldType);
+        caseField1.setCaseType(caseType);
+
+        CaseFieldEntity caseField2 = new CaseFieldEntity();
+        caseField2.setFieldType(fieldType);
+        caseField2.setCaseType(caseType);
 
         CaseFieldEntityValidationContext context = mock(CaseFieldEntityValidationContext.class);
         when(context.getCaseReference()).thenReturn("case ref");
 
-        ValidationResult result = validator.validate(caseField, context);
+        validator.validate(caseField1, context);
+        ValidationResult result = validator.validate(caseField2, context);
 
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors().get(0),
             instanceOf(CaseFieldEntityCORValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("The Change Organisation Request FieldType must be associated with an ID of "
-                + "'ChangeOrganisationRequest' instead of 'random ID' and "
-                + "may only be defined once in CaseType 'Any Case Type'"));
+            is("Change Organisation Request is defined more than once for case type 'case type'"));
     }
 
     @Test
     @DisplayName(
-        "Should return no exception when Change Organisation Request is defined with correct ID")
+        "Should return no exception when Change Organisation Request is defined once in a case type")
     void shouldReturnValidationResultWithNoError_whenCORDefinedOnceInCaseType() {
 
         FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference("ChangeOrganisationRequest");
         CaseTypeEntity caseType = new CaseTypeEntity();
-        caseType.setReference("CaseType");
+        caseType.setReference("case type");
+
         CaseFieldEntity caseField = new CaseFieldEntity();
-        caseField.setReference("ChangeOrganisationRequest");
         caseField.setFieldType(fieldType);
         caseField.setCaseType(caseType);
-
 
         CaseFieldEntityValidationContext context = mock(CaseFieldEntityValidationContext.class);
         when(context.getCaseReference()).thenReturn("case ref");
@@ -68,5 +70,36 @@ public class CaseFieldEntityCORValidatorImplTest {
         ValidationResult result = validator.validate(caseField, context);
 
         assertThat(result.getValidationErrors(), hasSize(0));
+    }
+
+    @Test
+    @DisplayName(
+        "Should return no exception when Change Organisation Request is defined once in multiple case types")
+    void shouldReturnValidationResultWithNoError_whenCORDefinedOnceInMultipleCaseType() {
+
+        FieldTypeEntity fieldType = new FieldTypeEntity();
+        fieldType.setReference("ChangeOrganisationRequest");
+        CaseTypeEntity caseType1 = new CaseTypeEntity();
+        CaseTypeEntity caseType2 = new CaseTypeEntity();
+        caseType1.setReference("case type 1");
+        caseType2.setReference("case type 2");
+
+        CaseFieldEntity caseField1 = new CaseFieldEntity();
+        caseField1.setFieldType(fieldType);
+        caseField1.setCaseType(caseType1);
+
+        CaseFieldEntity caseField2 = new CaseFieldEntity();
+        caseField2.setFieldType(fieldType);
+        caseField2.setCaseType(caseType2);
+
+        CaseFieldEntityValidationContext context = mock(CaseFieldEntityValidationContext.class);
+        when(context.getCaseReference()).thenReturn("case ref");
+
+        validator.validate(caseField1, context);
+        ValidationResult result = validator.validate(caseField2, context);
+
+        assertThat(result.getValidationErrors(), hasSize(0));
+
+
     }
 }
