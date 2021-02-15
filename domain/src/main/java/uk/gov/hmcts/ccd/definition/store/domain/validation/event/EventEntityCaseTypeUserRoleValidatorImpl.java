@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
@@ -10,7 +11,8 @@ import java.util.List;
 
 
 @Component
-public class EventEntityCaseTypeUsersValidatorImpl implements EventEntityValidator {
+@RequestScope
+public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityValidator {
 
     private final List<String> caseTypesContainingCaseworkerCaa = new ArrayList<>();
     private final List<String> caseTypesContainingCaseworkerApprover = new ArrayList<>();
@@ -25,17 +27,17 @@ public class EventEntityCaseTypeUsersValidatorImpl implements EventEntityValidat
 
             switch (entity.getUserRoleId().toLowerCase()) {
                 case "caseworker-caa":
-                    if (checkIfDuplicate(entity.getEvent().getCaseType().getReference(),
+                    if (isDuplicateCaseType(entity.getEvent().getCaseType().getReference(),
                         caseTypesContainingCaseworkerCaa)) {
-                        validationResult.addError(new EventEntityCaseTypeUsersValidationError(entity));
+                        validationResult.addError(new EventEntityCaseTypeUserRoleValidationError(entity));
                     } else {
                         caseTypesContainingCaseworkerCaa.add(entity.getEvent().getCaseType().getReference());
                     }
                     break;
                 case "caseworker-approver":
-                    if (checkIfDuplicate(entity.getEvent().getCaseType().getReference(),
+                    if (isDuplicateCaseType(entity.getEvent().getCaseType().getReference(),
                         caseTypesContainingCaseworkerApprover)) {
-                        validationResult.addError(new EventEntityCaseTypeUsersValidationError(entity));
+                        validationResult.addError(new EventEntityCaseTypeUserRoleValidationError(entity));
                     } else {
                         caseTypesContainingCaseworkerApprover.add(entity.getEvent().getCaseType().getReference());
                     }
@@ -47,12 +49,7 @@ public class EventEntityCaseTypeUsersValidatorImpl implements EventEntityValidat
         return validationResult;
     }
 
-    private boolean checkIfDuplicate(String caseType, List<String> list) {
-        for (String i : list) {
-            if (i.equalsIgnoreCase(caseType)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean isDuplicateCaseType(String caseType, List<String> existingCaseTypes) {
+        return existingCaseTypes.stream().anyMatch(caseType::equalsIgnoreCase);
     }
 }

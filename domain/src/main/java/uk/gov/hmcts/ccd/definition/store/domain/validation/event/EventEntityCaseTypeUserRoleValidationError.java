@@ -4,12 +4,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 
-public class EventEntityCaseTypeUsersValidationError extends ValidationError {
+public class EventEntityCaseTypeUserRoleValidationError extends ValidationError {
     private EventACLEntity entity;
 
-    public EventEntityCaseTypeUsersValidationError(final EventACLEntity entity) {
-        super(String.format("UserRole '%s' can only be associated once with CaseType '%s' for event '%s'",
-            entity.getUserRoleId(), entity.getEvent().getCaseType().getReference(), entity.getEvent().getName()));
+    public EventEntityCaseTypeUserRoleValidationError(final EventACLEntity entity) {
+        super(String.format("UserRole '%s' is defined more than once for case type '%s'",
+            entity.getUserRoleId(), entity.getEvent().getCaseType().getReference()));
         this.entity = entity;
     }
 

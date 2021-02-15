@@ -39,6 +39,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
@@ -725,6 +726,34 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         assertEquals("Change Organisation Request is defined more than once for case type 'case type'",
             classUnderTest.createErrorMessage(error));
     }
+
+    @Test
+    public void shouldHaveValidationMessageForEventEntityCaseTypeUserRoleValidationError() {
+
+        CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("CaseType");
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setCaseType(caseType);
+        EventEntity eventEntity1 = new EventEntity();
+        eventEntity1.setCaseType(caseType);
+        EventACLEntity eventACLEntity1 = new EventACLEntity();
+        EventEntity eventEntity2 = new EventEntity();
+        eventEntity2.addEventACL(eventACLEntity1);
+        eventACLEntity1.setEventEntity(eventEntity);
+        eventACLEntity1.setUserRoleId("caseworker-caa");
+        EventACLEntity eventACLEntity2 = new EventACLEntity();
+        eventEntity2.addEventACL(eventACLEntity2);
+        eventACLEntity2.setEventEntity(eventEntity1);
+        eventACLEntity2.setUserRoleId("Caseworker-caa");
+
+        EventEntityCaseTypeUserRoleValidationError error
+            = new EventEntityCaseTypeUserRoleValidationError(
+            eventACLEntity2);
+
+        assertEquals("UserRole 'Caseworker-caa' is defined more than once for case type 'CaseType'",
+            classUnderTest.createErrorMessage(error));
+    }
+
 
     @Test
     public void eventEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamRoleMissing() {
