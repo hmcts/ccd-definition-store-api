@@ -37,6 +37,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeUsersValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
@@ -642,6 +643,14 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                 StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
                 def.getSheetName());
         });
+    }
+
+    @Override
+    public String createErrorMessage(EventEntityCaseTypeUsersValidationError eventEntityCaseTypeUserseValidationError) {
+        return newMessageIfDefinitionExists(eventEntityCaseTypeUserseValidationError,
+            eventEntityCaseTypeUserseValidationError.getEventACLEntity(),
+            def -> String.format("%s. WorkSheet '%s'", eventEntityCaseTypeUserseValidationError.getDefaultMessage(),
+                def.getSheetName()));
     }
 
     @Override
