@@ -1434,6 +1434,10 @@
           ],
           "complexACLs": [
             {
+              "__ordering__": "UNORDERED",
+              "__elementId__": "listElementCode"
+            },
+            {
               "_extends_" : "AllGrantedAccessControlList",
               "listElementCode": "OrgPolicyCaseAssignedRole"
             },
