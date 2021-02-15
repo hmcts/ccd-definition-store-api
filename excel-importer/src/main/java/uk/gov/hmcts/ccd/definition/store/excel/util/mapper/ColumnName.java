@@ -94,7 +94,6 @@ public enum ColumnName {
     AUTHORISATION("Authorisation"),
     READ_ONLY("ReadOnly"),
     DISABLED("Disabled"),
-    REQUIRES_CASE_ROLE("RequiresCaseRole"),
     ACCESS_PROFILES("AccessProfiles");
 
     private final String name;
