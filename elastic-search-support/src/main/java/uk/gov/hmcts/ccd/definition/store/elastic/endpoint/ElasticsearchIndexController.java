@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,6 +43,7 @@ public class ElasticsearchIndexController {
         this.elasticDefinitionImportListener = elasticDefinitionImportListener;
     }
 
+    @Transactional
     @PostMapping(ELASTIC_INDEX_URI)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Builds the Elasticsearch indices for all known case types, using their latest version. This API can "

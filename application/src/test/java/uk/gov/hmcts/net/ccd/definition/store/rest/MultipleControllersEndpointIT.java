@@ -9,6 +9,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTabCollection;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
@@ -37,6 +38,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
 
+@Transactional
 public class MultipleControllersEndpointIT extends BaseTest {
     private static final String WIZARD_PAGE_STRUCTURE_URL_1 =
         "/api/display/wizard-page-structure/case-types/%s/event-triggers/%s";

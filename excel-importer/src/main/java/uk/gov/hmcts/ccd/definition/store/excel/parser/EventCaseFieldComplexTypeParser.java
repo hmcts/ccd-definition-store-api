@@ -16,7 +16,7 @@ import java.util.Map;
 public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser {
 
     private final ShowConditionParser showConditionParser;
-    private final HiddenFieldsValidator hiddenFieldsValidator;
+    private HiddenFieldsValidator hiddenFieldsValidator;
 
     public EventCaseFieldComplexTypeParser(ShowConditionParser showConditionParser,
                                            HiddenFieldsValidator hiddenFieldsValidator) {
@@ -46,10 +46,9 @@ public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser
 
             eventComplexTypeEntity.setPublish(definitionDataItem.getBooleanOrDefault(ColumnName.PUBLISH, false));
             eventComplexTypeEntity.setPublishAs(definitionDataItem.getString(ColumnName.PUBLISH_AS));
-
-            eventComplexTypeEntities.add(eventComplexTypeEntity);
             eventComplexTypeEntity.setRetainHiddenValue(hiddenFieldsValidator
                 .parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+            eventComplexTypeEntities.add(eventComplexTypeEntity);
         }
         return eventComplexTypeEntities;
     }

@@ -229,9 +229,7 @@ subprojects { subproject ->
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
         testCompile "org.postgresql:postgresql:42.2.16"
-        testCompile (group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.3') {
-            exclude group: 'org.postgresql', module: 'postgresql'
-        }
+        testCompile "org.testcontainers:postgresql:1.15.1"
         testCompile "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
@@ -261,7 +259,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.23.0'
+        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '6.8.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
