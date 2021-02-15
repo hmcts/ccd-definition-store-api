@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definitionstore.befta;
 
-import io.restassured.RestAssured;
 import uk.gov.hmcts.befta.BeftaMain;
 import uk.gov.hmcts.befta.BeftaTestDataLoader;
 import uk.gov.hmcts.befta.DefaultBeftaTestDataLoader;
