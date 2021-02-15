@@ -1698,7 +1698,6 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(roleToAccessProfile.getDisabled(), roleToAccessProfileEntity.getDisabled());
             assertEquals(roleToAccessProfile.getAuthorisation(), roleToAccessProfileEntity.getAuthorisation());
             assertEquals(roleToAccessProfile.getAccessProfiles(), roleToAccessProfileEntity.getAccessProfiles());
-            assertEquals(roleToAccessProfile.getRequiresCaseRole(), roleToAccessProfileEntity.getRequiresCaseRole());
         }
 
         @Test

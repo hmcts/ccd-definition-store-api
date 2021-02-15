@@ -92,7 +92,6 @@ class RoleToAccessProfileServiceImplTest {
         roleToAccessProfileEntity.setAccessProfiles(accessProfiles);
         roleToAccessProfileEntity.setDisabled(false);
         roleToAccessProfileEntity.setReadOnly(false);
-        roleToAccessProfileEntity.setRequiresCaseRole(false);
         roleToAccessProfileEntity.setAuthorisation("");
         return roleToAccessProfileEntity;
     }

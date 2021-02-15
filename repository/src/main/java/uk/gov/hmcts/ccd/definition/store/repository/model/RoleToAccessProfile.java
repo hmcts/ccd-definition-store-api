@@ -17,5 +17,4 @@ public class RoleToAccessProfile {
     private Date liveFrom;
     private Date liveTo;
     private String roleName;
-    private Boolean requiresCaseRole;
 }

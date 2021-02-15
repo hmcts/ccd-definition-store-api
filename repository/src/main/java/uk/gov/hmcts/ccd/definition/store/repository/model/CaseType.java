@@ -1,9 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+
 import java.util.ArrayList;
 import java.util.List;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 public class CaseType implements HasAcls {
     private String id = null;
@@ -21,7 +22,6 @@ public class CaseType implements HasAcls {
     private SecurityClassification securityClassification;
     private List<AccessControlList> acls = new ArrayList<>();
     private final List<SearchAliasField> searchAliasFields = new ArrayList<>();
-    private List<RoleToAccessProfile> accessProfiles = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -127,9 +127,4 @@ public class CaseType implements HasAcls {
             this.searchAliasFields.addAll(searchAliasFields);
         }
     }
-
-    public List<RoleToAccessProfile> getAccessProfiles() {
-        return accessProfiles;
-    }
-
 }
