@@ -22,6 +22,7 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
         return super.calculateCustomValue(scenarioContext, key);
     }
 
+    @Override
     protected BeftaTestDataLoader buildTestDataLoader() {
         return new DefaultBeftaTestDataLoader() {
             @Override

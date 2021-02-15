@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-600.5",
+  "_extends_": "F-093_Test_Base_data",
+  "title": "must fail to import definition file",
+  "specs": [
+    "contains incorrectly configured 'retainHiddenValue' column, invalid value in the retainHiddenValue column",
+    "provides a clear validation message describing why the definition import has failed, for example, retainHiddenValue has been incorrectly configured or is invalid for fieldID [FieldID] on [TabName]"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_RetainHiddenValue_CaseEventToComplex_Error2.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Invalid value 'BLAH' is found in column 'RetainHiddenValue' in the sheet 'EventToComplexTypes'"
+    }
+  }
+}
