@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
-import org.junit.jupiter.api.Test;
+import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,10 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
-import java.io.IOException;
-
 import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
@@ -70,13 +67,13 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     }
 
     @Test
-    void testMappingGeneration() {
-        CaseTypeEntity caseType = createCaseType();
+    void testListeningToDefinitionImportedEventWithDynamicLists() throws IOException {
+        CaseTypeEntity caseType = createCaseTypeWithDynamicLists();
 
-        String mapping = mappingGenerator.generateMapping(caseType);
+        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        assertThat(mapping, equalToJSONInFile(
-            readFileFromClasspath("integration/case_type_mapping.json")));
+        verify(client).createIndex(anyString(), anyString());
+        verify(client).upsertMapping(anyString(), anyString());
     }
 
     private CaseTypeEntity createCaseType() {
@@ -92,6 +89,18 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
             .addField(complexOfCollection)
             .addField(collectionOfBaseType)
             .addField(dynamicField).build();
+    }
+
+    private CaseTypeEntity createCaseTypeWithDynamicLists() {
+        CaseTypeEntity caseTypeEntity = createCaseType();
+        CaseFieldEntity dynamicRadioField = newField("dynamicRadioList",
+            FieldTypeUtils.BASE_DYNAMIC_RADIO_LIST).build();
+        CaseFieldEntity dynamicMultiSelectField = newField("dynamicMultiSelectList",
+            FieldTypeUtils.BASE_DYNAMIC_MULTI_SELECT_LIST).build();
+
+        caseTypeEntity.addCaseField(dynamicRadioField);
+        caseTypeEntity.addCaseField(dynamicMultiSelectField);
+        return caseTypeEntity;
     }
 
     private CaseFieldEntity newComplexFieldOfComplex() {
