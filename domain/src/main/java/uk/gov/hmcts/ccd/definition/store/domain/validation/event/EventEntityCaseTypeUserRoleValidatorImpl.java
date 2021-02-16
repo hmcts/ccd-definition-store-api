@@ -7,15 +7,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Component
 @RequestScope
 public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityValidator {
 
-    private final List<String> caseTypesContainingCaseworkerCaa = new ArrayList<>();
-    private final List<String> caseTypesContainingCaseworkerApprover = new ArrayList<>();
+    private final Map<String, ArrayList<String>> caseTypeAndUserRole = new HashMap<>() {{
+            put("caseworker-caa", new ArrayList<>());
+            put("caseworker-approver", new ArrayList<>());
+            }};
 
     @Override
     public ValidationResult validate(final EventEntity event,
@@ -24,32 +27,16 @@ public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityVali
         final ValidationResult validationResult = new ValidationResult();
 
         for (EventACLEntity entity : event.getEventACLEntities()) {
-
-            switch (entity.getUserRoleId().toLowerCase()) {
-                case "caseworker-caa":
-                    if (isDuplicateCaseType(entity.getEvent().getCaseType().getReference(),
-                        caseTypesContainingCaseworkerCaa)) {
-                        validationResult.addError(new EventEntityCaseTypeUserRoleValidationError(entity));
-                    } else {
-                        caseTypesContainingCaseworkerCaa.add(entity.getEvent().getCaseType().getReference());
-                    }
-                    break;
-                case "caseworker-approver":
-                    if (isDuplicateCaseType(entity.getEvent().getCaseType().getReference(),
-                        caseTypesContainingCaseworkerApprover)) {
-                        validationResult.addError(new EventEntityCaseTypeUserRoleValidationError(entity));
-                    } else {
-                        caseTypesContainingCaseworkerApprover.add(entity.getEvent().getCaseType().getReference());
-                    }
-                    break;
-                default:
-                    break;
+            if (caseTypeAndUserRole.containsKey(entity.getUserRoleId().toLowerCase())) {
+                if (caseTypeAndUserRole.get(entity.getUserRoleId().toLowerCase()).contains(entity.getEvent()
+                    .getCaseType().getReference().toLowerCase())) {
+                    validationResult.addError(new EventEntityCaseTypeUserRoleValidationError(entity));
+                } else {
+                    caseTypeAndUserRole.get(entity.getUserRoleId().toLowerCase()).add(entity.getEvent().getCaseType()
+                        .getReference().toLowerCase());
+                }
             }
         }
         return validationResult;
-    }
-
-    private boolean isDuplicateCaseType(String caseType, List<String> existingCaseTypes) {
-        return existingCaseTypes.stream().anyMatch(caseType::equalsIgnoreCase);
     }
 }
