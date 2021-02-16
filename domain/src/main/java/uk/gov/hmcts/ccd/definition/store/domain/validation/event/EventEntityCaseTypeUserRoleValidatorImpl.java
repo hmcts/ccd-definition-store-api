@@ -25,25 +25,27 @@ public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityVali
                                      final EventEntityValidationContext eventEntityValidationContext) {
 
         final ValidationResult validationResult = new ValidationResult();
-        mapUserRolesWithEmptyList(userRoleList);
+        initUserRoleCaseTypeMap();
 
         for (EventACLEntity entity : event.getEventACLEntities()) {
-            if (userRoleCaseTypeMap.containsKey(entity.getUserRoleId().toLowerCase())) {
-                if (userRoleCaseTypeMap.get(entity.getUserRoleId().toLowerCase()).contains(entity.getEvent()
-                    .getCaseType().getReference().toLowerCase())) {
+
+            String userRole = entity.getUserRoleId().toLowerCase();
+            String caseType = entity.getEvent().getCaseType().getReference().toLowerCase();
+
+            if (userRoleCaseTypeMap.containsKey(userRole)) {
+                if (userRoleCaseTypeMap.get(userRole).contains(caseType)) {
                     validationResult.addError(new EventEntityCaseTypeUserRoleValidationError(entity));
                 } else {
-                    userRoleCaseTypeMap.get(entity.getUserRoleId().toLowerCase()).add(entity.getEvent().getCaseType()
-                        .getReference().toLowerCase());
+                    userRoleCaseTypeMap.get(userRole).add(caseType);
                 }
             }
         }
         return validationResult;
     }
 
-    private void mapUserRolesWithEmptyList(List<String> list) {
-        for (String userRole : list) {
-            if (!(userRoleCaseTypeMap.containsKey(userRole))) {
+    private void initUserRoleCaseTypeMap() {
+        for (String userRole : userRoleList) {
+            if (!userRoleCaseTypeMap.containsKey(userRole)) {
                 userRoleCaseTypeMap.put(userRole, new ArrayList<>());
             }
         }
