@@ -43,7 +43,9 @@ public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityVali
 
     private void mapUserRolesWithEmptyList(List<String> list) {
         for (String userRole : list) {
-            userRoleCaseTypeMap.put(userRole, new ArrayList<>());
+            if (!(userRoleCaseTypeMap.containsKey(userRole))) {
+                userRoleCaseTypeMap.put(userRole, new ArrayList<>());
+            }
         }
     }
 }
