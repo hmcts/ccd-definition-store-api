@@ -9,34 +9,41 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.Arrays;
 
 
 @Component
 @RequestScope
 public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityValidator {
 
-    private final Map<String, ArrayList<String>> caseTypeAndUserRole = new HashMap<>() {{
-            put("caseworker-caa", new ArrayList<>());
-            put("caseworker-approver", new ArrayList<>());
-            }};
+    private final Map<String, ArrayList<String>> userRoleCaseTypeMap = new HashMap<>();
+    private final List<String> userRoleList = Arrays.asList("caseworker-caa", "caseworker-approver");
 
     @Override
     public ValidationResult validate(final EventEntity event,
                                      final EventEntityValidationContext eventEntityValidationContext) {
 
         final ValidationResult validationResult = new ValidationResult();
+        mapUserRolesWithEmptyList(userRoleList);
 
         for (EventACLEntity entity : event.getEventACLEntities()) {
-            if (caseTypeAndUserRole.containsKey(entity.getUserRoleId().toLowerCase())) {
-                if (caseTypeAndUserRole.get(entity.getUserRoleId().toLowerCase()).contains(entity.getEvent()
+            if (userRoleCaseTypeMap.containsKey(entity.getUserRoleId().toLowerCase())) {
+                if (userRoleCaseTypeMap.get(entity.getUserRoleId().toLowerCase()).contains(entity.getEvent()
                     .getCaseType().getReference().toLowerCase())) {
                     validationResult.addError(new EventEntityCaseTypeUserRoleValidationError(entity));
                 } else {
-                    caseTypeAndUserRole.get(entity.getUserRoleId().toLowerCase()).add(entity.getEvent().getCaseType()
+                    userRoleCaseTypeMap.get(entity.getUserRoleId().toLowerCase()).add(entity.getEvent().getCaseType()
                         .getReference().toLowerCase());
                 }
             }
         }
         return validationResult;
+    }
+
+    private void mapUserRolesWithEmptyList(List<String> list) {
+        for (String userRole : list) {
+            userRoleCaseTypeMap.put(userRole, new ArrayList<>());
+        }
     }
 }
