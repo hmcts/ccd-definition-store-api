@@ -1,6 +1,6 @@
 {
   "_guid_": "S-096.2",
-  "_extends_": "Import_Base_data",
+  "_extends_": "Test_Base_data",
   "title": "must fail to import definition file",
   "specs": [
     "contains two events for a caseType with userRole caseworker-caa",

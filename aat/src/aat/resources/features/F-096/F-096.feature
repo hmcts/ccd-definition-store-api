@@ -9,7 +9,7 @@ Feature: F-096: Import validations for the ChangeOrganisationRequest field and c
     Given a user with [permissions to import case definition files]
     When a request is prepared with appropriate values
     And the request [contains field ChangeOrganisationRequest defined twice within one casetype]
-    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    And it is submitted to call the [POST Case Definition File] operation of [CCD Definition Store Api]
     Then a negative response is received
     And the response has all other details as expected
     And the response [provides a clear validation message describing why the definition import has failed, for example, Change Organisation Request is defined more than once for case type 'CaseTypeID' in worksheet [TabName]]
@@ -19,7 +19,7 @@ Feature: F-096: Import validations for the ChangeOrganisationRequest field and c
      Given a user with [permissions to import case definition files]
      When a request is prepared with appropriate values
      And the request [contains two events for a caseType with userRole caseworker-caa]
-     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+     And it is submitted to call the [POST Case Definition File] operation of [CCD Definition Store Api]
      Then a negative response is received
      And the response has all other details as expected
      And the response [provides a clear validation message describing why the definition import has failed, for example, UserRole 'caseworker-caa' is defined more than once for case type 'CaseTypeID' in worksheet [TabName]]
