@@ -297,7 +297,7 @@ public class ImportServiceImplTest {
             changeOrganisationRequest,
             caseLocationBaseType,
             regionBaseType,
-            baseLocationBaseType));
+            baseLocationBaseType,
             dynamicRadioListBaseType,
             dynamicMultiSelectListBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
