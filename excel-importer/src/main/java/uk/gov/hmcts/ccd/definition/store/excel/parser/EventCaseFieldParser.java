@@ -1,11 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 public class EventCaseFieldParser implements FieldShowConditionParser {
@@ -47,6 +49,10 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
         eventCaseField.setHintText(eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_FIELD_HINT));
         eventCaseField.setRetainHiddenValue(hiddenFieldsValidator.parseHiddenFields(eventCaseFieldDefinition));
 
+        validateDisplayContextForPublish(eventCaseFieldDefinition, eventCaseField);
+        eventCaseField.setPublish(eventCaseFieldDefinition.getBooleanOrDefault(ColumnName.PUBLISH, false));
+        eventCaseField.setPublishAs(eventCaseFieldDefinition.getString(ColumnName.PUBLISH_AS));
+
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(
             eventCaseField, eventCaseFieldDefinition);
 
@@ -57,5 +63,17 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
     @Override
     public ShowConditionParser getShowConditionParser() {
         return showConditionParser;
+    }
+
+    private void validateDisplayContextForPublish(DefinitionDataItem eventCaseFieldDefinition,
+                                                  EventCaseFieldEntity eventCaseFieldEntity) {
+        if (eventCaseFieldEntity.getDisplayContext() == DisplayContext.COMPLEX
+            && eventCaseFieldDefinition.getBoolean(ColumnName.PUBLISH) != null) {
+            throw new MapperException(String.format("Publish column must not be set for case "
+                    + "field '%s', event '%s' in CaseEventToFields when DisplayContext is COMPLEX. "
+                    + "Please only use the Publish overrides in EventToComplexTypes.",
+                eventCaseFieldDefinition.getString(ColumnName.CASE_FIELD_ID),
+                eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_ID)));
+        }
     }
 }

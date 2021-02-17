@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -18,7 +19,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -67,7 +70,7 @@ public class EventCaseFieldParserTest {
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(
-            caseFieldId, displayContext, originalShowCondition, label, hint, false);
+            caseFieldId, displayContext, originalShowCondition, label, hint, false, false, null, null);
         when(hiddenFieldsValidator.parseHiddenFields(definitionDataItem)).thenReturn(Boolean.FALSE);
         EventCaseFieldEntity eventCaseFieldEntity = classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem);
 
@@ -75,6 +78,8 @@ public class EventCaseFieldParserTest {
         assertEquals(displayContext.getDisplayContext(), eventCaseFieldEntity.getDisplayContext());
         assertEquals(PARSED_SHOW_CONDITION, eventCaseFieldEntity.getShowCondition());
         assertFalse(eventCaseFieldEntity.getRetainHiddenValue());
+        assertFalse(eventCaseFieldEntity.getPublish());
+        assertNull(eventCaseFieldEntity.getPublishAs());
         assertEquals(label, eventCaseFieldEntity.getLabel());
         assertEquals(hint, eventCaseFieldEntity.getHintText());
 
@@ -93,10 +98,11 @@ public class EventCaseFieldParserTest {
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
         String originalShowCondition = "Original Show Condition";
+        String publishAs = "publishAsTest";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition,
-            null, null, true);
+            null, null, true, true, publishAs, null);
 
         when(showConditionParser.parseShowCondition(any())).thenThrow(
             new InvalidShowConditionException("")
@@ -108,10 +114,32 @@ public class EventCaseFieldParserTest {
         assertEquals(displayContext.getDisplayContext(), eventCaseFieldEntity.getDisplayContext());
         assertEquals(originalShowCondition, eventCaseFieldEntity.getShowCondition());
         assertTrue(eventCaseFieldEntity.getRetainHiddenValue());
+        assertEquals(Boolean.TRUE, eventCaseFieldEntity.getPublish());
+        assertEquals(publishAs, eventCaseFieldEntity.getPublishAs());
 
         verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(
             eq(eventCaseFieldEntity), eq(definitionDataItem));
         verify(parseContext).getCaseFieldForCaseType(eq(caseTypeId), eq(caseFieldId));
+    }
+
+    @Test
+    public void shouldErrorWhenDisplayContextIsComplexAndPublishIsSpecified() {
+        String expectedError = "Publish column must not be set for case field 'FieldId', "
+            + "event 'EventId' in CaseEventToFields when DisplayContext is COMPLEX. "
+            + "Please only use the Publish overrides in EventToComplexTypes.";
+
+        String caseFieldId = "FieldId";
+        String caseTypeId = "Case Type Id";
+        String caseEventId = "EventId";
+        DisplayContextColumn displayContext = new DisplayContextColumn("COMPLEX", DisplayContext.COMPLEX);
+
+        DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, null,
+            null, null, true, true, null, caseEventId);
+
+        MapperException exception = assertThrows(MapperException.class,
+            () -> classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem));
+
+        assertEquals(expectedError, exception.getMessage());
     }
 
     private DefinitionDataItem definitionDataItem(String caseFieldId,
@@ -119,7 +147,10 @@ public class EventCaseFieldParserTest {
                                                   String showCondition,
                                                   String label,
                                                   String hint,
-                                                  Boolean retainHiddenValue) {
+                                                  Boolean retainHiddenValue,
+                                                  Boolean publish,
+                                                  String publishAs,
+                                                  String caseEventId) {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
 
         when(definitionDataItem.getString(eq(ColumnName.CASE_FIELD_ID))).thenReturn(caseFieldId);
@@ -128,6 +159,9 @@ public class EventCaseFieldParserTest {
         when(definitionDataItem.getBoolean(eq(ColumnName.RETAIN_HIDDEN_VALUE))).thenReturn(retainHiddenValue);
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_LABEL)).thenReturn(label);
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_FIELD_HINT)).thenReturn(hint);
+        when(definitionDataItem.getBooleanOrDefault(ColumnName.PUBLISH, false)).thenReturn(publish);
+        when(definitionDataItem.getString(ColumnName.CASE_EVENT_ID)).thenReturn(caseEventId);
+        when(definitionDataItem.getString(ColumnName.PUBLISH_AS)).thenReturn(publishAs);
 
         return definitionDataItem;
     }

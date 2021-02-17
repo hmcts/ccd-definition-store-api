@@ -66,6 +66,8 @@ public class BaseTypeControllerTests extends BaseTest {
                 tuple("DynamicList", "DynamicList", null),
                 tuple("Region", "Region", null),
                 tuple("BaseLocation", "BaseLocation", null)
+                tuple("DynamicRadioList", "DynamicRadioList", null),
+                tuple("DynamicMultiSelectList", "DynamicMultiSelectList", null)
             );
 
     }
