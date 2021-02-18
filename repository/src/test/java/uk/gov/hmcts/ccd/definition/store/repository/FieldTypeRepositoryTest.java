@@ -234,7 +234,7 @@ public class FieldTypeRepositoryTest {
             fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION),
             fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION_POLICY),
             fieldTypeWithReference(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST),
-            fieldTypeWithReference(PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION)
+            fieldTypeWithReference(PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION),
             fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_LOCATION)
             )
         );
