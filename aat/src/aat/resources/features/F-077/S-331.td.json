@@ -20,10 +20,6 @@
 		"body": {
       "_extends_": "AllValidBaseTypeArrayPayload",
 			"arrayInMap": [
-				{
-					"__operator__": "equivalent",
-					"__ordering__": "unordered"
-				},
         {
         "id": "Region",
         "type": "Region",
@@ -43,25 +39,6 @@
           "fixed_list_items" : [ ],
           "complex_fields" : [ ],
           "collection_field_type" : null
-        }, {
-          "id" : "DynamicRadioList",
-          "type" : "DynamicRadioList",
-          "min" : null,
-          "max" : null,
-          "regular_expression" : null,
-          "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        }, 
-        {
-          "id": "DynamicMultiSelectList",
-          "type": "DynamicMultiSelectList",
-          "min": null,
-          "max": null,
-          "regular_expression": null,
-          "fixed_list_items": [],
-          "complex_fields": [],
-          "collection_field_type": null
         }
 			]
 		}
