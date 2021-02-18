@@ -38,7 +38,7 @@ dependencies {
     }
     compile "com.google.guava:guava:30.0-jre"
     compile "javax.validation:validation-api:2.0.1.Final"
-    compile "org.hibernate.validator:hibernate-validator:6.0.10.Final"
+    compile "org.hibernate.validator:hibernate-validator:7.0.1.Final"
     compile "org.glassfish:javax.el:3.0.0"
     compile "org.flywaydb:flyway-core:6.5.7"
     testCompile "org.assertj:assertj-core"
