@@ -18,7 +18,52 @@
 			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
 		},
 		"body": {
-      "_extends_": "AllValidBaseTypeArrayPayload"
+      "_extends_": "AllValidBaseTypeArrayPayload",
+			"arrayInMap": [
+				{
+					"__operator__": "equivalent",
+					"__ordering__": "unordered"
+				},
+        {
+        "id": "Region",
+        "type": "Region",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+        },
+        {
+          "id" : "BaseLocation",
+          "type" : "BaseLocation",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        }, {
+          "id" : "DynamicRadioList",
+          "type" : "DynamicRadioList",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        }, 
+        {
+          "id": "DynamicMultiSelectList",
+          "type": "DynamicMultiSelectList",
+          "min": null,
+          "max": null,
+          "regular_expression": null,
+          "fixed_list_items": [],
+          "complex_fields": [],
+          "collection_field_type": null
+        }
+			]
 		}
 	}
 }
