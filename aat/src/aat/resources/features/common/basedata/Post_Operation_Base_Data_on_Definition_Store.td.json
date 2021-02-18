@@ -1,0 +1,22 @@
+{
+  "_guid_": "Post_Operation_Base_Data_on_Definition_Store",
+
+  "productName": "CCD Definition Store",
+  "method": "POST",
+  "uri": "/import",
+  "specs": [
+    "an active profile in CCD"
+  ],
+  "users": {
+    "invokingUser": {
+      "_extends_": "DefaultUserForDefinitionImports"
+    }
+  },
+  "request": {
+    "headers": {
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "multipart/form-data"
+    }
+  }
+}

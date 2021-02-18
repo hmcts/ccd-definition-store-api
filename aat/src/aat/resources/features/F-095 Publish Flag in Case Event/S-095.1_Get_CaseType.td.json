@@ -29,7 +29,11 @@
 				"live_until" : null,
 				"case_types" : [ ]
 			},
-			"events" : [ {
+			"events" : [
+				{
+						"__ordering__": "UNORDERED"
+				},
+        {
 				"id" : "addExtraInfo",
 				"name" : "Add Details",
 				"description" : "Add extra details to the case",
@@ -41,8 +45,10 @@
 					},
 					{
             "_extends_" : "CaseEventField",
-					  "case_field_id" : "Age"
-				} ],
+            "case_field_id" : "Age",
+            "publish" : false,
+            "publish_as" : "age"
+          } ],
 				"pre_states" : [ "CaseCreated" ],
 				"post_states" : [ {
 					"enabling_condition" : null,
@@ -56,6 +62,7 @@
 				"callback_url_submitted_event" : null,
 				"retries_timeout_url_submitted_event" : [ ],
 				"security_classification" : "PUBLIC",
+        "event_enabling_condition": null,
 				"acls" : [ {
 					"role" : "caseworker-befta_master",
 					"create" : true,
@@ -86,8 +93,10 @@
 					  "case_field_id" : "TextFieldMName"
 				}, {
             "_extends_" : "CaseEventField",
-					  "case_field_id" : "TextFieldLName"
-				} ],
+            "case_field_id" : "TextFieldLName",
+            "publish" : true,
+            "publish_as" : "text_field_last_name"
+          } ],
 				"pre_states" : [ ],
 				"post_states" : [ {
 					"enabling_condition" : null,
@@ -101,6 +110,7 @@
 				"callback_url_submitted_event" : null,
 				"retries_timeout_url_submitted_event" : [ ],
 				"security_classification" : "PUBLIC",
+        "event_enabling_condition": null,
 				"acls" : [ {
 					"role" : "caseworker-befta_master",
 					"create" : true,

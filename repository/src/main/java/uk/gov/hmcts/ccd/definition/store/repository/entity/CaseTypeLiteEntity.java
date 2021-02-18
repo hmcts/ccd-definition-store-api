@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.FetchMode.SUBSELECT;
@@ -52,17 +51,17 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
     @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<StateEntity> states = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<EventLiteEntity> events = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<CaseTypeLiteACLEntity> caseTypeLiteACLEntities = new ArrayList<>();
@@ -148,5 +147,16 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
     public CaseTypeLiteEntity addCaseTypeACLs(final Collection<CaseTypeLiteACLEntity> caseTypeLiteACLEntities) {
         caseTypeLiteACLEntities.forEach(e -> addCaseTypeACL(e));
         return this;
+    }
+
+    public static CaseTypeLiteEntity toCaseTypeLiteEntity(CaseTypeEntity caseTypeEntity) {
+        CaseTypeLiteEntity caseTypeLiteEntity = new CaseTypeLiteEntity();
+        caseTypeLiteEntity.setId(caseTypeEntity.getId());
+        caseTypeLiteEntity.setReference(caseTypeEntity.getReference());
+        caseTypeLiteEntity.setName(caseTypeEntity.getName());
+        caseTypeLiteEntity.setVersion(caseTypeEntity.getVersion());
+        caseTypeLiteEntity.setDescription(caseTypeEntity.getDescription());
+        caseTypeLiteEntity.setJurisdiction(caseTypeEntity.getJurisdiction());
+        return caseTypeLiteEntity;
     }
 }

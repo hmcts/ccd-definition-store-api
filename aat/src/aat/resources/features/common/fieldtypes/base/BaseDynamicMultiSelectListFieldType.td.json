@@ -1,0 +1,8 @@
+{
+  "_guid_": "BaseDynamicMultiSelectListFieldType",
+
+  "_extends_": "CommonFieldType",
+
+  "id": "DynamicMultiSelectList",
+  "type": "DynamicMultiSelectList"
+}

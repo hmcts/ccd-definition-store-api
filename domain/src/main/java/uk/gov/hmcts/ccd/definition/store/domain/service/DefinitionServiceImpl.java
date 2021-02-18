@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.DraftDefinitionRepositoryDecorator;
@@ -38,6 +39,7 @@ public class DefinitionServiceImpl implements DefinitionService {
         this.mapper = mapper;
     }
 
+    @Transactional
     @Override
     public ServiceResponse<Definition> createDraftDefinition(final Definition definition) {
         preConditionCheck(definition);
@@ -57,6 +59,7 @@ public class DefinitionServiceImpl implements DefinitionService {
                 "Jurisdiction " + jurisdiction.getId() + " could not be retrieved or does not exist"));
     }
 
+    @Transactional
     @Override
     public List<Definition> findByJurisdictionId(String jurisdiction) {
         return decoratedRepository.findByJurisdictionId(jurisdiction)
@@ -65,6 +68,7 @@ public class DefinitionServiceImpl implements DefinitionService {
             .collect(toList());
     }
 
+    @Transactional
     @Override
     public ServiceResponse<Definition> saveDraftDefinition(final Definition definition) {
         preConditionCheck(definition);
@@ -92,6 +96,7 @@ public class DefinitionServiceImpl implements DefinitionService {
             decoratedRepository.simpleSave(definitionEntity)), UPDATE);
     }
 
+    @Transactional
     @Override
     public void deleteDraftDefinition(final String jurisdiction, final Integer version) {
         final DefinitionEntity
@@ -114,6 +119,7 @@ public class DefinitionServiceImpl implements DefinitionService {
         decoratedRepository.simpleSave(definitionEntity);
     }
 
+    @Transactional
     @Override
     public Definition findByJurisdictionIdAndVersion(final String jurisdiction, final Integer version) {
         final DefinitionEntity entity = decoratedRepository.findByJurisdictionIdAndVersion(jurisdiction, version);

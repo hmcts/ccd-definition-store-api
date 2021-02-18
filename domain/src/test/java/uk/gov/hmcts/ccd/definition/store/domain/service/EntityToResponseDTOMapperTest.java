@@ -252,6 +252,30 @@ class  EntityToResponseDTOMapperTest {
     }
 
     @Nested
+    @DisplayName("Should return a CaseEvent which matches the EventEntity")
+    class MapEventEnablingCondition {
+
+        @Test
+        void shouldMapToCaseEventWithEventEnablingCondition() {
+            EventEntity eventEntity = new EventEntity();
+            eventEntity.setShowEventNotes(true);
+            eventEntity.setCanSaveDraft(true);
+            final String validEventEnablingCondition = "FieldA!=\"\" AND FieldB=\"I'm innocent\"";
+            eventEntity.setEventEnablingCondition(validEventEnablingCondition);
+
+            CaseEvent caseEvent = spyOnClassUnderTest.map(
+                eventEntity
+            );
+
+            assertAll(
+                () -> assertEquals(eventEntity.getShowEventNotes(), caseEvent.getShowEventNotes()),
+                () -> assertEquals(eventEntity.getCanSaveDraft(), caseEvent.getCanSaveDraft()),
+                () -> assertEquals(eventEntity.getEventEnablingCondition(), caseEvent.getEventEnablingCondition())
+            );
+        }
+    }
+
+    @Nested
     @DisplayName("Should return a CaseType which matches the CaseTypeEntity")
     class MapCaseTypeEntityTests {
 
@@ -1670,8 +1694,8 @@ class  EntityToResponseDTOMapperTest {
             return fieldTypeEntity;
         }
 
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        private CaseTypeLiteEntity caseTypeEntity(String reference) {
+            CaseTypeLiteEntity caseTypeEntity = new CaseTypeLiteEntity();
             caseTypeEntity.setReference("Reference");
             return caseTypeEntity;
         }
