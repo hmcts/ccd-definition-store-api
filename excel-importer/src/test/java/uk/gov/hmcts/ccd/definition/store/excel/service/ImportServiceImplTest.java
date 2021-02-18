@@ -10,6 +10,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_BASE_LOCATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_HISTORY_VIEWER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_PAYMENT_HISTORY_VIEWER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
@@ -29,9 +30,11 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_N
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_PHONE_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_POST_CODE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_REGION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
@@ -185,6 +188,9 @@ public class ImportServiceImplTest {
     private FieldTypeEntity dynamicMultiSelectListBaseType;
     private FieldTypeEntity changeOrganisationRequest;
     private FieldTypeEntity previousOrganisationBaseType;
+    private FieldTypeEntity caseLocationBaseType;
+    private FieldTypeEntity regionBaseType;
+    private FieldTypeEntity baseLocationBaseType;
 
     @Before
     public void setup() {
@@ -237,6 +243,9 @@ public class ImportServiceImplTest {
         fixedListRadioTypeBaseType = buildBaseType(BASE_RADIO_FIXED_LIST);
         changeOrganisationRequest = buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST);
         previousOrganisationBaseType = buildBaseType(PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION);
+        caseLocationBaseType = buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION);
+        regionBaseType = buildBaseType(BASE_REGION);
+        baseLocationBaseType = buildBaseType(BASE_BASE_LOCATION);
         dynamicRadioListBaseType = buildBaseType(BASE_DYNAMIC_RADIO_LIST);
         dynamicMultiSelectListBaseType = buildBaseType(BASE_DYNAMIC_MULTI_SELECT_LIST);
 
@@ -292,6 +301,9 @@ public class ImportServiceImplTest {
             dynamicListBaseType,
             changeOrganisationRequest,
             previousOrganisationBaseType,
+            caseLocationBaseType,
+            regionBaseType,
+            baseLocationBaseType,
             dynamicRadioListBaseType,
             dynamicMultiSelectListBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
