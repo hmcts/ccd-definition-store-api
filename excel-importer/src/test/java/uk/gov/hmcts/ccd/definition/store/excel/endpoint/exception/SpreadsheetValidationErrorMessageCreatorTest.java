@@ -754,7 +754,6 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             classUnderTest.createErrorMessage(error));
     }
 
-
     @Test
     public void eventEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
