@@ -34,7 +34,7 @@ bootJar {
 
 ext {
     mapstructGenSourceDir = 'build/classes/java/main'
-    orgMapstructVersion='1.3.0.Final'
+    orgMapstructVersion='1.4.2.Final'
 }
 
 dependencies {
@@ -43,7 +43,7 @@ dependencies {
         exclude group: 'org.mapstruct', module: 'mapstruct'
     }
     compile "org.apache.commons:commons-lang3:3.11"
-    compile (group: 'commons-validator', name: 'commons-validator', version: '1.6') {
+    compile (group: 'commons-validator', name: 'commons-validator', version: '1.7') {
         exclude group: 'commons-beanutils', module: 'commons-beanutils'
     }
     compile "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
