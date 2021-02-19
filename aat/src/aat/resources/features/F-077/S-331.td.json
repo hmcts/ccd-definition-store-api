@@ -18,7 +18,29 @@
 			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
 		},
 		"body": {
-      "_extends_": "AllValidBaseTypeArrayPayload"
+      "_extends_": "AllValidBaseTypeArrayPayload",
+			"arrayInMap": [
+        {
+        "id": "Region",
+        "type": "Region",
+        "min": null,
+        "max": null,
+        "regular_expression": null,
+        "fixed_list_items": [],
+        "complex_fields": [],
+        "collection_field_type": null
+        },
+        {
+          "id" : "BaseLocation",
+          "type" : "BaseLocation",
+          "min" : null,
+          "max" : null,
+          "regular_expression" : null,
+          "fixed_list_items" : [ ],
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        }
+			]
 		}
 	}
 }
