@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 import static javax.persistence.FetchType.LAZY;
 
-@Table(name = "role_to_access_profile")
+@Table(name = "role_to_access_profiles")
 @Entity
 public class RoleToAccessProfilesEntity implements Serializable {
 
