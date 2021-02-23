@@ -111,7 +111,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
-    private final List<RoleToAccessProfileEntity> accessProfiles = new ArrayList<>();
+    private final List<RoleToAccessProfilesEntity> roleToAccessProfiles = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -290,7 +290,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
         return this;
     }
 
-    public List<RoleToAccessProfileEntity> getAccessProfiles() {
-        return accessProfiles;
+    public List<RoleToAccessProfilesEntity> getRoleToAccessProfiles() {
+        return roleToAccessProfiles;
     }
 }

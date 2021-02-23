@@ -12,11 +12,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 
 public class RoleToAccessProfilesParser {
 
-    public List<RoleToAccessProfileEntity> parse(Map<String, DefinitionSheet> definitionSheets,
+    public List<RoleToAccessProfilesEntity> parse(Map<String, DefinitionSheet> definitionSheets,
                                                   ParseContext parseContext) {
         try {
             final List<DefinitionDataItem> roleToAccessProfiles = definitionSheets
@@ -37,9 +37,9 @@ public class RoleToAccessProfilesParser {
         }
     }
 
-    public RoleToAccessProfileEntity createRoleToAccessProfileEntity(ParseContext parseContext,
-                                                                     DefinitionDataItem definitionDataItem) {
-        RoleToAccessProfileEntity roleToAccessProfileEntity = new RoleToAccessProfileEntity();
+    public RoleToAccessProfilesEntity createRoleToAccessProfileEntity(ParseContext parseContext,
+                                                                      DefinitionDataItem definitionDataItem) {
+        RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
 
         final String caseType = definitionDataItem.getString(ColumnName.CASE_TYPE_ID);
         CaseTypeEntity caseTypeEntity = parseContext.getCaseTypes()
@@ -52,19 +52,17 @@ public class RoleToAccessProfilesParser {
                 throw new InvalidImportException(message);
 
             });
-        roleToAccessProfileEntity.setCaseType(caseTypeEntity);
+        roleToAccessProfilesEntity.setCaseType(caseTypeEntity);
 
-        roleToAccessProfileEntity.setRoleName(definitionDataItem.getString(ColumnName.ROLE_NAME));
-        roleToAccessProfileEntity.setLiveFrom(definitionDataItem.getDate(ColumnName.LIVE_FROM));
-        roleToAccessProfileEntity.setLiveTo(definitionDataItem.getDate(ColumnName.LIVE_TO));
-        roleToAccessProfileEntity.setReadOnly(definitionDataItem.getBooleanOrDefault(ColumnName.READ_ONLY, false));
-        roleToAccessProfileEntity.setDisabled(definitionDataItem.getBooleanOrDefault(ColumnName.DISABLED, false));
-        roleToAccessProfileEntity.setRequiresCaseRole(definitionDataItem
-            .getBooleanOrDefault(ColumnName.REQUIRES_CASE_ROLE, false));
+        roleToAccessProfilesEntity.setRoleName(definitionDataItem.getString(ColumnName.ROLE_NAME));
+        roleToAccessProfilesEntity.setLiveFrom(definitionDataItem.getDate(ColumnName.LIVE_FROM));
+        roleToAccessProfilesEntity.setLiveTo(definitionDataItem.getDate(ColumnName.LIVE_TO));
+        roleToAccessProfilesEntity.setReadOnly(definitionDataItem.getBooleanOrDefault(ColumnName.READ_ONLY, false));
+        roleToAccessProfilesEntity.setDisabled(definitionDataItem.getBooleanOrDefault(ColumnName.DISABLED, false));
         String accessProfiles = definitionDataItem.getString(ColumnName.ACCESS_PROFILES);
-        roleToAccessProfileEntity.setAccessProfiles(accessProfiles);
-        roleToAccessProfileEntity.setAuthorisation(definitionDataItem.getString(ColumnName.AUTHORISATION));
+        roleToAccessProfilesEntity.setAccessProfiles(accessProfiles);
+        roleToAccessProfilesEntity.setAuthorisation(definitionDataItem.getString(ColumnName.AUTHORISATION));
 
-        return roleToAccessProfileEntity;
+        return roleToAccessProfilesEntity;
     }
 }

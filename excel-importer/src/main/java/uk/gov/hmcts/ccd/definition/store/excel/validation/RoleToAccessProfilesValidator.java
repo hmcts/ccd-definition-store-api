@@ -13,13 +13,13 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 @Component
-public class AccessProfileValidator {
+public class RoleToAccessProfilesValidator {
 
-    public void validate(final List<RoleToAccessProfileEntity> roleToAccessProfileEntities,
+    public void validate(final List<RoleToAccessProfilesEntity> roleToAccessProfileEntities,
                          final ParseContext parseContext) {
 
         final List<Pair<String, String>> roleNameCaseTypePairs = new ArrayList<>();
@@ -43,7 +43,7 @@ public class AccessProfileValidator {
             });
     }
 
-    private void validate(RoleToAccessProfileEntity entity,
+    private void validate(RoleToAccessProfilesEntity entity,
                           ParseContext parseContext,
                           ValidationResult validationResult) {
 
@@ -63,7 +63,8 @@ public class AccessProfileValidator {
             });
     }
 
-    private void validateRoleNameAndAccessProfile(ValidationResult validationResult, RoleToAccessProfileEntity entity) {
+    private void validateRoleNameAndAccessProfile(ValidationResult validationResult,
+                                                  RoleToAccessProfilesEntity entity) {
         if (StringUtils.isEmpty(entity.getRoleName())) {
             String formattedMessage = String.format("Role name should not be null or empty in column '%s' "
                 + "in the sheet '%s'", ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES);

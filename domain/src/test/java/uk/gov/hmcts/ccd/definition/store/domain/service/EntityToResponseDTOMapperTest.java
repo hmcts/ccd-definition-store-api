@@ -43,7 +43,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
@@ -74,7 +74,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
-import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfile;
+import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
@@ -1684,37 +1684,36 @@ class  EntityToResponseDTOMapperTest {
 
         @Test
         void testMapRoleToAccessProfileEntity() {
-            RoleToAccessProfileEntity roleToAccessProfileEntity = new RoleToAccessProfileEntity();
-            roleToAccessProfileEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+            RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
+            roleToAccessProfilesEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
 
 
-            RoleToAccessProfile roleToAccessProfile = classUnderTest.map(roleToAccessProfileEntity);
+            RoleToAccessProfiles roleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
-            assertEquals(roleToAccessProfile.getCaseTypeId(), roleToAccessProfileEntity.getCaseType().getReference());
-            assertEquals(roleToAccessProfile.getRoleName(), roleToAccessProfileEntity.getRoleName());
-            assertEquals(roleToAccessProfile.getLiveTo(), roleToAccessProfileEntity.getLiveTo());
-            assertEquals(roleToAccessProfile.getLiveFrom(), roleToAccessProfileEntity.getLiveFrom());
-            assertEquals(roleToAccessProfile.getReadOnly(), roleToAccessProfileEntity.getReadOnly());
-            assertEquals(roleToAccessProfile.getDisabled(), roleToAccessProfileEntity.getDisabled());
-            assertEquals(roleToAccessProfile.getAuthorisation(), roleToAccessProfileEntity.getAuthorisation());
-            assertEquals(roleToAccessProfile.getAccessProfiles(), roleToAccessProfileEntity.getAccessProfiles());
-            assertEquals(roleToAccessProfile.getRequiresCaseRole(), roleToAccessProfileEntity.getRequiresCaseRole());
+            assertEquals(roleToAccessProfiles.getCaseTypeId(), roleToAccessProfilesEntity.getCaseType().getReference());
+            assertEquals(roleToAccessProfiles.getRoleName(), roleToAccessProfilesEntity.getRoleName());
+            assertEquals(roleToAccessProfiles.getLiveTo(), roleToAccessProfilesEntity.getLiveTo());
+            assertEquals(roleToAccessProfiles.getLiveFrom(), roleToAccessProfilesEntity.getLiveFrom());
+            assertEquals(roleToAccessProfiles.getReadOnly(), roleToAccessProfilesEntity.getReadOnly());
+            assertEquals(roleToAccessProfiles.getDisabled(), roleToAccessProfilesEntity.getDisabled());
+            assertEquals(roleToAccessProfiles.getAuthorisation(), roleToAccessProfilesEntity.getAuthorisation());
+            assertEquals(roleToAccessProfiles.getAccessProfiles(), roleToAccessProfilesEntity.getAccessProfiles());
         }
 
         @Test
         void testMapEmptyRoleToAccessProfileEntity() {
-            RoleToAccessProfileEntity roleToAccessProfileEntity = new RoleToAccessProfileEntity();
+            RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
 
-            RoleToAccessProfile roleToAccessProfile = classUnderTest.map(roleToAccessProfileEntity);
+            RoleToAccessProfiles roleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
-            assertNull(roleToAccessProfile.getAccessProfiles());
-            assertNull(roleToAccessProfile.getCaseTypeId());
-            assertNull(roleToAccessProfile.getAuthorisation());
-            assertNull(roleToAccessProfile.getDisabled());
-            assertNull(roleToAccessProfile.getReadOnly());
-            assertNull(roleToAccessProfile.getLiveFrom());
-            assertNull(roleToAccessProfile.getLiveTo());
-            assertNull(roleToAccessProfile.getRoleName());
+            assertNull(roleToAccessProfiles.getAccessProfiles());
+            assertNull(roleToAccessProfiles.getCaseTypeId());
+            assertNull(roleToAccessProfiles.getAuthorisation());
+            assertNull(roleToAccessProfiles.getDisabled());
+            assertNull(roleToAccessProfiles.getReadOnly());
+            assertNull(roleToAccessProfiles.getLiveFrom());
+            assertNull(roleToAccessProfiles.getLiveTo());
+            assertNull(roleToAccessProfiles.getRoleName());
         }
 
 

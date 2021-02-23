@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.AccessProfileValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
@@ -113,7 +113,7 @@ public class ParserFactory {
         return new RoleToAccessProfilesParser();
     }
 
-    public AccessProfileValidator createAccessProfileValidator() {
-        return new AccessProfileValidator();
+    public RoleToAccessProfilesValidator createAccessProfileValidator() {
+        return new RoleToAccessProfilesValidator();
     }
 }

@@ -15,7 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,7 +55,7 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
             "Test Role 1", "judge", "Y", "N"));
         definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_2,
             "Test Role 2", "solicitor", "Y", "N"));
-        List<RoleToAccessProfileEntity> entityList = parser.parse(definitionSheets, parseContext);
+        List<RoleToAccessProfilesEntity> entityList = parser.parse(definitionSheets, parseContext);
         assertEquals(2, entityList.size());
     }
 
