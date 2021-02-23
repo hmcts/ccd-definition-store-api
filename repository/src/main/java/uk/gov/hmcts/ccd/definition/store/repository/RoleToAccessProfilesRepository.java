@@ -8,10 +8,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesE
 
 public interface RoleToAccessProfilesRepository extends JpaRepository<RoleToAccessProfilesEntity, Integer> {
 
-    @Query("select ap from RoleToAccessProfileEntity ap where ap.caseType.reference in :references")
+    @Query("select ap from RoleToAccessProfilesEntity ap where ap.caseType.reference in :references")
     List<RoleToAccessProfilesEntity> findByCaseTypeReference(@Param("references") List<String> references);
 
-    @Query("select ap from RoleToAccessProfileEntity ap where ap.roleName in :roleName")
+    @Query("select ap from RoleToAccessProfilesEntity ap where ap.roleName in :roleName")
     List<RoleToAccessProfilesEntity> findByRoleNme(@Param("roleName") String roleName);
 
 }
