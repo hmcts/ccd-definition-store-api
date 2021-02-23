@@ -428,7 +428,7 @@
         }
       ],
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
-      "roleToAccessProfiles" : [ ],
+      "accessProfiles" : [ ],
       "case_fields": [
         {
           "__operator__": "equivalent",
