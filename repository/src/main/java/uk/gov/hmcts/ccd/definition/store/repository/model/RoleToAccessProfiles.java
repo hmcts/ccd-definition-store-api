@@ -7,7 +7,7 @@ import lombok.Data;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Data
-public class RoleToAccessProfile {
+public class RoleToAccessProfiles {
 
     private String caseTypeId;
     private Boolean disabled;

@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Table(name = "role_to_access_profile")
 @Entity
-public class RoleToAccessProfileEntity implements Serializable {
+public class RoleToAccessProfilesEntity implements Serializable {
 
     @Id
     @Column(name = "id")
