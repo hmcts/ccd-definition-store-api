@@ -1,20 +1,5 @@
 {
-  "baseBranches": ["develop"],
-  "packageRules": [
-    {
-      "packagePatterns": ["*"],
-      "minor": {
-        "groupName": "every minor/patch dependency",
-        "groupSlug": "Renovate-all-minor-PR",
-        "automerge": true,
-        "labels": ["Renovate-Minor"]
-      },
-      "major": {
-        "automerge": false,
-        "labels": ["Renovate-Major"]
-      }
-    }
-  ],
+  "enabledManagers": ["helm-requirements"],
   "helm-requirements":
     {
       "enabled": true,
