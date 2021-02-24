@@ -1637,8 +1637,8 @@
           "label": "Case Reference",
           "hint_text": null,
           "field_type": {
-            "id": "Number",
-            "type": "Number",
+            "id": "Text",
+            "type": "Text",
             "min": null,
             "max": null,
             "regular_expression": null,
