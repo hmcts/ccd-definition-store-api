@@ -69,6 +69,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_D
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE_TIME;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DYNAMIC_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DYNAMIC_MULTI_SELECT_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DYNAMIC_RADIO_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_EMAIL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_LABEL;
@@ -84,6 +86,11 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_Y
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_REGION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_BASE_LOCATION;
+
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -175,7 +182,12 @@ public class ImportServiceImplTest {
     private FieldTypeEntity caseHistoryViewerBaseType;
     private FieldTypeEntity fixedListRadioTypeBaseType;
     private FieldTypeEntity dynamicListBaseType;
+    private FieldTypeEntity dynamicRadioListBaseType;
+    private FieldTypeEntity dynamicMultiSelectListBaseType;
     private FieldTypeEntity changeOrganisationRequest;
+    private FieldTypeEntity caseLocationBaseType;
+    private FieldTypeEntity regionBaseType;
+    private FieldTypeEntity baseLocationBaseType;
 
     @Before
     public void setup() {
@@ -227,6 +239,11 @@ public class ImportServiceImplTest {
         caseHistoryViewerBaseType = buildBaseType(BASE_CASE_HISTORY_VIEWER);
         fixedListRadioTypeBaseType = buildBaseType(BASE_RADIO_FIXED_LIST);
         changeOrganisationRequest = buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST);
+        caseLocationBaseType = buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION);
+        regionBaseType = buildBaseType(BASE_REGION);
+        baseLocationBaseType = buildBaseType(BASE_BASE_LOCATION);
+        dynamicRadioListBaseType = buildBaseType(BASE_DYNAMIC_RADIO_LIST);
+        dynamicMultiSelectListBaseType = buildBaseType(BASE_DYNAMIC_MULTI_SELECT_LIST);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -277,7 +294,12 @@ public class ImportServiceImplTest {
             caseHistoryViewerBaseType,
             fixedListRadioTypeBaseType,
             dynamicListBaseType,
-            changeOrganisationRequest));
+            changeOrganisationRequest,
+            caseLocationBaseType,
+            regionBaseType,
+            baseLocationBaseType,
+            dynamicRadioListBaseType,
+            dynamicMultiSelectListBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -321,7 +343,9 @@ public class ImportServiceImplTest {
             caseHistoryViewerBaseType,
             fixedListRadioTypeBaseType,
             dynamicListBaseType,
-            changeOrganisationRequest));
+            changeOrganisationRequest,
+            dynamicRadioListBaseType,
+            dynamicMultiSelectListBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");

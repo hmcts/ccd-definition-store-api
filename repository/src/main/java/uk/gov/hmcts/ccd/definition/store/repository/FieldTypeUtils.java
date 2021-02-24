@@ -30,6 +30,11 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_ORGANISATION = "Organisation";
     public static final String PREDEFINED_COMPLEX_ORGANISATION_POLICY = "OrganisationPolicy";
     public static final String PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST = "ChangeOrganisationRequest";
+    public static final String PREDEFINED_COMPLEX_CASE_LOCATION = "CaseLocation";
+    public static final String BASE_REGION = "Region";
+    public static final String BASE_BASE_LOCATION = "BaseLocation";
+    public static final String BASE_DYNAMIC_RADIO_LIST = "DynamicRadioList";
+    public static final String BASE_DYNAMIC_MULTI_SELECT_LIST = "DynamicMultiSelectList";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference)
