@@ -85,14 +85,6 @@
 
 	<suppress>
 		<notes>Temporary suppressions to unblock pipelines</notes>
-    <cve>CVE-2020-29242</cve>
-		<cve>CVE-2020-29243</cve>
-		<cve>CVE-2020-29244</cve>
-		<cve>CVE-2020-29245</cve>
-	</suppress>
-
-	<suppress>
-		<notes>temporary suppressions</notes>
 		<cve>CVE-2020-29242</cve>
 		<cve>CVE-2020-29243</cve>
 		<cve>CVE-2020-29244</cve>
