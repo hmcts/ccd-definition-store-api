@@ -314,7 +314,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void getAllCaseTypeDefinitinon() {
+    public void getAllCaseTypeDefinitions() {
         createCaseTypeEntity("ref1", "name1.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.2", 2, testJurisdiction);
@@ -335,6 +335,45 @@ public class CaseTypeRepositoryTest {
             () -> assertThat(result, not(hasItem(hasProperty("name", is("name4.1"))))),
             () -> assertThat(result, not(hasItem(hasProperty("name", is("name4.2"))))),
             () -> assertThat(result, not(hasItem(hasProperty("name", is("name4.3")))))
+        );
+    }
+
+    @Test
+    public void shouldFindAllUniqueCaseTypeIds() {
+        List<String> result = classUnderTest.findAllCaseTypeIds();
+
+        assertAll(
+            () -> assertEquals(7, result.size()),
+            () -> assertTrue(result.contains("TESTCASE")),
+            () -> assertTrue(result.contains("AnotherCase")),
+            () -> assertTrue(result.contains("anothercase")),
+            () -> assertTrue(result.contains("TestCase")),
+            () -> assertTrue(result.contains("testcase")),
+            () -> assertTrue(result.contains("id")),
+            () -> assertTrue(result.contains("ANOTHERCASE"))
+        );
+    }
+
+    @Test
+    public void getAllCaseTypeDefinitionsByReferences() {
+        createCaseTypeEntity("ref1", "name1.1", 1, testJurisdiction);
+        createCaseTypeEntity("ref2", "name2.1", 1, testJurisdiction);
+        createCaseTypeEntity("ref2", "name2.2", 2, testJurisdiction);
+        createCaseTypeEntity("ref3", "name3.1", 1, testJurisdiction);
+        createCaseTypeEntity("ref4", "name4.1", 1, testJurisdiction);
+        createCaseTypeEntity("ref4", "name4.2", 2, testJurisdiction);
+        createCaseTypeEntity("ref4", "name4.3", 3, testJurisdiction);
+        createCaseTypeEntity("ref4", "name4.4", 4, testJurisdiction);
+
+        List<CaseTypeEntity> result = classUnderTest.findAllLatestVersions(List.of(
+            "ref1", "ref2", "ref4"
+        ));
+
+        assertAll(
+            () -> assertEquals(3, result.size()),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name1.1")))),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name2.2")))),
+            () -> assertThat(result, hasItem(hasProperty("name", is("name4.4"))))
         );
     }
 }

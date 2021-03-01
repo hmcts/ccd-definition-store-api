@@ -189,14 +189,6 @@ public class DefinitionDataItem {
         return getString(ColumnName.CASE_TYPE_ID);
     }
 
-    public String getListElementCode() {
-        return getString(ColumnName.LIST_ELEMENT_CODE);
-    }
-
-    public String getCaseEventId() {
-        return getString(ColumnName.CASE_EVENT_ID);
-    }
-
     public String getSheetName() {
         return sheetName;
     }
@@ -209,12 +201,16 @@ public class DefinitionDataItem {
         return getString(ColumnName.USE_CASE);
     }
 
+    public Boolean getRetainHiddenValue() {
+        return getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
+    }
+
     public String getFieldShowCondition() {
         return getString(ColumnName.FIELD_SHOW_CONDITION);
     }
 
-    public Boolean getRetainHiddenValue() {
-        return getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
+    public String getCaseEventId() {
+        return getString(ColumnName.CASE_EVENT_ID);
     }
 
     public String getCaseFieldId() {

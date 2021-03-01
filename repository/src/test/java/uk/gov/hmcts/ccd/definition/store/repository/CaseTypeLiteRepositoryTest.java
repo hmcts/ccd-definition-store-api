@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import com.vladmihalcea.sql.SQLStatementCountValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,6 +77,7 @@ public class CaseTypeLiteRepositoryTest {
         saveCaseTypeClearAndFlushSession(caseType2);
     }
 
+
     @Test
     public void findByJurisdictionIdReturnsCurrentVersionOfCaseTypesWhenSeveralVersionsExist() {
         List<CaseTypeLiteEntity> caseTypeEntityOptional
@@ -102,6 +104,25 @@ public class CaseTypeLiteRepositoryTest {
         List<CaseTypeLiteEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
         assertTrue(caseTypeEntityOptional.isEmpty());
+    }
+
+    @Test
+    public void checkSQLStatementCounts() {
+
+        SQLStatementCountValidator.reset();
+
+        List<CaseTypeLiteEntity> caseTypeEntityOptional
+            = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
+
+        // caseType entity only no child associations (lazy)
+        SQLStatementCountValidator.assertSelectCount(1);
+
+        CaseTypeLiteEntity caseTypeLiteEntity = caseTypeEntityOptional.get(0);
+
+        assertEquals(1, caseTypeLiteEntity.getStates().size());
+
+        // additional query for states and acls (due to eager in StateEntity)
+        SQLStatementCountValidator.assertSelectCount(3);
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {
