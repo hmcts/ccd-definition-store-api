@@ -1,0 +1,8 @@
+{
+  "_guid_": "BaseDynamicRadioListFieldType",
+
+  "_extends_": "CommonFieldType",
+
+  "id": "DynamicRadioList",
+  "type": "DynamicRadioList"
+}
