@@ -37,4 +37,12 @@ public interface CaseTypeRepository extends VersionedDefinitionRepository<CaseTy
     @Query("select c from CaseTypeEntity c where c.version = ("
         + "select max(c2.version) from CaseTypeEntity c2 where c2.reference = c.reference)")
     List<CaseTypeEntity> findAllLatestVersions();
+
+    @Query("select c from CaseTypeEntity c where c.version = ("
+        + "select max(c2.version) from CaseTypeEntity c2 where c2.reference = c.reference) "
+        + "and c.reference in :caseTypeReferences")
+    List<CaseTypeEntity> findAllLatestVersions(@Param("caseTypeReferences") List<String> caseTypeReferences);
+
+    @Query("select distinct c.reference from CaseTypeEntity c")
+    List<String> findAllCaseTypeIds();
 }

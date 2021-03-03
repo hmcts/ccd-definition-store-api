@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.ChallengeQuestionTabRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
@@ -39,6 +40,7 @@ public class ChallengeQuestionTabServiceImpl implements ChallengeQuestionTabServ
         return challengeQuestionTabRepository.findByQuestionId(questionId);
     }
 
+    @Transactional
     @Override
     public List<ChallengeQuestion> getChallengeQuestions(String caseTypeId, String challengeQuestionId) {
         List<ChallengeQuestionTabEntity> questions = challengeQuestionTabRepository

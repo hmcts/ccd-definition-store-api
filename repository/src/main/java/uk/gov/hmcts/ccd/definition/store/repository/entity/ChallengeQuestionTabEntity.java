@@ -25,7 +25,7 @@ public class ChallengeQuestionTabEntity implements Serializable {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id", nullable = false)
-    private CaseTypeEntity caseType;
+    private CaseTypeLiteEntity caseType;
 
     @Column(name = "display_order")
     private Integer order;
@@ -57,11 +57,11 @@ public class ChallengeQuestionTabEntity implements Serializable {
         this.id = id;
     }
 
-    public CaseTypeEntity getCaseType() {
+    public CaseTypeLiteEntity getCaseType() {
         return caseType;
     }
 
-    public void setCaseType(CaseTypeEntity caseType) {
+    public void setCaseType(CaseTypeLiteEntity caseType) {
         this.caseType = caseType;
     }
 
