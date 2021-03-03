@@ -275,6 +275,10 @@
           "order": 1,
           "case_fields": [
             {
+              "__ordering__": "UNORDERED",
+              "__elementId__": "case_field_id"
+            },
+            {
               "case_field_id": "ChangeOrganisationRequestField",
               "display_context": "COMPLEX",
               "_extends_" : "CaseEventField",
