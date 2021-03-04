@@ -1,0 +1,6 @@
+{
+  "_guid_": "F-096_Test_Data__Base",
+  "_extends_": "Post_Operation_Base_Data_on_Definition_Store",
+
+  "operationName": "POST Case Definition File"
+}

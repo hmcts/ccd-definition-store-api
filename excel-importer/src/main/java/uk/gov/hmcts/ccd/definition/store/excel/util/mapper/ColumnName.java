@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
+import java.util.Arrays;
+
 /**
  * Enum to track all valid column names for a Case Definition import.
  */
@@ -71,7 +73,7 @@ public enum ColumnName {
     TAB_FIELD_DISPLAY_ORDER("TabFieldDisplayOrder"),
     TITLE_DISPLAY("TitleDisplay"),
     USER_IDAM_ID("UserIDAMId"),
-    USER_ROLE("UserRole"),
+    USER_ROLE("AccessProfile", new String[]{"UserRole"}),
     USE_CASE("UseCase"),
     RESULTS_ORDERING("ResultsOrdering"),
     WORK_BASKET_DEFAULT_JURISDICTION("WorkBasketDefaultJurisdiction"),
@@ -93,9 +95,15 @@ public enum ColumnName {
     EVENT_ENABLING_CONDITION("EventEnablingCondition");
 
     private final String name;
+    private final String[] aliases;
 
     ColumnName(String columnName) {
+        this(columnName, new String[]{});
+    }
+
+    ColumnName(String columnName, String[] aliases) {
         this.name = columnName;
+        this.aliases = aliases;
     }
 
     /**
@@ -185,8 +193,23 @@ public enum ColumnName {
         }
     }
 
+    /**
+     * Method to indicate whether column name or any of its aliases match the specified value.
+     *
+     * @param value - value to compare
+     * @return true if matched, false otherwise
+     */
+    public boolean equalsColumnNameOrAlias(String value) {
+        return value.equalsIgnoreCase(this.name)
+            || Arrays.stream(this.aliases).anyMatch(value::equalsIgnoreCase);
+    }
+
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public String[] getAliases() {
+        return this.aliases;
     }
 }

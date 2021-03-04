@@ -1,0 +1,10 @@
+{
+	"_guid_": "F-096_Get_CaseType__State__Base",
+
+	"id": "OVERRIDE STATE ID",
+
+	"name": "[[ANY_STRING_NOT_NULLABLE]]",
+	"description": "[[ANY_STRING_NULLABLE]]",
+	"order": "[[ANY_INTEGER_NOT_NULLABLE]]",
+	"title_display": "[[ANY_STRING_NULLABLE]]"
+}

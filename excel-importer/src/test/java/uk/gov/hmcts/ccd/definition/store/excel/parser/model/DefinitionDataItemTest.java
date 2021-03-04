@@ -56,6 +56,13 @@ public class DefinitionDataItemTest {
     }
 
     @Test
+    public void shouldSucceed_whenRequiredAttributeKeyIsUsingAnAlias() {
+        item.addAttribute(ColumnName.USER_ROLE.getAliases()[0], "User Role Value");
+
+        Assertions.assertThat(item.findAttribute(ColumnName.USER_ROLE)).isEqualTo("User Role Value");
+    }
+
+    @Test
     public void shouldGetNull_whenBigDecimalAttributeDoesNotExist() {
         final BigDecimal result = item.getBigDecimal(ColumnName.DISPLAY_ORDER);
         assertThat(result, is(nullValue()));

@@ -1,0 +1,9 @@
+{
+  "_guid_" : "AccessControlList_RU",
+  "_extends_": "AccessControlList__Base",
+
+  "create": false,
+  "read": true,
+  "update": true,
+  "delete": false
+}
