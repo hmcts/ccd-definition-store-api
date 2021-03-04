@@ -32,6 +32,7 @@ import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASELINK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
@@ -231,6 +232,7 @@ public class FieldTypeRepositoryTest {
             fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_UK),
             fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK),
             fieldTypeWithReference(PREDEFINED_COMPLEX_ORDER_SUMMARY),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_CASELINK),
             fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION),
             fieldTypeWithReference(PREDEFINED_COMPLEX_ORGANISATION_POLICY),
             fieldTypeWithReference(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST),
