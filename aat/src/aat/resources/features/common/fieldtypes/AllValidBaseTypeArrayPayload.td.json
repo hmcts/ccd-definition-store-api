@@ -67,6 +67,12 @@
       "_extends_": "BaseDynamicListFieldType"
     },
     {
+      "_extends_": "BaseBaseLocationFieldType"
+    },
+    {
+      "_extends_": "BaseRegionFieldType"
+    },
+    {
       "_extends_": "BaseDynamicRadioListFieldType"
     },
     {
