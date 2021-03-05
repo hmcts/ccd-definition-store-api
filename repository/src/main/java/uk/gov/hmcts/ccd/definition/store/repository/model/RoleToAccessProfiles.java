@@ -12,7 +12,7 @@ public class RoleToAccessProfiles {
     private String caseTypeId;
     private Boolean disabled;
     private Boolean readOnly;
-    private String authorisation;
+    private String authorisations;
     private String accessProfiles;
     private Date liveFrom;
     private Date liveTo;

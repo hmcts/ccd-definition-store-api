@@ -1696,7 +1696,7 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(roleToAccessProfiles.getLiveFrom(), roleToAccessProfilesEntity.getLiveFrom());
             assertEquals(roleToAccessProfiles.getReadOnly(), roleToAccessProfilesEntity.getReadOnly());
             assertEquals(roleToAccessProfiles.getDisabled(), roleToAccessProfilesEntity.getDisabled());
-            assertEquals(roleToAccessProfiles.getAuthorisation(), roleToAccessProfilesEntity.getAuthorisation());
+            assertEquals(roleToAccessProfiles.getAuthorisations(), roleToAccessProfilesEntity.getAuthorisation());
             assertEquals(roleToAccessProfiles.getAccessProfiles(), roleToAccessProfilesEntity.getAccessProfiles());
         }
 
@@ -1708,7 +1708,7 @@ class  EntityToResponseDTOMapperTest {
 
             assertNull(roleToAccessProfiles.getAccessProfiles());
             assertNull(roleToAccessProfiles.getCaseTypeId());
-            assertNull(roleToAccessProfiles.getAuthorisation());
+            assertNull(roleToAccessProfiles.getAuthorisations());
             assertNull(roleToAccessProfiles.getDisabled());
             assertNull(roleToAccessProfiles.getReadOnly());
             assertNull(roleToAccessProfiles.getLiveFrom());
