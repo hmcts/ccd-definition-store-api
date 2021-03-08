@@ -55,6 +55,8 @@
 		<cve>CVE-2020-29244</cve>
 		<cve>CVE-2020-29245</cve>
 		<cve>CVE-2020-7021</cve>
+		<cve>CVE-2021-25122</cve>
+		<cve>CVE-2021-25329</cve>
 	</suppress>
 
 </suppressions>
