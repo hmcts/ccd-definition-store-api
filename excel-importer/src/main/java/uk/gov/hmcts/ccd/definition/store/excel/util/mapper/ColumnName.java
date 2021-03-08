@@ -6,6 +6,7 @@ import java.util.Arrays;
  * Enum to track all valid column names for a Case Definition import.
  */
 public enum ColumnName {
+    ACCESS_PROFILE("AccessProfile", new String[]{"UserRole"}),
     CALLBACK_URL_ABOUT_TO_START_EVENT("CallBackURLAboutToStartEvent"),
     CALLBACK_URL_ABOUT_TO_SUBMIT_EVENT("CallBackURLAboutToSubmitEvent"),
     CALLBACK_URL_SUBMITTED_EVENT("CallBackURLSubmittedEvent"),
@@ -73,7 +74,6 @@ public enum ColumnName {
     TAB_FIELD_DISPLAY_ORDER("TabFieldDisplayOrder"),
     TITLE_DISPLAY("TitleDisplay"),
     USER_IDAM_ID("UserIDAMId"),
-    USER_ROLE("AccessProfile", new String[]{"UserRole"}),
     USE_CASE("UseCase"),
     RESULTS_ORDERING("ResultsOrdering"),
     WORK_BASKET_DEFAULT_JURISDICTION("WorkBasketDefaultJurisdiction"),
@@ -166,22 +166,22 @@ public enum ColumnName {
                 return columnName.equals(CASE_TYPE_ID);
             case AUTHORISATION_CASE_TYPE:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
-                    || columnName.equals(ColumnName.USER_ROLE)
+                    || columnName.equals(ColumnName.ACCESS_PROFILE)
                     || columnName.equals(ColumnName.CRUD);
             case AUTHORISATION_CASE_FIELD:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
                     || columnName.equals(ColumnName.CASE_FIELD_ID)
-                    || columnName.equals(ColumnName.USER_ROLE)
+                    || columnName.equals(ColumnName.ACCESS_PROFILE)
                     || columnName.equals(ColumnName.CRUD);
             case AUTHORISATION_CASE_EVENT:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
                     || columnName.equals(ColumnName.CASE_EVENT_ID)
-                    || columnName.equals(ColumnName.USER_ROLE)
+                    || columnName.equals(ColumnName.ACCESS_PROFILE)
                     || columnName.equals(ColumnName.CRUD);
             case AUTHORISATION_CASE_STATE:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)
                     || columnName.equals(ColumnName.STATE_ID)
-                    || columnName.equals(ColumnName.USER_ROLE)
+                    || columnName.equals(ColumnName.ACCESS_PROFILE)
                     || columnName.equals(ColumnName.CRUD);
             case SEARCH_ALIAS:
                 return columnName.equals(ColumnName.CASE_TYPE_ID)

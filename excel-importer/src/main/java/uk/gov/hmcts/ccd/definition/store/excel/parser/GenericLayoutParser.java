@@ -25,21 +25,21 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ACCESS_PROFILE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.FIELD_SHOW_CONDITION;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIST_ELEMENT_CODE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.RESULTS_ORDERING;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USE_CASE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
 public abstract class GenericLayoutParser implements FieldShowConditionParser {
     private static final Logger logger = LoggerFactory.getLogger(GenericLayoutParser.class);
 
-    public static final Pattern SORT_ORDER_PATTERN = Pattern.compile("^(1|2):(ASC|DESC)$");
-    public static final String SORT_STRING_DELIMITER = ":";
-    public static final String ALL_ROLES = "ALL_ROLES";
+    private static final Pattern SORT_ORDER_PATTERN = Pattern.compile("^(1|2):(ASC|DESC)$");
+    private static final String SORT_STRING_DELIMITER = ":";
+    private static final String ALL_ACCESS_PROFILES = "ALL_ACCESS_PROFILES";
 
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     protected final ParseContext parseContext;
@@ -185,9 +185,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     }
 
     private boolean hasDuplicateRows(List<DefinitionDataItem> layoutItems, DefinitionDataItem ddi) {
-        return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
-            ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE))
-            : StringUtils.isEmpty(item.getString(USER_ROLE)))
+        return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(ACCESS_PROFILE))
+            ? ddi.getString(ACCESS_PROFILE).equalsIgnoreCase(item.getString(ACCESS_PROFILE))
+            : StringUtils.isEmpty(item.getString(ACCESS_PROFILE)))
             && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
             && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
             && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
@@ -197,9 +197,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     }
 
     private boolean hasDuplicateRowsForSearchCases(List<DefinitionDataItem> layoutItems, DefinitionDataItem ddi) {
-        return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(USER_ROLE))
-            ? ddi.getString(USER_ROLE).equalsIgnoreCase(item.getString(USER_ROLE))
-            : StringUtils.isEmpty(item.getString(USER_ROLE)))
+        return layoutItems.stream().filter(item -> (StringUtils.isNotEmpty(ddi.getString(ACCESS_PROFILE))
+            ? ddi.getString(ACCESS_PROFILE).equalsIgnoreCase(item.getString(ACCESS_PROFILE))
+            : StringUtils.isEmpty(item.getString(ACCESS_PROFILE)))
             && ddi.getString(CASE_TYPE_ID).equalsIgnoreCase(item.getString(CASE_TYPE_ID))
             && ddi.getString(CASE_FIELD_ID).equalsIgnoreCase(item.getString(CASE_FIELD_ID))
             && (StringUtils.isNotEmpty(ddi.getString(LIST_ELEMENT_CODE))
@@ -231,9 +231,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         layoutEntity.setLabel(definition.getString(ColumnName.LABEL));
         layoutEntity.setOrder(definition.getInteger(ColumnName.DISPLAY_ORDER));
         layoutEntity.setDisplayContextParameter(definition.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
-        final String userRole = definition.getString(USER_ROLE);
-        if (StringUtils.isNotEmpty(userRole)) {
-            layoutEntity.setUserRole(getRoleEntity(layoutEntity, definition.getSheetName(), userRole));
+        final String accessProfile = definition.getString(ACCESS_PROFILE);
+        if (StringUtils.isNotEmpty(accessProfile)) {
+            layoutEntity.setUserRole(getRoleEntity(layoutEntity, definition.getSheetName(), accessProfile));
         }
         final String sortOrder = definition.getString(RESULTS_ORDERING);
         if (StringUtils.isNotEmpty(sortOrder)) {
@@ -251,11 +251,11 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         return ParseResult.Entry.createNew(layoutEntity);
     }
 
-    private UserRoleEntity getRoleEntity(GenericLayoutEntity layoutEntity, String sheetName, String userRole) {
-        return parseContext.getIdamRole(userRole)
+    private UserRoleEntity getRoleEntity(GenericLayoutEntity layoutEntity, String sheetName, String accessProfile) {
+        return parseContext.getIdamRole(accessProfile)
             .orElseThrow(() -> new MapperException(String.format(
-                "- Unknown idam role '%s' in worksheet '%s' for caseField '%s'",
-                userRole, sheetName, layoutEntity.getCaseField().getReference())));
+                "- Unknown IDAM access profile '%s' in worksheet '%s' for caseField '%s'",
+                accessProfile, sheetName, layoutEntity.getCaseField().getReference())));
     }
 
     private void validateSortOrders(List<DefinitionDataItem> layoutItems, CaseTypeEntity caseType) {
@@ -283,8 +283,8 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     private void validateDuplicateAndGaps(CaseTypeEntity caseType,
                                           String sheetName,
                                           List<DefinitionDataItem> sortDataItems) {
-        Map<String, List<Integer>> sortPrioritiesByUserRole = getSortPrioritiesByRole(sortDataItems);
-        sortPrioritiesByUserRole.values().forEach(items -> {
+        Map<String, List<Integer>> sortPrioritiesByAccessProfile = getSortPrioritiesByAccessProfile(sortDataItems);
+        sortPrioritiesByAccessProfile.values().forEach(items -> {
             checkDuplicateSortOrders(items, sheetName, caseType.getReference());
             checkGapsInSortPriority(items, sheetName, caseType.getReference());
         });
@@ -307,23 +307,26 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         }
     }
 
-    private Map<String, List<Integer>> getSortPrioritiesByRole(List<DefinitionDataItem> sortDataItems) {
-        Map<String, List<Integer>> sortPrioritiesByUserRole = new HashMap<>();
+    private Map<String, List<Integer>> getSortPrioritiesByAccessProfile(List<DefinitionDataItem> sortDataItems) {
+        Map<String, List<Integer>> sortPrioritiesByAccessProfile = new HashMap<>();
 
         sortDataItems.stream().forEach(ddi -> {
-            String key = StringUtils.isNotEmpty(ddi.getString(USER_ROLE)) ? ddi.getString(USER_ROLE) : ALL_ROLES;
+            String key = StringUtils.isNotEmpty(ddi.getString(ACCESS_PROFILE))
+                ? ddi.getString(ACCESS_PROFILE) : ALL_ACCESS_PROFILES;
             key = ddi.getSheetName().equals(SheetName.SEARCH_CASES_RESULT_FIELDS.getName())
                 ? key + "_" + ddi.getUseCase() : key;
-            List<Integer> priorities = sortPrioritiesByUserRole.getOrDefault(key, new ArrayList<>());
+            List<Integer> priorities = sortPrioritiesByAccessProfile.getOrDefault(key, new ArrayList<>());
             priorities.add(Integer.valueOf(ddi.getString(RESULTS_ORDERING).split(SORT_STRING_DELIMITER)[0]));
-            sortPrioritiesByUserRole.put(key, priorities);
+            sortPrioritiesByAccessProfile.put(key, priorities);
         });
-        sortPrioritiesByUserRole.keySet().forEach(key -> {
-            if (!key.equalsIgnoreCase(ALL_ROLES) && sortPrioritiesByUserRole.get(ALL_ROLES) != null) {
-                sortPrioritiesByUserRole.get(key).addAll(sortPrioritiesByUserRole.get(ALL_ROLES));
+        sortPrioritiesByAccessProfile.keySet().forEach(key -> {
+            if (!key.equalsIgnoreCase(ALL_ACCESS_PROFILES)
+                && sortPrioritiesByAccessProfile.get(ALL_ACCESS_PROFILES) != null) {
+
+                sortPrioritiesByAccessProfile.get(key).addAll(sortPrioritiesByAccessProfile.get(ALL_ACCESS_PROFILES));
             }
         });
-        return sortPrioritiesByUserRole;
+        return sortPrioritiesByAccessProfile;
     }
 
     protected static SortOrder getSortOrder(String sortOrderString) {

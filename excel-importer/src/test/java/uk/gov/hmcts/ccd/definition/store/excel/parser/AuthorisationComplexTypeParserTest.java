@@ -34,6 +34,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTy
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.ParserTestBase.CASE_FIELD_UNDER_TEST;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.ParserTestBase.CASE_TYPE_UNDER_TEST;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.ParserTestBase.COMPLEX_FIELD_UNDER_TEST;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ACCESS_PROFILE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
@@ -41,7 +42,6 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.FIE
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIST_ELEMENT_CODE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.NAME;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_COMPLEX_TYPE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
@@ -66,6 +66,10 @@ public class AuthorisationComplexTypeParserTest {
     private Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
     private final DefinitionSheet definitionSheet = new DefinitionSheet();
 
+    private static final String TEST_ACCESS_PROFILE_FOUND = "CaseWorker 1";
+    private static final String TEST_ACCESS_PROFILE_NOT_FOUND = "CaseWorker 2";
+    private static final String TEST_CASE_ROLE_FOUND = "[CLAIMANT]";
+
     @Mock
     private UserRoleEntity mockUserRoleEntity;
 
@@ -77,8 +81,7 @@ public class AuthorisationComplexTypeParserTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
-        final String role = "CaseWorker 1";
-        given(mockUserRoleEntity.getReference()).willReturn(role);
+        given(mockUserRoleEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
         context.registerUserRoles(Arrays.asList(mockUserRoleEntity));
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
@@ -120,9 +123,8 @@ public class AuthorisationComplexTypeParserTest {
         definitionSheets.put(CASE_FIELD.getName(), buildSheetForCaseField());
         definitionSheets.put(COMPLEX_TYPES.getName(), buildSheetForComplexTypes());
 
-        final String caseRole = "[CLAIMANT]";
         caseRoleEntity = new CaseRoleEntity();
-        caseRoleEntity.setReference(caseRole);
+        caseRoleEntity.setReference(TEST_CASE_ROLE_FOUND);
         caseRoleEntity.setCaseType(caseType);
         context.registerCaseRoles(Arrays.asList(caseRoleEntity));
     }
@@ -150,12 +152,11 @@ public class AuthorisationComplexTypeParserTest {
         sheet.addDataItem(item);
         definitionSheets.put(CASE_FIELD.getName(), sheet);
 
-        final String role = "CaseWorker 1";
         final DefinitionDataItem item1 = new DefinitionDataItem(AUTHORISATION_COMPLEX_TYPE.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
         item1.addAttribute(LIST_ELEMENT_CODE.toString(), ELEMENT_CODE_1);
-        item1.addAttribute(USER_ROLE.toString(), role);
+        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
         item1.addAttribute(CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
 
@@ -166,28 +167,26 @@ public class AuthorisationComplexTypeParserTest {
     }
 
     @Test
-    @DisplayName("should parse when user role found")
-    public void shouldParseEntityWithUserRoleFound() {
+    @DisplayName("should parse when access profile found")
+    public void shouldParseEntityWithAccessProfileFound() {
         final DefinitionDataItem item = new DefinitionDataItem(CASE_FIELD.getName());
         item.addAttribute(CASE_TYPE_ID, CASE_TYPE_UNDER_TEST);
         item.addAttribute(ID, CASE_FIELD_2);
         item.addAttribute(NAME, CASE_FIELD_2);
         definitionSheets.get(CASE_FIELD.getName()).addDataItem(item);
 
-        final String role = "CaseWorker 1";
-
         final DefinitionDataItem item1 = new DefinitionDataItem(AUTHORISATION_COMPLEX_TYPE.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
         item1.addAttribute(LIST_ELEMENT_CODE.toString(), ELEMENT_CODE_1);
-        item1.addAttribute(USER_ROLE.toString(), role);
+        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
         item1.addAttribute(CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
         final DefinitionDataItem item2 = new DefinitionDataItem(AUTHORISATION_COMPLEX_TYPE.getName());
         item2.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item2.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
         item2.addAttribute(LIST_ELEMENT_CODE.toString(), ELEMENT_CODE_2);
-        item2.addAttribute(USER_ROLE.toString(), role);
+        item2.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
         item2.addAttribute(CRUD.toString(), " RRRRd  ");
         definitionSheet.addDataItem(item2);
 
@@ -195,7 +194,7 @@ public class AuthorisationComplexTypeParserTest {
         item3.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item3.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_2);
         item3.addAttribute(LIST_ELEMENT_CODE.toString(), ELEMENT_CODE_3);
-        item3.addAttribute(USER_ROLE.toString(), role);
+        item3.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
         item3.addAttribute(CRUD.toString(), " CUud  ");
         definitionSheet.addDataItem(item3);
 
@@ -243,13 +242,11 @@ public class AuthorisationComplexTypeParserTest {
     @Test
     @DisplayName("should parse when case role found")
     public void shouldParseEntityWithCaseRoleFound() {
-        final String caseRole = "[CLAIMANT]";
-
         final DefinitionDataItem item1 = new DefinitionDataItem(AUTHORISATION_COMPLEX_TYPE.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
         item1.addAttribute(LIST_ELEMENT_CODE.toString(), ELEMENT_CODE_1);
-        item1.addAttribute(USER_ROLE.toString(), caseRole);
+        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_CASE_ROLE_FOUND);
         item1.addAttribute(CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
 
@@ -273,15 +270,13 @@ public class AuthorisationComplexTypeParserTest {
     }
 
     @Test
-    @DisplayName("should parse when user role not found")
-    public void shouldParseEntityWithUserRoleNotFound() {
-        final String role = "CaseWorker 2";
-
+    @DisplayName("should parse when user access profile not found")
+    public void shouldParseEntityWithAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(AUTHORISATION_COMPLEX_TYPE.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
         item1.addAttribute(LIST_ELEMENT_CODE.toString(), ELEMENT_CODE_1);
-        item1.addAttribute(USER_ROLE.toString(), role);
+        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_NOT_FOUND);
         item1.addAttribute(CRUD.toString(), " CCCd  ");
         definitionSheet.addDataItem(item1);
 
@@ -302,13 +297,11 @@ public class AuthorisationComplexTypeParserTest {
     @Test
     @DisplayName("should parse when CRUD is invalid")
     public void shouldParseEntityWithInvalidCrud() {
-        final String role = "CaseWorker 1";
-
         final DefinitionDataItem item1 = new DefinitionDataItem(AUTHORISATION_COMPLEX_TYPE.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
         item1.addAttribute(LIST_ELEMENT_CODE.toString(), ELEMENT_CODE_1);
-        item1.addAttribute(USER_ROLE.toString(), role);
+        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
         item1.addAttribute(CRUD.toString(), " X y  ");
         definitionSheet.addDataItem(item1);
 
@@ -328,15 +321,13 @@ public class AuthorisationComplexTypeParserTest {
     }
 
     @Test
-    @DisplayName("should parse when user role not found and CRUD is invalid")
-    public void shouldParseEntityWithInvalidCrudAndUserNotFound() {
-        final String role = "CaseWorker 2";
-
+    @DisplayName("should parse when access profile not found and CRUD is invalid")
+    public void shouldParseEntityWithInvalidCrudAndAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(AUTHORISATION_COMPLEX_TYPE.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
         item1.addAttribute(LIST_ELEMENT_CODE.toString(), ELEMENT_CODE_1);
-        item1.addAttribute(USER_ROLE.toString(), role);
+        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_NOT_FOUND);
         item1.addAttribute(CRUD.toString(), " X y  ");
         definitionSheet.addDataItem(item1);
 

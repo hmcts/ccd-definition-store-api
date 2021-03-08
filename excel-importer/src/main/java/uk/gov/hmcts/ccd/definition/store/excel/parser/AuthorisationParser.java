@@ -19,18 +19,18 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE
 
 interface AuthorisationParser {
 
-    default void parseUserRole(final Authorisation entity,
+    default void parseAccessProfile(final Authorisation entity,
                                final DefinitionDataItem definition,
                                final ParseContext parseContext) {
-        final String userRole = definition.getString(ColumnName.USER_ROLE);
+        final String accessProfile = definition.getString(ColumnName.ACCESS_PROFILE);
         final String caseType = definition.getString(ColumnName.CASE_TYPE_ID);
 
-        entity.setUserRoleId(userRole);
-        Optional<UserRoleEntity> userRoleEntity = parseContext.getRole(caseType, userRole);
+        entity.setUserRoleId(accessProfile);
+        Optional<UserRoleEntity> userRoleEntity = parseContext.getRole(caseType, accessProfile);
         if (userRoleEntity.isPresent()) {
             entity.setUserRole(userRoleEntity.get());
         } else {
-            parseContext.addMissingUserRole(userRole);
+            parseContext.addMissingUserRole(accessProfile);
         }
     }
 

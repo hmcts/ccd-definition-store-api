@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ColumnNameTest {
 
-    private static final ColumnName COLUMN_WITH_ALIAS = ColumnName.USER_ROLE;
+    private static final ColumnName COLUMN_WITH_ALIAS = ColumnName.ACCESS_PROFILE;
     private static final ColumnName COLUMN_WITHOUT_ALIAS = ColumnName.FIELD_TYPE;
 
     @Test

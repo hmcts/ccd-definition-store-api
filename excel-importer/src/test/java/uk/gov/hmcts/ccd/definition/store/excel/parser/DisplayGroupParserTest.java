@@ -306,18 +306,20 @@ public class DisplayGroupParserTest extends ParserTestBase {
     @Test
     @DisplayName("CaseTypeTabParser - should parse CaseTypeTab")
     void shouldParseCaseTypeTab() throws InvalidShowConditionException {
+        final String accessProfile = "AccessProfile1";
+
         UserRoleEntity userRoleEntity = new UserRoleEntity();
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
         given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
-        given(parseContext.getRole(CASE_TYPE_UNDER_TEST, "Role1")).willReturn(Optional.of(userRoleEntity));
+        given(parseContext.getRole(CASE_TYPE_UNDER_TEST, accessProfile)).willReturn(Optional.of(userRoleEntity));
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
         item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
         item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
-        item.addAttribute(ColumnName.USER_ROLE.toString(), "Role1");
+        item.addAttribute(ColumnName.ACCESS_PROFILE.toString(), accessProfile);
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
 
         // Excel parses an integer into a decimal number
@@ -343,8 +345,8 @@ public class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
-    @DisplayName("CaseTypeTabParser - should fail when multiple user roles for same CaseTypeTab")
-    void shouldNotParseCaseTypeTabForMultipleEntriesInUserRoles() throws InvalidShowConditionException {
+    @DisplayName("CaseTypeTabParser - should fail when multiple access profiles for same CaseTypeTab")
+    void shouldNotParseCaseTypeTabForMultipleEntriesInAccessProfiles() throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -355,7 +357,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
         item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
         item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
-        item.addAttribute(ColumnName.USER_ROLE.toString(), "Role1");
+        item.addAttribute(ColumnName.ACCESS_PROFILE.toString(), "AccessProfile1");
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
@@ -365,7 +367,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item2.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
         item2.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
-        item2.addAttribute(ColumnName.USER_ROLE.toString(), "Role1");
+        item2.addAttribute(ColumnName.ACCESS_PROFILE.toString(), "AccessProfile1");
         item2.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
         item2.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
@@ -374,16 +376,17 @@ public class DisplayGroupParserTest extends ParserTestBase {
 
         MapperException thrown = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
-        assertThat(thrown.getMessage(), is("Please provide one user role row per tab in worksheet CaseTypeTab "
-            + "on column USER_ROLE for the tab NameTab"));
+        assertThat(thrown.getMessage(), is("Please provide one access profile row per tab in worksheet "
+            + "CaseTypeTab on column ACCESS_PROFILE for the tab NameTab"));
     }
 
     @Test
-    @DisplayName("CaseTypeTabParser - should fail when invalid user roles")
-    void shouldNotParseCaseTypeTabForInvalidUserRoles() throws InvalidShowConditionException {
+    @DisplayName("CaseTypeTabParser - should fail when invalid access profiles")
+    void shouldNotParseCaseTypeTabForInvalidAccessProfiles() throws InvalidShowConditionException {
+        final String accessProfile = "AccessProfile1";
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
-        given(parseContext.getRole(CASE_TYPE_UNDER_TEST, "Role1")).willReturn(Optional.empty());
+        given(parseContext.getRole(CASE_TYPE_UNDER_TEST, accessProfile)).willReturn(Optional.empty());
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
         given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
 
@@ -392,7 +395,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
         item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
         item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
-        item.addAttribute(ColumnName.USER_ROLE.toString(), "Role1");
+        item.addAttribute(ColumnName.ACCESS_PROFILE.toString(), accessProfile);
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
@@ -401,7 +404,8 @@ public class DisplayGroupParserTest extends ParserTestBase {
         MapperException thrown = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(thrown.getMessage(),
-            is("- Invalid idam or case role 'Role1' in 'CaseTypeTab' tab for TabId 'NameTab'"));
+            is("- Invalid IDAM access profile or case role 'AccessProfile1' in 'CaseTypeTab' tab "
+                + "for TabId 'NameTab'"));
     }
 
     @Test
@@ -418,14 +422,15 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.TAB_ID.toString(), "Name Tab");
         item1.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
-        item1.addAttribute(ColumnName.USER_ROLE.toString(), caseRole);
+        item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), caseRole);
         item1.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item1.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         definitionSheet.addDataItem(item1);
         MapperException thrown = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(thrown.getMessage(),
-            is("- Invalid idam or case role '[CLAIMANT]' in 'CaseTypeTab' tab for TabId 'Name Tab'"));
+            is("- Invalid IDAM access profile or case role '[CLAIMANT]' in 'CaseTypeTab' tab "
+                + "for TabId 'Name Tab'"));
     }
 
     @Test
@@ -443,7 +448,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.TAB_ID.toString(), "Name Tab");
         item1.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
-        item1.addAttribute(ColumnName.USER_ROLE.toString(), caseRole);
+        item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), caseRole);
         item1.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item1.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         definitionSheet.addDataItem(item1);

@@ -57,9 +57,9 @@ public class DefinitionDataItemTest {
 
     @Test
     public void shouldSucceed_whenRequiredAttributeKeyIsUsingAnAlias() {
-        item.addAttribute(ColumnName.USER_ROLE.getAliases()[0], "User Role Value");
+        item.addAttribute(ColumnName.ACCESS_PROFILE.getAliases()[0], "Access Profile Value");
 
-        Assertions.assertThat(item.findAttribute(ColumnName.USER_ROLE)).isEqualTo("User Role Value");
+        Assertions.assertThat(item.findAttribute(ColumnName.ACCESS_PROFILE)).isEqualTo("Access Profile Value");
     }
 
     @Test
