@@ -94,7 +94,8 @@ public enum ColumnName {
     AUTHORISATION("Authorisation"),
     READ_ONLY("ReadOnly"),
     DISABLED("Disabled"),
-    ACCESS_PROFILES("AccessProfiles");
+    ACCESS_PROFILES("AccessProfiles"),
+    EVENT_ENABLING_CONDITION("EventEnablingCondition");
 
     private final String name;
 

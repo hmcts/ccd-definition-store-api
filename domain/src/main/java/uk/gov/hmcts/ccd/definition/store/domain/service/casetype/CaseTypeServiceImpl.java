@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
@@ -67,6 +68,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         return repository.caseTypeExistsInAnyJurisdiction(reference, jurisdictionId) > 0;
     }
 
+    @Transactional
     @Override
     public List<CaseType> findByJurisdictionId(String jurisdictionId) {
         Optional<List<CaseTypeEntity>> caseTypeEntities
@@ -79,6 +81,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             .collect(toList());
     }
 
+    @Transactional
     @Override
     public Optional<CaseType> findByCaseTypeId(String id) {
         return repository.findCurrentVersionForReference(id)
@@ -86,6 +89,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             .map(this::addMetadataFields);
     }
 
+    @Transactional
     @Override
     public Optional<CaseTypeVersionInformation> findVersionInfoByCaseTypeId(final String id) {
         return repository.findLastVersion(id)

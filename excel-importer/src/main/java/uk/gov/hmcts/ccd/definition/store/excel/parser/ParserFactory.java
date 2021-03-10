@@ -71,6 +71,7 @@ public class ParserFactory {
                 ),
                 new EventCaseFieldComplexTypeParser(showConditionParser, hiddenFieldsValidator),
                 entityToDefinitionDataItemRegistry,
+                showConditionParser,
                 applicationParams.isDefaultPublish()),
             new AuthorisationCaseTypeParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseFieldParser(context, entityToDefinitionDataItemRegistry),

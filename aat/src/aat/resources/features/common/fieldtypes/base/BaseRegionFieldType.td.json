@@ -1,0 +1,8 @@
+{
+  "_guid_": "BaseRegionFieldType",
+
+  "_extends_": "CommonFieldType",
+
+  "id": "Region",
+  "type": "Region"
+}

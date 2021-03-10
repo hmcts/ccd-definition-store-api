@@ -1,27 +1,11 @@
 {
   "_guid_": "F-093_Test_Base_data",
+  "_extends_": "Post_Operation_Base_Data_on_Definition_Store",
+
   "productName": "CCD Definition Store Api",
   "operationName": "POST Case Definition File",
 
   "specs": [
     "permissions to import case definition files"
-  ],
-
-  "method": "POST",
-  "uri": "/import",
-
-  "users": {
-    "invokingUser": {
-      "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
-      "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
-    }
-  },
-
-  "request": {
-    "headers": {
-      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
-      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-      "Content-Type": "multipart/form-data"
-    }
-  }
+  ]
 }
