@@ -135,7 +135,7 @@ public class ImportServiceImpl implements ImportService {
         spreadsheetValidator.validate(definitionSheets);
 
         final ParseContext parseContext = new ParseContext();
-        parseContext.registerUserRoles(userRoleRepository.findAll());
+        parseContext.registerAccessProfiles(userRoleRepository.findAll());
 
         /*
             1 - Jurisdiction
@@ -195,7 +195,7 @@ public class ImportServiceImpl implements ImportService {
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
         List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
-        caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingUserRoles()); // runs validation
+        caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingAccessProfiles()); // runs validation
 
         logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 

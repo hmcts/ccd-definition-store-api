@@ -55,7 +55,7 @@ public class AuthorisationCaseStateParserTest {
         MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
         given(mockUserRoleEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
-        context.registerUserRoles(Arrays.asList(mockUserRoleEntity));
+        context.registerAccessProfiles(Arrays.asList(mockUserRoleEntity));
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
         subject = new AuthorisationCaseStateParser(context, entityToDefinitionDataItemRegistry);

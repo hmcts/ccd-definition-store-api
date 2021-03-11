@@ -142,7 +142,7 @@ public class ChallengeQuestionValidator {
             //validate the roles.
             if (answersField.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
                 final String role = answersField.split(ANSWER_FIELD_ROLE_SEPARATOR)[1];
-                final Optional<UserRoleEntity> result = this.parseContext.getRole(
+                final Optional<UserRoleEntity> result = this.parseContext.getAccessProfile(
                     caseTypeEntity.getReference(),
                     role);
                 if (!result.isPresent()) {

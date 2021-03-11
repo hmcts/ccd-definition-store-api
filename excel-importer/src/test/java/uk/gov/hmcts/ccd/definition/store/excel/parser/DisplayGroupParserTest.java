@@ -312,7 +312,8 @@ public class DisplayGroupParserTest extends ParserTestBase {
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
         given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
-        given(parseContext.getRole(CASE_TYPE_UNDER_TEST, accessProfile)).willReturn(Optional.of(userRoleEntity));
+        given(parseContext.getAccessProfile(CASE_TYPE_UNDER_TEST, accessProfile))
+            .willReturn(Optional.of(userRoleEntity));
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -386,7 +387,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         final String accessProfile = "AccessProfile1";
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
-        given(parseContext.getRole(CASE_TYPE_UNDER_TEST, accessProfile)).willReturn(Optional.empty());
+        given(parseContext.getAccessProfile(CASE_TYPE_UNDER_TEST, accessProfile)).willReturn(Optional.empty());
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
         given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
 
@@ -442,7 +443,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
         given(mockShowConditionParser.parseShowCondition(any())).willReturn(new ShowCondition.Builder().build());
-        given(parseContext.getRole(CASE_TYPE_UNDER_TEST, caseRole)).willReturn(Optional.of(caseRoleEntity));
+        given(parseContext.getAccessProfile(CASE_TYPE_UNDER_TEST, caseRole)).willReturn(Optional.of(caseRoleEntity));
 
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);

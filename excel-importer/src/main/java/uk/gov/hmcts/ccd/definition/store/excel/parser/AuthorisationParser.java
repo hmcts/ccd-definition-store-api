@@ -26,11 +26,11 @@ interface AuthorisationParser {
         final String caseType = definition.getString(ColumnName.CASE_TYPE_ID);
 
         entity.setUserRoleId(accessProfile);
-        Optional<UserRoleEntity> userRoleEntity = parseContext.getRole(caseType, accessProfile);
+        Optional<UserRoleEntity> userRoleEntity = parseContext.getAccessProfile(caseType, accessProfile);
         if (userRoleEntity.isPresent()) {
             entity.setUserRole(userRoleEntity.get());
         } else {
-            parseContext.addMissingUserRole(accessProfile);
+            parseContext.addMissingAccessProfile(accessProfile);
         }
     }
 
