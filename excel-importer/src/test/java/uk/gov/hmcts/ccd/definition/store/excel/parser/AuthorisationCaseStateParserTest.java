@@ -8,11 +8,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +44,7 @@ public class AuthorisationCaseStateParserTest {
     private static final String TEST_CASE_ROLE_FOUND = "[CLAIMANT]";
 
     @Mock
-    private UserRoleEntity mockUserRoleEntity;
+    private AccessProfileEntity mockAccessProfileEntity;
 
     private CaseRoleEntity caseRoleEntity;
 
@@ -54,8 +54,8 @@ public class AuthorisationCaseStateParserTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
-        given(mockUserRoleEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
-        context.registerAccessProfiles(Arrays.asList(mockUserRoleEntity));
+        given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
+        context.registerAccessProfiles(Arrays.asList(mockAccessProfileEntity));
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
         subject = new AuthorisationCaseStateParser(context, entityToDefinitionDataItemRegistry);
@@ -87,7 +87,7 @@ public class AuthorisationCaseStateParserTest {
         final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
         assertThat(stateACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(stateACLEntity.getId(), is(nullValue()));
-        assertThat(stateACLEntity.getUserRole(), is(mockUserRoleEntity));
+        assertThat(stateACLEntity.getAccessProfile(), is(mockAccessProfileEntity));
         assertThat(stateACLEntity.getCreate(), is(true));
         assertThat(stateACLEntity.getUpdate(), is(false));
         assertThat(stateACLEntity.getRead(), is(false));
@@ -110,7 +110,7 @@ public class AuthorisationCaseStateParserTest {
         final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
         assertThat(stateACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(stateACLEntity.getId(), is(nullValue()));
-        assertThat(stateACLEntity.getUserRole(), is(caseRoleEntity));
+        assertThat(stateACLEntity.getAccessProfile(), is(caseRoleEntity));
         assertThat(stateACLEntity.getCreate(), is(true));
         assertThat(stateACLEntity.getUpdate(), is(false));
         assertThat(stateACLEntity.getRead(), is(false));
@@ -133,8 +133,8 @@ public class AuthorisationCaseStateParserTest {
         final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
         assertThat(stateACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(stateACLEntity.getId(), is(nullValue()));
-        assertThat(stateACLEntity.getUserRole(), is(nullValue()));
-        assertThat(stateACLEntity.getUserRoleId(), is(TEST_ACCESS_PROFILE_NOT_FOUND));
+        assertThat(stateACLEntity.getAccessProfile(), is(nullValue()));
+        assertThat(stateACLEntity.getAccessProfileId(), is(TEST_ACCESS_PROFILE_NOT_FOUND));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
     }
@@ -153,7 +153,7 @@ public class AuthorisationCaseStateParserTest {
         final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
         assertThat(stateACLEntity.getCrudAsString(), is("X y"));
         assertThat(stateACLEntity.getId(), is(nullValue()));
-        assertThat(stateACLEntity.getUserRole(), is(mockUserRoleEntity));
+        assertThat(stateACLEntity.getAccessProfile(), is(mockAccessProfileEntity));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
     }
@@ -172,8 +172,8 @@ public class AuthorisationCaseStateParserTest {
         final StateACLEntity stateACLEntity = new ArrayList<>(entities).get(0);
         assertThat(stateACLEntity.getCrudAsString(), is("X y"));
         assertThat(stateACLEntity.getId(), is(nullValue()));
-        assertThat(stateACLEntity.getUserRole(), is(nullValue()));
-        assertThat(stateACLEntity.getUserRoleId(), is(TEST_ACCESS_PROFILE_NOT_FOUND));
+        assertThat(stateACLEntity.getAccessProfile(), is(nullValue()));
+        assertThat(stateACLEntity.getAccessProfileId(), is(TEST_ACCESS_PROFILE_NOT_FOUND));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(stateACLEntity), is(Optional.of(item1)));
     }

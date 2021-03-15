@@ -9,11 +9,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +48,7 @@ class AuthorisationCaseEventParserTest {
     private static final String TEST_CASE_ROLE_FOUND = "[CLAIMANT]";
 
     @Mock
-    private UserRoleEntity mockUserRoleEntity;
+    private AccessProfileEntity mockAccessProfileEntity;
 
     private CaseRoleEntity caseRoleEntity;
 
@@ -59,8 +59,8 @@ class AuthorisationCaseEventParserTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
-        given(mockUserRoleEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
-        context.registerAccessProfiles(Arrays.asList(mockUserRoleEntity));
+        given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
+        context.registerAccessProfiles(Arrays.asList(mockAccessProfileEntity));
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
         subject = new AuthorisationCaseEventParser(context, entityToDefinitionDataItemRegistry);
@@ -96,7 +96,7 @@ class AuthorisationCaseEventParserTest {
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
         assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("CCCd")),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(mockAccessProfileEntity)),
             () -> assertThat(eventACLEntity.getCreate(), is(true)),
             () -> assertThat(eventACLEntity.getUpdate(), is(false)),
             () -> assertThat(eventACLEntity.getRead(), is(false)),
@@ -121,7 +121,7 @@ class AuthorisationCaseEventParserTest {
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
         assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("CCCd")),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(caseRoleEntity)),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(caseRoleEntity)),
             () -> assertThat(eventACLEntity.getCreate(), is(true)),
             () -> assertThat(eventACLEntity.getUpdate(), is(false)),
             () -> assertThat(eventACLEntity.getRead(), is(false)),
@@ -146,7 +146,7 @@ class AuthorisationCaseEventParserTest {
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
         assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("CCCd")),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(nullValue())),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(nullValue())),
 
             () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(eventACLEntity),
                 is(Optional.of(item1))));
@@ -168,7 +168,7 @@ class AuthorisationCaseEventParserTest {
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
         assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("X y")),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(mockAccessProfileEntity)),
             () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(eventACLEntity),
                 is(Optional.of(item1))));
     }
@@ -189,7 +189,7 @@ class AuthorisationCaseEventParserTest {
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
         assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("X y")),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(nullValue())),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(nullValue())),
             () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(eventACLEntity),
                 is(Optional.of(item1))));
     }

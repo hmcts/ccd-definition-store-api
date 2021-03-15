@@ -11,13 +11,13 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,7 +36,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-public class DisplayGroupParserTest extends ParserTestBase {
+class DisplayGroupParserTest extends ParserTestBase {
 
     private CaseTypeTabParser caseTypeTabParser;
     private WizardPageParser wizardPageParser;
@@ -308,12 +308,12 @@ public class DisplayGroupParserTest extends ParserTestBase {
     void shouldParseCaseTypeTab() throws InvalidShowConditionException {
         final String accessProfile = "AccessProfile1";
 
-        UserRoleEntity userRoleEntity = new UserRoleEntity();
+        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
         given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
         given(parseContext.getAccessProfile(CASE_TYPE_UNDER_TEST, accessProfile))
-            .willReturn(Optional.of(userRoleEntity));
+            .willReturn(Optional.of(accessProfileEntity));
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -342,7 +342,7 @@ public class DisplayGroupParserTest extends ParserTestBase {
         assertThat(fetched.getPurpose(), is(DisplayGroupPurpose.VIEW));
         assertThat(fetched.getOrder(), is(1));
         assertThat(fetched.getCaseType(), is(caseType));
-        assertThat(fetched.getUserRole(), is(userRoleEntity));
+        assertThat(fetched.getAccessProfile(), is(accessProfileEntity));
     }
 
     @Test
@@ -413,7 +413,6 @@ public class DisplayGroupParserTest extends ParserTestBase {
     @DisplayName("should fail for invalid CaseRole")
     void shouldFailForInvalidCaseRole() throws InvalidShowConditionException {
         final String caseRole = "[CLAIMANT]";
-        CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -454,5 +453,10 @@ public class DisplayGroupParserTest extends ParserTestBase {
         item1.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         definitionSheet.addDataItem(item1);
         final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
+
+        assertThat(parseResult.getAllResults().size(), is(1));
+
+        final DisplayGroupEntity fetched = parseResult.getAllResults().get(0);
+        assertThat(fetched.getAccessProfile(), is(caseRoleEntity));
     }
 }

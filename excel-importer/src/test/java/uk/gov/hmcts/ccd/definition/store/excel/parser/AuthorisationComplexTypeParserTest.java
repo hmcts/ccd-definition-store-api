@@ -9,13 +9,13 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -71,7 +71,7 @@ public class AuthorisationComplexTypeParserTest {
     private static final String TEST_CASE_ROLE_FOUND = "[CLAIMANT]";
 
     @Mock
-    private UserRoleEntity mockUserRoleEntity;
+    private AccessProfileEntity mockAccessProfileEntity;
 
     private CaseRoleEntity caseRoleEntity;
 
@@ -81,8 +81,8 @@ public class AuthorisationComplexTypeParserTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
-        given(mockUserRoleEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
-        context.registerAccessProfiles(Arrays.asList(mockUserRoleEntity));
+        given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
+        context.registerAccessProfiles(Arrays.asList(mockAccessProfileEntity));
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
         classUnderTest = new AuthorisationComplexTypeParser(context, entityToDefinitionDataItemRegistry);
@@ -207,7 +207,7 @@ public class AuthorisationComplexTypeParserTest {
             () -> assertThat(entities.size(), is(2)),
             () -> assertThat(entities.get(0).getCrudAsString(), is("CCCd")),
             () -> assertThat(entities.get(0).getId(), is(nullValue())),
-            () -> assertThat(entities.get(0).getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(entities.get(0).getAccessProfile(), is(mockAccessProfileEntity)),
             () -> assertThat(entities.get(0).getCreate(), is(true)),
             () -> assertThat(entities.get(0).getUpdate(), is(false)),
             () -> assertThat(entities.get(0).getRead(), is(false)),
@@ -215,7 +215,7 @@ public class AuthorisationComplexTypeParserTest {
             () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(entities.get(0)), is(Optional.of(item1))),
             () -> assertThat(entities.get(1).getCrudAsString(), is("RRRRd")),
             () -> assertThat(entities.get(1).getId(), is(nullValue())),
-            () -> assertThat(entities.get(1).getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(entities.get(1).getAccessProfile(), is(mockAccessProfileEntity)),
             () -> assertThat(entities.get(1).getCreate(), is(false)),
             () -> assertThat(entities.get(1).getUpdate(), is(false)),
             () -> assertThat(entities.get(1).getRead(), is(true)),
@@ -230,7 +230,7 @@ public class AuthorisationComplexTypeParserTest {
             () -> assertThat(entities2.size(), is(1)),
             () -> assertThat(entities2.get(0).getCrudAsString(), is("CUud")),
             () -> assertThat(entities2.get(0).getId(), is(nullValue())),
-            () -> assertThat(entities2.get(0).getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(entities2.get(0).getAccessProfile(), is(mockAccessProfileEntity)),
             () -> assertThat(entities2.get(0).getCreate(), is(true)),
             () -> assertThat(entities2.get(0).getUpdate(), is(true)),
             () -> assertThat(entities2.get(0).getRead(), is(false)),
@@ -259,7 +259,7 @@ public class AuthorisationComplexTypeParserTest {
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("CCCd")),
             () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),
-            () -> assertThat(complexFieldACLEntity.getUserRole(), is(caseRoleEntity)),
+            () -> assertThat(complexFieldACLEntity.getAccessProfile(), is(caseRoleEntity)),
             () -> assertThat(complexFieldACLEntity.getCreate(), is(true)),
             () -> assertThat(complexFieldACLEntity.getUpdate(), is(false)),
             () -> assertThat(complexFieldACLEntity.getRead(), is(false)),
@@ -314,7 +314,7 @@ public class AuthorisationComplexTypeParserTest {
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("X y")),
             () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),
-            () -> assertThat(complexFieldACLEntity.getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(complexFieldACLEntity.getAccessProfile(), is(mockAccessProfileEntity)),
             () -> assertThat(
                 entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
         );
@@ -340,7 +340,7 @@ public class AuthorisationComplexTypeParserTest {
         assertAll(
             () -> assertThat(complexFieldACLEntity.getCrudAsString(), is("X y")),
             () -> assertThat(complexFieldACLEntity.getId(), is(nullValue())),
-            () -> assertThat(complexFieldACLEntity.getUserRole(), is(nullValue())),
+            () -> assertThat(complexFieldACLEntity.getAccessProfile(), is(nullValue())),
             () -> assertThat(
                 entityToDefinitionDataItemRegistry.getForEntity(complexFieldACLEntity), is(Optional.of(item1)))
         );

@@ -5,8 +5,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperExceptio
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -20,15 +20,15 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE
 interface AuthorisationParser {
 
     default void parseAccessProfile(final Authorisation entity,
-                               final DefinitionDataItem definition,
-                               final ParseContext parseContext) {
+                                    final DefinitionDataItem definition,
+                                    final ParseContext parseContext) {
         final String accessProfile = definition.getString(ColumnName.ACCESS_PROFILE);
         final String caseType = definition.getString(ColumnName.CASE_TYPE_ID);
 
-        entity.setUserRoleId(accessProfile);
-        Optional<UserRoleEntity> userRoleEntity = parseContext.getAccessProfile(caseType, accessProfile);
-        if (userRoleEntity.isPresent()) {
-            entity.setUserRole(userRoleEntity.get());
+        entity.setAccessProfileId(accessProfile);
+        Optional<AccessProfileEntity> accessProfileEntity = parseContext.getAccessProfile(caseType, accessProfile);
+        if (accessProfileEntity.isPresent()) {
+            entity.setAccessProfile(accessProfileEntity.get());
         } else {
             parseContext.addMissingAccessProfile(accessProfile);
         }

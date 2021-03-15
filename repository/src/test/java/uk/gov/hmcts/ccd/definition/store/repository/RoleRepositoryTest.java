@@ -9,10 +9,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
@@ -52,8 +52,8 @@ public class RoleRepositoryTest {
 
     private static final String CASE_TYPE_REFERENCE = "id";
     private static final String CASE_TYPE_NAME = "Case Type I";
-    private static final String USER_ROLE_REFERENCE = "Some role reference";
-    private static final String USER_ROLE_NAME = "Some user role";
+    private static final String ACCESS_PROFILE_REFERENCE = "Some access profile reference";
+    private static final String ACCESS_PROFILE_NAME = "Some access profile";
     private static final String CASE_ROLE_REFERENCE = "[Claimant]";
     private static final String CASE_ROLE_NAME = "The claimant party";
     private static final String CASE_ROLE_DESCRIPTION = "Claimant Description";
@@ -80,10 +80,10 @@ public class RoleRepositoryTest {
         caseRoleEntity2.setDescription(CASE_ROLE_DESCRIPTION_2);
         caseRoleEntity2.setSecurityClassification(PUBLIC);
 
-        UserRoleEntity userRoleEntity = new UserRoleEntity();
-        userRoleEntity.setReference(USER_ROLE_REFERENCE);
-        userRoleEntity.setName(USER_ROLE_NAME);
-        userRoleEntity.setSecurityClassification(PUBLIC);
+        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
+        accessProfileEntity.setReference(ACCESS_PROFILE_REFERENCE);
+        accessProfileEntity.setName(ACCESS_PROFILE_NAME);
+        accessProfileEntity.setSecurityClassification(PUBLIC);
 
 
         caseType.setReference(CASE_TYPE_REFERENCE);
@@ -93,7 +93,7 @@ public class RoleRepositoryTest {
         caseType.addCaseRole(caseRoleEntity);
         caseType.addCaseRoles(Arrays.asList(caseRoleEntity2));
         caseType.setSecurityClassification(PUBLIC);
-        saveCaseTypeClearAndFlushSession(caseType, userRoleEntity);
+        saveCaseTypeClearAndFlushSession(caseType, accessProfileEntity);
     }
 
     @Test
@@ -132,55 +132,55 @@ public class RoleRepositoryTest {
     }
 
     @Test
-    public void shouldFindSingleUserRole() {
-        List<UserRoleEntity> userRoleEntities = userRoleRepository.findAll();
-        assertThat(userRoleEntities.size(), is(1));
-        assertThat(userRoleEntities.get(0).getReference(), is(USER_ROLE_REFERENCE));
+    public void shouldFindSingleAccessProfile() {
+        List<AccessProfileEntity> accessProfileEntities = userRoleRepository.findAll();
+        assertThat(accessProfileEntities.size(), is(1));
+        assertThat(accessProfileEntities.get(0).getReference(), is(ACCESS_PROFILE_REFERENCE));
     }
 
     @Test
-    public void shouldFindUserRole() {
-        final UserRoleEntity role = userRoleRepository.findTopByReference(USER_ROLE_REFERENCE).get();
+    public void shouldFindAccessProfile() {
+        final AccessProfileEntity role = userRoleRepository.findTopByReference(ACCESS_PROFILE_REFERENCE).get();
         assertThat(role.getId(), is(notNullValue()));
         assertThat(role.getCreatedAt(), is(notNullValue()));
-        assertThat(role.getReference(), is(USER_ROLE_REFERENCE));
+        assertThat(role.getReference(), is(ACCESS_PROFILE_REFERENCE));
         assertThat(role.getSecurityClassification(), is(PUBLIC));
     }
 
     @Test
-    public void shouldFindNoUserRoleEntity() {
-        final Optional<UserRoleEntity> role = userRoleRepository.findTopByReference("unknown role reference");
+    public void shouldFindNoAccessProfileEntity() {
+        final Optional<AccessProfileEntity> role = userRoleRepository.findTopByReference("unknown role reference");
         assertThat(role, isEmpty());
     }
 
     @Test
-    public void shouldCreateUserRole() {
-        final String role = "a new role reference";
-        final UserRoleEntity entity = new UserRoleEntity();
+    public void shouldCreateAccessProfile() {
+        final String role = "a new access profile reference";
+        final AccessProfileEntity entity = new AccessProfileEntity();
         entity.setReference(role);
-        entity.setName("SOME_ROLE");
+        entity.setName("SOME_ACCESS_PROFILE");
         entity.setSecurityClassification(RESTRICTED);
         userRoleRepository.save(entity);
 
         entityManager.flush();
         entityManager.clear();
 
-        final UserRoleEntity afterSave = userRoleRepository.findTopByReference(role).get();
+        final AccessProfileEntity afterSave = userRoleRepository.findTopByReference(role).get();
         assertThat(afterSave.getReference(), is(role));
         assertThat(afterSave.getSecurityClassification(), is(RESTRICTED));
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void shouldFailWhenCreateDuplicateUserRoles() {
-        final UserRoleEntity entity = new UserRoleEntity();
+    public void shouldFailWhenCreateDuplicateAccessProfiles() {
+        final AccessProfileEntity entity = new AccessProfileEntity();
         entity.setReference("xyz = '3'");
         entity.setSecurityClassification(RESTRICTED);
         userRoleRepository.save(entity);
     }
 
-    private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType, UserRoleEntity userRole) {
+    private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType, AccessProfileEntity accessProfile) {
         caseTypeRepository.save(caseType);
-        userRoleRepository.save(userRole);
+        userRoleRepository.save(accessProfile);
         entityManager.flush();
         entityManager.clear();
     }

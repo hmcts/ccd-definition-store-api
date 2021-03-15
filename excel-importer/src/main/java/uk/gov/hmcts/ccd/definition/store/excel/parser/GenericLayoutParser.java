@@ -11,10 +11,10 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -233,7 +233,8 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         layoutEntity.setDisplayContextParameter(definition.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
         final String accessProfile = definition.getString(ACCESS_PROFILE);
         if (StringUtils.isNotEmpty(accessProfile)) {
-            layoutEntity.setUserRole(getRoleEntity(layoutEntity, definition.getSheetName(), accessProfile));
+            layoutEntity.setAccessProfile(
+                getAccessProfileEntity(layoutEntity, definition.getSheetName(), accessProfile));
         }
         final String sortOrder = definition.getString(RESULTS_ORDERING);
         if (StringUtils.isNotEmpty(sortOrder)) {
@@ -251,7 +252,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         return ParseResult.Entry.createNew(layoutEntity);
     }
 
-    private UserRoleEntity getRoleEntity(GenericLayoutEntity layoutEntity, String sheetName, String accessProfile) {
+    private AccessProfileEntity getAccessProfileEntity(GenericLayoutEntity layoutEntity,
+                                                       String sheetName,
+                                                       String accessProfile) {
         return parseContext.getIdamAccessProfile(accessProfile)
             .orElseThrow(() -> new MapperException(String.format(
                 "- Unknown IDAM access profile '%s' in worksheet '%s' for caseField '%s'",

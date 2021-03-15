@@ -13,7 +13,7 @@ public class CaseFieldEntityInvalidUserRoleValidationError extends ValidationErr
     public CaseFieldEntityInvalidUserRoleValidationError(final Authorisation entity,
                                                          final AuthorisationCaseFieldValidationContext context) {
         super(String.format("Invalid UserRole %s for case type '%s', case field '%s'",
-            entity.getUserRoleId(),
+            entity.getAccessProfileId(),
             context.getCaseReference(),
             context.getCaseFieldReference()));
         this.caseFieldACLEntity = entity;

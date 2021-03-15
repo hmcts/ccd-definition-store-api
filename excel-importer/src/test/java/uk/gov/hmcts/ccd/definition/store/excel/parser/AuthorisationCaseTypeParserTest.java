@@ -8,10 +8,10 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +42,7 @@ public class AuthorisationCaseTypeParserTest {
     private static final String TEST_CASE_ROLE_FOUND = "[CLAIMANT]";
 
     @Mock
-    private UserRoleEntity mockUserRoleEntity;
+    private AccessProfileEntity mockAccessProfileEntity;
 
     private CaseRoleEntity caseRoleEntity;
 
@@ -52,8 +52,8 @@ public class AuthorisationCaseTypeParserTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
-        given(mockUserRoleEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
-        context.registerAccessProfiles(Arrays.asList(mockUserRoleEntity));
+        given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
+        context.registerAccessProfiles(Arrays.asList(mockAccessProfileEntity));
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
         subject = new AuthorisationCaseTypeParser(context, entityToDefinitionDataItemRegistry);
@@ -81,7 +81,7 @@ public class AuthorisationCaseTypeParserTest {
         final CaseTypeACLEntity caseTypeACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseTypeACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(caseTypeACLEntity.getId(), is(nullValue()));
-        assertThat(caseTypeACLEntity.getUserRole(), is(mockUserRoleEntity));
+        assertThat(caseTypeACLEntity.getAccessProfile(), is(mockAccessProfileEntity));
         assertThat(caseTypeACLEntity.getCreate(), is(true));
         assertThat(caseTypeACLEntity.getUpdate(), is(false));
         assertThat(caseTypeACLEntity.getRead(), is(false));
@@ -103,7 +103,7 @@ public class AuthorisationCaseTypeParserTest {
         final CaseTypeACLEntity caseTypeACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseTypeACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(caseTypeACLEntity.getId(), is(nullValue()));
-        assertThat(caseTypeACLEntity.getUserRole(), is(caseRoleEntity));
+        assertThat(caseTypeACLEntity.getAccessProfile(), is(caseRoleEntity));
         assertThat(caseTypeACLEntity.getCreate(), is(true));
         assertThat(caseTypeACLEntity.getUpdate(), is(false));
         assertThat(caseTypeACLEntity.getRead(), is(false));
@@ -125,7 +125,7 @@ public class AuthorisationCaseTypeParserTest {
         final CaseTypeACLEntity caseTypeACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseTypeACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(caseTypeACLEntity.getId(), is(nullValue()));
-        assertThat(caseTypeACLEntity.getUserRole(), is(nullValue()));
+        assertThat(caseTypeACLEntity.getAccessProfile(), is(nullValue()));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity), is(Optional.of(item1)));
     }
@@ -143,7 +143,7 @@ public class AuthorisationCaseTypeParserTest {
         final CaseTypeACLEntity caseTypeACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseTypeACLEntity.getCrudAsString(), is("X y"));
         assertThat(caseTypeACLEntity.getId(), is(nullValue()));
-        assertThat(caseTypeACLEntity.getUserRole(), is(mockUserRoleEntity));
+        assertThat(caseTypeACLEntity.getAccessProfile(), is(mockAccessProfileEntity));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity), is(Optional.of(item1)));
     }
@@ -161,7 +161,7 @@ public class AuthorisationCaseTypeParserTest {
         final CaseTypeACLEntity caseTypeACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseTypeACLEntity.getCrudAsString(), is("X y"));
         assertThat(caseTypeACLEntity.getId(), is(nullValue()));
-        assertThat(caseTypeACLEntity.getUserRole(), is(nullValue()));
+        assertThat(caseTypeACLEntity.getAccessProfile(), is(nullValue()));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity), is(Optional.of(item1)));
     }

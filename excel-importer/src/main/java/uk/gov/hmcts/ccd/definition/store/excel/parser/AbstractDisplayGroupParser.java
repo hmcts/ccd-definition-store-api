@@ -11,12 +11,12 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -168,14 +168,14 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
             .filter(ddi -> StringUtils.isNotEmpty(ddi.getString(ACCESS_PROFILE))).findFirst();
         if (optionalDDI.isPresent()) {
             final String accessProfile = optionalDDI.get().getString(ACCESS_PROFILE);
-            group.setUserRole(getRoleEntity(caseType, group, groupDefinition, accessProfile));
+            group.setAccessProfile(getAccessProfile(caseType, group, groupDefinition, accessProfile));
         }
     }
 
-    private UserRoleEntity getRoleEntity(CaseTypeEntity caseType,
-                                         DisplayGroupEntity group,
-                                         List<DefinitionDataItem> groupDefinition,
-                                         String accessProfile) {
+    private AccessProfileEntity getAccessProfile(CaseTypeEntity caseType,
+                                                 DisplayGroupEntity group,
+                                                 List<DefinitionDataItem> groupDefinition,
+                                                 String accessProfile) {
         return parseContext.getAccessProfile(caseType.getReference(), accessProfile)
             .orElseThrow(() -> new MapperException(
                 String.format("- Invalid IDAM access profile or case role '%s' in '%s' tab for TabId '%s'",

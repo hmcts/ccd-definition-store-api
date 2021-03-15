@@ -7,10 +7,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
 public class CaseFieldEntityComplexFieldACLValidatorImplTest {
 
-    private static final String ROLE1 = "Role1";
+    private static final String ACCESS_PROFILE_1 = "AccessProfile1";
     private static final String CLASS = "Class";
     private static final String CLASS_MEMBERS = "ClassMembers";
     private static final String CHILDREN = "Children";
@@ -50,7 +50,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     private CaseFieldEntity caseField;
 
     @Mock
-    private UserRoleEntity userRole;
+    private AccessProfileEntity accessProfile;
 
     @Mock
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
@@ -59,8 +59,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        userRole = new UserRoleEntity();
-        userRole.setReference(ROLE1);
+        accessProfile = new AccessProfileEntity();
+        accessProfile.setReference(ACCESS_PROFILE_1);
 
         complexACL0 = new ComplexFieldACLEntity();
         complexACL0.setListElementCode(CLASS);
@@ -112,12 +112,12 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     }
 
     @Test
-    @DisplayName("should fail when user not found")
-    public void shouldHaveValidationErrorWhenUserNotFound() {
-        complexACL0.setUserRole(null);
-        complexACL0.setUserRoleId("nf_user_role_id");
+    @DisplayName("should fail when access profile not found")
+    public void shouldHaveValidationErrorWhenAccessProfileNotFound() {
+        complexACL0.setAccessProfile(null);
+        complexACL0.setAccessProfileId("nf_access_profile_id");
         caseField.addComplexFieldACL(complexACL0);
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         caseField.addCaseFieldACL(fieldACL);
 
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
@@ -127,18 +127,18 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
             () -> assertThat(result.getValidationErrors().get(0), instanceOf(
                 CaseFieldEntityInvalidUserRoleValidationError.class)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
-                "Invalid UserRole nf_user_role_id for case type 'case_type', case field 'case_field'"))
+                "Invalid UserRole nf_access_profile_id for case type 'case_type', case field 'case_field'"))
         );
     }
 
     @Test
-    @DisplayName("should not fail when user is found")
-    public void shouldHaveNoValidationErrorWhenUserFound() {
-        complexACL0.setUserRole(userRole);
+    @DisplayName("should not fail when access profile is found")
+    public void shouldHaveNoValidationErrorWhenAccessProfileFound() {
+        complexACL0.setAccessProfile(accessProfile);
         complexACL0.setCreate(true);
         caseField.addComplexFieldACL(complexACL0);
         fieldACL.setCreate(true);
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         caseField.addCaseFieldACL(fieldACL);
 
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
@@ -149,7 +149,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     @Test
     @DisplayName("should fail when parent caseField has no ACL defined")
     public void shouldFailWhenCaseFieldParentHasNoAcl() {
-        complexACL0.setUserRole(userRole);
+        complexACL0.setAccessProfile(accessProfile);
         complexACL0.setCreate(true);
         caseField.addComplexFieldACL(complexACL0);
         caseField.addCaseFieldACL(fieldACL);
@@ -168,9 +168,9 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     @DisplayName("should fail when ACL definition for complex parent node is missing")
     public void shouldFailWhenACLDefinitionForComplexParentNodeIsMissing() {
         complexACL1.setCreate(true);
-        complexACL1.setUserRole(userRole);
+        complexACL1.setAccessProfile(accessProfile);
         fieldACL.setCreate(true);
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         caseField.addComplexFieldACL(complexACL1);
         caseField.addCaseFieldACL(fieldACL);
 
@@ -187,10 +187,10 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     @Test
     @DisplayName("should fail when complex child element has higher access than parent")
     public void shouldFailWhenComplexChildHasHigherAccessThanCaseFieldParent() {
-        complexACL0.setUserRole(userRole);
+        complexACL0.setAccessProfile(accessProfile);
         complexACL0.setCreate(true);
         fieldACL.setCreate(false);
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         caseField.addComplexFieldACLEntities(asList(complexACL0));
         caseField.addCaseFieldACL(fieldACL);
 
@@ -208,14 +208,14 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     @Test
     @DisplayName("should fail when a complex child has higher access than its complex parent")
     public void shouldFailWhenComplexChildHasHigherAccessThanComplexParent() {
-        complexACL0.setUserRole(userRole);
+        complexACL0.setAccessProfile(accessProfile);
         complexACL0.setCreate(false);
-        complexACL1.setUserRole(userRole);
+        complexACL1.setAccessProfile(accessProfile);
         complexACL1.setCreate(false);
-        complexACL2.setUserRole(userRole);
+        complexACL2.setAccessProfile(accessProfile);
         complexACL2.setCreate(true);
         caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2));
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         fieldACL.setCreate(true);
         caseField.addCaseFieldACL(fieldACL);
 
@@ -231,18 +231,18 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     @Test
     @DisplayName("should not fail for partial list element code matching on parent level")
     public void shouldNotFailForPartialListElementCodeMatchingOnParentLevel() {
-        complexACL0.setUserRole(userRole);
+        complexACL0.setAccessProfile(accessProfile);
         complexACL0.setCreate(true);
-        complexACL1.setUserRole(userRole);
+        complexACL1.setAccessProfile(accessProfile);
         complexACL1.setCreate(true);
-        complexACL2.setUserRole(userRole);
+        complexACL2.setAccessProfile(accessProfile);
         complexACL2.setCreate(true);
-        complexACL3.setUserRole(userRole);
+        complexACL3.setAccessProfile(accessProfile);
         complexACL3.setCreate(true);
-        complexACL4.setUserRole(userRole);
+        complexACL4.setAccessProfile(accessProfile);
         complexACL4.setCreate(false);
         caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2, complexACL3, complexACL4));
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         fieldACL.setCreate(true);
         caseField.addCaseFieldACL(fieldACL);
 
@@ -254,16 +254,16 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     @Test
     @DisplayName("should fail when a complex child has higher access than its second level complex parent")
     public void shouldFailWhenComplexChildHasHigherAccessThanSecondLevelComplexParent() {
-        complexACL0.setUserRole(userRole);
+        complexACL0.setAccessProfile(accessProfile);
         complexACL0.setCreate(true);
-        complexACL1.setUserRole(userRole);
+        complexACL1.setAccessProfile(accessProfile);
         complexACL1.setCreate(false);
-        complexACL2.setUserRole(userRole);
+        complexACL2.setAccessProfile(accessProfile);
         complexACL2.setCreate(true);
-        complexACL3.setUserRole(userRole);
+        complexACL3.setAccessProfile(accessProfile);
         complexACL3.setCreate(true);
         caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2, complexACL3));
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         fieldACL.setCreate(true);
         caseField.addCaseFieldACL(fieldACL);
 
@@ -280,16 +280,16 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     @Test
     @DisplayName("should succeed when a complex children has correct access")
     public void shouldSucceedWhenComplexChildrenHasCorrectAccess() {
-        complexACL0.setUserRole(userRole);
+        complexACL0.setAccessProfile(accessProfile);
         complexACL0.setCreate(true);
-        complexACL1.setUserRole(userRole);
+        complexACL1.setAccessProfile(accessProfile);
         complexACL1.setCreate(true);
-        complexACL2.setUserRole(userRole);
+        complexACL2.setAccessProfile(accessProfile);
         complexACL2.setCreate(false);
-        complexACL3.setUserRole(userRole);
+        complexACL3.setAccessProfile(accessProfile);
         complexACL3.setCreate(false);
         caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2, complexACL3));
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         fieldACL.setCreate(true);
         caseField.addCaseFieldACL(fieldACL);
 
@@ -301,23 +301,23 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     @Test
     @DisplayName("should fail when a predefined complex child has been defined")
     public void shouldFailWhenPredefinedComplexChildHasBeenDefined() {
-        complexACL0.setUserRole(userRole);
+        complexACL0.setAccessProfile(accessProfile);
         complexACL0.setCreate(true);
-        complexACL1.setUserRole(userRole);
+        complexACL1.setAccessProfile(accessProfile);
         complexACL1.setCreate(true);
-        complexACL2.setUserRole(userRole);
+        complexACL2.setAccessProfile(accessProfile);
         complexACL2.setCreate(false);
-        complexACL5.setUserRole(userRole);
+        complexACL5.setAccessProfile(accessProfile);
         complexACL5.setCreate(false);
-        complexACL6.setUserRole(userRole);
+        complexACL6.setAccessProfile(accessProfile);
         complexACL6.setCreate(false);
-        complexACL7.setUserRole(userRole);
+        complexACL7.setAccessProfile(accessProfile);
         complexACL7.setCreate(false);
-        complexACL8.setUserRole(userRole);
+        complexACL8.setAccessProfile(accessProfile);
         complexACL8.setCreate(false);
         caseField.addComplexFieldACLEntities(asList(complexACL0, complexACL1, complexACL2, complexACL5, complexACL6,
             complexACL7, complexACL8));
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         fieldACL.setCreate(true);
         caseField.addCaseFieldACL(fieldACL);
 
@@ -341,14 +341,14 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
 
         ComplexFieldACLEntity complexACL10 = new ComplexFieldACLEntity();
         complexACL10.setListElementCode("parent.non-existent");
-        complexACL10.setUserRole(userRole);
+        complexACL10.setAccessProfile(accessProfile);
         complexACL10.setCreate(true);
         ComplexFieldACLEntity complexACL9 = new ComplexFieldACLEntity();
         complexACL9.setListElementCode("parent");
-        complexACL9.setUserRole(userRole);
+        complexACL9.setAccessProfile(accessProfile);
         complexACL9.setCreate(true);
         caseField.addComplexFieldACLEntities(asList(complexACL10, complexACL9));
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         fieldACL.setCreate(true);
         caseField.addCaseFieldACL(fieldACL);
 
@@ -377,10 +377,10 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
         );
         ComplexFieldACLEntity complexACL11 = new ComplexFieldACLEntity();
         complexACL11.setListElementCode("AddressLine1");
-        complexACL11.setUserRole(userRole);
+        complexACL11.setAccessProfile(accessProfile);
         complexACL11.setCreate(true);
         preDefined.addComplexFieldACLEntities(asList(complexACL11));
-        fieldACL.setUserRole(userRole);
+        fieldACL.setAccessProfile(accessProfile);
         fieldACL.setCreate(true);
         preDefined.addCaseFieldACL(fieldACL);
 

@@ -540,7 +540,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
         final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
-        entity.setUserRoleId("nf_user_role_id");
+        entity.setAccessProfileId("nf_access_profile_id");
 
         final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
             entity,
@@ -548,7 +548,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                 new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
-            "Invalid UserRole nf_user_role_id for case type 'case type', case field 'case field'",
+            "Invalid UserRole nf_access_profile_id for case type 'case type', case field 'case field'",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -762,14 +762,14 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity(null, "crud");
-        entity.setUserRoleId("nf_user_role_id");
+        entity.setAccessProfileId("nf_access_profile_id");
 
         final EventEntityInvalidUserRoleValidationError error = new EventEntityInvalidUserRoleValidationError(
             entity,
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
-            "Invalid UserRole nf_user_role_id for case type 'case type', event 'event'",
+            "Invalid UserRole nf_access_profile_id for case type 'case type', event 'event'",
             classUnderTest.createErrorMessage(error));
     }
 

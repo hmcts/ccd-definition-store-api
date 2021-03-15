@@ -13,7 +13,7 @@ public class EventEntityInvalidUserRoleValidationError extends ValidationError {
     public EventEntityInvalidUserRoleValidationError(final EventACLEntity entity,
                                                      final AuthorisationEventValidationContext context) {
         super(String.format("Invalid UserRole %s for case type '%s', event '%s'",
-            entity.getUserRoleId(),
+            entity.getAccessProfileId(),
             context.getCaseReference(),
             context.getEventReference()));
         this.eventACLEntity = entity;

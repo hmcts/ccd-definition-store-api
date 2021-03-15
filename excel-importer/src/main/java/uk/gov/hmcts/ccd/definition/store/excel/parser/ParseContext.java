@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.map.MultiKeyMap;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -11,7 +12,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,7 +36,7 @@ public class ParseContext {
     private final Map<String, FieldTypeEntity> baseTypes = Maps.newHashMap();
     private final Map<String, FieldTypeEntity> allTypes = Maps.newHashMap();
     private final Set<CaseTypeEntity> caseTypes = Sets.newHashSet();
-    private final Map<String, UserRoleEntity> accessProfiles = Maps.newHashMap();
+    private final Map<String, AccessProfileEntity> accessProfiles = Maps.newHashMap();
     private final MultiKeyMap<String, CaseRoleEntity> caseRoles = new MultiKeyMap<>();
 
     /**
@@ -234,14 +234,14 @@ public class ParseContext {
         return Optional.ofNullable(baseTypes.get(reference));
     }
 
-    public Optional<UserRoleEntity> getIdamAccessProfile(final String accessProfile) {
+    public Optional<AccessProfileEntity> getIdamAccessProfile(final String accessProfile) {
         return Optional.ofNullable(accessProfiles.get(accessProfile));
     }
 
-    public Optional<UserRoleEntity> getAccessProfile(String caseType, final String role) {
-        Optional<UserRoleEntity> userRoleEntity = Optional.ofNullable(accessProfiles.get(role));
-        if (userRoleEntity.isPresent()) {
-            return userRoleEntity;
+    public Optional<AccessProfileEntity> getAccessProfile(String caseType, final String role) {
+        Optional<AccessProfileEntity> accessProfileEntity = Optional.ofNullable(accessProfiles.get(role));
+        if (accessProfileEntity.isPresent()) {
+            return accessProfileEntity;
         } else {
             return Optional.ofNullable(caseRoles.get(caseType, role));
         }
@@ -257,11 +257,11 @@ public class ParseContext {
         );
     }
 
-    public ParseContext registerAccessProfiles(final List<UserRoleEntity> accessProfileList) {
+    public ParseContext registerAccessProfiles(final List<AccessProfileEntity> accessProfileList) {
         accessProfiles.clear();
         accessProfiles.putAll(accessProfileList
             .stream()
-            .collect(toMap(UserRoleEntity::getReference, ap -> ap)));
+            .collect(toMap(AccessProfileEntity::getReference, ap -> ap)));
         return this;
     }
 

@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleExcep
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
 import java.time.LocalDateTime;
@@ -38,7 +38,7 @@ class UserRoleServiceImplTest {
     private UserRoleRepository repository;
     private UserRoleService service;
 
-    private UserRoleEntity entity = mock(UserRoleEntity.class);
+    private AccessProfileEntity mockAccessProfileEntity = mock(AccessProfileEntity.class);
     private UserRole mockUserRole = mock(UserRole.class);
 
     @BeforeEach
@@ -57,7 +57,7 @@ class UserRoleServiceImplTest {
             final String role = "role";
             givenEntityWithRole(role);
 
-            doReturn(Optional.of(entity)).when(repository).findTopByReference(role);
+            doReturn(Optional.of(mockAccessProfileEntity)).when(repository).findTopByReference(role);
 
             final UserRole userRole = service.getRole(role);
 
@@ -87,24 +87,25 @@ class UserRoleServiceImplTest {
         void shouldCreate_whenSaveRole() {
 
             final String role = "create";
-            final ArgumentCaptor<UserRoleEntity> argumentCaptor = ArgumentCaptor.forClass(UserRoleEntity.class);
+            final ArgumentCaptor<AccessProfileEntity> argumentCaptor =
+                ArgumentCaptor.forClass(AccessProfileEntity.class);
 
             givenUserRole(role, RESTRICTED);
             givenEntityWithRole(role);
 
             doReturn(Optional.empty()).when(repository).findTopByReference(role);
-            doReturn(entity).when(repository).save(argumentCaptor.capture());
+            doReturn(mockAccessProfileEntity).when(repository).save(argumentCaptor.capture());
 
             final UserRole saved = service.saveRole(mockUserRole).getResponseBody();
-            final UserRoleEntity captured = argumentCaptor.getValue();
+            final AccessProfileEntity captured = argumentCaptor.getValue();
 
-            verify(repository).save(any(UserRoleEntity.class));
+            verify(repository).save(any(AccessProfileEntity.class));
             assertThat(captured.getReference(), is(role));
             assertThat(captured.getSecurityClassification(), is(RESTRICTED));
 
 
-            verify(entity, never()).setSecurityClassification(any());
-            verify(entity, never()).setReference(anyString());
+            verify(mockAccessProfileEntity, never()).setSecurityClassification(any());
+            verify(mockAccessProfileEntity, never()).setReference(anyString());
 
             assertThat(saved.getRole(), is(role));
             assertThat(saved.getSecurityClassification(), is(RESTRICTED));
@@ -116,24 +117,25 @@ class UserRoleServiceImplTest {
         void shouldUpdate_whenSaveRole() {
 
             final String role = "update";
-            final ArgumentCaptor<UserRoleEntity> argumentCaptor = ArgumentCaptor.forClass(UserRoleEntity.class);
-            final UserRoleEntity savedEntity = mock(UserRoleEntity.class);
+            final ArgumentCaptor<AccessProfileEntity> argumentCaptor =
+                ArgumentCaptor.forClass(AccessProfileEntity.class);
+            final AccessProfileEntity savedEntity = mock(AccessProfileEntity.class);
 
             givenUserRole(role, PUBLIC);
             givenEntityWithRole(role);
             givenEntityWithRole(role, PUBLIC, savedEntity);
 
-            doReturn(Optional.of(entity)).when(repository).findTopByReference(role);
+            doReturn(Optional.of(mockAccessProfileEntity)).when(repository).findTopByReference(role);
             doReturn(savedEntity).when(repository).save(argumentCaptor.capture());
 
             final UserRole saved = service.saveRole(mockUserRole).getResponseBody();
-            final UserRoleEntity captured = argumentCaptor.getValue();
+            final AccessProfileEntity captured = argumentCaptor.getValue();
 
-            verify(repository).save(any(UserRoleEntity.class));
+            verify(repository).save(any(AccessProfileEntity.class));
             assertThat(captured.getReference(), is(role));
 
-            verify(entity).setSecurityClassification(PUBLIC);
-            verify(entity, never()).setReference(anyString());
+            verify(mockAccessProfileEntity).setSecurityClassification(PUBLIC);
+            verify(mockAccessProfileEntity, never()).setReference(anyString());
 
             assertThat(saved.getRole(), is(role));
             assertThat(saved.getSecurityClassification(), is(PUBLIC));
@@ -148,24 +150,25 @@ class UserRoleServiceImplTest {
         void shouldCreate_whenCreateRole() {
 
             final String role = "create";
-            final ArgumentCaptor<UserRoleEntity> argumentCaptor = ArgumentCaptor.forClass(UserRoleEntity.class);
+            final ArgumentCaptor<AccessProfileEntity> argumentCaptor =
+                ArgumentCaptor.forClass(AccessProfileEntity.class);
 
             givenUserRole(role, RESTRICTED);
             givenEntityWithRole(role);
 
             doReturn(Optional.empty()).when(repository).findTopByReference(role);
-            doReturn(entity).when(repository).save(argumentCaptor.capture());
+            doReturn(mockAccessProfileEntity).when(repository).save(argumentCaptor.capture());
 
             final UserRole saved = service.createRole(mockUserRole).getResponseBody();
-            final UserRoleEntity captured = argumentCaptor.getValue();
+            final AccessProfileEntity captured = argumentCaptor.getValue();
 
-            verify(repository).save(any(UserRoleEntity.class));
+            verify(repository).save(any(AccessProfileEntity.class));
             assertThat(captured.getReference(), is(role));
             assertThat(captured.getSecurityClassification(), is(RESTRICTED));
 
 
-            verify(entity, never()).setSecurityClassification(any());
-            verify(entity, never()).setReference(anyString());
+            verify(mockAccessProfileEntity, never()).setSecurityClassification(any());
+            verify(mockAccessProfileEntity, never()).setReference(anyString());
 
             assertThat(saved.getRole(), is(role));
             assertThat(saved.getSecurityClassification(), is(RESTRICTED));
@@ -177,14 +180,15 @@ class UserRoleServiceImplTest {
         void shouldThrowExceptionwhenCreateRole() {
 
             final String role = "create";
-            final ArgumentCaptor<UserRoleEntity> argumentCaptor = ArgumentCaptor.forClass(UserRoleEntity.class);
-            final UserRoleEntity savedEntity = mock(UserRoleEntity.class);
+            final ArgumentCaptor<AccessProfileEntity> argumentCaptor =
+                ArgumentCaptor.forClass(AccessProfileEntity.class);
+            final AccessProfileEntity savedEntity = mock(AccessProfileEntity.class);
 
             givenUserRole(role, PUBLIC);
             givenEntityWithRole(role);
             givenEntityWithRole(role, PUBLIC, savedEntity);
 
-            doReturn(Optional.of(entity)).when(repository).findTopByReference(role);
+            doReturn(Optional.of(mockAccessProfileEntity)).when(repository).findTopByReference(role);
 
             Throwable thrown = assertThrows(DuplicateUserRoleException.class, () -> service.createRole(mockUserRole));
             assertEquals("User role already exists", thrown.getMessage());
@@ -199,12 +203,13 @@ class UserRoleServiceImplTest {
         void getRoles() {
             String[] roleNames = {"role1", "role2", "role3"};
             givenUserRole(roleNames[0], PUBLIC);
-            givenEntityWithRole(roleNames[0], RESTRICTED, entity);
+            givenEntityWithRole(roleNames[0], RESTRICTED, mockAccessProfileEntity);
             givenUserRole(roleNames[2], PUBLIC);
-            UserRoleEntity entity2 = mock(UserRoleEntity.class);
-            givenEntityWithRole(roleNames[2], PUBLIC, entity2);
+            AccessProfileEntity mockAccessProfileEntity2 = mock(AccessProfileEntity.class);
+            givenEntityWithRole(roleNames[2], PUBLIC, mockAccessProfileEntity2);
 
-            doReturn(Arrays.asList(entity, entity2)).when(repository).findByReferenceIn(Arrays.asList(roleNames));
+            doReturn(Arrays.asList(mockAccessProfileEntity, mockAccessProfileEntity2))
+                .when(repository).findByReferenceIn(Arrays.asList(roleNames));
 
             List<UserRole> userRoles = service.getRoles(Arrays.asList(roleNames));
 
@@ -238,12 +243,12 @@ class UserRoleServiceImplTest {
         void getRoles() {
             String[] roleNames = {"role1", "role2", "role3"};
             givenUserRole(roleNames[0], PUBLIC);
-            givenEntityWithRole(roleNames[0], RESTRICTED, entity);
+            givenEntityWithRole(roleNames[0], RESTRICTED, mockAccessProfileEntity);
             givenUserRole(roleNames[2], PUBLIC);
-            UserRoleEntity entity2 = mock(UserRoleEntity.class);
-            givenEntityWithRole(roleNames[2], PUBLIC, entity2);
+            AccessProfileEntity mockAccessProfileEntity2 = mock(AccessProfileEntity.class);
+            givenEntityWithRole(roleNames[2], PUBLIC, mockAccessProfileEntity2);
 
-            doReturn(Arrays.asList(entity, entity2)).when(repository).findAll();
+            doReturn(Arrays.asList(mockAccessProfileEntity, mockAccessProfileEntity2)).when(repository).findAll();
 
             List<UserRole> userRoles = service.getRoles();
 
@@ -269,10 +274,10 @@ class UserRoleServiceImplTest {
     }
 
     private void givenEntityWithRole(final String role) {
-        givenEntityWithRole(role, RESTRICTED, entity);
+        givenEntityWithRole(role, RESTRICTED, mockAccessProfileEntity);
     }
 
-    private void givenEntityWithRole(final String role, SecurityClassification sc, UserRoleEntity e) {
+    private void givenEntityWithRole(final String role, SecurityClassification sc, AccessProfileEntity e) {
         given(e.getId()).willReturn(-3);
         given(e.getReference()).willReturn(role);
         given(e.getSecurityClassification()).willReturn(sc);

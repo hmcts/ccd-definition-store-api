@@ -13,10 +13,10 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -160,14 +160,14 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item3);
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        UserRoleEntity userRoleEntity = new UserRoleEntity();
-        userRoleEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(userRoleEntity));
+        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
+        accessProfileEntity.setReference(ACCESS_PROFILE_1);
+        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new UserRoleEntity()));
+        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
     }
 
     @Test
@@ -193,14 +193,14 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item3);
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        UserRoleEntity userRoleEntity = new UserRoleEntity();
-        userRoleEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(userRoleEntity));
+        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
+        accessProfileEntity.setReference(ACCESS_PROFILE_1);
+        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new UserRoleEntity()));
+        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
     }
 
     @Test
@@ -228,19 +228,19 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item3);
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        UserRoleEntity userRoleEntity = new UserRoleEntity();
-        userRoleEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(userRoleEntity));
+        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
+        accessProfileEntity.setReference(ACCESS_PROFILE_1);
+        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new UserRoleEntity()));
+        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
     }
 
     @Test
     @DisplayName("Duplicate definitions without access profile and list element code should generate error")
-    public void shouldFailForDuplicateDefinitionItemsWithoutRoleAndListElementCodes() {
+    public void shouldFailForDuplicateDefinitionItemsWithoutAccessProfileAndListElementCodes() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
@@ -255,14 +255,14 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item3);
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        UserRoleEntity userRoleEntity = new UserRoleEntity();
-        userRoleEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(userRoleEntity));
+        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
+        accessProfileEntity.setReference(ACCESS_PROFILE_1);
+        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new UserRoleEntity()));
+        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
     }
 
     @Test
@@ -730,15 +730,15 @@ public class GenericLayoutParserTest {
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
 
-        UserRoleEntity userRoleEntity = new UserRoleEntity();
-        userRoleEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(userRoleEntity));
+        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
+        accessProfileEntity.setReference(ACCESS_PROFILE_1);
+        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
         MapperException thrown = assertThrows(MapperException.class,
             () -> classUnderTest.parseAllForSearchCases(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new UserRoleEntity()));
+        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
     }
 
     private void addCaseType2Field(DefinitionSheet sheet) {
