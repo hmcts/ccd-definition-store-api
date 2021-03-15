@@ -7,7 +7,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRoleRepository extends JpaRepository<AccessProfileEntity, Integer> {
+public interface AccessProfileRepository extends JpaRepository<AccessProfileEntity, Integer> {
 
     Optional<AccessProfileEntity> findTopByReference(String reference);
 

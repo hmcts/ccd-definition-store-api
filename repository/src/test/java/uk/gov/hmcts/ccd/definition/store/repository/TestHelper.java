@@ -23,17 +23,17 @@ public class TestHelper {
     private final VersionedDefinitionRepositoryDecorator<JurisdictionEntity, Integer> versionedJurisdictionRepository;
     private final VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedTypeRepository;
     private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
-    private final UserRoleRepository userRoleRepository;
+    private final AccessProfileRepository accessProfileRepository;
 
     @Autowired
     public TestHelper(JurisdictionRepository jurisdictionRepository,
                       FieldTypeRepository fieldTypeRepository,
-                      UserRoleRepository userRoleRepository,
+                      AccessProfileRepository accessProfileRepository,
                       CaseTypeRepository caseTypeRepository) {
         versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository);
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
         versionedTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository);
-        this.userRoleRepository = userRoleRepository;
+        this.accessProfileRepository = accessProfileRepository;
     }
 
     public JurisdictionEntity createJurisdiction() {
@@ -94,7 +94,7 @@ public class TestHelper {
         entity.setReference(reference);
         entity.setName(name);
         entity.setSecurityClassification(sc);
-        return userRoleRepository.save(entity);
+        return accessProfileRepository.save(entity);
     }
 
     public EventCaseFieldEntity createEventCaseField(CaseFieldEntity caseField,

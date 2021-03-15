@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
@@ -35,7 +35,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 
 class UserRoleServiceImplTest {
 
-    private UserRoleRepository repository;
+    private AccessProfileRepository repository;
     private UserRoleService service;
 
     private AccessProfileEntity mockAccessProfileEntity = mock(AccessProfileEntity.class);
@@ -43,7 +43,7 @@ class UserRoleServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        repository = mock(UserRoleRepository.class);
+        repository = mock(AccessProfileRepository.class);
         service = new UserRoleServiceImpl(repository);
     }
 

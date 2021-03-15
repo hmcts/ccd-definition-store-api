@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
-import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper;
@@ -22,9 +22,9 @@ import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMa
 @Component
 public class UserRoleServiceImpl implements UserRoleService {
 
-    private final UserRoleRepository repository;
+    private final AccessProfileRepository repository;
 
-    UserRoleServiceImpl(final UserRoleRepository repository) {
+    UserRoleServiceImpl(final AccessProfileRepository repository) {
         this.repository = repository;
     }
 

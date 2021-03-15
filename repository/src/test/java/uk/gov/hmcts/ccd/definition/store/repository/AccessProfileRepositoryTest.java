@@ -33,13 +33,13 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class RoleRepositoryTest {
+public class AccessProfileRepositoryTest {
 
     @Autowired
     private CaseRoleRepository caseRoleRepository;
 
     @Autowired
-    private UserRoleRepository userRoleRepository;
+    private AccessProfileRepository accessProfileRepository;
 
     @Autowired
     private CaseTypeRepository caseTypeRepository;
@@ -133,40 +133,41 @@ public class RoleRepositoryTest {
 
     @Test
     public void shouldFindSingleAccessProfile() {
-        List<AccessProfileEntity> accessProfileEntities = userRoleRepository.findAll();
+        List<AccessProfileEntity> accessProfileEntities = accessProfileRepository.findAll();
         assertThat(accessProfileEntities.size(), is(1));
         assertThat(accessProfileEntities.get(0).getReference(), is(ACCESS_PROFILE_REFERENCE));
     }
 
     @Test
     public void shouldFindAccessProfile() {
-        final AccessProfileEntity role = userRoleRepository.findTopByReference(ACCESS_PROFILE_REFERENCE).get();
-        assertThat(role.getId(), is(notNullValue()));
-        assertThat(role.getCreatedAt(), is(notNullValue()));
-        assertThat(role.getReference(), is(ACCESS_PROFILE_REFERENCE));
-        assertThat(role.getSecurityClassification(), is(PUBLIC));
+        final AccessProfileEntity entity = accessProfileRepository.findTopByReference(ACCESS_PROFILE_REFERENCE).get();
+        assertThat(entity.getId(), is(notNullValue()));
+        assertThat(entity.getCreatedAt(), is(notNullValue()));
+        assertThat(entity.getReference(), is(ACCESS_PROFILE_REFERENCE));
+        assertThat(entity.getSecurityClassification(), is(PUBLIC));
     }
 
     @Test
     public void shouldFindNoAccessProfileEntity() {
-        final Optional<AccessProfileEntity> role = userRoleRepository.findTopByReference("unknown role reference");
-        assertThat(role, isEmpty());
+        final Optional<AccessProfileEntity> entity =
+            accessProfileRepository.findTopByReference("unknown access profile reference");
+        assertThat(entity, isEmpty());
     }
 
     @Test
     public void shouldCreateAccessProfile() {
-        final String role = "a new access profile reference";
+        final String accessProfile = "a new access profile reference";
         final AccessProfileEntity entity = new AccessProfileEntity();
-        entity.setReference(role);
+        entity.setReference(accessProfile);
         entity.setName("SOME_ACCESS_PROFILE");
         entity.setSecurityClassification(RESTRICTED);
-        userRoleRepository.save(entity);
+        accessProfileRepository.save(entity);
 
         entityManager.flush();
         entityManager.clear();
 
-        final AccessProfileEntity afterSave = userRoleRepository.findTopByReference(role).get();
-        assertThat(afterSave.getReference(), is(role));
+        final AccessProfileEntity afterSave = accessProfileRepository.findTopByReference(accessProfile).get();
+        assertThat(afterSave.getReference(), is(accessProfile));
         assertThat(afterSave.getSecurityClassification(), is(RESTRICTED));
     }
 
@@ -175,12 +176,12 @@ public class RoleRepositoryTest {
         final AccessProfileEntity entity = new AccessProfileEntity();
         entity.setReference("xyz = '3'");
         entity.setSecurityClassification(RESTRICTED);
-        userRoleRepository.save(entity);
+        accessProfileRepository.save(entity);
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType, AccessProfileEntity accessProfile) {
         caseTypeRepository.save(caseType);
-        userRoleRepository.save(accessProfile);
+        accessProfileRepository.save(accessProfile);
         entityManager.flush();
         entityManager.clear();
     }

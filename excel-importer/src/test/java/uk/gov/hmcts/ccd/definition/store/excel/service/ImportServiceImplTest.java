@@ -85,8 +85,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
@@ -129,7 +129,7 @@ public class ImportServiceImplTest {
     private JurisdictionEntity jurisdiction;
 
     @Mock
-    private UserRoleRepository userRoleRepository;
+    private AccessProfileRepository accessProfileRepository;
 
     @Mock
     private WorkBasketUserDefaultService workBasketUserDefaultService;
@@ -212,7 +212,7 @@ public class ImportServiceImplTest {
             jurisdictionService,
             caseTypeService,
             layoutService,
-            userRoleRepository,
+            accessProfileRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,
@@ -400,7 +400,7 @@ public class ImportServiceImplTest {
             jurisdictionService,
             caseTypeService,
             layoutService,
-            userRoleRepository,
+            accessProfileRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,
