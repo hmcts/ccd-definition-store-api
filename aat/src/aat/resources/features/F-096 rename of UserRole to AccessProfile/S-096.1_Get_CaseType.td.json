@@ -21,7 +21,8 @@
 
 			"events": [
 				{
-					"__ordering__": "UNORDERED"
+					"__ordering__": "UNORDERED",
+					"__elementId__": "id"
 				},
 				{
 					"_extends_": "F-096_Get_CaseType__Event__Base",
@@ -59,6 +60,10 @@
 			],
 
 			"states": [
+				{
+					"__ordering__": "UNORDERED",
+					"__elementId__": "id"
+				},
 				{
 					"_extends_": "F-096_Get_CaseType__State__Base",
 
