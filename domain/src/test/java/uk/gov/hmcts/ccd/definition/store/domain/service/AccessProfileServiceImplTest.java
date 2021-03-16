@@ -33,10 +33,10 @@ import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
 
-class UserRoleServiceImplTest {
+class AccessProfileServiceImplTest {
 
     private AccessProfileRepository repository;
-    private UserRoleService service;
+    private AccessProfileService service;
 
     private AccessProfileEntity mockAccessProfileEntity = mock(AccessProfileEntity.class);
     private UserRole mockUserRole = mock(UserRole.class);
@@ -44,7 +44,7 @@ class UserRoleServiceImplTest {
     @BeforeEach
     void setUp() {
         repository = mock(AccessProfileRepository.class);
-        service = new UserRoleServiceImpl(repository);
+        service = new AccessProfileServiceImpl(repository);
     }
 
     @Nested

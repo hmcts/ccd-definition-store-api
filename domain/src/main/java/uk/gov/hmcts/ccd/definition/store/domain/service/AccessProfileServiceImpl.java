@@ -20,11 +20,11 @@ import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMa
 import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toModel;
 
 @Component
-public class UserRoleServiceImpl implements UserRoleService {
+public class AccessProfileServiceImpl implements AccessProfileService {
 
     private final AccessProfileRepository repository;
 
-    UserRoleServiceImpl(final AccessProfileRepository repository) {
+    AccessProfileServiceImpl(final AccessProfileRepository repository) {
         this.repository = repository;
     }
 
