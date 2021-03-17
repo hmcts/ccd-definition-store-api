@@ -34,6 +34,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         this.elasticClient = elasticClient;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean createIndex(String indexName, String alias) throws IOException {
         log.info("creating index {} with alias {}", indexName, alias);
@@ -45,6 +46,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         return createIndexResponse.isAcknowledged();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean upsertMapping(String aliasName, String caseTypeMapping) throws IOException {
         log.info("upsert mapping of most recent index for alias {}", aliasName);
