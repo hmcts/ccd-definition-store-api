@@ -1,0 +1,7 @@
+{
+  "_extends_": "CommonFieldType",
+  "_guid_": "BaseFixedListFieldType",
+
+  "id": "FixedList",
+  "type": "FixedList"
+}

@@ -1,0 +1,21 @@
+{
+  "_guid_": "CaseField",
+
+  "metadata": false,
+  "case_type_id": null,
+  "hint_text": null,
+  "field_type": {
+    "_extends_" : "BaseTextFieldType"
+  },
+  "hidden": false,
+  "security_classification": "PUBLIC",
+  "live_from": null,
+  "live_until": null,
+  "acls": [],
+  "complexACLs": [],
+  "order": null,
+  "show_condition": null,
+  "display_context_parameter": null,
+  "retain_hidden_value": null
+
+}

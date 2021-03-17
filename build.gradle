@@ -52,7 +52,7 @@ dependencyCheck {
 ext['elasticsearch.version'] = '6.4.3'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.10.Final'
-ext['spring-security.version'] = '5.3.4.RELEASE'
+ext['spring-security.version'] = '5.3.8.RELEASE'
 ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.2.16'
@@ -71,7 +71,7 @@ ext {
     reformLogging= '5.1.1-BETA'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
-    tomcatVersion = '9.0.40!!'
+    tomcatVersion = '9.0.43!!'
     hibernateVersion = '5.4.24.Final!!'
     limits = [
             'instruction': 99,
@@ -212,7 +212,7 @@ subprojects { subproject ->
         compile('org.springframework.boot:spring-boot-starter-web')
         compile('org.springframework.boot:spring-boot-starter-data-jpa')
 
-        compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
+        compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
 
@@ -229,9 +229,7 @@ subprojects { subproject ->
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
         testCompile "org.postgresql:postgresql:42.2.16"
-        testCompile (group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.3') {
-            exclude group: 'org.postgresql', module: 'postgresql'
-        }
+        testCompile "org.testcontainers:postgresql:1.15.1"
         testCompile "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"

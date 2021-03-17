@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
@@ -27,12 +28,14 @@ public class UserRoleServiceImpl implements UserRoleService {
         this.repository = repository;
     }
 
+    @Transactional
     @Override
     public UserRole getRole(final String role) {
         return toModel(repository.findTopByReference(role).orElseThrow(() ->
             new NotFoundException("Role '" + role + "' is not found")));
     }
 
+    @Transactional
     @Override
     public ServiceResponse<UserRole> saveRole(final UserRole userRole) {
         final UserRoleEntity entity;
@@ -49,6 +52,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         return new ServiceResponse<>(toModel(repository.save(entity)), roleFound ? UPDATE : CREATE);
     }
 
+    @Transactional
     @Override
     public ServiceResponse<UserRole> createRole(final UserRole userRole) {
         final UserRoleEntity entity;
@@ -63,6 +67,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
     }
 
+    @Transactional
     @Override
     public List<UserRole> getRoles(List<String> roles) {
         final List<UserRoleEntity> userRoles = repository.findByReferenceIn(roles);
@@ -71,6 +76,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             .collect(toList());
     }
 
+    @Transactional
     @Override
     public List<UserRole> getRoles() {
         final List<UserRoleEntity> userRoles = repository.findAll();

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
@@ -44,6 +45,7 @@ public class BannerServiceImpl implements BannerService {
         this.bannerRepository.save(bannerEntityDB);
     }
 
+    @Transactional
     @Override
     public List<Banner> getAll(List<String> references) {
         List<BannerEntity> bannerEntities = bannerRepository.findAllByReference(references);
