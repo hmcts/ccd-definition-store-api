@@ -659,18 +659,6 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         });
     }
 
-    private String formattedErrorMessage(String message,
-                                         String showConditionField,
-                                         String eventReference,
-                                         String condition,
-                                         String sheetName) {
-        return String.format(message,
-            showConditionField,
-            eventReference,
-            StringUtils.isEmpty(condition) ? "not defined" : condition,
-            sheetName);
-    }
-
     @Override
     public String createErrorMessage(EventEntityCaseTypeUserRoleValidationError
                                          eventEntityCaseTypeUserRoleValidationError) {
@@ -684,6 +672,18 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     public String createErrorMessage(CaseFieldEntityCORValidationError error) {
         return newMessageIfDefinitionExists(error, error.getCaseFieldEntity(),
             def -> String.format("%s in worksheet '%s'", error.getDefaultMessage(), def.getSheetName()));
+    }
+
+    private String formattedErrorMessage(String message,
+                                         String showConditionField,
+                                         String eventReference,
+                                         String condition,
+                                         String sheetName) {
+        return String.format(message,
+            showConditionField,
+            eventReference,
+            StringUtils.isEmpty(condition) ? "not defined" : condition,
+            sheetName);
     }
 
     private String withWorkSheetName(SimpleValidationError<?> error) {
