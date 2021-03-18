@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-096.2",
+  "_extends_": "Test_Base_data",
+  "title": "must fail to import definition file",
+  "specs": [
+    "contains two events for a caseType with userRole caseworker-caa",
+    "provides a clear validation message describing why the definition import has failed, for example, UserRole 'caseworker-caa' is defined more than once for case type 'CaseTypeID' in worksheet [TabName]"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_Invalid_CaseTypeUserRole_Multiple_Events.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- UserRole 'caseworker-caa' is defined more than once for case type 'FT_MasterCaseType' in worksheet 'AuthorisationCaseEvent'"
+    }
+  }
+}
