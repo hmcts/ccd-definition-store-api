@@ -53,6 +53,7 @@ public class FieldTypeParser {
             if ("Collection".equals(baseTypeReference)) {
                 final FieldTypeEntity collectionFieldType = parseContext.getType(fieldTypeParameter).orElseThrow(() ->
                     new SpreadsheetParsingException("No type found for collection of: " + fieldTypeParameter));
+                collectionFieldType.setRegularExpression(regularExpression);
                 fieldType.setCollectionFieldType(collectionFieldType);
             }
 

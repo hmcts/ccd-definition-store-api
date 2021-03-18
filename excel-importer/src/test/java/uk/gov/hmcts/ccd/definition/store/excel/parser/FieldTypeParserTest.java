@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 public class FieldTypeParserTest {
@@ -33,20 +32,25 @@ public class FieldTypeParserTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void shouldReturnFieldTypeEntityWithUniqueReferenceAndCollectionBaseType_whenFieldTypeAttributeIsCollection() {
+    public void shouldReturnFieldTypeEntityWithUniqueReferenceAndCollectionBaseTypeForCollectionFieldTypeAttribute() {
 
         FieldTypeEntity collectionBaseType = new FieldTypeEntity();
         String collectionFieldType = "Collection";
-        when(parseContext.getType(eq(collectionFieldType))).thenReturn(Optional.of(collectionBaseType));
+        when(parseContext.getType(collectionFieldType)).thenReturn(Optional.of(collectionBaseType));
+
         String fieldTypeParameter = "FieldTypeParameter";
         FieldTypeEntity parameterFieldType = new FieldTypeEntity();
-        when(parseContext.getType(eq(fieldTypeParameter))).thenReturn(Optional.of(parameterFieldType));
+        when(parseContext.getType(fieldTypeParameter)).thenReturn(Optional.of(parameterFieldType));
+
+        String regEx = "^[A-Z]+$";
+        FieldTypeEntity regExFieldType = new FieldTypeEntity();
+        when(parseContext.getType(regEx)).thenReturn(Optional.of(regExFieldType));
 
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_FIELD.toString());
         definitionDataItem.addAttribute(ColumnName.FIELD_TYPE.toString(), collectionFieldType);
         definitionDataItem.addAttribute(ColumnName.FIELD_TYPE_PARAMETER.toString(), fieldTypeParameter);
+        definitionDataItem.addAttribute(ColumnName.REGULAR_EXPRESSION.toString(), regEx);
 
         String fieldId = "FieldId";
 
@@ -63,10 +67,13 @@ public class FieldTypeParserTest {
                 String.format("(%s)-[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}", fieldId))
                 .matcher(parsedEntity.getReference()).matches()
         );
+
         assertEquals(parsedEntity.getBaseFieldType(), collectionBaseType);
         assertEquals(parameterFieldType, parsedEntity.getCollectionFieldType());
 
-        assertNull(parsedEntity.getRegularExpression());
+        assertEquals(regEx, parsedEntity.getRegularExpression());
+        assertEquals(regEx, parsedEntity.getCollectionFieldType().getRegularExpression());
+
         assertNull(parsedEntity.getMinimum());
         assertNull(parsedEntity.getMaximum());
 
