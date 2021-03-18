@@ -7,7 +7,7 @@ import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -34,6 +34,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         this.elasticClient = elasticClient;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean createIndex(String indexName, String alias) throws IOException {
         log.info("creating index {} with alias {}", indexName, alias);
@@ -45,6 +46,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         return createIndexResponse.isAcknowledged();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean upsertMapping(String aliasName, String caseTypeMapping) throws IOException {
         log.info("upsert mapping of most recent index for alias {}", aliasName);
@@ -54,7 +56,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         PutMappingRequest request = new PutMappingRequest(currentIndex);
         request.type(config.getCasesIndexType());
         request.source(caseTypeMapping, XContentType.JSON);
-        PutMappingResponse putMappingResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
+        AcknowledgedResponse putMappingResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
         log.info("mapping upserted: {}", putMappingResponse.isAcknowledged());
         return putMappingResponse.isAcknowledged();
     }
