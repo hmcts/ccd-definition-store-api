@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation;
 
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
@@ -28,6 +29,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
@@ -179,6 +181,8 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(
         CaseTypeEntityFieldLabelValidator.PlaceholderCannotBeResolvedValidationError validationError);
 
+    String createErrorMessage(CaseFieldEntityCORValidationError validationError);
+
     String createErrorMessage(EventEntityInvalidPostStatePriorityError classUnderTest);
 
     String createErrorMessage(EventEntityInvalidDefaultPostStateError classUnderTest);
@@ -186,4 +190,7 @@ public interface ValidationErrorMessageCreator {
     String createErrorMessage(EventEntityShowConditionReferencesInvalidCaseFieldError classUnderTest);
 
     String createErrorMessage(EventEntityEnableConditionReferencesInvalidCaseFieldError classUnderTest);
+
+    String createErrorMessage(EventEntityCaseTypeUserRoleValidationError eventEntityCaseTypeUserRoleValidationError);
+
 }
