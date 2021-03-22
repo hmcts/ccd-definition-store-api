@@ -16,7 +16,7 @@ elasticsearch:
     defaultBoolean: '{"type" : "boolean"}'
     defaultLong: '{"type" : "long"}'
     defaultDouble: '{"type" : "double"}'
-    ccdPhoneUK: '{"type" : "text", "analyzer": "phone_number_analyzer"}'
+    ccdPhoneUK: '{"type" : "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "lowercase_normalizer"}}, "analyzer": "phone_number_analyzer"}'
     ccdDocument: '{
                     "properties":{
                         "document_binary_url":{
@@ -84,7 +84,7 @@ elasticsearch:
   casesIndexType: _doc
   # casePredefinedMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.case-predefined-mappings.defaultText property
   casePredefinedMappings:
-    reference: '{"type" : "text", "analyzer": "standard", "search_analyzer": "case_id_analyzer"}'
+    reference: '{"type" : "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 256, "normalizer": "lowercase_normalizer"}},"analyzer": "standard", "search_analyzer": "case_id_analyzer"}'
     jurisdiction: ${elasticsearch.elasticMappings.defaultText}
     id: ${elasticsearch.elasticMappings.defaultLong}
     state: ${elasticsearch.elasticMappings.defaultText}
