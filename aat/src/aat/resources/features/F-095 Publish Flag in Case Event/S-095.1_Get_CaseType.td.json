@@ -46,7 +46,8 @@
 					{
             "_extends_" : "CaseEventField",
 					  "case_field_id" : "Age",
-					  "publish_as": "age"
+            "publish" : false,
+            "publish_as" : "age"
 				} ],
 				"pre_states" : [ "CaseCreated" ],
 				"post_states" : [ {
@@ -93,8 +94,8 @@
 				}, {
             "_extends_" : "CaseEventField",
 					  "case_field_id" : "TextFieldLName",
-					  "publish": true,
-					  "publish_as": "text_field_last_name"
+            "publish" : true,
+            "publish_as" : "text_field_last_name"
 				} ],
 				"pre_states" : [ ],
 				"post_states" : [ {
@@ -158,6 +159,7 @@
 				"delete" : true
 			} ],
 			"searchAliasFields" : [ ],
+      "roleToAccessProfiles" : [ ],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",
