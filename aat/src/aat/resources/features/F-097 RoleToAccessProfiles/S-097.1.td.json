@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-096.1",
-	"_extends_": "F-096_Test_Base_data",
+	"_guid_": "S-097.1",
+	"_extends_": "F-097_Test_Base_data",
 	"title": "Must return a negative response in an attempt to import a definition file containing invalid case type id in RoleToAccessProfiles",
 	"specs": [
     "an active profile in CCD",

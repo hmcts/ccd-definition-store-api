@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-096.4",
-	"_extends_": "F-096_Test_Base_data",
+	"_guid_": "S-097.4",
+	"_extends_": "F-097_Test_Base_data",
 	"title": "Must return a negative response in an attempt to import a definition file containing invalid disabled value in RoleToAccessProfiles",
 	"specs": [
 		"an active profile in CCD",

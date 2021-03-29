@@ -1,10 +1,10 @@
-@F-096
-Feature: F-096: Role To Access Profiles
+@F-097
+Feature: F-097: Role To Access Profiles
 
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-096.1
+  @S-097.1
   Scenario: Must return a negative response in an attempt to import a definition file containing invalid case type id in RoleToAccessProfiles
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -13,7 +13,7 @@ Feature: F-096: Role To Access Profiles
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-096.2
+  @S-097.2
   Scenario: Must return a negative response in an attempt to import a definition file containing invalid access profile in RoleToAccessProfiles
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -22,7 +22,7 @@ Feature: F-096: Role To Access Profiles
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-096.3
+  @S-097.3
   Scenario: Must return a negative response in an attempt to import a definition file containing invalid readonly value in RoleToAccessProfiles
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -31,7 +31,7 @@ Feature: F-096: Role To Access Profiles
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-096.4
+  @S-097.4
   Scenario: Must return a negative response in an attempt to import a definition file containing invalid disabled value in RoleToAccessProfiles
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -40,7 +40,7 @@ Feature: F-096: Role To Access Profiles
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-096.5
+  @S-097.5
   Scenario: Must successfully import a definition file containing  a valid Role to access profiles
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
