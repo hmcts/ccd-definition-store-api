@@ -1,6 +1,6 @@
 {
   "_guid_": "S-600.5",
-  "_extends_": "F-093_Test_Base_data",
+  "_extends_": "Test_Base_data",
   "title": "must fail to import definition file",
   "specs": [
     "contains incorrectly configured 'retainHiddenValue' column, invalid value in the retainHiddenValue column",
