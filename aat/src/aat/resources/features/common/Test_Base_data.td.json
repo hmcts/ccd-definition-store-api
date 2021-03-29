@@ -1,5 +1,5 @@
 {
-  "_guid_": "F-093_Test_Base_data",
+  "_guid_": "Test_Base_data",
   "_extends_": "Post_Operation_Base_Data_on_Definition_Store",
 
   "productName": "CCD Definition Store Api",
