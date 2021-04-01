@@ -24,6 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
@@ -41,10 +42,12 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.LayoutParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.RoleToAccessProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
@@ -57,6 +60,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
@@ -81,6 +85,7 @@ public class ImportServiceImpl implements ImportService {
     private final BannerService bannerService;
     private final JurisdictionUiConfigService jurisdictionUiConfigService;
     private final ChallengeQuestionTabService challengeQuestionTabService;
+    private final RoleToAccessProfileService roleToAccessProfileService;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -97,7 +102,8 @@ public class ImportServiceImpl implements ImportService {
                              IdamProfileClient idamProfileClient,
                              BannerService bannerService,
                              JurisdictionUiConfigService jurisdictionUiConfigService,
-                             ChallengeQuestionTabService challengeQuestionTabService) {
+                             ChallengeQuestionTabService challengeQuestionTabService,
+                             RoleToAccessProfileService roleToAccessProfileService) {
 
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
@@ -114,6 +120,7 @@ public class ImportServiceImpl implements ImportService {
         this.bannerService = bannerService;
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
         this.challengeQuestionTabService = challengeQuestionTabService;
+        this.roleToAccessProfileService = roleToAccessProfileService;
     }
 
     /**
@@ -274,7 +281,26 @@ public class ImportServiceImpl implements ImportService {
             logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
         }
 
+        parseRoleToAccessProfiles(definitionSheets, parseContext);
+
         return metadata;
+    }
+
+    private void parseRoleToAccessProfiles(Map<String, DefinitionSheet> definitionSheets,
+                                           ParseContext parseContext) {
+
+        // Role to Access Profiles
+        if (definitionSheets.get(SheetName.ROLE_TO_ACCESS_PROFILES.getName()) != null) {
+            logger.debug("Importing spreadsheet: RoleToAccessProfiles...");
+            final RoleToAccessProfilesParser parser = parserFactory.createRoleToAccessProfilesParser();
+            List<RoleToAccessProfilesEntity> accessProfileEntities = parser.parse(definitionSheets, parseContext);
+            final RoleToAccessProfilesValidator roleToAccessProfilesValidator = parserFactory
+                .createAccessProfileValidator();
+            roleToAccessProfilesValidator.validate(accessProfileEntities, parseContext);
+
+            roleToAccessProfileService.saveAll(accessProfileEntities);
+            logger.debug("Importing spreadsheet: RoleToAccessProfiles...: OK");
+        }
     }
 
     @VisibleForTesting  // used by BaseTest
