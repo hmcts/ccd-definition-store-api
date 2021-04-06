@@ -400,6 +400,7 @@
         }
       ],
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
+      "roleToAccessProfiles" : [ ],
       "case_fields": [
         {
           "__operator__": "equivalent",

@@ -77,6 +77,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
@@ -162,6 +163,9 @@ public class ImportServiceImplTest {
     private ChallengeQuestionTabService challengeQuestionTabService;
 
     @Mock
+    private RoleToAccessProfileService roleToAccessProfileService;
+
+    @Mock
     private ApplicationParams applicationParams;
 
     private FieldTypeEntity fixedTypeBaseType;
@@ -219,7 +223,8 @@ public class ImportServiceImplTest {
             idamProfileClient,
             bannerService,
             jurisdictionUiConfigService,
-            challengeQuestionTabService);
+            challengeQuestionTabService,
+            roleToAccessProfileService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -407,7 +412,8 @@ public class ImportServiceImplTest {
             idamProfileClient,
             bannerService,
             jurisdictionUiConfigService,
-            challengeQuestionTabService);
+            challengeQuestionTabService,
+            roleToAccessProfileService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

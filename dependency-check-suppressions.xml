@@ -43,15 +43,43 @@
 		<cve>CVE-2007-1652</cve>
 	</suppress>
 
-	<suppress>
+<suppress>
 		<notes>Temporary suppressions to unblock pipelines</notes>
 		<cve>CVE-2020-29242</cve>
 		<cve>CVE-2020-29243</cve>
 		<cve>CVE-2020-29244</cve>
 		<cve>CVE-2020-29245</cve>
 		<cve>CVE-2020-7021</cve>
-		<cve>CVE-2021-25122</cve>
-		<cve>CVE-2021-25329</cve>
 	</suppress>
-
+	<suppress>
+		<cve>CVE-2020-7021</cve>
+	</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-core-9.0.40.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
+   <cve>CVE-2021-25122</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-core-9.0.40.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
+   <cve>CVE-2021-25329</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.40.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
+   <cve>CVE-2021-25122</cve>
+</suppress>
+	<suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.40.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
+   <cve>CVE-2021-25329</cve>
+</suppress>
 </suppressions>
