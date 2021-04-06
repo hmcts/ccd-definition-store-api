@@ -34,159 +34,135 @@
 				{
 					"__ordering__": "UNORDERED"
 				},
-				{
-					"id": "addExtraInfo",
-					"name": "Add Details",
-					"description": "Add extra details to the case",
-					"order": 1,
-					"case_fields": [
-						{
-							"__ordering__": "UNORDERED",
-							"__elementId__": "case_field_id"
-						},
-						{
-							"_extends_": "CaseEventField",
-							"case_field_id": "Age",
-							"publish": false,
-							"publish_as": "age"
-						}
-					],
-					"pre_states": [
-						"CaseCreated"
-					],
-					"post_states": [
-						{
-							"enabling_condition": null,
-							"priority": 99,
-							"post_state_reference": "extraDetailsAdded"
-						}
-					],
-					"callback_url_about_to_start_event": null,
-					"retries_timeout_about_to_start_event": [],
-					"callback_url_about_to_submit_event": null,
-					"retries_timeout_url_about_to_submit_event": [],
-					"callback_url_submitted_event": null,
-					"retries_timeout_url_submitted_event": [],
-					"security_classification": "PUBLIC",
-					"event_enabling_condition": null,
-					"acls": [
-						{
-							"role": "caseworker-befta_master",
-							"create": true,
-							"read": true,
-							"update": true,
-							"delete": true
-						}
-					],
-					"show_summary": true,
-					"publish": false,
-					"show_event_notes": null,
-					"can_save_draft": null,
-					"end_button_label": null
-				},
-				{
-					"id": "createCase",
-					"name": "Create a case",
-					"description": "Create a case",
-					"order": 1,
-					"case_fields": [
-						{
-							"__ordering__": "UNORDERED",
-							"__elementId__": "case_field_id"
-						},
-						{
-							"_extends_": "CaseEventField",
-							"case_field_id": "TextFieldFName"
-						},
-						{
-							"_extends_": "CaseEventField",
-							"case_field_id": "TextFieldMName"
-						},
-						{
-							"_extends_": "CaseEventField",
-							"case_field_id": "TextFieldLName",
-							"publish": true,
-							"publish_as": "text_field_last_name"
-						}
-					],
-					"pre_states": [],
-					"post_states": [
-						{
-							"enabling_condition": null,
-							"priority": 99,
-							"post_state_reference": "CaseCreated"
-						}
-					],
-					"callback_url_about_to_start_event": null,
-					"retries_timeout_about_to_start_event": [],
-					"callback_url_about_to_submit_event": null,
-					"retries_timeout_url_about_to_submit_event": [],
-					"callback_url_submitted_event": null,
-					"retries_timeout_url_submitted_event": [],
-					"security_classification": "PUBLIC",
-					"event_enabling_condition": null,
-					"acls": [
-						{
-							"role": "caseworker-befta_master",
-							"create": true,
-							"read": true,
-							"update": true,
-							"delete": true
-						}
-					],
-					"show_summary": true,
-					"publish": true,
-					"show_event_notes": null,
-					"can_save_draft": null,
-					"end_button_label": null
-				}
-			],
-			"states": [
-				{
-					"id": "CaseCreated",
-					"name": "Create case",
-					"description": null,
-					"order": 1,
-					"title_display": null,
-					"acls": [
-						{
-							"role": "caseworker-befta_master",
-							"create": true,
-							"read": true,
-							"update": true,
-							"delete": true
-						}
-					]
-				},
-				{
-					"id": "extraDetailsAdded",
-					"name": "Extra Details Added",
-					"description": null,
-					"order": 1,
-					"title_display": null,
-					"acls": [
-						{
-							"role": "caseworker-befta_master",
-							"create": true,
-							"read": true,
-							"update": true,
-							"delete": true
-						}
-					]
-				}
-			],
-			"acls": [
-				{
-					"role": "caseworker-befta_master",
-					"create": true,
-					"read": true,
-					"update": true,
-					"delete": true
-				}
-			],
-			"searchAliasFields": [],
-			"roleToAccessProfiles": [],
-			"case_fields": [
+
+        {
+				"id" : "addExtraInfo",
+				"name" : "Add Details",
+				"description" : "Add extra details to the case",
+				"order" : 1,
+				"case_fields" : [
+					{
+						"__ordering__": "UNORDERED",
+						"__elementId__": "case_field_id"
+					},
+					{
+            "_extends_" : "CaseEventField",
+            "case_field_id" : "Age",
+            "publish" : false,
+            "publish_as" : "age"
+          } ],
+				"pre_states" : [ "CaseCreated" ],
+				"post_states" : [ {
+					"enabling_condition" : null,
+					"priority" : 99,
+					"post_state_reference" : "extraDetailsAdded"
+				} ],
+				"callback_url_about_to_start_event" : null,
+				"retries_timeout_about_to_start_event" : [ ],
+				"callback_url_about_to_submit_event" : null,
+				"retries_timeout_url_about_to_submit_event" : [ ],
+				"callback_url_submitted_event" : null,
+				"retries_timeout_url_submitted_event" : [ ],
+				"security_classification" : "PUBLIC",
+        "event_enabling_condition": null,
+				"acls" : [ {
+					"role" : "caseworker-befta_master",
+					"create" : true,
+					"read" : true,
+					"update" : true,
+					"delete" : true
+				} ],
+				"show_summary" : true,
+				"publish" : false,
+				"show_event_notes" : null,
+				"can_save_draft" : null,
+				"end_button_label" : null
+			}, {
+				"id" : "createCase",
+				"name" : "Create a case",
+				"description" : "Create a case",
+				"order" : 1,
+				"case_fields" : [
+					{
+						"__ordering__": "UNORDERED",
+						"__elementId__": "case_field_id"
+					},
+					{
+            "_extends_" : "CaseEventField",
+					  "case_field_id" : "TextFieldFName"
+				}, {
+            "_extends_" : "CaseEventField",
+					  "case_field_id" : "TextFieldMName"
+				}, {
+            "_extends_" : "CaseEventField",
+            "case_field_id" : "TextFieldLName",
+            "publish" : true,
+            "publish_as" : "text_field_last_name"
+          } ],
+				"pre_states" : [ ],
+				"post_states" : [ {
+					"enabling_condition" : null,
+					"priority" : 99,
+					"post_state_reference" : "CaseCreated"
+				} ],
+				"callback_url_about_to_start_event" : null,
+				"retries_timeout_about_to_start_event" : [ ],
+				"callback_url_about_to_submit_event" : null,
+				"retries_timeout_url_about_to_submit_event" : [ ],
+				"callback_url_submitted_event" : null,
+				"retries_timeout_url_submitted_event" : [ ],
+				"security_classification" : "PUBLIC",
+        "event_enabling_condition": null,
+				"acls" : [ {
+					"role" : "caseworker-befta_master",
+					"create" : true,
+					"read" : true,
+					"update" : true,
+					"delete" : true
+				} ],
+				"show_summary" : true,
+				"publish" : true,
+				"show_event_notes" : null,
+				"can_save_draft" : null,
+				"end_button_label" : null
+			} ],
+			"states" : [ {
+				"id" : "CaseCreated",
+				"name" : "Create case",
+				"description" : null,
+				"order" : 1,
+				"title_display" : null,
+				"acls" : [ {
+					"role" : "caseworker-befta_master",
+					"create" : true,
+					"read" : true,
+					"update" : true,
+					"delete" : true
+				} ]
+			}, {
+				"id" : "extraDetailsAdded",
+				"name" : "Extra Details Added",
+				"description" : null,
+				"order" : 1,
+				"title_display" : null,
+				"acls" : [ {
+					"role" : "caseworker-befta_master",
+					"create" : true,
+					"read" : true,
+					"update" : true,
+					"delete" : true
+				} ]
+			} ],
+			"acls" : [ {
+				"role" : "caseworker-befta_master",
+				"create" : true,
+				"read" : true,
+				"update" : true,
+				"delete" : true
+			} ],
+			"searchAliasFields" : [ ],
+      "roleToAccessProfiles" : [ ],
+			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",
 					"__elementId__": "id"
