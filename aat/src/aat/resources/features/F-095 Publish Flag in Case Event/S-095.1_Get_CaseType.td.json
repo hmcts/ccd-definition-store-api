@@ -475,8 +475,8 @@
 				"label" : "Case Reference",
 				"hint_text" : null,
 				"field_type" : {
-					"id" : "Text",
-					"type" : "Text",
+					"id" : "Number",
+					"type" : "Number",
 					"min" : null,
 					"max" : null,
 					"regular_expression" : null,
