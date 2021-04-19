@@ -1,4 +1,3 @@
-provider "azurerm" {
   features {}
 }
 
@@ -43,16 +42,57 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
   key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
 }
 
-module "definition-store-db" {
+
+
+
+////////////////////////////////////////////////////////////
+// DB version OLD KEYS this values are going to be deleted//
+///////////////////////////////////////////////////////////
+resource "azurerm_key_vault_secret" "POSTGRES-USER" {
+  name         = "${var.component}-POSTGRES-USER"
+  value        = module.definition-store-db-v11.user_name
+  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
+  name         = "${var.component}-POSTGRES-PASS"
+  value        = module.definition-store-db-v11.postgresql_password
+  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
+  name         = "${var.component}-POSTGRES-HOST"
+  value        = module.definition-store-db-v11.host_name
+  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
+  name         = "${var.component}-POSTGRES-PORT"
+  value        = module.definition-store-db-v11.postgresql_listen_port
+  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
+  name         = "${var.component}-POSTGRES-DATABASE"
+  value        = module.definition-store-db-v11.postgresql_database
+  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
+}
+
+////////////////////////////////
+// DB version 11             //
+////////////////////////////////
+
+module "definition-store-db-v11" {
   source          = "git@github.com:hmcts/cnp-module-postgres?ref=master"
-  product         = var.product
+  product         = "${var.component}-db-v11"
   component       = var.component
-  name            = "${local.app_full_name}-postgres-db"
+  name            = "${local.app_full_name}-postgres-db-v11"
   location        = "${var.location}"
   env             = "${var.env}"
   subscription    = "${var.subscription}"
   postgresql_user = "${var.postgresql_user}"
   database_name   = "${var.database_name}"
+  postgresql_version = "11"
   sku_name        = "${var.database_sku_name}"
   sku_tier        = "GeneralPurpose"
   sku_capacity    = "${var.database_sku_capacity}"
@@ -60,36 +100,34 @@ module "definition-store-db" {
   common_tags     = "${var.common_tags}"
 }
 
-////////////////////////////////
-// Populate Vault with DB info
-////////////////////////////////
 
-resource "azurerm_key_vault_secret" "POSTGRES-USER" {
-  name         = "${var.component}-POSTGRES-USER"
-  value        = module.definition-store-db.user_name
+
+resource "azurerm_key_vault_secret" "POSTGRES-USER-V11" {
+  name         = "${var.component}-POSTGRES-USER-V11"
+  value        = module.definition-store-db-v11.user_name
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
-  name         = "${var.component}-POSTGRES-PASS"
-  value        = module.definition-store-db.postgresql_password
+resource "azurerm_key_vault_secret" "POSTGRES-PASS-V11" {
+  name         = "${var.component}-POSTGRES-PASS-V11"
+  value        = module.definition-store-db-v11.postgresql_password
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
-  name         = "${var.component}-POSTGRES-HOST"
-  value        = module.definition-store-db.host_name
+resource "azurerm_key_vault_secret" "POSTGRES_HOST-V11" {
+  name         = "${var.component}-POSTGRES-HOST-V11"
+  value        = module.definition-store-db-v11.host_name
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
-  name         = "${var.component}-POSTGRES-PORT"
-  value        = module.definition-store-db.postgresql_listen_port
+resource "azurerm_key_vault_secret" "POSTGRES_PORT-V11" {
+  name         = "${var.component}-POSTGRES-PORT-V11"
+  value        = module.definition-store-db-v11.postgresql_listen_port
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
-  name         = "${var.component}-POSTGRES-DATABASE"
-  value        = module.definition-store-db.postgresql_database
+resource "azurerm_key_vault_secret" "POSTGRES_DATABASE-V11" {
+  name         = "${var.component}-POSTGRES-DATABASE-V11"
+  value        = module.definition-store-db-v11.postgresql_database
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
