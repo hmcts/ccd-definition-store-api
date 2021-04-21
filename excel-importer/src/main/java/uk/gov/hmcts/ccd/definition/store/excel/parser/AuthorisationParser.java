@@ -60,6 +60,10 @@ interface AuthorisationParser {
     }
 
     default DefinitionSheet getDefinitionSheet(Map<String, DefinitionSheet> definitionSheets) {
+        if (definitionSheets == null || definitionSheets.isEmpty()) {
+            throw new MapperException("A definition must contain a sheet");
+        }
+
         DefinitionSheet definitionSheet = definitionSheets.get(getSheetName());
         if (definitionSheet == null) {
             throw new MapperException(

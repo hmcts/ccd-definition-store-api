@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -184,21 +185,15 @@ public class MapperUtil {
         // Case Insensitive False= false
         // Case Insensitive T = true
         // Case Insensitive F = false
-        switch (attribute.toLowerCase()) {
+        switch (attribute.toLowerCase(Locale.ENGLISH)) {
             case "yes":
-                return true;
             case "y":
-                return true;
             case "t":
-                return true;
             case "true":
                 return true;
             case "no":
-                return false;
             case "n":
-                return false;
             case "false":
-                return false;
             case "f":
                 return false;
             default:

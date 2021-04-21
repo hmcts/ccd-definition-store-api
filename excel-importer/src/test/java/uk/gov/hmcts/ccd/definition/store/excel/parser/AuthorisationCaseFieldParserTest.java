@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -25,6 +26,8 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.ParserTestBase.CASE_FIELD_UNDER_TEST;
@@ -200,6 +203,51 @@ public class AuthorisationCaseFieldParserTest {
         assertThat(caseFieldACLEntity.getUserRole(), is(nullValue()));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(caseFieldACLEntity), is(Optional.of(item1)));
+    }
+
+    @Test
+    public void shouldParseEntityWithInvalidCaseField() {
+        final String role = "CaseWorker 1";
+
+        CaseFieldEntity caseField1 = new CaseFieldEntity();
+        caseField1.setReference("Invalid case field");
+
+        final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
+        item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
+        item1.addAttribute(CRUD.toString(), " CCCd  ");
+        item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
+        definitionSheet.addDataItem(item1);
+
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField1));
+        Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
+        assertThat(entities.size(), is(0));
+    }
+
+    @Test
+    void shouldParseEntityWithNoDefinitions() {
+        final MapperException mapperException = assertThrows(MapperException.class,
+            () -> subject.parseAndSetACLEntities(null, caseType, Collections.singleton(caseField)));
+        assertEquals("A definition must contain a sheet", mapperException.getMessage());
+    }
+
+    @Test
+    void shouldParseEntityWithNoDefinitionSheet() {
+        Map<String, DefinitionSheet> definitionSheetMap = new HashMap<>();
+        definitionSheetMap.put(CASE_TYPE.getName(), buildSheetForCaseType());
+        definitionSheetMap.put(CASE_FIELD.getName(), buildSheetForCaseField());
+
+        final MapperException mapperException = assertThrows(MapperException.class,
+            () -> subject.parseAndSetACLEntities(definitionSheetMap, caseType, Collections.singleton(caseField)));
+        assertEquals("A definition must contain a AuthorisationCaseField sheet", mapperException.getMessage());
+    }
+
+    @Test
+    void shouldParseEntityWithNoDataItems() {
+        subject.parseAndSetACLEntities(definitionSheets, caseType, Collections.singleton(caseField));
+        final Collection<CaseFieldACLEntity> entities = caseField.getCaseFieldACLEntities();
+
+        assertThat(entities.size(), is(0));
     }
 
     static DefinitionSheet buildSheetForCaseField() {

@@ -44,9 +44,6 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
         validateCaseEvents(definitionSheets, definitionSheet, caseTypeReference);
 
         final List<DefinitionDataItem> dataItems = dataItemMap.get(caseTypeReference);
-        final Map<String, List<DefinitionDataItem>> collect = dataItems == null
-            ? null
-            : dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_EVENT_ID)));
 
         for (EventEntity event : events) {
             final List<EventACLEntity> parseResults = Lists.newArrayList();
@@ -55,17 +52,22 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
             LOG.debug("Parsing AuthorisationCaseEvent for case type {}, event {}...",
                 caseTypeReference, eventReference);
 
-            if (null == dataItems) {
-                LOG.warn("No data is found for case type '{} in AuthorisationCaseEvents tab", caseTypeReference);
+            if (null == dataItems || dataItems.isEmpty()) {
+                LOG.warn("No data is found for case type '{}' in AuthorisationCaseEvents tab", caseTypeReference);
             } else {
                 LOG.debug("Parsing user roles for case type {}: {} AuthorisationCaseEvents detected",
                     caseTypeReference, dataItems.size());
 
-                if (null == collect.get(eventReference)) {
+                final Map<String, List<DefinitionDataItem>> collect =
+                    dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_EVENT_ID)));
+
+                List<DefinitionDataItem> definitionDataItems = collect.get(eventReference);
+
+                if (null == definitionDataItems || definitionDataItems.isEmpty()) {
                     LOG.warn("No row is defined for case type '{}', event '{}'", caseTypeReference, eventReference);
                     // and let validation handles this Exception
                 } else {
-                    for (DefinitionDataItem definition : collect.get(eventReference)) {
+                    for (DefinitionDataItem definition : definitionDataItems) {
                         EventACLEntity entity = new EventACLEntity();
 
                         parseUserRole(entity, definition, parseContext);

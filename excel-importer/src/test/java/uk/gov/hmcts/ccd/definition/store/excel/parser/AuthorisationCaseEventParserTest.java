@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -27,6 +28,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_EVENT;
@@ -204,6 +207,51 @@ class AuthorisationCaseEventParserTest {
             () -> assertThat(eventACLEntity.getUserRole(), is(nullValue())),
             () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(eventACLEntity),
                 is(Optional.of(item1))));
+    }
+
+    @Test
+    void shouldParseEntityWithInvalidEvent() {
+        final String role = "CaseWorker 1";
+
+        EventEntity caseEvent1 = new EventEntity();
+        caseEvent1.setReference("Invalid event");
+
+        final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
+        item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
+        item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
+        item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
+        definitionSheet.addDataItem(item1);
+
+        subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent1));
+        Collection<EventACLEntity> entities = caseEvent1.getEventACLEntities();
+        assertThat(entities.size(), is(0));
+    }
+
+    @Test
+    void shouldParseEntityWithNoDefinitions() {
+        final MapperException mapperException = assertThrows(MapperException.class,
+            () -> subject.parseAndSetEventACLEntities(null, caseType, Collections.singleton(caseEvent)));
+        assertEquals("A definition must contain a sheet", mapperException.getMessage());
+    }
+
+    @Test
+    void shouldParseEntityWithNoDefinitionSheet() {
+        Map<String, DefinitionSheet> definitionSheetsMap = new HashMap<>();
+        definitionSheetsMap.put(CASE_TYPE.getName(), buildSheetForCaseType());
+        definitionSheetsMap.put(CASE_EVENT.getName(), buildSheetForCaseEvent());
+
+        final MapperException mapperException = assertThrows(MapperException.class,
+            () -> subject.parseAndSetEventACLEntities(definitionSheetsMap, caseType, Collections.singleton(caseEvent)));
+        assertEquals("A definition must contain a AuthorisationCaseEvent sheet", mapperException.getMessage());
+    }
+
+    @Test
+    void shouldParseEntityWithNoDataItems() {
+        subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
+        Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
+
+        assertThat(entities.size(), is(0));
     }
 
     private DefinitionSheet buildSheetForCaseEvent() {
