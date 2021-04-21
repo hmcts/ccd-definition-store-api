@@ -5,14 +5,18 @@
 	<suppress until="2021-04-23">
 		<notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security
 			(any version), see https://pivotal.io/security/cve-2018-1258
-			False positive confirmed.
+			False
+			positive confirmed.
 		</notes>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
 	<suppress until="2021-04-23">
-		<notes>These CVE's are coming from Dhowden tag library and it impacts only MP3/MP4/OGG/FLAC metadata parsing
-			library. Also it is declared as false positive in https://github.com/jeremylong/DependencyCheck/issues/3043
+		<notes>These CVE's are coming from Dhowden tag library and it impacts
+			only MP3/MP4/OGG/FLAC metadata parsing
+			library. Also it is declared as
+			false positive in
+			https://github.com/jeremylong/DependencyCheck/issues/3043
 		</notes>
 		<cve>CVE-2020-29242</cve>
 		<cve>CVE-2020-29243</cve>
@@ -20,8 +24,8 @@
 		<cve>CVE-2020-29245</cve>
 	</suppress>
 
-	<!-- !!!!!!! This suppression should not be removed until the elastic search
-		client is updated to 7. Before updating the elastic client make sure that
+	<!-- !!!!!!! This suppression should not be removed until the elastic search 
+		client is updated to 7. Before updating the elastic client make sure that 
 		the server has been updated to 7 !!!!! -->
 	<suppress until="2021-04-23">
 		<notes><![CDATA[
@@ -37,13 +41,15 @@
 	</suppress>
 
 	<suppress until="2021-04-23">
-		<notes>Declared as False Positive on com.nimbusds:oauth2-oidc-sdk #2866
-			https://github.com/jeremylong/DependencyCheck/issues/2866</notes>
+		<notes>Declared as False Positive on com.nimbusds:oauth2-oidc-sdk
+			#2866
+			https://github.com/jeremylong/DependencyCheck/issues/2866
+		</notes>
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
 	</suppress>
 
-	<suppress>
+	<suppress until="2021-05-21">
 		<notes>Temporary suppressions to unblock pipelines</notes>
 		<cve>CVE-2020-29242</cve>
 		<cve>CVE-2020-29243</cve>
@@ -52,36 +58,47 @@
 		<cve>CVE-2020-7021</cve>
 		<cve>CVE-2021-25122</cve>
 		<cve>CVE-2021-25329</cve>
+		<cve>CVE-2021-29425</cve>
 	</suppress>
+
 	<suppress>
 		<cve>CVE-2020-7021</cve>
 	</suppress>
+
 	<suppress>
-   <notes><![CDATA[
+		<notes><![CDATA[
    file name: tomcat-embed-core-9.0.40.jar
    ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
-   <cve>CVE-2021-25122</cve>
-</suppress>
+		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$
+		</packageUrl>
+		<cve>CVE-2021-25122</cve>
+	</suppress>
+
 	<suppress>
-   <notes><![CDATA[
+		<notes><![CDATA[
    file name: tomcat-embed-core-9.0.40.jar
    ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
-   <cve>CVE-2021-25329</cve>
-</suppress>
+		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$
+		</packageUrl>
+		<cve>CVE-2021-25329</cve>
+	</suppress>
+
 	<suppress>
-   <notes><![CDATA[
+		<notes><![CDATA[
    file name: tomcat-embed-websocket-9.0.40.jar
    ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
-   <cve>CVE-2021-25122</cve>
-</suppress>
+		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$
+		</packageUrl>
+		<cve>CVE-2021-25122</cve>
+	</suppress>
+
 	<suppress>
-   <notes><![CDATA[
+		<notes><![CDATA[
    file name: tomcat-embed-websocket-9.0.40.jar
    ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
-   <cve>CVE-2021-25329</cve>
-</suppress>
+		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$
+		</packageUrl>
+		<cve>CVE-2021-25329</cve>
+	</suppress>
+
 </suppressions>
