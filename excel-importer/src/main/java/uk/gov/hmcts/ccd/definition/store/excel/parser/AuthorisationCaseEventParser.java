@@ -55,29 +55,35 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
             LOG.debug("Parsing AuthorisationCaseEvent for case type {}, event {}...",
                 caseTypeReference, eventReference);
 
-            if (null == dataItems) {
-                LOG.warn("No data is found for case type '{} in AuthorisationCaseEvents tab", caseTypeReference);
+            if (null == dataItems || dataItems.size() == 0) {
+                LOG.warn("No data is found for case type '{}' in AuthorisationCaseEvents tab", caseTypeReference);
             } else {
                 LOG.debug("Parsing user roles for case type {}: {} AuthorisationCaseEvents detected",
                     caseTypeReference, dataItems.size());
 
-                if (null == collect.get(eventReference)) {
-                    LOG.warn("No row is defined for case type '{}', event '{}'", caseTypeReference, eventReference);
-                    // and let validation handles this Exception
+                if (null == collect || collect.size() == 0) {
+                    LOG.warn("No data is found for case type '{}' in AuthorisationCaseEvents tab", caseTypeReference);
                 } else {
-                    for (DefinitionDataItem definition : collect.get(eventReference)) {
-                        EventACLEntity entity = new EventACLEntity();
+                    List<DefinitionDataItem> definitionDataItems = collect.get(eventReference);
 
-                        parseUserRole(entity, definition, parseContext);
-                        parseCrud(entity, definition);
-                        parseResults.add(entity);
-                        entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
+                    if (null == definitionDataItems || definitionDataItems.size() == 0) {
+                        LOG.warn("No row is defined for case type '{}', event '{}'", caseTypeReference, eventReference);
+                        // and let validation handles this Exception
+                    } else {
+                        for (DefinitionDataItem definition : definitionDataItems) {
+                            EventACLEntity entity = new EventACLEntity();
 
-                        LOG.info("Parsing user role for case type '{}', event '{}', user role '{}', crud '{}': OK",
-                            caseTypeReference,
-                            eventReference,
-                            definition.getString(ColumnName.USER_ROLE),
-                            definition.getString(ColumnName.CRUD));
+                            parseUserRole(entity, definition, parseContext);
+                            parseCrud(entity, definition);
+                            parseResults.add(entity);
+                            entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
+
+                            LOG.info("Parsing user role for case type '{}', event '{}', user role '{}', crud '{}': OK",
+                                caseTypeReference,
+                                eventReference,
+                                definition.getString(ColumnName.USER_ROLE),
+                                definition.getString(ColumnName.CRUD));
+                        }
                     }
                 }
             }
