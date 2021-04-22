@@ -61,19 +61,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
-import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
-import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
-import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
@@ -82,8 +69,23 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFac
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
+import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
+import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -93,6 +95,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportServiceImplTest {
@@ -160,6 +163,9 @@ public class ImportServiceImplTest {
     private ChallengeQuestionTabService challengeQuestionTabService;
 
     @Mock
+    private RoleToAccessProfileService roleToAccessProfileService;
+
+    @Mock
     private ApplicationParams applicationParams;
 
     private FieldTypeEntity fixedTypeBaseType;
@@ -217,7 +223,8 @@ public class ImportServiceImplTest {
             idamProfileClient,
             bannerService,
             jurisdictionUiConfigService,
-            challengeQuestionTabService);
+            challengeQuestionTabService,
+            roleToAccessProfileService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -405,7 +412,8 @@ public class ImportServiceImplTest {
             idamProfileClient,
             bannerService,
             jurisdictionUiConfigService,
-            challengeQuestionTabService);
+            challengeQuestionTabService,
+            roleToAccessProfileService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

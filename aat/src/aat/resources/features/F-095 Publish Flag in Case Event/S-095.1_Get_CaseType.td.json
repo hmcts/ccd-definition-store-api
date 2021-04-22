@@ -45,8 +45,10 @@
 					},
 					{
             "_extends_" : "CaseEventField",
-					  "case_field_id" : "Age"
-				} ],
+            "case_field_id" : "Age",
+            "publish" : false,
+            "publish_as" : "age"
+          } ],
 				"pre_states" : [ "CaseCreated" ],
 				"post_states" : [ {
 					"enabling_condition" : null,
@@ -91,8 +93,10 @@
 					  "case_field_id" : "TextFieldMName"
 				}, {
             "_extends_" : "CaseEventField",
-					  "case_field_id" : "TextFieldLName"
-				} ],
+            "case_field_id" : "TextFieldLName",
+            "publish" : true,
+            "publish_as" : "text_field_last_name"
+          } ],
 				"pre_states" : [ ],
 				"post_states" : [ {
 					"enabling_condition" : null,
@@ -155,6 +159,7 @@
 				"delete" : true
 			} ],
 			"searchAliasFields" : [ ],
+      "roleToAccessProfiles" : [ ],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",
@@ -471,8 +476,8 @@
 				"label" : "Case Reference",
 				"hint_text" : null,
 				"field_type" : {
-					"id" : "Number",
-					"type" : "Number",
+					"id" : "Text",
+					"type" : "Text",
 					"min" : null,
 					"max" : null,
 					"regular_expression" : null,

@@ -1,0 +1,31 @@
+{
+	"_guid_": "S-095.11",
+	"_extends_": "Import_Base_data",
+	"title": "Must return a negative response in an attempt to import a definition file where PublishAs value is not unique within the same event and case type across CaseEventToFields and CaseEventToComplexType",
+	"specs": [
+		"an active profile in CCD",
+		"contains a non-unique PublishAs value within the same event and case type"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid_Non_Unique_PublishAs_Column.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- validationError: PublishAs column has an invalid value 'text_field',  reference 'TextField'. This value must be unique across CaseEventToFields and EventToComplexTypes for the case type. - validationError: PublishAs column has an invalid value 'text_field',  reference 'OrganisationPolicyField1.Organisation.OrganisationID'. This value must be unique across CaseEventToFields and EventToComplexTypes for the case type. "
+    }
+  }
+}
