@@ -226,6 +226,9 @@ subprojects { subproject ->
         }
         compile "org.bouncycastle:bcprov-jdk15on:1.61", "org.bouncycastle:bcpkix-jdk15on:1.61"
 
+        // CVE-2021-29425
+        compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
+
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
         testCompile "org.postgresql:postgresql:42.2.16"
