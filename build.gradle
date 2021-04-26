@@ -23,7 +23,6 @@ plugins {
     id "info.solidsoft.pitest" version '1.4.0' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
     id 'uk.gov.hmcts.java' version '0.12.0'
-    id 'org.flywaydb.flyway' version '7.0.0'
 }
 
 apply plugin: 'java'
@@ -218,6 +217,8 @@ subprojects { subproject ->
 
         compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
         compile('org.springframework.boot:spring-boot-starter-cache')
+
+        compile "org.flywaydb:flyway-core:6.5.7"
 
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
 
@@ -455,15 +456,4 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
     reports = files("${rootDir}/target/cucumber.json")
-}
-
-task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-    baselineOnMigrate = true
-    baselineVersion = '0001'
-    outOfOrder = true
-    ignoreMissingMigrations = true
-    if (project.hasProperty("dburl")) {
-        url = "jdbc:postgresql://${dburl}"
-    }
-    locations = "filesystem:${projectDir}/repository/src/main/resources/db/migration".split(',')
 }
