@@ -930,8 +930,8 @@
           "id": "[CASE_REFERENCE]",
           "label": "Case Reference",
           "field_type": {
-            "id": "Number",
-            "type": "Number"
+            "id": "Text",
+            "type": "Text"
           },
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
         }

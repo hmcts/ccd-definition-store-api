@@ -18,7 +18,7 @@
 			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
 		},
 		"body": {
-      		"_extends_": "AllValidBaseTypeArrayPayload"
+      "_extends_": "AllValidBaseTypeArrayPayload"
 		}
 	}
 }
