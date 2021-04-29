@@ -16,6 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersion
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
+import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public class CaseDefinitionControllerTest {
     public void createSubject() {
         subject = new CaseDefinitionController(caseTypeService, jurisdictionService, caseRoleService);
         mockMvc = MockMvcBuilders.standaloneSetup(subject)
-            .setControllerAdvice(new ControllerExceptionHandler())
+            .setControllerAdvice(new RestEndPointExceptionHandler())
             .build();
     }
 

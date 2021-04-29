@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 import uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient;
 
@@ -45,7 +46,7 @@ class ImportAuditControllerTest {
         initMocks(this);
         subject = new ImportAuditController(azureImportAuditsClient);
         mockMvc = standaloneSetup(subject)
-            .setControllerAdvice(new ControllerExceptionHandler())
+            .setControllerAdvice(new RestEndPointExceptionHandler())
             .build();
     }
 
@@ -87,7 +88,7 @@ class ImportAuditControllerTest {
         subject = new ImportAuditController(null);
         final MockMvc
             mockMvcNullAzureImportAuditsClient =
-            standaloneSetup(subject).setControllerAdvice(new ControllerExceptionHandler()).build();
+            standaloneSetup(subject).setControllerAdvice(new RestEndPointExceptionHandler()).build();
         final MvcResult
             mvcResult =
             mockMvcNullAzureImportAuditsClient.perform(get(URL_IMPORT_AUDITS)).andExpect(status().isOk()).andReturn();

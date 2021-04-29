@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.rest.configuration.AdminWebAuthorizationProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
 import uk.gov.hmcts.ccd.definition.store.rest.model.AdminWebAuthorization;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
@@ -44,7 +45,7 @@ class AdminWebAuthorizationControllerTest {
         final AdminWebAuthorizationController controller = new AdminWebAuthorizationController(idamProfileClient,
             adminWebAuthorizationProperties);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-            .setControllerAdvice(new ControllerExceptionHandler())
+            .setControllerAdvice(new RestEndPointExceptionHandler())
             .build();
     }
 
