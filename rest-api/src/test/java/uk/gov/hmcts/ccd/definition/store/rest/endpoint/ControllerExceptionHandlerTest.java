@@ -39,7 +39,7 @@ class ControllerExceptionHandlerTest {
     }
 
     @Test
-    public void handleExceptionShouldAggregateInnerMessages() {
+    void handleExceptionShouldAggregateInnerMessages() {
         final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
 
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
@@ -49,7 +49,7 @@ class ControllerExceptionHandlerTest {
     }
 
     @Test
-    public void handleExceptionShouldStopMessageAggregationAtDepth5() {
+    void handleExceptionShouldStopMessageAggregationAtDepth5() {
         final RuntimeException exception = new RuntimeException("Depth 1",
             new Exception("Depth 2",
                 new Exception("Depth 3",
@@ -65,7 +65,7 @@ class ControllerExceptionHandlerTest {
     }
 
     @Test
-    public void handleConflictWhenOptimisticLockExceptionHappens() {
+    void handleConflictWhenOptimisticLockExceptionHappens() {
         final OptimisticLockException exception = new OptimisticLockException(
             "Outer message", new Exception("Inner message"));
 
@@ -76,7 +76,7 @@ class ControllerExceptionHandlerTest {
     }
 
     @Test
-    public void handleBadRequest() {
+    void handleBadRequest() {
         final BadRequestException exception = new BadRequestException("Invalid request");
 
         final ResponseEntity<Object> response = handler.handleBadRequest(exception, mock(WebRequest.class));
