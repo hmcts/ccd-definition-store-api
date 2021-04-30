@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -83,12 +84,14 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
     }
 
     private Settings.Builder casesIndexSettings() throws IOException {
-        Settings.Builder settings = Settings.builder().loadFromStream(CASES_INDEX_SETTINGS_JSON,
-            getClass().getResourceAsStream(CASES_INDEX_SETTINGS_JSON), false);
-        settings.put("index.number_of_shards", config.getIndexShards());
-        settings.put("index.number_of_replicas", config.getIndexShardsReplicas());
-        settings.put("index.mapping.total_fields.limit", config.getCasesIndexMappingFieldsLimit());
-        return settings;
+        try (InputStream inputStream = getClass().getResourceAsStream(CASES_INDEX_SETTINGS_JSON)) {
+            Settings.Builder settings = Settings.builder().loadFromStream(CASES_INDEX_SETTINGS_JSON,
+                inputStream, false);
+            settings.put("index.number_of_shards", config.getIndexShards());
+            settings.put("index.number_of_replicas", config.getIndexShardsReplicas());
+            settings.put("index.mapping.total_fields.limit", config.getCasesIndexMappingFieldsLimit());
+            return settings;
+        }
     }
 
     private String getCurrentAliasIndex(String indexName, GetAliasesResponse aliasesResponse) {
