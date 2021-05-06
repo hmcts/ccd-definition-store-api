@@ -17,7 +17,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.DefinitionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -73,7 +72,7 @@ class DraftDefinitionControllerTest {
         MockitoAnnotations.initMocks(this);
         final DraftDefinitionController controller = new DraftDefinitionController(definitionService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-            .setControllerAdvice(new RestEndPointExceptionHandler())
+            .setControllerAdvice(new ControllerExceptionHandler())
             .build();
         definition = createDefinition();
         def2 = createDefinition();
