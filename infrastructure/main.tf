@@ -101,7 +101,7 @@ resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
 
 module "definition-store-db-v11" {
   source          = "git@github.com:hmcts/cnp-module-postgres?ref=master"
-  product         = "${var.component}-db-v11"
+  product         = var.product
   component       = var.component
   name            = "${local.app_full_name}-postgres-db-v11"
   location        = "${var.location}"
