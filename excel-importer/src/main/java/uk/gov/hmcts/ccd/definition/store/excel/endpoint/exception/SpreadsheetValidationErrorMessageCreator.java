@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.SimpleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
@@ -36,6 +37,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
@@ -657,6 +659,21 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                 condition,
                 def.getSheetName());
         });
+    }
+
+    @Override
+    public String createErrorMessage(EventEntityCaseTypeUserRoleValidationError
+                                         eventEntityCaseTypeUserRoleValidationError) {
+        return newMessageIfDefinitionExists(eventEntityCaseTypeUserRoleValidationError,
+            eventEntityCaseTypeUserRoleValidationError.getEventACLEntity(),
+            def -> String.format("%s in worksheet '%s'", eventEntityCaseTypeUserRoleValidationError.getDefaultMessage(),
+                def.getSheetName()));
+    }
+
+    @Override
+    public String createErrorMessage(CaseFieldEntityCORValidationError error) {
+        return newMessageIfDefinitionExists(error, error.getCaseFieldEntity(),
+            def -> String.format("%s in worksheet '%s'", error.getDefaultMessage(), def.getSheetName()));
     }
 
     private String formattedErrorMessage(String message,

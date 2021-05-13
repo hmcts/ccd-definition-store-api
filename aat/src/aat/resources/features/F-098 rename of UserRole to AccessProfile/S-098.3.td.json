@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-096.3",
-	"_extends_": "F-096_Test_Data__Base",
+	"_guid_": "S-098.3",
+	"_extends_": "F-098_Test_Data__Base",
 
 	"title": "must return a negative response in an attempt to import a definition file with an invalid AccessProfile column",
 

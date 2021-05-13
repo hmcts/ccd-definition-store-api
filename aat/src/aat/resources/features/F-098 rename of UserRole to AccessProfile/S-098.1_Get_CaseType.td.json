@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-096.1_Get_CaseType",
-	"_extends_": "F-096_Get_CaseType__Base",
+	"_guid_": "S-098.1_Get_CaseType",
+	"_extends_": "F-098_Get_CaseType__Base",
 
 	"specs": [
 		"fetch a Case Type Schema to verify ACLs generated for AccessProfile values"
@@ -25,7 +25,7 @@
 					"__elementId__": "id"
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Event__Base",
+					"_extends_": "F-098_Get_CaseType__Event__Base",
 
 					"id": "createCase",
 					"acls": [
@@ -36,7 +36,7 @@
 					]
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Event__Base",
+					"_extends_": "F-098_Get_CaseType__Event__Base",
 
 					"id": "modifyCase",
 					"acls": [
@@ -47,7 +47,7 @@
 					]
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Event__Base",
+					"_extends_": "F-098_Get_CaseType__Event__Base",
 
 					"id": "closeCase",
 					"acls": [
@@ -65,7 +65,7 @@
 					"__elementId__": "id"
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__State__Base",
+					"_extends_": "F-098_Get_CaseType__State__Base",
 
 					"id": "CaseCreated",
 					"acls": [
@@ -76,7 +76,7 @@
 					]
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__State__Base",
+					"_extends_": "F-098_Get_CaseType__State__Base",
 
 					"id": "CaseModified",
 					"acls": [
@@ -87,7 +87,7 @@
 					]
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__State__Base",
+					"_extends_": "F-098_Get_CaseType__State__Base",
 
 					"id": "CaseClosed",
 					"acls": [
@@ -108,7 +108,7 @@
 
 			"case_fields": [
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "Children",
 
@@ -161,7 +161,7 @@
 					]
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "Homeless",
 
@@ -174,7 +174,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "FamilyDetails",
 
@@ -222,7 +222,7 @@
 					]
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "MySchool",
 
@@ -320,7 +320,7 @@
 					]
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "CaseHistory",
 
@@ -333,7 +333,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "MyCompany",
 
@@ -346,7 +346,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "CollectionComplexField",
 

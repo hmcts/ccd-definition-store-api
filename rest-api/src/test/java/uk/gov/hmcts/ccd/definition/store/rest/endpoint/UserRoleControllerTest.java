@@ -22,7 +22,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.AccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
 
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
@@ -75,7 +74,7 @@ class UserRoleControllerTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-            .setControllerAdvice(new RestEndPointExceptionHandler())
+            .setControllerAdvice(new ControllerExceptionHandler())
             .build();
         uriVariables = new HashMap<>();
     }

@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-096.1",
-	"_extends_": "F-096_Test_Data__Base",
+	"_guid_": "S-098.1",
+	"_extends_": "F-098_Test_Data__Base",
 
 	"title": "must successfully import a definition file using AccessProfile columns",
 

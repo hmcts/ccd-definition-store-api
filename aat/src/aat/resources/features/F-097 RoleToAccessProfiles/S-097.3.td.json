@@ -1,0 +1,30 @@
+{
+	"_guid_": "S-097.3",
+	"_extends_": "F-097_Test_Base_data",
+	"title": "Must return a negative response in an attempt to import a definition file containing invalid readonly value in RoleToAccessProfiles",
+	"specs": [
+		"an active profile in CCD",
+		"contains invalid readonly value"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_RoleToAccessProfiles_Invalid_ReadOnly.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "[[ANYTHING_PRESENT]]"
+    },
+    "body" : {
+      "__plainTextValue__" : "Invalid value 'INVALID' is found in column 'ReadOnly' in the sheet 'RoleToAccessProfiles'"
+    }
+  }
+}

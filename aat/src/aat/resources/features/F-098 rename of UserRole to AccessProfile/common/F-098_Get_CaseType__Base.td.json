@@ -1,5 +1,5 @@
 {
-	"_guid_": "F-096_Get_CaseType__Base",
+	"_guid_": "F-098_Get_CaseType__Base",
 	"_extends_": "Get_CaseType",
 
 	"request": {
@@ -40,7 +40,7 @@
 					"__elementId__": "id"
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "[STATE]",
 
@@ -48,7 +48,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "[JURISDICTION]",
 
@@ -56,7 +56,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "[CASE_TYPE]",
 
@@ -64,7 +64,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "[SECURITY_CLASSIFICATION]",
 
@@ -72,7 +72,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "[CASE_REFERENCE]",
 
@@ -80,7 +80,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "[CREATED_DATE]",
 
@@ -88,7 +88,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "[LAST_MODIFIED_DATE]",
 
@@ -96,7 +96,7 @@
 					"complexACLs": []
 				},
 				{
-					"_extends_": "F-096_Get_CaseType__Fields__Base",
+					"_extends_": "F-098_Get_CaseType__Fields__Base",
 
 					"id": "[LAST_STATE_MODIFIED_DATE]",
 
@@ -106,6 +106,7 @@
 			],
 
 			"searchAliasFields": "[[ANYTHING_PRESENT]]",
+      "roleToAccessProfiles": [],
 			"printable_document_url": null,
 			"security_classification": "PUBLIC"
 		}

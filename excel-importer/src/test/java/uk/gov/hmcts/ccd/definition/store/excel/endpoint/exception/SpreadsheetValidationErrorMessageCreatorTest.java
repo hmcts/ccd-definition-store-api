@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
@@ -39,6 +40,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
@@ -704,6 +706,53 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             new CaseFieldEntityValidationContext(caseTypeEntity));
 
         assertEquals("Invalid metadata field 'case field' declaration for case type 'case type'",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void shouldHaveValidationMessageForCaseFieldEntityCORValidationError() {
+
+        FieldTypeEntity fieldType = new FieldTypeEntity();
+        fieldType.setReference("ChangeOrganisationRequest");
+        CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("case type");
+
+        CaseFieldEntity caseField1 = new CaseFieldEntity();
+        caseField1.setFieldType(fieldType);
+        caseField1.setCaseType(caseType);
+
+        CaseFieldEntityCORValidationError error
+            = new CaseFieldEntityCORValidationError(
+            caseField1);
+
+        assertEquals("Change Organisation Request is defined more than once for case type 'case type'",
+            classUnderTest.createErrorMessage(error));
+    }
+
+    @Test
+    public void shouldHaveValidationMessageForEventEntityCaseTypeUserRoleValidationError() {
+
+        CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("CaseType");
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setCaseType(caseType);
+        EventEntity eventEntity1 = new EventEntity();
+        eventEntity1.setCaseType(caseType);
+        EventACLEntity eventACLEntity1 = new EventACLEntity();
+        EventEntity eventEntity2 = new EventEntity();
+        eventEntity2.addEventACL(eventACLEntity1);
+        eventACLEntity1.setEventEntity(eventEntity);
+        eventACLEntity1.setAccessProfileId("caseworker-caa");
+        EventACLEntity eventACLEntity2 = new EventACLEntity();
+        eventEntity2.addEventACL(eventACLEntity2);
+        eventACLEntity2.setEventEntity(eventEntity1);
+        eventACLEntity2.setAccessProfileId("Caseworker-caa");
+
+        EventEntityCaseTypeUserRoleValidationError error
+            = new EventEntityCaseTypeUserRoleValidationError(
+            eventACLEntity2);
+
+        assertEquals("UserRole 'Caseworker-caa' is defined more than once for case type 'CaseType'",
             classUnderTest.createErrorMessage(error));
     }
 
