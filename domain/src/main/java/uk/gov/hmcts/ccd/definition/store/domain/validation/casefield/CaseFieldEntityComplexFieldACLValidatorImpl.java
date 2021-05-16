@@ -152,7 +152,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
                                        CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                        ValidationResult validationResult, ComplexFieldACLEntity entity) {
         if (null == entity.getAccessProfile()) {
-            validationResult.addError(new CaseFieldEntityInvalidUserRoleValidationError(entity,
+            validationResult.addError(new CaseFieldEntityInvalidAccessProfileValidationError(entity,
                 new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
         }
     }

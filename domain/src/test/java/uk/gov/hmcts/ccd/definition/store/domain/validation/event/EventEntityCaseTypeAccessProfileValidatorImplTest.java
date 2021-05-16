@@ -14,9 +14,9 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EventEntityCaseTypeUserRoleValidatorImplTest {
+public class EventEntityCaseTypeAccessProfileValidatorImplTest {
 
-    private final EventEntityCaseTypeUserRoleValidatorImpl validator = new EventEntityCaseTypeUserRoleValidatorImpl();
+    private final EventEntityCaseTypeAccessProfileValidatorImpl validator = new EventEntityCaseTypeAccessProfileValidatorImpl();
 
     @Test
     @DisplayName(
@@ -46,7 +46,7 @@ public class EventEntityCaseTypeUserRoleValidatorImplTest {
 
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors().get(0),
-            instanceOf(EventEntityCaseTypeUserRoleValidationError.class));
+            instanceOf(EventEntityCaseTypeAccessProfileValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
             is("UserRole 'Caseworker-caa' is defined more than once for case type 'CaseType_example'"));
     }
@@ -80,7 +80,7 @@ public class EventEntityCaseTypeUserRoleValidatorImplTest {
 
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors().get(0),
-            instanceOf(EventEntityCaseTypeUserRoleValidationError.class));
+            instanceOf(EventEntityCaseTypeAccessProfileValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
             is("UserRole 'Caseworker-approver' is defined more than once for case type 'CaseType_example'"));
     }

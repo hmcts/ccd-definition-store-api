@@ -14,14 +14,14 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEn
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityFieldLabelValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
@@ -37,7 +37,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeUserRoleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
@@ -45,7 +45,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasL
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidDefaultPostStateError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidPostStatePriorityError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCaseHistoryViewerCaseFieldValidator;
@@ -226,9 +226,9 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(final CaseTypeEntityInvalidUserRoleValidationError error) {
+    public String createErrorMessage(final CaseTypeEntityInvalidAccessProfileValidationError error) {
         return newMessageIfDefinitionExists(error,
-            error.getCaseTypeUserRoleEntity(),
+            error.getCaseTypeAccessProfileEntity(),
 
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.ACCESS_PROFILE)))
                 ? String.format(
@@ -248,7 +248,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(final CaseTypeEntityInvalidCrudValidationError error) {
         return newMessageIfDefinitionExists(error,
-            error.getCaseTypeUserRoleEntity(),
+            error.getCaseTypeAccessProfileEntity(),
             def -> String.format(
                 "Invalid CRUD value '%s' in %s tab for case type '%s', access profile '%s'",
                 def.getString(ColumnName.CRUD),
@@ -303,7 +303,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(final CaseFieldEntityInvalidUserRoleValidationError error) {
+    public String createErrorMessage(final CaseFieldEntityInvalidAccessProfileValidationError error) {
         return newMessageIfDefinitionExists(error,
             error.getCaseFieldACLEntity(),
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.ACCESS_PROFILE)))
@@ -337,7 +337,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(final EventEntityInvalidUserRoleValidationError error) {
+    public String createErrorMessage(final EventEntityInvalidAccessProfileValidationError error) {
         return newMessageIfDefinitionExists(error,
             error.getEventACLEntity(),
             def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.ACCESS_PROFILE)))
@@ -434,8 +434,8 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(EventEntityMissingForPageTypeDisplayGroupError eventMissingError) {
         return String.format("Event is missing for displayGroup '%s' and with label '%s'",
-            eventMissingError.getCaseTypeUserRoleEntity().getReference(),
-            eventMissingError.getCaseTypeUserRoleEntity().getLabel());
+            eventMissingError.getCaseTypeAccessProfileEntity().getReference(),
+            eventMissingError.getCaseTypeAccessProfileEntity().getLabel());
     }
 
     @Override
@@ -662,11 +662,11 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(EventEntityCaseTypeUserRoleValidationError
-                                         eventEntityCaseTypeUserRoleValidationError) {
-        return newMessageIfDefinitionExists(eventEntityCaseTypeUserRoleValidationError,
-            eventEntityCaseTypeUserRoleValidationError.getEventACLEntity(),
-            def -> String.format("%s in worksheet '%s'", eventEntityCaseTypeUserRoleValidationError.getDefaultMessage(),
+    public String createErrorMessage(EventEntityCaseTypeAccessProfileValidationError
+                                         eventEntityCaseTypeAccessProfileValidationError) {
+        return newMessageIfDefinitionExists(eventEntityCaseTypeAccessProfileValidationError,
+            eventEntityCaseTypeAccessProfileValidationError.getEventACLEntity(),
+            def -> String.format("%s in worksheet '%s'", eventEntityCaseTypeAccessProfileValidationError.getDefaultMessage(),
                 def.getSheetName()));
     }
 

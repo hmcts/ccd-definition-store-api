@@ -15,17 +15,17 @@ import java.util.Arrays;
 
 @Component
 @RequestScope
-public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityValidator {
+public class EventEntityCaseTypeAccessProfileValidatorImpl implements EventEntityValidator {
 
     private final Map<String, ArrayList<String>> userRoleCaseTypeMap = new HashMap<>();
-    private final List<String> userRoleList = Arrays.asList("caseworker-caa", "caseworker-approver");
+    private final List<String> accessProfileList = Arrays.asList("caseworker-caa", "caseworker-approver");
 
     @Override
     public ValidationResult validate(final EventEntity event,
                                      final EventEntityValidationContext eventEntityValidationContext) {
 
         final ValidationResult validationResult = new ValidationResult();
-        initUserRoleCaseTypeMap();
+        initAccessProfileCaseTypeMap();
 
         for (EventACLEntity entity : event.getEventACLEntities()) {
 
@@ -34,7 +34,7 @@ public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityVali
 
             if (userRoleCaseTypeMap.containsKey(userRole)) {
                 if (userRoleCaseTypeMap.get(userRole).contains(caseType)) {
-                    validationResult.addError(new EventEntityCaseTypeUserRoleValidationError(entity));
+                    validationResult.addError(new EventEntityCaseTypeAccessProfileValidationError(entity));
                 } else {
                     userRoleCaseTypeMap.get(userRole).add(caseType);
                 }
@@ -43,8 +43,8 @@ public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityVali
         return validationResult;
     }
 
-    private void initUserRoleCaseTypeMap() {
-        for (String userRole : userRoleList) {
+    private void initAccessProfileCaseTypeMap() {
+        for (String userRole : accessProfileList) {
             if (!userRoleCaseTypeMap.containsKey(userRole)) {
                 userRoleCaseTypeMap.put(userRole, new ArrayList<>());
             }

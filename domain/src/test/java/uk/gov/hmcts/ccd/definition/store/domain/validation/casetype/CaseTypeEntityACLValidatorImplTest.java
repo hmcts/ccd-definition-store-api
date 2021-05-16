@@ -25,7 +25,7 @@ public class CaseTypeEntityACLValidatorImplTest {
 
     private CaseTypeEntity caseType;
 
-    private CaseTypeACLEntity caseTypeUserRole;
+    private CaseTypeACLEntity caseTypeAccessProfile;
 
     @Mock
     private AccessProfileEntity accessProfile;
@@ -35,11 +35,11 @@ public class CaseTypeEntityACLValidatorImplTest {
 
         validator = new CaseTypeEntityACLValidatorImpl();
 
-        caseTypeUserRole = new CaseTypeACLEntity();
+        caseTypeAccessProfile = new CaseTypeACLEntity();
 
         caseType = new CaseTypeEntity();
         caseType.setReference("case type");
-        caseType.addCaseTypeACL(caseTypeUserRole);
+        caseType.addCaseTypeACL(caseTypeAccessProfile);
     }
 
     @Test
@@ -48,15 +48,15 @@ public class CaseTypeEntityACLValidatorImplTest {
         final ValidationResult result = validator.validate(caseType);
 
         assertThat(result.getValidationErrors().size(), is(1));
-        assertThat(result.getValidationErrors().get(0), instanceOf(CaseTypeEntityInvalidUserRoleValidationError.class));
+        assertThat(result.getValidationErrors().get(0), instanceOf(CaseTypeEntityInvalidAccessProfileValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
-            "Invalid UserRole is not defined for case type 'case type'"));
+            "Invalid AccessProfile is not defined for case type 'case type'"));
     }
 
     @Test
     public void shouldHaveNoValidationError_whenAccessProfileFound() {
 
-        caseTypeUserRole.setAccessProfile(accessProfile);
+        caseTypeAccessProfile.setAccessProfile(accessProfile);
 
         final ValidationResult result = validator.validate(caseType);
 

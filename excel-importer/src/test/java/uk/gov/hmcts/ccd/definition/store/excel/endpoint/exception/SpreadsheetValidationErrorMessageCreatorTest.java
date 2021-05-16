@@ -14,18 +14,18 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.Authori
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityFieldLabelValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
@@ -40,12 +40,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeUserRoleValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityValidationContext;
@@ -411,7 +411,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
 
-        final CaseTypeEntityInvalidUserRoleValidationError error = new CaseTypeEntityInvalidUserRoleValidationError(
+        final CaseTypeEntityInvalidAccessProfileValidationError error = new CaseTypeEntityInvalidAccessProfileValidationError(
             caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
@@ -431,7 +431,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
 
-        final CaseTypeEntityInvalidUserRoleValidationError error = new CaseTypeEntityInvalidUserRoleValidationError(
+        final CaseTypeEntityInvalidAccessProfileValidationError error = new CaseTypeEntityInvalidAccessProfileValidationError(
             caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
@@ -489,7 +489,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             "case field", SecurityClassification.RESTRICTED);
         final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
 
-        final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
+        final CaseFieldEntityInvalidAccessProfileValidationError error = new CaseFieldEntityInvalidAccessProfileValidationError(
             entity,
             new AuthorisationCaseFieldValidationContext(caseFieldEntity,
                 new CaseFieldEntityValidationContext(caseTypeEntity)));
@@ -516,7 +516,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             "case field", SecurityClassification.RESTRICTED);
         final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
 
-        final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
+        final CaseFieldEntityInvalidAccessProfileValidationError error = new CaseFieldEntityInvalidAccessProfileValidationError(
             entity,
             new AuthorisationCaseFieldValidationContext(caseFieldEntity,
                 new CaseFieldEntityValidationContext(caseTypeEntity)));
@@ -544,7 +544,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
         entity.setAccessProfileId("nf_access_profile_id");
 
-        final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
+        final CaseFieldEntityInvalidAccessProfileValidationError error = new CaseFieldEntityInvalidAccessProfileValidationError(
             entity,
             new AuthorisationCaseFieldValidationContext(caseFieldEntity,
                 new CaseFieldEntityValidationContext(caseTypeEntity)));
@@ -748,8 +748,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         eventACLEntity2.setEventEntity(eventEntity1);
         eventACLEntity2.setAccessProfileId("Caseworker-caa");
 
-        EventEntityCaseTypeUserRoleValidationError error
-            = new EventEntityCaseTypeUserRoleValidationError(
+        EventEntityCaseTypeAccessProfileValidationError error
+            = new EventEntityCaseTypeAccessProfileValidationError(
             eventACLEntity2);
 
         assertEquals("UserRole 'Caseworker-caa' is defined more than once for case type 'CaseType'",
@@ -762,7 +762,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity(null, "crud");
 
-        final EventEntityInvalidUserRoleValidationError error = new EventEntityInvalidUserRoleValidationError(
+        final EventEntityInvalidAccessProfileValidationError error = new EventEntityInvalidAccessProfileValidationError(
             entity,
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
@@ -787,7 +787,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity(null, "crud");
 
-        final EventEntityInvalidUserRoleValidationError error = new EventEntityInvalidUserRoleValidationError(
+        final EventEntityInvalidAccessProfileValidationError error = new EventEntityInvalidAccessProfileValidationError(
             entity,
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
@@ -813,7 +813,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final EventACLEntity entity = eventACLEntity(null, "crud");
         entity.setAccessProfileId("nf_access_profile_id");
 
-        final EventEntityInvalidUserRoleValidationError error = new EventEntityInvalidUserRoleValidationError(
+        final EventEntityInvalidAccessProfileValidationError error = new EventEntityInvalidAccessProfileValidationError(
             entity,
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 

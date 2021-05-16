@@ -16,7 +16,7 @@ public class CaseTypeEntityACLValidatorImpl implements CaseTypeEntityValidator {
         for (CaseTypeACLEntity entity : caseType.getCaseTypeACLEntities()) {
 
             if (null == entity.getAccessProfile()) {
-                validationResult.addError(new CaseTypeEntityInvalidUserRoleValidationError(entity,
+                validationResult.addError(new CaseTypeEntityInvalidAccessProfileValidationError(entity,
                     new AuthorisationValidationContext(caseType)));
             }
         }
