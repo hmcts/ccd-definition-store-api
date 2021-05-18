@@ -49,7 +49,7 @@ dependencyCheck {
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
 ext['elasticsearch.version'] = '6.4.3'
 ext['javax-validation.version'] = '2.0.1.Final'
-ext['hibernate-validator.version'] = '6.0.10.Final'
+ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.3.8.RELEASE'
 ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
