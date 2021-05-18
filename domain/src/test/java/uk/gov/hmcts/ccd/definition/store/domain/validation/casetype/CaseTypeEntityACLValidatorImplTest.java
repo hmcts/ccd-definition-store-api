@@ -48,7 +48,8 @@ public class CaseTypeEntityACLValidatorImplTest {
         final ValidationResult result = validator.validate(caseType);
 
         assertThat(result.getValidationErrors().size(), is(1));
-        assertThat(result.getValidationErrors().get(0), instanceOf(CaseTypeEntityInvalidAccessProfileValidationError.class));
+        assertThat(result.getValidationErrors().get(0),
+                instanceOf(CaseTypeEntityInvalidAccessProfileValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
             "Invalid AccessProfile is not defined for case type 'case type'"));
     }

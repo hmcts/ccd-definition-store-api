@@ -21,7 +21,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMa
 
 /**
  * RDM-10539 - The UserRoles will not be changed in this class as it is only used in the UserRole controller which will
- * soon possibly be out of commission in the future
+ * soon possibly be out of commission in the future.
  */
 @Component
 public class AccessProfileServiceImpl implements AccessProfileService {

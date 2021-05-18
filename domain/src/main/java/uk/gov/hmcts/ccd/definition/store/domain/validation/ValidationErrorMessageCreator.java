@@ -107,7 +107,8 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(EventEntityInvalidCrudValidationError eventEntityInvalidCrudValidationError);
 
-    String createErrorMessage(EventEntityInvalidAccessProfileValidationError eventEntityInvalidAccessProfileValidationError);
+    String createErrorMessage(
+            EventEntityInvalidAccessProfileValidationError eventEntityInvalidAccessProfileValidationError);
 
     String createErrorMessage(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
                                   eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
@@ -191,6 +192,7 @@ public interface ValidationErrorMessageCreator {
 
     String createErrorMessage(EventEntityEnableConditionReferencesInvalidCaseFieldError classUnderTest);
 
-    String createErrorMessage(EventEntityCaseTypeAccessProfileValidationError eventEntityCaseTypeAccessProfileValidationError);
+    String createErrorMessage(
+            EventEntityCaseTypeAccessProfileValidationError eventEntityCaseTypeAccessProfileValidationError);
 
 }

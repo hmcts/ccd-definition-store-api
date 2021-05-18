@@ -666,8 +666,9 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                                          eventEntityCaseTypeAccessProfileValidationError) {
         return newMessageIfDefinitionExists(eventEntityCaseTypeAccessProfileValidationError,
             eventEntityCaseTypeAccessProfileValidationError.getEventACLEntity(),
-            def -> String.format("%s in worksheet '%s'", eventEntityCaseTypeAccessProfileValidationError.getDefaultMessage(),
-                def.getSheetName()));
+            def -> String.format("%s in worksheet '%s'",
+                    eventEntityCaseTypeAccessProfileValidationError.getDefaultMessage(),
+                    def.getSheetName()));
     }
 
     @Override

@@ -41,11 +41,12 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleMissingAccessProfilesException() throws Exception {
+    public void handleMissingAccessProfilesException() {
         Set<String> accessProfiles = new HashSet<>();
         accessProfiles.add("user_role_1");
         List<ValidationError> validationErrors = new ArrayList<>();
-        final MissingAccessProfilesException exception = new MissingAccessProfilesException(accessProfiles, validationErrors);
+        final MissingAccessProfilesException exception
+                = new MissingAccessProfilesException(accessProfiles, validationErrors);
 
         final ResponseEntity<Object> response = exceptionHandler
             .handleAccessProfilesMissing(exception, mock(WebRequest.class));

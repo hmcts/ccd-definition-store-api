@@ -411,7 +411,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
 
-        final CaseTypeEntityInvalidAccessProfileValidationError error = new CaseTypeEntityInvalidAccessProfileValidationError(
+        final CaseTypeEntityInvalidAccessProfileValidationError error
+                = new CaseTypeEntityInvalidAccessProfileValidationError(
             caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
@@ -431,7 +432,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
 
-        final CaseTypeEntityInvalidAccessProfileValidationError error = new CaseTypeEntityInvalidAccessProfileValidationError(
+        final CaseTypeEntityInvalidAccessProfileValidationError error
+                = new CaseTypeEntityInvalidAccessProfileValidationError(
             caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
@@ -489,10 +491,10 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             "case field", SecurityClassification.RESTRICTED);
         final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
 
-        final CaseFieldEntityInvalidAccessProfileValidationError error = new CaseFieldEntityInvalidAccessProfileValidationError(
-            entity,
-            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                new CaseFieldEntityValidationContext(caseTypeEntity)));
+        final CaseFieldEntityInvalidAccessProfileValidationError error
+                = new CaseFieldEntityInvalidAccessProfileValidationError(entity,
+                    new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                    new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
@@ -516,10 +518,10 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             "case field", SecurityClassification.RESTRICTED);
         final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
 
-        final CaseFieldEntityInvalidAccessProfileValidationError error = new CaseFieldEntityInvalidAccessProfileValidationError(
-            entity,
-            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                new CaseFieldEntityValidationContext(caseTypeEntity)));
+        final CaseFieldEntityInvalidAccessProfileValidationError error
+                = new CaseFieldEntityInvalidAccessProfileValidationError(entity,
+                    new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                        new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
@@ -544,13 +546,13 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
         entity.setAccessProfileId("nf_access_profile_id");
 
-        final CaseFieldEntityInvalidAccessProfileValidationError error = new CaseFieldEntityInvalidAccessProfileValidationError(
-            entity,
-            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                new CaseFieldEntityValidationContext(caseTypeEntity)));
+        final CaseFieldEntityInvalidAccessProfileValidationError error
+                = new CaseFieldEntityInvalidAccessProfileValidationError(entity,
+                    new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                        new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
-            "Invalid UserRole nf_access_profile_id for case type 'case type', case field 'case field'",
+            "Invalid AccessProfile nf_access_profile_id for case type 'case type', case field 'case field'",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -752,7 +754,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             = new EventEntityCaseTypeAccessProfileValidationError(
             eventACLEntity2);
 
-        assertEquals("UserRole 'Caseworker-caa' is defined more than once for case type 'CaseType'",
+        assertEquals("AccessProfile 'Caseworker-caa' is defined more than once for case type 'CaseType'",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -818,7 +820,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
-            "Invalid UserRole nf_access_profile_id for case type 'case type', event 'event'",
+            "Invalid AccessProfile nf_access_profile_id for case type 'case type', event 'event'",
             classUnderTest.createErrorMessage(error));
     }
 

@@ -16,7 +16,8 @@ import static org.mockito.Mockito.when;
 
 public class EventEntityCaseTypeAccessProfileValidatorImplTest {
 
-    private final EventEntityCaseTypeAccessProfileValidatorImpl validator = new EventEntityCaseTypeAccessProfileValidatorImpl();
+    private final EventEntityCaseTypeAccessProfileValidatorImpl validator
+            = new EventEntityCaseTypeAccessProfileValidatorImpl();
 
     @Test
     @DisplayName(
@@ -48,7 +49,7 @@ public class EventEntityCaseTypeAccessProfileValidatorImplTest {
         assertThat(result.getValidationErrors().get(0),
             instanceOf(EventEntityCaseTypeAccessProfileValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("UserRole 'Caseworker-caa' is defined more than once for case type 'CaseType_example'"));
+            is("AccessProfile 'Caseworker-caa' is defined more than once for case type 'CaseType_example'"));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class EventEntityCaseTypeAccessProfileValidatorImplTest {
         assertThat(result.getValidationErrors().get(0),
             instanceOf(EventEntityCaseTypeAccessProfileValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("UserRole 'Caseworker-approver' is defined more than once for case type 'CaseType_example'"));
+            is("AccessProfile 'Caseworker-approver' is defined more than once for case type 'CaseType_example'"));
     }
 
     @Test

@@ -35,7 +35,7 @@ public class CaseTypeEntityInvalidAccessProfileValidationErrorTest {
     @Test
     public void testDefaultMessage() {
         assertEquals(
-            "Invalid UserRole is not defined for case type 'case_type'",
+            "Invalid AccessProfile is not defined for case type 'case_type'",
             classUnderTest.getDefaultMessage()
         );
     }
