@@ -280,7 +280,7 @@ public class ImportServiceImplTest {
     }
 
     @Test(expected = MissingAccessProfilesException.class)
-    public void importDefinitionThrowsMissingUserRole() throws Exception {
+    public void importDefinitionThrowsMissingAccessProfiles() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,

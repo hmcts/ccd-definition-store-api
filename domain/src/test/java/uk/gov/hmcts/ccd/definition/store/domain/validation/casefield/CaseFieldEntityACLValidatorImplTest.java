@@ -24,7 +24,7 @@ public class CaseFieldEntityACLValidatorImplTest {
 
     private CaseFieldEntityACLValidatorImpl validator;
 
-    private CaseFieldACLEntity caseFieldUserRole;
+    private CaseFieldACLEntity caseFieldAccessProfile;
 
     private CaseFieldEntity caseField;
 
@@ -37,12 +37,12 @@ public class CaseFieldEntityACLValidatorImplTest {
     @Before
     public void setup() {
 
-        caseFieldUserRole = new CaseFieldACLEntity();
+        caseFieldAccessProfile = new CaseFieldACLEntity();
 
         given(caseFieldEntityValidationContext.getCaseReference()).willReturn("case_type");
 
         caseField = new CaseFieldEntity();
-        caseField.addCaseFieldACL(caseFieldUserRole);
+        caseField.addCaseFieldACL(caseFieldAccessProfile);
         caseField.setReference("case_field");
 
         validator = new CaseFieldEntityACLValidatorImpl();
@@ -51,8 +51,8 @@ public class CaseFieldEntityACLValidatorImplTest {
     @Test
     public void shouldHaveValidationErrorWhenUserNotFound() {
 
-        caseFieldUserRole.setAccessProfile(null);
-        caseFieldUserRole.setAccessProfileId("nf_access_profile_id");
+        caseFieldAccessProfile.setAccessProfile(null);
+        caseFieldAccessProfile.setAccessProfileId("nf_access_profile_id");
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 
         assertThat(result.getValidationErrors().size(), is(1));
@@ -65,7 +65,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     @Test
     public void shouldHaveNoValidationErrorWhenAccessProfileFound() {
 
-        caseFieldUserRole.setAccessProfile(accessProfileEntity);
+        caseFieldAccessProfile.setAccessProfile(accessProfileEntity);
 
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 

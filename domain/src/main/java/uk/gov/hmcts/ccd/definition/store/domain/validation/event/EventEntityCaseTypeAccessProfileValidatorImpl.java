@@ -17,8 +17,9 @@ import java.util.Arrays;
 @RequestScope
 public class EventEntityCaseTypeAccessProfileValidatorImpl implements EventEntityValidator {
 
-    private final Map<String, ArrayList<String>> userRoleCaseTypeMap = new HashMap<>();
-    private final List<String> accessProfileList = Arrays.asList("caseworker-caa", "caseworker-approver");
+    private final Map<String, ArrayList<String>> accessProfileCaseTypeMap = new HashMap<>();
+    private final List<String> accessProfilesLimitedToOneEventPerCaseType
+            = Arrays.asList("caseworker-caa", "caseworker-approver");
 
     @Override
     public ValidationResult validate(final EventEntity event,
@@ -29,14 +30,14 @@ public class EventEntityCaseTypeAccessProfileValidatorImpl implements EventEntit
 
         for (EventACLEntity entity : event.getEventACLEntities()) {
 
-            String userRole = entity.getAccessProfileId().toLowerCase();
+            String accessProfileId = entity.getAccessProfileId().toLowerCase();
             String caseType = entity.getEvent().getCaseType().getReference().toLowerCase();
 
-            if (userRoleCaseTypeMap.containsKey(userRole)) {
-                if (userRoleCaseTypeMap.get(userRole).contains(caseType)) {
+            if (accessProfileCaseTypeMap.containsKey(accessProfileId)) {
+                if (accessProfileCaseTypeMap.get(accessProfileId).contains(caseType)) {
                     validationResult.addError(new EventEntityCaseTypeAccessProfileValidationError(entity));
                 } else {
-                    userRoleCaseTypeMap.get(userRole).add(caseType);
+                    accessProfileCaseTypeMap.get(accessProfileId).add(caseType);
                 }
             }
         }
@@ -44,9 +45,9 @@ public class EventEntityCaseTypeAccessProfileValidatorImpl implements EventEntit
     }
 
     private void initAccessProfileCaseTypeMap() {
-        for (String userRole : accessProfileList) {
-            if (!userRoleCaseTypeMap.containsKey(userRole)) {
-                userRoleCaseTypeMap.put(userRole, new ArrayList<>());
+        for (String accessProfile : accessProfilesLimitedToOneEventPerCaseType) {
+            if (!accessProfileCaseTypeMap.containsKey(accessProfile)) {
+                accessProfileCaseTypeMap.put(accessProfile, new ArrayList<>());
             }
         }
     }

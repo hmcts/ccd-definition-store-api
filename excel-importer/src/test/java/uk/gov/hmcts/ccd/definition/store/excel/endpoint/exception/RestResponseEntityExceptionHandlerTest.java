@@ -43,7 +43,7 @@ public class RestResponseEntityExceptionHandlerTest {
     @Test
     public void handleMissingAccessProfilesException() {
         Set<String> accessProfiles = new HashSet<>();
-        accessProfiles.add("user_role_1");
+        accessProfiles.add("access_profile_1");
         List<ValidationError> validationErrors = new ArrayList<>();
         final MissingAccessProfilesException exception
                 = new MissingAccessProfilesException(accessProfiles, validationErrors);

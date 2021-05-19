@@ -52,9 +52,9 @@ public class RoleToAccessProfilesValidator {
 
         Arrays.stream(accessProfiles.split(","))
             .forEach(accessProfile -> {
-                Optional<AccessProfileEntity> userRoleEntity = parseContext
+                Optional<AccessProfileEntity> accessProfileEntity = parseContext
                     .getAccessProfile(caseTypeRef, accessProfile);
-                if (userRoleEntity.isEmpty()) {
+                if (accessProfileEntity.isEmpty()) {
                     String message = String.format("Access Profile '%s' not found in column '%s' "
                             + "in the sheet '%s'",
                         accessProfile, ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES);

@@ -73,13 +73,13 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
                                            CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                            ValidationResult validationResult,
                                            ComplexFieldACLEntity parentComplexFieldACLEntity) {
-        String parentUserRole = parentComplexFieldACLEntity.getAccessProfile() != null
+        String parentAccessProfile = parentComplexFieldACLEntity.getAccessProfile() != null
             ? parentComplexFieldACLEntity.getAccessProfile().getReference() : "";
         caseField.getComplexFieldACLEntities()
             .stream()
             .anyMatch(child -> {
                 boolean match = (child.getAccessProfile() != null
-                    && child.getAccessProfile().getReference().equalsIgnoreCase(parentUserRole))
+                    && child.getAccessProfile().getReference().equalsIgnoreCase(parentAccessProfile))
                     && isAChild(parentComplexFieldACLEntity.getListElementCode(), child.getListElementCode())
                     && parentComplexFieldACLEntity.hasLowerAccessThan(child);
                 if (match) {
@@ -98,7 +98,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
         final List<String> missingCodes = parentCodes
             .stream()
             .filter(parentCode -> isMissingInComplexACLs(
-                caseField.getComplexFieldACLEntities(), parentUserRole, parentCode))
+                caseField.getComplexFieldACLEntities(), parentAccessProfile, parentCode))
             .collect(Collectors.toList());
         for (String code : missingCodes) {
             validationResult.addError(new CaseFieldEntityComplexACLValidationError(
