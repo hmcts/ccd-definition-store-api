@@ -407,7 +407,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseTypeEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
+    public void caseTypeEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
 
@@ -423,12 +423,13 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid IDAM access profile 'access profile' in AuthorisationCaseType tab for case type 'case type'",
+            "Invalid access profile 'access profile' in AuthorisationCaseType tab for case type 'case type'",
             classUnderTest.createErrorMessage(error));
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void caseTypeEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+    public void caseTypeEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
 
@@ -485,7 +486,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
+    public void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -506,13 +507,14 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid IDAM access profile 'X' in AuthorisationCaseField tab, case type 'case type', "
+            "Invalid access profile 'X' in AuthorisationCaseField tab, case type 'case type', "
                 + "case field 'case field', crud 'Y'",
             classUnderTest.createErrorMessage(error));
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void caseFieldEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+    public void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -539,7 +541,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidUserRole_createErrorMessageCalled_defaultMessageReturned() {
+    public void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -732,7 +734,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForEventEntityCaseTypeUserRoleValidationError() {
+    public void shouldHaveValidationMessageForEventEntityCaseTypeAccessProfileValidationError() {
 
         CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference("CaseType");
@@ -759,7 +761,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
+    public void eventEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity(null, "crud");
@@ -778,13 +780,13 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             );
 
         assertEquals(
-            "Invalid IDAM access profile 'ap' in AuthorisationCaseEvent tab, case type 'case type', "
+            "Invalid access profile 'ap' in AuthorisationCaseEvent tab, case type 'case type', "
                 + "event 'event', crud 'x'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void eventEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+    public void eventEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity(null, "crud");
@@ -809,7 +811,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventEntityInvalidUserRole_createErrorMessageCalled_defaultMessageReturned() {
+    public void eventEntityInvalidAccessProfile_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity(null, "crud");
@@ -1454,7 +1456,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForUserProfileValidationError() {
+    public void shouldHaveValidationMessageForAccessProfileValidationError() {
         assertEquals("Invalid CaseType in workbasket user default; user: 'null', jurisdiction: 'null', "
                 + "case type: 'null', state: 'null'",
             classUnderTest.createErrorMessage(

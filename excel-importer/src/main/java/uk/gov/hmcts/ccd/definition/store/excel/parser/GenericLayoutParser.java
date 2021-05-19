@@ -255,9 +255,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
     private AccessProfileEntity getAccessProfileEntity(GenericLayoutEntity layoutEntity,
                                                        String sheetName,
                                                        String accessProfile) {
-        return parseContext.getIdamAccessProfile(accessProfile)
+        return parseContext.getAccessProfile(accessProfile)
             .orElseThrow(() -> new MapperException(String.format(
-                "- Unknown IDAM access profile '%s' in worksheet '%s' for caseField '%s'",
+                "- Unknown access profile '%s' in worksheet '%s' for caseField '%s'",
                 accessProfile, sheetName, layoutEntity.getCaseField().getReference())));
     }
 

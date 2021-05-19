@@ -238,7 +238,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                 def.getSheetName(),
                 error.getAuthorisationValidationContext().getCaseReference()) :
                 String.format(
-                    "Invalid IDAM access profile '%s' in %s tab for case type '%s'",
+                    "Invalid access profile '%s' in %s tab for case type '%s'",
                     def.getString(ColumnName.ACCESS_PROFILE),
                     def.getSheetName(),
                     error.getAuthorisationValidationContext().getCaseReference())
@@ -315,7 +315,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                 def.getString(ColumnName.CASE_TYPE_ID),
                 def.getString(ColumnName.CASE_FIELD_ID)) :
                 String.format(
-                    "Invalid IDAM access profile '%s' in %s tab, case type '%s', case field '%s', crud '%s'",
+                    "Invalid access profile '%s' in %s tab, case type '%s', case field '%s', crud '%s'",
                     defaultString(def.getString(ColumnName.ACCESS_PROFILE)),
                     def.getSheetName(),
                     def.getString(ColumnName.CASE_TYPE_ID),
@@ -349,7 +349,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
                 error.getAuthorisationEventValidationContext().getCaseReference(),
                 error.getAuthorisationEventValidationContext().getEventReference()) :
                 String.format(
-                    "Invalid IDAM access profile '%s' in %s tab, case type '%s', event '%s', crud '%s'",
+                    "Invalid access profile '%s' in %s tab, case type '%s', event '%s', crud '%s'",
                     defaultString(def.getString(ColumnName.ACCESS_PROFILE)),
                     def.getSheetName(),
                     error.getAuthorisationEventValidationContext().getCaseReference(),

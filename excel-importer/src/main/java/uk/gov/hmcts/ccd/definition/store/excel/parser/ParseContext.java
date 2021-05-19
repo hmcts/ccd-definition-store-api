@@ -234,16 +234,16 @@ public class ParseContext {
         return Optional.ofNullable(baseTypes.get(reference));
     }
 
-    public Optional<AccessProfileEntity> getIdamAccessProfile(final String accessProfile) {
+    public Optional<AccessProfileEntity> getAccessProfile(final String accessProfile) {
         return Optional.ofNullable(accessProfiles.get(accessProfile));
     }
 
-    public Optional<AccessProfileEntity> getAccessProfile(String caseType, final String role) {
-        Optional<AccessProfileEntity> accessProfileEntity = Optional.ofNullable(accessProfiles.get(role));
+    public Optional<AccessProfileEntity> getAccessProfile(String caseType, final String accessProfile) {
+        Optional<AccessProfileEntity> accessProfileEntity = Optional.ofNullable(accessProfiles.get(accessProfile));
         if (accessProfileEntity.isPresent()) {
             return accessProfileEntity;
         } else {
-            return Optional.ofNullable(caseRoles.get(caseType, role));
+            return Optional.ofNullable(caseRoles.get(caseType, accessProfile));
         }
     }
 

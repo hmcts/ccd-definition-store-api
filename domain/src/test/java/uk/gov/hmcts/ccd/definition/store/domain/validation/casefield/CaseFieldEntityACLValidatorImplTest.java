@@ -29,7 +29,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     private CaseFieldEntity caseField;
 
     @Mock
-    private AccessProfileEntity userRole;
+    private AccessProfileEntity accessProfileEntity;
 
     @Mock
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
@@ -65,7 +65,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     @Test
     public void shouldHaveNoValidationErrorWhenAccessProfileFound() {
 
-        caseFieldUserRole.setAccessProfile(userRole);
+        caseFieldUserRole.setAccessProfile(accessProfileEntity);
 
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 

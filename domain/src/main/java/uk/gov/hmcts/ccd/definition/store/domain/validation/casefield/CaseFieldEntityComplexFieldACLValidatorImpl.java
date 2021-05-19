@@ -116,10 +116,10 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
     }
 
     private boolean isMissingInComplexACLs(List<ComplexFieldACLEntity> complexFieldACLEntities,
-                                           String userRole, String parentCode) {
+                                           String accessProfile, String parentCode) {
         return complexFieldACLEntities.stream()
             .noneMatch(entity -> (entity.getAccessProfile() != null
-                && entity.getAccessProfile().getReference().equalsIgnoreCase(userRole))
+                && entity.getAccessProfile().getReference().equalsIgnoreCase(accessProfile))
                 && parentCode.equals(entity.getListElementCode())
             );
     }
@@ -128,9 +128,10 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
                                                     CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                                     ValidationResult validationResult, ComplexFieldACLEntity entity) {
         String accessProfile = entity.getAccessProfile() != null ? entity.getAccessProfile().getReference() : "";
-        final Optional<CaseFieldACLEntity> caseFieldACLByRole = caseField.getCaseFieldACLByAccessProfile(accessProfile);
-        if (caseFieldACLByRole.isPresent()) {
-            if (caseFieldACLByRole.get().hasLowerAccessThan(entity)) {
+        final Optional<CaseFieldACLEntity> caseFieldACLByAccessProfile
+                = caseField.getCaseFieldACLByAccessProfile(accessProfile);
+        if (caseFieldACLByAccessProfile.isPresent()) {
+            if (caseFieldACLByAccessProfile.get().hasLowerAccessThan(entity)) {
                 validationResult.addError(new CaseFieldEntityComplexACLValidationError(
                     String.format("List element code '%s' has higher access than case field '%s'",
                         entity.getListElementCode(), caseField.getReference()),

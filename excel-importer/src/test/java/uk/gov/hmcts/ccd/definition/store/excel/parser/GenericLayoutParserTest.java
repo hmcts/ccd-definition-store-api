@@ -132,7 +132,7 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item2);
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
-        assertEquals(String.format("- Unknown IDAM access profile '%s' in worksheet '%s' for caseField '%s'",
+        assertEquals(String.format("- Unknown access profile '%s' in worksheet '%s' for caseField '%s'",
             INVALID_ACCESS_PROFILE, item2.getSheetName(), item2.getString(ColumnName.CASE_FIELD_ID)),
             thrown.getMessage());
     }
