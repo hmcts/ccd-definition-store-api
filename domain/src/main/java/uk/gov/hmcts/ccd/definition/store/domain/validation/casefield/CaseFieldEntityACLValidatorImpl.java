@@ -17,8 +17,8 @@ public class CaseFieldEntityACLValidatorImpl implements CaseFieldEntityValidator
 
         for (CaseFieldACLEntity entity : caseField.getCaseFieldACLEntities()) {
 
-            if (null == entity.getUserRole()) {
-                validationResult.addError(new CaseFieldEntityInvalidUserRoleValidationError(entity,
+            if (null == entity.getAccessProfile()) {
+                validationResult.addError(new CaseFieldEntityInvalidAccessProfileValidationError(entity,
                     new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
             }
         }

@@ -15,38 +15,39 @@ import java.util.Arrays;
 
 @Component
 @RequestScope
-public class EventEntityCaseTypeUserRoleValidatorImpl implements EventEntityValidator {
+public class EventEntityCaseTypeAccessProfileValidatorImpl implements EventEntityValidator {
 
-    private final Map<String, ArrayList<String>> userRoleCaseTypeMap = new HashMap<>();
-    private final List<String> userRoleList = Arrays.asList("caseworker-caa", "caseworker-approver");
+    private final Map<String, ArrayList<String>> accessProfileCaseTypeMap = new HashMap<>();
+    private final List<String> accessProfilesLimitedToOneEventPerCaseType
+            = Arrays.asList("caseworker-caa", "caseworker-approver");
 
     @Override
     public ValidationResult validate(final EventEntity event,
                                      final EventEntityValidationContext eventEntityValidationContext) {
 
         final ValidationResult validationResult = new ValidationResult();
-        initUserRoleCaseTypeMap();
+        initAccessProfileCaseTypeMap();
 
         for (EventACLEntity entity : event.getEventACLEntities()) {
 
-            String userRole = entity.getUserRoleId().toLowerCase();
+            String accessProfileId = entity.getAccessProfileId().toLowerCase();
             String caseType = entity.getEvent().getCaseType().getReference().toLowerCase();
 
-            if (userRoleCaseTypeMap.containsKey(userRole)) {
-                if (userRoleCaseTypeMap.get(userRole).contains(caseType)) {
-                    validationResult.addError(new EventEntityCaseTypeUserRoleValidationError(entity));
+            if (accessProfileCaseTypeMap.containsKey(accessProfileId)) {
+                if (accessProfileCaseTypeMap.get(accessProfileId).contains(caseType)) {
+                    validationResult.addError(new EventEntityCaseTypeAccessProfileValidationError(entity));
                 } else {
-                    userRoleCaseTypeMap.get(userRole).add(caseType);
+                    accessProfileCaseTypeMap.get(accessProfileId).add(caseType);
                 }
             }
         }
         return validationResult;
     }
 
-    private void initUserRoleCaseTypeMap() {
-        for (String userRole : userRoleList) {
-            if (!userRoleCaseTypeMap.containsKey(userRole)) {
-                userRoleCaseTypeMap.put(userRole, new ArrayList<>());
+    private void initAccessProfileCaseTypeMap() {
+        for (String accessProfile : accessProfilesLimitedToOneEventPerCaseType) {
+            if (!accessProfileCaseTypeMap.containsKey(accessProfile)) {
+                accessProfileCaseTypeMap.put(accessProfile, new ArrayList<>());
             }
         }
     }
