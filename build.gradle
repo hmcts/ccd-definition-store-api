@@ -4,7 +4,6 @@ buildscript {
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
@@ -19,7 +18,7 @@ plugins {
     id "com.github.kt3k.coveralls" version "2.8.2"
     id 'io.franzbecker.gradle-lombok' version '2.0'
     id 'net.ltgt.apt' version '0.21'
-    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
+    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
     id "info.solidsoft.pitest" version '1.4.0' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
     id 'uk.gov.hmcts.java' version '0.12.0'
@@ -34,7 +33,6 @@ apply plugin: 'application'
 apply plugin: "org.sonarqube"
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'se.patrikerdes.use-latest-versions'
 
@@ -51,7 +49,7 @@ dependencyCheck {
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
 ext['elasticsearch.version'] = '6.4.3'
 ext['javax-validation.version'] = '2.0.1.Final'
-ext['hibernate-validator.version'] = '6.0.10.Final'
+ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.3.8.RELEASE'
 ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
@@ -99,7 +97,7 @@ allprojects {
         mavenCentral()
         jcenter()
         maven {
-            url  "https://dl.bintray.com/hmcts/hmcts-maven"
+            url  "https://jitpack.io"
         }
     }
 
@@ -226,6 +224,9 @@ subprojects { subproject ->
         }
         compile "org.bouncycastle:bcprov-jdk15on:1.61", "org.bouncycastle:bcpkix-jdk15on:1.61"
 
+        // CVE-2021-29425
+        compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
+
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
         testCompile "org.postgresql:postgresql:42.2.16"
@@ -259,7 +260,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '6.13.3'
+        testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '6.14.2'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024
@@ -430,10 +431,7 @@ task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
 task dependencyCheck(dependsOn: dependencyCheckAnalyze)
 
 configurations { codacy }
-repositories {
-    maven { url "https://jitpack.io" }
-    maven { url "http://dl.bintray.com/typesafe/maven-releases" }
-}
+
 dependencies {
     codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
 }
