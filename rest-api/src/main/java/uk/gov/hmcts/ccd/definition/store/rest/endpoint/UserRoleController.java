@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.ccd.definition.store.domain.service.UserRoleService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.AccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
@@ -35,12 +35,12 @@ import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOper
 @RequestMapping(value = "/api")
 public class UserRoleController {
 
-    private final UserRoleService userRoleService;
+    private final AccessProfileService accessProfileService;
     public static final String URI_USER_ROLE = "/user-role";
 
     @Autowired
-    UserRoleController(final UserRoleService userRoleService) {
-        this.userRoleService = userRoleService;
+    UserRoleController(final AccessProfileService accessProfileService) {
+        this.accessProfileService = accessProfileService;
     }
 
     @PutMapping(value = URI_USER_ROLE, produces = {"application/json"})
@@ -55,7 +55,7 @@ public class UserRoleController {
     })
     public ResponseEntity<UserRole> userRolePut(
         @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
-        final ServiceResponse<UserRole> serviceResponse = userRoleService.saveRole(userRole);
+        final ServiceResponse<UserRole> serviceResponse = accessProfileService.saveRole(userRole);
         final ResponseEntity.BodyBuilder responseEntityBuilder = serviceResponse.getOperation() == CREATE
             ? ResponseEntity.status(CREATED) : ResponseEntity.status(RESET_CONTENT);
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
@@ -73,7 +73,7 @@ public class UserRoleController {
     })
     public ResponseEntity<UserRole> userRoleCreate(
         @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
-        final ServiceResponse<UserRole> serviceResponse = userRoleService.createRole(userRole);
+        final ServiceResponse<UserRole> serviceResponse = accessProfileService.createRole(userRole);
         final ResponseEntity.BodyBuilder responseEntityBuilder = ResponseEntity.status(CREATED);
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
     }
@@ -87,7 +87,7 @@ public class UserRoleController {
     })
     public UserRole userRoleGet(@RequestParam("role") @NotNull byte[] roleBase64EncodedBytes) {
         final String role = new String(Base64.getDecoder().decode(roleBase64EncodedBytes));
-        return userRoleService.getRole(role);
+        return accessProfileService.getRole(role);
     }
 
     @RequestMapping(value = "/user-roles/{roles}", method = RequestMethod.GET, produces = {"application/json"})
@@ -98,7 +98,7 @@ public class UserRoleController {
     })
     public List<UserRole> getUserRoles(
         @ApiParam(value = "Roles", required = true) @PathVariable("roles") List<String> roles) {
-        return this.userRoleService.getRoles(roles);
+        return this.accessProfileService.getRoles(roles);
     }
 
     @RequestMapping(value = "/user-roles", method = RequestMethod.GET, produces = {"application/json"})
@@ -108,6 +108,6 @@ public class UserRoleController {
         @ApiResponse(code = 200, message = "User Roles Response is returned"),
     })
     public List<UserRole> getAllUserRoles() {
-        return this.userRoleService.getRoles();
+        return this.accessProfileService.getRoles();
     }
 }
