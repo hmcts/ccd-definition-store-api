@@ -35,7 +35,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("USERROLE")
-public class AccessProfileEntity implements Serializable {
+public class UserRoleEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)

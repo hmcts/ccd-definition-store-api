@@ -11,12 +11,12 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.WebhookParser.parseWebhook;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ACCESS_PROFILE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 
 public abstract class AbstractDisplayGroupParser implements FieldShowConditionParser {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -47,7 +47,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     protected Optional<ColumnName> columnId = Optional.empty();
     protected boolean displayGroupItemMandatory;
 
-    protected Optional<ColumnName> accessProfileColumn = Optional.empty();
+    protected Optional<ColumnName> userRoleColumn = Optional.empty();
 
     public AbstractDisplayGroupParser(ParseContext parseContext, ShowConditionParser showConditionParser,
                                       EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry) {
@@ -152,39 +152,39 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         group.addDisplayGroupCaseFields(groupCaseFields);
         this.groupShowConditionColumn.ifPresent(column -> parseGroupShowCondition(
             column, group, groupDefinition.getValue()));
-        this.accessProfileColumn.ifPresent(column -> parseAccessProfile(caseType, group, groupDefinition.getValue()));
+        this.userRoleColumn.ifPresent(column -> parseUserRole(caseType, group, groupDefinition.getValue()));
         return ParseResult.Entry.createNew(group);
     }
 
-    private void parseAccessProfile(CaseTypeEntity caseType,
+    private void parseUserRole(CaseTypeEntity caseType,
                                final DisplayGroupEntity group,
                                final List<DefinitionDataItem> groupDefinition) {
-        if (hasMultipleAccessProfileRowsPerTab(groupDefinition)) {
+        if (hasMultipleUserRoleRowsPerTab(groupDefinition)) {
             throw new MapperException(
-                String.format("Please provide one access profile row per tab in worksheet %s on column ACCESS_PROFILE "
-                    + "for the tab %s", groupDefinition.get(0).getSheetName(), group.getReference()));
+                String.format(
+                    "Please provide one user role row per tab in worksheet %s on column USER_ROLE for the tab %s",
+                    groupDefinition.get(0).getSheetName(), group.getReference()));
         }
         Optional<DefinitionDataItem> optionalDDI = groupDefinition.stream()
-            .filter(ddi -> StringUtils.isNotEmpty(ddi.getString(ACCESS_PROFILE))).findFirst();
+            .filter(ddi -> StringUtils.isNotEmpty(ddi.getString(USER_ROLE))).findFirst();
         if (optionalDDI.isPresent()) {
-            final String accessProfile = optionalDDI.get().getString(ACCESS_PROFILE);
-            group.setAccessProfile(getAccessProfile(caseType, group, groupDefinition, accessProfile));
+            final String userRole = optionalDDI.get().getString(USER_ROLE);
+            group.setUserRole(getRoleEntity(caseType, group, groupDefinition, userRole));
         }
     }
 
-    private AccessProfileEntity getAccessProfile(CaseTypeEntity caseType,
-                                                 DisplayGroupEntity group,
-                                                 List<DefinitionDataItem> groupDefinition,
-                                                 String accessProfile) {
-        return parseContext.getAccessProfile(caseType.getReference(), accessProfile)
+    private UserRoleEntity getRoleEntity(CaseTypeEntity caseType,
+                                         DisplayGroupEntity group,
+                                         List<DefinitionDataItem> groupDefinition,
+                                         String userRole) {
+        return parseContext.getRole(caseType.getReference(), userRole)
             .orElseThrow(() -> new MapperException(
-                String.format("- Invalid access profile or case role '%s' in '%s' tab for TabId '%s'",
-                    accessProfile, groupDefinition.get(0).getSheetName(), group.getReference())));
+                String.format("- Invalid idam or case role '%s' in '%s' tab for TabId '%s'",
+                userRole, groupDefinition.get(0).getSheetName(), group.getReference())));
     }
 
-    private boolean hasMultipleAccessProfileRowsPerTab(List<DefinitionDataItem> groupDefinition) {
-        return groupDefinition.stream()
-            .filter(ddi -> StringUtils.isNotEmpty(ddi.getString(ACCESS_PROFILE))).count() > 1;
+    private boolean hasMultipleUserRoleRowsPerTab(List<DefinitionDataItem> groupDefinition) {
+        return groupDefinition.stream().filter(ddi -> StringUtils.isNotEmpty(ddi.getString(USER_ROLE))).count() > 1;
     }
 
     private void parseGroupShowCondition(ColumnName column,

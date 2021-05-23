@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
@@ -14,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity.toCaseTypeLiteEntity;
 
@@ -23,17 +23,17 @@ public class TestHelper {
     private final VersionedDefinitionRepositoryDecorator<JurisdictionEntity, Integer> versionedJurisdictionRepository;
     private final VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedTypeRepository;
     private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
-    private final AccessProfileRepository accessProfileRepository;
+    private final UserRoleRepository userRoleRepository;
 
     @Autowired
     public TestHelper(JurisdictionRepository jurisdictionRepository,
                       FieldTypeRepository fieldTypeRepository,
-                      AccessProfileRepository accessProfileRepository,
+                      UserRoleRepository userRoleRepository,
                       CaseTypeRepository caseTypeRepository) {
         versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository);
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
         versionedTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository);
-        this.accessProfileRepository = accessProfileRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     public JurisdictionEntity createJurisdiction() {
@@ -87,14 +87,14 @@ public class TestHelper {
         return caseFieldEntity;
     }
 
-    public AccessProfileEntity createAccessProfile(final String reference,
-                                                   final String name,
-                                                   final SecurityClassification sc) {
-        final AccessProfileEntity entity = new AccessProfileEntity();
+    public UserRoleEntity createUserRole(final String reference,
+                                         final String name,
+                                         final SecurityClassification sc) {
+        final UserRoleEntity entity = new UserRoleEntity();
         entity.setReference(reference);
         entity.setName(name);
         entity.setSecurityClassification(sc);
-        return accessProfileRepository.save(entity);
+        return userRoleRepository.save(entity);
     }
 
     public EventCaseFieldEntity createEventCaseField(CaseFieldEntity caseField,

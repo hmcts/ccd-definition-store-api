@@ -10,9 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -40,37 +40,37 @@ class RoleToAccessProfilesValidatorTest {
         when(caseTypeEntity2.getReference()).thenReturn(CASE_TYPE_ID_2);
         Set<CaseTypeEntity> caseTypes = Sets.newHashSet(caseTypeEntity1, caseTypeEntity2);
         given(parseContext.getCaseTypes()).willReturn(caseTypes);
-        AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
-        when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.of(accessProfileEntity));
+        UserRoleEntity userRoleEntity = mock(UserRoleEntity.class);
+        when(parseContext.getRole(anyString(), anyString())).thenReturn(Optional.of(userRoleEntity));
     }
 
 
     @Test
     void shouldThrowExceptionWhenAccessProfileNotFound() {
-        when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.empty());
+        when(parseContext.getRole(anyString(), anyString())).thenReturn(Optional.empty());
         Assertions.assertThrows(ValidationException.class, () -> validator.validate(createEntities(), parseContext));
     }
 
 
     @Test
     void shouldNotThrowExceptionWhenAccessProfileFound() {
-        AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
-        when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.of(accessProfileEntity));
+        UserRoleEntity userRoleEntity = mock(UserRoleEntity.class);
+        when(parseContext.getRole(anyString(), anyString())).thenReturn(Optional.of(userRoleEntity));
         validator.validate(createEntities(), parseContext);
     }
 
     @Test
     void shouldThrowExceptionOnDuplicateRoleNameAndCaseType() {
-        AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
-        when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.of(accessProfileEntity));
+        UserRoleEntity userRoleEntity = mock(UserRoleEntity.class);
+        when(parseContext.getRole(anyString(), anyString())).thenReturn(Optional.of(userRoleEntity));
         Assertions.assertThrows(ValidationException.class, () -> validator
             .validate(createDuplicateRoleNameAndCaseTypeEntities(), parseContext));
     }
 
     @Test
     void shouldThrowExceptionOnEmptyRoleName() {
-        AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
-        when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.of(accessProfileEntity));
+        UserRoleEntity userRoleEntity = mock(UserRoleEntity.class);
+        when(parseContext.getRole(anyString(), anyString())).thenReturn(Optional.of(userRoleEntity));
         Assertions.assertThrows(ValidationException.class, () -> validator
             .validate(createEntityWithEmptyRoleName(), parseContext));
     }

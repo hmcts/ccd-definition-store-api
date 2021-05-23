@@ -5,15 +5,15 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessag
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 
-public class EventEntityInvalidAccessProfileValidationError extends ValidationError {
+public class EventEntityInvalidUserRoleValidationError extends ValidationError {
 
     private final EventACLEntity eventACLEntity;
     private final AuthorisationEventValidationContext authorisationEventValidationContext;
 
-    public EventEntityInvalidAccessProfileValidationError(final EventACLEntity entity,
-                                                          final AuthorisationEventValidationContext context) {
-        super(String.format("Invalid AccessProfile %s for case type '%s', event '%s'",
-            entity.getAccessProfileId(),
+    public EventEntityInvalidUserRoleValidationError(final EventACLEntity entity,
+                                                     final AuthorisationEventValidationContext context) {
+        super(String.format("Invalid UserRole %s for case type '%s', event '%s'",
+            entity.getUserRoleId(),
             context.getCaseReference(),
             context.getEventReference()));
         this.eventACLEntity = entity;

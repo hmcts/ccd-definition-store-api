@@ -5,7 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
 import java.util.List;
 
-public interface AccessProfileService {
+public interface UserRoleService {
 
     UserRole getRole(String role);
 

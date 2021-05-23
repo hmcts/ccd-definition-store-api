@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper;
 
@@ -19,16 +19,12 @@ import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOper
 import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toEntity;
 import static uk.gov.hmcts.ccd.definition.store.repository.model.UserRoleModelMapper.toModel;
 
-/**
- * RDM-10539 - The UserRoles will not be changed in this class as it is only used in the UserRole controller which will
- * soon possibly be out of commission in the future.
- */
 @Component
-public class AccessProfileServiceImpl implements AccessProfileService {
+public class UserRoleServiceImpl implements UserRoleService {
 
-    private final AccessProfileRepository repository;
+    private final UserRoleRepository repository;
 
-    AccessProfileServiceImpl(final AccessProfileRepository repository) {
+    UserRoleServiceImpl(final UserRoleRepository repository) {
         this.repository = repository;
     }
 
@@ -42,9 +38,9 @@ public class AccessProfileServiceImpl implements AccessProfileService {
     @Transactional
     @Override
     public ServiceResponse<UserRole> saveRole(final UserRole userRole) {
-        final AccessProfileEntity entity;
+        final UserRoleEntity entity;
         final boolean roleFound;
-        final Optional<AccessProfileEntity> searchResult = repository.findTopByReference(userRole.getRole());
+        final Optional<UserRoleEntity> searchResult = repository.findTopByReference(userRole.getRole());
         if (searchResult.isPresent()) {
             entity = searchResult.get();
             entity.setSecurityClassification(userRole.getSecurityClassification());
@@ -59,8 +55,8 @@ public class AccessProfileServiceImpl implements AccessProfileService {
     @Transactional
     @Override
     public ServiceResponse<UserRole> createRole(final UserRole userRole) {
-        final AccessProfileEntity entity;
-        final Optional<AccessProfileEntity> searchResult = repository.findTopByReference(userRole.getRole().trim());
+        final UserRoleEntity entity;
+        final Optional<UserRoleEntity> searchResult = repository.findTopByReference(userRole.getRole().trim());
 
         if (!searchResult.isPresent()) {
             userRole.setRole(userRole.getRole().trim());
@@ -74,8 +70,8 @@ public class AccessProfileServiceImpl implements AccessProfileService {
     @Transactional
     @Override
     public List<UserRole> getRoles(List<String> roles) {
-        final List<AccessProfileEntity> accessProfiles = repository.findByReferenceIn(roles);
-        return accessProfiles.stream()
+        final List<UserRoleEntity> userRoles = repository.findByReferenceIn(roles);
+        return userRoles.stream()
             .map(UserRoleModelMapper::toModel)
             .collect(toList());
     }
@@ -83,8 +79,8 @@ public class AccessProfileServiceImpl implements AccessProfileService {
     @Transactional
     @Override
     public List<UserRole> getRoles() {
-        final List<AccessProfileEntity> accessProfiles = repository.findAll();
-        return accessProfiles.stream()
+        final List<UserRoleEntity> userRoles = repository.findAll();
+        return userRoles.stream()
             .map(UserRoleModelMapper::toModel)
             .collect(toList());
     }

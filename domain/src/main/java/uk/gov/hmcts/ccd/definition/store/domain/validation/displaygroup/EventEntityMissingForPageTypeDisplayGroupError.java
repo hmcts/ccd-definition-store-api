@@ -15,7 +15,7 @@ public class EventEntityMissingForPageTypeDisplayGroupError extends ValidationEr
         this.entity = displayGroupEntity;
     }
 
-    public DisplayGroupEntity getCaseTypeAccessProfileEntity() {
+    public DisplayGroupEntity getCaseTypeUserRoleEntity() {
         return entity;
     }
 

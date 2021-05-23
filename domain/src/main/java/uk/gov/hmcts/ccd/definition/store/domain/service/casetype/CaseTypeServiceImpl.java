@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
@@ -58,8 +58,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     @Override
     public void createAll(JurisdictionEntity jurisdiction,
                           Collection<CaseTypeEntity> caseTypes,
-                          Set<String> missingAccessprofiles) {
-        validate(jurisdiction, caseTypes, missingAccessprofiles);
+                          Set<String> missingUserRoles) {
+        validate(jurisdiction, caseTypes, missingUserRoles);
         versionedRepository.saveAll(caseTypes);
     }
 
@@ -114,7 +114,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
 
     private void validate(JurisdictionEntity jurisdiction,
                           Collection<CaseTypeEntity> caseTypes,
-                          Set<String> missingAccessProfiles) {
+                          Set<String> missingUserRoles) {
         ValidationResult validationResult = new ValidationResult();
         caseTypes.forEach(
             caseTypeEntity -> {
@@ -134,8 +134,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         );
 
         validationResult.getValidationErrors().forEach(vr -> LOG.warn(vr.toString()));
-        if (missingAccessProfiles.size() > 0) {
-            throw new MissingAccessProfilesException(missingAccessProfiles, validationResult.getValidationErrors());
+        if (missingUserRoles.size() > 0) {
+            throw new MissingUserRolesException(missingUserRoles, validationResult.getValidationErrors());
         }
         if (!validationResult.isValid()) {
             throw new ValidationException(validationResult);

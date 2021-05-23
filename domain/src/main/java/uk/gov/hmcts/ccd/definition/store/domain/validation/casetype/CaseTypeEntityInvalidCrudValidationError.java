@@ -20,7 +20,7 @@ public class CaseTypeEntityInvalidCrudValidationError extends ValidationError {
         this.context = context;
     }
 
-    public CaseTypeACLEntity getCaseTypeAccessProfileEntity() {
+    public CaseTypeACLEntity getCaseTypeUserRoleEntity() {
         return entity;
     }
 

@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -29,6 +28,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 
 import static org.hamcrest.Matchers.contains;
@@ -73,9 +73,9 @@ public class CaseTypeObjectGraphTest {
     private FieldTypeEntity fieldType;
 
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
-    private AccessProfileEntity accessProfile1;
-    private AccessProfileEntity accessProfile2;
-    private AccessProfileEntity accessProfile3;
+    private UserRoleEntity userRole1;
+    private UserRoleEntity userRole2;
+    private UserRoleEntity userRole3;
 
     @Before
     public void setup() {
@@ -83,12 +83,9 @@ public class CaseTypeObjectGraphTest {
 
         jurisdiction = helper.createJurisdiction();
         fieldType = helper.createType(jurisdiction);
-        accessProfile1 = helper.createAccessProfile(
-            "access profile 1", "access profile 1", SecurityClassification.PUBLIC);
-        accessProfile2 = helper.createAccessProfile(
-            "access profile 2", "access profile 2", SecurityClassification.PRIVATE);
-        accessProfile3 = helper.createAccessProfile(
-            "access profile 3", "access profile 3", SecurityClassification.RESTRICTED);
+        userRole1 = helper.createUserRole("user role 1", "user role 1", SecurityClassification.PUBLIC);
+        userRole2 = helper.createUserRole("user role 2", "user role 2", SecurityClassification.PRIVATE);
+        userRole3 = helper.createUserRole("user role 3", "user role 3", SecurityClassification.RESTRICTED);
     }
 
     @Test
@@ -106,8 +103,8 @@ public class CaseTypeObjectGraphTest {
         cf.setLiveFrom(LocalDate.of(2017, 8, 31));
         cf.setSecurityClassification(SecurityClassification.RESTRICTED);
 
-        cf.addCaseFieldACL(createCaseFieldAccessProfileEntity(accessProfile1, true, false, false, true));
-        cf.addCaseFieldACL(createCaseFieldAccessProfileEntity(accessProfile2, true, true, false, true));
+        cf.addCaseFieldACL(createCaseFieldUserRoleEntity(userRole1, true, false, false, true));
+        cf.addCaseFieldACL(createCaseFieldUserRoleEntity(userRole2, true, true, false, true));
 
         caseType.addCaseField(cf);
 
@@ -117,8 +114,8 @@ public class CaseTypeObjectGraphTest {
         final StateEntity s1 = createState("stateId", "stateName", "desc", 3, TODAY, TOMORROW);
         final StateEntity s2 = createState("stateId2", "stateName2", "desc2", 3, TODAY, TOMORROW);
 
-        final StateACLEntity stateACLEntity1 = createStateAccessProfileEntity(accessProfile1, false, false, true, true);
-        final StateACLEntity stateACLEntity2 = createStateAccessProfileEntity(accessProfile2, false, true, true, false);
+        final StateACLEntity stateACLEntity1 = createStateUserRoleEntity(userRole1, false, false, true, true);
+        final StateACLEntity stateACLEntity2 = createStateUserRoleEntity(userRole2, false, true, true, false);
         s1.addStateACL(stateACLEntity1);
         s1.addStateACL(stateACLEntity2);
 
@@ -127,9 +124,9 @@ public class CaseTypeObjectGraphTest {
         caseType.addState(s1);
         caseType.addState(s2);
 
-        final CaseTypeACLEntity cture1 = createCaseTypeAccessProfileEntity(accessProfile1, false, false, true, true);
-        final CaseTypeACLEntity cture2 = createCaseTypeAccessProfileEntity(accessProfile2, false, true, true, false);
-        final CaseTypeACLEntity cture3 = createCaseTypeAccessProfileEntity(accessProfile3, true, false, true, true);
+        final CaseTypeACLEntity cture1 = createCaseTypeUserRoleEntity(userRole1, false, false, true, true);
+        final CaseTypeACLEntity cture2 = createCaseTypeUserRoleEntity(userRole2, false, true, true, false);
+        final CaseTypeACLEntity cture3 = createCaseTypeUserRoleEntity(userRole3, true, false, true, true);
         caseType.addCaseTypeACL(cture1);
         caseType.addCaseTypeACL(cture2);
         caseType.addCaseTypeACL(cture3);
@@ -150,10 +147,10 @@ public class CaseTypeObjectGraphTest {
 
         e1.setSecurityClassification(SecurityClassification.PRIVATE);
 
-        e1.addEventACL(createEventAccessProfileEntity(accessProfile1, true, false, false, true));
-        e1.addEventACL(createEventAccessProfileEntity(accessProfile2, false, false, false, true));
-        e2.addEventACL(createEventAccessProfileEntity(accessProfile1, true, true, false, true));
-        e2.addEventACL(createEventAccessProfileEntity(accessProfile3, false, true, false, true));
+        e1.addEventACL(createEventUserRoleEntity(userRole1, true, false, false, true));
+        e1.addEventACL(createEventUserRoleEntity(userRole2, false, false, false, true));
+        e2.addEventACL(createEventUserRoleEntity(userRole1, true, true, false, true));
+        e2.addEventACL(createEventUserRoleEntity(userRole3, false, true, false, true));
 
         final CaseTypeEntity saved = versionedCaseTypeRepository.save(caseType);
 
@@ -198,8 +195,8 @@ public class CaseTypeObjectGraphTest {
         assertThat(fetchedState1.getReference(), equalTo("stateId"));
         assertThat(fetchedState1.getLiveFrom(), equalTo(TODAY));
         assertThat(fetchedState1.getLiveTo(), equalTo(TOMORROW));
-        assertStateAccessProfileEntity(fetchedState1, stateACLEntity1, fetchedState1.getStateACLEntities().get(0));
-        assertStateAccessProfileEntity(fetchedState1, stateACLEntity2, fetchedState1.getStateACLEntities().get(1));
+        assertStateUserRoleEntity(fetchedState1, stateACLEntity1, fetchedState1.getStateACLEntities().get(0));
+        assertStateUserRoleEntity(fetchedState1, stateACLEntity2, fetchedState1.getStateACLEntities().get(1));
 
         // Check case field
         assertThat(fetched.getCaseFields(), hasSize(1));
@@ -217,17 +214,17 @@ public class CaseTypeObjectGraphTest {
 
         // Check authorisation case types
         assertThat(fetched.getCaseTypeACLEntities(), hasSize(3));
-        assertCaseTypeAccessProfileEntity(fetched, cture1, fetched.getCaseTypeACLEntities().get(0));
-        assertCaseTypeAccessProfileEntity(fetched, cture2, fetched.getCaseTypeACLEntities().get(1));
-        assertCaseTypeAccessProfileEntity(fetched, cture3, fetched.getCaseTypeACLEntities().get(2));
+        assertCaseTypeUserRoleEntity(fetched, cture1, fetched.getCaseTypeACLEntities().get(0));
+        assertCaseTypeUserRoleEntity(fetched, cture2, fetched.getCaseTypeACLEntities().get(1));
+        assertCaseTypeUserRoleEntity(fetched, cture3, fetched.getCaseTypeACLEntities().get(2));
 
 
         // Check authorisation case fields
         assertThat(caseField.getCaseFieldACLEntities().size(), equalTo(2));
-        assertThat(caseField.getCaseFieldACLEntities().get(0).getAccessProfile().getReference(),
-            equalTo("access profile 1"));
-        assertThat(caseField.getCaseFieldACLEntities().get(1).getAccessProfile().getReference(),
-            equalTo("access profile 2"));
+        assertThat(caseField.getCaseFieldACLEntities().get(0).getUserRole().getReference(),
+            equalTo("user role 1"));
+        assertThat(caseField.getCaseFieldACLEntities().get(1).getUserRole().getReference(),
+            equalTo("user role 2"));
         assertThat(caseField.getCaseFieldACLEntities().get(0).getCreate(), equalTo(true));
         assertThat(caseField.getCaseFieldACLEntities().get(0).getRead(), equalTo(false));
         assertThat(caseField.getCaseFieldACLEntities().get(0).getUpdate(), equalTo(false));
@@ -241,15 +238,15 @@ public class CaseTypeObjectGraphTest {
         final EventEntity eventEntity1 = findEventEntity(fetchedEvents, e1);
         final EventEntity eventEntity2 = findEventEntity(fetchedEvents, e2);
 
-        final EventACLEntity eventACLEntity1 = findFetchedEventAccessProfileEntity(eventEntity1, "access profile 1");
-        final EventACLEntity eventACLEntity2 = findFetchedEventAccessProfileEntity(eventEntity1, "access profile 2");
-        final EventACLEntity eventACLEntity3 = findFetchedEventAccessProfileEntity(eventEntity2, "access profile 1");
-        final EventACLEntity eventACLEntity4 = findFetchedEventAccessProfileEntity(eventEntity2, "access profile 3");
+        final EventACLEntity eventACLEntity1 = findFetchedEventUserRoleEntity(eventEntity1, "user role 1");
+        final EventACLEntity eventACLEntity2 = findFetchedEventUserRoleEntity(eventEntity1, "user role 2");
+        final EventACLEntity eventACLEntity3 = findFetchedEventUserRoleEntity(eventEntity2, "user role 1");
+        final EventACLEntity eventACLEntity4 = findFetchedEventUserRoleEntity(eventEntity2, "user role 3");
 
-        assertEventAccessProfileEntity(eventACLEntity1, true, false, false, true);
-        assertEventAccessProfileEntity(eventACLEntity2, false, false, false, true);
-        assertEventAccessProfileEntity(eventACLEntity3, true, true, false, true);
-        assertEventAccessProfileEntity(eventACLEntity4, false, true, false, true);
+        assertEventUserRoleEntity(eventACLEntity1, true, false, false, true);
+        assertEventUserRoleEntity(eventACLEntity2, false, false, false, true);
+        assertEventUserRoleEntity(eventACLEntity3, true, true, false, true);
+        assertEventUserRoleEntity(eventACLEntity4, false, true, false, true);
 
         versionedCaseTypeRepository.save(fetched);
 
@@ -265,26 +262,25 @@ public class CaseTypeObjectGraphTest {
 
     }
 
-    private void assertEventAccessProfileEntity(final EventACLEntity entity,
-                                                final boolean canCreate,
-                                                final boolean canRead,
-                                                final boolean canUpdate,
-                                                final boolean canDelete) {
-        final String reasonPrefix = String.format("Case type '%s, Event '%s', Access Profile '%s' ",
+    private void assertEventUserRoleEntity(final EventACLEntity entity,
+                                           final boolean canCreate,
+                                           final boolean canRead,
+                                           final boolean canUpdate,
+                                           final boolean canDelete) {
+        final String reasonPrefix = String.format("Case type '%s, Event '%s', User Role '%s' ",
             entity.getEvent().getCaseType().getReference(), entity.getEvent().getReference(),
-            entity.getAccessProfile().getReference());
+            entity.getUserRole().getReference());
         assertThat(reasonPrefix + "can create", entity.getCreate(), is(canCreate));
         assertThat(reasonPrefix + "can read", entity.getRead(), is(canRead));
         assertThat(reasonPrefix + "can update", entity.getUpdate(), is(canUpdate));
         assertThat(reasonPrefix + "can delete", entity.getDelete(), is(canDelete));
     }
 
-    private EventACLEntity findFetchedEventAccessProfileEntity(final EventEntity eventEntity,
-                                                               final String accessProfile) {
+    private EventACLEntity findFetchedEventUserRoleEntity(final EventEntity eventEntity, final String userRole) {
         // @formatter:off
         return eventEntity.getEventACLEntities()
             .stream()
-            .filter(r -> StringUtils.equals(accessProfile, r.getAccessProfile().getReference()))
+            .filter(r -> StringUtils.equals(userRole, r.getUserRole().getReference()))
             .findFirst()
             .get();
         // @formatter:on
@@ -300,64 +296,64 @@ public class CaseTypeObjectGraphTest {
         // @formatter:on
     }
 
-    private void assertCaseTypeAccessProfileEntity(final CaseTypeEntity caseType,
-                                                   final CaseTypeACLEntity expected,
-                                                   final CaseTypeACLEntity actual) {
+    private void assertCaseTypeUserRoleEntity(final CaseTypeEntity caseType,
+                                              final CaseTypeACLEntity expected,
+                                              final CaseTypeACLEntity actual) {
         assertThat(expected.getCaseType().getReference(), is(caseType.getReference()));
-        assertThat(expected.getAccessProfile().getReference(), is(actual.getAccessProfile().getReference()));
-        assertThat(expected.getAccessProfile().getSecurityClassification(),
-            is(actual.getAccessProfile().getSecurityClassification()));
+        assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
+        assertThat(expected.getUserRole().getSecurityClassification(),
+            is(actual.getUserRole().getSecurityClassification()));
     }
 
-    private void assertStateAccessProfileEntity(final StateEntity stateEntity,
-                                                final StateACLEntity expected,
-                                                final StateACLEntity actual) {
+    private void assertStateUserRoleEntity(final StateEntity stateEntity,
+                                           final StateACLEntity expected,
+                                           final StateACLEntity actual) {
         assertThat(expected.getStateEntity().getReference(), is(stateEntity.getReference()));
-        assertThat(expected.getAccessProfile().getReference(), is(actual.getAccessProfile().getReference()));
-        assertThat(expected.getAccessProfile().getSecurityClassification(),
-            is(actual.getAccessProfile().getSecurityClassification()));
+        assertThat(expected.getUserRole().getReference(), is(actual.getUserRole().getReference()));
+        assertThat(expected.getUserRole().getSecurityClassification(),
+            is(actual.getUserRole().getSecurityClassification()));
     }
 
     private void setAuthorisationData(final Authorisation entity,
-                                      final AccessProfileEntity accessProfile,
+                                      final UserRoleEntity userRole,
                                       final Boolean canCreate,
                                       final Boolean canRead,
                                       final Boolean canUpdate,
                                       final Boolean canDelete) {
-        entity.setAccessProfile(accessProfile);
+        entity.setUserRole(userRole);
         entity.setCreate(canCreate);
         entity.setRead(canRead);
         entity.setUpdate(canUpdate);
         entity.setDelete(canDelete);
     }
 
-    private CaseTypeACLEntity createCaseTypeAccessProfileEntity(final AccessProfileEntity accessProfile,
-                                                                final Boolean canCreate,
-                                                                final Boolean canRead,
-                                                                final Boolean canUpdate,
-                                                                final Boolean canDelete) {
+    private CaseTypeACLEntity createCaseTypeUserRoleEntity(final UserRoleEntity userRole,
+                                                           final Boolean canCreate,
+                                                           final Boolean canRead,
+                                                           final Boolean canUpdate,
+                                                           final Boolean canDelete) {
         final CaseTypeACLEntity entity = new CaseTypeACLEntity();
-        setAuthorisationData(entity, accessProfile, canCreate, canRead, canUpdate, canDelete);
+        setAuthorisationData(entity, userRole, canCreate, canRead, canUpdate, canDelete);
         return entity;
     }
 
-    private CaseFieldACLEntity createCaseFieldAccessProfileEntity(final AccessProfileEntity accessProfile,
-                                                                  final Boolean canCreate,
-                                                                  final Boolean canRead,
-                                                                  final Boolean canUpdate,
-                                                                  final Boolean canDelete) {
+    private CaseFieldACLEntity createCaseFieldUserRoleEntity(final UserRoleEntity userRole,
+                                                             final Boolean canCreate,
+                                                             final Boolean canRead,
+                                                             final Boolean canUpdate,
+                                                             final Boolean canDelete) {
         final CaseFieldACLEntity entity = new CaseFieldACLEntity();
-        setAuthorisationData(entity, accessProfile, canCreate, canRead, canUpdate, canDelete);
+        setAuthorisationData(entity, userRole, canCreate, canRead, canUpdate, canDelete);
         return entity;
     }
 
-    private EventACLEntity createEventAccessProfileEntity(final AccessProfileEntity accessProfile,
-                                                          final Boolean canCreate,
-                                                          final Boolean canRead,
-                                                          final Boolean canUpdate,
-                                                          final Boolean canDelete) {
+    private EventACLEntity createEventUserRoleEntity(final UserRoleEntity role,
+                                                     final Boolean canCreate,
+                                                     final Boolean canRead,
+                                                     final Boolean canUpdate,
+                                                     final Boolean canDelete) {
         EventACLEntity e = new EventACLEntity();
-        e.setAccessProfile(accessProfile);
+        e.setUserRole(role);
         e.setCreate(canCreate);
         e.setRead(canRead);
         e.setUpdate(canUpdate);
@@ -365,13 +361,13 @@ public class CaseTypeObjectGraphTest {
         return e;
     }
 
-    private StateACLEntity createStateAccessProfileEntity(final AccessProfileEntity accessProfile,
-                                                          final Boolean canCreate,
-                                                          final Boolean canRead,
-                                                          final Boolean canUpdate,
-                                                          final Boolean canDelete) {
+    private StateACLEntity createStateUserRoleEntity(final UserRoleEntity userRole,
+                                                     final Boolean canCreate,
+                                                     final Boolean canRead,
+                                                     final Boolean canUpdate,
+                                                     final Boolean canDelete) {
         final StateACLEntity entity = new StateACLEntity();
-        setAuthorisationData(entity, accessProfile, canCreate, canRead, canUpdate, canDelete);
+        setAuthorisationData(entity, userRole, canCreate, canRead, canUpdate, canDelete);
         return entity;
     }
 

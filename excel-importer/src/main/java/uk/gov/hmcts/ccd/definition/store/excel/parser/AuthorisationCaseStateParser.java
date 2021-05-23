@@ -18,9 +18,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ACCESS_PROFILE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.STATE_ID;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_STATE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
 
@@ -56,7 +56,7 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
         if (null == dataItems) {
             LOG.warn("No row were defined for case state '{}' in AuthorisationCaseState tab", stateReference);
         } else {
-            LOG.debug("Parsing access profiles for case state {}: {} AuthorisationCaseSate detected",
+            LOG.debug("Parsing user roles for case state {}: {} AuthorisationCaseSate detected",
                 stateReference, dataItems.size());
             final Map<String, List<DefinitionDataItem>> collect = dataItems
                 .stream().collect(groupingBy(d -> d.getString(STATE_ID)));
@@ -67,16 +67,15 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
                 for (DefinitionDataItem definition : collect.get(stateReference)) {
                     StateACLEntity entity = new StateACLEntity();
 
-                    parseAccessProfile(entity, definition, parseContext);
+                    parseUserRole(entity, definition, parseContext);
                     parseCrud(entity, definition);
                     parseResults.add(entity);
                     entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
 
-                    LOG.info(
-                        "Parsing access profile for case type '{}', state '{}', access profile '{}', crud '{}': OK",
+                    LOG.info("Parsing user role for case type '{}', state '{}', user role '{}', crud '{}': OK",
                         caseTypeReference,
                         stateReference,
-                        definition.getString(ACCESS_PROFILE), definition.getString(CRUD));
+                        definition.getString(USER_ROLE), definition.getString(CRUD));
                 }
             }
         }

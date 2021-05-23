@@ -17,8 +17,8 @@ public class EventEntityACLValidatorImpl implements EventEntityValidator {
 
         for (EventACLEntity entity : event.getEventACLEntities()) {
 
-            if (null == entity.getAccessProfile()) {
-                validationResult.addError(new EventEntityInvalidAccessProfileValidationError(entity,
+            if (null == entity.getUserRole()) {
+                validationResult.addError(new EventEntityInvalidUserRoleValidationError(entity,
                     new AuthorisationEventValidationContext(event, eventEntityValidationContext)));
             }
         }

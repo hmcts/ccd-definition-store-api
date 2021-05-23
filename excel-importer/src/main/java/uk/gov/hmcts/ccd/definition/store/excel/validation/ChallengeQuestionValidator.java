@@ -17,11 +17,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportE
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -142,7 +142,7 @@ public class ChallengeQuestionValidator {
             //validate the roles.
             if (answersField.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
                 final String role = answersField.split(ANSWER_FIELD_ROLE_SEPARATOR)[1];
-                final Optional<AccessProfileEntity> result = this.parseContext.getAccessProfile(
+                final Optional<UserRoleEntity> result = this.parseContext.getRole(
                     caseTypeEntity.getReference(),
                     role);
                 if (!result.isPresent()) {

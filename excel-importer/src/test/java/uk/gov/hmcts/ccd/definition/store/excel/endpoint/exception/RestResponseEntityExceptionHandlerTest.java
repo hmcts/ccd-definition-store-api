@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -41,17 +41,16 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleMissingAccessProfilesException() {
-        Set<String> accessProfiles = new HashSet<>();
-        accessProfiles.add("access_profile_1");
+    public void handleMissingUserRolesException() throws Exception {
+        Set<String> userRoles = new HashSet<>();
+        userRoles.add("user_role_1");
         List<ValidationError> validationErrors = new ArrayList<>();
-        final MissingAccessProfilesException exception
-                = new MissingAccessProfilesException(accessProfiles, validationErrors);
+        final MissingUserRolesException exception = new MissingUserRolesException(userRoles, validationErrors);
 
         final ResponseEntity<Object> response = exceptionHandler
-            .handleAccessProfilesMissing(exception, mock(WebRequest.class));
+            .handleUserRolesMissing(exception, mock(WebRequest.class));
 
-        assertThat(response.getBody().toString(), containsString("Missing AccessProfiles."));
+        assertThat(response.getBody().toString(), containsString("Missing UserRoles."));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 

@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,15 +10,15 @@ public class UserRoleModelMapper {
         // blank line intended
     }
 
-    public static AccessProfileEntity toEntity(@NotNull UserRole model) {
-        final AccessProfileEntity entity = new AccessProfileEntity();
+    public static UserRoleEntity toEntity(@NotNull UserRole model) {
+        final UserRoleEntity entity = new UserRoleEntity();
         entity.setReference(model.getRole());
         entity.setName(model.getRole());
         entity.setSecurityClassification(model.getSecurityClassification());
         return entity;
     }
 
-    public static UserRole toModel(@NotNull AccessProfileEntity entity) {
+    public static UserRole toModel(@NotNull UserRoleEntity entity) {
         final UserRole model = new UserRole();
         model.setCreatedAt(entity.getCreatedAt().toString());
         model.setId(entity.getId());

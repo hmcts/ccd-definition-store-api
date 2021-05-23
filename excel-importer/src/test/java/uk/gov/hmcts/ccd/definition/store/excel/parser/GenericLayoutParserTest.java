@@ -13,10 +13,10 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,8 +39,8 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK
 @DisplayName("Generic Layout Parser Test")
 public class GenericLayoutParserTest {
     private static final String INVALID_CASE_TYPE_ID = "Invalid Case Type";
-    private static final String ACCESS_PROFILE_1 = "AccessProfile1";
-    private static final String INVALID_ACCESS_PROFILE = "Invalid Access Profile";
+    private static final String ROLE1 = "Role1";
+    private static final String INVALID_USER_ROLE = "Invalid User Role";
     private static final String CASE_TYPE_ID = "Valid Case Type";
     private static final String CASE_TYPE_ID2 = "Valid Case Type II";
     private static final String CASE_FIELD_ID_1 = "Field 1";
@@ -116,8 +116,8 @@ public class GenericLayoutParserTest {
     }
 
     @Test
-    @DisplayName("Unknown access profiles should generate error")
-    public void shouldFailForInvalidAccessProfile() {
+    @DisplayName("Unknown user roles should generate error")
+    public void shouldFailForInvalidUserRole() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
@@ -128,18 +128,17 @@ public class GenericLayoutParserTest {
         item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
         item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
-        item2.addAttribute(ColumnName.ACCESS_PROFILE, INVALID_ACCESS_PROFILE);
+        item2.addAttribute(ColumnName.USER_ROLE, INVALID_USER_ROLE);
         sheet.addDataItem(item2);
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
-        assertEquals(String.format("- Unknown access profile '%s' in worksheet '%s' for caseField '%s'",
-            INVALID_ACCESS_PROFILE, item2.getSheetName(), item2.getString(ColumnName.CASE_FIELD_ID)),
-            thrown.getMessage());
+        assertEquals(String.format("- Unknown idam role '%s' in worksheet '%s' for caseField '%s'",
+            INVALID_USER_ROLE, item2.getSheetName(), item2.getString(ColumnName.CASE_FIELD_ID)), thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Duplicate access profiles should generate error")
-    public void shouldFailForDuplicateAccessProfile() {
+    @DisplayName("Duplicate user roles should generate error")
+    public void shouldFailForDuplicateUserRole() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
@@ -150,24 +149,24 @@ public class GenericLayoutParserTest {
         item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
         item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
-        item2.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item2);
         final DefinitionDataItem item3 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item3.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
         item3.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item3.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
-        item3.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item3.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item3);
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
-        accessProfileEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
+        UserRoleEntity userRoleEntity = new UserRoleEntity();
+        userRoleEntity.setReference(ROLE1);
+        context.registerUserRoles(Arrays.asList(userRoleEntity));
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        context.registerUserRoles(Arrays.asList(new UserRoleEntity()));
     }
 
     @Test
@@ -193,18 +192,18 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item3);
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
-        accessProfileEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
+        UserRoleEntity userRoleEntity = new UserRoleEntity();
+        userRoleEntity.setReference(ROLE1);
+        context.registerUserRoles(Arrays.asList(userRoleEntity));
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        context.registerUserRoles(Arrays.asList(new UserRoleEntity()));
     }
 
     @Test
-    @DisplayName("Duplicate access profile and list element code definitions should generate error")
+    @DisplayName("Duplicate user role and list element code definitions should generate error")
     public void shouldFailForDuplicateDefinitionItems() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
@@ -217,30 +216,30 @@ public class GenericLayoutParserTest {
         item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item2.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
-        item2.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item2);
         final DefinitionDataItem item3 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item3.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID2);
         item3.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item3.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item3.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
-        item3.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item3.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item3);
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
-        accessProfileEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
+        UserRoleEntity userRoleEntity = new UserRoleEntity();
+        userRoleEntity.setReference(ROLE1);
+        context.registerUserRoles(Arrays.asList(userRoleEntity));
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        context.registerUserRoles(Arrays.asList(new UserRoleEntity()));
     }
 
     @Test
-    @DisplayName("Duplicate definitions without access profile and list element code should generate error")
-    public void shouldFailForDuplicateDefinitionItemsWithoutAccessProfileAndListElementCodes() {
+    @DisplayName("Duplicate definitions without user role and list element code should generate error")
+    public void shouldFailForDuplicateDefinitionItemsWithoutRoleAndListElementCodes() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
@@ -255,14 +254,14 @@ public class GenericLayoutParserTest {
         sheet.addDataItem(item3);
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
-        accessProfileEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
+        UserRoleEntity userRoleEntity = new UserRoleEntity();
+        userRoleEntity.setReference(ROLE1);
+        context.registerUserRoles(Arrays.asList(userRoleEntity));
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        context.registerUserRoles(Arrays.asList(new UserRoleEntity()));
     }
 
     @Test
@@ -309,22 +308,22 @@ public class GenericLayoutParserTest {
     }
 
     @Test
-    @DisplayName("duplicate sort order priority with in the same access profile should generate error")
-    public void shouldFailForDuplicateSortOrderPriorityWithInAccessProfile() {
+    @DisplayName("duplicate sort order priority with in the same user role should generate error")
+    public void shouldFailForDuplicateSortOrderPriorityWithInUserRole() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
         item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
         item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
         item.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
-        item.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item);
         final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
         item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item2.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
-        item2.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item2);
         addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
@@ -334,8 +333,8 @@ public class GenericLayoutParserTest {
     }
 
     @Test
-    @DisplayName("duplicate sort order priority per access profile should generate error")
-    public void shouldFailForDuplicateSortOrderPriorityPerAccessProfile() {
+    @DisplayName("duplicate sort order priority per user role should generate error")
+    public void shouldFailForDuplicateSortOrderPriorityPerUserRole() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
@@ -348,7 +347,7 @@ public class GenericLayoutParserTest {
         item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item2.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
-        item2.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item2);
         addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
@@ -380,21 +379,21 @@ public class GenericLayoutParserTest {
     }
 
     @Test
-    @DisplayName("Missing sort order priority for the same access profile should generate error")
-    public void shouldFailForGapsInSortOrderPriorityWithInAccessProfile() {
+    @DisplayName("Missing sort order priority for the same user role should generate error")
+    public void shouldFailForGapsInSortOrderPriorityWithInUserRole() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
         item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_1);
         item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
-        item.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item);
         final DefinitionDataItem item2 = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
         item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item2.addAttribute(ColumnName.RESULTS_ORDERING, "2:ASC");
-        item2.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item2);
         addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
@@ -638,8 +637,9 @@ public class GenericLayoutParserTest {
     }
 
     @Test
-    @DisplayName("duplicate sort order priority per access profile should generate error")
-    void shouldFailForDuplicateSortOrderPriorityPerAccessProfileParseAllSearchCases() {
+    @DisplayName("duplicate sort order priority per user role should generate error")
+
+    void shouldFailForDuplicateSortOrderPriorityPerUserRoleParseAllsearchCases() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
@@ -652,7 +652,7 @@ public class GenericLayoutParserTest {
         item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item2.addAttribute(ColumnName.RESULTS_ORDERING, "1:ASC");
-        item2.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet.addDataItem(item2);
         addCaseType2Field(sheet); // CASE_TYPE_ID2
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
@@ -684,7 +684,7 @@ public class GenericLayoutParserTest {
     }
 
     @Test
-    @DisplayName("Duplicate access profile and list element code definitions should generate error")
+    @DisplayName("Duplicate user role and list element code definitions should generate error")
     void shouldFailForDuplicateDefinitionItemsForSearchCases() {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
@@ -692,7 +692,7 @@ public class GenericLayoutParserTest {
         item.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
-        item.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item.addAttribute(ColumnName.USER_ROLE, ROLE1);
         item.addAttribute(ColumnName.USE_CASE, "WORKBASKET");
         sheet.addDataItem(item);
         final DefinitionDataItem item2 = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
@@ -700,7 +700,7 @@ public class GenericLayoutParserTest {
         item2.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item2.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item2.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
-        item2.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item2.addAttribute(ColumnName.USER_ROLE, ROLE1);
         item2.addAttribute(ColumnName.USE_CASE, "ORGCASES");
         sheet.addDataItem(item2);
         final DefinitionDataItem item3 = new DefinitionDataItem(SEARCH_CASES_RESULT_FIELDS.getName());
@@ -708,7 +708,7 @@ public class GenericLayoutParserTest {
         item3.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item3.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item3.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
-        item3.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item3.addAttribute(ColumnName.USER_ROLE, ROLE1);
         item3.addAttribute(ColumnName.USE_CASE, "ORGCASES");
         sheet.addDataItem(item3);
 
@@ -725,20 +725,20 @@ public class GenericLayoutParserTest {
         item4.addAttribute(ColumnName.CASE_FIELD_ID, CASE_FIELD_ID_2);
         item4.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
         item4.addAttribute(ColumnName.LIST_ELEMENT_CODE, LIST_ELEMENT_CODE_1);
-        item4.addAttribute(ColumnName.ACCESS_PROFILE, ACCESS_PROFILE_1);
+        item4.addAttribute(ColumnName.USER_ROLE, ROLE1);
         sheet1.addDataItem(item4);
 
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
 
-        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
-        accessProfileEntity.setReference(ACCESS_PROFILE_1);
-        context.registerAccessProfiles(Arrays.asList(accessProfileEntity));
+        UserRoleEntity userRoleEntity = new UserRoleEntity();
+        userRoleEntity.setReference(ROLE1);
+        context.registerUserRoles(Arrays.asList(userRoleEntity));
         MapperException thrown = assertThrows(MapperException.class,
             () -> classUnderTest.parseAllForSearchCases(definitionSheets));
         assertEquals(String.format("Please make sure each row in worksheet %s is unique for case type %s",
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
-        context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        context.registerUserRoles(Arrays.asList(new UserRoleEntity()));
     }
 
     private void addCaseType2Field(DefinitionSheet sheet) {

@@ -14,14 +14,14 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEn
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidAccessProfileValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityFieldLabelValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidAccessProfileValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
@@ -37,7 +37,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.EventEntityMissingForPageTypeDisplayGroupError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeAccessProfileValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
@@ -45,7 +45,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasL
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidDefaultPostStateError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidPostStatePriorityError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidAccessProfileValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldCaseHistoryViewerCaseFieldValidator;
@@ -81,9 +81,6 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         = "Invalid CRUD value '%s' in %s tab, case type '%s', case field '%s', ";
     public static final String DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE
         = "Please make sure it is defined in the CaseRoles sheet.";
-
-    private static final String NOT_DEFINED = "not defined";
-
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     public SpreadsheetValidationErrorMessageCreator(EntityToDefinitionDataItemRegistry
@@ -226,20 +223,20 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(final CaseTypeEntityInvalidAccessProfileValidationError error) {
+    public String createErrorMessage(final CaseTypeEntityInvalidUserRoleValidationError error) {
         return newMessageIfDefinitionExists(error,
-            error.getCaseTypeAccessProfileEntity(),
+            error.getCaseTypeUserRoleEntity(),
 
-            def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.ACCESS_PROFILE)))
+            def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
                 "Invalid case role '%s' in %s tab for case type '%s'. "
                     + DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE,
-                def.getString(ColumnName.ACCESS_PROFILE),
+                def.getString(ColumnName.USER_ROLE),
                 def.getSheetName(),
                 error.getAuthorisationValidationContext().getCaseReference()) :
                 String.format(
-                    "Invalid access profile '%s' in %s tab for case type '%s'",
-                    def.getString(ColumnName.ACCESS_PROFILE),
+                    "Invalid idam role '%s' in %s tab for case type '%s'",
+                    def.getString(ColumnName.USER_ROLE),
                     def.getSheetName(),
                     error.getAuthorisationValidationContext().getCaseReference())
         );
@@ -248,13 +245,13 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(final CaseTypeEntityInvalidCrudValidationError error) {
         return newMessageIfDefinitionExists(error,
-            error.getCaseTypeAccessProfileEntity(),
+            error.getCaseTypeUserRoleEntity(),
             def -> String.format(
-                "Invalid CRUD value '%s' in %s tab for case type '%s', access profile '%s'",
+                "Invalid CRUD value '%s' in %s tab for case type '%s', user role '%s'",
                 def.getString(ColumnName.CRUD),
                 def.getSheetName(),
                 error.getAuthorisationValidationContext().getCaseReference(),
-                def.getString(ColumnName.ACCESS_PROFILE)));
+                def.getString(ColumnName.USER_ROLE)));
     }
 
     @Override
@@ -263,12 +260,12 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             error.getCaseFieldACLEntity(),
             def -> String.format(
                 INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
-                    + "access profile '%s'",
+                    + "user role '%s'",
                 defaultString(def.getString(ColumnName.CRUD)),
                 def.getSheetName(),
                 def.getString(ColumnName.CASE_TYPE_ID),
                 def.getString(ColumnName.CASE_FIELD_ID),
-                defaultString(def.getString(ColumnName.ACCESS_PROFILE))));
+                defaultString(def.getString(ColumnName.USER_ROLE))));
     }
 
     @Override
@@ -277,13 +274,13 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             error.getComplexFieldACLEntity(),
             def -> String.format(
                 INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
-                    + "list element code '%s', access profile '%s'",
+                    + "list element code '%s', user role '%s'",
                 defaultString(def.getString(ColumnName.CRUD)),
                 def.getSheetName(),
                 def.getString(ColumnName.CASE_TYPE_ID),
                 def.getString(ColumnName.CASE_FIELD_ID),
                 def.getString(ColumnName.LIST_ELEMENT_CODE),
-                defaultString(def.getString(ColumnName.ACCESS_PROFILE))));
+                defaultString(def.getString(ColumnName.USER_ROLE))));
     }
 
     @Override
@@ -292,31 +289,31 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             error.getComplexFieldACLEntity(),
             def -> String.format(
                 INVALID_CRUD_VALUE_V_IN_TAB_T_CASE_TYPE_C_CASE_FIELD_F
-                    + "list element code '%s', access profile '%s'. Detail: %s",
+                    + "list element code '%s', user role '%s'. Detail: %s",
                 defaultString(def.getString(ColumnName.CRUD)),
                 def.getSheetName(),
                 def.getString(ColumnName.CASE_TYPE_ID),
                 def.getString(ColumnName.CASE_FIELD_ID),
                 def.getString(ColumnName.LIST_ELEMENT_CODE),
-                defaultString(def.getString(ColumnName.ACCESS_PROFILE)),
+                defaultString(def.getString(ColumnName.USER_ROLE)),
                 error.getDefaultMessage()));
     }
 
     @Override
-    public String createErrorMessage(final CaseFieldEntityInvalidAccessProfileValidationError error) {
+    public String createErrorMessage(final CaseFieldEntityInvalidUserRoleValidationError error) {
         return newMessageIfDefinitionExists(error,
             error.getCaseFieldACLEntity(),
-            def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.ACCESS_PROFILE)))
+            def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
                 "Invalid case role '%s' in %s tab, case type '%s', case field '%s'. "
                     + DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE,
-                defaultString(def.getString(ColumnName.ACCESS_PROFILE)),
+                defaultString(def.getString(ColumnName.USER_ROLE)),
                 def.getSheetName(),
                 def.getString(ColumnName.CASE_TYPE_ID),
                 def.getString(ColumnName.CASE_FIELD_ID)) :
                 String.format(
-                    "Invalid access profile '%s' in %s tab, case type '%s', case field '%s', crud '%s'",
-                    defaultString(def.getString(ColumnName.ACCESS_PROFILE)),
+                    "Invalid idam role '%s' in %s tab, case type '%s', case field '%s', crud '%s'",
+                    defaultString(def.getString(ColumnName.USER_ROLE)),
                     def.getSheetName(),
                     def.getString(ColumnName.CASE_TYPE_ID),
                     def.getString(ColumnName.CASE_FIELD_ID),
@@ -328,29 +325,30 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error,
             error.getEventACLEntity(),
             def -> String.format(
-                "Invalid CRUD value '%s' in %s tab, case type '%s', event '%s', access profile '%s'",
+                "Invalid CRUD value '%s' in %s tab, case type '%s', event '%s', user "
+                    + "" + "" + "role '%s'",
                 defaultString(def.getString(ColumnName.CRUD)),
                 def.getSheetName(),
                 error.getAuthorisationEventValidationContext().getCaseReference(),
                 error.getAuthorisationEventValidationContext().getEventReference(),
-                defaultString(def.getString(ColumnName.ACCESS_PROFILE))));
+                defaultString(def.getString(ColumnName.USER_ROLE))));
     }
 
     @Override
-    public String createErrorMessage(final EventEntityInvalidAccessProfileValidationError error) {
+    public String createErrorMessage(final EventEntityInvalidUserRoleValidationError error) {
         return newMessageIfDefinitionExists(error,
             error.getEventACLEntity(),
-            def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.ACCESS_PROFILE)))
+            def -> CaseRoleServiceImpl.isCaseRole(defaultString(def.getString(ColumnName.USER_ROLE)))
                 ? String.format(
                 "Invalid case role '%s' in %s tab, case type '%s', event '%s'. "
                     + DEFINED_IN_CASE_ROLES_SHEET_VERIFICATION_MESSAGE,
-                defaultString(def.getString(ColumnName.ACCESS_PROFILE)),
+                defaultString(def.getString(ColumnName.USER_ROLE)),
                 def.getSheetName(),
                 error.getAuthorisationEventValidationContext().getCaseReference(),
                 error.getAuthorisationEventValidationContext().getEventReference()) :
                 String.format(
-                    "Invalid access profile '%s' in %s tab, case type '%s', event '%s', crud '%s'",
-                    defaultString(def.getString(ColumnName.ACCESS_PROFILE)),
+                    "Invalid idam role '%s' in %s tab, case type '%s', event '%s', crud '%s'",
+                    defaultString(def.getString(ColumnName.USER_ROLE)),
                     def.getSheetName(),
                     error.getAuthorisationEventValidationContext().getCaseReference(),
                     error.getAuthorisationEventValidationContext().getEventReference(),
@@ -363,7 +361,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
             return String.format("Event '%s' is invalid create event as Postcondition is %s in %s tab",
                 error.getEventEntity().getReference(),
-                StringUtils.isEmpty(postConditionValue) ? NOT_DEFINED : postConditionValue,
+                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
                 def.getSheetName());
         });
     }
@@ -434,8 +432,8 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     @Override
     public String createErrorMessage(EventEntityMissingForPageTypeDisplayGroupError eventMissingError) {
         return String.format("Event is missing for displayGroup '%s' and with label '%s'",
-            eventMissingError.getCaseTypeAccessProfileEntity().getReference(),
-            eventMissingError.getCaseTypeAccessProfileEntity().getLabel());
+            eventMissingError.getCaseTypeUserRoleEntity().getReference(),
+            eventMissingError.getCaseTypeUserRoleEntity().getLabel());
     }
 
     @Override
@@ -618,7 +616,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return newMessageIfDefinitionExists(error, error.getEventEntity(), def -> {
             String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
             return String.format("Post state condition %s has duplicate priorities for event '%s' in %s tab",
-                StringUtils.isEmpty(postConditionValue) ? NOT_DEFINED : postConditionValue,
+                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
                 error.getEventEntity().getReference(),
                 def.getSheetName());
         });
@@ -630,7 +628,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
             String postConditionValue = def.getString(ColumnName.POST_CONDITION_STATE);
             return String.format("Post state condition %s has to include "
                     + "non conditional post state for event '%s' in %s tab",
-                StringUtils.isEmpty(postConditionValue) ? NOT_DEFINED : postConditionValue,
+                StringUtils.isEmpty(postConditionValue) ? "not defined" : postConditionValue,
                 error.getEventEntity().getReference(),
                 def.getSheetName());
         });
@@ -662,13 +660,12 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
     }
 
     @Override
-    public String createErrorMessage(EventEntityCaseTypeAccessProfileValidationError
-                                         eventEntityCaseTypeAccessProfileValidationError) {
-        return newMessageIfDefinitionExists(eventEntityCaseTypeAccessProfileValidationError,
-            eventEntityCaseTypeAccessProfileValidationError.getEventACLEntity(),
-            def -> String.format("%s in worksheet '%s'",
-                    eventEntityCaseTypeAccessProfileValidationError.getDefaultMessage(),
-                    def.getSheetName()));
+    public String createErrorMessage(EventEntityCaseTypeUserRoleValidationError
+                                         eventEntityCaseTypeUserRoleValidationError) {
+        return newMessageIfDefinitionExists(eventEntityCaseTypeUserRoleValidationError,
+            eventEntityCaseTypeUserRoleValidationError.getEventACLEntity(),
+            def -> String.format("%s in worksheet '%s'", eventEntityCaseTypeUserRoleValidationError.getDefaultMessage(),
+                def.getSheetName()));
     }
 
     @Override
@@ -685,7 +682,7 @@ public class SpreadsheetValidationErrorMessageCreator implements ValidationError
         return String.format(message,
             showConditionField,
             eventReference,
-            StringUtils.isEmpty(condition) ? NOT_DEFINED : condition,
+            StringUtils.isEmpty(condition) ? "not defined" : condition,
             sheetName);
     }
 

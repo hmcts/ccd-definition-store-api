@@ -18,12 +18,11 @@ import uk.gov.hmcts.ccd.definitionstore.tests.helper.ImportDefinitonDataSetup;
 
 class ImportDefinitionTest extends BaseTest {
 
-    private static final String IMPORT_URL = "/import";
-    private static final String SUCCESS_RESPONSE_BODY = "Case Definition data successfully imported";
-
     protected ImportDefinitionTest(AATHelper aat) {
         super(aat);
     }
+
+    private Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
 
     @Disabled("The response code should be 400 instead of 500. Code needs to be fixed.")
     @Test
@@ -38,7 +37,7 @@ class ImportDefinitionTest extends BaseTest {
             .statusCode(400)
             .response()
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
         assert (response.getBody().jsonPath().get("message").toString()
             .contains("At least one case field must be defined for case type"));
     }
@@ -56,7 +55,7 @@ class ImportDefinitionTest extends BaseTest {
             .expect()
             .statusCode(422)
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
 
         assert (response.getBody().prettyPrint()
             .contains("Case Type with name 'Demo case' must have a Security Classification defined"));
@@ -73,7 +72,7 @@ class ImportDefinitionTest extends BaseTest {
             .expect()
             .statusCode(422)
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
 
         assert (response.getBody().prettyPrint()
             .contains("Case Type with name 'Demo case' must have a Security Classification defined"));
@@ -91,7 +90,7 @@ class ImportDefinitionTest extends BaseTest {
             .expect()
             .statusCode(400)
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
 
         assert (response.getBody().prettyPrint()
             .contains("At least one case field must be defined for case type"));
@@ -109,7 +108,7 @@ class ImportDefinitionTest extends BaseTest {
             .expect()
             .statusCode(400)
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
     }
 
     @Test
@@ -123,7 +122,7 @@ class ImportDefinitionTest extends BaseTest {
             .expect()
             .statusCode(400)
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
     }
 
     @Test
@@ -137,7 +136,7 @@ class ImportDefinitionTest extends BaseTest {
             .expect()
             .statusCode(422)
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
     }
 
     @Test
@@ -151,7 +150,7 @@ class ImportDefinitionTest extends BaseTest {
             .expect()
             .statusCode(400)
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
     }
 
     @Disabled("This test case is breaking the master build. Marking it ignored to unblock the other developers."
@@ -160,12 +159,12 @@ class ImportDefinitionTest extends BaseTest {
     @DisplayName("Should return the correct security classification for each case type.")
     void shouldReturnCorrectSecurityClassificationForCaseType() {
         long matchingACLRecords = 0;
-
-        Set<String> caseTypeACLKeySet = new HashSet<>();
-        caseTypeACLKeySet.add("id");
-        caseTypeACLKeySet.add("name");
-        caseTypeACLKeySet.add("description");
-        caseTypeACLKeySet.add("security_classification");
+        Set<String> caseTypeACLKeySet = new HashSet<String>() {{
+                add("id");
+                add("name");
+                add("description");
+                add("security_classification");
+            }};
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
         Response response = asUser.get()
@@ -174,9 +173,10 @@ class ImportDefinitionTest extends BaseTest {
             .expect()
             .statusCode(201)
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
 
-        assert (response.getBody().prettyPrint().equals(SUCCESS_RESPONSE_BODY));
+        assert (response.getBody().prettyPrint()
+            .equals("Case Definition data successfully imported"));
 
         ArrayList<Map<String, String>> caseTypeACL = asUser
             .get()
@@ -202,7 +202,7 @@ class ImportDefinitionTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Should import definition with valid event enabling condition.")
+    @DisplayName("Should return import definition with valid event enabling condition.")
     void shouldImportDefinitionWithValidEventEnablingCondition() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
@@ -212,27 +212,9 @@ class ImportDefinitionTest extends BaseTest {
             .expect()
             .statusCode(201)
             .when()
-            .post(IMPORT_URL);
+            .post("/import");
 
-        assert (response.getBody().prettyPrint().equals(SUCCESS_RESPONSE_BODY));
-    }
-
-    @Test
-    @DisplayName("Should import definition with AccessProfile column rename.")
-    void shouldImportDefinitionWithAccessProfileColumnRename() {
-
-        // NB: Older test definition files do not contain the rename but will still pass as they
-        //     use the legacy column name as a permitted alias
-
-        Supplier<RequestSpecification> asUser = asAutoTestImporter();
-        Response response = asUser.get()
-            .given()
-            .multiPart(new File("src/resource/CCD_CNP_27_With_AccessProfile_Rename.xlsx"))
-            .expect()
-            .statusCode(201)
-            .when()
-            .post(IMPORT_URL);
-
-        assert (response.getBody().prettyPrint().equals(SUCCESS_RESPONSE_BODY));
+        assert (response.getBody().prettyPrint()
+            .equals("Case Definition data successfully imported"));
     }
 }

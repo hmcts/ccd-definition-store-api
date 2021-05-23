@@ -52,7 +52,7 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
             if (null == dataItems) {
                 LOG.warn("No data is found for case type '{} in AuthorisationCaseFields tab", caseTypeReference);
             } else {
-                LOG.debug("Parsing access profiles for case type '{}': '{}' AuthorisationCaseFields detected",
+                LOG.debug("Parsing user roles for case type '{}': '{}' AuthorisationCaseFields detected",
                     caseTypeReference, dataItems.size());
 
                 if (null == collect.get(caseFieldReference)) {
@@ -64,17 +64,15 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
 
                         final CaseFieldACLEntity entity = new CaseFieldACLEntity();
 
-                        parseAccessProfile(entity, definition, parseContext);
+                        parseUserRole(entity, definition, parseContext);
                         parseCrud(entity, definition);
                         parseResults.add(entity);
                         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
 
-                        LOG.info(
-                            "Parsing access profile for case type '{}', case field '{}', access profile '{}', "
-                                + "crud '{}': OK",
+                        LOG.info("Parsing user role for case type '{}', case field '{}', user role '{}', crud '{}': OK",
                             caseTypeReference,
                             definition.getString(ColumnName.CASE_FIELD_ID),
-                            definition.getString(ColumnName.ACCESS_PROFILE),
+                            definition.getString(ColumnName.USER_ROLE),
                             definition.getString(ColumnName.CRUD));
                     }
                 }

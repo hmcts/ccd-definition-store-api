@@ -60,20 +60,9 @@ public class SpreadSheetImportTest extends BaseTest {
         "/CCD_TestDefinition_Invalid_PostState_NoDefault.xlsx";
     public static final String EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES =
         "/CCD_TestDefinition_Invalid_PostState_DuplicatePriorities.xlsx";
-    public static final String EXCEL_FILE_WITH_ACCESS_PROFILE_ALIAS =
-        "/CCD_TestDefinition_withAccessProfileColumnAlias.xlsx";
-
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
     private static final String RESPONSE_JSON_V45 = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
-
-    private static final String EXPECTED_USER_PROFILES = "[{\"id\":\"user1@hmcts.net\","
-        + "\"work_basket_default_jurisdiction\":\"TEST\","
-        + "\"work_basket_default_case_type\":\"TestAddressBookCase\","
-        + "\"work_basket_default_state\":\"CaseCreated\"}," + //
-        "{\"id\":\"UseR2@hmcts.net\"," + "\"work_basket_default_jurisdiction\":\"TEST\","
-        + "\"work_basket_default_case_type\":\"TestAddressBookCase\","
-        + "\"work_basket_default_state\":\"CaseEnteredIntoLegacy\"}]";
 
     private Map<Object, Object> caseTypesId;
     private Map<Object, Object> fieldTypesId;
@@ -98,41 +87,15 @@ public class SpreadSheetImportTest extends BaseTest {
             assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         }
 
+        final String expectedUserProfiles = "[{\"id\":\"user1@hmcts.net\","
+            + "\"work_basket_default_jurisdiction\":\"TEST\","
+            + "\"work_basket_default_case_type\":\"TestAddressBookCase\","
+            + "\"work_basket_default_state\":\"CaseCreated\"}," + //
+            "{\"id\":\"UseR2@hmcts.net\"," + "\"work_basket_default_jurisdiction\":\"TEST\","
+            + "\"work_basket_default_case_type\":\"TestAddressBookCase\","
+            + "\"work_basket_default_state\":\"CaseEnteredIntoLegacy\"}]";
         WireMock.verify(1,
-            putRequestedFor(urlEqualTo("/user-profile/users")).withRequestBody(equalTo(EXPECTED_USER_PROFILES)));
-
-        // Check the HTTP GET request for the imported Case Type returns the correct response.
-        MvcResult getCaseTypesMvcResult = mockMvc.perform(MockMvcRequestBuilders.get(CASE_TYPE_DEF_URL)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
-        assertBody(getCaseTypesMvcResult.getResponse().getContentAsString());
-
-        assertDatabaseIsCorrect();
-    }
-
-    /**
-     * API test for successful import of a valid Case Definition spreadsheet (which uses legacy AccessProfile alias).
-     *
-     * @throws Exception On error running test
-     */
-    @Test
-    @Transactional
-    public void importValidDefinitionFileUsingLegacyAccessProfileColumnAlias() throws Exception {
-
-        try (final InputStream inputStream =
-                 new ClassPathResource(EXCEL_FILE_WITH_ACCESS_PROFILE_ALIAS, getClass()).getInputStream()) {
-            MockMultipartFile file = new MockMultipartFile("file", inputStream);
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                .file(file)
-                .header(AUTHORIZATION, "Bearer testUser")) //
-                .andReturn();
-
-            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
-        }
-
-        WireMock.verify(1,
-            putRequestedFor(urlEqualTo("/user-profile/users")).withRequestBody(equalTo(EXPECTED_USER_PROFILES)));
+            putRequestedFor(urlEqualTo("/user-profile/users")).withRequestBody(equalTo(expectedUserProfiles)));
 
         // Check the HTTP GET request for the imported Case Type returns the correct response.
         MvcResult getCaseTypesMvcResult = mockMvc.perform(MockMvcRequestBuilders.get(CASE_TYPE_DEF_URL)

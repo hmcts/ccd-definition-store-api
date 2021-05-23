@@ -42,7 +42,7 @@ public abstract class Authorisation implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
-    private AccessProfileEntity accessProfile;
+    private UserRoleEntity userRole;
 
     @Column(name = "live_from")
     private LocalDate liveFrom;
@@ -61,10 +61,10 @@ public abstract class Authorisation implements Serializable {
     private String crudAsString;
 
     /**
-     * Used for holding accessProfileId, so that we can use this in logs if Access Profile is missing.
+     * Used for holding userRoleId, so that we can use this in logs if User Role is missing.
      */
     @Transient
-    private String accessProfileId;
+    private String userRoleId;
 
     public Integer getId() {
         return id;
@@ -102,12 +102,12 @@ public abstract class Authorisation implements Serializable {
         this.delete = delete;
     }
 
-    public AccessProfileEntity getAccessProfile() {
-        return accessProfile;
+    public UserRoleEntity getUserRole() {
+        return userRole;
     }
 
-    public void setAccessProfile(@NotNull final AccessProfileEntity accessProfile) {
-        this.accessProfile = accessProfile;
+    public void setUserRole(@NotNull final UserRoleEntity userRole) {
+        this.userRole = userRole;
     }
 
     public LocalDate getLiveFrom() {
@@ -138,12 +138,12 @@ public abstract class Authorisation implements Serializable {
         this.crudAsString = crudAsString;
     }
 
-    public String getAccessProfileId() {
-        return accessProfile == null ? accessProfileId : accessProfile.getReference();
+    public String getUserRoleId() {
+        return userRole == null ? userRoleId : userRole.getReference();
     }
 
-    public void setAccessProfileId(String accessProfileId) {
-        this.accessProfileId = accessProfileId;
+    public void setUserRoleId(String userRoleId) {
+        this.userRoleId = userRoleId;
     }
 
     @Transient

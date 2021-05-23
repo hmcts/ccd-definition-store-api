@@ -17,9 +17,9 @@ public class StateEntityACLValidatorImpl implements StateEntityValidator {
         final ValidationResult validationResult = new ValidationResult();
 
         for (StateACLEntity entity : stateEntity.getStateACLEntities()) {
-            if (null == entity.getAccessProfile()) {
-                String message = String.format("Invalid AccessProfile %s for case type '%s', case state '%s'",
-                    entity.getAccessProfileId(),
+            if (null == entity.getUserRole()) {
+                String message = String.format("Invalid UserRole %s for case type '%s', case state '%s'",
+                    entity.getUserRoleId(),
                     stateEntityValidationContext.getCaseReference(),
                     entity.getStateEntity().getReference());
                 validationResult.addError(new ValidationError(message, entity));

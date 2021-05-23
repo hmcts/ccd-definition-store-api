@@ -14,6 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Component;
+
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
@@ -43,8 +49,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
@@ -71,7 +77,7 @@ public class ImportServiceImpl implements ImportService {
     private final JurisdictionService jurisdictionService;
     private final CaseTypeService caseTypeService;
     private final LayoutService layoutService;
-    private final AccessProfileRepository accessProfileRepository;
+    private final UserRoleRepository userRoleRepository;
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
     private final CaseFieldRepository caseFieldRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -89,7 +95,7 @@ public class ImportServiceImpl implements ImportService {
                              JurisdictionService jurisdictionService,
                              CaseTypeService caseTypeService,
                              LayoutService layoutService,
-                             AccessProfileRepository accessProfileRepository,
+                             UserRoleRepository userRoleRepository,
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
                              ApplicationEventPublisher applicationEventPublisher,
@@ -106,7 +112,7 @@ public class ImportServiceImpl implements ImportService {
         this.jurisdictionService = jurisdictionService;
         this.caseTypeService = caseTypeService;
         this.layoutService = layoutService;
-        this.accessProfileRepository = accessProfileRepository;
+        this.userRoleRepository = userRoleRepository;
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
         this.idamProfileClient = idamProfileClient;
@@ -136,7 +142,7 @@ public class ImportServiceImpl implements ImportService {
         spreadsheetValidator.validate(definitionSheets);
 
         final ParseContext parseContext = new ParseContext();
-        parseContext.registerAccessProfiles(accessProfileRepository.findAll());
+        parseContext.registerUserRoles(userRoleRepository.findAll());
 
         /*
             1 - Jurisdiction
@@ -196,7 +202,7 @@ public class ImportServiceImpl implements ImportService {
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
         List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
-        caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingAccessProfiles()); // runs validation
+        caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingUserRoles()); // runs validation
 
         logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 

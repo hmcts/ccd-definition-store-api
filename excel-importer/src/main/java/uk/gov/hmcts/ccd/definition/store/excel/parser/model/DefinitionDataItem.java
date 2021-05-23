@@ -48,9 +48,9 @@ public class DefinitionDataItem {
         final Object
             result =
             attributes.stream()
-                .filter(attribute -> columnName.equalsColumnNameOrAlias(attribute.getKey()))
+                .filter(attribute -> attribute.getKey().equalsIgnoreCase(name))
                 .findFirst()
-                .map(Pair::getValue)
+                .map(p -> p.getValue())
                 .orElse(null);
 
         if (ColumnName.isRequired(SheetName.forName(sheetName), columnName)) {

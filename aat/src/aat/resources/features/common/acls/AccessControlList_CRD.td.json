@@ -1,8 +1,0 @@
-{
-  "_guid_" : "AccessControlList_CRD",
-  "_extends_": "AccessControlList__Base",
-
-  "create": true,
-  "read": true,
-  "delete": true
-}

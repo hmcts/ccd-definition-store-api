@@ -6,12 +6,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,19 +29,17 @@ import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.ParserTestBase.CASE_FIELD_UNDER_TEST;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.ParserTestBase.CASE_TYPE_UNDER_TEST;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ACCESS_PROFILE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.NAME;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_FIELD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 
 public class AuthorisationCaseFieldParserTest {
-
-
 
     private AuthorisationCaseFieldParser subject;
     private CaseTypeEntity caseType;
@@ -48,12 +47,8 @@ public class AuthorisationCaseFieldParserTest {
     private Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
     private final DefinitionSheet definitionSheet = new DefinitionSheet();
 
-    private static final String TEST_ACCESS_PROFILE_FOUND = "CaseWorker 1";
-    private static final String TEST_ACCESS_PROFILE_NOT_FOUND = "CaseWorker 2";
-    private static final String TEST_CASE_ROLE_FOUND = "[CLAIMANT]";
-
     @Mock
-    private AccessProfileEntity mockAccessProfileEntity;
+    private UserRoleEntity mockUserRoleEntity;
 
     private CaseRoleEntity caseRoleEntity;
 
@@ -63,8 +58,9 @@ public class AuthorisationCaseFieldParserTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
-        given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
-        context.registerAccessProfiles(Arrays.asList(mockAccessProfileEntity));
+        final String role = "CaseWorker 1";
+        given(mockUserRoleEntity.getReference()).willReturn(role);
+        context.registerUserRoles(Arrays.asList(mockUserRoleEntity));
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
         subject = new AuthorisationCaseFieldParser(context, entityToDefinitionDataItemRegistry);
@@ -76,17 +72,20 @@ public class AuthorisationCaseFieldParserTest {
         definitionSheets.put(CASE_TYPE.getName(), buildSheetForCaseType());
         definitionSheets.put(CASE_FIELD.getName(), buildSheetForCaseField());
 
+        final String caseRole = "[CLAIMANT]";
         caseRoleEntity = new CaseRoleEntity();
-        caseRoleEntity.setReference(TEST_CASE_ROLE_FOUND);
+        caseRoleEntity.setReference(caseRole);
         caseRoleEntity.setCaseType(caseType);
         context.registerCaseRoles(Arrays.asList(caseRoleEntity));
     }
 
     @Test
-    public void shouldParseEntityWithAccessProfileFound() {
+    public void shouldParseEntityWithUserRoleFound() {
+        final String role = "CaseWorker 1";
+
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
-        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
+        item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(CRUD.toString(), " CCCd  ");
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
@@ -98,7 +97,7 @@ public class AuthorisationCaseFieldParserTest {
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseFieldACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(caseFieldACLEntity.getId(), is(nullValue()));
-        assertThat(caseFieldACLEntity.getAccessProfile(), is(mockAccessProfileEntity));
+        assertThat(caseFieldACLEntity.getUserRole(), is(mockUserRoleEntity));
         assertThat(caseFieldACLEntity.getCreate(), is(true));
         assertThat(caseFieldACLEntity.getUpdate(), is(false));
         assertThat(caseFieldACLEntity.getRead(), is(false));
@@ -109,9 +108,11 @@ public class AuthorisationCaseFieldParserTest {
 
     @Test
     public void shouldParseEntityWithCaseRoleFound() {
+        final String caseRole = "[CLAIMANT]";
+
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
-        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_CASE_ROLE_FOUND);
+        item1.addAttribute(ColumnName.USER_ROLE.toString(), caseRole);
         item1.addAttribute(CRUD.toString(), " CCCd  ");
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
@@ -123,7 +124,7 @@ public class AuthorisationCaseFieldParserTest {
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseFieldACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(caseFieldACLEntity.getId(), is(nullValue()));
-        assertThat(caseFieldACLEntity.getAccessProfile(), is(caseRoleEntity));
+        assertThat(caseFieldACLEntity.getUserRole(), is(caseRoleEntity));
         assertThat(caseFieldACLEntity.getCreate(), is(true));
         assertThat(caseFieldACLEntity.getUpdate(), is(false));
         assertThat(caseFieldACLEntity.getRead(), is(false));
@@ -133,10 +134,12 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithAccessProfileNotFound() {
+    public void shouldParseEntityWithUserRoleNotFound() {
+        final String role = "CaseWorker 2";
+
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
-        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_NOT_FOUND);
+        item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(CRUD.toString(), " CCCd  ");
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
@@ -148,16 +151,18 @@ public class AuthorisationCaseFieldParserTest {
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseFieldACLEntity.getCrudAsString(), is("CCCd"));
         assertThat(caseFieldACLEntity.getId(), is(nullValue()));
-        assertThat(caseFieldACLEntity.getAccessProfile(), is(nullValue()));
+        assertThat(caseFieldACLEntity.getUserRole(), is(nullValue()));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(caseFieldACLEntity), is(Optional.of(item1)));
     }
 
     @Test
     public void shouldParseEntityWithInvalidCrud() {
+        final String role = "CaseWorker 1";
+
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
-        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
+        item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
         item1.addAttribute(CRUD.toString(), " X y  ");
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
@@ -169,16 +174,18 @@ public class AuthorisationCaseFieldParserTest {
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseFieldACLEntity.getCrudAsString(), is("X y"));
         assertThat(caseFieldACLEntity.getId(), is(nullValue()));
-        assertThat(caseFieldACLEntity.getAccessProfile(), is(mockAccessProfileEntity));
+        assertThat(caseFieldACLEntity.getUserRole(), is(mockUserRoleEntity));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(caseFieldACLEntity), is(Optional.of(item1)));
     }
 
     @Test
-    public void shouldParseEntityWithInvalidCrudAndAccessProfileNotFound() {
+    public void shouldParseEntityWithInvalidCrudAndUserNotFound() {
+        final String role = "CaseWorker 2";
+
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
-        item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_NOT_FOUND);
+        item1.addAttribute(USER_ROLE.toString(), role);
         item1.addAttribute(CRUD.toString(), " X y  ");
         item1.addAttribute(CASE_FIELD_ID.toString(), CASE_FIELD_UNDER_TEST);
 
@@ -190,7 +197,7 @@ public class AuthorisationCaseFieldParserTest {
         final CaseFieldACLEntity caseFieldACLEntity = new ArrayList<>(entities).get(0);
         assertThat(caseFieldACLEntity.getCrudAsString(), is("X y"));
         assertThat(caseFieldACLEntity.getId(), is(nullValue()));
-        assertThat(caseFieldACLEntity.getAccessProfile(), is(nullValue()));
+        assertThat(caseFieldACLEntity.getUserRole(), is(nullValue()));
 
         assertThat(entityToDefinitionDataItemRegistry.getForEntity(caseFieldACLEntity), is(Optional.of(item1)));
     }

@@ -14,18 +14,18 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.Authori
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityFieldLabelValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityNonUniqueReferenceValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceSpellingValidationError;
@@ -40,12 +40,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeAccessProfileValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidUserRoleValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityShowConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityValidationContext;
@@ -407,41 +407,38 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseTypeEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
+    public void caseTypeEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
-        final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
+        final CaseTypeACLEntity caseTypeACLEntity = caseTypeUserRoleEntity("crud");
 
-        final CaseTypeEntityInvalidAccessProfileValidationError error
-                = new CaseTypeEntityInvalidAccessProfileValidationError(
+        final CaseTypeEntityInvalidUserRoleValidationError error = new CaseTypeEntityInvalidUserRoleValidationError(
             caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_TYPE,
                     new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "access profile"))
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
             );
 
         assertEquals(
-            "Invalid access profile 'access profile' in AuthorisationCaseType tab for case type 'case type'",
+            "Invalid idam role 'user role' in AuthorisationCaseType tab for case type 'case type'",
             classUnderTest.createErrorMessage(error));
     }
 
-    @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void caseTypeEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+    public void caseTypeEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
-        final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
+        final CaseTypeACLEntity caseTypeACLEntity = caseTypeUserRoleEntity("crud");
 
-        final CaseTypeEntityInvalidAccessProfileValidationError error
-                = new CaseTypeEntityInvalidAccessProfileValidationError(
+        final CaseTypeEntityInvalidUserRoleValidationError error = new CaseTypeEntityInvalidUserRoleValidationError(
             caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_TYPE,
                     new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "[CASE_ROLE]"))
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "[CASE_ROLE]"))
             );
 
         assertEquals(
@@ -451,9 +448,9 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseTypeEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
+    public void caseTypeUserRoleEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
-        final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("Xcrud");
+        final CaseTypeACLEntity caseTypeACLEntity = caseTypeUserRoleEntity("Xcrud");
 
         final CaseTypeEntityInvalidCrudValidationError error = new CaseTypeEntityInvalidCrudValidationError(
             caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
@@ -462,20 +459,20 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_TYPE,
                     new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "access profile"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"),
                     new ImmutablePair<>(ColumnName.CRUD, "Xcrud"))
             );
 
         assertEquals(
             "Invalid CRUD value 'Xcrud' in AuthorisationCaseType tab for case type 'case type', "
-                + "access profile 'access profile'",
+                + "user role 'user role'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void caseTypeEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
+    public void caseTypeUserRoleEnttyInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
-        final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("Xcrud");
+        final CaseTypeACLEntity caseTypeACLEntity = caseTypeUserRoleEntity("Xcrud");
 
         final CaseTypeEntityInvalidCrudValidationError error = new CaseTypeEntityInvalidCrudValidationError(
             caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
@@ -486,51 +483,50 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
+    public void caseFieldEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
-        final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
+        final CaseFieldACLEntity entity = caseFieldUserRoleEntity("crud");
 
-        final CaseFieldEntityInvalidAccessProfileValidationError error
-                = new CaseFieldEntityInvalidAccessProfileValidationError(entity,
-                    new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                    new CaseFieldEntityValidationContext(caseTypeEntity)));
+        final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
+            entity,
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_FIELD,
                     new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
                     new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "X"),
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "X"),
                     new ImmutablePair<>(ColumnName.CRUD, "Y"))
             );
 
         assertEquals(
-            "Invalid access profile 'X' in AuthorisationCaseField tab, case type 'case type', "
+            "Invalid idam role 'X' in AuthorisationCaseField tab, case type 'case type', "
                 + "case field 'case field', crud 'Y'",
             classUnderTest.createErrorMessage(error));
     }
 
-    @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+    public void caseFieldEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
-        final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
+        final CaseFieldACLEntity entity = caseFieldUserRoleEntity("crud");
 
-        final CaseFieldEntityInvalidAccessProfileValidationError error
-                = new CaseFieldEntityInvalidAccessProfileValidationError(entity,
-                    new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                        new CaseFieldEntityValidationContext(caseTypeEntity)));
+        final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
+            entity,
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
                 definitionDataItem(SheetName.AUTHORISATION_CASE_FIELD,
                     new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
                     new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "[SOME_CASE_ROLE]"))
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "[SOME_CASE_ROLE]"))
             );
 
         assertEquals(
@@ -541,29 +537,29 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_defaultMessageReturned() {
+    public void caseFieldUserRoleEntityInvalidUserRole_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
-        final CaseFieldACLEntity entity = caseFieldACLEntity("crud");
-        entity.setAccessProfileId("nf_access_profile_id");
+        final CaseFieldACLEntity entity = caseFieldUserRoleEntity("crud");
+        entity.setUserRoleId("nf_user_role_id");
 
-        final CaseFieldEntityInvalidAccessProfileValidationError error
-                = new CaseFieldEntityInvalidAccessProfileValidationError(entity,
-                    new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                        new CaseFieldEntityValidationContext(caseTypeEntity)));
+        final CaseFieldEntityInvalidUserRoleValidationError error = new CaseFieldEntityInvalidUserRoleValidationError(
+            entity,
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
-            "Invalid AccessProfile nf_access_profile_id for case type 'case type', case field 'case field'",
+            "Invalid UserRole nf_user_role_id for case type 'case type', case field 'case field'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void caseFieldEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
+    public void caseFieldUserRoleEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
-        final CaseFieldACLEntity entity = caseFieldACLEntity("Xcrud");
+        final CaseFieldACLEntity entity = caseFieldUserRoleEntity("Xcrud");
 
         final CaseFieldEntityInvalidCrudValidationError error = new CaseFieldEntityInvalidCrudValidationError(
             entity,
@@ -576,21 +572,21 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                     new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
                     new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
                     new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "access profile"))
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
             );
 
         assertEquals(
             "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', "
-                + "case field 'case field', access profile 'access profile'",
+                + "case field 'case field', user role 'user role'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void caseFieldEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
+    public void caseFieldUserRoleEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
-        final CaseFieldACLEntity entity = caseFieldACLEntity("Xcrud");
+        final CaseFieldACLEntity entity = caseFieldUserRoleEntity("Xcrud");
 
         final CaseFieldEntityInvalidCrudValidationError error = new CaseFieldEntityInvalidCrudValidationError(entity,
             new AuthorisationCaseFieldValidationContext(
@@ -603,7 +599,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidComplexCrud_createErrorMessageCalled_customMessageReturned() {
+    public void caseFieldUserRoleEntityInvalidComplexCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -622,17 +618,17 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                     new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
                     new ImmutablePair<>(ColumnName.LIST_ELEMENT_CODE, "list element code"),
                     new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "access profile"))
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
             );
 
         assertEquals(
             "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', "
-                + "case field 'case field', list element code 'list element code', access profile 'access profile'",
+                + "case field 'case field', list element code 'list element code', user role 'user role'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void caseFieldEntityInvalidComplexCrud_createErrorMessageCalled_defaultMessageReturned() {
+    public void caseFieldUserRoleEntityInvalidComplexCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -669,14 +665,13 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                     new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
                     new ImmutablePair<>(ColumnName.LIST_ELEMENT_CODE, "list element code"),
                     new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "access profile"))
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
             );
 
         assertEquals(
             "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', case field "
-                + "'case field', list element code 'list element code', access profile 'access profile'. Detail: The "
-                + "access for case type 'case type', case field 'case field', list element code 'code1' is more than "
-                + "its parent",
+                + "'case field', list element code 'list element code', user role 'user role'. Detail: The access for "
+                + "case type 'case type', case field 'case field', list element code 'code1' is more than its parent",
             classUnderTest.createErrorMessage(error));
     }
 
@@ -734,7 +729,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForEventEntityCaseTypeAccessProfileValidationError() {
+    public void shouldHaveValidationMessageForEventEntityCaseTypeUserRoleValidationError() {
 
         CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference("CaseType");
@@ -746,27 +741,27 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         EventEntity eventEntity2 = new EventEntity();
         eventEntity2.addEventACL(eventACLEntity1);
         eventACLEntity1.setEventEntity(eventEntity);
-        eventACLEntity1.setAccessProfileId("caseworker-caa");
+        eventACLEntity1.setUserRoleId("caseworker-caa");
         EventACLEntity eventACLEntity2 = new EventACLEntity();
         eventEntity2.addEventACL(eventACLEntity2);
         eventACLEntity2.setEventEntity(eventEntity1);
-        eventACLEntity2.setAccessProfileId("Caseworker-caa");
+        eventACLEntity2.setUserRoleId("Caseworker-caa");
 
-        EventEntityCaseTypeAccessProfileValidationError error
-            = new EventEntityCaseTypeAccessProfileValidationError(
+        EventEntityCaseTypeUserRoleValidationError error
+            = new EventEntityCaseTypeUserRoleValidationError(
             eventACLEntity2);
 
-        assertEquals("AccessProfile 'Caseworker-caa' is defined more than once for case type 'CaseType'",
+        assertEquals("UserRole 'Caseworker-caa' is defined more than once for case type 'CaseType'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void eventEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
+    public void eventEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenIdamRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
-        final EventACLEntity entity = eventACLEntity(null, "crud");
+        final EventACLEntity entity = eventUserRoleEntity(null, "crud");
 
-        final EventEntityInvalidAccessProfileValidationError error = new EventEntityInvalidAccessProfileValidationError(
+        final EventEntityInvalidUserRoleValidationError error = new EventEntityInvalidUserRoleValidationError(
             entity,
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
@@ -776,22 +771,22 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                     new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
                     new ImmutablePair<>(ColumnName.CASE_EVENT_ID, "event"),
                     new ImmutablePair<>(ColumnName.CRUD, "x"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "ap"))
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "u"))
             );
 
         assertEquals(
-            "Invalid access profile 'ap' in AuthorisationCaseEvent tab, case type 'case type', "
+            "Invalid idam role 'u' in AuthorisationCaseEvent tab, case type 'case type', "
                 + "event 'event', crud 'x'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void eventEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+    public void eventEntityInvalidUserRole_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
-        final EventACLEntity entity = eventACLEntity(null, "crud");
+        final EventACLEntity entity = eventUserRoleEntity(null, "crud");
 
-        final EventEntityInvalidAccessProfileValidationError error = new EventEntityInvalidAccessProfileValidationError(
+        final EventEntityInvalidUserRoleValidationError error = new EventEntityInvalidUserRoleValidationError(
             entity,
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
@@ -801,7 +796,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                     new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
                     new ImmutablePair<>(ColumnName.CASE_EVENT_ID, "event"),
                     new ImmutablePair<>(ColumnName.CRUD, "x"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "[CASE_ROLE]"))
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "[CASE_ROLE]"))
             );
 
         assertEquals(
@@ -811,26 +806,26 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventEntityInvalidAccessProfile_createErrorMessageCalled_defaultMessageReturned() {
+    public void eventUserRoleEntityInvalidUserRole_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
-        final EventACLEntity entity = eventACLEntity(null, "crud");
-        entity.setAccessProfileId("nf_access_profile_id");
+        final EventACLEntity entity = eventUserRoleEntity(null, "crud");
+        entity.setUserRoleId("nf_user_role_id");
 
-        final EventEntityInvalidAccessProfileValidationError error = new EventEntityInvalidAccessProfileValidationError(
+        final EventEntityInvalidUserRoleValidationError error = new EventEntityInvalidUserRoleValidationError(
             entity,
             new AuthorisationEventValidationContext(eventEntity, new EventEntityValidationContext(caseTypeEntity)));
 
         assertEquals(
-            "Invalid AccessProfile nf_access_profile_id for case type 'case type', event 'event'",
+            "Invalid UserRole nf_user_role_id for case type 'case type', event 'event'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void eventEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
+    public void eventUserRoleEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
-        final EventACLEntity entity = eventACLEntity("access profile", "Xcrud");
+        final EventACLEntity entity = eventUserRoleEntity("user role", "Xcrud");
 
         final EventEntityInvalidCrudValidationError error = new EventEntityInvalidCrudValidationError(
             entity,
@@ -842,20 +837,20 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                     new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
                     new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"),
                     new ImmutablePair<>(ColumnName.CRUD, "Xcrud"),
-                    new ImmutablePair<>(ColumnName.ACCESS_PROFILE, "access profile"))
+                    new ImmutablePair<>(ColumnName.USER_ROLE, "user role"))
             );
 
         assertEquals(
             "Invalid CRUD value 'Xcrud' in AuthorisationCaseField tab, case type 'case type', event 'event', "
-                + "access profile 'access profile'",
+                + "user role 'user role'",
             classUnderTest.createErrorMessage(error));
     }
 
     @Test
-    public void eventEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
+    public void eventUserRoleEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
-        final EventACLEntity entity = eventACLEntity("access profile", "Xcrud");
+        final EventACLEntity entity = eventUserRoleEntity("user role", "Xcrud");
 
         final EventEntityInvalidCrudValidationError error = new EventEntityInvalidCrudValidationError(entity,
             new AuthorisationEventValidationContext(
@@ -1322,7 +1317,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_StateEntityACLValidationError_customMessageReturned() {
+    public void testCreateErrorMessage_StateUserRoleEntityValidationError_customMessageReturned() {
 
         StateACLEntity entity = new StateACLEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1336,7 +1331,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_StateEntityACLValidationError_defaultMessageReturned() {
+    public void testCreateErrorMessage_StateUserRoleEntityValidationError_defaultMessageReturned() {
         assertEquals(
             "default message",
             classUnderTest.createErrorMessage(
@@ -1456,7 +1451,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForAccessProfileValidationError() {
+    public void shouldHaveValidationMessageForUserProfileValidationError() {
         assertEquals("Invalid CaseType in workbasket user default; user: 'null', jurisdiction: 'null', "
                 + "case type: 'null', state: 'null'",
             classUnderTest.createErrorMessage(
@@ -1729,13 +1724,13 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     }
 
-    private CaseTypeACLEntity caseTypeACLEntity(final String crud) {
+    private CaseTypeACLEntity caseTypeUserRoleEntity(final String crud) {
         final CaseTypeACLEntity entity = new CaseTypeACLEntity();
         setAuthorisation(entity, crud);
         return entity;
     }
 
-    private CaseFieldACLEntity caseFieldACLEntity(final String crud) {
+    private CaseFieldACLEntity caseFieldUserRoleEntity(final String crud) {
         final CaseFieldACLEntity entity = new CaseFieldACLEntity();
         setAuthorisation(entity, crud);
         return entity;
@@ -1748,7 +1743,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         return entity;
     }
 
-    private EventACLEntity eventACLEntity(final String role, final String crud) {
+    private EventACLEntity eventUserRoleEntity(final String role, final String crud) {
         final EventACLEntity entity = new EventACLEntity();
         setAuthorisation(entity, crud);
         return entity;

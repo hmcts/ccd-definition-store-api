@@ -1,7 +1,0 @@
-{
-  "_guid_" : "AccessControlList_CU",
-  "_extends_": "AccessControlList__Base",
-
-  "create": true,
-  "update": true
-}

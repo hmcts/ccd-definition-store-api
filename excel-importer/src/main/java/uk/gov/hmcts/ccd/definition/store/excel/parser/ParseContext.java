@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.map.MultiKeyMap;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -12,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,8 +36,8 @@ public class ParseContext {
     private final Map<String, FieldTypeEntity> baseTypes = Maps.newHashMap();
     private final Map<String, FieldTypeEntity> allTypes = Maps.newHashMap();
     private final Set<CaseTypeEntity> caseTypes = Sets.newHashSet();
-    private final Map<String, AccessProfileEntity> accessProfiles = Maps.newHashMap();
-    private final MultiKeyMap<String, CaseRoleEntity> caseRoles = new MultiKeyMap<>();
+    private final Map<String, UserRoleEntity> userRoles = Maps.newHashMap();
+    private final MultiKeyMap<String, CaseRoleEntity> caseRoles = new MultiKeyMap();
 
     /**
      * Accumulate Field types by case type and field IDs for subsequent linking to case fields.
@@ -70,9 +70,9 @@ public class ParseContext {
     private final Map<String, CaseFieldEntity> metadataFields = new HashMap<>();
 
     /**
-     * Missing Access Profiles.
+     * Missing User Roles.
      */
-    private final Set<String> missingAccessProfiles = new HashSet<>();
+    private final Set<String> missingUserRoles = new HashSet<>();
 
     public JurisdictionEntity getJurisdiction() {
         return jurisdiction;
@@ -109,7 +109,9 @@ public class ParseContext {
     }
 
     public ParseContext registerCaseFieldType(String caseTypeId, String fieldId, FieldTypeEntity fieldType) {
-        caseFieldTypes.computeIfAbsent(caseTypeId, k -> Maps.newHashMap());
+        if (!caseFieldTypes.containsKey(caseTypeId)) {
+            caseFieldTypes.put(caseTypeId, Maps.newHashMap());
+        }
 
         final Map<String, FieldTypeEntity> caseTypeFields = caseFieldTypes.get(caseTypeId);
 
@@ -140,7 +142,9 @@ public class ParseContext {
     }
 
     public ParseContext registerStateForCaseType(String caseTypeId, StateEntity state) {
-        statesByCaseTypes.computeIfAbsent(caseTypeId, k -> Maps.newHashMap());
+        if (!statesByCaseTypes.containsKey(caseTypeId)) {
+            statesByCaseTypes.put(caseTypeId, Maps.newHashMap());
+        }
 
         final Map<String, StateEntity> caseTypeStates = statesByCaseTypes.get(caseTypeId);
 
@@ -171,8 +175,9 @@ public class ParseContext {
     }
 
     public ParseContext registerCaseRoleForCaseType(String caseTypeId, CaseRoleEntity caseRole) {
-        caseRolesByCaseTypes.computeIfAbsent(caseTypeId, k -> Maps.newHashMap());
-
+        if (!caseRolesByCaseTypes.containsKey(caseTypeId)) {
+            caseRolesByCaseTypes.put(caseTypeId, Maps.newHashMap());
+        }
         final Map<String, CaseRoleEntity> caseTypeCaseRoles = caseRolesByCaseTypes.get(caseTypeId);
         caseTypeCaseRoles.put(caseRole.getReference(), caseRole);
         return this;
@@ -196,7 +201,9 @@ public class ParseContext {
     }
 
     public ParseContext registerCaseFieldForCaseType(String caseTypeId, CaseFieldEntity caseField) {
-        caseFieldByCaseTypes.computeIfAbsent(caseTypeId, k -> Maps.newHashMap());
+        if (!caseFieldByCaseTypes.containsKey(caseTypeId)) {
+            caseFieldByCaseTypes.put(caseTypeId, Maps.newHashMap());
+        }
 
         final Map<String, CaseFieldEntity> caseTypeFields = caseFieldByCaseTypes.get(caseTypeId);
 
@@ -234,16 +241,16 @@ public class ParseContext {
         return Optional.ofNullable(baseTypes.get(reference));
     }
 
-    public Optional<AccessProfileEntity> getAccessProfile(final String accessProfile) {
-        return Optional.ofNullable(accessProfiles.get(accessProfile));
+    public Optional<UserRoleEntity> getIdamRole(final String role) {
+        return Optional.ofNullable(userRoles.get(role));
     }
 
-    public Optional<AccessProfileEntity> getAccessProfile(String caseType, final String accessProfile) {
-        Optional<AccessProfileEntity> accessProfileEntity = Optional.ofNullable(accessProfiles.get(accessProfile));
-        if (accessProfileEntity.isPresent()) {
-            return accessProfileEntity;
+    public Optional<UserRoleEntity> getRole(String caseType, final String role) {
+        Optional<UserRoleEntity> userRoleEntity = Optional.ofNullable(userRoles.get(role));
+        if (userRoleEntity.isPresent()) {
+            return userRoleEntity;
         } else {
-            return Optional.ofNullable(caseRoles.get(caseType, accessProfile));
+            return Optional.ofNullable(caseRoles.get(caseType, role));
         }
     }
 
@@ -257,16 +264,18 @@ public class ParseContext {
         );
     }
 
-    public ParseContext registerAccessProfiles(final List<AccessProfileEntity> accessProfileList) {
-        accessProfiles.clear();
-        accessProfiles.putAll(accessProfileList
+    public ParseContext registerUserRoles(final List<UserRoleEntity> userRoleList) {
+        userRoles.clear();
+        userRoles.putAll(userRoleList
             .stream()
-            .collect(toMap(AccessProfileEntity::getReference, ap -> ap)));
+            .collect(toMap(UserRoleEntity::getReference, u -> u)));
         return this;
     }
 
     public ParseContext registerEvent(String caseTypeId, EventEntity event) {
-        eventsByCaseTypes.computeIfAbsent(caseTypeId, k -> Maps.newHashMap());
+        if (!eventsByCaseTypes.containsKey(caseTypeId)) {
+            eventsByCaseTypes.put(caseTypeId, Maps.newHashMap());
+        }
 
         final Map<String, EventEntity> caseTypeEvents = eventsByCaseTypes.get(caseTypeId);
 
@@ -294,11 +303,11 @@ public class ParseContext {
             .collect(toMap(CaseFieldEntity::getReference, Function.identity())));
     }
 
-    public Set<String> getMissingAccessProfiles() {
-        return missingAccessProfiles;
+    public Set<String> getMissingUserRoles() {
+        return missingUserRoles;
     }
 
-    public void addMissingAccessProfile(String missingAccessProfile) {
-        this.missingAccessProfiles.add(missingAccessProfile);
+    public void addMissingUserRole(String missingUserRole) {
+        this.missingUserRoles.add(missingUserRole);
     }
 }

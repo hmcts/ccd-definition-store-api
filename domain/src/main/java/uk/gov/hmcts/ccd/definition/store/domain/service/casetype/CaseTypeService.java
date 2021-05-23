@@ -11,9 +11,7 @@ import java.util.Set;
 
 public interface CaseTypeService {
 
-    void createAll(JurisdictionEntity jurisdiction,
-                   Collection<CaseTypeEntity> caseTypes,
-                   Set<String> missingAccessprofiles);
+    void createAll(JurisdictionEntity jurisdiction, Collection<CaseTypeEntity> caseTypes, Set<String> missingUserRoles);
 
     boolean caseTypeExistsInAnyJurisdiction(String reference, String jurisdictionId);
 

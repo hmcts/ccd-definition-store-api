@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
@@ -52,19 +52,19 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             ex, flattenExceptionMessages(ex), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(value = MissingAccessProfilesException.class)
-    ResponseEntity<Object> handleAccessProfilesMissing(MissingAccessProfilesException ex, WebRequest request) {
-        String missingAccessProfiles = new StringBuilder("Missing AccessProfiles.\n\n")
-            .append(ex.getMissingAccessProfiles()
+    @ExceptionHandler(value = MissingUserRolesException.class)
+    ResponseEntity<Object> handleUserRolesMissing(MissingUserRolesException ex, WebRequest request) {
+        String missingUserRoles = new StringBuilder("Missing UserRoles.\n\n")
+            .append(ex.getMissingUserRoles()
                 .stream()
                 .collect(Collectors.joining("\n"))).toString();
-        log.warn(missingAccessProfiles);
+        log.warn(missingUserRoles);
 
         String validationErrors = getValidationErrorMessage(
             "\n\nValidation errors occurred importing the spreadsheet.\n\n", ex.getValidationErrors());
 
         return handleExceptionInternal(
-            ex, missingAccessProfiles + validationErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+            ex, missingUserRoles + validationErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     private HttpHeaders responseContentType() {
