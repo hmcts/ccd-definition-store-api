@@ -12,7 +12,7 @@
 			"arrayInMap": [
 				{
 					"key": "file",
-					"filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid.xlsx"
+					"filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_invalid.xlsx"
 				}
 			]
 		}
