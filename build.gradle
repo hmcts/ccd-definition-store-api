@@ -42,7 +42,7 @@ dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
 
     // Ignore these non-runtime configurations
-   skipConfigurations = ['codacy']
+ //  skipConfigurations = ['codacy']
 }
 
 //spring boot dependency override
@@ -50,7 +50,7 @@ dependencyCheck {
 ext['elasticsearch.version'] = '6.4.3'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.3.8.RELEASE'
+ext['spring-security.version'] = '5.3.9.RELEASE'
 ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.2.16'
