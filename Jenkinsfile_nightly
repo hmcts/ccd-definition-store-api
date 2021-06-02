@@ -63,9 +63,9 @@ withNightlyPipeline(type, product, component) {
     env.CCD_GW_SERVICE_NAME = "ccd_gw"
     
     loadVaultSecrets(secrets)
-    enableDbMigration()
+    enableDbMigration('ccd')
+    disableLegacyDeployment()
     enableMutationTest()
-    enableSlackNotifications('#ccd-nightly-builds')
     
     after('test') {
         // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
