@@ -5,13 +5,3 @@ java:
   environment:
     DEFINITION_STORE_DB_NAME: ccd_definition_store
     DEFINITION_STORE_DB_HOST: ccd-definition-store-api-postgres-db-v11-aat.postgres.database.azure.com
-  keyVaults:
-    ccd:
-      secrets:
-        - definition-store-api-POSTGRES-USER-V11
-        - definition-store-api-POSTGRES-PASS-V11
-        - ccd-definition-s2s-secret
-        - ccd-ELASTIC-SEARCH-URL
-        - ccd-ELASTIC-SEARCH-PASSWORD
-        - storage-account-primary-connection-string
-        - AppInsightsInstrumentationKey
