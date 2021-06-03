@@ -49,6 +49,10 @@
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
                 {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "NotesReason",
                   "hint": null,
                   "label": null,
