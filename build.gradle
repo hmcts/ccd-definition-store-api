@@ -49,8 +49,8 @@ dependencyCheck {
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
 ext['elasticsearch.version'] = '6.4.3'
 ext['javax-validation.version'] = '2.0.1.Final'
-ext['hibernate-validator.version'] = '6.0.10.Final'
-ext['spring-security.version'] = '5.3.8.RELEASE'
+ext['hibernate-validator.version'] = '6.0.20.Final'
+ext['spring-security.version'] = '5.3.9.RELEASE'
 ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.2.16'
@@ -260,10 +260,10 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '6.14.2'
+        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.0.0'
     }
 
-    // from https://github.com/junit-team/junit5/issues/1024
+    // from https://github.com/junit-team/junit5/issues/1024'
     afterEvaluate {
         jacocoTestReport {
             reports {

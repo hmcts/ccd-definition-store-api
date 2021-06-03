@@ -14,9 +14,10 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EventEntityCaseTypeUserRoleValidatorImplTest {
+public class EventEntityCaseTypeAccessProfileValidatorImplTest {
 
-    private final EventEntityCaseTypeUserRoleValidatorImpl validator = new EventEntityCaseTypeUserRoleValidatorImpl();
+    private final EventEntityCaseTypeAccessProfileValidatorImpl validator
+            = new EventEntityCaseTypeAccessProfileValidatorImpl();
 
     @Test
     @DisplayName(
@@ -33,11 +34,11 @@ public class EventEntityCaseTypeUserRoleValidatorImplTest {
         EventEntity eventEntity2 = new EventEntity();
         eventEntity2.addEventACL(eventACLEntity1);
         eventACLEntity1.setEventEntity(eventEntity);
-        eventACLEntity1.setUserRoleId("caseworker-caa");
+        eventACLEntity1.setAccessProfileId("caseworker-caa");
         EventACLEntity eventACLEntity2 = new EventACLEntity();
         eventEntity2.addEventACL(eventACLEntity2);
         eventACLEntity2.setEventEntity(eventEntity1);
-        eventACLEntity2.setUserRoleId("Caseworker-caa");
+        eventACLEntity2.setAccessProfileId("Caseworker-caa");
 
         EventEntityValidationContext context = mock(EventEntityValidationContext.class);
         when(context.getCaseReference()).thenReturn("case ref");
@@ -46,9 +47,9 @@ public class EventEntityCaseTypeUserRoleValidatorImplTest {
 
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors().get(0),
-            instanceOf(EventEntityCaseTypeUserRoleValidationError.class));
+            instanceOf(EventEntityCaseTypeAccessProfileValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("UserRole 'Caseworker-caa' is defined more than once for case type 'CaseType_example'"));
+            is("AccessProfile 'Caseworker-caa' is defined more than once for case type 'CaseType_example'"));
     }
 
     @Test
@@ -67,11 +68,11 @@ public class EventEntityCaseTypeUserRoleValidatorImplTest {
         EventEntity eventEntity2 = new EventEntity();
         eventEntity2.addEventACL(eventACLEntity1);
         eventACLEntity1.setEventEntity(eventEntity);
-        eventACLEntity1.setUserRoleId("caseworker-approver");
+        eventACLEntity1.setAccessProfileId("caseworker-approver");
         EventACLEntity eventACLEntity2 = new EventACLEntity();
         eventEntity2.addEventACL(eventACLEntity2);
         eventACLEntity2.setEventEntity(eventEntity1);
-        eventACLEntity2.setUserRoleId("Caseworker-approver");
+        eventACLEntity2.setAccessProfileId("Caseworker-approver");
 
         EventEntityValidationContext context = mock(EventEntityValidationContext.class);
         when(context.getCaseReference()).thenReturn("case ref");
@@ -80,9 +81,9 @@ public class EventEntityCaseTypeUserRoleValidatorImplTest {
 
         assertThat(result.getValidationErrors(), hasSize(1));
         assertThat(result.getValidationErrors().get(0),
-            instanceOf(EventEntityCaseTypeUserRoleValidationError.class));
+            instanceOf(EventEntityCaseTypeAccessProfileValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("UserRole 'Caseworker-approver' is defined more than once for case type 'CaseType_example'"));
+            is("AccessProfile 'Caseworker-approver' is defined more than once for case type 'CaseType_example'"));
     }
 
     @Test
@@ -103,11 +104,11 @@ public class EventEntityCaseTypeUserRoleValidatorImplTest {
         EventEntity eventEntity2 = new EventEntity();
         eventEntity2.addEventACL(eventACLEntity1);
         eventACLEntity1.setEventEntity(eventEntity);
-        eventACLEntity1.setUserRoleId("caseworker-approver");
+        eventACLEntity1.setAccessProfileId("caseworker-approver");
         EventACLEntity eventACLEntity2 = new EventACLEntity();
         eventEntity2.addEventACL(eventACLEntity2);
         eventACLEntity2.setEventEntity(eventEntity1);
-        eventACLEntity2.setUserRoleId("Caseworker-approver");
+        eventACLEntity2.setAccessProfileId("Caseworker-approver");
 
         EventEntityValidationContext context = mock(EventEntityValidationContext.class);
         when(context.getCaseReference()).thenReturn("case ref");
@@ -132,11 +133,11 @@ public class EventEntityCaseTypeUserRoleValidatorImplTest {
         EventEntity eventEntity2 = new EventEntity();
         eventEntity2.addEventACL(eventACLEntity1);
         eventACLEntity1.setEventEntity(eventEntity);
-        eventACLEntity1.setUserRoleId("caseworker");
+        eventACLEntity1.setAccessProfileId("caseworker");
         EventACLEntity eventACLEntity2 = new EventACLEntity();
         eventEntity2.addEventACL(eventACLEntity2);
         eventACLEntity2.setEventEntity(eventEntity1);
-        eventACLEntity2.setUserRoleId("Caseworker");
+        eventACLEntity2.setAccessProfileId("Caseworker");
 
         EventEntityValidationContext context = mock(EventEntityValidationContext.class);
         when(context.getCaseReference()).thenReturn("case ref");
@@ -160,7 +161,7 @@ public class EventEntityCaseTypeUserRoleValidatorImplTest {
         EventEntity eventEntity2 = new EventEntity();
         eventEntity2.addEventACL(eventACLEntity1);
         eventACLEntity1.setEventEntity(eventEntity);
-        eventACLEntity1.setUserRoleId("caseworker-caa");
+        eventACLEntity1.setAccessProfileId("caseworker-caa");
 
         EventEntityValidationContext context = mock(EventEntityValidationContext.class);
         when(context.getCaseReference()).thenReturn("case ref");
