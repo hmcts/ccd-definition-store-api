@@ -17,7 +17,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,8 +45,6 @@ class AuthorisationCaseEventParserTest {
     private static final String CASE_CRUD_1 = " CCCd  ";
     private static final String CASE_CRUD_2 = " X y  ";
 
-    private static final String CASE_TYPE_UNDER_TEST = "Some Case Type";
-    private static final String CASE_EVENT_UNDER_TEST = "Are we there yet";
     private AuthorisationCaseEventParser subject;
     private CaseTypeEntity caseType;
     private Map<String, DefinitionSheet> definitionSheets;
