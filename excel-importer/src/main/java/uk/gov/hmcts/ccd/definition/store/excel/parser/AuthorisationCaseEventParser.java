@@ -55,7 +55,7 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
             if (null == dataItems || dataItems.isEmpty()) {
                 LOG.warn("No data is found for case type '{}' in AuthorisationCaseEvents tab", caseTypeReference);
             } else {
-                LOG.debug("Parsing user roles for case type {}: {} AuthorisationCaseEvents detected",
+                LOG.debug("Parsing access profiles for case type {}: {} AuthorisationCaseEvents detected",
                     caseTypeReference, dataItems.size());
 
                 final Map<String, List<DefinitionDataItem>> collect =
@@ -70,15 +70,16 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
                     for (DefinitionDataItem definition : definitionDataItems) {
                         EventACLEntity entity = new EventACLEntity();
 
-                        parseUserRole(entity, definition, parseContext);
+                        parseAccessProfile(entity, definition, parseContext);
                         parseCrud(entity, definition);
                         parseResults.add(entity);
                         entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
 
-                        LOG.info("Parsing user role for case type '{}', event '{}', user role '{}', crud '{}': OK",
+                        LOG.info(
+                            "Parsing access profile for case type '{}', event '{}', access profile '{}', crud '{}': OK",
                             caseTypeReference,
                             eventReference,
-                            definition.getString(ColumnName.USER_ROLE),
+                            definition.getString(ColumnName.ACCESS_PROFILE),
                             definition.getString(ColumnName.CRUD));
                     }
                 }

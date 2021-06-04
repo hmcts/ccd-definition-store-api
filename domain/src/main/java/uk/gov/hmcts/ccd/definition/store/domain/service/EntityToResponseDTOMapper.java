@@ -224,39 +224,39 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "displayGroupEntity.reference", target = "id")
     @Mapping(source = "displayGroupEntity.showCondition", target = "showCondition")
     @Mapping(source = "displayGroupEntity.displayGroupCaseFields", target = "tabFields")
-    @Mapping(source = "displayGroupEntity.userRole.reference", target = "role")
+    @Mapping(source = "displayGroupEntity.accessProfile.reference", target = "role")
     CaseTypeTab map(DisplayGroupEntity displayGroupEntity);
 
     @Mapping(source = "displayGroupCaseFieldEntity.showCondition", target = "showCondition")
     CaseTypeTabField map(DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity);
 
     @Mapping(source = "searchInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
-    @Mapping(source = "searchInputCaseFieldEntity.userRole.reference", target = "role")
     @Mapping(source = "searchInputCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
+    @Mapping(source = "searchInputCaseFieldEntity.accessProfile.reference", target = "role")
     @Mapping(source = "searchInputCaseFieldEntity.showCondition", target = "showCondition")
     SearchInputField map(SearchInputCaseFieldEntity searchInputCaseFieldEntity);
 
     @Mapping(source = "searchResultCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "searchResultCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
-    @Mapping(source = "searchResultCaseFieldEntity.userRole.reference", target = "role")
+    @Mapping(source = "searchResultCaseFieldEntity.accessProfile.reference", target = "role")
     @Mapping(expression = "java(searchResultCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchResultsField map(SearchResultCaseFieldEntity searchResultCaseFieldEntity);
 
     @Mapping(source = "workBasketInputCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "workBasketInputCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
-    @Mapping(source = "workBasketInputCaseFieldEntity.userRole.reference", target = "role")
+    @Mapping(source = "workBasketInputCaseFieldEntity.accessProfile.reference", target = "role")
     @Mapping(source = "workBasketInputCaseFieldEntity.showCondition", target = "showCondition")
     WorkbasketInputField map(WorkBasketInputCaseFieldEntity workBasketInputCaseFieldEntity);
 
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "workBasketCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
-    @Mapping(source = "workBasketCaseFieldEntity.userRole.reference", target = "role")
+    @Mapping(source = "workBasketCaseFieldEntity.accessProfile.reference", target = "role")
     @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 
     @Mapping(source = "searchCasesResultFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "searchCasesResultFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
-    @Mapping(source = "searchCasesResultFieldEntity.userRole.reference", target = "role")
+    @Mapping(source = "searchCasesResultFieldEntity.accessProfile.reference", target = "role")
     @Mapping(expression = "java(searchCasesResultFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchCasesResultField map(SearchCasesResultFieldEntity searchCasesResultFieldEntity);
 
@@ -309,7 +309,7 @@ public interface EntityToResponseDTOMapper {
 
         static List<AccessControlList> map(List<? extends Authorisation> authorisation) {
             return authorisation.stream()
-                .map(auth -> new AccessControlList(auth.getUserRole().getReference(),
+                .map(auth -> new AccessControlList(auth.getAccessProfile().getReference(),
                     auth.getCreate(),
                     auth.getRead(),
                     auth.getUpdate(),
@@ -319,7 +319,7 @@ public interface EntityToResponseDTOMapper {
 
         static List<ComplexACL> mapComplex(List<ComplexFieldACLEntity> complexFieldACLEntities) {
             return complexFieldACLEntities.stream()
-                .map(el -> new ComplexACL(el.getUserRole().getReference(),
+                .map(el -> new ComplexACL(el.getAccessProfile().getReference(),
                     el.getCreate(),
                     el.getRead(),
                     el.getUpdate(),

@@ -9,7 +9,7 @@ import uk.gov.hmcts.befta.player.BackEndFunctionalTestScenarioContext;
 
 public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationAdapter {
 
-    public static final String DEFAULT_DEFINITIONS_PATH = "uk/gov/hmcts/befta/dse/ccd/definitions/valid";
+    public static final String DEFAULT_DEFINITIONS_PATH = "uk/gov/hmcts/ccd/test_definitions/valid";
 
     private TestDataLoaderToDefinitionStore loader = new TestDataLoaderToDefinitionStore(this, DEFAULT_DEFINITIONS_PATH,
         BeftaMain.getConfig().getTestUrl());

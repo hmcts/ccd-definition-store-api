@@ -5,23 +5,23 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessag
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 
-public class CaseTypeEntityInvalidUserRoleValidationError extends ValidationError {
+public class CaseTypeEntityInvalidAccessProfileValidationError extends ValidationError {
 
     private final CaseTypeACLEntity entity;
 
     private final AuthorisationValidationContext context;
 
-    public CaseTypeEntityInvalidUserRoleValidationError(final CaseTypeACLEntity entity,
-                                                        final AuthorisationValidationContext context) {
+    public CaseTypeEntityInvalidAccessProfileValidationError(final CaseTypeACLEntity entity,
+                                                             final AuthorisationValidationContext context) {
 
 
-        super(String.format("Invalid UserRole is not defined for case type '%s'",
+        super(String.format("Invalid AccessProfile is not defined for case type '%s'",
             context.getCaseReference()));
         this.entity = entity;
         this.context = context;
     }
 
-    public CaseTypeACLEntity getCaseTypeUserRoleEntity() {
+    public CaseTypeACLEntity getCaseTypeAccessProfileEntity() {
         return entity;
     }
 

@@ -15,11 +15,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ACCESS_PROFILE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CRUD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIST_ELEMENT_CODE;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.USER_ROLE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_COMPLEX_TYPE;
 
 class AuthorisationComplexTypeParser implements AuthorisationParser {
@@ -53,7 +53,7 @@ class AuthorisationComplexTypeParser implements AuthorisationParser {
             if (null == dataItems) {
                 LOG.warn("No data is found for case type '{} in AuthorisationComplexTypes tab", caseTypeReference);
             } else {
-                LOG.debug("Parsing user roles for case type '{}': '{}' AuthorisationComplexTypes detected",
+                LOG.debug("Parsing access profiles for case type '{}': '{}' AuthorisationComplexTypes detected",
                     caseTypeReference, dataItems.size());
                 List<String> allPaths = caseFieldEntityUtil
                     .buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(caseType.getCaseFields());
@@ -71,7 +71,7 @@ class AuthorisationComplexTypeParser implements AuthorisationParser {
                             getSheetName()));
                     }
                     final ComplexFieldACLEntity complexFieldACLEntity = new ComplexFieldACLEntity();
-                    parseUserRole(complexFieldACLEntity, definition, parseContext);
+                    parseAccessProfile(complexFieldACLEntity, definition, parseContext);
                     parseCrud(complexFieldACLEntity, definition);
                     complexFieldACLEntity.setListElementCode(listElementCode);
                     caseFieldEntity.addComplexFieldACL(complexFieldACLEntity);
@@ -80,11 +80,11 @@ class AuthorisationComplexTypeParser implements AuthorisationParser {
                     parseResults.add(complexFieldACLEntity);
 
                     LOG.info("Parsing complexType authorisation for case type '{}', case field '{}', "
-                            + "complexFieldReference '{}', user role '{}', crud '{}': OK",
+                            + "complexFieldReference '{}', access profile '{}', crud '{}': OK",
                         definition.getString(CASE_TYPE_ID),
                         definition.getString(CASE_FIELD_ID),
                         definition.getString(LIST_ELEMENT_CODE),
-                        definition.getString(USER_ROLE),
+                        definition.getString(ACCESS_PROFILE),
                         definition.getString(CRUD));
                 }
             }
