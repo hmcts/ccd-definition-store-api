@@ -39,28 +39,31 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
         validateCaseFields(definitionSheets, definitionSheet, caseTypeReference);
 
         final List<DefinitionDataItem> dataItems = dataItemMap.get(caseTypeReference);
-        final Map<String, List<DefinitionDataItem>> collect = dataItems == null
-            ? null
-            : dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_FIELD_ID)));
 
         for (CaseFieldEntity caseField : caseFields) {
             final List<CaseFieldACLEntity> parseResults = Lists.newArrayList();
             final String caseFieldReference = caseField.getReference();
+
             LOG.debug("Parsing AuthorisationCaseField for case type {}, caseField {}...",
                 caseTypeReference, caseFieldReference);
 
-            if (null == dataItems) {
-                LOG.warn("No data is found for case type '{} in AuthorisationCaseFields tab", caseTypeReference);
+            if (null == dataItems || dataItems.isEmpty()) {
+                LOG.warn("No data is found for case type '{}' in AuthorisationCaseFields tab", caseTypeReference);
             } else {
                 LOG.debug("Parsing access profiles for case type '{}': '{}' AuthorisationCaseFields detected",
                     caseTypeReference, dataItems.size());
 
-                if (null == collect.get(caseFieldReference)) {
+                final Map<String, List<DefinitionDataItem>> collect =
+                    dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_FIELD_ID)));
+
+                List<DefinitionDataItem> definitionDataItems = collect.get(caseFieldReference);
+
+                if (null == definitionDataItems || definitionDataItems.isEmpty()) {
                     LOG.warn("No row is defined for case type '{}', case field '{}'",
                         caseTypeReference, caseFieldReference);
                     // and let validation handles this Exception
                 } else {
-                    for (DefinitionDataItem definition : collect.get(caseFieldReference)) {
+                    for (DefinitionDataItem definition : definitionDataItems) {
 
                         final CaseFieldACLEntity entity = new CaseFieldACLEntity();
 
