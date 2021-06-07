@@ -261,6 +261,7 @@ subprojects { subproject ->
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
         testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.0.0'
+        testImplementation 'com.github.hmcts:befta-fw:extend-feature-flag-framework-SNAPSHOT'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
