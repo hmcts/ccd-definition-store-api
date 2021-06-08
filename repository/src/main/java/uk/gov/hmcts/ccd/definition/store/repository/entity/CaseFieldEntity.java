@@ -234,13 +234,18 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     }
 
     @Transient
-    public Optional<CaseFieldACLEntity> getCaseFieldACLByRole(String role) {
-        return this.caseFieldACLEntities.stream().filter(e -> roleEquals(role, e)).findFirst();
+    public Optional<CaseFieldACLEntity> getCaseFieldACLByAccessProfile(String accessProfile) {
+        return this.caseFieldACLEntities.stream().filter(e -> accessProfileEquals(accessProfile, e)).findFirst();
     }
 
-    private boolean roleEquals(String role, CaseFieldACLEntity e) {
-        return e.getUserRole() == null ? false :
-            (e.getUserRole().getReference() == null ? false : e.getUserRole().getReference().equalsIgnoreCase(role));
+    private boolean accessProfileEquals(String accessProfile, CaseFieldACLEntity e) {
+        if (e.getAccessProfile() == null) {
+            return false;
+        }
+        if (e.getAccessProfile().getReference() == null) {
+            return false;
+        }
+        return  e.getAccessProfile().getReference().equalsIgnoreCase(accessProfile);
     }
 
 }
