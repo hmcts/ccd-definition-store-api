@@ -51,5 +51,6 @@
 
 	<suppress>
 		<cve>CVE-2021-29425</cve>
+		<cve>CVE-2021-22118</cve>
 	</suppress>
 </suppressions>
