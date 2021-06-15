@@ -21,19 +21,19 @@ public enum AATHelper {
     }
 
     public String getIdamURL() {
-        return Env.require("IDAM_URL");
+        return Env.require("IDAM_API_URL_BASE");
     }
 
     public String getS2SURL() {
-        return Env.require("S2S_URL");
+        return Env.require("S2S_URL_BASE");
     }
 
     public String getImporterAutoTestEmail() {
-        return Env.require("CCD_IMPORT_AUTOTEST_EMAIL");
+        return Env.require("DEFINITION_IMPORTER_USERNAME");
     }
 
     public String getImporterAutoTestPassword() {
-        return Env.require("CCD_IMPORT_AUTOTEST_PASSWORD");
+        return Env.require("DEFINITION_IMPORTER_PASSWORD");
     }
 
     public String getCaseworkerAutoTestEmail() {
@@ -45,11 +45,11 @@ public enum AATHelper {
     }
 
     public String getGatewayServiceName() {
-        return Env.require("BEFTA_S2S_CLIENT_ID");
+        return Env.require("CCD_API_GATEWAY_S2S_ID");
     }
 
     public String getGatewayServiceSecret() {
-        return Env.require("BEFTA_S2S_CLIENT_SECRET");
+        return Env.require("CCD_API_GATEWAY_S2S_KEY");
     }
 
     public IdamHelper getIdamHelper() {
