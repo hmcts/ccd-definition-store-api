@@ -37,6 +37,8 @@
 		<cve>CVE-2020-7019</cve>
 		<cve>CVE-2020-7020</cve>
 		<cve>CVE-2020-7021</cve>
+		<cve>CVE-2021-22137</cve>
+		<cve>CVE-2021-22135</cve>
 
 	</suppress>
 
