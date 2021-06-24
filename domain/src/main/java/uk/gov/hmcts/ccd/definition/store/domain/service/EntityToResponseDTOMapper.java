@@ -298,6 +298,11 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseType.reference", target = "caseTypeId")
     RoleToAccessProfiles map(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
 
+    @Mapping(source = "caseType.reference", target = "id")
+    @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")
+    CaseRole roleToAccessProfilesEntityToCaseRole(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
+
+
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
     // but this does not play nicely with Mockito v1

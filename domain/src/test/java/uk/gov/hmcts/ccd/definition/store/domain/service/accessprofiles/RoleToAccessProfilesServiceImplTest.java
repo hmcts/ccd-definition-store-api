@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles;
 
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,10 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfilesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,10 +35,13 @@ class RoleToAccessProfilesServiceImplTest {
     @Mock
     private EntityToResponseDTOMapper dtoMapper;
 
+    @Mock
+    private CaseTypeRepository caseTypeRepository;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        classUnderTest = new RoleToAccessProfilesServiceImpl(repository, dtoMapper);
+        classUnderTest = new RoleToAccessProfilesServiceImpl(repository, dtoMapper, caseTypeRepository);
     }
 
     @Test
@@ -46,7 +51,7 @@ class RoleToAccessProfilesServiceImplTest {
         List<RoleToAccessProfilesEntity> roleToAccessProfileEntities = Lists.newArrayList();
         roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole1", "judge"));
         roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole2", "solicitor"));
-        doReturn(roleToAccessProfileEntities).when(repository).findByCaseTypeReference(anyList());
+        doReturn(roleToAccessProfileEntities).when(repository).findByCaseTypeReferenceIn(anyList());
         List<String> references = Lists.newArrayList("Test", "Divorce");
         List<RoleToAccessProfiles> valuesReturned = classUnderTest.findByCaseTypeReferences(references);
         Assert.assertEquals(2, valuesReturned.size());
@@ -59,7 +64,7 @@ class RoleToAccessProfilesServiceImplTest {
         List<RoleToAccessProfilesEntity> roleToAccessProfileEntities = Lists.newArrayList();
         roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole1", "judge"));
         roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole2", "solicitor"));
-        doReturn(roleToAccessProfileEntities).when(repository).findByRoleNme(anyString());
+        doReturn(roleToAccessProfileEntities).when(repository).findByRoleName(anyString());
         List<RoleToAccessProfiles> valuesReturned = classUnderTest.findByRoleName("Divorce");
         Assert.assertEquals(2, valuesReturned.size());
     }
@@ -69,7 +74,7 @@ class RoleToAccessProfilesServiceImplTest {
         "Should get empty Role To Access Profiles list for the passed empty case type references")
     void shouldGetEmptyRoleToAccessProfilesListForEmptyCaseType() {
         List<RoleToAccessProfilesEntity> roleToAccessProfileEntities = Lists.newArrayList();
-        doReturn(roleToAccessProfileEntities).when(repository).findByCaseTypeReference(anyList());
+        doReturn(roleToAccessProfileEntities).when(repository).findByCaseTypeReferenceIn(anyList());
         List<RoleToAccessProfiles> valuesReturned = classUnderTest.findByCaseTypeReferences(Lists.newArrayList());
         Assert.assertEquals(0, valuesReturned.size());
     }
