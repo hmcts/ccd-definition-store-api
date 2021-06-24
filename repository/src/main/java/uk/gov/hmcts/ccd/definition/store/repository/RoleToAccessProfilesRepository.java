@@ -1,17 +1,24 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 
+import java.util.List;
+
+import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE;
+
 public interface RoleToAccessProfilesRepository extends JpaRepository<RoleToAccessProfilesEntity, Integer> {
 
-    @Query("select ap from RoleToAccessProfilesEntity ap where ap.caseType.reference in :references")
-    List<RoleToAccessProfilesEntity> findByCaseTypeReference(@Param("references") List<String> references);
+    List<RoleToAccessProfilesEntity> findByRoleName(String roleName);
 
-    @Query("select ap from RoleToAccessProfilesEntity ap where ap.roleName in :roleName")
-    List<RoleToAccessProfilesEntity> findByRoleNme(@Param("roleName") String roleName);
+    List<RoleToAccessProfilesEntity> findByCaseTypeReferenceIn(List<String> caseTypeReferences);
+
+    @Query("select cre from RoleToAccessProfilesEntity cre where cre.caseType = ("
+        + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
+    List<RoleToAccessProfilesEntity> findRoleToAccessProfilesEntityByCaseType(
+        @Param("caseTypeReference") String caseType
+    );
 
 }
