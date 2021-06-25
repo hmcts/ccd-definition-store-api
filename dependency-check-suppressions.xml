@@ -2,7 +2,7 @@
 <suppressions
 	xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
-	<suppress until="2021-06-25">
+	<suppress until="2021-07-25">
 		<notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security
 			(any version), see https://pivotal.io/security/cve-2018-1258
 			False
@@ -11,7 +11,7 @@
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
-	<suppress until="2021-06-25">
+	<suppress until="2021-07-25">
 		<notes>These CVE's are coming from Dhowden tag library and it impacts
 			only MP3/MP4/OGG/FLAC metadata parsing
 			library. Also it is declared as
@@ -27,7 +27,7 @@
 	<!-- !!!!!!! This suppression should not be removed until the elastic search
 		client is updated to 7. Before updating the elastic client make sure that
 		the server has been updated to 7 !!!!! -->
-	<suppress until="2021-06-25">
+	<suppress until="2021-07-25">
 		<notes><![CDATA[
       		  Jar: org.elasticsearch/elasticsearch@6.4.3
       		  Analysis: These CVEs expected to be fixed as part of RDM-9054
@@ -37,10 +37,12 @@
 		<cve>CVE-2020-7019</cve>
 		<cve>CVE-2020-7020</cve>
 		<cve>CVE-2020-7021</cve>
+		<cve>CVE-2021-22137</cve>
+		<cve>CVE-2021-22135</cve>
 
 	</suppress>
 
-	<suppress until="2021-06-25">
+	<suppress until="2021-07-25">
 		<notes>Declared as False Positive on com.nimbusds:oauth2-oidc-sdk
 			#2866
 			https://github.com/jeremylong/DependencyCheck/issues/2866
@@ -51,5 +53,8 @@
 
 	<suppress>
 		<cve>CVE-2021-29425</cve>
+		<cve>CVE-2021-22118</cve>
+		<cve>CVE-2021-22135</cve>
+		<cve>CVE-2021-22137</cve>
 	</suppress>
 </suppressions>
