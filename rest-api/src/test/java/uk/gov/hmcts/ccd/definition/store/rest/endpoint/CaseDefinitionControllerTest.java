@@ -104,6 +104,26 @@ public class CaseDefinitionControllerTest {
         }
     }
 
+
+    @Nested
+    @DisplayName("Test the getRoleToAccessProfiles   method")
+    class GetCaseRoleForRATests {
+
+        @Test
+        @DisplayName("Should call the roleToAccessProfilesService by correct parameter")
+        void shouldCallCaseRoleService() {
+            subject.getRoleToAccessProfiles(null, null, "someCaseTypeId");
+            verify(roleToAccessProfilesService, times(1)).findByCaseTypeId(eq("someCaseTypeId"));
+        }
+
+        @Test
+        @DisplayName("Should call the roleToAccessProfilesService with null when parameter is null")
+        void shouldCallCaseRoleServiceWhenParameterIsNull() {
+            subject.getRoleToAccessProfiles(null, null, null);
+            verify(roleToAccessProfilesService, times(1)).findByCaseTypeId(null);
+        }
+    }
+
     @Nested
     @DisplayName("Test the dataCaseworkerIdAndJurisdictionIdCaseTypeGet method")
     class FindByCaseTypeIdTests {

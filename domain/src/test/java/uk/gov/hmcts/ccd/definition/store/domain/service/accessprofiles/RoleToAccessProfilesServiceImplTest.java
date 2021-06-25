@@ -12,10 +12,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfilesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -89,6 +91,37 @@ class RoleToAccessProfilesServiceImplTest {
         classUnderTest.saveAll(entitiesToSave);
         verify(repository, times(1)).saveAll(eq(entitiesToSave));
     }
+
+    @Test
+    @DisplayName(
+        "Should get Case Role To Access Profile for the passed case type")
+    void shouldGetCaseRolesForAPassedCaseType() {
+        var version = 333333;
+        var caseType = "caseType";
+        doReturn(Optional.of(version)).when(caseTypeRepository).findLastVersion(caseType);
+
+        List<RoleToAccessProfilesEntity> roleToAccessProfileEntities = Lists.newArrayList();
+        roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole1", "judge"));
+        roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole2", "solicitor"));
+        doReturn(roleToAccessProfileEntities).when(repository).findRoleToAccessProfilesEntityByCaseType(caseType);
+
+        List<CaseRole> valuesReturned = classUnderTest.findByCaseTypeId(caseType);
+        Assert.assertEquals(2, valuesReturned.size());
+    }
+
+    @Test
+    @DisplayName(
+        "Should get an empty Case Role To Access Profile for the passed case type")
+    void shouldGetAnEmptyCaseRolesForAPassedCaseType() {
+        var version = 333333;
+        var caseType = "caseType";
+        doReturn(Optional.of(version)).when(caseTypeRepository).findLastVersion(caseType);
+        doReturn(Lists.newArrayList()).when(repository).findRoleToAccessProfilesEntityByCaseType(caseType);
+
+        List<CaseRole> valuesReturned = classUnderTest.findByCaseTypeId(caseType);
+        Assert.assertEquals(0, valuesReturned.size());
+    }
+
 
     private RoleToAccessProfilesEntity createRoleToAccessProfile(String roleName, String accessProfiles) {
         RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
