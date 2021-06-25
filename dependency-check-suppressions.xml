@@ -22,6 +22,22 @@
 		<cve>CVE-2020-29243</cve>
 		<cve>CVE-2020-29244</cve>
 		<cve>CVE-2020-29245</cve>
+
+		<cve>CVE-2019-7611</cve>
+		<cve>CVE-2020-7021</cve>
+		<cve>CVE-2020-7020</cve>
+		<cve>CVE-2020-7019</cve>
+		<cve>CVE-2019-7614</cve>
+		<cve>CVE-2020-7019</cve>
+		<cve>CVE-2018-1258</cve>
+		<cve>CVE-2007-1652</cve>
+		<cve>CVE-2020-7019</cve>
+		<cve>CVE-2007-1651</cve>
+		<cve>CVE-2020-29243</cve>
+		<cve>CVE-2020-29243</cve>
+		<cve>CVE-2020-29242</cve>
+		<cve>CVE-2020-29245</cve>
+		<cve>CVE-2020-29244</cve>
 	</suppress>
 
 	<!-- !!!!!!! This suppression should not be removed until the elastic search
