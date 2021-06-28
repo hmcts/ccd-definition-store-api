@@ -67,7 +67,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
-import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
@@ -97,7 +96,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-class  EntityToResponseDTOMapperTest {
+class EntityToResponseDTOMapperTest {
 
     private static final SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -135,20 +134,20 @@ class  EntityToResponseDTOMapperTest {
 
             assertAll(
                 () -> assertEquals("displayContext", eventCaseFieldEntity.getDisplayContext().name(),
-                                   caseEventField.getDisplayContext()),
+                    caseEventField.getDisplayContext()),
                 () -> assertEquals("showCondition", eventCaseFieldEntity.getShowCondition(),
-                                   caseEventField.getShowCondition()),
+                    caseEventField.getShowCondition()),
                 () -> assertEquals("showSummaryChangeOption", eventCaseFieldEntity.getShowSummaryChangeOption(),
-                                   caseEventField.getShowSummaryChangeOption()),
+                    caseEventField.getShowSummaryChangeOption()),
                 () -> assertEquals("showSummaryContentOption",
-                                   eventCaseFieldEntity.getShowSummaryContentOption(),
-                                   caseEventField.getShowSummaryContentOption()),
+                    eventCaseFieldEntity.getShowSummaryContentOption(),
+                    caseEventField.getShowSummaryContentOption()),
                 () -> assertEquals("retainHiddenValue", eventCaseFieldEntity.getRetainHiddenValue(),
-                                   caseEventField.getRetainHiddenValue()),
+                    caseEventField.getRetainHiddenValue()),
                 () -> assertEquals("publish", eventCaseFieldEntity.getPublish(),
-                                   caseEventField.getPublish()),
+                    caseEventField.getPublish()),
                 () -> assertEquals("publishAs", eventCaseFieldEntity.getPublishAs(),
-                                   caseEventField.getPublishAs())
+                    caseEventField.getPublishAs())
             );
         }
 
@@ -933,10 +932,10 @@ class  EntityToResponseDTOMapperTest {
         }
 
         private StateACLEntity stateACLEntity(String reference,
-                                             Boolean create,
-                                             Boolean read,
-                                             Boolean update,
-                                             Boolean delete) {
+                                              Boolean create,
+                                              Boolean read,
+                                              Boolean update,
+                                              Boolean delete) {
             StateACLEntity stateACLEntity = new StateACLEntity();
             AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
             accessProfileEntity.setReference(reference);
