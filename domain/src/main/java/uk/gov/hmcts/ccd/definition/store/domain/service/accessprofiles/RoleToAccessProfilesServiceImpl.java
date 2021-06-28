@@ -61,7 +61,7 @@ public class RoleToAccessProfilesServiceImpl implements RoleToAccessProfileServi
 
     @Transactional
     @Override
-    public List<RoleAssignment> findByCaseTypeId(String caseType) {
+    public List<RoleAssignment> findRoleAssignmentsByCaseTypeId(String caseType) {
         final var caseTypeVersion = caseTypeRepository.findLastVersion(caseType)
             .orElseThrow(() -> new NotFoundException(caseType));
         LOG.debug("CaseType version {} found. for caseType {}...", caseTypeVersion, caseType);

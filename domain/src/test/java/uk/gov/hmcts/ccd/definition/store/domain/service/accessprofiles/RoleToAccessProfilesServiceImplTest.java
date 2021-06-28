@@ -12,7 +12,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfilesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 
@@ -106,7 +105,7 @@ class RoleToAccessProfilesServiceImplTest {
         roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole2", "solicitor"));
         doReturn(roleToAccessProfileEntities).when(repository).findRoleToAccessProfilesEntityByCaseType(caseType);
 
-        List<RoleAssignment> valuesReturned = classUnderTest.findByCaseTypeId(caseType);
+        List<RoleAssignment> valuesReturned = classUnderTest.findRoleAssignmentsByCaseTypeId(caseType);
         Assert.assertEquals(2, valuesReturned.size());
     }
 
@@ -119,7 +118,7 @@ class RoleToAccessProfilesServiceImplTest {
         doReturn(Optional.of(version)).when(caseTypeRepository).findLastVersion(caseType);
         doReturn(Lists.newArrayList()).when(repository).findRoleToAccessProfilesEntityByCaseType(caseType);
 
-        List<RoleAssignment> valuesReturned = classUnderTest.findByCaseTypeId(caseType);
+        List<RoleAssignment> valuesReturned = classUnderTest.findRoleAssignmentsByCaseTypeId(caseType);
         Assert.assertEquals(0, valuesReturned.size());
     }
 

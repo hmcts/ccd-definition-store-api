@@ -14,5 +14,5 @@ public interface RoleToAccessProfileService {
 
     List<RoleToAccessProfiles> findByCaseTypeReferences(List<String> caseTypeReferences);
 
-    List<RoleAssignment> findByCaseTypeId(String id);
+    List<RoleAssignment> findRoleAssignmentsByCaseTypeId(String id);
 }

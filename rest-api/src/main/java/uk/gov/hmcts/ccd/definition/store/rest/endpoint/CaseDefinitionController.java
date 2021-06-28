@@ -93,16 +93,16 @@ public class CaseDefinitionController {
 
     @GetMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/access/profile/roles",
         produces = {"application/json"})
-    @ApiOperation(value = "Get Case Roles for a case type",
-        notes = "Returns list of case roles of a single case type.\n", response = CaseRole.class)
+    @ApiOperation(value = "Get Role assignment for a case type",
+        notes = "Returns list of case roles of a single case type.\n", response = RoleAssignment.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of Case Roles")
+        @ApiResponse(code = 200, message = "List of Role assignments")
     })
     public List<RoleAssignment> getRoleToAccessProfiles(
         @ApiParam(value = "ID for a Caseworker", required = true) @PathVariable("uid") String caseworkerId,
         @ApiParam(value = "ID for a Jurisdiction", required = true) @PathVariable("jid") String jurisdictionId,
         @ApiParam(value = "ID for Case Type", required = true) @PathVariable("ctid") String caseTypeId) {
-        return roleToAccessProfilesService.findByCaseTypeId(caseTypeId);
+        return roleToAccessProfilesService.findRoleAssignmentsByCaseTypeId(caseTypeId);
     }
 
     @GetMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type",
