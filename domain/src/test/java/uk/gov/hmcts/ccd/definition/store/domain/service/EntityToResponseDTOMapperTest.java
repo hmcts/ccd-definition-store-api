@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -74,6 +67,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
+import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
@@ -81,6 +75,14 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -1856,4 +1858,22 @@ class  EntityToResponseDTOMapperTest {
         }
     }
 
+    @Nested
+    @DisplayName("Should create a RoleAssignment matching RoleToAccessProfilesEntity fields")
+    class RoleAssignmentTests {
+
+        @Test
+        void testMapWorkBasketInputCaseFieldEntity() {
+            RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
+
+            roleToAccessProfilesEntity.setId(2222222);
+            roleToAccessProfilesEntity.setRoleName("TEST1");
+
+            RoleAssignment roleAssignment = spyOnClassUnderTest.roleToAccessProfilesEntityToRoleAssignment(
+                roleToAccessProfilesEntity
+            );
+            assertEquals(roleToAccessProfilesEntity.getId(), roleAssignment.getId());
+            assertEquals(roleToAccessProfilesEntity.getRoleName(), roleAssignment.getName());
+        }
+    }
 }
