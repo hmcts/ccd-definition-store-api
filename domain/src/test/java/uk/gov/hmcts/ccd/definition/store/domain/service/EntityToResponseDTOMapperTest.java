@@ -1864,15 +1864,17 @@ class  EntityToResponseDTOMapperTest {
 
         @Test
         void testMapWorkBasketInputCaseFieldEntity() {
-            RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
-
+            final var roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
+            final var caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference("2222222");
             roleToAccessProfilesEntity.setId(2222222);
+            roleToAccessProfilesEntity.setCaseType(caseTypeEntity);
             roleToAccessProfilesEntity.setRoleName("TEST1");
 
-            RoleAssignment roleAssignment = spyOnClassUnderTest.roleToAccessProfilesEntityToRoleAssignment(
+            final var roleAssignment = spyOnClassUnderTest.roleToAccessProfilesEntityToRoleAssignment(
                 roleToAccessProfilesEntity
             );
-            assertEquals(roleToAccessProfilesEntity.getId(), roleAssignment.getId());
+            assertEquals(roleToAccessProfilesEntity.getCaseType().getReference(), roleAssignment.getId());
             assertEquals(roleToAccessProfilesEntity.getRoleName(), roleAssignment.getName());
         }
     }
