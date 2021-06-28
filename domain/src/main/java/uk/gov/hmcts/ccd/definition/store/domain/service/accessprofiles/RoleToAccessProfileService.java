@@ -1,9 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles;
 
-import java.util.List;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
+import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
+
+import java.util.List;
 
 public interface RoleToAccessProfileService {
 
@@ -13,5 +14,5 @@ public interface RoleToAccessProfileService {
 
     List<RoleToAccessProfiles> findByCaseTypeReferences(List<String> caseTypeReferences);
 
-    List<CaseRole> findByCaseTypeId(String id);
+    List<RoleAssignment> findByCaseTypeId(String id);
 }

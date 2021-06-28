@@ -14,7 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMappe
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfilesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
+import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 
 import static java.util.stream.Collectors.toList;
@@ -61,7 +61,7 @@ public class RoleToAccessProfilesServiceImpl implements RoleToAccessProfileServi
 
     @Transactional
     @Override
-    public List<CaseRole> findByCaseTypeId(String caseType) {
+    public List<RoleAssignment> findByCaseTypeId(String caseType) {
         final var caseTypeVersion = caseTypeRepository.findLastVersion(caseType)
             .orElseThrow(() -> new NotFoundException(caseType));
         LOG.debug("CaseType version {} found. for caseType {}...", caseTypeVersion, caseType);
@@ -71,7 +71,7 @@ public class RoleToAccessProfilesServiceImpl implements RoleToAccessProfileServi
 
         return caseRoleEntities
             .stream()
-            .map(dtoMapper::roleToAccessProfilesEntityToCaseRole)
+            .map(dtoMapper::roleToAccessProfilesEntityToRoleAssignment)
             .collect(toList());
     }
 

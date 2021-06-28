@@ -22,6 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersion
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 
 import java.util.List;
 import java.util.Optional;
@@ -97,7 +98,7 @@ public class CaseDefinitionController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of Case Roles")
     })
-    public List<CaseRole> getRoleToAccessProfiles(
+    public List<RoleAssignment> getRoleToAccessProfiles(
         @ApiParam(value = "ID for a Caseworker", required = true) @PathVariable("uid") String caseworkerId,
         @ApiParam(value = "ID for a Jurisdiction", required = true) @PathVariable("jid") String jurisdictionId,
         @ApiParam(value = "ID for Case Type", required = true) @PathVariable("ctid") String caseTypeId) {
