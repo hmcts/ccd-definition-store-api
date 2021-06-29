@@ -5,7 +5,7 @@ properties([
     pipelineTriggers([cron('H 05 * * *')])
 ])
 
-@Library("Infrastructure@ccd-1131-nightly-patch")
+@Library("Infrastructure")
 
 def type = "java"
 def product = "ccd"
