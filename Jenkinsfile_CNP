@@ -13,16 +13,17 @@ def definitionStoreDevelopPr = "PR-575" // This doesn't change frequently, but w
 
 def secrets = [
     'ccd-${env}': [
-        secret('ccd-importer-autotest-email', 'CCD_IMPORT_AUTOTEST_EMAIL'),
-        secret('ccd-importer-autotest-password', 'CCD_IMPORT_AUTOTEST_PASSWORD'),
         secret('ccd-caseworker-autotest-email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
         secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
-        secret('ccd-api-gateway-oauth2-client-secret', 'OAUTH2_CLIENT_SECRET'),
         secret('ccd-befta-caseworker-3-pwd', 'CCD_BEFTA_CASEWORKER_3_PWD'),
         secret('ccd-befta-master-caseworker-pwd', 'CCD_BEFTA_MASTER_CASEWORKER_PWD'),
 
+        secret('ccd-api-gateway-oauth2-client-secret', 'CCD_API_GATEWAY_OAUTH2_CLIENT_SECRET'),
+        secret('definition-importer-username', 'DEFINITION_IMPORTER_USERNAME'),
+        secret('definition-importer-password', 'DEFINITION_IMPORTER_PASSWORD')
     ],
     's2s-${env}': [
+        secret('microservicekey-ccd-gw', 'CCD_API_GATEWAY_S2S_KEY'),
         secret('microservicekey-ccd-gw', 'BEFTA_S2S_CLIENT_SECRET')
     ]
 ]
@@ -43,22 +44,12 @@ def vaultOverrides = [
 ]
 
 // Vars needed for AKS functional and smoke tests
-env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
-env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
 env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
-env.OAUTH2_CLIENT_ID = "ccd_gateway"
-env.OAUTH2_REDIRECT_URI = "https://www-ccd.aat.platform.hmcts.net/oauth2redirect"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
 env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.service.core-compute-aat.internal"
 
 withPipeline(type, product, app) {
-    // Vars needed for functional and smoke tests run against AKS
-    env.OAUTH2_CLIENT_ID = "ccd_gateway"
-    env.OAUTH2_REDIRECT_URI = "https://www-ccd.nonprod.platform.hmcts.net/oauth2redirect"
-    env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
-    env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
-    env.CCD_GW_SERVICE_NAME = "ccd_gw"
     onMaster {
         enableSlackNotifications('#ccd-master-builds')
     }
@@ -72,12 +63,18 @@ withPipeline(type, product, app) {
         enableSlackNotifications('#ccd-pr-builds')
     }
 
+    if (env.BRANCH_NAME.startsWith("PR-")) {
+        environmentOfDependencies = env.BRANCH_NAME.toLowerCase()
+        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${environmentOfDependencies}.service.core-compute-preview.internal"
+    }
+
     enableDbMigration('ccd')
     overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
     enableAksStagingDeployment()
     disableLegacyDeploymentOnAAT()
     disableLegacyDeployment()
+    enableHighLevelDataSetup()
 
     after('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
