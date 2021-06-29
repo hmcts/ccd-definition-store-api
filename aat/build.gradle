@@ -25,6 +25,14 @@ sourceSets {
     }
 }
 
+task highLevelDataSetup(type: JavaExec) {
+    dependsOn aatClasses
+
+    main = "uk.gov.hmcts.ccd.definitionstore.befta.HighLevelDataSetupApp"
+    classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
+    jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+}
+
 task smoke(type: Test) {
     description = 'Executes smoke tests against the CCD Definition Store Instance just deployed'
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
