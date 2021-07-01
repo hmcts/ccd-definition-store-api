@@ -1381,6 +1381,9 @@ class  EntityToResponseDTOMapperTest {
             SortOrder sortOrder = new SortOrder(2, "ASC");
             searchResultCaseFieldEntity.setSortOrder(sortOrder);
             searchResultCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference("Case_Type_1");
+            searchResultCaseFieldEntity.setCaseType(caseTypeEntity);
 
             SearchResultsField searchResultsField = spyOnClassUnderTest.map(searchResultCaseFieldEntity);
 
@@ -1397,6 +1400,7 @@ class  EntityToResponseDTOMapperTest {
 
             assertEquals(sortOrder.getDirection(), searchResultsField.getSortOrder().getDirection());
             assertEquals(sortOrder.getPriority(), searchResultsField.getSortOrder().getPriority());
+            assertEquals(caseTypeEntity.getReference(), searchResultsField.getCaseTypeId());
         }
 
         @Test
@@ -1470,6 +1474,9 @@ class  EntityToResponseDTOMapperTest {
             SortOrder sortOrder = new SortOrder(2, "ASC");
             workBasketCaseFieldEntity.setSortOrder(sortOrder);
             workBasketCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference("Case_Type_1");
+            workBasketCaseFieldEntity.setCaseType(caseTypeEntity);
 
             WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
 
@@ -1484,6 +1491,7 @@ class  EntityToResponseDTOMapperTest {
 
             assertEquals(sortOrder.getDirection(), workBasketResult.getSortOrder().getDirection());
             assertEquals(sortOrder.getPriority(), workBasketResult.getSortOrder().getPriority());
+            assertEquals(caseTypeEntity.getReference(), workBasketResult.getCaseTypeId());
         }
 
         @Test
@@ -1523,6 +1531,10 @@ class  EntityToResponseDTOMapperTest {
             searchCasesResultFieldEntity.setSortOrder(sortOrder);
             searchCasesResultFieldEntity.setDisplayContextParameter("DisplayContextParameter");
             searchCasesResultFieldEntity.setUseCase("orgCase");
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference("Case_Type_1");
+            searchCasesResultFieldEntity.setCaseType(caseTypeEntity);
+
 
             SearchCasesResultField searchCasesResultField = spyOnClassUnderTest.map(searchCasesResultFieldEntity);
 
@@ -1539,6 +1551,7 @@ class  EntityToResponseDTOMapperTest {
 
             assertEquals(sortOrder.getDirection(), searchCasesResultField.getSortOrder().getDirection());
             assertEquals(sortOrder.getPriority(), searchCasesResultField.getSortOrder().getPriority());
+            assertEquals(caseTypeEntity.getReference(), searchCasesResultField.getCaseTypeId());
 
         }
 
