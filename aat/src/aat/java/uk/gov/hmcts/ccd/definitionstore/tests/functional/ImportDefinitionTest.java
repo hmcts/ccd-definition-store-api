@@ -237,7 +237,7 @@ class ImportDefinitionTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Should return import definition with valid mid event URL.")
+    @DisplayName("Should import definition with valid mid event URL.")
     void shouldImportDefinitionWithValidMidEventURL() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
