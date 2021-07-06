@@ -74,7 +74,7 @@ withPipeline(type, product, app) {
     enableAksStagingDeployment()
     disableLegacyDeploymentOnAAT()
     disableLegacyDeployment()
-    enableHighLevelDataSetup()
+//     enableHighLevelDataSetup()
 
     after('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
