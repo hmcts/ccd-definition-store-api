@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Locale;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -48,9 +49,9 @@ public class DefinitionDataItem {
         final Object
             result =
             attributes.stream()
-                .filter(attribute -> attribute.getKey().equalsIgnoreCase(name))
+                .filter(attribute -> columnName.equalsColumnNameOrAlias(attribute.getKey()))
                 .findFirst()
-                .map(p -> p.getValue())
+                .map(Pair::getValue)
                 .orElse(null);
 
         if (ColumnName.isRequired(SheetName.forName(sheetName), columnName)) {
@@ -127,21 +128,15 @@ public class DefinitionDataItem {
         if (attribute == null) {
             return null;
         } else {
-            switch (attribute.toString().toLowerCase()) {
+            switch (attribute.toString().toLowerCase(Locale.ENGLISH)) {
                 case "yes":
-                    return true;
                 case "y":
-                    return true;
                 case "t":
-                    return true;
                 case "true":
                     return true;
                 case "no":
-                    return false;
                 case "n":
-                    return false;
                 case "false":
-                    return false;
                 case "f":
                     return false;
                 default:

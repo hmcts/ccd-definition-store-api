@@ -2,7 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 
 import java.time.LocalDateTime;
 
@@ -18,16 +18,16 @@ public class UserRoleModelMapperTest {
     @Test
     public void shouldGetEntity_whenToEntity() {
         final UserRole model = givenModel();
-        final UserRoleEntity userRoleEntity = UserRoleModelMapper.toEntity(model);
+        final AccessProfileEntity accessProfileEntity = UserRoleModelMapper.toEntity(model);
 
-        assertThat(userRoleEntity.getSecurityClassification(), is(SecurityClassification.PUBLIC));
-        assertThat(userRoleEntity.getId(), is(nullValue()));
-        assertThat(userRoleEntity.getCreatedAt(), is(nullValue()));
+        assertThat(accessProfileEntity.getSecurityClassification(), is(SecurityClassification.PUBLIC));
+        assertThat(accessProfileEntity.getId(), is(nullValue()));
+        assertThat(accessProfileEntity.getCreatedAt(), is(nullValue()));
     }
 
     @Test
     public void shouldGetModel_whenToModel() {
-        final UserRoleEntity entity = givenEntity();
+        final AccessProfileEntity entity = givenEntity();
         final UserRole model = UserRoleModelMapper.toModel(entity);
 
         assertThat(model.getId(), is(-3));
@@ -46,8 +46,8 @@ public class UserRoleModelMapperTest {
         return role;
     }
 
-    private UserRoleEntity givenEntity() {
-        UserRoleEntity entity = mock(UserRoleEntity.class);
+    private AccessProfileEntity givenEntity() {
+        AccessProfileEntity entity = mock(AccessProfileEntity.class);
 
         given(entity.getId()).willReturn(-3);
         given(entity.getCreatedAt()).willReturn(LocalDateTime.of(2011, 6, 5, 23, 59, 59));

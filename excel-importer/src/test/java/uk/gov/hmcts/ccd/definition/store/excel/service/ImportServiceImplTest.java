@@ -61,6 +61,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
@@ -69,7 +70,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFac
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
-import uk.gov.hmcts.ccd.definition.store.excel.service.ImportServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
@@ -84,10 +84,9 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingUserRolesException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
@@ -130,7 +129,7 @@ public class ImportServiceImplTest {
     private JurisdictionEntity jurisdiction;
 
     @Mock
-    private UserRoleRepository userRoleRepository;
+    private AccessProfileRepository accessProfileRepository;
 
     @Mock
     private WorkBasketUserDefaultService workBasketUserDefaultService;
@@ -216,7 +215,7 @@ public class ImportServiceImplTest {
             jurisdictionService,
             caseTypeService,
             layoutService,
-            userRoleRepository,
+            accessProfileRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,
@@ -280,8 +279,8 @@ public class ImportServiceImplTest {
         service.importFormDefinitions(inputStream);
     }
 
-    @Test(expected = MissingUserRolesException.class)
-    public void importDefinitionThrowsMissingUserRole() throws Exception {
+    @Test(expected = MissingAccessProfilesException.class)
+    public void importDefinitionThrowsMissingAccessProfiles() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
@@ -323,7 +322,7 @@ public class ImportServiceImplTest {
         state.setDataFieldType(DataFieldType.METADATA);
         given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
             .willReturn(state);
-        doThrow(MissingUserRolesException.class)
+        doThrow(MissingAccessProfilesException.class)
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
@@ -405,7 +404,7 @@ public class ImportServiceImplTest {
             jurisdictionService,
             caseTypeService,
             layoutService,
-            userRoleRepository,
+            accessProfileRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,

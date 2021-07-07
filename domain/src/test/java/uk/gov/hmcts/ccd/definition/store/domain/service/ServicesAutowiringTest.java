@@ -46,6 +46,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeVa
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldNameValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
@@ -63,7 +64,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionUiConfigReposito
 import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfilesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
-import uk.gov.hmcts.ccd.definition.store.repository.UserRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
@@ -295,8 +295,8 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
 
         @Bean
         @Primary
-        public UserRoleRepository userRoleRepository() {
-            return mock(UserRoleRepository.class);
+        public AccessProfileRepository accessProfileRepository() {
+            return mock(AccessProfileRepository.class);
         }
 
         @Bean

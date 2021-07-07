@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
-import uk.gov.hmcts.ccd.definition.store.domain.service.UserRoleService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.AccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
@@ -68,7 +68,7 @@ class UserRoleControllerTest {
     private UserRoleController controller;
 
     @Mock
-    private UserRoleService userRoleService;
+    private AccessProfileService accessProfileService;
 
     @BeforeEach
     void setUp() {
@@ -89,7 +89,7 @@ class UserRoleControllerTest {
             uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
             final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -6);
 
-            when(userRoleService.getRole(ROLE_DEFINED)).thenReturn(mockUserRole);
+            when(accessProfileService.getRole(ROLE_DEFINED)).thenReturn(mockUserRole);
 
             final MvcResult mvcResult = mockMvc.perform(
                 get(URL_TEMPLATE.expand(uriVariables)))
@@ -109,7 +109,7 @@ class UserRoleControllerTest {
         void shouldHaveStatusNotFound_whenRoleDoesNotExist() throws Throwable {
             uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
 
-            when(userRoleService.getRole(ROLE_DEFINED))
+            when(accessProfileService.getRole(ROLE_DEFINED))
                 .thenThrow(new NotFoundException("Role '" + ROLE_DEFINED + "' is not found"));
 
             mockMvc.perform(
@@ -127,7 +127,7 @@ class UserRoleControllerTest {
             final UserRole mockUserRole2 = buildUserRole(ROLE2, 2);
             List<UserRole> roles = Arrays.asList(mockUserRole, mockUserRole2);
             List<String> roleNames = Arrays.asList("role1", "role2");
-            when(userRoleService.getRoles(roleNames)).thenReturn(roles);
+            when(accessProfileService.getRoles(roleNames)).thenReturn(roles);
 
             final MvcResult mvcResult = mockMvc.perform(
                 get(URL_API_USER_ROLES))
@@ -155,7 +155,7 @@ class UserRoleControllerTest {
         @Test
         void shouldGetEmptyRoles_whenNoRolesExists() throws Exception {
             List<String> roleNames = Arrays.asList("role1", "role2");
-            when(userRoleService.getRoles(roleNames)).thenReturn(Collections.EMPTY_LIST);
+            when(accessProfileService.getRoles(roleNames)).thenReturn(Collections.EMPTY_LIST);
 
             final MvcResult mvcResult = mockMvc.perform(
                 get(URL_API_USER_ROLES))
@@ -177,7 +177,7 @@ class UserRoleControllerTest {
             final UserRole mockUserRole = buildUserRole(ROLE1, 1);
             final UserRole mockUserRole2 = buildUserRole(ROLE2, 2);
             List<UserRole> roles = Arrays.asList(mockUserRole, mockUserRole2);
-            when(userRoleService.getRoles()).thenReturn(roles);
+            when(accessProfileService.getRoles()).thenReturn(roles);
 
             final MvcResult mvcResult = mockMvc.perform(
                 get(URL_API_ALL_USER_ROLES))
@@ -213,7 +213,7 @@ class UserRoleControllerTest {
             throws Throwable {
 
             final UserRole argument = buildUserRole(ROLE_DEFINED);
-            when(userRoleService.saveRole(isA(UserRole.class)))
+            when(accessProfileService.saveRole(isA(UserRole.class)))
                 .thenThrow(new ObjectOptimisticLockingFailureException("Object updated already", 1));
 
             mockMvc.perform(
@@ -228,7 +228,7 @@ class UserRoleControllerTest {
         @DisplayName("Should have conflict status when role is updated but optimistic lock exception is thrown")
         void shouldHaveStatusConflict_whenUserRoleIsUpdatedThrowOptimisticLockException() throws Throwable {
             final UserRole argument = buildUserRole(ROLE_DEFINED);
-            when(userRoleService.saveRole(isA(UserRole.class)))
+            when(accessProfileService.saveRole(isA(UserRole.class)))
                 .thenThrow(new OptimisticLockException("Object updated already"));
 
             mockMvc.perform(
@@ -243,7 +243,7 @@ class UserRoleControllerTest {
         @DisplayName("Should have server error status when role is updated but persistence exception is thrown")
         void shouldHaveStatus500_whenUserRoleIsUpdatedWithPersistenceException() throws Throwable {
             final UserRole argument = buildUserRole(ROLE_DEFINED);
-            when(userRoleService.saveRole(isA(UserRole.class)))
+            when(accessProfileService.saveRole(isA(UserRole.class)))
                 .thenThrow(new PersistenceException("something funny in the database"));
 
             mockMvc.perform(
@@ -259,7 +259,8 @@ class UserRoleControllerTest {
         void shouldHaveStatusResetContent_whenPutSuccessfully() throws Exception {
             final UserRole argument = buildUserRole(ROLE_DEFINED);
             final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -7);
-            when(userRoleService.saveRole(isA(UserRole.class))).thenReturn(new ServiceResponse<>(mockUserRole, UPDATE));
+            when(accessProfileService.saveRole(isA(UserRole.class)))
+                .thenReturn(new ServiceResponse<>(mockUserRole, UPDATE));
 
             mockMvc.perform(
                 put(URL_API_USER_ROLE)
@@ -281,7 +282,7 @@ class UserRoleControllerTest {
             throws Throwable {
 
             final UserRole argument = buildUserRole(ROLE_DEFINED);
-            when(userRoleService.createRole(isA(UserRole.class)))
+            when(accessProfileService.createRole(isA(UserRole.class)))
                 .thenThrow(new DuplicateUserRoleException("User role already exists"));
 
             mockMvc.perform(
@@ -297,7 +298,7 @@ class UserRoleControllerTest {
         void shouldHaveStatusResetContent_whenPutSuccessfully() throws Exception {
             final UserRole argument = buildUserRole(ROLE_DEFINED);
             final UserRole mockUserRole = buildUserRole(ROLE_DEFINED, -7);
-            when(userRoleService.createRole(isA(UserRole.class)))
+            when(accessProfileService.createRole(isA(UserRole.class)))
                 .thenReturn(new ServiceResponse<>(mockUserRole, CREATE));
 
             mockMvc.perform(

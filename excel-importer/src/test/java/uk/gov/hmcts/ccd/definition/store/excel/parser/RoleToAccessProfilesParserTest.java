@@ -14,9 +14,9 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperExceptio
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -45,8 +45,8 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
         when(caseTypeEntity2.getReference()).thenReturn(CASE_TYPE_ID_2);
         Set<CaseTypeEntity> caseTypes = Sets.newHashSet(caseTypeEntity1, caseTypeEntity2);
         given(parseContext.getCaseTypes()).willReturn(caseTypes);
-        UserRoleEntity userRoleEntity = mock(UserRoleEntity.class);
-        when(parseContext.getRole(anyString(), anyString())).thenReturn(Optional.of(userRoleEntity));
+        AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
+        when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.of(accessProfileEntity));
     }
 
     @Test

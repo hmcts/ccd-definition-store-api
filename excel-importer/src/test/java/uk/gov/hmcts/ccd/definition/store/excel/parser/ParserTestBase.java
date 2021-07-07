@@ -13,7 +13,9 @@ abstract class ParserTestBase {
 
     protected static final String CASE_TYPE_UNDER_TEST = "Some Case Type";
     protected static final String CASE_FIELD_UNDER_TEST = "Some Case Field";
+    protected static final String CASE_EVENT_UNDER_TEST = "Are we there yet";
     protected static final String COMPLEX_FIELD_UNDER_TEST = "Some Complex Field";
+
     protected ParseContext parseContext;
     protected CaseTypeEntity caseType;
     protected Map<String, DefinitionSheet> definitionSheets;

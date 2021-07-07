@@ -14,7 +14,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/invalid/BEFTA_Master_Definition_invalid_retain_hidden_for_subfields_of_complex_type.xlsx"
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_invalid_retain_hidden_for_subfields_of_complex_type.xlsx"
         }
       ]
     }

@@ -1,0 +1,6 @@
+{
+  "_guid_" : "AccessControlList_R",
+  "_extends_": "AccessControlList__Base",
+
+  "read": true
+}

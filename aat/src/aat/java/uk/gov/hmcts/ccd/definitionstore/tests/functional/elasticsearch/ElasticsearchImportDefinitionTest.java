@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
+import uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore;
 import uk.gov.hmcts.befta.util.BeftaUtils;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 
@@ -56,7 +56,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     void shouldImportValidDefinitionMultipleTimes() throws Exception {
         // invoke definition import
         File file = BeftaUtils.getClassPathResourceIntoTemporaryFile(
-            TestDataLoaderToDefinitionStore.DEFAULT_DEFINITIONS_PATH + "CCD_CNP_27.xlsx");
+            DataLoaderToDefinitionStore.VALID_CCD_TEST_DEFINITIONS_PATH + "CCD_CNP_27.xlsx");
         try {
             asAutoTestImporter().get()
                 .given()

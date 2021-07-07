@@ -56,6 +56,13 @@ public class DefinitionDataItemTest {
     }
 
     @Test
+    public void shouldSucceed_whenRequiredAttributeKeyIsUsingAnAlias() {
+        item.addAttribute(ColumnName.ACCESS_PROFILE.getAliases()[0], "Access Profile Value");
+
+        Assertions.assertThat(item.findAttribute(ColumnName.ACCESS_PROFILE)).isEqualTo("Access Profile Value");
+    }
+
+    @Test
     public void shouldGetNull_whenBigDecimalAttributeDoesNotExist() {
         final BigDecimal result = item.getBigDecimal(ColumnName.DISPLAY_ORDER);
         assertThat(result, is(nullValue()));

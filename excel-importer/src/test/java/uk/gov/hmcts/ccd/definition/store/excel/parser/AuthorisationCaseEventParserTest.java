@@ -5,18 +5,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,8 +27,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.ccd.definition.store.excel.parser.AuthorisationCaseTypeParserTest.buildSheetForCaseType;
+import static uk.gov.hmcts.ccd.definition.store.excel.parser.ParserTestBase.CASE_TYPE_UNDER_TEST;
+import static uk.gov.hmcts.ccd.definition.store.excel.parser.ParserTestBase.CASE_EVENT_UNDER_TEST;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTHORISATION_CASE_EVENT;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
@@ -36,15 +40,22 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE
 @DisplayName("Authorisation Case Event Parser Test")
 class AuthorisationCaseEventParserTest {
 
-    private static final String CASE_TYPE_UNDER_TEST = "Some Case Type";
-    private static final String CASE_EVENT_UNDER_TEST = "Are we there yet";
+    private static final String CASE_TYPE_INVALID = "Invalid Case Type";
+
+    private static final String CASE_CRUD_1 = " CCCd  ";
+    private static final String CASE_CRUD_2 = " X y  ";
+
     private AuthorisationCaseEventParser subject;
     private CaseTypeEntity caseType;
     private Map<String, DefinitionSheet> definitionSheets;
     private DefinitionSheet definitionSheet;
 
+    private static final String TEST_ACCESS_PROFILE_FOUND = "CaseWorker 1";
+    private static final String TEST_ACCESS_PROFILE_NOT_FOUND = "CaseWorker 2";
+    private static final String TEST_CASE_ROLE_FOUND = "[CLAIMANT]";
+
     @Mock
-    private UserRoleEntity mockUserRoleEntity;
+    private AccessProfileEntity mockAccessProfileEntity;
 
     private CaseRoleEntity caseRoleEntity;
 
@@ -55,9 +66,9 @@ class AuthorisationCaseEventParserTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final ParseContext context = new ParseContext();
-        final String role = "CaseWorker 1";
-        given(mockUserRoleEntity.getReference()).willReturn(role);
-        context.registerUserRoles(Arrays.asList(mockUserRoleEntity));
+
+        given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
+        context.registerAccessProfiles(Collections.singletonList(mockAccessProfileEntity));
 
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
         subject = new AuthorisationCaseEventParser(context, entityToDefinitionDataItemRegistry);
@@ -72,32 +83,28 @@ class AuthorisationCaseEventParserTest {
         definitionSheets.put(CASE_TYPE.getName(), buildSheetForCaseType());
         definitionSheets.put(CASE_EVENT.getName(), buildSheetForCaseEvent());
 
-        final String caseRole = "[CLAIMANT]";
         caseRoleEntity = new CaseRoleEntity();
-        caseRoleEntity.setReference(caseRole);
+        caseRoleEntity.setReference(TEST_CASE_ROLE_FOUND);
         caseRoleEntity.setCaseType(caseType);
-        context.registerCaseRoles(Arrays.asList(caseRoleEntity));
+        context.registerCaseRoles(Collections.singletonList(caseRoleEntity));
     }
 
     @Test
-    void shouldParseEntityWithUserRoleFound() {
-
-        final String role = "CaseWorker 1";
-
+    void shouldParseEntityWithAccessProfileFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
-        item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
-        item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
+        item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
+        item1.addAttribute(ColumnName.CRUD.toString(), CASE_CRUD_1);
         definitionSheet.addDataItem(item1);
         subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
         Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
-        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("CCCd")),
+        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is(CASE_CRUD_1.trim())),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(mockAccessProfileEntity)),
             () -> assertThat(eventACLEntity.getCreate(), is(true)),
             () -> assertThat(eventACLEntity.getUpdate(), is(false)),
             () -> assertThat(eventACLEntity.getRead(), is(false)),
@@ -109,22 +116,20 @@ class AuthorisationCaseEventParserTest {
 
     @Test
     public void shouldParseEntityWithCaseRoleFound() {
-        final String caseRole = "[CLAIMANT]";
-
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
-        item1.addAttribute(ColumnName.USER_ROLE.toString(), caseRole);
-        item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
+        item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), TEST_CASE_ROLE_FOUND);
+        item1.addAttribute(ColumnName.CRUD.toString(), CASE_CRUD_1);
         definitionSheet.addDataItem(item1);
         subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
         Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
-        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("CCCd")),
+        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is(CASE_CRUD_1.trim())),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(caseRoleEntity)),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(caseRoleEntity)),
             () -> assertThat(eventACLEntity.getCreate(), is(true)),
             () -> assertThat(eventACLEntity.getUpdate(), is(false)),
             () -> assertThat(eventACLEntity.getRead(), is(false)),
@@ -135,24 +140,21 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithUserRoleNotFound() {
-
-        final String role = "CaseWorker 2";
-
+    public void shouldParseEntityWithAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
-        item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
-        item1.addAttribute(ColumnName.CRUD.toString(), " CCCd  ");
+        item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_NOT_FOUND);
+        item1.addAttribute(ColumnName.CRUD.toString(), CASE_CRUD_1);
         definitionSheet.addDataItem(item1);
         subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
         Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
-        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("CCCd")),
+        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is(CASE_CRUD_1.trim())),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(nullValue())),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(nullValue())),
 
             () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(eventACLEntity),
                 is(Optional.of(item1))));
@@ -160,14 +162,11 @@ class AuthorisationCaseEventParserTest {
 
     @Test
     public void shouldParseEntityWithInvalidCrud() {
-
-        final String role = "CaseWorker 1";
-
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
-        item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
-        item1.addAttribute(ColumnName.CRUD.toString(), " X y  ");
+        item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
+        item1.addAttribute(ColumnName.CRUD.toString(), CASE_CRUD_2);
         definitionSheet.addDataItem(item1);
         subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
         Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
@@ -175,23 +174,20 @@ class AuthorisationCaseEventParserTest {
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
-        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("X y")),
+        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is(CASE_CRUD_2.trim())),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(mockUserRoleEntity)),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(mockAccessProfileEntity)),
             () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(eventACLEntity),
                 is(Optional.of(item1))));
     }
 
     @Test
-    public void shouldParseEntityWithInvalidCrudAndUserNotFound() {
-
-        final String role = "CaseWorker 2";
-
+    public void shouldParseEntityWithInvalidCrudAndAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
-        item1.addAttribute(ColumnName.USER_ROLE.toString(), role);
-        item1.addAttribute(ColumnName.CRUD.toString(), " X y  ");
+        item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_NOT_FOUND);
+        item1.addAttribute(ColumnName.CRUD.toString(), CASE_CRUD_2);
         definitionSheet.addDataItem(item1);
         subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
         Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
@@ -199,11 +195,79 @@ class AuthorisationCaseEventParserTest {
         assertThat(entities.size(), is(1));
 
         final EventACLEntity eventACLEntity = new ArrayList<>(entities).get(0);
-        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is("X y")),
+        assertAll(() -> assertThat(eventACLEntity.getCrudAsString(), is(CASE_CRUD_2.trim())),
             () -> assertThat(eventACLEntity.getId(), is(nullValue())),
-            () -> assertThat(eventACLEntity.getUserRole(), is(nullValue())),
+            () -> assertThat(eventACLEntity.getAccessProfile(), is(nullValue())),
             () -> assertThat(entityToDefinitionDataItemRegistry.getForEntity(eventACLEntity),
                 is(Optional.of(item1))));
+    }
+
+    @Test
+    void shouldParseEntityWithInvalidEvent() {
+        EventEntity caseEvent1 = new EventEntity();
+        caseEvent1.setReference("Invalid event");
+
+        final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
+        item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
+        item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
+        item1.addAttribute(ColumnName.CRUD.toString(), CASE_CRUD_1);
+        definitionSheet.addDataItem(item1);
+
+        subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent1));
+        Collection<EventACLEntity> entities = caseEvent1.getEventACLEntities();
+        assertThat(entities.size(), is(0));
+    }
+
+    @Test
+    void shouldParseEntityWithInvalidCaseType() {
+        final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
+        item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_INVALID);
+        item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
+        item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
+        item1.addAttribute(ColumnName.CRUD.toString(), CASE_CRUD_1);
+        definitionSheet.addDataItem(item1);
+
+        final MapperException mapperException = assertThrows(MapperException.class,
+            () -> subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent)));
+        assertEquals(String.format("Unknown Case Type '%s' in worksheet '%s'",
+            CASE_TYPE_INVALID, SheetName.AUTHORISATION_CASE_EVENT.getName()), mapperException.getMessage());
+    }
+
+    @Test
+    void shouldParseEntityWithNoDefinitions() {
+        final MapperException mapperException = assertThrows(MapperException.class,
+            () -> subject.parseAndSetEventACLEntities(null, caseType, Collections.singleton(caseEvent)));
+        assertEquals("A definition must contain a sheet", mapperException.getMessage());
+    }
+
+    @Test
+    void shouldParseEntityWithEmptyDefinitions() {
+        Map<String, DefinitionSheet> definitionSheetsMap = new HashMap<>();
+
+        final MapperException mapperException = assertThrows(MapperException.class,
+            () -> subject.parseAndSetEventACLEntities(definitionSheetsMap, caseType, Collections.singleton(caseEvent)));
+        assertEquals("A definition must contain a sheet", mapperException.getMessage());
+    }
+
+    @Test
+    void shouldParseEntityWithNoDefinitionSheet() {
+        Map<String, DefinitionSheet> definitionSheetsMap = new HashMap<>();
+        definitionSheetsMap.put(CASE_TYPE.getName(), buildSheetForCaseType());
+        definitionSheetsMap.put(CASE_EVENT.getName(), buildSheetForCaseEvent());
+
+        final MapperException mapperException = assertThrows(MapperException.class,
+            () -> subject.parseAndSetEventACLEntities(definitionSheetsMap, caseType, Collections.singleton(caseEvent)));
+        assertEquals(String.format("A definition must contain a '%s' sheet",
+            SheetName.AUTHORISATION_CASE_EVENT.getName()), mapperException.getMessage());
+    }
+
+    @Test
+    void shouldParseEntityWithNoDataItems() {
+        subject.parseAndSetEventACLEntities(definitionSheets, caseType, Collections.singleton(caseEvent));
+        Collection<EventACLEntity> entities = caseEvent.getEventACLEntities();
+
+        assertThat(entities.size(), is(0));
     }
 
     private DefinitionSheet buildSheetForCaseEvent() {

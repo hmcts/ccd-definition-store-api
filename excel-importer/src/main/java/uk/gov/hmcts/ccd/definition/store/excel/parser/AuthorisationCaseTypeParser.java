@@ -47,20 +47,20 @@ class AuthorisationCaseTypeParser implements AuthorisationParser {
         if (null == dataItems) {
             LOG.warn("No row were defined for case type '{}' in AuthorisationCaseTypes tab", caseTypeReference);
         } else {
-            LOG.debug("Parsing user roles for case type {}: {} AuthorisationCaseTypes detected",
+            LOG.debug("Parsing access profiles for case type {}: {} AuthorisationCaseTypes detected",
                 caseTypeReference, dataItems.size());
 
             for (DefinitionDataItem definition : dataItems) {
 
                 final CaseTypeACLEntity entity = new CaseTypeACLEntity();
-                parseUserRole(entity, definition, parseContext);
+                parseAccessProfile(entity, definition, parseContext);
                 parseCrud(entity, definition);
 
                 parseResults.add(entity);
                 entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(entity, definition);
 
-                LOG.info("Parsing user role {} for case type {}: OK",
-                    definition.getString(ColumnName.USER_ROLE), caseTypeReference);
+                LOG.info("Parsing access profile {} for case type {}: OK",
+                    definition.getString(ColumnName.ACCESS_PROFILE), caseTypeReference);
             }
 
         }
