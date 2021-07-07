@@ -14,7 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 
 @Component
 public class RoleToAccessProfilesValidator {
@@ -52,8 +52,9 @@ public class RoleToAccessProfilesValidator {
 
         Arrays.stream(accessProfiles.split(","))
             .forEach(accessProfile -> {
-                Optional<UserRoleEntity> userRoleEntity = parseContext.getRole(caseTypeRef, accessProfile);
-                if (userRoleEntity.isEmpty()) {
+                Optional<AccessProfileEntity> accessProfileEntity = parseContext
+                    .getAccessProfile(caseTypeRef, accessProfile);
+                if (accessProfileEntity.isEmpty()) {
                     String message = String.format("Access Profile '%s' not found in column '%s' "
                             + "in the sheet '%s'",
                         accessProfile, ColumnName.ACCESS_PROFILES, SheetName.ROLE_TO_ACCESS_PROFILES);

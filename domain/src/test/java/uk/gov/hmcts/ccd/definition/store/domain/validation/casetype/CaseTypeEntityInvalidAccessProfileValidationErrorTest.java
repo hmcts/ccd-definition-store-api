@@ -13,20 +13,20 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeUserRoleEntityBuilder.buildCaseTypeUserRoleEntity;
 
-public class CaseTypeEntityInvalidUserRoleValidationErrorTest {
+public class CaseTypeEntityInvalidAccessProfileValidationErrorTest {
 
     private static final String OVERRIDDEN_ERROR_MESSAGE = "The overridden error message";
 
     @Mock
     private ValidationErrorMessageCreator mockValidationErrorMessageCreator;
 
-    private CaseTypeEntityInvalidUserRoleValidationError classUnderTest;
+    private CaseTypeEntityInvalidAccessProfileValidationError classUnderTest;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         final CaseTypeACLEntity entity = buildCaseTypeUserRoleEntity("1yLLoMwpA7");
-        classUnderTest = new CaseTypeEntityInvalidUserRoleValidationError(entity,
+        classUnderTest = new CaseTypeEntityInvalidAccessProfileValidationError(entity,
             new AuthorisationValidationContext(entity.getCaseType()));
         when(mockValidationErrorMessageCreator.createErrorMessage(classUnderTest))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);
@@ -35,7 +35,7 @@ public class CaseTypeEntityInvalidUserRoleValidationErrorTest {
     @Test
     public void testDefaultMessage() {
         assertEquals(
-            "Invalid UserRole is not defined for case type 'case_type'",
+            "Invalid AccessProfile is not defined for case type 'case_type'",
             classUnderTest.getDefaultMessage()
         );
     }

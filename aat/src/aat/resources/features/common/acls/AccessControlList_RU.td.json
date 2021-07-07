@@ -1,0 +1,7 @@
+{
+  "_guid_" : "AccessControlList_RU",
+  "_extends_": "AccessControlList__Base",
+
+  "read": true,
+  "update": true
+}

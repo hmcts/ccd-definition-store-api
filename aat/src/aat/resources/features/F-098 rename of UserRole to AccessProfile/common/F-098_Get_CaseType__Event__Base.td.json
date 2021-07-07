@@ -1,0 +1,28 @@
+{
+	"_guid_": "F-098_Get_CaseType__Event__Base",
+
+	"id": "OVERRIDE EVENT ID",
+
+	"name": "[[ANY_STRING_NOT_NULLABLE]]",
+	"description": "[[ANY_STRING_NULLABLE]]",
+	"order": "[[ANY_INTEGER_NOT_NULLABLE]]",
+	"case_fields": "[[ANYTHING_PRESENT]]",
+	"pre_states": "[[ANYTHING_PRESENT]]",
+	"post_states": "[[ANYTHING_PRESENT]]",
+	"callback_url_about_to_start_event": null,
+	"retries_timeout_about_to_start_event": [],
+	"callback_url_about_to_submit_event": null,
+	"retries_timeout_url_about_to_submit_event": [],
+	"callback_url_submitted_event": null,
+	"retries_timeout_url_submitted_event": [],
+	"security_classification": "PUBLIC",
+	"event_enabling_condition": null,
+
+	"acls": [],
+
+	"show_summary": "[[ANYTHING_PRESENT]]",
+	"publish": "[[ANYTHING_PRESENT]]",
+	"show_event_notes": null,
+	"can_save_draft": null,
+	"end_button_label": null
+}

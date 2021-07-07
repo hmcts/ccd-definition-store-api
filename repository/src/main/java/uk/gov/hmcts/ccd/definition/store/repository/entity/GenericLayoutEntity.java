@@ -53,7 +53,7 @@ public abstract class GenericLayoutEntity implements Serializable {
 
     @ManyToOne(cascade = ALL)
     @JoinColumn(name = "role_id", nullable = false)
-    private UserRoleEntity userRole;
+    private AccessProfileEntity accessProfile;
 
     @Column(name = "display_context_parameter")
     private String displayContextParameter;
@@ -122,12 +122,12 @@ public abstract class GenericLayoutEntity implements Serializable {
         this.order = order;
     }
 
-    public UserRoleEntity getUserRole() {
-        return userRole;
+    public AccessProfileEntity getAccessProfile() {
+        return accessProfile;
     }
 
-    public void setUserRole(UserRoleEntity userRole) {
-        this.userRole = userRole;
+    public void setAccessProfile(AccessProfileEntity accessProfile) {
+        this.accessProfile = accessProfile;
     }
 
     public Optional<String> showCondition() {

@@ -26,7 +26,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
         final ValidationResult validationResult = new ValidationResult();
 
         for (ComplexFieldACLEntity entity : caseField.getComplexFieldACLEntities()) {
-            validateUserRole(caseField, caseFieldEntityValidationContext, validationResult, entity);
+            validateAccessProfile(caseField, caseFieldEntityValidationContext, validationResult, entity);
             validateCrudAgainstCaseFieldParent(caseField, caseFieldEntityValidationContext, validationResult, entity);
             validateCrudComplexParent(caseField, caseFieldEntityValidationContext, validationResult, entity);
             validatePredefinedComplexTypes(caseField, caseFieldEntityValidationContext, validationResult, entity);
@@ -73,13 +73,13 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
                                            CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                            ValidationResult validationResult,
                                            ComplexFieldACLEntity parentComplexFieldACLEntity) {
-        String parentUserRole = parentComplexFieldACLEntity.getUserRole() != null
-            ? parentComplexFieldACLEntity.getUserRole().getReference() : "";
+        String parentAccessProfile = parentComplexFieldACLEntity.getAccessProfile() != null
+            ? parentComplexFieldACLEntity.getAccessProfile().getReference() : "";
         caseField.getComplexFieldACLEntities()
             .stream()
             .anyMatch(child -> {
-                boolean match = (child.getUserRole() != null
-                    && child.getUserRole().getReference().equalsIgnoreCase(parentUserRole))
+                boolean match = (child.getAccessProfile() != null
+                    && child.getAccessProfile().getReference().equalsIgnoreCase(parentAccessProfile))
                     && isAChild(parentComplexFieldACLEntity.getListElementCode(), child.getListElementCode())
                     && parentComplexFieldACLEntity.hasLowerAccessThan(child);
                 if (match) {
@@ -98,7 +98,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
         final List<String> missingCodes = parentCodes
             .stream()
             .filter(parentCode -> isMissingInComplexACLs(
-                caseField.getComplexFieldACLEntities(), parentUserRole, parentCode))
+                caseField.getComplexFieldACLEntities(), parentAccessProfile, parentCode))
             .collect(Collectors.toList());
         for (String code : missingCodes) {
             validationResult.addError(new CaseFieldEntityComplexACLValidationError(
@@ -116,10 +116,10 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
     }
 
     private boolean isMissingInComplexACLs(List<ComplexFieldACLEntity> complexFieldACLEntities,
-                                           String userRole, String parentCode) {
+                                           String accessProfile, String parentCode) {
         return complexFieldACLEntities.stream()
-            .noneMatch(entity -> (entity.getUserRole() != null
-                && entity.getUserRole().getReference().equalsIgnoreCase(userRole))
+            .noneMatch(entity -> (entity.getAccessProfile() != null
+                && entity.getAccessProfile().getReference().equalsIgnoreCase(accessProfile))
                 && parentCode.equals(entity.getListElementCode())
             );
     }
@@ -127,10 +127,11 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
     private void validateCrudAgainstCaseFieldParent(CaseFieldEntity caseField,
                                                     CaseFieldEntityValidationContext caseFieldEntityValidationContext,
                                                     ValidationResult validationResult, ComplexFieldACLEntity entity) {
-        String userRole = entity.getUserRole() != null ? entity.getUserRole().getReference() : "";
-        final Optional<CaseFieldACLEntity> caseFieldACLByRole = caseField.getCaseFieldACLByRole(userRole);
-        if (caseFieldACLByRole.isPresent()) {
-            if (caseFieldACLByRole.get().hasLowerAccessThan(entity)) {
+        String accessProfile = entity.getAccessProfile() != null ? entity.getAccessProfile().getReference() : "";
+        final Optional<CaseFieldACLEntity> caseFieldACLByAccessProfile
+                = caseField.getCaseFieldACLByAccessProfile(accessProfile);
+        if (caseFieldACLByAccessProfile.isPresent()) {
+            if (caseFieldACLByAccessProfile.get().hasLowerAccessThan(entity)) {
                 validationResult.addError(new CaseFieldEntityComplexACLValidationError(
                     String.format("List element code '%s' has higher access than case field '%s'",
                         entity.getListElementCode(), caseField.getReference()),
@@ -148,11 +149,11 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
         }
     }
 
-    private void validateUserRole(CaseFieldEntity caseField,
-                                  CaseFieldEntityValidationContext caseFieldEntityValidationContext,
-                                  ValidationResult validationResult, ComplexFieldACLEntity entity) {
-        if (null == entity.getUserRole()) {
-            validationResult.addError(new CaseFieldEntityInvalidUserRoleValidationError(entity,
+    private void validateAccessProfile(CaseFieldEntity caseField,
+                                       CaseFieldEntityValidationContext caseFieldEntityValidationContext,
+                                       ValidationResult validationResult, ComplexFieldACLEntity entity) {
+        if (null == entity.getAccessProfile()) {
+            validationResult.addError(new CaseFieldEntityInvalidAccessProfileValidationError(entity,
                 new AuthorisationCaseFieldValidationContext(caseField, caseFieldEntityValidationContext)));
         }
     }

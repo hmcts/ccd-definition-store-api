@@ -534,6 +534,7 @@
         }
       ],
       "searchAliasFields": [],
+      "roleToAccessProfiles": [],
       "case_fields": [
         {
           "__ordering__": "UNORDERED",
@@ -1089,7 +1090,7 @@
                 "metadata": false,
                 "id": "PreviousOrganisations",
                 "case_type_id": null,
-                "label": "PreviousOrganisations",
+                "label": "Previous Organisations",
                 "hint_text": null,
                 "field_type": {
                   "id": "PreviousOrganisationCollection",
@@ -1111,7 +1112,7 @@
                         "metadata": false,
                         "id": "FromTimestamp",
                         "case_type_id": null,
-                        "label": "FromTimestamp",
+                        "label": "From Timestamp",
                         "hint_text": null,
                         "field_type": {
                           "id": "DateTime",
@@ -1138,7 +1139,7 @@
                         "metadata": false,
                         "id": "ToTimestamp",
                         "case_type_id": null,
-                        "label": "ToTimestamp",
+                        "label": "To Timestamp",
                         "hint_text": null,
                         "field_type": {
                           "id": "DateTime",
@@ -1165,7 +1166,7 @@
                         "metadata": false,
                         "id": "OrganisationName",
                         "case_type_id": null,
-                        "label": "OrganisationName",
+                        "label": "Organisation Name",
                         "hint_text": null,
                         "field_type": {
                           "id": "Text",
@@ -1192,7 +1193,7 @@
                         "metadata": false,
                         "id": "OrganisationAddress",
                         "case_type_id": null,
-                        "label": "OrganisationAddress",
+                        "label": "Organisation Address",
                         "hint_text": null,
                         "field_type": {
                           "id": "AddressUK",

@@ -1,0 +1,8 @@
+{
+  "_guid_" : "AccessControlList_CRU",
+  "_extends_": "AccessControlList__Base",
+
+  "create": true,
+  "read": true,
+  "update": true
+}

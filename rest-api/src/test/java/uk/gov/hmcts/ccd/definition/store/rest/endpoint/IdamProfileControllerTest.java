@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.RestEndPointExceptionHandler;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
@@ -43,7 +42,7 @@ class IdamProfileControllerTest {
         given(idamProfileClient.getLoggedInUserDetails()).willReturn(idamProperties);
         final IdamProfileController controller = new IdamProfileController(idamProfileClient);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-            .setControllerAdvice(new RestEndPointExceptionHandler())
+            .setControllerAdvice(new ControllerExceptionHandler())
             .build();
     }
 

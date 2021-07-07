@@ -12,7 +12,7 @@ import static javax.persistence.FetchType.LAZY;
 @Table(name = "role")
 @Entity
 @DiscriminatorValue("CASEROLE")
-public class CaseRoleEntity extends UserRoleEntity implements Serializable {
+public class CaseRoleEntity extends AccessProfileEntity implements Serializable {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id")
     private CaseTypeEntity caseType;
