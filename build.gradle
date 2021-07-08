@@ -47,7 +47,7 @@ dependencyCheck {
 
 //spring boot dependency override
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
-ext['elasticsearch.version'] = '6.4.3'
+ext['elasticsearch.version'] = '6.8.17'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.4.5'
@@ -105,7 +105,8 @@ allprojects {
     apply plugin: 'java'
 
     ext {
-        elasticSearchVersion = '6.4.3'
+        elasticSearchVersion = '6.8.17'
+        elasticSearchHLClientVersion = '6.5.0'
     }
 
     dependencies {
@@ -137,6 +138,7 @@ allprojects {
         resolutionStrategy {
             dependencySubstitution {
                 substitute module('org.elasticsearch:elasticsearch') with module("org.elasticsearch:elasticsearch:${elasticSearchVersion}")
+                substitute module('org.elasticsearch.client:elasticsearch-rest-high-level-client') with module("org.elasticsearch.client:elasticsearch-rest-high-level-client:${elasticSearchHLClientVersion}")
             }
 
             eachDependency { details ->
@@ -215,7 +217,7 @@ subprojects { subproject ->
         compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
-
+        runtime "org.elasticsearch.client:elasticsearch-rest-high-level-client:6.5.0"
         compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
         compile('org.springframework.boot:spring-boot-starter-cache')
 
