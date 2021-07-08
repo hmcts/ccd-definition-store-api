@@ -105,7 +105,7 @@ allprojects {
     apply plugin: 'java'
 
     ext {
-        elasticSearchVersion = '6.4.3'
+        elasticSearchVersion = '6.8.15'
     }
 
     dependencies {
