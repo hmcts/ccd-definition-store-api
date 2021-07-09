@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
