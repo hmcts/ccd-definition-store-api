@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
@@ -42,6 +43,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         deleteElasticsearchIndices(WILDCARD);
     }
 
+    @Test
     @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
     void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException, JSONException {
         CaseFieldEntity baseTypeField = newTextField("TextField").build();
@@ -89,6 +91,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
             ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))));
     }
 
+    @Test
     void shouldCreateElasticsearchIndexForAllCaseTypes() throws IOException, JSONException {
         CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
         CaseFieldEntity baseTypeField2 = newTextField("TextField2").build();
