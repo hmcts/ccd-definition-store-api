@@ -54,8 +54,8 @@ pitest {
                    'uk.gov.hmcts.ccd.definition.store.utils.*'
     ]
     enableDefaultIncrementalAnalysis = true
-    historyInputLocation = ['build/reports/pitest/fastermutationtesting']
-    historyOutputLocation = ['build/reports/pitest/fastermutationtestingoutput']
+    historyInputLocation = 'build/reports/pitest/fastermutationtesting'
+    historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     threads = 15
     testSourceSets = [sourceSets.test]
     mainSourceSets = [sourceSets.main]
