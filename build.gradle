@@ -114,6 +114,7 @@ allprojects {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+        compile 'net.minidev:json-smart:2.4.7'
     }
 
     // Global constraints
