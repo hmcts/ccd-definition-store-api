@@ -50,4 +50,9 @@
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
 	</suppress>
+	
+	<suppress until="2021-07-25">
+		<cve>CVE-2021-27568</cve>
+	</suppress>
+	
 </suppressions>
