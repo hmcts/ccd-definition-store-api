@@ -50,17 +50,9 @@
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
 	</suppress>
-
-	<suppress>
-		<cve>CVE-2021-29425</cve>
-		<cve>CVE-2021-22118</cve>
-		<cve>CVE-2021-22135</cve>
-		<cve>CVE-2021-22137</cve>
+	
+	<suppress until="2021-07-25">
+		<cve>CVE-2021-27568</cve>
 	</suppress>
-
-	<suppress>
-		<cve>CVE-2021-22135</cve>
-		<cve>CVE-2021-22137</cve>
-		<cve>CVE-2021-22118</cve>
-	</suppress>
+	
 </suppressions>
