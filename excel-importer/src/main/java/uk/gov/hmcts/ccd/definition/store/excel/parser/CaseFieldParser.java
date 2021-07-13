@@ -51,9 +51,9 @@ public class CaseFieldParser {
 
         for (DefinitionDataItem caseFieldDefinition : caseFieldItems) {
             final String caseFieldId = caseFieldDefinition.getId();
-            if (!caseFieldId.matches(CASE_FIELD_ID_PATTERN))
-            {
-                throw new SpreadsheetParsingException("CaseField ID "+ caseFieldId +" did not match pattern "+ CASE_FIELD_ID_PATTERN);
+            if (!caseFieldId.matches(CASE_FIELD_ID_PATTERN)) {
+                throw new SpreadsheetParsingException("CaseField ID " + caseFieldId
+                   + " did not match pattern " + CASE_FIELD_ID_PATTERN);
             }
             logger.debug("Parsing case fields for case type {}: Parsing case field {}...", caseTypeId, caseFieldId);
             final CaseFieldEntity caseField = parseCaseField(caseTypeId, caseFieldId, caseFieldDefinition);
