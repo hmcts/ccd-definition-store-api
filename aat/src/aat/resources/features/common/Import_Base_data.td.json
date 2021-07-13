@@ -12,8 +12,8 @@
 
   "users": {
     "invokingUser": {
-      "username": "[[$CCD_IMPORT_AUTOTEST_EMAIL]]",
-      "password": "[[$CCD_IMPORT_AUTOTEST_PASSWORD]]"
+      "username": "[[$DEFINITION_IMPORTER_USERNAME]]",
+      "password": "[[$DEFINITION_IMPORTER_PASSWORD]]"
     }
   },
 
