@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -81,6 +74,16 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
+
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -1701,7 +1704,13 @@ class  EntityToResponseDTOMapperTest {
         void testMapRoleToAccessProfileEntity() {
             RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
             roleToAccessProfilesEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
-
+            roleToAccessProfilesEntity.setRoleName("judge");
+            roleToAccessProfilesEntity.setLiveFrom(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+            roleToAccessProfilesEntity.setLiveTo(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+            roleToAccessProfilesEntity.setReadOnly(true);
+            roleToAccessProfilesEntity.setDisabled(true);
+            roleToAccessProfilesEntity.setAuthorisation("auth1,auth2");
+            roleToAccessProfilesEntity.setAccessProfiles("caseworker-befta_master,caseworker-befta_master-solicitor");
 
             RoleToAccessProfiles roleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
