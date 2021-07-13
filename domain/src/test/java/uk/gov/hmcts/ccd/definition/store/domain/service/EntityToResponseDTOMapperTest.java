@@ -76,7 +76,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -96,7 +98,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-class EntityToResponseDTOMapperTest {
+class  EntityToResponseDTOMapperTest {
 
     private static final SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -134,20 +136,20 @@ class EntityToResponseDTOMapperTest {
 
             assertAll(
                 () -> assertEquals("displayContext", eventCaseFieldEntity.getDisplayContext().name(),
-                    caseEventField.getDisplayContext()),
+                                   caseEventField.getDisplayContext()),
                 () -> assertEquals("showCondition", eventCaseFieldEntity.getShowCondition(),
-                    caseEventField.getShowCondition()),
+                                   caseEventField.getShowCondition()),
                 () -> assertEquals("showSummaryChangeOption", eventCaseFieldEntity.getShowSummaryChangeOption(),
-                    caseEventField.getShowSummaryChangeOption()),
+                                   caseEventField.getShowSummaryChangeOption()),
                 () -> assertEquals("showSummaryContentOption",
-                    eventCaseFieldEntity.getShowSummaryContentOption(),
-                    caseEventField.getShowSummaryContentOption()),
+                                   eventCaseFieldEntity.getShowSummaryContentOption(),
+                                   caseEventField.getShowSummaryContentOption()),
                 () -> assertEquals("retainHiddenValue", eventCaseFieldEntity.getRetainHiddenValue(),
-                    caseEventField.getRetainHiddenValue()),
+                                   caseEventField.getRetainHiddenValue()),
                 () -> assertEquals("publish", eventCaseFieldEntity.getPublish(),
-                    caseEventField.getPublish()),
+                                   caseEventField.getPublish()),
                 () -> assertEquals("publishAs", eventCaseFieldEntity.getPublishAs(),
-                    caseEventField.getPublishAs())
+                                   caseEventField.getPublishAs())
             );
         }
 
@@ -932,10 +934,10 @@ class EntityToResponseDTOMapperTest {
         }
 
         private StateACLEntity stateACLEntity(String reference,
-                                              Boolean create,
-                                              Boolean read,
-                                              Boolean update,
-                                              Boolean delete) {
+                                             Boolean create,
+                                             Boolean read,
+                                             Boolean update,
+                                             Boolean delete) {
             StateACLEntity stateACLEntity = new StateACLEntity();
             AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
             accessProfileEntity.setReference(reference);
@@ -1702,7 +1704,13 @@ class EntityToResponseDTOMapperTest {
         void testMapRoleToAccessProfileEntity() {
             RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
             roleToAccessProfilesEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
-
+            roleToAccessProfilesEntity.setRoleName("judge");
+            roleToAccessProfilesEntity.setLiveFrom(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+            roleToAccessProfilesEntity.setLiveTo(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+            roleToAccessProfilesEntity.setReadOnly(true);
+            roleToAccessProfilesEntity.setDisabled(true);
+            roleToAccessProfilesEntity.setAuthorisation("auth1,auth2");
+            roleToAccessProfilesEntity.setAccessProfiles("caseworker-befta_master,caseworker-befta_master-solicitor");
 
             RoleToAccessProfiles roleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
@@ -1857,24 +1865,4 @@ class EntityToResponseDTOMapperTest {
         }
     }
 
-    @Nested
-    @DisplayName("Should create a RoleAssignment matching RoleToAccessProfilesEntity fields")
-    class RoleAssignmentTests {
-
-        @Test
-        void testMapWorkBasketInputCaseFieldEntity() {
-            final var roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
-            final var caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference("2222222");
-            roleToAccessProfilesEntity.setId(2222222);
-            roleToAccessProfilesEntity.setCaseType(caseTypeEntity);
-            roleToAccessProfilesEntity.setRoleName("TEST1");
-
-            final var roleAssignment = spyOnClassUnderTest.roleToAccessProfilesEntityToRoleAssignment(
-                roleToAccessProfilesEntity
-            );
-            assertEquals(roleToAccessProfilesEntity.getCaseType().getReference(), roleAssignment.getId());
-            assertEquals(roleToAccessProfilesEntity.getRoleName(), roleAssignment.getName());
-        }
-    }
 }

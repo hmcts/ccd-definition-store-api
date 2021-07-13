@@ -297,6 +297,7 @@ public interface EntityToResponseDTOMapper {
     ChallengeQuestion map(ChallengeQuestionTabEntity challengeQuestionEntity);
 
     @Mapping(source = "caseType.reference", target = "caseTypeId")
+    @Mapping(source = "authorisation", target = "authorisations")
     RoleToAccessProfiles map(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
 
     @Mapping(source = "caseType.reference", target = "id")
