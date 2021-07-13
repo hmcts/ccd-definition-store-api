@@ -52,6 +52,27 @@ public class CaseFieldParserTest extends ParserTestBase {
         }
     }
 
+    @Test(expected = SpreadsheetParsingException.class)
+    public void shouldFail_ForInvalidCaseFieldID() {
+        try {
+            final FieldTypeEntity field = mock(FieldTypeEntity.class);
+            given(parseContext.getCaseFieldType(CASE_TYPE_UNDER_TEST, "Case_Field")).willReturn(field);
+
+            final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_FIELD.toString());
+            item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+            item.addAttribute(ColumnName.ID.toString(), "Case * Field");
+            item.addAttribute(ColumnName.LABEL.toString(), "Case Field");
+            item.addAttribute(ColumnName.FIELD_TYPE.toString(), "Text");
+
+            definitionSheet.addDataItem(item);
+
+            caseFieldParser.parseAll(definitionSheets, caseType);
+        } catch (SpreadsheetParsingException ex) {
+            Assertions.assertThat(ex).hasMessageContaining("CaseField ID Case * Field did not match pattern");
+            throw ex;
+        }
+    }
+
     @Test
     public void shouldParse() {
         final FieldTypeEntity field = mock(FieldTypeEntity.class);
