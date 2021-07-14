@@ -235,4 +235,21 @@ class ImportDefinitionTest extends BaseTest {
 
         assert (response.getBody().prettyPrint().equals(SUCCESS_RESPONSE_BODY));
     }
+
+    @Test
+    @DisplayName("Should import definition with valid mid event URL.")
+    void shouldImportDefinitionWithValidMidEventURL() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        Response response = asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_CaseType_Event_Mid_Event_URL.xlsx"))
+            .expect()
+            .statusCode(201)
+            .when()
+            .post(IMPORT_URL);
+
+        assert (response.getBody().prettyPrint()
+            .equals(SUCCESS_RESPONSE_BODY));
+    }
 }
