@@ -47,7 +47,8 @@ public class CaseFieldEntityIdValidatorImplTest {
         assertThat(result.getValidationErrors().get(0),
             instanceOf(CaseFieldEntityInvalidIdValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
-            "case field '" + caseField.getReference() + "' for case type 'case_type' does not match pattern '^['a-zA-Z0-9\\[\\]\\#%\\&()\\.?_\\£\\s\\xA0-]+$' "));
+            "case field '" + caseField.getReference() + "' for case type 'case_type' "
+            + "does not match pattern '^['a-zA-Z0-9\\[\\]\\#%\\&()\\.?_\\£\\s\\xA0-]+$' "));
     }
 
     @Test

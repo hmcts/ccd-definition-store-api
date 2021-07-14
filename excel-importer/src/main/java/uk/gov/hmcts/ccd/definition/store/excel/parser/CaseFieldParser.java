@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class CaseFieldParser {
     private static final Logger logger = LoggerFactory.getLogger(CaseFieldParser.class);
-    public static final String CASE_FIELD_ID_PATTERN = "^['a-zA-Z0-9\\[\\]\\#%\\&()\\.?_\\£\\s\\xA0-]+$";
+
 
     private final ParseContext parseContext;
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
@@ -52,6 +52,7 @@ public class CaseFieldParser {
         for (DefinitionDataItem caseFieldDefinition : caseFieldItems) {
             final String caseFieldId = caseFieldDefinition.getId();
             logger.debug("Parsing case fields for case type {}: Parsing case field {}...", caseTypeId, caseFieldId);
+
             final CaseFieldEntity caseField = parseCaseField(caseTypeId, caseFieldId, caseFieldDefinition);
             parseContext.registerCaseFieldForCaseType(caseTypeId, caseField);
             caseFields.add(caseField);

@@ -24,17 +24,9 @@ public class CaseFieldEntityInvalidIdValidationError extends ValidationError {
         this.authorisationCaseFieldValidationContext = context;
     }
 
-    public CaseFieldEntityInvalidIdValidationError(final String message, final CaseFieldEntity entity,
-                                                   final AuthorisationCaseFieldValidationContext context) {
-        super(message);
-        this.caseFieldEntity = entity;
-        this.authorisationCaseFieldValidationContext = context;
-    }
-
     public CaseFieldEntity getCaseFieldEntity() {
         return caseFieldEntity;
     }
-
 
     public AuthorisationCaseFieldValidationContext getAuthorisationCaseFieldValidationContext() {
         return authorisationCaseFieldValidationContext;
