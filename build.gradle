@@ -19,10 +19,9 @@ plugins {
     id 'io.franzbecker.gradle-lombok' version '2.0'
     id 'net.ltgt.apt' version '0.21'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
-    id "info.solidsoft.pitest" version '1.4.0' apply(false)
+    id "info.solidsoft.pitest" version '1.5.1' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
     id 'uk.gov.hmcts.java' version '0.12.0'
-    id 'org.flywaydb.flyway' version '7.0.0'
 }
 
 apply plugin: 'java'
@@ -222,6 +221,8 @@ subprojects { subproject ->
         compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
         compile('org.springframework.boot:spring-boot-starter-cache')
 
+        compile "org.flywaydb:flyway-core:6.5.7"
+
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
 
         compile (group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0') {
@@ -270,6 +271,7 @@ subprojects { subproject ->
         testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.2.0'
         // https://mvnrepository.com/artifact/junit/junit
         compile group: 'junit', name: 'junit', version: '4.13.1'
+        testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
 
     }
 
@@ -460,15 +462,4 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
     reports = files("${rootDir}/target/cucumber.json")
-}
-
-task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-    baselineOnMigrate = true
-    baselineVersion = '0001'
-    outOfOrder = true
-    ignoreMissingMigrations = true
-    if (project.hasProperty("dburl")) {
-        url = "jdbc:postgresql://${dburl}"
-    }
-    locations = "filesystem:${projectDir}/repository/src/main/resources/db/migration".split(',')
 }
