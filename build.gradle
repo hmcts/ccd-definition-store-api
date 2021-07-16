@@ -269,6 +269,7 @@ subprojects { subproject ->
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
         testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.0.0'
         testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.2.0'
+        testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
         // https://mvnrepository.com/artifact/junit/junit
         compile group: 'junit', name: 'junit', version: '4.13.1'
         testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
@@ -457,6 +458,12 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
             "-r",
             "${buildDir}/reports/jacoco/jacocoTestReport.xml"
     ]
+}
+
+task fortifyScan(type: JavaExec)  {
+    main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    classpath += sourceSets.test.runtimeClasspath
+    jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
 
 cucumberReports {
