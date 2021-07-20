@@ -127,6 +127,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         CaseTypeEntity caseType,
         String groupId,
         Map.Entry<String, List<DefinitionDataItem>> groupDefinition) {
+
         final DefinitionDataItem sample = groupDefinition.getValue().get(0);
 
         final DisplayGroupEntity group = new DisplayGroupEntity();
@@ -137,7 +138,9 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         group.setOrder(sample.getInteger(this.displayGroupOrder));
         group.setType(this.displayGroupType);
         group.setPurpose(this.displayGroupPurpose);
-        group.setWebhookMidEvent(parseWebhook(sample,
+
+
+        group.setWebhookMidEvent(parseWebhook(getDataDefinitionWithValidMidEventURL(groupDefinition),
             ColumnName.CALLBACK_URL_MID_EVENT, ColumnName.RETRIES_TIMEOUT_URL_MID_EVENT));
 
         String eventId = sample.getString(ColumnName.CASE_EVENT_ID);
@@ -222,5 +225,15 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     @Override
     public ShowConditionParser getShowConditionParser() {
         return showConditionParser;
+    }
+
+    private DefinitionDataItem getDataDefinitionWithValidMidEventURL(Map.Entry<String,
+                                                                     List<DefinitionDataItem>> groupDefinition) {
+        Optional<DefinitionDataItem> sample = groupDefinition.getValue()
+            .stream()
+            .filter(definitionDataItem -> definitionDataItem.getString(ColumnName.CALLBACK_URL_MID_EVENT) != null)
+            .findFirst();
+        return sample.orElse(groupDefinition.getValue().get(0));
+
     }
 }

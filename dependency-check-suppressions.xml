@@ -24,24 +24,6 @@
 		<cve>CVE-2020-29245</cve>
 	</suppress>
 
-	<!-- !!!!!!! This suppression should not be removed until the elastic search
-		client is updated to 7. Before updating the elastic client make sure that
-		the server has been updated to 7 !!!!! -->
-	<suppress until="2021-07-25">
-		<notes><![CDATA[
-      		  Jar: org.elasticsearch/elasticsearch@6.4.3
-      		  Analysis: These CVEs expected to be fixed as part of RDM-9054
-   		]]></notes>
-		<cve>CVE-2019-7611</cve>
-		<cve>CVE-2019-7614</cve>
-		<cve>CVE-2020-7019</cve>
-		<cve>CVE-2020-7020</cve>
-		<cve>CVE-2020-7021</cve>
-		<cve>CVE-2021-22137</cve>
-		<cve>CVE-2021-22135</cve>
-
-	</suppress>
-
 	<suppress until="2021-07-25">
 		<notes>Declared as False Positive on com.nimbusds:oauth2-oidc-sdk
 			#2866
@@ -50,9 +32,4 @@
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
 	</suppress>
-	
-	<suppress until="2021-07-25">
-		<cve>CVE-2021-27568</cve>
-	</suppress>
-	
 </suppressions>

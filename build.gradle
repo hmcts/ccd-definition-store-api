@@ -22,7 +22,6 @@ plugins {
     id "info.solidsoft.pitest" version '1.5.1' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
     id 'uk.gov.hmcts.java' version '0.12.0'
-    id 'org.flywaydb.flyway' version '7.0.0'
 }
 
 apply plugin: 'java'
@@ -47,7 +46,7 @@ dependencyCheck {
 
 //spring boot dependency override
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
-ext['elasticsearch.version'] = '6.4.3'
+ext['elasticsearch.version'] = '6.8.17'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.4.5'
@@ -70,7 +69,7 @@ ext {
     reformLogging= '5.1.1-BETA'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
-    tomcatVersion = '9.0.43!!'
+    tomcatVersion = '9.0.50!!'
     hibernateVersion = '5.4.24.Final!!'
     limits = [
             'instruction': 99,
@@ -105,7 +104,8 @@ allprojects {
     apply plugin: 'java'
 
     ext {
-        elasticSearchVersion = '6.4.3'
+        elasticSearchVersion = '6.8.17'
+        elasticSearchHLClientVersion = '6.5.0'
     }
 
     dependencies {
@@ -113,6 +113,7 @@ allprojects {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+        compile 'net.minidev:json-smart:2.4.7'
     }
 
     // Global constraints
@@ -137,6 +138,7 @@ allprojects {
         resolutionStrategy {
             dependencySubstitution {
                 substitute module('org.elasticsearch:elasticsearch') with module("org.elasticsearch:elasticsearch:${elasticSearchVersion}")
+                substitute module('org.elasticsearch.client:elasticsearch-rest-high-level-client') with module("org.elasticsearch.client:elasticsearch-rest-high-level-client:${elasticSearchHLClientVersion}")
             }
 
             eachDependency { details ->
@@ -215,9 +217,11 @@ subprojects { subproject ->
         compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         runtime "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
-
+        runtime "org.elasticsearch.client:elasticsearch-rest-high-level-client:6.5.0"
         compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
         compile('org.springframework.boot:spring-boot-starter-cache')
+
+        compile "org.flywaydb:flyway-core:6.5.7"
 
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
 
@@ -458,15 +462,4 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
     reports = files("${rootDir}/target/cucumber.json")
-}
-
-task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-    baselineOnMigrate = true
-    baselineVersion = '0001'
-    outOfOrder = true
-    ignoreMissingMigrations = true
-    if (project.hasProperty("dburl")) {
-        url = "jdbc:postgresql://${dburl}"
-    }
-    locations = "filesystem:${projectDir}/repository/src/main/resources/db/migration".split(',')
 }

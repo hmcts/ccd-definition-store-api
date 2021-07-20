@@ -148,6 +148,57 @@ class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("WizardPageParser - should parse when midpoint callback url is not mentioned in first line")
+    void shouldParseCaseEventToFieldsWhenMidPointCallBackURL() throws InvalidShowConditionException {
+
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .willReturn(PARSED_SHOW_CONDITION);
+
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CASE_EVENT_ID.toString(), "SomeEvent");
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item.addAttribute(ColumnName.DISPLAY_CONTEXT.toString(), "READONLY");
+        item.addAttribute(ColumnName.PAGE_ID.toString(), "Name");
+        item.addAttribute(ColumnName.PAGE_LABEL.toString(), "Name");
+        item.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.PAGE_FIELD_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+
+        caseEventToFieldsSheet.addDataItem(item);
+        final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item2.addAttribute(ColumnName.CASE_EVENT_ID.toString(), "SomeEvent");
+        item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
+        item2.addAttribute(ColumnName.DISPLAY_CONTEXT.toString(), "READONLY");
+        item2.addAttribute(ColumnName.PAGE_ID.toString(), "Name");
+        item2.addAttribute(ColumnName.PAGE_LABEL.toString(), "Name");
+        item2.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1.0);
+        item2.addAttribute(ColumnName.PAGE_FIELD_DISPLAY_ORDER.toString(), 2.0);
+        item2.addAttribute(ColumnName.CALLBACK_URL_MID_EVENT.toString(),
+            "http://host.docker.internal:8080/ccdMidEvent?pageId=bla");
+
+
+        caseEventToFieldsSheet.addDataItem(item2);
+        final ParseResult<DisplayGroupEntity> parseResult = wizardPageParser.parseAll(definitionSheets);
+        assertThat(parseResult.getAllResults().size(), is(1));
+
+        final DisplayGroupEntity fetched = parseResult.getAllResults().get(0);
+        assertThat(fetched.getId(), is(nullValue()));
+        assertThat(fetched.getReference(), is("SomeEvent" + "Name"));
+        assertThat(fetched.getLabel(), is("Name"));
+        assertThat(fetched.getType(), is(DisplayGroupType.PAGE));
+        assertThat(fetched.getPurpose(), is(DisplayGroupPurpose.EDIT));
+        assertThat(fetched.getOrder(), is(1));
+        assertThat(fetched.getCaseType(), is(caseType));
+        assertThat(fetched.getShowCondition(), is("parsedShowCondition2"));
+        assertThat(fetched.getWebhookMidEvent().getUrl(), is("http://host.docker.internal:8080/ccdMidEvent?pageId=bla"));
+
+    }
+
+    @Test
     @DisplayName("WizardPageParser - should parse more than one item")
     void shouldParseCaseEventToFieldsEvenWithSamePageId() throws InvalidShowConditionException {
 
