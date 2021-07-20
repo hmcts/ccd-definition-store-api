@@ -239,6 +239,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "searchResultCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "searchResultCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     @Mapping(source = "searchResultCaseFieldEntity.accessProfile.reference", target = "role")
+    @Mapping(source = "searchResultCaseFieldEntity.caseType.reference", target = "caseTypeId")
     @Mapping(expression = "java(searchResultCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchResultsField map(SearchResultCaseFieldEntity searchResultCaseFieldEntity);
 
@@ -251,12 +252,14 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "workBasketCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     @Mapping(source = "workBasketCaseFieldEntity.accessProfile.reference", target = "role")
+    @Mapping(source = "workBasketCaseFieldEntity.caseType.reference", target = "caseTypeId")
     @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 
     @Mapping(source = "searchCasesResultFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "searchCasesResultFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     @Mapping(source = "searchCasesResultFieldEntity.accessProfile.reference", target = "role")
+    @Mapping(source = "searchCasesResultFieldEntity.caseType.reference", target = "caseTypeId")
     @Mapping(expression = "java(searchCasesResultFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchCasesResultField map(SearchCasesResultFieldEntity searchCasesResultFieldEntity);
 
