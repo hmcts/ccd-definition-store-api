@@ -15,6 +15,7 @@ public class SearchResultsField {
     private String role;
     private SortOrder sortOrder;
     private String displayContextParameter;
+    private String caseTypeId;
 
     @ApiModelProperty(value = "")
     @JsonProperty("case_field_id")
@@ -88,5 +89,14 @@ public class SearchResultsField {
 
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
+    }
+
+    @JsonProperty("case_type_id")
+    public String getCaseTypeId() {
+        return caseTypeId;
+    }
+
+    public void setCaseTypeId(String caseTypeId) {
+        this.caseTypeId = caseTypeId;
     }
 }
