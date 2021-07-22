@@ -55,6 +55,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
+import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
@@ -301,6 +302,11 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseType.reference", target = "caseTypeId")
     @Mapping(source = "authorisation", target = "authorisations")
     RoleToAccessProfiles map(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
+
+    @Mapping(source = "caseType.reference", target = "id")
+    @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")
+    RoleAssignment roleToAccessProfilesEntityToRoleAssignment(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
+
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
