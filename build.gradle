@@ -129,6 +129,7 @@ allprojects {
         testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
         testCompile "org.codehaus.groovy:groovy-xml:${groovyVersion}"
         testCompile "org.codehaus.groovy:groovy-json:${groovyVersion}"
+        testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
     }
 
     configurations.all {
@@ -457,6 +458,12 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
             "-r",
             "${buildDir}/reports/jacoco/jacocoTestReport.xml"
     ]
+}
+
+task fortifyScan(type: JavaExec)  {
+    main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    classpath += sourceSets.test.runtimeClasspath
+    jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
 
 cucumberReports {
