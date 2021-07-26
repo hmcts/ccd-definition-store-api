@@ -7,6 +7,7 @@
 			(any version), see https://pivotal.io/security/cve-2018-1258
 			False
 			positive confirmed.
+			Last control version: 5.5.1
 		</notes>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
@@ -17,6 +18,7 @@
 			library. Also it is declared as
 			false positive in
 			https://github.com/jeremylong/DependencyCheck/issues/3043
+			Last control version:  1.5
 		</notes>
 		<cve>CVE-2020-29242</cve>
 		<cve>CVE-2020-29243</cve>
@@ -28,6 +30,7 @@
 		<notes>Declared as False Positive on com.nimbusds:oauth2-oidc-sdk
 			#2866
 			https://github.com/jeremylong/DependencyCheck/issues/2866
+			Last control version: 9.10.1
 		</notes>
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
