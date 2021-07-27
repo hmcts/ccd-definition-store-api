@@ -39,7 +39,7 @@
 	<suppress until="2021-08-25">
 		<notes> CVE's raising flaws in apache-commons-compress highlighting
 			potential denial of service attacks when using compressed files.
-			To be fixed in Jira tickets CCD-1696, CCD-1697, CCD-1698 & CCD-1699
+			To be fixed in Jira tickets CCD-1696, CCD-1697, CCD-1698 and CCD-1699
 		</notes>
 		<cve>CVE-2021-35515</cve>
 		<cve>CVE-2021-35516</cve>
