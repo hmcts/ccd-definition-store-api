@@ -47,6 +47,7 @@ class CaseTypeTest extends BaseTest {
                 empty());
     }
 
+    @Ignore
     @Test
     @DisplayName("Should return case types as a list with optional jurisdiction filter")
     void shouldReturnCaseTypesWithJurisdictionFilter() {
