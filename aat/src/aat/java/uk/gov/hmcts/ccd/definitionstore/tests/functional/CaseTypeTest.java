@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
@@ -47,6 +48,7 @@ class CaseTypeTest extends BaseTest {
                 empty());
     }
 
+    @Ignore
     @Test
     @DisplayName("Should return case types as a list with optional jurisdiction filter")
     void shouldReturnCaseTypesWithJurisdictionFilter() {
