@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
@@ -42,11 +43,13 @@ public class CaseDefinitionControllerTest {
     private JurisdictionService jurisdictionService = mock(JurisdictionService.class);
     private CaseRoleService caseRoleService = mock(CaseRoleService.class);
     private CaseDefinitionController subject;
+    private RoleToAccessProfileService roleToAccessProfilesService = mock(RoleToAccessProfileService.class);
     private MockMvc mockMvc;
 
     @BeforeEach
     public void createSubject() {
-        subject = new CaseDefinitionController(caseTypeService, jurisdictionService, caseRoleService);
+        subject = new CaseDefinitionController(caseTypeService, jurisdictionService, caseRoleService,
+            roleToAccessProfilesService);
         mockMvc = MockMvcBuilders.standaloneSetup(subject)
             .setControllerAdvice(new ControllerExceptionHandler())
             .build();
@@ -98,6 +101,26 @@ public class CaseDefinitionControllerTest {
         void shouldCallCaseRoleServiceWhenParameterIsNull() {
             subject.getCaseRoles(null, null, null);
             verify(caseRoleService, times(1)).findByCaseTypeId(null);
+        }
+    }
+
+
+    @Nested
+    @DisplayName("Test the getRoleToAccessProfiles   method")
+    class GetCaseRoleForRATests {
+
+        @Test
+        @DisplayName("Should call the roleToAccessProfilesService by correct parameter")
+        void shouldCallCaseRoleService() {
+            subject.getRoleToAccessProfiles(null, null, "someCaseTypeId");
+            verify(roleToAccessProfilesService, times(1)).findRoleAssignmentsByCaseTypeId(eq("someCaseTypeId"));
+        }
+
+        @Test
+        @DisplayName("Should call the roleToAccessProfilesService with null when parameter is null")
+        void shouldCallCaseRoleServiceWhenParameterIsNull() {
+            subject.getRoleToAccessProfiles(null, null, null);
+            verify(roleToAccessProfilesService, times(1)).findRoleAssignmentsByCaseTypeId(null);
         }
     }
 

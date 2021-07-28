@@ -55,6 +55,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
+import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
@@ -239,6 +240,7 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "searchResultCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "searchResultCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     @Mapping(source = "searchResultCaseFieldEntity.accessProfile.reference", target = "role")
+    @Mapping(source = "searchResultCaseFieldEntity.caseType.reference", target = "caseTypeId")
     @Mapping(expression = "java(searchResultCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchResultsField map(SearchResultCaseFieldEntity searchResultCaseFieldEntity);
 
@@ -251,12 +253,14 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "workBasketCaseFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "workBasketCaseFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     @Mapping(source = "workBasketCaseFieldEntity.accessProfile.reference", target = "role")
+    @Mapping(source = "workBasketCaseFieldEntity.caseType.reference", target = "caseTypeId")
     @Mapping(expression = "java(workBasketCaseFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     WorkBasketResultField map(WorkBasketCaseFieldEntity workBasketCaseFieldEntity);
 
     @Mapping(source = "searchCasesResultFieldEntity.caseField.reference", target = "caseFieldId")
     @Mapping(source = "searchCasesResultFieldEntity.caseFieldElementPath", target = "caseFieldElementPath")
     @Mapping(source = "searchCasesResultFieldEntity.accessProfile.reference", target = "role")
+    @Mapping(source = "searchCasesResultFieldEntity.caseType.reference", target = "caseTypeId")
     @Mapping(expression = "java(searchCasesResultFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchCasesResultField map(SearchCasesResultFieldEntity searchCasesResultFieldEntity);
 
@@ -296,7 +300,13 @@ public interface EntityToResponseDTOMapper {
     ChallengeQuestion map(ChallengeQuestionTabEntity challengeQuestionEntity);
 
     @Mapping(source = "caseType.reference", target = "caseTypeId")
+    @Mapping(source = "authorisation", target = "authorisations")
     RoleToAccessProfiles map(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
+
+    @Mapping(source = "caseType.reference", target = "id")
+    @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")
+    RoleAssignment roleToAccessProfilesEntityToRoleAssignment(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
+
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)

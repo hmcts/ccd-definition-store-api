@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -81,6 +74,16 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
+
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -1381,6 +1384,9 @@ class  EntityToResponseDTOMapperTest {
             SortOrder sortOrder = new SortOrder(2, "ASC");
             searchResultCaseFieldEntity.setSortOrder(sortOrder);
             searchResultCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference("Case_Type_1");
+            searchResultCaseFieldEntity.setCaseType(caseTypeEntity);
 
             SearchResultsField searchResultsField = spyOnClassUnderTest.map(searchResultCaseFieldEntity);
 
@@ -1397,6 +1403,7 @@ class  EntityToResponseDTOMapperTest {
 
             assertEquals(sortOrder.getDirection(), searchResultsField.getSortOrder().getDirection());
             assertEquals(sortOrder.getPriority(), searchResultsField.getSortOrder().getPriority());
+            assertEquals(caseTypeEntity.getReference(), searchResultsField.getCaseTypeId());
         }
 
         @Test
@@ -1470,6 +1477,9 @@ class  EntityToResponseDTOMapperTest {
             SortOrder sortOrder = new SortOrder(2, "ASC");
             workBasketCaseFieldEntity.setSortOrder(sortOrder);
             workBasketCaseFieldEntity.setDisplayContextParameter("DisplayContextParameter");
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference("Case_Type_1");
+            workBasketCaseFieldEntity.setCaseType(caseTypeEntity);
 
             WorkBasketResultField workBasketResult = spyOnClassUnderTest.map(workBasketCaseFieldEntity);
 
@@ -1484,6 +1494,7 @@ class  EntityToResponseDTOMapperTest {
 
             assertEquals(sortOrder.getDirection(), workBasketResult.getSortOrder().getDirection());
             assertEquals(sortOrder.getPriority(), workBasketResult.getSortOrder().getPriority());
+            assertEquals(caseTypeEntity.getReference(), workBasketResult.getCaseTypeId());
         }
 
         @Test
@@ -1523,6 +1534,10 @@ class  EntityToResponseDTOMapperTest {
             searchCasesResultFieldEntity.setSortOrder(sortOrder);
             searchCasesResultFieldEntity.setDisplayContextParameter("DisplayContextParameter");
             searchCasesResultFieldEntity.setUseCase("orgCase");
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference("Case_Type_1");
+            searchCasesResultFieldEntity.setCaseType(caseTypeEntity);
+
 
             SearchCasesResultField searchCasesResultField = spyOnClassUnderTest.map(searchCasesResultFieldEntity);
 
@@ -1539,6 +1554,7 @@ class  EntityToResponseDTOMapperTest {
 
             assertEquals(sortOrder.getDirection(), searchCasesResultField.getSortOrder().getDirection());
             assertEquals(sortOrder.getPriority(), searchCasesResultField.getSortOrder().getPriority());
+            assertEquals(caseTypeEntity.getReference(), searchCasesResultField.getCaseTypeId());
 
         }
 
@@ -1701,7 +1717,13 @@ class  EntityToResponseDTOMapperTest {
         void testMapRoleToAccessProfileEntity() {
             RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
             roleToAccessProfilesEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
-
+            roleToAccessProfilesEntity.setRoleName("judge");
+            roleToAccessProfilesEntity.setLiveFrom(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+            roleToAccessProfilesEntity.setLiveTo(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+            roleToAccessProfilesEntity.setReadOnly(true);
+            roleToAccessProfilesEntity.setDisabled(true);
+            roleToAccessProfilesEntity.setAuthorisation("auth1,auth2");
+            roleToAccessProfilesEntity.setAccessProfiles("caseworker-befta_master,caseworker-befta_master-solicitor");
 
             RoleToAccessProfiles roleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
