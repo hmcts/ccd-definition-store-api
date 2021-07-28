@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,11 +30,11 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
     @Column(name = "live_to")
     private LocalDate liveTo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_field_id", referencedColumnName = "id")
     private CaseFieldEntity caseField;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "display_group_id", referencedColumnName = "id")
     private DisplayGroupEntity displayGroup;
 

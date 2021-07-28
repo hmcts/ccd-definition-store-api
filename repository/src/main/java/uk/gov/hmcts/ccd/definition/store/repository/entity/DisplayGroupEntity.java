@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Table(name = "display_group")
@@ -64,16 +63,16 @@ public class DisplayGroupEntity implements Serializable {
     @JoinColumn(name = "event_id")
     private EventEntity event;
 
-    @OneToMany(mappedBy = "displayGroup", fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "displayGroup", fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     private final List<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new ArrayList<>();
 
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(cascade = ALL, fetch = LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private AccessProfileEntity accessProfile;
 
 
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(cascade = ALL, fetch = LAZY)
     @JoinColumn(name = "webhook_mid_event_id")
     private WebhookEntity webhookMidEvent;
 
