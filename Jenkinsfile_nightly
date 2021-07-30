@@ -61,10 +61,8 @@ withNightlyPipeline(type, product, component) {
     env.CCD_GW_SERVICE_NAME = "ccd_gw"
 
     loadVaultSecrets(secrets)
-    enableFortifyScan()
     enableDbMigration('ccd')
     disableLegacyDeployment()
-    enableMutationTest()
     enableHighLevelDataSetup()
 
     after('fortify-scan') {
