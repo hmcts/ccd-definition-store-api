@@ -71,7 +71,6 @@ public class FieldTypeEntity implements Serializable, Versionable {
     private FieldTypeEntity collectionFieldType;
 
     @OneToMany(mappedBy = "fieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Fetch(FetchMode.SUBSELECT)
     private final List<FieldTypeListItemEntity> listItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
