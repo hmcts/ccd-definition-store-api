@@ -48,12 +48,15 @@ public abstract class ElasticDefinitionImportListener {
     public void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) {
         HighLevelCCDElasticClient elasticClient = null;
         String caseMapping = null;
+        String eventCaseMapping = null;
+
         CaseTypeEntity currentCaseType = null;
         try {
             elasticClient = clientFactory.getObject();
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
-                String baseIndexName = baseIndexName(caseType);
+                    var baseIndexName = baseIndexName(caseType);
+                    var baseIndexNameForEvents = baseIndexNameForEvents(caseType);
 
                 if (!elasticClient.aliasExists(baseIndexName)) {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
@@ -61,9 +64,18 @@ public abstract class ElasticDefinitionImportListener {
                     elasticClient.createIndex(actualIndexName, alias);
                 }
 
+                if (!elasticClient.aliasExists(baseIndexNameForEvents)) {
+                    String actualIndexEventName = baseIndexNameForEvents + FIRST_INDEX_SUFFIX;
+                    String aliasEvent = baseIndexNameForEvents;
+                    elasticClient.createIndex(actualIndexEventName, aliasEvent);
+                }
+
                 caseMapping = mappingGenerator.generateMapping(caseType);
                 log.debug("case mapping: {}", caseMapping);
                 elasticClient.upsertMapping(baseIndexName, caseMapping);
+
+                eventCaseMapping = mappingGenerator.generateCaseEventMapping(caseType);
+                elasticClient.upsertMapping(baseIndexNameForEvents, eventCaseMapping);
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
@@ -81,6 +93,11 @@ public abstract class ElasticDefinitionImportListener {
     private String baseIndexName(CaseTypeEntity caseType) {
         String caseTypeId = caseType.getReference();
         return String.format(config.getCasesIndexNameFormat(), caseTypeId.toLowerCase());
+    }
+
+    private String baseIndexNameForEvents(CaseTypeEntity caseType) {
+        String caseTypeId = caseType.getReference();
+        return String.format("%s_event_cases", caseTypeId.toLowerCase());
     }
 
     private void logMapping(String caseMapping) {

@@ -20,6 +20,7 @@ public class CcdElasticSearchProperties {
     private Map<String, String> elasticMappings;
     private Map<String, String> typeMappings;
     private Map<String, String> casePredefinedMappings;
+    private Map<String, String> eventCasePredefinedMappings;
     private List<String> ccdIgnoredTypes;
     private String securityClassificationMapping;
     private boolean enabled;
@@ -142,5 +143,17 @@ public class CcdElasticSearchProperties {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Map<String, String> getEventCasePredefinedMappings() {
+        return eventCasePredefinedMappings;
+    }
+
+    public void setEventCasePredefinedMappings(Map<String, String> eventCasePredefinedMappings) {
+        this.eventCasePredefinedMappings = eventCasePredefinedMappings;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

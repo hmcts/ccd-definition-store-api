@@ -41,6 +41,33 @@ public class CaseMappingGenerator extends MappingGenerator {
         return mapping;
     }
 
+    public String generateCaseEventMapping(CaseTypeEntity caseType) {
+        log.info("creating mapping for case type: {}", caseType.getReference());
+
+        String mapping = newJson(Unchecked.consumer((JsonWriter jw) -> {
+            jw.name("dynamic");
+            jw.value(config.getDynamic());
+            jw.name(PROPERTIES);
+            jw.beginObject();
+            propertiesEventCaseMapping(jw);
+            dataMapping(jw, caseType);
+            jw.endObject();
+        }));
+
+        log.debug("generated mapping for case type {}: {}", caseType.getReference(), mapping);
+        return mapping;
+    }
+
+    private void propertiesEventCaseMapping(JsonWriter jw) {
+        log.info("generating case properties mapping");
+        config.getEventCasePredefinedMappings().forEach(Unchecked.biConsumer((property, mapping) -> {
+            jw.name(property);
+            jw.jsonValue(mapping);
+            log.info("property: {}, mapping: {}", property, mapping);
+        }));
+    }
+
+
     private void propertiesMapping(JsonWriter jw) {
         log.info("generating case properties mapping");
         config.getCasePredefinedMappings().forEach(Unchecked.biConsumer((property, mapping) -> {
