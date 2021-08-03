@@ -33,6 +33,7 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION = "PreviousOrganisation";
     public static final String PREDEFINED_COMPLEX_CASE_LOCATION = "CaseLocation";
     public static final String PREDEFINED_COMPLEX_SEARCH_PARTY = "SearchParty";
+    public static final String PREDEFINED_COMPLEX_SEARCH_CRITERIA = "SearchCriteria";
     public static final String BASE_REGION = "Region";
     public static final String BASE_BASE_LOCATION = "BaseLocation";
     public static final String BASE_DYNAMIC_RADIO_LIST = "DynamicRadioList";
