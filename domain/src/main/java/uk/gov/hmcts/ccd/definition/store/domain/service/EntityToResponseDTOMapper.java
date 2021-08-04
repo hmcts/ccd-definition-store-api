@@ -276,7 +276,8 @@ public interface EntityToResponseDTOMapper {
                                                                     complexTypeEntity.getShowCondition(),
                                                                     complexTypeEntity.getDefaultValue(),
                                                                     complexTypeEntity.getPublish(),
-                                                                    complexTypeEntity.getPublishAs()
+                                                                    complexTypeEntity.getPublishAs(),
+                                                                    complexTypeEntity.getPageId()
                 ))
                 .collect(Collectors.toList());
         }

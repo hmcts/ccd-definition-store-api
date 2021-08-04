@@ -82,6 +82,17 @@ public class EventCaseFieldEntity implements Serializable {
     @Column(name = "publish_as")
     private String publishAs;
 
+    public Integer getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+    @Column(name = "display_order")
+    private Integer displayOrder;
+
 
     public DisplayContext getDisplayContext() {
         return displayContext;

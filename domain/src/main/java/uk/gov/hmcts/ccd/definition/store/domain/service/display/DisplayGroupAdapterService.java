@@ -105,7 +105,7 @@ public class DisplayGroupAdapterService {
 
             wizardPageField.addAllComplexFieldOverrides(eventCaseFieldEntity.getEventComplexTypes()
                 .stream()
-                .map(eventComplexTypeEntity -> createWizardPageComplexFieldOverride(reference, eventComplexTypeEntity))
+                .map(eventComplexTypeEntity -> createWizardPageComplexFieldOverride(reference, eventComplexTypeEntity, eventCaseFieldEntity.getDisplayOrder()))
                 .collect(Collectors.toList()));
 
             wizardPageField.addAllComplexFieldOverrides(determineHiddenFieldsOverrides(
@@ -134,7 +134,8 @@ public class DisplayGroupAdapterService {
     }
 
     private WizardPageComplexFieldOverride createWizardPageComplexFieldOverride(
-        final String reference, final EventComplexTypeEntity eventComplexTypeEntity) {
+        final String reference, EventComplexTypeEntity eventComplexTypeEntity, int order) {
+
         WizardPageComplexFieldOverride override = new WizardPageComplexFieldOverride();
         override.setComplexFieldElementId(reference + "." + eventComplexTypeEntity.getReference());
         override.setDisplayContext(eventComplexTypeEntity.getDisplayContext().toString());
@@ -143,7 +144,12 @@ public class DisplayGroupAdapterService {
         override.setShowCondition(eventComplexTypeEntity.getShowCondition());
         override.setDefaultValue(eventComplexTypeEntity.getDefaultValue());
         override.setRetainHiddenValue(eventComplexTypeEntity.getRetainHiddenValue());
+        if (eventComplexTypeEntity.getPageId() != null && eventComplexTypeEntity.getPageId() != order) {
+            override.setDisplayContext("HIDDEN");
+        }
         return override;
+
+
     }
 
     private List<String> createAllSubtypeLeafCombinations(final DisplayGroupEntity displayGroupEntity) {

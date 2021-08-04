@@ -37,6 +37,10 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
         eventCaseField.setCaseField(parseContext.getCaseFieldForCaseType(caseTypeId, caseFieldId));
         DisplayContextColumn displayContextColumn = eventCaseFieldDefinition.getDisplayContext();
         eventCaseField.setDisplayContext(displayContextColumn.getDisplayContext());
+        String str = eventCaseFieldDefinition.findAttribute(ColumnName.PAGE_DISPLAY_ORDER).toString();
+        Integer something = Integer.parseInt(str);
+
+        eventCaseField.setDisplayOrder( something);
         eventCaseField.setDisplayContextParameter(this.parseShowCondition(
             eventCaseFieldDefinition.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER)));
         eventCaseField.setShowCondition(this.parseShowCondition(

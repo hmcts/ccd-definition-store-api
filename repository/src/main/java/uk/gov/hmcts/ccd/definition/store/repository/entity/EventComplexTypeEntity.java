@@ -73,6 +73,9 @@ public class EventComplexTypeEntity implements Serializable {
     @Column(name = "retain_hidden_value")
     private Boolean retainHiddenValue;
 
+    @Column(name = "page_id")
+    private Integer pageId;
+
     public String getReference() {
         return reference;
     }
@@ -175,5 +178,13 @@ public class EventComplexTypeEntity implements Serializable {
 
     public void setRetainHiddenValue(Boolean retainHiddenValue) {
         this.retainHiddenValue = retainHiddenValue;
+    }
+
+    public Integer getPageId() {
+        return pageId;
+    }
+
+    public void setPageId(Integer pageId) {
+        this.pageId = pageId;
     }
 }

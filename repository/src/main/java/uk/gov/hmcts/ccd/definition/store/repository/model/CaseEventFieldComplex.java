@@ -22,6 +22,8 @@ public class CaseEventFieldComplex {
 
     private String publishAs;
 
+    private Integer pageId;
+
     public CaseEventFieldComplex() {
     }
 
@@ -33,7 +35,8 @@ public class CaseEventFieldComplex {
                                  String showCondition,
                                  String defaultValue,
                                  Boolean publish,
-                                 String publishAs) {
+                                 String publishAs,
+                                 Integer pageId) {
         this.reference = reference;
         this.hint = hint;
         this.label = label;
@@ -43,6 +46,7 @@ public class CaseEventFieldComplex {
         this.defaultValue = defaultValue;
         this.publish = publish;
         this.publishAs = publishAs;
+        this.pageId = pageId;
     }
 
     public String getReference() {

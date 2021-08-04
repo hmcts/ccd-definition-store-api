@@ -37,17 +37,16 @@ public class EventCaseFieldComplexTypeParser implements FieldShowConditionParser
             eventComplexTypeEntity.setLiveFrom(definitionDataItem.getLocalDate(ColumnName.LIVE_FROM));
             eventComplexTypeEntity.setLiveTo(definitionDataItem.getLocalDate(ColumnName.LIVE_TO));
             eventComplexTypeEntity.setOrder(definitionDataItem.getInteger(ColumnName.FIELD_DISPLAY_ORDER));
-
             eventComplexTypeEntity.setDefaultValue(definitionDataItem.getString(ColumnName.DEFAULT_VALUE));
             DisplayContextColumn displayContextColumn = definitionDataItem.getDisplayContext();
             eventComplexTypeEntity.setDisplayContext(displayContextColumn.getDisplayContext());
             eventComplexTypeEntity.setShowCondition(parseShowCondition(
                 definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION)));
-
             eventComplexTypeEntity.setPublish(definitionDataItem.getBooleanOrDefault(ColumnName.PUBLISH, false));
             eventComplexTypeEntity.setPublishAs(definitionDataItem.getString(ColumnName.PUBLISH_AS));
             eventComplexTypeEntity.setRetainHiddenValue(hiddenFieldsValidator
                 .parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+            eventComplexTypeEntity.setPageId(definitionDataItem.getInteger(ColumnName.PAGE_ID));
             eventComplexTypeEntities.add(eventComplexTypeEntity);
         }
         return eventComplexTypeEntities;
