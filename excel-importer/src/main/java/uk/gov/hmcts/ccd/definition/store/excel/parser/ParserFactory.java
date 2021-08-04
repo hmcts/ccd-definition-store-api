@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
 @Component
@@ -27,7 +28,8 @@ public class ParserFactory {
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
                          SpreadsheetValidator spreadsheetValidator,
                          HiddenFieldsValidator hiddenFieldsValidator,
-                         ChallengeQuestionParser challengeQuestionParser, ApplicationParams applicationParams) {
+                         ChallengeQuestionParser challengeQuestionParser,
+                         ApplicationParams applicationParams) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
@@ -116,5 +118,13 @@ public class ParserFactory {
 
     public RoleToAccessProfilesValidator createAccessProfileValidator() {
         return new RoleToAccessProfilesValidator();
+    }
+
+    public SearchPartyParser createNewSearchPartyParser() {
+        return new SearchPartyParser();
+    }
+
+    public SearchPartyValidator createNewSearchPartyValidator() {
+        return new SearchPartyValidator();
     }
 }
