@@ -1,0 +1,25 @@
+{
+	"_guid_": "S-099.1",
+	"_extends_": "Import_Base_data",
+	"title": "Must successfully import Definition file with correctly configured, single case field name in SearchPartyName column of SearchParty tab",
+	"specs": [
+      "an active profile in CCD",
+      "contains correctly configured SearchParty tab with single case field name in the SearchPartyName column",
+      "contains correctly configured SearchParty tab with valid field names in the SearchPartyEmailAddress, SearchPartyAddressLine1, SearchPartyPostCode and SearchPartyDoB columns"
+	],
+
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_RoleToAccessProfiles_Invalid_CaseType.xlsx"
+        }
+      ]
+    }
+  },
+
+  "expectedResponse" : {
+    "_extends_" : "Case_Definition_Data_Import_Success"
+  }
+}
