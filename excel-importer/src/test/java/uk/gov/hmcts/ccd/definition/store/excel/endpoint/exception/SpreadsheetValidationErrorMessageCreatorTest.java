@@ -11,15 +11,16 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidIdValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
@@ -1584,6 +1585,32 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
                 new CaseRoleEntityUniquenessValidatorImpl.ValidationError(
                     "Custom message", caseRoleEntity))
         );
+    }
+
+    @Test
+    public void testCreateErrorMessage_CaseFieldEntityIdValidatorImplValidationError_customMessageReturned() {
+
+        final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
+        final CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
+        caseFieldEntity.setReference("select * from tab1");
+        final CaseFieldEntityInvalidIdValidationError error
+            = new CaseFieldEntityInvalidIdValidationError(
+            caseFieldEntity,
+            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                new CaseFieldEntityValidationContext(caseTypeEntity)));
+
+        when(entityToDefinitionDataItemRegistry.getForEntity(caseFieldEntity))
+            .thenReturn(
+                definitionDataItem(SheetName.CASE_FIELD,
+                    new ImmutablePair<>(ColumnName.CASE_TYPE_ID, "case type"),
+                    new ImmutablePair<>(ColumnName.CASE_FIELD_ID, "case field"))
+            );
+
+        assertEquals(
+            "case field 'select * from tab1' for case type 'case type' does not match pattern"
+               + " '^['a-zA-Z0-9\\[\\]\\#%\\&()\\.?_\\£\\s\\xA0-]+$'  in worksheet 'CaseField'",
+            classUnderTest.createErrorMessage(error));
+
     }
 
     @Test
