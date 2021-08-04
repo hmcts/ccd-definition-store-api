@@ -39,7 +39,6 @@ public class FieldTypeUtils {
     public static final String BASE_DYNAMIC_RADIO_LIST = "DynamicRadioList";
     public static final String BASE_DYNAMIC_MULTI_SELECT_LIST = "DynamicMultiSelectList";
 
-
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference)
             || BASE_MULTI_SELECT_LIST.equals(baseTypeReference)
