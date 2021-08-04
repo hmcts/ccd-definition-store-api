@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-082.1
+@S-082.1 @Ignore # disable temporarily
 Scenario: must return 200
 
     Given a user with [an active profile in CCD]
