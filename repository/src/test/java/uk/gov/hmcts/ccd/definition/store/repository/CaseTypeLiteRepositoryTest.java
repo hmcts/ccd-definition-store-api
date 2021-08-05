@@ -121,8 +121,7 @@ public class CaseTypeLiteRepositoryTest {
 
         assertEquals(1, caseTypeLiteEntity.getStates().size());
 
-        // reduced assertSelectCount to 2 from 3 as acl is now connected lazily in StateEntity
-        SQLStatementCountValidator.assertSelectCount(2);
+        SQLStatementCountValidator.assertSelectCount(3);
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {

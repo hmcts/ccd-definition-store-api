@@ -64,7 +64,7 @@ public class DisplayGroupEntity implements Serializable {
     private EventEntity event;
 
     @OneToMany(mappedBy = "displayGroup", fetch = LAZY, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(value = FetchMode.JOIN)
     private final List<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new ArrayList<>();
 
     @ManyToOne(cascade = ALL, fetch = LAZY)

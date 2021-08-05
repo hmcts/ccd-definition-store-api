@@ -54,7 +54,7 @@ public class StateEntity implements Serializable, Referencable {
     private CaseTypeEntity caseType;
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "stateEntity")
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(value = FetchMode.JOIN)
     private final List<StateACLEntity> stateACLEntities = new ArrayList<>();
 
     @Column(name = "title_display")

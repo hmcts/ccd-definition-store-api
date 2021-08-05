@@ -75,7 +75,7 @@ public class FieldTypeEntity implements Serializable, Versionable {
     private final List<FieldTypeListItemEntity> listItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.JOIN)
     @OrderBy("id")
     private final List<ComplexFieldEntity> complexFields = new ArrayList<>();
 
@@ -83,9 +83,9 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "jurisdiction_id")
     private JurisdictionEntity jurisdiction;
 
-    private static final Set<String> FIXED_List_ITEMS = new HashSet<>(Arrays.asList(new String[] {"FixedList",
+    private static final Set<String> FIXED_List_ITEMS = new HashSet<>(Arrays.asList("FixedList",
         "MultiSelectList",
-        "FixedRadioList"}));
+        "FixedRadioList"));
 
     public Integer getId() {
         return id;

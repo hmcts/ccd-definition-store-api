@@ -80,35 +80,29 @@ public class CaseTypeEntity implements Serializable, Versionable {
     private JurisdictionEntity jurisdiction;
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
-    @Fetch(value = FetchMode.SUBSELECT)
     private final List<EventEntity> events = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<StateEntity> states = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(value = FetchMode.JOIN)
     private final List<CaseFieldEntity> caseFields = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<CaseTypeACLEntity> caseTypeACLEntities = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<CaseRoleEntity> caseRoles = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<SearchAliasFieldEntity> searchAliasFields = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<RoleToAccessProfilesEntity> roleToAccessProfiles = new ArrayList<>();
 
