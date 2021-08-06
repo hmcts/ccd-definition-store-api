@@ -28,9 +28,9 @@ public class SearchPartyServiceImpl implements SearchPartyService {
     }
 
     @Override
-    public List<SearchParty> findByRoleName(String roleName) {
+    public List<SearchParty> findSearchPartyName(String searchPartyName) {
         List<SearchPartyEntity> searchPartyEntities = repository
-            .findBySearchPartyName(roleName);
+            .findBySearchPartyName(searchPartyName);
         return searchPartyEntities.stream()
             .map(dtoMapper::map)
             .collect(Collectors.toList());

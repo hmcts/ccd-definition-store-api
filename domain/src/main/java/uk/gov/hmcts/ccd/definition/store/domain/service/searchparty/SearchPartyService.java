@@ -9,7 +9,7 @@ public interface SearchPartyService {
 
     void saveAll(List<SearchPartyEntity> entityList);
 
-    List<SearchParty> findByRoleName(String roleName);
+    List<SearchParty> findSearchPartyName(String searchPartyName);
 
     List<SearchParty> findByCaseTypeReferences(List<String> caseTypeReferences);
 
