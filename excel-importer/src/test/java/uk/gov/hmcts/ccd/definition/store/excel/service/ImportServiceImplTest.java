@@ -63,6 +63,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
@@ -167,6 +168,9 @@ public class ImportServiceImplTest {
     private RoleToAccessProfileService roleToAccessProfileService;
 
     @Mock
+    private SearchPartyService searchPartyService;
+
+    @Mock
     private ApplicationParams applicationParams;
 
     private FieldTypeEntity fixedTypeBaseType;
@@ -227,7 +231,8 @@ public class ImportServiceImplTest {
             bannerService,
             jurisdictionUiConfigService,
             challengeQuestionTabService,
-            roleToAccessProfileService);
+            roleToAccessProfileService,
+            searchPartyService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -421,7 +426,8 @@ public class ImportServiceImplTest {
             bannerService,
             jurisdictionUiConfigService,
             challengeQuestionTabService,
-            roleToAccessProfileService);
+            roleToAccessProfileService,
+            searchPartyService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

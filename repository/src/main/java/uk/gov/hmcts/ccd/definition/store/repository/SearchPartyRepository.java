@@ -13,7 +13,7 @@ public interface SearchPartyRepository extends JpaRepository<SearchPartyEntity, 
 
     List<SearchPartyEntity> findBySearchPartyName(String searchPartyName);
 
-    List<SearchPartyEntity> findByCaseTypeReference(List<String> caseTypeReferences);
+    List<SearchPartyEntity> findByCaseTypeReferenceIn(List<String> caseTypeReferences);
 
     @Query("select cre from SearchPartyEntity cre where cre.caseType = ("
         + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
