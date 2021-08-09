@@ -20,6 +20,7 @@ public class ParserFactory {
     private final SpreadsheetValidator spreadsheetValidator;
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
+    private final SearchPartyValidator searchPartyValidator;
     private final ApplicationParams applicationParams;
 
     @Autowired
@@ -29,6 +30,7 @@ public class ParserFactory {
                          SpreadsheetValidator spreadsheetValidator,
                          HiddenFieldsValidator hiddenFieldsValidator,
                          ChallengeQuestionParser challengeQuestionParser,
+                         SearchPartyValidator searchPartyValidator,
                          ApplicationParams applicationParams) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
@@ -36,6 +38,7 @@ public class ParserFactory {
         this.spreadsheetValidator = spreadsheetValidator;
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
+        this.searchPartyValidator = searchPartyValidator;
         this.applicationParams = applicationParams;
     }
 
@@ -125,6 +128,6 @@ public class ParserFactory {
     }
 
     public SearchPartyValidator createNewSearchPartyValidator() {
-        return new SearchPartyValidator();
+        return searchPartyValidator;
     }
 }
