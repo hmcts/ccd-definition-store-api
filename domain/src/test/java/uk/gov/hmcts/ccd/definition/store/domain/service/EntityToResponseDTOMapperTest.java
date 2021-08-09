@@ -1782,7 +1782,7 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(searchParty.getSearchPartyAddressLine1(), searchPartyEntity.getSearchPartyAddressLine1());
             assertEquals(searchParty.getSearchPartyEmailAddress(), searchPartyEntity.getSearchPartyEmailAddress());
             assertEquals(searchParty.getSearchPartyPostCode(), searchPartyEntity.getSearchPartyPostCode());
-            assertEquals(searchParty.getSearchPartyDoB(), searchPartyEntity.getSearchPartyDoB());
+            assertEquals(searchParty.getSearchPartyDob(), searchPartyEntity.getSearchPartyDob());
             assertEquals(searchParty.getLiveTo(), searchPartyEntity.getLiveTo());
             assertEquals(searchParty.getLiveFrom(), searchPartyEntity.getLiveFrom());
 
@@ -1801,7 +1801,7 @@ class  EntityToResponseDTOMapperTest {
             assertNull(searchParty.getSearchPartyAddressLine1());
             assertNull(searchParty.getSearchPartyEmailAddress());
             assertNull(searchParty.getSearchPartyPostCode());
-            assertNull(searchParty.getSearchPartyDoB());
+            assertNull(searchParty.getSearchPartyDob());
         }
 
         private CaseTypeEntity caseTypeEntity(String reference) {

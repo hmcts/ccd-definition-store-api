@@ -84,7 +84,7 @@ public class SearchPartyRepositoryTest {
         searchPartyEntity.setSearchPartyEmailAddress(SEARCH_PARTY_EMAIL_ADDRESS);
         searchPartyEntity.setSearchPartyAddressLine1(SEARCH_PARTY_ADDRESS_LINE_1);
         searchPartyEntity.setSearchPartyPostCode(SEARCH_PARTY_POST_CODE);
-        searchPartyEntity.setSearchPartyDoB(SEARCH_PARTY_DOB);
+        searchPartyEntity.setSearchPartyDob(SEARCH_PARTY_DOB);
 
         return searchPartyRepository.save(searchPartyEntity);
     }

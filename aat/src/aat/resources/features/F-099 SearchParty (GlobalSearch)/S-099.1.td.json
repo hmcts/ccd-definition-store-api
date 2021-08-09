@@ -5,7 +5,7 @@
   "specs": [
     "an active profile in CCD",
     "contains correctly configured SearchParty tab with single case field name in the SearchPartyName column",
-    "contains correctly configured SearchParty tab with valid field names in the SearchPartyEmailAddress, SearchPartyAddressLine1, SearchPartyPostCode and SearchPartyDoB columns"
+    "contains correctly configured SearchParty tab with valid field names in the SearchPartyEmailAddress, SearchPartyAddressLine1, SearchPartyPostCode and SearchPartyDob columns"
   ],
 
   "request": {

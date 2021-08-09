@@ -45,7 +45,7 @@ public class SearchPartyEntity implements Serializable {
     private String searchPartyPostCode;
 
     @Column(name = "search_party_dob")
-    private String searchPartyDoB;
+    private String searchPartyDob;
 
     public Integer getId() {
         return id;
@@ -111,11 +111,11 @@ public class SearchPartyEntity implements Serializable {
         this.searchPartyPostCode = searchPartyPostCode;
     }
 
-    public String getSearchPartyDoB() {
-        return searchPartyDoB;
+    public String getSearchPartyDob() {
+        return searchPartyDob;
     }
 
-    public void setSearchPartyDoB(String searchPartyDoB) {
-        this.searchPartyDoB = searchPartyDoB;
+    public void setSearchPartyDob(String searchPartyDob) {
+        this.searchPartyDob = searchPartyDob;
     }
 }

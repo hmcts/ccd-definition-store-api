@@ -11,8 +11,8 @@ import java.util.Date;
 public class SearchParty {
 
     private String caseTypeId;
-    private Boolean searchPartyDoB;
-    private Boolean searchPartyPostCode;
+    private String searchPartyDob;
+    private String searchPartyPostCode;
     private String searchPartyAddressLine1;
     private String searchPartyEmailAddress;
     private Date liveFrom;

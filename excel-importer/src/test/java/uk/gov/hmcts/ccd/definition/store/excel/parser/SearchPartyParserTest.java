@@ -62,7 +62,7 @@ class SearchPartyParserTest extends ParserTestBase {
         assertEquals(SEARCH_PARTY_EMAIL_ADDRESS, searchPartyEntity.getSearchPartyEmailAddress());
         assertEquals(SEARCH_PARTY_ADDRESS_LINE_1, searchPartyEntity.getSearchPartyAddressLine1());
         assertEquals(SEARCH_PARTY_POST_CODE, searchPartyEntity.getSearchPartyPostCode());
-        assertEquals(SEARCH_PARTY_DOB, searchPartyEntity.getSearchPartyDoB());
+        assertEquals(SEARCH_PARTY_DOB, searchPartyEntity.getSearchPartyDob());
     }
 
     @Test

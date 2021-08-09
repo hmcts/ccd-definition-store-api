@@ -103,7 +103,7 @@ class SearchPartyServiceImplTest {
         searchPartyEntity.setSearchPartyEmailAddress("testEmail@mail.com");
         searchPartyEntity.setSearchPartyAddressLine1("Test Address");
         searchPartyEntity.setSearchPartyPostCode("J21 2HS");
-        searchPartyEntity.setSearchPartyDoB("date of birth");
+        searchPartyEntity.setSearchPartyDob("date of birth");
 
         return searchPartyEntity;
     }

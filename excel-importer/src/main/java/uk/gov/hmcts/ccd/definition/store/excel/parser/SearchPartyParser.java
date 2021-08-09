@@ -63,7 +63,7 @@ public class SearchPartyParser {
         searchPartyEntity.setSearchPartyAddressLine1(definitionDataItem
             .getString(ColumnName.SEARCH_PARTY_ADDRESS_LINE_1));
         searchPartyEntity.setSearchPartyPostCode(definitionDataItem.getString(ColumnName.SEARCH_PARTY_POST_CODE));
-        searchPartyEntity.setSearchPartyDoB(definitionDataItem.getString(ColumnName.SEARCH_PARTY_DOB));
+        searchPartyEntity.setSearchPartyDob(definitionDataItem.getString(ColumnName.SEARCH_PARTY_DOB));
 
         return searchPartyEntity;
     }
