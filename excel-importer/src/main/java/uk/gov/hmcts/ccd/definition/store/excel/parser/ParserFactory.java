@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
 @Component
@@ -116,5 +117,13 @@ public class ParserFactory {
 
     public RoleToAccessProfilesValidator createAccessProfileValidator() {
         return new RoleToAccessProfilesValidator();
+    }
+
+    public SearchCriteriaParser createSearchCriteriaParser() {
+        return new SearchCriteriaParser();
+    }
+
+    public SearchCriteriaValidator createSearchCriteriaValidator() {
+        return new SearchCriteriaValidator();
     }
 }

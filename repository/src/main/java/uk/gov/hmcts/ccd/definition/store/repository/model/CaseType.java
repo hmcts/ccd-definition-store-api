@@ -22,6 +22,7 @@ public class CaseType implements HasAcls {
     private List<AccessControlList> acls = new ArrayList<>();
     private final List<SearchAliasField> searchAliasFields = new ArrayList<>();
     private List<RoleToAccessProfiles> roleToAccessProfiles = new ArrayList<>();
+    private List<SearchCriteria> searchCriterias = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -130,6 +131,10 @@ public class CaseType implements HasAcls {
 
     public List<RoleToAccessProfiles> getRoleToAccessProfiles() {
         return roleToAccessProfiles;
+    }
+
+    public List<SearchCriteria> getSearchCriterias() {
+        return searchCriterias;
     }
 
 }
