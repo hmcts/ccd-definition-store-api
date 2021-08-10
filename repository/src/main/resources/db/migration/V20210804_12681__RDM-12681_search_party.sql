@@ -15,7 +15,7 @@ CREATE TABLE public.search_party (
   id integer NOT NULL DEFAULT nextval('public.search_party_id_seq'::regclass),
   live_from date NOT NULL,
   live_to date,
-  search_party_name character varying(2000) NOT NULL,
+  search_party_name character varying(2000),
   case_type_id integer NOT NULL,
   search_party_email_address character varying(2000),
   search_party_address_line_1 character varying(2000),
