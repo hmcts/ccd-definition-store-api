@@ -13,7 +13,7 @@ CACHE 1;
 
 CREATE TABLE public.search_party (
   id integer NOT NULL DEFAULT nextval('public.search_party_id_seq'::regclass),
-  live_from date,
+  live_from date NOT NULL,
   live_to date,
   search_party_name character varying(2000) NOT NULL,
   case_type_id integer NOT NULL,
