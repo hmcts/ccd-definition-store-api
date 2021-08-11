@@ -16,7 +16,7 @@ CREATE TABLE public.search_criteria (
   live_from date,
   live_to date,
   other_case_reference character varying(200),
-  case_type_id integer NOT NULL,
+  case_type_id integer NOT NULL
 );
 
 

@@ -21,11 +21,11 @@ public class SearchCriteriaParser {
                                             ParseContext parseContext) {
         try {
             final List<DefinitionDataItem> searchCriterias = definitionSheets
-                .get(SheetName.ROLE_TO_ACCESS_PROFILES.getName()).getDataItems();
+                .get(SheetName.SEARCH_CRITERIA.getName()).getDataItems();
             return searchCriterias
                 .stream()
-                .map(questionItem ->
-                    createSearchCriteriaEntity(parseContext, questionItem)).collect(Collectors.toList());
+                .map(dataItem ->
+                    createSearchCriteriaEntity(parseContext, dataItem)).collect(Collectors.toList());
         } catch (InvalidImportException invalidImportException) {
             ValidationResult validationResult = new ValidationResult();
             validationResult.addError(new ValidationError(invalidImportException.getMessage()) {

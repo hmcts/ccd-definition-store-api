@@ -40,6 +40,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigE
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
@@ -70,6 +71,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCriteria;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
@@ -1751,6 +1753,47 @@ class  EntityToResponseDTOMapperTest {
             assertNull(roleToAccessProfiles.getLiveFrom());
             assertNull(roleToAccessProfiles.getLiveTo());
             assertNull(roleToAccessProfiles.getRoleName());
+        }
+
+
+        private CaseTypeEntity caseTypeEntity(String reference) {
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference(reference);
+            return caseTypeEntity;
+        }
+    }
+
+
+    @Nested
+    @DisplayName("Should return SearchCriteria model whose fields match those in the SearchCriteriaEntity")
+    class MapSearchCriteriaTests {
+
+        @Test
+        void testMapSearchCriteriaEntity() {
+            SearchCriteriaEntity searchCriteriaEntity = new SearchCriteriaEntity();
+            searchCriteriaEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+            searchCriteriaEntity.setOtherCaseReference("OtherCaseReference");
+            searchCriteriaEntity.setLiveFrom(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+            searchCriteriaEntity.setLiveTo(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+
+            SearchCriteria searchCriteria = classUnderTest.map(searchCriteriaEntity);
+
+            assertEquals(searchCriteria.getCaseTypeId(), searchCriteriaEntity.getCaseType().getReference());
+            assertEquals(searchCriteria.getOtherCaseReference(), searchCriteriaEntity.getOtherCaseReference());
+            assertEquals(searchCriteria.getLiveTo(), searchCriteriaEntity.getLiveTo());
+            assertEquals(searchCriteria.getLiveFrom(), searchCriteriaEntity.getLiveFrom());
+        }
+
+        @Test
+        void testMapEmptyRoleToAccessProfileEntity() {
+            SearchCriteriaEntity searchCriteriaEntity = new SearchCriteriaEntity();
+
+            SearchCriteria searchCriteria = classUnderTest.map(searchCriteriaEntity);
+
+            assertNull(searchCriteria.getCaseTypeId());
+            assertNull(searchCriteria.getLiveFrom());
+            assertNull(searchCriteria.getLiveTo());
+            assertNull(searchCriteria.getOtherCaseReference());
         }
 
 

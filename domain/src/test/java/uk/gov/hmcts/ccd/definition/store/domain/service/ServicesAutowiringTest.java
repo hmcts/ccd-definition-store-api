@@ -63,6 +63,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionUiConfigRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfilesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
@@ -357,6 +358,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public RoleToAccessProfilesRepository roleToAccessProfileRepository() {
             return mock(RoleToAccessProfilesRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public SearchCriteriaRepository getSearchCriteriaRepository() {
+            return mock(SearchCriteriaRepository.class);
         }
     }
 }
