@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class SearchPartyValidator {
 
-    private static final String NAME_FIELD_SEPARATOR = ",";
+    protected static final String NAME_FIELD_SEPARATOR = ",";
 
     @Autowired
     private final DotNotationValidator dotNotationValidator;
