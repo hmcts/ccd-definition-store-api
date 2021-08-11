@@ -88,7 +88,8 @@
 				"delete" : true
 			} ],
 			"searchAliasFields" : [ ],
-      "roleToAccessProfiles" : [ ],
+      		"roleToAccessProfiles" : [ ],
+			"searchParties" : [ ],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",
