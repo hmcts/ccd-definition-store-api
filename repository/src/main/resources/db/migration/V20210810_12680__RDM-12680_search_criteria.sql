@@ -13,7 +13,7 @@ CACHE 1;
 
 CREATE TABLE public.search_criteria (
   id integer NOT NULL DEFAULT nextval('public.search_criteria_id_seq'::regclass),
-  live_from date NOT NULL,
+  live_from date,
   live_to date,
   other_case_reference character varying(200),
   case_type_id integer NOT NULL,
