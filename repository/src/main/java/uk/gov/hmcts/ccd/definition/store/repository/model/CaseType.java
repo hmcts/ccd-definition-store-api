@@ -133,4 +133,7 @@ public class CaseType implements HasAcls {
         return roleToAccessProfiles;
     }
 
+    public List<SearchParty> getSearchParties() {
+        return searchParties;
+    }
 }

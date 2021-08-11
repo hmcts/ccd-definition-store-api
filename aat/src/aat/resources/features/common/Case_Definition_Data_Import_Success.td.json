@@ -1,5 +1,5 @@
 {
-  "guid": "Case_Definition_Data_Import_Success",
+  "_guid_": "Case_Definition_Data_Import_Success",
   "_extends_": "Common_201_Response",
 
   "headers": {
