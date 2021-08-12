@@ -74,6 +74,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
@@ -171,6 +172,9 @@ public class ImportServiceImplTest {
     private SearchCriteriaService searchCriteriaService;
 
     @Mock
+    private SearchCriteriaValidator searchCriteriaValidator;
+
+    @Mock
     private ApplicationParams applicationParams;
 
     private FieldTypeEntity fixedTypeBaseType;
@@ -212,7 +216,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, applicationParams);
+            challengeQuestionParser, searchCriteriaValidator, applicationParams);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -406,8 +410,8 @@ public class ImportServiceImplTest {
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
-            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
-            hiddenFieldsValidator,challengeQuestionParser, applicationParams);
+            new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
+            challengeQuestionParser, searchCriteriaValidator, applicationParams);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 

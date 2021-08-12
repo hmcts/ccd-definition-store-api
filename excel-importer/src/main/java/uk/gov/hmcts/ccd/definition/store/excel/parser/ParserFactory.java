@@ -20,6 +20,7 @@ public class ParserFactory {
     private final SpreadsheetValidator spreadsheetValidator;
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
+    private final SearchCriteriaValidator searchCriteriaValidator;
     private final ApplicationParams applicationParams;
 
     @Autowired
@@ -28,13 +29,16 @@ public class ParserFactory {
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
                          SpreadsheetValidator spreadsheetValidator,
                          HiddenFieldsValidator hiddenFieldsValidator,
-                         ChallengeQuestionParser challengeQuestionParser, ApplicationParams applicationParams) {
+                         ChallengeQuestionParser challengeQuestionParser,
+                         SearchCriteriaValidator searchCriteriaValidator,
+                         ApplicationParams applicationParams) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
         this.spreadsheetValidator = spreadsheetValidator;
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
+        this.searchCriteriaValidator = searchCriteriaValidator;
         this.applicationParams = applicationParams;
     }
 
@@ -124,6 +128,7 @@ public class ParserFactory {
     }
 
     public SearchCriteriaValidator createSearchCriteriaValidator() {
-        return new SearchCriteriaValidator();
+        return searchCriteriaValidator;
     }
+
 }
