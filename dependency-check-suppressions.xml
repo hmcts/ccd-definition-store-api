@@ -36,4 +36,8 @@
 		<cve>CVE-2007-1652</cve>
 	</suppress>
 
+	<suppress until="2021-08-25">
+		<cve>CVE-2021-28170</cve>
+	</suppress>
+
 </suppressions>
