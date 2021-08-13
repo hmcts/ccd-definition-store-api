@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 
 @Table(name = "state")
 @Entity
@@ -53,7 +53,7 @@ public class StateEntity implements Serializable, Referencable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
-    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "stateEntity")
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "stateEntity")
     @Fetch(value = FetchMode.SUBSELECT)
     private final List<StateACLEntity> stateACLEntities = new ArrayList<>();
 
