@@ -55,7 +55,7 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     @Type(type = "pgsql_securityclassification_enum")
     private SecurityClassification securityClassification;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "field_type_id", nullable = false)
     private FieldTypeEntity fieldType;
 
