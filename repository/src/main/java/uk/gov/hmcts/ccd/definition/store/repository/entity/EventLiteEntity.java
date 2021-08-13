@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.FetchMode.SUBSELECT;
 
@@ -46,7 +46,7 @@ public class EventLiteEntity implements Serializable, Referencable {
     @Column(name = "can_create", nullable = false)
     private Boolean canCreate = Boolean.FALSE;
 
-    @ManyToMany(fetch = EAGER)
+    @ManyToMany(fetch = LAZY)
     @Fetch(value = SUBSELECT)
     @JoinTable(
         name = "event_pre_state",
@@ -55,7 +55,7 @@ public class EventLiteEntity implements Serializable, Referencable {
     )
     private final List<StateEntity> preStates = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = SUBSELECT)
     @JoinColumn(name = "event_id")
     private final List<EventLiteACLEntity> eventACLs = new ArrayList<>();
