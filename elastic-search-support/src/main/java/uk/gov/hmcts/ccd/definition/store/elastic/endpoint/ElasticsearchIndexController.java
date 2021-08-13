@@ -32,6 +32,7 @@ import static uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIn
 public class ElasticsearchIndexController {
 
     public static final String ELASTIC_INDEX_URI = "/elastic-support/index";
+    public static final String GS_ELASTIC_INDEX_URI = "/global-search/elastic-support/index";
 
     private final CaseTypeRepository caseTypeRepository;
     private final ElasticDefinitionImportListener elasticDefinitionImportListener;
@@ -67,9 +68,26 @@ public class ElasticsearchIndexController {
         return new IndicesCreationResult(caseTypesToIndex);
     }
 
+    @Transactional
+    @PostMapping(GS_ELASTIC_INDEX_URI)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation("Builds the Elasticsearch index for Global Search.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Elasticsearch index have been created successfully "
+            + "for all known case types"),
+        @ApiResponse(code = 400, message = "An error occurred during creation of index"),
+        @ApiResponse(code = 404, message = "Endpoint is disabled")
+    })
+    public IndicesCreationResult createGlobalSearchElasticsearchIndex() {
+        log.info("Creating Elasticsearch index for Global search.");
+        elasticDefinitionImportListener.initialiseElasticSearchForGlobalSearch();
+        return new IndicesCreationResult();
+    }
+
     @GetMapping("/elastic-support/case-types")
     @ApiOperation("Returns the list of unique case type references across all jurisdictions.")
     public List<String> getAllCaseTypeReferences() {
         return caseTypeRepository.findAllCaseTypeIds();
     }
+
 }

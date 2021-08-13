@@ -113,6 +113,16 @@ class ElasticsearchIndexControllerTest {
     }
 
     @Test
+    void shouldTriggerGSElasticsearchIndicesCreationWithEmptyList() {
+        IndicesCreationResult result = controller.createGlobalSearchElasticsearchIndex();
+
+        assertAll(
+            () -> verify(elasticDefinitionImportListener).initialiseElasticSearchForGlobalSearch(),
+            () -> assertThat(result.getTotal(), is(1))
+        );
+    }
+
+    @Test
     void shouldGetAllCaseTypeIds() {
         List<String> result = controller.getAllCaseTypeReferences();
 

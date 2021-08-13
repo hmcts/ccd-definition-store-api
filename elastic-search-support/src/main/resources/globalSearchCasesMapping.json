@@ -1,0 +1,52 @@
+{
+  "properties": {
+    "reference": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
+        }
+      },
+      "analyzer": "standard",
+      "search_analyzer": "case_id_analyzer"
+    },
+    "jurisdiction": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
+        }
+      }
+    },
+    "id": {
+      "type": "long"
+    },
+    "state": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
+        }
+      }
+    },
+    "last_modified": {
+      "type": "date",
+      "ignore_malformed": true
+    },
+    "security_classification": {
+      "type": "keyword",
+      "normalizer": "lowercase_normalizer"
+    },
+
+    "last_state_modified_date": {
+      "type": "date",
+      "ignore_malformed": true
+    }
+  }
+}

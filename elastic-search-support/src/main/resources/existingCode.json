@@ -1,0 +1,711 @@
+{
+  "dynamic": "true",
+  "properties": {
+    "reference": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
+        }
+      },
+      "analyzer": "standard",
+      "search_analyzer": "case_id_analyzer"
+    },
+    "jurisdiction": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
+        }
+      }
+    },
+    "id": {
+      "type": "long"
+    },
+    "state": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
+        }
+      }
+    },
+    "created_date": {
+      "type": "date",
+      "ignore_malformed": true
+    },
+    "last_modified": {
+      "type": "date",
+      "ignore_malformed": true
+    },
+    "security_classification": {
+      "type": "keyword",
+      "normalizer": "lowercase_normalizer"
+    },
+    "case_type_id": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
+        }
+      }
+    },
+    "last_state_modified_date": {
+      "type": "date",
+      "ignore_malformed": true
+    },
+    "@timestamp": {
+      "enabled": false
+    },
+    "@version": {
+      "enabled": false
+    },
+    "index_id": {
+      "enabled": false
+    },
+    "data": {
+      "properties": {
+        "TextField": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256,
+              "normalizer": "lowercase_normalizer"
+            }
+          }
+        },
+        "TextAreaField": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256,
+              "normalizer": "lowercase_normalizer"
+            }
+          }
+        },
+        "DateField": {
+          "type": "date",
+          "ignore_malformed": true
+        },
+        "AddressField": {
+          "properties": {
+            "AddressLine1": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "AddressLine2": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "AddressLine3": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "Country": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            }
+          }
+        },
+        "PhoneField": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256,
+              "normalizer": "lowercase_normalizer"
+            }
+          },
+          "analyzer": "phone_number_analyzer"
+        },
+        "NumberField": {
+          "type": "double"
+        },
+        "YesNoField": {
+          "type": "keyword",
+          "normalizer": "lowercase_normalizer"
+        },
+        "CollectionFieldMan": {
+          "properties": {
+            "id": {
+              "enabled": false
+            },
+            "value": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            }
+          }
+        },
+        "CollectionField": {
+          "properties": {
+            "id": {
+              "enabled": false
+            },
+            "value": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            }
+          }
+        },
+        "AddressUKField": {
+          "properties": {
+            "AddressLine1": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "AddressLine2": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "AddressLine3": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "PostTown": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "County": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "PostCode": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "Country": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            }
+          }
+        },
+        "MarritalStatus": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256,
+              "normalizer": "lowercase_normalizer"
+            }
+          }
+        },
+        "MoneyField": {
+          "type": "double"
+        },
+        "DocumentField": {
+          "properties": {
+            "document_binary_url": {
+              "type": "text",
+              "index": false
+            },
+            "document_filename": {
+              "type": "text"
+            },
+            "document_url": {
+              "type": "text",
+              "index": false
+            }
+          }
+        },
+        "DecreeNisiDocumentField": {
+          "properties": {
+            "document_binary_url": {
+              "type": "text",
+              "index": false
+            },
+            "document_filename": {
+              "type": "text"
+            },
+            "document_url": {
+              "type": "text",
+              "index": false
+            }
+          }
+        },
+        "DocumentField1": {
+          "properties": {
+            "document_binary_url": {
+              "type": "text",
+              "index": false
+            },
+            "document_filename": {
+              "type": "text"
+            },
+            "document_url": {
+              "type": "text",
+              "index": false
+            }
+          }
+        },
+        "EmailField": {
+          "type": "keyword",
+          "normalizer": "lowercase_normalizer"
+        },
+        "MultiSelectField": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256,
+              "normalizer": "lowercase_normalizer"
+            }
+          }
+        },
+        "DynamicList": {
+          "properties": {
+            "value": {
+              "properties": {
+                "code": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
+                    }
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
+                    }
+                  }
+                }
+              }
+            },
+            "list_items": {
+              "type": "object",
+              "enabled": false
+            }
+          }
+        },
+        "OrganisationPolicyField1": {
+          "properties": {
+            "Organisation": {
+              "properties": {
+                "OrganisationID": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
+                    }
+                  }
+                },
+                "OrganisationName": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
+                    }
+                  }
+                }
+              }
+            },
+            "OrgPolicyCaseAssignedRole": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "OrgPolicyReference": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "PreviousOrganisations": {
+              "properties": {
+                "id": {
+                  "enabled": false
+                },
+                "value": {
+                  "properties": {
+                    "FromTimestamp": {
+                      "type": "date",
+                      "ignore_malformed": true
+                    },
+                    "ToTimestamp": {
+                      "type": "date",
+                      "ignore_malformed": true
+                    },
+                    "OrganisationName": {
+                      "type": "text",
+                      "fields": {
+                        "keyword": {
+                          "type": "keyword",
+                          "ignore_above": 256,
+                          "normalizer": "lowercase_normalizer"
+                        }
+                      }
+                    },
+                    "OrganisationAddress": {
+                      "properties": {
+                        "AddressLine1": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "AddressLine2": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "AddressLine3": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "PostTown": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "County": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "PostCode": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "Country": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "PrepopulateToUsersOrganisation": {
+              "type": "keyword",
+              "normalizer": "lowercase_normalizer"
+            }
+          }
+        },
+        "OrganisationPolicyField2": {
+          "properties": {
+            "Organisation": {
+              "properties": {
+                "OrganisationID": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
+                    }
+                  }
+                },
+                "OrganisationName": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
+                    }
+                  }
+                }
+              }
+            },
+            "OrgPolicyCaseAssignedRole": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "OrgPolicyReference": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            },
+            "PreviousOrganisations": {
+              "properties": {
+                "id": {
+                  "enabled": false
+                },
+                "value": {
+                  "properties": {
+                    "FromTimestamp": {
+                      "type": "date",
+                      "ignore_malformed": true
+                    },
+                    "ToTimestamp": {
+                      "type": "date",
+                      "ignore_malformed": true
+                    },
+                    "OrganisationName": {
+                      "type": "text",
+                      "fields": {
+                        "keyword": {
+                          "type": "keyword",
+                          "ignore_above": 256,
+                          "normalizer": "lowercase_normalizer"
+                        }
+                      }
+                    },
+                    "OrganisationAddress": {
+                      "properties": {
+                        "AddressLine1": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "AddressLine2": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "AddressLine3": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "PostTown": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "County": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "PostCode": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        },
+                        "Country": {
+                          "type": "text",
+                          "fields": {
+                            "keyword": {
+                              "type": "keyword",
+                              "ignore_above": 256,
+                              "normalizer": "lowercase_normalizer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "PrepopulateToUsersOrganisation": {
+              "type": "keyword",
+              "normalizer": "lowercase_normalizer"
+            }
+          }
+        },
+        "CaseLinkField": {
+          "properties": {
+            "CaseReference": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              }
+            }
+          }
+        },
+        "[STATE]": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256,
+              "normalizer": "lowercase_normalizer"
+            }
+          }
+        }
+      }
+    }
+  }
+}

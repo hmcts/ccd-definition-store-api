@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,7 @@ import java.util.TreeSet;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toCollection;
+import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener.GLOBAL_SEARCH;
 
 @Data
 public class IndicesCreationResult {
@@ -41,6 +43,13 @@ public class IndicesCreationResult {
     public IndicesCreationResult(List<CaseTypeEntity> caseTypes) {
         this.caseTypesByJurisdiction = getCaseTypesGroupedByJurisdiction(caseTypes);
         this.total = caseTypes.size();
+    }
+
+    public IndicesCreationResult() {
+        Map<String, Set<String>> result = new HashMap<>();
+        result.put(GLOBAL_SEARCH, Set.of(GLOBAL_SEARCH));
+        this.caseTypesByJurisdiction = result;
+        this.total = 1;
     }
 
     private Map<String, Set<String>> getCaseTypesGroupedByJurisdiction(List<CaseTypeEntity> caseTypes) {

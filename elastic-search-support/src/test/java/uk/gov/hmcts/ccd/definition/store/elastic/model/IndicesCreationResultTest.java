@@ -42,6 +42,17 @@ class IndicesCreationResultTest {
         );
     }
 
+    @Test
+    void shouldCreateResultForGlobalSearch() {
+        IndicesCreationResult result = new IndicesCreationResult();
+
+        assertAll(
+            () -> assertThat(result.getTotal(), is(1)),
+            () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(1)),
+            () -> assertThat(result.getCaseTypesByJurisdiction().get("GlobalSearch"), hasItem("GlobalSearch"))
+        );
+    }
+
     private CaseTypeEntity createCaseType(String reference, String jurisdictionReference) {
         CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference(reference);
