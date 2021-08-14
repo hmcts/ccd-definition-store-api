@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "jurisdiction_ui_config")
@@ -24,7 +24,7 @@ public class JurisdictionUiConfigEntity implements Serializable {
     @Column(name = "shuttered")
     private Boolean shuttered;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
 
