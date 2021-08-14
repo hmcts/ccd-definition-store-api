@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "banner")
@@ -40,7 +40,7 @@ public class BannerEntity implements Serializable {
     @Column(name = "banner_url")
     private String bannerUrl;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
 
