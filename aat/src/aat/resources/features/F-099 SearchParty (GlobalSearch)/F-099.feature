@@ -28,7 +28,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [to fetch incorrect caseTypeId schema] will get the expected response as in [S-099.2_Get_InvalidCaseType].
 
   @S-099.3 @AC-15
-  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyDoB" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyDoB" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
@@ -40,7 +40,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
 
   @S-099.4 @AC-16
-  Scenario: Import Definition file with invalid top level case field name in the "SearchPartyDoB" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid top level case field name in the "SearchPartyDoB" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
@@ -52,7 +52,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
 
   @S-099.5 @AC-17
-  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyPostCode" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyPostCode" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
@@ -64,7 +64,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
 
   @S-099.6 @AC-18
-  Scenario:  Import Definition file with invalid top level case field name in the "SearchPartyPostCode" column of the SearchCriteria tab
+  Scenario:  Import Definition file with invalid top level case field name in the "SearchPartyPostCode" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
@@ -76,7 +76,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
 
   @S-099.7 @AC-19
-  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyAddressLine1" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyAddressLine1" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
@@ -88,7 +88,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
 
   @S-099.8 @AC-20
-  Scenario: Import Definition file with invalid top level case field name in the "SearchPartyAddressLine1" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid top level case field name in the "SearchPartyAddressLine1" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
@@ -100,7 +100,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
 
   @S-099.9 @AC-21
-  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyEmailAddress" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyEmailAddress" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
@@ -112,7 +112,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
 
   @S-099.10 @AC-22
-  Scenario: Import Definition file with invalid top level case field name in the "SearchPartyEmailAddress" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid top level case field name in the "SearchPartyEmailAddress" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
@@ -124,7 +124,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
 
   @S-099.11 @AC-23
-  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyName" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyName" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains SearchParty tab with a invalid case field name in the SearchPartyName column]
@@ -134,7 +134,7 @@ Feature: F-099: Search Party (Global Search)
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
 
   @S-099.12 @AC-24
-  Scenario: Import Definition file with invalid top level case field name in the "SearchPartyName" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid top level case field name in the "SearchPartyName" column of the SearchParty tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains SearchParty tab with a invalid complex element name in the SearchPartyName column]

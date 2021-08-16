@@ -2,11 +2,12 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.searchparty;
 
 import com.google.common.collect.Lists;
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchPartyRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -22,9 +23,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 class SearchPartyServiceImplTest {
-
-    private SearchPartyServiceImpl sut;
 
     @Mock
     private SearchPartyRepository repository;
@@ -32,11 +32,8 @@ class SearchPartyServiceImplTest {
     @Mock
     private EntityToResponseDTOMapper dtoMapper;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
-        sut = new SearchPartyServiceImpl(repository, dtoMapper);
-    }
+    @InjectMocks
+    private SearchPartyServiceImpl sut;
 
     @Test
     @DisplayName(
