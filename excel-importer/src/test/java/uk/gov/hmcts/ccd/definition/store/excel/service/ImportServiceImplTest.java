@@ -64,6 +64,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
@@ -74,6 +75,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
@@ -171,6 +173,12 @@ public class ImportServiceImplTest {
     private SearchCriteriaService searchCriteriaService;
 
     @Mock
+    private SearchPartyService searchPartyService;
+
+    @Mock
+    private SearchPartyValidator searchPartyValidator;
+
+    @Mock
     private ApplicationParams applicationParams;
 
     private FieldTypeEntity fixedTypeBaseType;
@@ -212,7 +220,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, applicationParams);
+            challengeQuestionParser, searchPartyValidator, applicationParams);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -232,7 +240,8 @@ public class ImportServiceImplTest {
             jurisdictionUiConfigService,
             challengeQuestionTabService,
             roleToAccessProfileService,
-            searchCriteriaService);
+            searchCriteriaService,
+            searchPartyService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -407,7 +416,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
-            hiddenFieldsValidator,challengeQuestionParser, applicationParams);
+            hiddenFieldsValidator,challengeQuestionParser, searchPartyValidator, applicationParams);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -427,7 +436,8 @@ public class ImportServiceImplTest {
             jurisdictionUiConfigService,
             challengeQuestionTabService,
             roleToAccessProfileService,
-            searchCriteriaService);
+            searchCriteriaService,
+            searchPartyService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

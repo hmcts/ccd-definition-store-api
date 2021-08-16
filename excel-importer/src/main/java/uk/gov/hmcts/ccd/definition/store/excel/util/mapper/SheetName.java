@@ -30,6 +30,7 @@ public enum SheetName {
     BANNER("Banner"),
     CHALLENGE_QUESTION_TAB("ChallengeQuestion"),
     ROLE_TO_ACCESS_PROFILES("RoleToAccessProfiles"),
+    SEARCH_PARTY("SearchParty"),
     SEARCH_CRITERIA("SearchCriteria");
 
     private final String name;

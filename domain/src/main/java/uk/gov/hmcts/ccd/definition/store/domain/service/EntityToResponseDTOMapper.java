@@ -32,6 +32,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntit
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
@@ -62,6 +63,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCriteria;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchParty;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
@@ -307,6 +309,9 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(source = "caseType.reference", target = "caseTypeId")
     SearchCriteria map(SearchCriteriaEntity searchCriteriaEntity);
+
+    @Mapping(source = "caseType.reference", target = "caseTypeId")
+    SearchParty map(SearchPartyEntity searchPartyEntity);
 
     @Mapping(source = "caseType.reference", target = "id")
     @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")

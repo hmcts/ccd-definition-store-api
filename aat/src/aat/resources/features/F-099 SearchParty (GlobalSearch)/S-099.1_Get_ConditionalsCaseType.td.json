@@ -1,0 +1,72 @@
+{
+	"_guid_": "S-099.1_Get_ConditionalsCaseType",
+	"_extends_": "F-099_Get_CaseType",
+
+	"specs": [
+		"fetch Conditionals Case Type Schema to verify complex field name in columns SearchPartyName(AC3), SearchPartyEmailAddress(AC7), SearchPartyAddressLine1(AC9), SearchPartyPostCode(AC11), SearchPartyDob(AC13)"
+	],
+
+	"request": {
+		"pathVariables": {
+			"id": "FT_Conditionals"
+		}
+	},
+
+	"expectedResponse": {
+		"body": {
+			"id": "FT_Conditionals",
+			"searchParties": [
+				{
+					"case_type_id": "FT_Conditionals",
+					"search_party_dob": "TextField",
+					"search_party_post_code": "TextField",
+					"search_party_address_line1": "TextField",
+					"search_party_email_address": "TextField",
+					"live_from": "2017-01-01T00:00:00.000+00:00",
+					"live_to": null,
+					"search_party_name": "AddressComplex1.AddressLine1"
+				},
+				{
+					"case_type_id": "FT_Conditionals",
+					"search_party_dob": "TextField",
+					"search_party_post_code": "TextField",
+					"search_party_address_line1": "TextField",
+					"search_party_email_address": "AddressComplex1.AddressLine1",
+					"live_from": "2017-01-01T00:00:00.000+00:00",
+					"live_to": null,
+					"search_party_name": "TextField"
+				},
+				{
+					"case_type_id": "FT_Conditionals",
+					"search_party_dob": "TextField",
+					"search_party_post_code": "TextField",
+					"search_party_address_line1": "AddressComplex1.AddressLine1",
+					"search_party_email_address": "TextField",
+					"live_from": "2017-01-01T00:00:00.000+00:00",
+					"live_to": null,
+					"search_party_name": "TextField2"
+				},
+				{
+					"case_type_id": "FT_Conditionals",
+					"search_party_dob": "TextField",
+					"search_party_post_code": "AddressComplex1.AddressLine1",
+					"search_party_address_line1": "TextField",
+					"search_party_email_address": "TextField",
+					"live_from": "2017-01-01T00:00:00.000+00:00",
+					"live_to": null,
+					"search_party_name": "TextField3"
+				},
+				{
+					"case_type_id": "FT_Conditionals",
+					"search_party_dob": "AddressComplex1.AddressLine1",
+					"search_party_post_code": "TextField",
+					"search_party_address_line1": "TextField",
+					"search_party_email_address": "TextField",
+					"live_from": "2017-01-01T00:00:00.000+00:00",
+					"live_to": null,
+					"search_party_name": "TextFieldOptional"
+				}
+			]
+		}
+	}
+}

@@ -42,6 +42,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntit
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
@@ -73,6 +74,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCriteria;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchParty;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
@@ -1802,6 +1804,55 @@ class  EntityToResponseDTOMapperTest {
             caseTypeEntity.setReference(reference);
             return caseTypeEntity;
         }
+    }
+
+
+    @Nested
+    @DisplayName("Should return SearchParty model whose fields match those in the SearchPartyEntity")
+    class MapSearchPartyTests {
+
+
+        @Test
+        void testMapSearchPartyEntity() {
+            SearchPartyEntity searchPartyEntity = new SearchPartyEntity();
+            searchPartyEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+
+
+            SearchParty searchParty = classUnderTest.map(searchPartyEntity);
+
+            assertEquals(searchParty.getCaseTypeId(), searchPartyEntity.getCaseType().getReference());
+            assertEquals(searchParty.getSearchPartyName(), searchPartyEntity.getSearchPartyName());
+            assertEquals(searchParty.getSearchPartyAddressLine1(), searchPartyEntity.getSearchPartyAddressLine1());
+            assertEquals(searchParty.getSearchPartyEmailAddress(), searchPartyEntity.getSearchPartyEmailAddress());
+            assertEquals(searchParty.getSearchPartyPostCode(), searchPartyEntity.getSearchPartyPostCode());
+            assertEquals(searchParty.getSearchPartyDob(), searchPartyEntity.getSearchPartyDob());
+            assertEquals(searchParty.getLiveTo(), searchPartyEntity.getLiveTo());
+            assertEquals(searchParty.getLiveFrom(), searchPartyEntity.getLiveFrom());
+
+        }
+
+        @Test
+        void testMapEmptySearchPartyEntity() {
+            SearchPartyEntity searchPartyEntity = new SearchPartyEntity();
+
+            SearchParty searchParty = classUnderTest.map(searchPartyEntity);
+
+            assertNull(searchParty.getCaseTypeId());
+            assertNull(searchParty.getLiveFrom());
+            assertNull(searchParty.getLiveTo());
+            assertNull(searchParty.getSearchPartyName());
+            assertNull(searchParty.getSearchPartyAddressLine1());
+            assertNull(searchParty.getSearchPartyEmailAddress());
+            assertNull(searchParty.getSearchPartyPostCode());
+            assertNull(searchParty.getSearchPartyDob());
+        }
+
+        private CaseTypeEntity caseTypeEntity(String reference) {
+            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+            caseTypeEntity.setReference(reference);
+            return caseTypeEntity;
+        }
+
     }
 
     private void assertComplexACLs(List<ComplexFieldACLEntity> authorisation, List<ComplexACL> accessControlList) {

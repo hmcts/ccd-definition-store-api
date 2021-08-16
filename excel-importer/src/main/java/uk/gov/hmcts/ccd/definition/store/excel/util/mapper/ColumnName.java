@@ -97,6 +97,11 @@ public enum ColumnName {
     READ_ONLY("ReadOnly"),
     DISABLED("Disabled"),
     ACCESS_PROFILES("AccessProfiles"),
+    SEARCH_PARTY_NAME("SearchPartyName"),
+    SEARCH_PARTY_EMAIL_ADDRESS("SearchPartyEmailAddress"),
+    SEARCH_PARTY_ADDRESS_LINE_1("SearchPartyAddressLine1"),
+    SEARCH_PARTY_POST_CODE("SearchPartyPostCode"),
+    SEARCH_PARTY_DOB("SearchPartyDOB"),
     OTHER_CASE_REFERENCE("OtherCaseReference"),
     EVENT_ENABLING_CONDITION("EventEnablingCondition");
 
