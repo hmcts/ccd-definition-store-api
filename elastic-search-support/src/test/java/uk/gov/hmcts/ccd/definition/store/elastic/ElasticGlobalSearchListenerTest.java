@@ -8,19 +8,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -37,12 +28,6 @@ public class ElasticGlobalSearchListenerTest {
 
     @Mock
     private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
-
-    @Mock
-    private ElasticsearchErrorHandler elasticsearchErrorHandler;
-
-    private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseTypeA").build();
-    private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
 
     @BeforeEach
     public void setUp() {
@@ -67,13 +52,10 @@ public class ElasticGlobalSearchListenerTest {
         verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
     }
 
-
-    private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes));
-    }
-
     private static class TestDefinitionImportListener extends ElasticGlobalSearchListener {
-        public TestDefinitionImportListener(ObjectFactory<uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient> clientFactory, ElasticsearchErrorHandler elasticsearchErrorHandler) {
+        public TestDefinitionImportListener(
+            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
+            ElasticsearchErrorHandler elasticsearchErrorHandler) {
             super(clientFactory, elasticsearchErrorHandler);
         }
     }
