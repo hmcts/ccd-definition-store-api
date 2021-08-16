@@ -27,7 +27,7 @@ Feature: F-100: Search Criteria (Global Search)
     And a call [to fetch incorrect caseTypeId schema] will get the expected response as in [S-100.2_Get_InvalidCaseType].
 
   @S-100.3 @AC-5
-  Scenario: Import Definition file with invalid complex case field name in the "OtherCaseReference" column of the SearchCriteria tab
+  Scenario: Import Definition file with invalid case field name in the "OtherCaseReference" column of the SearchCriteria tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains SearchCriteria tab with a invalid case field name in the OtherCaseReference column]
