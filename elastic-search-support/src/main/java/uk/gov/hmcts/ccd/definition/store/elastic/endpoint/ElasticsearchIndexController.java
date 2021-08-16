@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.model.IndicesCreationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -36,12 +37,15 @@ public class ElasticsearchIndexController {
 
     private final CaseTypeRepository caseTypeRepository;
     private final ElasticDefinitionImportListener elasticDefinitionImportListener;
+    private final ElasticGlobalSearchListener elasticGlobalSearchListener;
 
     @Autowired
     public ElasticsearchIndexController(CaseTypeRepository caseTypeRepository,
-                                        ElasticDefinitionImportListener elasticDefinitionImportListener) {
+                                        ElasticDefinitionImportListener elasticDefinitionImportListener,
+                                        ElasticGlobalSearchListener elasticGlobalSearchListener) {
         this.caseTypeRepository = caseTypeRepository;
         this.elasticDefinitionImportListener = elasticDefinitionImportListener;
+        this.elasticGlobalSearchListener = elasticGlobalSearchListener;
     }
 
     @Transactional
@@ -78,10 +82,9 @@ public class ElasticsearchIndexController {
         @ApiResponse(code = 400, message = "An error occurred during creation of index"),
         @ApiResponse(code = 404, message = "Endpoint is disabled")
     })
-    public IndicesCreationResult createGlobalSearchElasticsearchIndex() {
+    public void createGlobalSearchElasticsearchIndex() {
         log.info("Creating Elasticsearch index for Global search.");
-        elasticDefinitionImportListener.initialiseElasticSearchForGlobalSearch();
-        return new IndicesCreationResult();
+        elasticGlobalSearchListener.initialiseElasticSearchForGlobalSearch();
     }
 
     @GetMapping("/elastic-support/case-types")

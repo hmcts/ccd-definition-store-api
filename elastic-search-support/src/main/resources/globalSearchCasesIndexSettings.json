@@ -1,21 +1,6 @@
 {
   "analysis": {
     "analyzer": {
-      "phone_number_analyzer": {
-        "type": "custom",
-        "tokenizer": "keyword",
-        "filter": [
-          "shingle_filter",
-          "whitespace_remove"
-        ]
-      },
-      "case_id_analyzer": {
-        "type": "custom",
-        "tokenizer": "keyword",
-        "filter": [
-          "hyphen_remove"
-        ]
-      },
       "alphaNumericStringAnalyzer": {
         "tokenizer": "standard",
         "filter": "lowercase",
@@ -38,16 +23,6 @@
         "min_shingle_size": 2,
         "max_shingle_size": 3,
         "output_unigrams": true
-      },
-      "whitespace_remove": {
-        "type": "pattern_replace",
-        "pattern": " ",
-        "replacement": ""
-      },
-      "hyphen_remove": {
-        "type": "pattern_replace",
-        "pattern": "-",
-        "replacement": ""
       }
     },
     "normalizer": {

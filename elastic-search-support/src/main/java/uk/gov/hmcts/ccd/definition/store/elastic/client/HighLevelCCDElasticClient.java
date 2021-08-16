@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
-import com.microsoft.applicationinsights.core.dependencies.apachecommons.io.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
@@ -20,20 +18,16 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
-import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener.GLOBAL_SEARCH;
+import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
 
 @Slf4j
 public class HighLevelCCDElasticClient implements CCDElasticClient {
 
     private static final String CASES_INDEX_SETTINGS_JSON = "/casesIndexSettings.json";
     private static final String GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON = "/globalSearchCasesIndexSettings.json";
-    private static final String GLOBAL_SEARCH_CASES_MAPPING_JSON = "/globalSearchCasesMapping.json";
     protected CcdElasticSearchProperties config;
 
     protected RestHighLevelClient elasticClient;
@@ -52,13 +46,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         String file = (alias.equalsIgnoreCase(GLOBAL_SEARCH))
             ? GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON : CASES_INDEX_SETTINGS_JSON;
         request.settings(casesIndexSettings(file));
-        if (alias.equalsIgnoreCase(GLOBAL_SEARCH)) {
-            InputStream inputStream = getClass().getResourceAsStream(GLOBAL_SEARCH_CASES_MAPPING_JSON);
-            String contents = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        //    request.mapping("_doc", contents, XContentType.JSON);
-            request.source(contents, XContentType.JSON);
-        }
-
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
         log.info("index created: {}", createIndexResponse.isAcknowledged());
         return createIndexResponse.isAcknowledged();

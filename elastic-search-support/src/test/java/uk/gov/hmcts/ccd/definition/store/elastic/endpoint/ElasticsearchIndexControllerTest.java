@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.model.IndicesCreationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -36,6 +37,9 @@ class ElasticsearchIndexControllerTest {
 
     @Mock
     private ElasticDefinitionImportListener elasticDefinitionImportListener;
+
+    @Mock
+    private ElasticGlobalSearchListener elasticGlobalSearchListener;
 
     @Captor
     private ArgumentCaptor<List<CaseTypeEntity>> caseTypeCaptor;
@@ -114,11 +118,10 @@ class ElasticsearchIndexControllerTest {
 
     @Test
     void shouldTriggerGSElasticsearchIndicesCreationWithEmptyList() {
-        IndicesCreationResult result = controller.createGlobalSearchElasticsearchIndex();
+        controller.createGlobalSearchElasticsearchIndex();
 
         assertAll(
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearchForGlobalSearch(),
-            () -> assertThat(result.getTotal(), is(1))
+            () -> verify(elasticGlobalSearchListener).initialiseElasticSearchForGlobalSearch()
         );
     }
 

@@ -2,12 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -19,14 +13,12 @@ import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
 
     private static final String FIRST_INDEX_SUFFIX = "-000001";
-    public static final String GLOBAL_SEARCH = "globalsearch";
 
     private final CcdElasticSearchProperties config;
 
@@ -77,28 +69,6 @@ public abstract class ElasticDefinitionImportListener {
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (Exception exc) {
             logMapping(caseMapping);
-            throw new ElasticSearchInitialisationException(exc);
-        } finally {
-            if (elasticClient != null) {
-                elasticClient.close();
-            }
-        }
-    }
-
-    @Transactional
-    public void initialiseElasticSearchForGlobalSearch() {
-        HighLevelCCDElasticClient elasticClient = null;
-        try {
-            elasticClient = clientFactory.getObject();
-            if (!elasticClient.aliasExists(GLOBAL_SEARCH)) {
-                String actualIndexName = GLOBAL_SEARCH + FIRST_INDEX_SUFFIX;
-                elasticClient.createIndex(actualIndexName, GLOBAL_SEARCH);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ElasticsearchStatusException exc) {
-            throw elasticsearchErrorHandler.createException(exc, null);
-        } catch (Exception exc) {
             throw new ElasticSearchInitialisationException(exc);
         } finally {
             if (elasticClient != null) {

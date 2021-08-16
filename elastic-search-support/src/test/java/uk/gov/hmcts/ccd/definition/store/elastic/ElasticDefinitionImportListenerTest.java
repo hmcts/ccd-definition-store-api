@@ -119,25 +119,6 @@ public class ElasticDefinitionImportListenerTest {
         });
     }
 
-    @Test
-    public void createsIndexIfNotExistsForGlobalSearch() throws IOException {
-        when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
-
-        listener.initialiseElasticSearchForGlobalSearch();
-
-        verify(ccdElasticClient).createIndex("globalsearch-000001", "globalsearch");
-    }
-
-    @Test
-    public void skipIndexCreationIfNotExistsForGlobalSearch() throws IOException {
-        when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
-
-        listener.initialiseElasticSearchForGlobalSearch();
-
-        verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
-    }
-
-
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
         return new DefinitionImportedEvent(newArrayList(caseTypes));
     }
