@@ -1,0 +1,40 @@
+{
+  "_guid_": "S-100.1_Get_MultiplePagesCaseType",
+  "_extends_": "F-100_Get_CaseType",
+
+  "specs": [
+    "fetch Multiple Pages Case Type Schema to verify comma separated case field names in OtherCaseReference column(AC2)"
+  ],
+
+  "request": {
+    "pathVariables": {
+      "id": "FT_MultiplePages"
+    }
+  },
+
+  "expectedResponse": {
+    "body": {
+      "id": "FT_MultiplePages",
+      "searchCriterias": [
+        {
+          "case_type_id": "FT_MultiplePages",
+          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_to": null,
+          "other_case_reference": "TextFieldFName"
+        },
+        {
+          "case_type_id": "FT_MultiplePages",
+          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_to": null,
+          "other_case_reference": "TextFieldMName"
+        },
+        {
+          "case_type_id": "FT_MultiplePages",
+          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_to": null,
+          "other_case_reference": "TextFieldLName"
+        }
+      ]
+    }
+  }
+}

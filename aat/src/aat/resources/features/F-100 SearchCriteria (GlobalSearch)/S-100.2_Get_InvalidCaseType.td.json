@@ -1,0 +1,27 @@
+{
+  "_guid_": "S-099.2_Get_InvalidCaseType",
+  "_extends_": "Get_CaseType",
+
+  "specs": [
+    "to fetch incorrect caseTypeId schema"
+  ],
+
+  "request": {
+    "pathVariables": {
+      "id": "InvalidCaseType"
+    }
+  },
+
+  "expectedResponse": {
+    "responseCode": 404,
+    "responseMessage": "Not Found",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "message": "Object Not Found for:InvalidCaseType"
+    }
+  }
+}

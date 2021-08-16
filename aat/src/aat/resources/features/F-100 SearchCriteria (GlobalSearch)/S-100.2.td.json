@@ -1,0 +1,32 @@
+{
+  "_guid_": "S-100.2",
+  "_extends_": "Import_Base_data",
+  "title": "Import Definition file with in-correct value in 'CaseTypeId' column of the SearchCriteria tab",
+  "specs": [
+    "an active profile in CCD",
+    "contains an invalid value (not matching the CaseType tab) in the configured 'CaseTypeId' column of the SearchCriteria tab"
+  ],
+
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/GlobalSearch/BEFTA_Master_Definition_GlobalSearch_InvalidCaseTypeId.xlsx"
+        }
+      ]
+    }
+  },
+
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Type": "plain/text",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- Case Type not found InvalidCaseType in column 'CaseTypeID' in the sheet 'SearchCriteria'"
+    }
+  }
+}
