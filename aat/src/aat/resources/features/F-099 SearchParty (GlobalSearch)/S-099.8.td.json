@@ -1,7 +1,7 @@
 {
   "_guid_": "S-099.8",
   "_extends_": "Import_Base_data",
-  "title": "Import Definition file with invalid top level case field name in the 'SearchPartyAddressLine1' column of the SearchCriteria tab",
+  "title": "Import Definition file with invalid top level case field name in the 'SearchPartyAddressLine1' column of the SearchParty tab",
 
   "specs": [
     "an active profile in CCD",
