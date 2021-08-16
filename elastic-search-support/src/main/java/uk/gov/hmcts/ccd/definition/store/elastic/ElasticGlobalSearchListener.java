@@ -6,6 +6,7 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class ElasticGlobalSearchListener {
             elasticClient.upsertMapping(GLOBAL_SEARCH, mapping);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ElasticSearchInitialisationException(e);
         } catch (ElasticsearchStatusException exc) {
             throw elasticsearchErrorHandler.createException(exc, null);
         } finally {

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ElasticGlobalSearchListenerTest {
+class ElasticGlobalSearchListenerTest {
 
     @InjectMocks
     private TestDefinitionImportListener listener;
@@ -35,7 +35,7 @@ public class ElasticGlobalSearchListenerTest {
     }
 
     @Test
-    public void createsIndexIfNotExistsForGlobalSearch() throws IOException {
+    void createsIndexIfNotExistsForGlobalSearch() throws IOException {
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
 
         listener.initialiseElasticSearchForGlobalSearch();
@@ -44,7 +44,7 @@ public class ElasticGlobalSearchListenerTest {
     }
 
     @Test
-    public void skipIndexCreationIfNotExistsForGlobalSearch() throws IOException {
+    void skipIndexCreationIfNotExistsForGlobalSearch() throws IOException {
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
 
         listener.initialiseElasticSearchForGlobalSearch();
