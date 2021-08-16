@@ -76,6 +76,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
@@ -173,6 +174,9 @@ public class ImportServiceImplTest {
     private SearchCriteriaService searchCriteriaService;
 
     @Mock
+    private SearchCriteriaValidator searchCriteriaValidator;
+
+    @Mock
     private SearchPartyService searchPartyService;
 
     @Mock
@@ -220,7 +224,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, searchPartyValidator, applicationParams);
+            challengeQuestionParser, searchPartyValidator, searchCriteriaValidator, applicationParams);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -416,7 +420,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
-            hiddenFieldsValidator,challengeQuestionParser, searchPartyValidator, applicationParams);
+            hiddenFieldsValidator,challengeQuestionParser, searchPartyValidator, searchCriteriaValidator, applicationParams);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
