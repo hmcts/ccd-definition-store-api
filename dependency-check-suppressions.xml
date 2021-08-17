@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions
-	xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+		xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
 	<suppress until="2021-08-25">
 		<notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security
@@ -37,14 +37,17 @@
 	</suppress>
 
 	<suppress until="2021-08-25">
-		<notes> CVE's raising flaws in apache-commons-compress highlighting
-			potential denial of service attacks when using compressed files.
-			To be fixed in Jira tickets CCD-1696, CCD-1697, CCD-1698 and CCD-1699
+		<notes>In the Jakarta Expression Language implementation 3.0.3 and earlier, 
+		a bug in the ELParserTokenManager enables invalid EL expressions to be evaluated as if they were valid.
 		</notes>
-		<cve>CVE-2021-35515</cve>
-		<cve>CVE-2021-35516</cve>
-		<cve>CVE-2021-35517</cve>
-		<cve>CVE-2021-36090</cve>
+		<cve>CVE-2021-28170</cve>
+	</suppress>
+
+	<suppress until="2021-08-25">
+		<notes>susceptible to a Denial-of-Service (DoS) attack via the initiation of the Authorization Request 
+		in an OAuth 2.0 Client Web and WebFlux application
+		</notes>
+		<cve>CVE-2021-22119</cve>
 	</suppress>
 
 </suppressions>
