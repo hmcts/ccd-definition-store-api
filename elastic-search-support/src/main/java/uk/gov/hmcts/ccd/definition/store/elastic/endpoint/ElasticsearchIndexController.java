@@ -77,8 +77,7 @@ public class ElasticsearchIndexController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Builds the Elasticsearch index for Global Search.")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Elasticsearch index have been created successfully "
-            + "for all known case types"),
+        @ApiResponse(code = 201, message = "Global Search Elasticsearch index has been created successfully."),
         @ApiResponse(code = 400, message = "An error occurred during creation of index"),
         @ApiResponse(code = 404, message = "Endpoint is disabled")
     })
