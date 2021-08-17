@@ -420,7 +420,8 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
-            hiddenFieldsValidator,challengeQuestionParser, searchPartyValidator, searchCriteriaValidator, applicationParams);
+            hiddenFieldsValidator,challengeQuestionParser,
+            searchPartyValidator, searchCriteriaValidator, applicationParams);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
