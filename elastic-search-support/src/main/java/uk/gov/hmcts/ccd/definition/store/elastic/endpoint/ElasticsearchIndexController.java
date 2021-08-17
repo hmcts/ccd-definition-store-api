@@ -33,7 +33,7 @@ import static uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIn
 public class ElasticsearchIndexController {
 
     public static final String ELASTIC_INDEX_URI = "/elastic-support/index";
-    public static final String GS_ELASTIC_INDEX_URI = "/global-search/elastic-support/index";
+    public static final String GS_ELASTIC_INDEX_URI = "/elastic-support/global-search/index";
 
     private final CaseTypeRepository caseTypeRepository;
     private final ElasticDefinitionImportListener elasticDefinitionImportListener;
