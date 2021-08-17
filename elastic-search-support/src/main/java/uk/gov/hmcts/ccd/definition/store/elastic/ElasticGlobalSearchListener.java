@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 public class ElasticGlobalSearchListener {
 
     private static final String FIRST_INDEX_SUFFIX = "-000001";
-    public static final String GLOBAL_SEARCH = "globalsearch";
+    public static final String GLOBAL_SEARCH = "global_search";
 
     private final ObjectFactory<HighLevelCCDElasticClient> clientFactory;
 
