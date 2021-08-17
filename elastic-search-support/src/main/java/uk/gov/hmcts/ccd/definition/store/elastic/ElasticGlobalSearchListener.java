@@ -46,10 +46,8 @@ public class ElasticGlobalSearchListener {
             log.debug("case mapping: {}", mapping);
             elasticClient.upsertMapping(GLOBAL_SEARCH, mapping);
 
-        } catch (IOException e) {
+        } catch (IOException | ElasticsearchStatusException e) {
             throw new ElasticSearchInitialisationException(e);
-        } catch (ElasticsearchStatusException exc) {
-            throw elasticsearchErrorHandler.createException(exc, null);
         } finally {
             if (elasticClient != null) {
                 elasticClient.close();
