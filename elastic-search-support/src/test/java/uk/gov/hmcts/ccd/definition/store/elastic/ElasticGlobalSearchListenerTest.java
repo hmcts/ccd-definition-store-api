@@ -40,7 +40,7 @@ class ElasticGlobalSearchListenerTest {
 
         listener.initialiseElasticSearchForGlobalSearch();
 
-        verify(ccdElasticClient).createIndex("globalsearch-000001", "globalsearch");
+        verify(ccdElasticClient).createIndex("global_search-000001", "global_search");
     }
 
     @Test
