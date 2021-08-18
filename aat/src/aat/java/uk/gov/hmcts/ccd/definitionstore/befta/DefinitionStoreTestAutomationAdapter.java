@@ -10,7 +10,7 @@ import static uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore.VALID_CCD_T
 
 public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationAdapter {
 
-    public static final String TEMPORARY_DEFINITION_FOLDER = BeftaUtils.getBuildPath() + "/tmp/definition_files_copy";
+    public static final String TEMPORARY_DEFINITION_FOLDER = "build/tmp/definition_files_copy";
 
     private DataLoaderToDefinitionStore testDataLoader;
 
