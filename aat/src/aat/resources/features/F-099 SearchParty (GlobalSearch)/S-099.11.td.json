@@ -1,0 +1,38 @@
+{
+  "_guid_": "S-099.11",
+  "_extends_": "Import_Base_data",
+  "title": "Import Definition file with invalid complex case field name in the 'SearchPartyName' column of the SearchParty tab",
+  "specs": [
+    "an active profile in CCD",
+    "contains SearchParty tab with a invalid case field name in the SearchPartyName column"
+   ],
+
+  "prerequisites": [
+    {
+      "complexFieldsOrderingSchemaSnapshot": "F-099_Get_ComplexFieldsOrderingSchemaSnapshot"
+    }
+  ],
+
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/GlobalSearch/BEFTA_Master_Definition_GlobalSearch_InvalidComplexSearchPartyName_ComplexFieldsOrdering_Schema.xlsx"
+        }
+      ]
+    }
+  },
+
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Type": "plain/text",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "SearchPartyTab Invalid value 'RespondentDetails.InvalidName' is not a valid SearchPartyName value. The expression dot notation values should be valid caseTypes fields."
+    }
+  }
+}

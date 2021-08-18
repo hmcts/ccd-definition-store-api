@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
 @Component
@@ -19,6 +20,7 @@ public class ParserFactory {
     private final SpreadsheetValidator spreadsheetValidator;
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
+    private final SearchPartyValidator searchPartyValidator;
     private final ApplicationParams applicationParams;
 
     @Autowired
@@ -27,13 +29,16 @@ public class ParserFactory {
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
                          SpreadsheetValidator spreadsheetValidator,
                          HiddenFieldsValidator hiddenFieldsValidator,
-                         ChallengeQuestionParser challengeQuestionParser, ApplicationParams applicationParams) {
+                         ChallengeQuestionParser challengeQuestionParser,
+                         SearchPartyValidator searchPartyValidator,
+                         ApplicationParams applicationParams) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
         this.spreadsheetValidator = spreadsheetValidator;
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
+        this.searchPartyValidator = searchPartyValidator;
         this.applicationParams = applicationParams;
     }
 
@@ -116,5 +121,13 @@ public class ParserFactory {
 
     public RoleToAccessProfilesValidator createAccessProfileValidator() {
         return new RoleToAccessProfilesValidator();
+    }
+
+    public SearchPartyParser createNewSearchPartyParser() {
+        return new SearchPartyParser();
+    }
+
+    public SearchPartyValidator createNewSearchPartyValidator() {
+        return searchPartyValidator;
     }
 }
