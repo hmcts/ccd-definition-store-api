@@ -7,8 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore;
-import uk.gov.hmcts.befta.util.BeftaUtils;
+import uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreTestAutomationAdapter;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 
 import java.io.File;
@@ -53,21 +52,21 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     @Test
     @DisplayName(
         "should import a valid definition multiple times and create Elasticsearch index, alias and field mappings")
-    void shouldImportValidDefinitionMultipleTimes() throws Exception {
+    void shouldImportValidDefinitionMultipleTimes() {
         // invoke definition import
-        File file = BeftaUtils.getClassPathResourceIntoTemporaryFile(
-            DataLoaderToDefinitionStore.VALID_CCD_TEST_DEFINITIONS_PATH + "CCD_CNP_27.xlsx");
-        try {
-            asAutoTestImporter().get()
-                .given()
-                .multiPart(file)
-                .expect()
-                .statusCode(201)
-                .when()
-                .post("/import");
-        } finally {
-            file.delete();
+        File file = new File(DefinitionStoreTestAutomationAdapter.TEMPORARY_DEFINITION_FOLDER + "/CCD_CNP_27.xlsx");
+        if (!file.exists()) {
+            // generate definition files by initialising the TestDataLoader
+            var taAdapter = new DefinitionStoreTestAutomationAdapter();
+            taAdapter.initialiseTestDataLoader();
         }
+        asAutoTestImporter().get()
+            .given()
+            .multiPart(file)
+            .expect()
+            .statusCode(201)
+            .when()
+            .post("/import");
 
         withRetries(RETRY_POLL_DELAY_MILLIS, RETRY_POLL_INTERVAL_MILLIS,
             "ES index verification", () -> verifyIndexAndFieldMappings(false));
@@ -104,7 +103,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
     }
 
     private void verifyCaseDataFields(ValidatableResponse response, boolean verifyNewFields) {
-        response.root(CASE_INDEX_NAME + ".mappings." + DEFAULT_DOC_TYPE + ".properties.data.properties");
+        response.rootPath(CASE_INDEX_NAME + ".mappings." + DEFAULT_DOC_TYPE + ".properties.data.properties");
         if (verifyNewFields) {
             verifyFieldsAndType(response, TEXT_FIELD_TYPE, "NewTextField");
         } else {
@@ -112,6 +111,7 @@ class ElasticsearchImportDefinitionTest extends ElasticsearchBaseTest {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void verifyFieldsAndType(ValidatableResponse response, String type, String... fields) {
         Stream.of(fields).forEach(field -> response
             .body("", hasKey(field))

@@ -125,6 +125,17 @@ task functional(type: Test) {
 
     outputs.upToDateWhen { false }
 }
+
+// allows execution of individual functional tests from within IntelliJ wihout full execution of BEFTA
+task functionalNoCucumberReport(type: Test) {
+    description = 'Executes functional tests against the CCD Definition Store Instance just deployed'
+    setTestClassesDirs(sourceSets.aat.output.classesDirs)
+    setClasspath(sourceSets.aat.runtimeClasspath)
+    useJUnitPlatform()
+
+    dependsOn aatClasses
+}
+
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
     reports = files("${rootDir}/target/cucumber.json")
