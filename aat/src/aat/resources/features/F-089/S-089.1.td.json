@@ -12,7 +12,7 @@
 		"arrayInMap": [
 			{
 				"key": "file",
-				"localFilePath": "build/tmp/definition_files_copy/BEFTA_Master.xlsx"
+				"localFilePath": "$buildPath/tmp/definition_files_copy/BEFTA_Master.xlsx"
 			}
 		]
 	 }
