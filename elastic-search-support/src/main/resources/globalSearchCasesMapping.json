@@ -182,9 +182,7 @@
               "analyzer": "standard",
               "search_analyzer": "alphanumeric_string_analyzer"
             },
-            "DateOfBirth": {
-              "type": "defaultDate"
-            }
+            "DateOfBirth": {"type" : "date", "ignore_malformed": true}
           }
         }
       }
