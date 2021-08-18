@@ -1,29 +1,23 @@
 {
   "analysis": {
     "analyzer": {
-      "alphaNumericStringAnalyzer": {
+      "alphanumeric_string_analyzer": {
         "tokenizer": "standard",
         "filter": "lowercase",
         "type": "custom",
         "char_filter": [
-          "alphaNumeric_char_filter"
+          "alphanumeric_char_filter"
         ]
       }
     },
     "char_filter": {
-      "alphaNumeric_char_filter": {
+      "alphanumeric_char_filter": {
         "type": "pattern_replace",
         "pattern": "[^A-Za-z0-9]",
         "replacement": ""
       }
     },
     "filter": {
-      "shingle_filter": {
-        "type": "shingle",
-        "min_shingle_size": 2,
-        "max_shingle_size": 3,
-        "output_unigrams": true
-      }
     },
     "normalizer": {
       "lowercase_normalizer": {

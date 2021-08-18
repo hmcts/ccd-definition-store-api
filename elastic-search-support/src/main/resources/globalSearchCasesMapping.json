@@ -8,7 +8,9 @@
           "ignore_above": 256,
           "normalizer": "lowercase_normalizer"
         }
-      }
+      },
+      "analyzer": "standard",
+      "search_analyzer": "alphanumeric_string_analyzer"
     },
     "jurisdictionId": {
       "type": "text",
@@ -18,7 +20,9 @@
           "ignore_above": 256,
           "normalizer": "lowercase_normalizer"
         }
-      }
+      },
+      "analyzer": "standard",
+      "search_analyzer": "alphanumeric_string_analyzer"
     },
     "caseTypeId": {
       "type": "text",
@@ -30,7 +34,7 @@
         }
       },
       "analyzer": "standard",
-      "search_analyzer": "alphaNumericStringAnalyzer"
+      "search_analyzer": "alphanumeric_string_analyzer"
     },
     "region": {
       "type": "text",
@@ -42,7 +46,7 @@
         }
       },
       "analyzer": "standard",
-      "search_analyzer": "alphaNumericStringAnalyzer"
+      "search_analyzer": "alphanumeric_string_analyzer"
     },
     "baseLocation": {
       "type": "text",
@@ -52,7 +56,9 @@
           "ignore_above": 256,
           "normalizer": "lowercase_normalizer"
         }
-      }
+      },
+      "analyzer": "standard",
+      "search_analyzer": "alphanumeric_string_analyzer"
     },
     "stateId": {
       "type": "text",
@@ -64,9 +70,8 @@
         }
       },
       "analyzer": "standard",
-      "search_analyzer": "alphaNumericStringAnalyzer"
+      "search_analyzer": "alphanumeric_string_analyzer"
     },
-
     "HMCTSServiceId": {
       "type": "text",
       "fields": {
@@ -77,7 +82,7 @@
         }
       },
       "analyzer": "standard",
-      "search_analyzer": "alphaNumericStringAnalyzer"
+      "search_analyzer": "alphanumeric_string_analyzer"
     },
     "caseNameHmctsInternal": {
       "type": "text",
@@ -89,7 +94,7 @@
         }
       },
       "analyzer": "standard",
-      "search_analyzer": "alphaNumericStringAnalyzer"
+      "search_analyzer": "alphanumeric_string_analyzer"
     },
     "caseManagementCategoryName": {
       "type": "text",
@@ -101,7 +106,7 @@
         }
       },
       "analyzer": "standard",
-      "search_analyzer": "alphaNumericStringAnalyzer"
+      "search_analyzer": "alphanumeric_string_analyzer"
     },
     "OtherCaseReferences": {
       "properties": {
@@ -118,7 +123,7 @@
             }
           },
           "analyzer": "standard",
-          "search_analyzer": "alphaNumericStringAnalyzer"
+          "search_analyzer": "alphanumeric_string_analyzer"
         }
       }
     },
@@ -139,7 +144,7 @@
                 }
               },
               "analyzer": "standard",
-              "search_analyzer": "alphaNumericStringAnalyzer"
+              "search_analyzer": "alphanumeric_string_analyzer"
             },
             "EmailAddress": {
               "type": "text",
@@ -151,7 +156,7 @@
                 }
               },
               "analyzer": "standard",
-              "search_analyzer": "alphaNumericStringAnalyzer"
+              "search_analyzer": "alphanumeric_string_analyzer"
             },
             "AddressLine1": {
               "type": "text",
@@ -163,7 +168,7 @@
                 }
               },
               "analyzer": "standard",
-              "search_analyzer": "alphaNumericStringAnalyzer"
+              "search_analyzer": "alphanumeric_string_analyzer"
             },
             "PostCode": {
               "type": "text",
@@ -175,17 +180,10 @@
                 }
               },
               "analyzer": "standard",
-              "search_analyzer": "alphaNumericStringAnalyzer"
+              "search_analyzer": "alphanumeric_string_analyzer"
             },
             "DateOfBirth": {
-              "type": "keyword",
-              "fields": {
-                "keyword": {
-                  "type": "keyword",
-                  "ignore_above": 256,
-                  "normalizer": "lowercase_normalizer"
-                }
-              }
+              "type": "defaultDate"
             }
           }
         }
