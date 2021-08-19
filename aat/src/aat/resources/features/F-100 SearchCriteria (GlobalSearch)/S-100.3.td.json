@@ -32,7 +32,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "SearchCriteriaTab Invalid value 'RespondentDetails.InvalidOtherCaseReference' is not a valid OtherCaseReference value. The expression dot notation values should be valid caseTypes fields."
+      "__plainTextValue__": "SearchCriteriaTab Invalid value 'InvalidOtherCaseReference' is not a valid OtherCaseReference value. The expression dot notation values should be valid caseTypes fields."
     }
   }
 }

@@ -3,7 +3,7 @@
   "_extends_": "F-100_Get_CaseType",
 
   "specs": [
-    "fetch Multiple Pages Case Type Schema to verify comma separated case field names in OtherCaseReference column(AC2)"
+    "fetch Multiple Pages Case Type Schema to verify case field names in OtherCaseReference (AC2)"
   ],
 
   "request": {

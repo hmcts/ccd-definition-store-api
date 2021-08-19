@@ -3,7 +3,7 @@
   "_extends_": "F-100_Get_CaseType",
 
   "specs": [
-    "fetch Master Case Type Schema to verify single case field values in columns OtherCaseReference(AC1)"
+    "fetch Master Case Type Schema to verify single case field values in columns OtherCaseReference (AC1)"
   ],
 
   "request": {

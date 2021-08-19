@@ -12,7 +12,7 @@ Feature: F-100: Search Criteria (Global Search)
     Then a positive response is received
     And the response has all other details as expected
     And a call [fetch Master Case Type Schema to verify single case field values in columns OtherCaseReference (AC1)] will get the expected response as in [S-100.1_Get_MasterCaseType].
-    And a call [fetch Multiple Pages Case Type Schema to verify comma separated case field names in OtherCaseReference (AC2) column] will get the expected response as in [S-100.1_Get_MultiplePagesCaseType].
+    And a call [fetch Multiple Pages Case Type Schema to verify case field names in OtherCaseReference (AC2)] will get the expected response as in [S-100.1_Get_MultiplePagesCaseType].
     And a call [fetch Conditionals Case Type Schema to verify complex field name in columns OtherCaseReference (AC3)] will get the expected response as in [S-100.1_Get_ConditionalsCaseType]
     And a call [fetch Tabs Case Type Schema to verify blank value in the columns OtherCaseReference (AC7)] will get the expected response as in [S-100.1_Get_TabsCaseType]
 

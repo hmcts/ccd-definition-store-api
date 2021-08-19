@@ -3,7 +3,7 @@
   "_extends_": "F-100_Get_CaseType",
 
   "specs": [
-    "fetch Tabs Case Type Schema to verify blank value in the columns OtherCaseReference(AC5)"
+    "fetch Tabs Case Type Schema to verify blank value in the columns OtherCaseReference (AC7)"
   ],
 
   "request": {

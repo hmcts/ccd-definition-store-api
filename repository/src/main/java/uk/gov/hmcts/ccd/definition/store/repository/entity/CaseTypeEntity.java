@@ -116,7 +116,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
-    private final List<SearchCriteriaEntity> searchCriteriaEntities = new ArrayList<>();
+    private final List<SearchCriteriaEntity> searchCriterias = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -304,8 +304,8 @@ public class CaseTypeEntity implements Serializable, Versionable {
         return roleToAccessProfiles;
     }
 
-    public List<SearchCriteriaEntity> getSearchCriteriaEntities() {
-        return searchCriteriaEntities;
+    public List<SearchCriteriaEntity> getSearchCriterias() {
+        return searchCriterias;
     }
 
     public List<SearchPartyEntity> getSearchParties() {

@@ -13,6 +13,7 @@
       "acls": "[[ANYTHING_PRESENT]]",
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
+      "searchParties": "[[ANYTHING_PRESENT]]",
       "searchCriterias": [],
       "case_fields": "[[ANYTHING_PRESENT]]",
       "printable_document_url": "[[ANY_STRING_NULLABLE]]",

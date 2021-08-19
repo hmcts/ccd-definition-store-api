@@ -161,7 +161,7 @@
 				"delete" : true
 			} ],
 			"searchAliasFields" : [ ],
-      		"roleToAccessProfiles" : [ ],
+      "roleToAccessProfiles" : [ ],
 			"searchParties" : [
 				{
 					"case_type_id": "FT_MultiplePages",
@@ -174,6 +174,26 @@
 					"search_party_name": "TextFieldFName,TextFieldMName,TextFieldLName"
 				}
 			],
+      "searchCriterias" : [
+        {
+          "case_type_id": "FT_MultiplePages",
+          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_to": null,
+          "other_case_reference": "TextFieldFName"
+        },
+        {
+          "case_type_id": "FT_MultiplePages",
+          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_to": null,
+          "other_case_reference": "TextFieldMName"
+        },
+        {
+          "case_type_id": "FT_MultiplePages",
+          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_to": null,
+          "other_case_reference": "TextFieldLName"
+        }
+      ],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",
