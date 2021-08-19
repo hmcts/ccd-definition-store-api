@@ -9,7 +9,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,11 +37,11 @@ public class EventWebhookEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_webhook_id_seq")
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "webhook_id")
     private WebhookEntity webhook;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "event_id")
     private EventEntity event;
 
