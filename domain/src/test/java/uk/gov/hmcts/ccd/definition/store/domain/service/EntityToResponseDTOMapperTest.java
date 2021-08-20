@@ -119,6 +119,12 @@ class  EntityToResponseDTOMapperTest {
         spyOnClassUnderTest = spy(classUnderTest);
     }
 
+    private CaseTypeEntity caseTypeEntity(String reference) {
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference(reference);
+        return caseTypeEntity;
+    }
+
     @Nested
     @DisplayName("Should return a CaseEventField which matches the EventCaseFieldEntity")
     class MapEventCaseFieldEntity {
@@ -1067,12 +1073,6 @@ class  EntityToResponseDTOMapperTest {
             return complexFieldACLEntity;
         }
 
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(reference);
-            return caseTypeEntity;
-        }
-
     }
 
     @Nested
@@ -1662,7 +1662,7 @@ class  EntityToResponseDTOMapperTest {
             ChallengeQuestionTabEntity challengeQuestionEntity = new ChallengeQuestionTabEntity();
             challengeQuestionEntity.setAnswerField("Answer Field");
             challengeQuestionEntity.setAnswerFieldType(fieldTypeEntity("FieldTypeReference"));
-            challengeQuestionEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+            challengeQuestionEntity.setCaseType(caseTypeEntity("Reference"));
             challengeQuestionEntity.setChallengeQuestionId("ChallengeQuestionId");
             challengeQuestionEntity.setDisplayContextParameter("DisplayContextParameter");
             challengeQuestionEntity.setId(1);
@@ -1708,7 +1708,7 @@ class  EntityToResponseDTOMapperTest {
 
         private CaseTypeLiteEntity caseTypeEntity(String reference) {
             CaseTypeLiteEntity caseTypeEntity = new CaseTypeLiteEntity();
-            caseTypeEntity.setReference("Reference");
+            caseTypeEntity.setReference(reference);
             return caseTypeEntity;
         }
     }
@@ -1756,13 +1756,6 @@ class  EntityToResponseDTOMapperTest {
             assertNull(roleToAccessProfiles.getLiveTo());
             assertNull(roleToAccessProfiles.getRoleName());
         }
-
-
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(reference);
-            return caseTypeEntity;
-        }
     }
 
 
@@ -1798,12 +1791,6 @@ class  EntityToResponseDTOMapperTest {
             assertNull(searchCriteria.getOtherCaseReference());
         }
 
-
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(reference);
-            return caseTypeEntity;
-        }
     }
 
 
@@ -1845,12 +1832,6 @@ class  EntityToResponseDTOMapperTest {
             assertNull(searchParty.getSearchPartyEmailAddress());
             assertNull(searchParty.getSearchPartyPostCode());
             assertNull(searchParty.getSearchPartyDob());
-        }
-
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(reference);
-            return caseTypeEntity;
         }
 
     }

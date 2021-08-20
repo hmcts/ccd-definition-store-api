@@ -35,13 +35,4 @@ public class SearchPartyServiceImpl implements SearchPartyService {
             .map(dtoMapper::map)
             .collect(Collectors.toList());
     }
-
-    @Override
-    public List<SearchParty> findByCaseTypeReferences(List<String> caseTypeReferences) {
-        List<SearchPartyEntity> searchPartyEntities = repository
-            .findByCaseTypeReferenceIn(caseTypeReferences);
-        return searchPartyEntities.stream()
-            .map(dtoMapper::map)
-            .collect(Collectors.toList());
-    }
 }

@@ -65,9 +65,7 @@ public class SearchCriteriaRepositoryTest {
         List<SearchCriteriaEntity> result = searchCriteriaRepository
             .findSearchCriteriaEntityByCaseType("IncorrectCaseType");
 
-        assertAll(
-            () -> assertThat(result, hasSize(0))
-        );
+        assertThat(result, hasSize(0));
     }
 
 

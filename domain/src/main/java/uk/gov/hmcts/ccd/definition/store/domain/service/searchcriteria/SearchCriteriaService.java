@@ -9,6 +9,4 @@ public interface SearchCriteriaService {
 
     void saveAll(List<SearchCriteriaEntity> entityList);
 
-    List<SearchCriteria> findByCaseTypeReferences(List<String> caseTypeReferences);
-
 }

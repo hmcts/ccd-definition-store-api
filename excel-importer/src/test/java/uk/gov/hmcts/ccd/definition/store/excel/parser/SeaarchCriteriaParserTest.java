@@ -27,7 +27,7 @@ class SeaarchCriteriaParserTest extends ParserTestBase {
     private static final String CASE_TYPE_ID_1 = "TestCaseTypeID_1";
     private static final String CASE_TYPE_ID_2 = "TestCaseTypeID_2";
 
-    public static final String OTHER_CASE_REFERENCE = "OtherCaseReference";
+    private static final String OTHER_CASE_REFERENCE = "OtherCaseReference";
 
     private SearchCriteriaParser parser;
 

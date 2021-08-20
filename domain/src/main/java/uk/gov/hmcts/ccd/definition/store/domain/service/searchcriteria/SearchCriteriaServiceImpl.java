@@ -36,13 +36,4 @@ public class SearchCriteriaServiceImpl implements SearchCriteriaService {
         repository.saveAll(entityList);
     }
 
-    @Override
-    public List<SearchCriteria> findByCaseTypeReferences(List<String> caseTypeReferences) {
-        List<SearchCriteriaEntity> searchCriteriaEntities = repository
-            .findByCaseTypeReferenceIn(caseTypeReferences);
-        return searchCriteriaEntities.stream()
-            .map(dtoMapper::map)
-            .collect(Collectors.toList());
-    }
-
 }

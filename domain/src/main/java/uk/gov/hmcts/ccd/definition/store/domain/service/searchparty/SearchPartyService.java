@@ -11,6 +11,4 @@ public interface SearchPartyService {
 
     List<SearchParty> findSearchPartyName(String searchPartyName);
 
-    List<SearchParty> findByCaseTypeReferences(List<String> caseTypeReferences);
-
 }

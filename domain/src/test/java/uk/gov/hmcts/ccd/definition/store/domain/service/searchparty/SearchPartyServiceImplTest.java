@@ -37,18 +37,6 @@ class SearchPartyServiceImplTest {
 
     @Test
     @DisplayName(
-        "Should get Search Party for the passed case type references")
-    void shouldSearchPartyForValidCaseTypeId() {
-        List<SearchPartyEntity> searchPartyEntities = Lists.newArrayList();
-        searchPartyEntities.add(createSearchParty());
-        searchPartyEntities.add(createSearchParty());
-        doReturn(searchPartyEntities).when(repository).findByCaseTypeReferenceIn(anyList());
-        List<SearchParty> valuesReturned = sut.findByCaseTypeReferences(Lists.newArrayList());
-        Assert.assertEquals(2, valuesReturned.size());
-    }
-
-    @Test
-    @DisplayName(
         "Should get Search Party for the passed search party name")
     void shouldSearchPartyForValidSearchPartyName() {
         List<SearchPartyEntity> searchPartyEntities = Lists.newArrayList();
@@ -57,16 +45,6 @@ class SearchPartyServiceImplTest {
         doReturn(searchPartyEntities).when(repository).findBySearchPartyName("name");
         List<SearchParty> valuesReturned = sut.findSearchPartyName("name");
         Assert.assertEquals(2, valuesReturned.size());
-    }
-
-    @Test
-    @DisplayName(
-        "Should get empty Role To Search Party list for the passed empty case type references")
-    void shouldGetEmptySearchPartyListForEmptyCaseType() {
-        List<SearchPartyEntity> searchPartyEntities = Lists.newArrayList();
-        doReturn(searchPartyEntities).when(repository).findByCaseTypeReferenceIn(anyList());
-        List<SearchParty> valuesReturned = sut.findByCaseTypeReferences(Lists.newArrayList("Test"));
-        Assert.assertEquals(0, valuesReturned.size());
     }
 
     @Test

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 
 class SearchCriteriaServiceImplTest {
 
-    public static final String OTHER_CASE_REFERENCE = "OtherCaseReference";
+    private static final String OTHER_CASE_REFERENCE = "OtherCaseReference";
 
     private SearchCriteriaServiceImpl sut;
 
@@ -43,29 +43,6 @@ class SearchCriteriaServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         sut = new SearchCriteriaServiceImpl(repository, dtoMapper, caseTypeRepository);
-    }
-
-    @Test
-    @DisplayName(
-        "Should get Search Criteria for the passed case type references")
-    void shouldGetRoleToAccessProfilesForValidCaseTypeId() {
-        List<SearchCriteriaEntity> searchCriteriaEntities = Lists.newArrayList();
-        searchCriteriaEntities.add(createSearchCriteriaEntity());
-        searchCriteriaEntities.add(createSearchCriteriaEntity());
-        doReturn(searchCriteriaEntities).when(repository).findByCaseTypeReferenceIn(anyList());
-        List<String> references = Lists.newArrayList("Test", "Divorce");
-        List<SearchCriteria> valuesReturned = sut.findByCaseTypeReferences(references);
-        Assert.assertEquals(2, valuesReturned.size());
-    }
-
-    @Test
-    @DisplayName(
-        "Should get empty Role To Access Profiles list for the passed empty case type references")
-    void shouldGetEmptyRoleToAccessProfilesListForEmptyCaseType() {
-        List<SearchCriteriaEntity> searchCriteriaEntities = Lists.newArrayList();
-        doReturn(searchCriteriaEntities).when(repository).findByCaseTypeReferenceIn(anyList());
-        List<SearchCriteria> valuesReturned = sut.findByCaseTypeReferences(Lists.newArrayList());
-        Assert.assertEquals(0, valuesReturned.size());
     }
 
     @Test

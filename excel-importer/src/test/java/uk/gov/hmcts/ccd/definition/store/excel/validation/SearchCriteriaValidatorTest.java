@@ -48,11 +48,11 @@ class SearchCriteriaValidatorTest {
     void shouldValidateOtherCaseReferenceField() {
 
         // GIVEN
-        SearchCriteriaEntity searchCriteriaEntity1 = createBlankSearchCriteriaEntity();
-        searchCriteriaEntity1.setOtherCaseReference(TEST_EXPRESSION_OTHER_CASE_REFERENCE_1);
+        SearchCriteriaEntity searchCriteriaEntity = createBlankSearchCriteriaEntity();
+        searchCriteriaEntity.setOtherCaseReference(TEST_EXPRESSION_OTHER_CASE_REFERENCE_1);
 
         // WHEN
-        searchCriteriaValidator.validate(List.of(searchCriteriaEntity1), parseContext);
+        searchCriteriaValidator.validate(List.of(searchCriteriaEntity), parseContext);
 
         // THEN
         verifyDotNotationValidatorCallMadeFor(ColumnName.OTHER_CASE_REFERENCE, TEST_EXPRESSION_OTHER_CASE_REFERENCE_1);

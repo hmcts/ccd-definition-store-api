@@ -11,8 +11,6 @@ import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT
 
 public interface SearchCriteriaRepository extends JpaRepository<SearchCriteriaEntity, Integer> {
 
-    List<SearchCriteriaEntity> findByCaseTypeReferenceIn(List<String> caseTypeReferences);
-
     @Query("select cre from SearchCriteriaEntity cre where cre.caseType = ("
         + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
     List<SearchCriteriaEntity> findSearchCriteriaEntityByCaseType(
