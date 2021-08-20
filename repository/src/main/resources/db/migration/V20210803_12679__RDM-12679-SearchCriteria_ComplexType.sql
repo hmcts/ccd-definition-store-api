@@ -16,7 +16,7 @@ VALUES (now(), 'OtherCaseReferencesList',
         (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null), '1');
 
 INSERT INTO public.field_type (created_at, reference, base_field_type_id, collection_field_type_id, version)
-VALUES (now(), 'SearchCriteriaList',
+VALUES (now(), 'SearchPartyList',
         (select id from field_type where reference = 'Collection' and version = 1 and jurisdiction_id is null),
         (select id from field_type where reference = 'SearchParty' and version = 1 and jurisdiction_id is null), '1');
 
@@ -27,5 +27,5 @@ values ('OtherCaseReferences', 'OtherCaseReferences', 'PUBLIC',
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
 values ('SearchParties', 'SearchParties', 'PUBLIC',
-        (select id from field_type where reference = 'SearchCriteriaList' and version = 1 and jurisdiction_id is null),
+        (select id from field_type where reference = 'SearchPartyList' and version = 1 and jurisdiction_id is null),
         (select id from field_type where reference = 'SearchCriteria' and version = 1 and jurisdiction_id is null));
