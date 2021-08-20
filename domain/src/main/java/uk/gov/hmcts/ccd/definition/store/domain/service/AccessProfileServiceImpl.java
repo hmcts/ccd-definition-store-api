@@ -53,7 +53,7 @@ public class AccessProfileServiceImpl implements AccessProfileService {
             entity = toEntity(userRole);
             roleFound = false;
         }
-        return new ServiceResponse<>(toModel(repository.save(entity)), roleFound ? UPDATE : CREATE);
+        return new ServiceResponse<>(toModel(repository.saveAndFlush(entity)), roleFound ? UPDATE : CREATE);
     }
 
     @Transactional
@@ -65,7 +65,7 @@ public class AccessProfileServiceImpl implements AccessProfileService {
         if (!searchResult.isPresent()) {
             userRole.setRole(userRole.getRole().trim());
             entity = toEntity(userRole);
-            return new ServiceResponse<>(toModel(repository.save(entity)), CREATE);
+            return new ServiceResponse<>(toModel(repository.saveAndFlush(entity)), CREATE);
         } else {
             throw new DuplicateUserRoleException("User role already exists");
         }

@@ -28,7 +28,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @Table(name = "case_type")
 @Entity
@@ -43,7 +43,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     private static final long serialVersionUID = 542723327314434924L;
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE, generator = "case_type_id_seq")
     private Integer id;
 
     @Column(name = "created_at")
