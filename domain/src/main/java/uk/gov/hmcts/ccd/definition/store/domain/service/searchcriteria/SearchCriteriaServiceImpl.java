@@ -9,10 +9,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMappe
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCriteria;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class SearchCriteriaServiceImpl implements SearchCriteriaService {

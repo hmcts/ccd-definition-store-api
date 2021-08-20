@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria;
 
-import com.google.common.collect.Lists;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,14 +10,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -54,13 +49,6 @@ class SearchCriteriaServiceImplTest {
         entitiesToSave.add(searchCriteriaEntity);
         sut.saveAll(entitiesToSave);
         verify(repository, times(1)).saveAll(eq(entitiesToSave));
-    }
-
-    private SearchCriteriaEntity createSearchCriteriaEntity() {
-        SearchCriteriaEntity searchCriteriaEntity = new SearchCriteriaEntity();
-        searchCriteriaEntity.setCaseType(createCaseTypeEntity());
-        searchCriteriaEntity.setOtherCaseReference(OTHER_CASE_REFERENCE);
-        return searchCriteriaEntity;
     }
 
     private CaseTypeEntity createCaseTypeEntity() {
