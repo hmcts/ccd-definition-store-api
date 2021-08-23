@@ -22,11 +22,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static javax.persistence.GenerationType.SEQUENCE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
@@ -77,7 +79,7 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.JOIN)
     @OrderBy("id")
-    private final List<ComplexFieldEntity> complexFields = new ArrayList<>();
+    private final Set<ComplexFieldEntity> complexFields = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jurisdiction_id")
@@ -156,7 +158,7 @@ public class FieldTypeEntity implements Serializable, Versionable {
     }
 
     public List<ComplexFieldEntity> getComplexFields() {
-        return complexFields;
+        return List.copyOf(complexFields);
     }
 
     public boolean hasComplexField(String complexFieldReference) {
@@ -202,18 +204,18 @@ public class FieldTypeEntity implements Serializable, Versionable {
     }
 
     @Transient
-    public List<ComplexFieldEntity> getChildren() {
+    public Set<ComplexFieldEntity> getChildren() {
         if (this.baseFieldType == null) {
-            return emptyList();
+            return emptySet();
         } else if (this.baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX)) {
             return this.complexFields;
         } else if (this.baseFieldType.getReference().equalsIgnoreCase(BASE_COLLECTION)) {
             if (this.collectionFieldType == null) {
-                return emptyList();
+                return emptySet();
             }
             return collectionFieldType.complexFields;
         } else {
-            return emptyList();
+            return emptySet();
         }
     }
 
@@ -238,4 +240,23 @@ public class FieldTypeEntity implements Serializable, Versionable {
         }
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        FieldTypeEntity that = (FieldTypeEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(createdAt, that.createdAt) && Objects.equals(reference, that.reference) && Objects.equals(version, that.version) && Objects.equals(minimum, that.minimum) && Objects.equals(maximum, that.maximum) && Objects.equals(regularExpression, that.regularExpression) && Objects.equals(baseFieldType, that.baseFieldType) && Objects.equals(collectionFieldType, that.collectionFieldType) && Objects.equals(listItems, that.listItems) && Objects.equals(complexFields, that.complexFields) && Objects.equals(jurisdiction, that.jurisdiction);
+    }
+
+    @SuppressWarnings("checkstyle:LineLength")
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createdAt, reference, version, minimum, maximum, regularExpression, baseFieldType, collectionFieldType, listItems, complexFields, jurisdiction);
+    }
 }

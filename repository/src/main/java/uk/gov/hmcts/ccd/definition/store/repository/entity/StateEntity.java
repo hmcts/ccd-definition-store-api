@@ -12,12 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
@@ -55,7 +57,8 @@ public class StateEntity implements Serializable, Referencable {
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "stateEntity")
     @Fetch(value = FetchMode.JOIN)
-    private final List<StateACLEntity> stateACLEntities = new ArrayList<>();
+    @OrderBy("id")
+    private final Set<StateACLEntity> stateACLEntities = new LinkedHashSet<>();
 
     @Column(name = "title_display")
     private String titleDisplay;
@@ -122,7 +125,7 @@ public class StateEntity implements Serializable, Referencable {
     }
 
     public List<StateACLEntity> getStateACLEntities() {
-        return stateACLEntities;
+        return List.copyOf(stateACLEntities);
     }
 
     public String getTitleDisplay() {

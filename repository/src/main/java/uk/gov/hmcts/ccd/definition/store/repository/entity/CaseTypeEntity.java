@@ -5,8 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
@@ -88,7 +92,8 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
     @Fetch(value = FetchMode.JOIN)
-    private final List<CaseFieldEntity> caseFields = new ArrayList<>();
+    @OrderBy("id")
+    private final Set<CaseFieldEntity> caseFields = new LinkedHashSet<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "case_type_id")
@@ -229,7 +234,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     }
 
     public List<CaseFieldEntity> getCaseFields() {
-        return caseFields;
+        return List.copyOf(caseFields);
     }
 
     public JurisdictionEntity getJurisdiction() {
@@ -285,5 +290,25 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public List<RoleToAccessProfilesEntity> getRoleToAccessProfiles() {
         return roleToAccessProfiles;
+    }
+
+    @SuppressWarnings("checkstyle:LineLength")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        CaseTypeEntity that = (CaseTypeEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(createdAt, that.createdAt) && Objects.equals(reference, that.reference) && Objects.equals(version, that.version) && Objects.equals(liveFrom, that.liveFrom) && Objects.equals(liveTo, that.liveTo) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && securityClassification == that.securityClassification && Objects.equals(printWebhook, that.printWebhook) && Objects.equals(jurisdiction, that.jurisdiction) && Objects.equals(events, that.events) && Objects.equals(states, that.states) && Objects.equals(caseFields, that.caseFields) && Objects.equals(caseTypeACLEntities, that.caseTypeACLEntities) && Objects.equals(caseRoles, that.caseRoles) && Objects.equals(searchAliasFields, that.searchAliasFields) && Objects.equals(roleToAccessProfiles, that.roleToAccessProfiles);
+    }
+
+    @SuppressWarnings("checkstyle:LineLength")
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createdAt, reference, version, liveFrom, liveTo, name, description, securityClassification, printWebhook, jurisdiction, events, states, caseFields, caseTypeACLEntities, caseRoles, searchAliasFields, roleToAccessProfiles);
     }
 }

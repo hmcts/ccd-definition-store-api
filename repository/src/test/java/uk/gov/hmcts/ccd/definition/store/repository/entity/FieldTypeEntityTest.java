@@ -4,9 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Set;
 
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -25,21 +25,21 @@ class FieldTypeEntityTest {
         @Test
         @DisplayName("should return empty list for no base field type")
         public void shouldReturnEmptyListIfTypeHasBaseFieldTypeAsNull() {
-            List<ComplexFieldEntity> children = textFieldType().getChildren();
+            Set<ComplexFieldEntity> children = textFieldType().getChildren();
 
-            assertThat(children, is(emptyList()));
+            assertThat(children, is(emptySet()));
         }
 
         @Test
         @DisplayName("should return empty list if base type is not Complex or Collection")
         public void shouldReturnEmptyListIfTypeIsFixedListType() {
-            List<ComplexFieldEntity> children = newType("fixedList")
+            Set<ComplexFieldEntity> children = newType("fixedList")
                 .withBaseFieldType(newType("FixedListType")
                     .build())
                 .build()
                 .getChildren();
 
-            assertThat(children, is(emptyList()));
+            assertThat(children, is(emptySet()));
         }
 
         @Test
@@ -54,7 +54,7 @@ class FieldTypeEntityTest {
                     .buildComplex())
                 .buildCollection();
 
-            List<ComplexFieldEntity> children = collectionType.getChildren();
+            Set<ComplexFieldEntity> children = collectionType.getChildren();
 
             assertAll(
                 () -> assertThat(children.size(), is(2)),
@@ -66,17 +66,17 @@ class FieldTypeEntityTest {
         @Test
         @DisplayName("should return empty list if collection type missing children types")
         public void shouldReturnEmptyListIfCollectionTypeMissingChildrenTypes() {
-            List<ComplexFieldEntity> children = newType("Collection")
+            Set<ComplexFieldEntity> children = newType("Collection")
                 .buildCollection()
                 .getChildren();
 
-            assertThat(children, is(emptyList()));
+            assertThat(children, is(emptySet()));
         }
 
         @Test
         @DisplayName("should get children of complex type")
         public void shouldGetChildrenOfComplexType() {
-            List<ComplexFieldEntity> children = newType("Complex")
+            Set<ComplexFieldEntity> children = newType("Complex")
                 .addFieldToComplex("caseField1", newType("caseField1").build())
                 .addFieldToComplex("caseField2", newType("caseField2").build())
                 .buildComplex()

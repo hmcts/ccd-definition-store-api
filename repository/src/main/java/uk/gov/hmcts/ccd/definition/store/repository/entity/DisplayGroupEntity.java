@@ -14,11 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
@@ -65,7 +68,8 @@ public class DisplayGroupEntity implements Serializable {
 
     @OneToMany(mappedBy = "displayGroup", fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.JOIN)
-    private final List<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new ArrayList<>();
+    @OrderBy("id")
+    private final Set<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new LinkedHashSet<>();
 
     @ManyToOne(cascade = ALL, fetch = LAZY)
     @JoinColumn(name = "role_id", nullable = false)
@@ -150,7 +154,7 @@ public class DisplayGroupEntity implements Serializable {
     }
 
     public List<DisplayGroupCaseFieldEntity> getDisplayGroupCaseFields() {
-        return displayGroupCaseFields;
+        return List.copyOf(displayGroupCaseFields);
     }
 
     public WebhookEntity getWebhookMidEvent() {
@@ -190,5 +194,25 @@ public class DisplayGroupEntity implements Serializable {
 
     public void setAccessProfile(AccessProfileEntity accessProfile) {
         this.accessProfile = accessProfile;
+    }
+
+    @SuppressWarnings("checkstyle:LineLength")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        DisplayGroupEntity that = (DisplayGroupEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(reference, that.reference) && Objects.equals(label, that.label) && Objects.equals(channel, that.channel) && Objects.equals(showCondition, that.showCondition) && Objects.equals(order, that.order) && type == that.type && purpose == that.purpose && Objects.equals(caseType, that.caseType) && Objects.equals(event, that.event) && Objects.equals(displayGroupCaseFields, that.displayGroupCaseFields) && Objects.equals(accessProfile, that.accessProfile) && Objects.equals(webhookMidEvent, that.webhookMidEvent);
+    }
+
+    @SuppressWarnings("checkstyle:LineLength")
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, reference, label, channel, showCondition, order, type, purpose, caseType, event, displayGroupCaseFields, accessProfile, webhookMidEvent);
     }
 }
