@@ -1,0 +1,8 @@
+DROP INDEX IF EXISTS event_case_field_event_id_case_field_id_idx;
+DROP INDEX IF EXISTS idx_reference;
+DROP INDEX IF EXISTS idx_event__case_type_id;
+DROP INDEX IF EXISTS event_pre_state_state_id_event_id_idx;
+DROP INDEX IF EXISTS idx_field_type__id__base_field_type_id__collection_field_type_i;
+DROP INDEX IF EXISTS idx_jurisdiction__id__reference;
+DROP INDEX IF EXISTS idx_field_type_list_item__field_type_id;
+DROP INDEX IF EXISTS idx_field_type__complex_field_type_id__field_type_id;

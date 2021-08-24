@@ -11,7 +11,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/befta/dse/ccd/definitions/excel/BEFTA_Master_Definition.xlsx"
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/excel/BEFTA_Master_Definition.xlsx"
         }
       ]
     }

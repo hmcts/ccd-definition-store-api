@@ -15,6 +15,7 @@ public class SearchCasesResultField {
     private String useCase;
     private SortOrder sortOrder;
     private String displayContextParameter;
+    private String caseTypeId;
 
     @JsonProperty("case_field_id")
     public String getCaseFieldId() {
@@ -95,4 +96,14 @@ public class SearchCasesResultField {
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
     }
+
+    @JsonProperty("case_type_id")
+    public String getCaseTypeId() {
+        return caseTypeId;
+    }
+
+    public void setCaseTypeId(String caseTypeId) {
+        this.caseTypeId = caseTypeId;
+    }
+
 }

@@ -25,6 +25,14 @@ sourceSets {
     }
 }
 
+task highLevelDataSetup(type: JavaExec) {
+    dependsOn aatClasses
+
+    main = "uk.gov.hmcts.ccd.definitionstore.befta.HighLevelDataSetupApp"
+    classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
+    jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+}
+
 task smoke(type: Test) {
     description = 'Executes smoke tests against the CCD Definition Store Instance just deployed'
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
@@ -47,8 +55,11 @@ task smoke(type: Test) {
         javaexec {
             main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
             classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
-                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+            args = [
+                     '--plugin', "json:${rootDir}/target/cucumber.json",
+                     '--tags', '@Smoke and not @Ignore',
+                     '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features'
+                   ]
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
         }
     }
@@ -59,6 +70,8 @@ task smoke(type: Test) {
                 delete "${rootDir}/BEFTA Report for Smoke Tests/"
                 new File("${rootDir}/BEFTA Report for Smoke Tests").mkdirs()
                 file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Smoke Tests"))
+
+                logger.quiet("Smoke test report moved to ---> file://${rootDir}/BEFTA%20Report%20for%20Smoke%20Tests/overview-features.html")
             }
         }
     }
@@ -88,8 +101,12 @@ task functional(type: Test) {
         javaexec {
             main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
             classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
-                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+            args = [
+                     '--threads', '1', // current definition-store tests do not support multiple threads
+                     '--plugin', "json:${rootDir}/target/cucumber.json",
+                     '--tags', 'not @Ignore',
+                     '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features'
+                   ]
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
         }
     }
@@ -100,6 +117,8 @@ task functional(type: Test) {
                 delete "${rootDir}/BEFTA Report for Functional Tests/"
                 new File("${rootDir}/BEFTA Report for Functional Tests").mkdirs()
                 file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Functional Tests"))
+
+                logger.quiet("Functional test report moved to ---> file://${rootDir}/BEFTA%20Report%20for%20Functional%20Tests/overview-features.html")
             }
         }
     }
@@ -110,6 +129,14 @@ cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
     reports = files("${rootDir}/target/cucumber.json")
 }
+
+task customCleanBeftaReports(type:Delete) {
+    delete "${rootDir}/BEFTA Report for Smoke Tests/"
+    delete "${rootDir}/BEFTA Report for Functional Tests/"
+    delete "${rootDir}/target/cucumber"
+    delete "${rootDir}/target/cucumber.json"
+}
+tasks.clean.dependsOn(tasks.customCleanBeftaReports)
 
 bootJar {
     enabled = false
