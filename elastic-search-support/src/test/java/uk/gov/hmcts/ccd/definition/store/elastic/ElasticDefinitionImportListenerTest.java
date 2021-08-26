@@ -56,7 +56,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void createsAndClosesANewElasticClientOnEachImortToSaveResources() throws IOException {
+    public void createsAndClosesANewElasticClientOnEachImportToSaveResources() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
 
