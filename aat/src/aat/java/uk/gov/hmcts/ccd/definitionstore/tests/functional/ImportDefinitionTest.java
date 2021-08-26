@@ -127,6 +127,20 @@ class ImportDefinitionTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Should Not import a definition with invalid case field id")
+    void shouldNotImportDefinitionWithInvalidCaseFieldID() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Invalid_CaseField_ID.xlsx"))
+            .expect()
+            .statusCode(400)
+            .when()
+            .post(IMPORT_URL);
+    }
+
+    @Test
     @DisplayName("Should Not import a definition with invalid CRUD permissions")
     void shouldNotImportDefinitionWithInvalidPermissions() {
 
