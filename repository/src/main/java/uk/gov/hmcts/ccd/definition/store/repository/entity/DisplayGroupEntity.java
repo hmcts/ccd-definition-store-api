@@ -70,7 +70,7 @@ public class DisplayGroupEntity implements Serializable {
 
     @ManyToOne(cascade = ALL)
     @JoinColumn(name = "role_id", nullable = false)
-    private UserRoleEntity userRole;
+    private AccessProfileEntity accessProfile;
 
 
     @ManyToOne(cascade = ALL)
@@ -185,11 +185,11 @@ public class DisplayGroupEntity implements Serializable {
             dgcf -> dgcf.getCaseField().getReference().equals(fieldReference));
     }
 
-    public UserRoleEntity getUserRole() {
-        return userRole;
+    public AccessProfileEntity getAccessProfile() {
+        return accessProfile;
     }
 
-    public void setUserRole(UserRoleEntity userRole) {
-        this.userRole = userRole;
+    public void setAccessProfile(AccessProfileEntity accessProfile) {
+        this.accessProfile = accessProfile;
     }
 }

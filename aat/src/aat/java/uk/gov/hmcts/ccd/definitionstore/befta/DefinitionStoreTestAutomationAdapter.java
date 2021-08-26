@@ -1,35 +1,44 @@
 package uk.gov.hmcts.ccd.definitionstore.befta;
 
-import uk.gov.hmcts.befta.BeftaMain;
 import uk.gov.hmcts.befta.BeftaTestDataLoader;
-import uk.gov.hmcts.befta.DefaultBeftaTestDataLoader;
 import uk.gov.hmcts.befta.DefaultTestAutomationAdapter;
-import uk.gov.hmcts.befta.dse.ccd.TestDataLoaderToDefinitionStore;
+import uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore;
 import uk.gov.hmcts.befta.player.BackEndFunctionalTestScenarioContext;
+import uk.gov.hmcts.befta.util.BeftaUtils;
+
+import static uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore.VALID_CCD_TEST_DEFINITIONS_PATH;
 
 public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationAdapter {
 
-    public static final String DEFAULT_DEFINITIONS_PATH = "uk/gov/hmcts/befta/dse/ccd/definitions/valid";
+    public static final String TEMPORARY_DEFINITION_FOLDER = "build/tmp/definition_files_copy";
 
-    private TestDataLoaderToDefinitionStore loader = new TestDataLoaderToDefinitionStore(this, DEFAULT_DEFINITIONS_PATH,
-        BeftaMain.getConfig().getTestUrl());
+    private DataLoaderToDefinitionStore testDataLoader;
 
     @Override
-    public Object calculateCustomValue(BackEndFunctionalTestScenarioContext scenarioContext, Object key) {
+    protected BeftaTestDataLoader buildTestDataLoader() {
+        initialiseTestDataLoader();
+        return this.testDataLoader;
+    }
+
+    @Override
+    public synchronized Object calculateCustomValue(BackEndFunctionalTestScenarioContext scenarioContext, Object key) {
         if (key.toString().startsWith("no_dynamic_injection_")) {
             return key.toString().replace("no_dynamic_injection_","");
         }
         return super.calculateCustomValue(scenarioContext, key);
     }
 
-    @Override
-    protected BeftaTestDataLoader buildTestDataLoader() {
-        return new DefaultBeftaTestDataLoader() {
-            @Override
-            public void doLoadTestData() {
-                DefinitionStoreTestAutomationAdapter.this.loader.addCcdRoles();
-                DefinitionStoreTestAutomationAdapter.this.loader.importDefinitions();
-            }
-        };
+    public void initialiseTestDataLoader() {
+        if (testDataLoader == null) {
+            testDataLoader = new DataLoaderToDefinitionStore(this, VALID_CCD_TEST_DEFINITIONS_PATH);
+
+            BeftaUtils.defaultLog(String.format(
+                "Copy valid def files generated from a JSON template to a temporary location for use in FTAs: '%s'",
+                TEMPORARY_DEFINITION_FOLDER
+            ));
+            testDataLoader.getAllDefinitionFilesToLoadAt(VALID_CCD_TEST_DEFINITIONS_PATH, TEMPORARY_DEFINITION_FOLDER);
+            BeftaUtils.defaultLog("Copy complete.\n");
+        }
     }
+
 }

@@ -2,6 +2,7 @@ package uk.gov.hmcts.net.ccd.definition.store;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -115,6 +116,9 @@ public abstract class BaseTest {
 
     @Before
     public void setUp() {
+        // reset wiremock counters
+        WireMock.resetAllRequests();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         jdbcTemplate = new JdbcTemplate(db);
         ReflectionTestUtils.setField(applicationParams, "userProfileHost", "http://localhost:" + wiremockPort);

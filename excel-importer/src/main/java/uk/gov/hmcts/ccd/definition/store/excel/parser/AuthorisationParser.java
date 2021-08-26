@@ -5,8 +5,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperExceptio
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -19,18 +19,18 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE
 
 interface AuthorisationParser {
 
-    default void parseUserRole(final Authorisation entity,
-                               final DefinitionDataItem definition,
-                               final ParseContext parseContext) {
-        final String userRole = definition.getString(ColumnName.USER_ROLE);
+    default void parseAccessProfile(final Authorisation entity,
+                                    final DefinitionDataItem definition,
+                                    final ParseContext parseContext) {
+        final String accessProfile = definition.getString(ColumnName.ACCESS_PROFILE);
         final String caseType = definition.getString(ColumnName.CASE_TYPE_ID);
 
-        entity.setUserRoleId(userRole);
-        Optional<UserRoleEntity> userRoleEntity = parseContext.getRole(caseType, userRole);
-        if (userRoleEntity.isPresent()) {
-            entity.setUserRole(userRoleEntity.get());
+        entity.setAccessProfileId(accessProfile);
+        Optional<AccessProfileEntity> accessProfileEntity = parseContext.getAccessProfile(caseType, accessProfile);
+        if (accessProfileEntity.isPresent()) {
+            entity.setAccessProfile(accessProfileEntity.get());
         } else {
-            parseContext.addMissingUserRole(userRole);
+            parseContext.addMissingAccessProfile(accessProfile);
         }
     }
 
@@ -60,10 +60,14 @@ interface AuthorisationParser {
     }
 
     default DefinitionSheet getDefinitionSheet(Map<String, DefinitionSheet> definitionSheets) {
+        if (definitionSheets == null || definitionSheets.isEmpty()) {
+            throw new MapperException("A definition must contain a sheet");
+        }
+
         DefinitionSheet definitionSheet = definitionSheets.get(getSheetName());
         if (definitionSheet == null) {
             throw new MapperException(
-                String.format("A definition must contain a %s sheet", getSheetName())
+                String.format("A definition must contain a '%s' sheet", getSheetName())
             );
         }
         return definitionSheet;

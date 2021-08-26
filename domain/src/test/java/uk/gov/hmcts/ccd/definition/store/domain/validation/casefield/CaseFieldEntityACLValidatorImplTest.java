@@ -7,9 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.UserRoleEntity;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
@@ -24,12 +24,12 @@ public class CaseFieldEntityACLValidatorImplTest {
 
     private CaseFieldEntityACLValidatorImpl validator;
 
-    private CaseFieldACLEntity caseFieldUserRole;
+    private CaseFieldACLEntity caseFieldAccessProfile;
 
     private CaseFieldEntity caseField;
 
     @Mock
-    private UserRoleEntity userRole;
+    private AccessProfileEntity accessProfileEntity;
 
     @Mock
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
@@ -37,12 +37,12 @@ public class CaseFieldEntityACLValidatorImplTest {
     @Before
     public void setup() {
 
-        caseFieldUserRole = new CaseFieldACLEntity();
+        caseFieldAccessProfile = new CaseFieldACLEntity();
 
         given(caseFieldEntityValidationContext.getCaseReference()).willReturn("case_type");
 
         caseField = new CaseFieldEntity();
-        caseField.addCaseFieldACL(caseFieldUserRole);
+        caseField.addCaseFieldACL(caseFieldAccessProfile);
         caseField.setReference("case_field");
 
         validator = new CaseFieldEntityACLValidatorImpl();
@@ -51,21 +51,21 @@ public class CaseFieldEntityACLValidatorImplTest {
     @Test
     public void shouldHaveValidationErrorWhenUserNotFound() {
 
-        caseFieldUserRole.setUserRole(null);
-        caseFieldUserRole.setUserRoleId("nf_user_role_id");
+        caseFieldAccessProfile.setAccessProfile(null);
+        caseFieldAccessProfile.setAccessProfileId("nf_access_profile_id");
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 
         assertThat(result.getValidationErrors().size(), is(1));
         assertThat(result.getValidationErrors().get(0),
-            instanceOf(CaseFieldEntityInvalidUserRoleValidationError.class));
+            instanceOf(CaseFieldEntityInvalidAccessProfileValidationError.class));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
-            "Invalid UserRole nf_user_role_id for case type 'case_type', case field 'case_field'"));
+            "Invalid AccessProfile nf_access_profile_id for case type 'case_type', case field 'case_field'"));
     }
 
     @Test
-    public void shouldHaveNoValidationErrorWhenUserFound() {
+    public void shouldHaveNoValidationErrorWhenAccessProfileFound() {
 
-        caseFieldUserRole.setUserRole(userRole);
+        caseFieldAccessProfile.setAccessProfile(accessProfileEntity);
 
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 

@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
+import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,13 +35,16 @@ public class CaseDefinitionController {
     private CaseTypeService caseTypeService;
     private JurisdictionService jurisdictionService;
     private final CaseRoleService caseRoleService;
+    private final RoleToAccessProfileService roleToAccessProfilesService;
 
     @Autowired
     public CaseDefinitionController(CaseTypeService caseTypeService, JurisdictionService jurisdictionService,
-                                    CaseRoleService caseRoleService) {
+                                    CaseRoleService caseRoleService,
+                                    RoleToAccessProfileService roleToAccessProfilesService) {
         this.caseTypeService = caseTypeService;
         this.jurisdictionService = jurisdictionService;
         this.caseRoleService = caseRoleService;
+        this.roleToAccessProfilesService = roleToAccessProfilesService;
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(CaseDefinitionController.class);
@@ -83,6 +88,21 @@ public class CaseDefinitionController {
         @ApiParam(value = "ID for a Jurisdiction", required = true) @PathVariable("jid") String jurisdictionId,
         @ApiParam(value = "ID for Case Type", required = true) @PathVariable("ctid") String caseTypeId) {
         return caseRoleService.findByCaseTypeId(caseTypeId);
+    }
+
+
+    @GetMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/access/profile/roles",
+        produces = {"application/json"})
+    @ApiOperation(value = "Get Role assignment for a case type",
+        notes = "Returns list of case roles of a single case type.\n", response = RoleAssignment.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of Role assignments")
+    })
+    public List<RoleAssignment> getRoleToAccessProfiles(
+        @ApiParam(value = "ID for a Caseworker", required = true) @PathVariable("uid") String caseworkerId,
+        @ApiParam(value = "ID for a Jurisdiction", required = true) @PathVariable("jid") String jurisdictionId,
+        @ApiParam(value = "ID for Case Type", required = true) @PathVariable("ctid") String caseTypeId) {
+        return roleToAccessProfilesService.findRoleAssignmentsByCaseTypeId(caseTypeId);
     }
 
     @GetMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type",

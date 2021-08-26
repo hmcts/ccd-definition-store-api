@@ -1,0 +1,33 @@
+{
+	"_guid_": "S-098.1",
+	"_extends_": "F-098_Test_Data__Base",
+
+	"title": "must successfully import a definition file using AccessProfile columns",
+
+	"specs": [
+		"contains definition file using AccessProfile columns"
+	],
+
+	"request": {
+	 "body": {
+		"arrayInMap": [
+			{
+			 "key": "file",
+			 "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+			}
+		]
+	 }
+	},
+
+	"expectedResponse": {
+		"_extends_": "Common_201_Response",
+		"headers": {
+			"Content-Encoding": "[[ANYTHING_PRESENT]]",
+			"Content-Type": "application/json",
+			"Content-Length": "[[ANYTHING_PRESENT]]"
+		},
+		"body": {
+			"__plainTextValue__": "Case Definition data successfully imported"
+		}
+	}
+}
