@@ -1,0 +1,23 @@
+{
+  "_guid_": "F-100_Get_CaseType",
+  "_extends_": "Get_CaseType",
+
+  "expectedResponse": {
+    "body": {
+      "description": "[[ANY_STRING_NULLABLE]]",
+      "version":  "[[ANYTHING_PRESENT]]",
+      "name": "[[ANY_STRING_NOT_NULLABLE]]",
+      "jurisdiction": "[[ANYTHING_PRESENT]]",
+      "events": "[[ANYTHING_PRESENT]]",
+      "states": "[[ANYTHING_PRESENT]]",
+      "acls": "[[ANYTHING_PRESENT]]",
+      "searchAliasFields": "[[ANYTHING_PRESENT]]",
+      "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
+      "searchParties": "[[ANYTHING_PRESENT]]",
+      "searchCriterias": [],
+      "case_fields": "[[ANYTHING_PRESENT]]",
+      "printable_document_url": "[[ANY_STRING_NULLABLE]]",
+      "security_classification": "PUBLIC"
+    }
+  }
+}

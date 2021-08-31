@@ -40,6 +40,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigE
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
@@ -71,6 +72,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCriteria;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchParty;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
@@ -115,6 +117,12 @@ class  EntityToResponseDTOMapperTest {
     @BeforeEach
     void setUpSpy() {
         spyOnClassUnderTest = spy(classUnderTest);
+    }
+
+    private CaseTypeEntity caseTypeEntity(String reference) {
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference(reference);
+        return caseTypeEntity;
     }
 
     @Nested
@@ -1065,12 +1073,6 @@ class  EntityToResponseDTOMapperTest {
             return complexFieldACLEntity;
         }
 
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(reference);
-            return caseTypeEntity;
-        }
-
     }
 
     @Nested
@@ -1660,7 +1662,7 @@ class  EntityToResponseDTOMapperTest {
             ChallengeQuestionTabEntity challengeQuestionEntity = new ChallengeQuestionTabEntity();
             challengeQuestionEntity.setAnswerField("Answer Field");
             challengeQuestionEntity.setAnswerFieldType(fieldTypeEntity("FieldTypeReference"));
-            challengeQuestionEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+            challengeQuestionEntity.setCaseType(caseTypeEntity("Reference"));
             challengeQuestionEntity.setChallengeQuestionId("ChallengeQuestionId");
             challengeQuestionEntity.setDisplayContextParameter("DisplayContextParameter");
             challengeQuestionEntity.setId(1);
@@ -1706,7 +1708,7 @@ class  EntityToResponseDTOMapperTest {
 
         private CaseTypeLiteEntity caseTypeEntity(String reference) {
             CaseTypeLiteEntity caseTypeEntity = new CaseTypeLiteEntity();
-            caseTypeEntity.setReference("Reference");
+            caseTypeEntity.setReference(reference);
             return caseTypeEntity;
         }
     }
@@ -1754,13 +1756,41 @@ class  EntityToResponseDTOMapperTest {
             assertNull(roleToAccessProfiles.getLiveTo());
             assertNull(roleToAccessProfiles.getRoleName());
         }
+    }
 
 
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(reference);
-            return caseTypeEntity;
+    @Nested
+    @DisplayName("Should return SearchCriteria model whose fields match those in the SearchCriteriaEntity")
+    class MapSearchCriteriaTests {
+
+        @Test
+        void testMapSearchCriteriaEntity() {
+            SearchCriteriaEntity searchCriteriaEntity = new SearchCriteriaEntity();
+            searchCriteriaEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+            searchCriteriaEntity.setOtherCaseReference("OtherCaseReference");
+            searchCriteriaEntity.setLiveFrom(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+            searchCriteriaEntity.setLiveTo(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+
+            SearchCriteria searchCriteria = classUnderTest.map(searchCriteriaEntity);
+
+            assertEquals(searchCriteria.getCaseTypeId(), searchCriteriaEntity.getCaseType().getReference());
+            assertEquals(searchCriteria.getOtherCaseReference(), searchCriteriaEntity.getOtherCaseReference());
+            assertEquals(searchCriteria.getLiveTo(), searchCriteriaEntity.getLiveTo());
+            assertEquals(searchCriteria.getLiveFrom(), searchCriteriaEntity.getLiveFrom());
         }
+
+        @Test
+        void testMapEmptyRoleToAccessProfileEntity() {
+            SearchCriteriaEntity searchCriteriaEntity = new SearchCriteriaEntity();
+
+            SearchCriteria searchCriteria = classUnderTest.map(searchCriteriaEntity);
+
+            assertNull(searchCriteria.getCaseTypeId());
+            assertNull(searchCriteria.getLiveFrom());
+            assertNull(searchCriteria.getLiveTo());
+            assertNull(searchCriteria.getOtherCaseReference());
+        }
+
     }
 
 
@@ -1802,12 +1832,6 @@ class  EntityToResponseDTOMapperTest {
             assertNull(searchParty.getSearchPartyEmailAddress());
             assertNull(searchParty.getSearchPartyPostCode());
             assertNull(searchParty.getSearchPartyDob());
-        }
-
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(reference);
-            return caseTypeEntity;
         }
 
     }

@@ -1,0 +1,28 @@
+{
+  "_guid_": "S-100.1_Get_MasterCaseType",
+  "_extends_": "F-100_Get_CaseType",
+
+  "specs": [
+    "fetch Master Case Type Schema to verify single case field values in columns OtherCaseReference (AC1)"
+  ],
+
+  "request": {
+    "pathVariables": {
+      "id": "FT_MasterCaseType"
+    }
+  },
+
+  "expectedResponse": {
+    "body": {
+      "id": "FT_MasterCaseType",
+      "searchCriterias": [
+        {
+          "case_type_id": "FT_MasterCaseType",
+          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_to": null,
+          "other_case_reference": "TextField"
+        }
+      ]
+    }
+  }
+}

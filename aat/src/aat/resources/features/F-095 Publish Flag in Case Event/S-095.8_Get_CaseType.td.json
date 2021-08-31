@@ -157,6 +157,7 @@
 			"searchAliasFields" : [ ],
 			"roleToAccessProfiles" : [ ],
 			"searchParties" : [ ],
+      "searchCriterias" : [ ],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",

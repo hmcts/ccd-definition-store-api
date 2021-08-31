@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
@@ -21,6 +22,7 @@ public class ParserFactory {
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
     private final SearchPartyValidator searchPartyValidator;
+    private final SearchCriteriaValidator searchCriteriaValidator;
     private final ApplicationParams applicationParams;
 
     @Autowired
@@ -31,6 +33,7 @@ public class ParserFactory {
                          HiddenFieldsValidator hiddenFieldsValidator,
                          ChallengeQuestionParser challengeQuestionParser,
                          SearchPartyValidator searchPartyValidator,
+                         SearchCriteriaValidator searchCriteriaValidator,
                          ApplicationParams applicationParams) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
@@ -39,6 +42,7 @@ public class ParserFactory {
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
         this.searchPartyValidator = searchPartyValidator;
+        this.searchCriteriaValidator = searchCriteriaValidator;
         this.applicationParams = applicationParams;
     }
 
@@ -130,4 +134,13 @@ public class ParserFactory {
     public SearchPartyValidator createNewSearchPartyValidator() {
         return searchPartyValidator;
     }
+
+    public SearchCriteriaParser createSearchCriteriaParser() {
+        return new SearchCriteriaParser();
+    }
+
+    public SearchCriteriaValidator createSearchCriteriaValidator() {
+        return searchCriteriaValidator;
+    }
+
 }

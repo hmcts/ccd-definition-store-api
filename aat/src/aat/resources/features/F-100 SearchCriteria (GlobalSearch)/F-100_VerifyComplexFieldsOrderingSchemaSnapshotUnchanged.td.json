@@ -1,0 +1,21 @@
+{
+  "_guid_": "F-100_VerifyComplexFieldsOrderingSnapshotUnchanged",
+  "_extends_": "F-100_Get_CaseType",
+
+  "specs": [
+    "verify search criteria data has not been updated"
+  ],
+
+  "request": {
+    "pathVariables": {
+      "id": "FT_ComplexFieldsOrdering"
+    }
+  },
+
+  "expectedResponse": {
+    "body": {
+      "id": "FT_ComplexFieldsOrdering",
+      "searchCriterias": ["${[scenarioContext][siblingContexts][complexFieldsOrderingSchemaSnapshot][testData][actualResponse][body][searchCriterias][0]}"]
+    }
+  }
+}

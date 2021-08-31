@@ -106,8 +106,9 @@
 			],
 
 			"searchAliasFields": "[[ANYTHING_PRESENT]]",
-      		"roleToAccessProfiles": [],
+      "roleToAccessProfiles": [],
 			"searchParties": [],
+      "searchCriterias": [],
 			"printable_document_url": null,
 			"security_classification": "PUBLIC"
 		}

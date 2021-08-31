@@ -22,6 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAcc
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
@@ -38,12 +39,14 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.RoleToAccessProfilesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SearchCriteriaParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SearchPartyParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
@@ -58,6 +61,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
@@ -84,6 +88,7 @@ public class ImportServiceImpl implements ImportService {
     private final JurisdictionUiConfigService jurisdictionUiConfigService;
     private final ChallengeQuestionTabService challengeQuestionTabService;
     private final RoleToAccessProfileService roleToAccessProfileService;
+    private final SearchCriteriaService searchCriteriaService;
     private final SearchPartyService searchPartyService;
 
     @Autowired
@@ -103,6 +108,7 @@ public class ImportServiceImpl implements ImportService {
                              JurisdictionUiConfigService jurisdictionUiConfigService,
                              ChallengeQuestionTabService challengeQuestionTabService,
                              RoleToAccessProfileService roleToAccessProfileService,
+                             SearchCriteriaService searchCriteriaService,
                              SearchPartyService searchPartyService) {
 
         this.spreadsheetValidator = spreadsheetValidator;
@@ -121,6 +127,7 @@ public class ImportServiceImpl implements ImportService {
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
         this.challengeQuestionTabService = challengeQuestionTabService;
         this.roleToAccessProfileService = roleToAccessProfileService;
+        this.searchCriteriaService = searchCriteriaService;
         this.searchPartyService = searchPartyService;
     }
 
@@ -284,6 +291,8 @@ public class ImportServiceImpl implements ImportService {
 
         parseRoleToAccessProfiles(definitionSheets, parseContext);
 
+        parseSearchCriteria(definitionSheets, parseContext);
+
         parseSearchParty(definitionSheets, parseContext);
 
         return metadata;
@@ -303,6 +312,22 @@ public class ImportServiceImpl implements ImportService {
 
             roleToAccessProfileService.saveAll(accessProfileEntities);
             logger.debug("Importing spreadsheet: RoleToAccessProfiles...: OK");
+        }
+    }
+
+    private void parseSearchCriteria(Map<String, DefinitionSheet> definitionSheets,
+                                           ParseContext parseContext) {
+
+        if (definitionSheets.get(SheetName.SEARCH_CRITERIA.getName()) != null) {
+            logger.debug("Importing spreadsheet: SearchCriteria...");
+            final SearchCriteriaParser parser = parserFactory.createSearchCriteriaParser();
+            List<SearchCriteriaEntity> searchCriteriaEntities = parser.parse(definitionSheets, parseContext);
+            final SearchCriteriaValidator searchCriteriaValidator = parserFactory
+                .createSearchCriteriaValidator();
+            searchCriteriaValidator.validate(searchCriteriaEntities, parseContext);
+
+            searchCriteriaService.saveAll(searchCriteriaEntities);
+            logger.debug("Importing spreadsheet: SearchCriteria...: OK");
         }
     }
 
