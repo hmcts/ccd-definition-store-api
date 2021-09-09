@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -157,8 +156,8 @@ public class FieldTypeEntity implements Serializable, Versionable {
         return listItems;
     }
 
-    public List<ComplexFieldEntity> getComplexFields() {
-        return List.copyOf(complexFields);
+    public Set<ComplexFieldEntity> getComplexFields() {
+        return complexFields;
     }
 
     public boolean hasComplexField(String complexFieldReference) {
@@ -238,25 +237,5 @@ public class FieldTypeEntity implements Serializable, Versionable {
         } else {
             return this.baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX);
         }
-    }
-
-    @SuppressWarnings("checkstyle:LineLength")
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        FieldTypeEntity that = (FieldTypeEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(createdAt, that.createdAt) && Objects.equals(reference, that.reference) && Objects.equals(version, that.version) && Objects.equals(minimum, that.minimum) && Objects.equals(maximum, that.maximum) && Objects.equals(regularExpression, that.regularExpression) && Objects.equals(baseFieldType, that.baseFieldType) && Objects.equals(collectionFieldType, that.collectionFieldType) && Objects.equals(listItems, that.listItems) && Objects.equals(complexFields, that.complexFields) && Objects.equals(jurisdiction, that.jurisdiction);
-    }
-
-    @SuppressWarnings("checkstyle:LineLength")
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, createdAt, reference, version, minimum, maximum, regularExpression, baseFieldType, collectionFieldType, listItems, complexFields, jurisdiction);
     }
 }

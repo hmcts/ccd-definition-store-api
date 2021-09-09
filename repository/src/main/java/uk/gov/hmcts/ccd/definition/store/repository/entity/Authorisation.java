@@ -66,6 +66,10 @@ public abstract class Authorisation implements Serializable {
     @Transient
     private String accessProfileId;
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -16,6 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -47,9 +48,9 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                 return validationResult;
             }
 
-            List<String> allSubTypePossibilities = caseFieldEntityUtil
+            Set<String> allSubTypePossibilities = caseFieldEntityUtil
                 .buildDottedComplexFieldPossibilities(thisDisplayGroup.getCaseType().getCaseFields().stream()
-                    .map(FieldEntity.class::cast).collect(Collectors.toList()));
+                    .map(FieldEntity.class::cast).collect(Collectors.toSet()));
 
             showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
                 if (!allSubTypePossibilities.contains(showConditionField)) {
@@ -79,7 +80,7 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                         return validationResult;
                     }
 
-                    List<String> allSubTypePossibilities = caseFieldEntityUtil
+                    Set<String> allSubTypePossibilities = caseFieldEntityUtil
                         .buildDottedComplexFieldPossibilities(thisDisplayGroup.getCaseType().getCaseFields());
 
                     showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {

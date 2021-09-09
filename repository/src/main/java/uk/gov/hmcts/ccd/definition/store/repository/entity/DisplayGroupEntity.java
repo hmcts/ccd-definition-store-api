@@ -20,7 +20,6 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
@@ -153,8 +152,8 @@ public class DisplayGroupEntity implements Serializable {
         displayGroupCaseFields.add(displayGroupField);
     }
 
-    public List<DisplayGroupCaseFieldEntity> getDisplayGroupCaseFields() {
-        return List.copyOf(displayGroupCaseFields);
+    public Set<DisplayGroupCaseFieldEntity> getDisplayGroupCaseFields() {
+        return displayGroupCaseFields;
     }
 
     public WebhookEntity getWebhookMidEvent() {
@@ -196,23 +195,4 @@ public class DisplayGroupEntity implements Serializable {
         this.accessProfile = accessProfile;
     }
 
-    @SuppressWarnings("checkstyle:LineLength")
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        DisplayGroupEntity that = (DisplayGroupEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(reference, that.reference) && Objects.equals(label, that.label) && Objects.equals(channel, that.channel) && Objects.equals(showCondition, that.showCondition) && Objects.equals(order, that.order) && type == that.type && purpose == that.purpose && Objects.equals(caseType, that.caseType) && Objects.equals(event, that.event) && Objects.equals(displayGroupCaseFields, that.displayGroupCaseFields) && Objects.equals(accessProfile, that.accessProfile) && Objects.equals(webhookMidEvent, that.webhookMidEvent);
-    }
-
-    @SuppressWarnings("checkstyle:LineLength")
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, reference, label, channel, showCondition, order, type, purpose, caseType, event, displayGroupCaseFields, accessProfile, webhookMidEvent);
-    }
 }

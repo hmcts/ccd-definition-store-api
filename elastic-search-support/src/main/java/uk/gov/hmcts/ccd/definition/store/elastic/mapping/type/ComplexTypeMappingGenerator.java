@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
@@ -21,7 +22,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
         return dataMapping(complexFields(field));
     }
 
-    public String dataMapping(List<ComplexFieldEntity> complexFields) {
+    public String dataMapping(Set<ComplexFieldEntity> complexFields) {
         List<FieldEntity> fields = complexFields.stream().filter(field -> !shouldIgnore(field)).collect(toList());
 
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
@@ -44,7 +45,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
         return dataClassificationMapping(complexFields(field));
     }
 
-    public String dataClassificationMapping(List<ComplexFieldEntity> complexFields) {
+    public String dataClassificationMapping(Set<ComplexFieldEntity> complexFields) {
         List<FieldEntity> fields = complexFields.stream().filter(field -> !shouldIgnore(field)).collect(toList());
 
         return newJson(Unchecked.consumer((JsonWriter jw) -> {
@@ -75,7 +76,7 @@ public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
         return newArrayList(COMPLEX);
     }
 
-    private List<ComplexFieldEntity> complexFields(FieldEntity field) {
+    private Set<ComplexFieldEntity> complexFields(FieldEntity field) {
         return field.getFieldType().getComplexFields();
     }
 }

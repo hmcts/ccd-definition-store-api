@@ -14,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 @Component
@@ -43,7 +44,7 @@ public class PageShowConditionValidatorImpl implements DisplayGroupValidator {
                 return validationResult;
             }
 
-            List<String> allSubTypePossibilities = caseFieldEntityUtil
+            Set<String> allSubTypePossibilities = caseFieldEntityUtil
                 .buildDottedComplexFieldPossibilities(displayGroup.getCaseType().getCaseFields());
 
             showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {

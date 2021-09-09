@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import javax.persistence.Column;
@@ -233,8 +232,8 @@ public class CaseTypeEntity implements Serializable, Versionable {
         this.printWebhook = printWebhook;
     }
 
-    public List<CaseFieldEntity> getCaseFields() {
-        return List.copyOf(caseFields);
+    public Set<CaseFieldEntity> getCaseFields() {
+        return caseFields;
     }
 
     public JurisdictionEntity getJurisdiction() {
@@ -290,25 +289,5 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public List<RoleToAccessProfilesEntity> getRoleToAccessProfiles() {
         return roleToAccessProfiles;
-    }
-
-    @SuppressWarnings("checkstyle:LineLength")
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        CaseTypeEntity that = (CaseTypeEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(createdAt, that.createdAt) && Objects.equals(reference, that.reference) && Objects.equals(version, that.version) && Objects.equals(liveFrom, that.liveFrom) && Objects.equals(liveTo, that.liveTo) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && securityClassification == that.securityClassification && Objects.equals(printWebhook, that.printWebhook) && Objects.equals(jurisdiction, that.jurisdiction) && Objects.equals(events, that.events) && Objects.equals(states, that.states) && Objects.equals(caseFields, that.caseFields) && Objects.equals(caseTypeACLEntities, that.caseTypeACLEntities) && Objects.equals(caseRoles, that.caseRoles) && Objects.equals(searchAliasFields, that.searchAliasFields) && Objects.equals(roleToAccessProfiles, that.roleToAccessProfiles);
-    }
-
-    @SuppressWarnings("checkstyle:LineLength")
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, createdAt, reference, version, liveFrom, liveTo, name, description, securityClassification, printWebhook, jurisdiction, events, states, caseFields, caseTypeACLEntities, caseRoles, searchAliasFields, roleToAccessProfiles);
     }
 }

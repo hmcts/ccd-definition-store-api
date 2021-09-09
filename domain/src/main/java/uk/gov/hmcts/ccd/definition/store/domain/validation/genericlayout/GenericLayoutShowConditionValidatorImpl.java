@@ -12,6 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -51,7 +52,7 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
             return validationResult;
         }
 
-        List<String> allSubTypePossibilities = getAllSubTypePossibilities(allGenericLayouts);
+        Set<String> allSubTypePossibilities = getAllSubTypePossibilities(allGenericLayouts);
         showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
             if (!allSubTypePossibilities.contains(showConditionField)) {
                 validationResult.addError(buildError(entity, showConditionField, showConditionString));
@@ -69,11 +70,11 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
         return validationResult;
     }
 
-    private List<String> getAllSubTypePossibilities(List<GenericLayoutEntity> layoutEntities) {
+    private Set<String> getAllSubTypePossibilities(List<GenericLayoutEntity> layoutEntities) {
         return caseFieldEntityUtil.buildDottedComplexFieldPossibilities(
             layoutEntities.stream()
                 .map(GenericLayoutEntity::getCaseField)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet()));
     }
 
     private boolean showConditionFieldExistsInAtLeastOneLayOutEntity(

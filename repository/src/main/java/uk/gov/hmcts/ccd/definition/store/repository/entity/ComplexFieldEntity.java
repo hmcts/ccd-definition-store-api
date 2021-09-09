@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
@@ -75,6 +76,14 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     @Column(name = "retain_hidden_value")
     private Boolean retainHiddenValue;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Override
     public String getReference() {
         return reference;
@@ -136,6 +145,17 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
         return false;
     }
 
+    @Transient
+    private String oid = IdGenerator.createId();
+
+    public String getOid() {
+        return oid;
+    }
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
     public void setFieldType(FieldTypeEntity fieldType) {
         this.fieldType = fieldType;
     }
@@ -180,4 +200,29 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
         this.retainHiddenValue = retainHiddenValue;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ComplexFieldEntity that = (ComplexFieldEntity) o;
+        if (getId() != null) {
+            return Objects.equals(getId(), that.getId());
+        } else {
+            return Objects.equals(getOid(), that.getOid());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        if (getId() != null) {
+            return Objects.hash(getId());
+        } else {
+            return Objects.hash(getOid());
+        }
+    }
 }

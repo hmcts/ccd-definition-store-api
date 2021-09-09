@@ -18,7 +18,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
@@ -124,8 +123,8 @@ public class StateEntity implements Serializable, Referencable {
         return caseType;
     }
 
-    public List<StateACLEntity> getStateACLEntities() {
-        return List.copyOf(stateACLEntities);
+    public Set<StateACLEntity> getStateACLEntities() {
+        return stateACLEntities;
     }
 
     public String getTitleDisplay() {
