@@ -183,8 +183,14 @@
               "analyzer": "standard",
               "search_analyzer": "alphanumeric_string_analyzer"
             },
-            "DateOfBirth": {"type" : "date", "ignore_malformed": true},
-            "DateOfDeath": {"type" : "date", "ignore_malformed": true}
+            "DateOfBirth": {
+              "type": "date",
+              "ignore_malformed": true
+            },
+            "DateOfDeath": {
+              "type": "date",
+              "ignore_malformed": true
+            }
           }
         }
       }
