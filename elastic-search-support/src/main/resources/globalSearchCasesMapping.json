@@ -1,6 +1,6 @@
 {
   "properties": {
-    "caseReference": {
+    "reference": {
       "type": "text",
       "fields": {
         "keyword": {
@@ -12,7 +12,7 @@
       "analyzer": "standard",
       "search_analyzer": "alphanumeric_string_analyzer"
     },
-    "jurisdictionId": {
+    "jurisdiction": {
       "type": "text",
       "fields": {
         "keyword": {
@@ -24,7 +24,7 @@
       "analyzer": "standard",
       "search_analyzer": "alphanumeric_string_analyzer"
     },
-    "caseTypeId": {
+    "case_type_id": {
       "type": "text",
       "fields": {
         "keyword": {
@@ -36,7 +36,7 @@
       "analyzer": "standard",
       "search_analyzer": "alphanumeric_string_analyzer"
     },
-    "region": {
+    "state": {
       "type": "text",
       "fields": {
         "keyword": {
@@ -48,7 +48,7 @@
       "analyzer": "standard",
       "search_analyzer": "alphanumeric_string_analyzer"
     },
-    "baseLocation": {
+    "security_classification": {
       "type": "text",
       "fields": {
         "keyword": {
@@ -60,60 +60,143 @@
       "analyzer": "standard",
       "search_analyzer": "alphanumeric_string_analyzer"
     },
-    "stateId": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256,
-          "normalizer": "lowercase_normalizer"
-        }
-      },
-      "analyzer": "standard",
-      "search_analyzer": "alphanumeric_string_analyzer"
-    },
-    "HMCTSServiceId": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256,
-          "normalizer": "lowercase_normalizer"
-        }
-      },
-      "analyzer": "standard",
-      "search_analyzer": "alphanumeric_string_analyzer"
-    },
-    "caseNameHmctsInternal": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256,
-          "normalizer": "lowercase_normalizer"
-        }
-      },
-      "analyzer": "standard",
-      "search_analyzer": "alphanumeric_string_analyzer"
-    },
-    "caseManagementCategoryName": {
-      "type": "text",
-      "fields": {
-        "keyword": {
-          "type": "keyword",
-          "ignore_above": 256,
-          "normalizer": "lowercase_normalizer"
-        }
-      },
-      "analyzer": "standard",
-      "search_analyzer": "alphanumeric_string_analyzer"
-    },
-    "OtherCaseReferences": {
+    "data": {
+      "type": "object",
       "properties": {
-        "id": {
-          "enabled": false
+        "SearchCriteria": {
+          "type": "object",
+          "properties": {
+            "OtherCaseReferences": {
+              "properties": {
+                "id": {
+                  "enabled": false
+                },
+                "value": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {
+                      "type": "keyword",
+                      "ignore_above": 256,
+                      "normalizer": "lowercase_normalizer"
+                    }
+                  },
+                  "analyzer": "standard",
+                  "search_analyzer": "alphanumeric_string_analyzer"
+                }
+              }
+            },
+            "SearchParties": {
+              "properties": {
+                "id": {
+                  "enabled": false
+                },
+                "value": {
+                  "type": "nested",
+                  "properties": {
+                    "Name": {
+                      "type": "text",
+                      "fields": {
+                        "keyword": {
+                          "type": "keyword",
+                          "ignore_above": 256,
+                          "normalizer": "lowercase_normalizer"
+                        }
+                      },
+                      "analyzer": "standard",
+                      "search_analyzer": "alphanumeric_string_analyzer"
+                    },
+                    "EmailAddress": {
+                      "type": "text",
+                      "fields": {
+                        "keyword": {
+                          "type": "keyword",
+                          "ignore_above": 256,
+                          "normalizer": "lowercase_normalizer"
+                        }
+                      },
+                      "analyzer": "standard",
+                      "search_analyzer": "alphanumeric_string_analyzer"
+                    },
+                    "AddressLine1": {
+                      "type": "text",
+                      "fields": {
+                        "keyword": {
+                          "type": "keyword",
+                          "ignore_above": 256,
+                          "normalizer": "lowercase_normalizer"
+                        }
+                      },
+                      "analyzer": "standard",
+                      "search_analyzer": "alphanumeric_string_analyzer"
+                    },
+                    "PostCode": {
+                      "type": "text",
+                      "fields": {
+                        "keyword": {
+                          "type": "keyword",
+                          "ignore_above": 256,
+                          "normalizer": "lowercase_normalizer"
+                        }
+                      },
+                      "analyzer": "standard",
+                      "search_analyzer": "alphanumeric_string_analyzer"
+                    },
+                    "DateOfBirth": {
+                      "type": "date",
+                      "ignore_malformed": true
+                    },
+                    "DateOfDeath": {
+                      "type": "date",
+                      "ignore_malformed": true
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
-        "value": {
+        "caseManagementLocation": {
+          "type": "object",
+          "properties": {
+            "region": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              },
+              "analyzer": "standard",
+              "search_analyzer": "alphanumeric_string_analyzer"
+            },
+            "baseLocation": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256,
+                  "normalizer": "lowercase_normalizer"
+                }
+              },
+              "analyzer": "standard",
+              "search_analyzer": "alphanumeric_string_analyzer"
+            }
+          }
+        },
+        "caseNameHmctsInternal": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256,
+              "normalizer": "lowercase_normalizer"
+            }
+          },
+          "analyzer": "standard",
+          "search_analyzer": "alphanumeric_string_analyzer"
+        },
+        "caseManagementCategory": {
           "type": "text",
           "fields": {
             "keyword": {
@@ -126,73 +209,24 @@
           "search_analyzer": "alphanumeric_string_analyzer"
         }
       }
-    },
-    "SearchParties": {
-      "properties": {
-        "id": {
-          "enabled": false
-        },
-        "value": {
-          "type": "nested",
-          "properties": {
-            "Name": {
-              "type": "text",
-              "fields": {
-                "keyword": {
-                  "type": "keyword",
-                  "ignore_above": 256,
-                  "normalizer": "lowercase_normalizer"
-                }
-              },
-              "analyzer": "standard",
-              "search_analyzer": "alphanumeric_string_analyzer"
-            },
-            "EmailAddress": {
-              "type": "text",
-              "fields": {
-                "keyword": {
-                  "type": "keyword",
-                  "ignore_above": 256,
-                  "normalizer": "lowercase_normalizer"
-                }
-              },
-              "analyzer": "standard",
-              "search_analyzer": "alphanumeric_string_analyzer"
-            },
-            "AddressLine1": {
-              "type": "text",
-              "fields": {
-                "keyword": {
-                  "type": "keyword",
-                  "ignore_above": 256,
-                  "normalizer": "lowercase_normalizer"
-                }
-              },
-              "analyzer": "standard",
-              "search_analyzer": "alphanumeric_string_analyzer"
-            },
-            "PostCode": {
-              "type": "text",
-              "fields": {
-                "keyword": {
-                  "type": "keyword",
-                  "ignore_above": 256,
-                  "normalizer": "lowercase_normalizer"
-                }
-              },
-              "analyzer": "standard",
-              "search_analyzer": "alphanumeric_string_analyzer"
-            },
-            "DateOfBirth": {
-              "type": "date",
-              "ignore_malformed": true
-            },
-            "DateOfDeath": {
-              "type": "date",
-              "ignore_malformed": true
-            }
+    }
+  },
+  "data_classification": {
+  },
+  "supplementary_data": {
+    "type": "object",
+    "properties": {
+      "HMCTSServiceId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256,
+            "normalizer": "lowercase_normalizer"
           }
-        }
+        },
+        "analyzer": "standard",
+        "search_analyzer": "alphanumeric_string_analyzer"
       }
     }
   }
