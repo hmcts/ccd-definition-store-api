@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
@@ -60,10 +61,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
@@ -106,6 +110,8 @@ public class ImportServiceImplTest {
     private static final String TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE = "TestComplexAddressBookCase";
 
     private ImportServiceImpl service;
+
+    private final Executor executor = Executors.newSingleThreadExecutor();
 
     @Mock
     private FieldTypeService fieldTypeService;
@@ -204,7 +210,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, applicationParams);
+            challengeQuestionParser, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -393,7 +399,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
-            hiddenFieldsValidator,challengeQuestionParser, applicationParams);
+            hiddenFieldsValidator,challengeQuestionParser, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -422,6 +428,47 @@ public class ImportServiceImplTest {
         assertThat(warnings.size(), equalTo(2));
         assertThat(importWarnings, containsInAnyOrder("Warning1", "Warning2"));
         verify(spreadsheetParser).getImportWarnings();
+    }
+
+    @Test
+    public void shouldThrowMapperException() {
+        given(hiddenFieldsValidator.parseComplexTypesHiddenFields(any(), any())).willThrow(MapperException.class);
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
+            multiSelectBaseType,
+            complexType,
+            textBaseType,
+            numberBaseType,
+            emailBaseType,
+            yesNoBaseType,
+            dateBaseType,
+            dateTimeBaseType,
+            postCodeBaseType,
+            moneyGBPBaseType,
+            phoneUKBaseType,
+            textAreaBaseType,
+            collectionBaseType,
+            documentBaseType,
+            organisationBaseType,
+            organisationPolicyBaseType,
+            labelBaseType,
+            casePaymentHistoryViewerBaseType,
+            caseHistoryViewerBaseType,
+            fixedListRadioTypeBaseType,
+            dynamicListBaseType,
+            changeOrganisationRequest,
+            previousOrganisationBaseType,
+            dynamicRadioListBaseType,
+            dynamicMultiSelectListBaseType));
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
+
+        assertThrows(MapperException.class, () -> service.importFormDefinitions(inputStream));
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {
