@@ -13,7 +13,7 @@
 		"arrayInMap": [
 			{
 			 "key": "file",
-			 "filePath": "uk/gov/hmcts/ccd/test_definitions/excel/CCD_BEFTA_JURISDICTION2.xlsx"
+			 "localFilePath": "build/tmp/definition_files_copy/CCD_BEFTA_JURISDICTION2.xlsx"
 			}
 		]
 	 }
