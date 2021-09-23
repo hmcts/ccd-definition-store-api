@@ -73,6 +73,7 @@ public enum ColumnName {
     TAB_DISPLAY_ORDER("TabDisplayOrder"),
     TAB_FIELD_DISPLAY_ORDER("TabFieldDisplayOrder"),
     TITLE_DISPLAY("TitleDisplay"),
+    TTL_INCREMENT("TTLIncrement"),
     USER_IDAM_ID("UserIDAMId"),
     USE_CASE("UseCase"),
     RESULTS_ORDERING("ResultsOrdering"),
