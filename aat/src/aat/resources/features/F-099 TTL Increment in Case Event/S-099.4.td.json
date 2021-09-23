@@ -1,0 +1,30 @@
+{
+  "_guid_": "S-099.4",
+  "_extends_": "Import_Base_data",
+  "title": "Must successfully import a definition file where TTLIncrement column is missing",
+  "specs": [
+    "an active profile in CCD",
+    "contains missing TTLIncrement column"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_missing_TTL_Increment_Column.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Case Definition data successfully imported"
+    }
+  }
+}

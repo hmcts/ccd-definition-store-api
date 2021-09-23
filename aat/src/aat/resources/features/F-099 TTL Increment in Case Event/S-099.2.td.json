@@ -1,0 +1,31 @@
+{
+	"_guid_": "S-099.2",
+	"_extends_": "Import_Base_data",
+	"title": "Must return a negative response in an attempt to import a definition file containing a invalid value TTLIncrement Events column",
+	"specs": [
+		"an active profile in CCD",
+		"contains a invalid value configured in TTLIncrement Events column"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_invalid_Case_Event_TTL_Increment_Column.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Invalid value 'NONE' is found in column 'TTLIncrement' in the sheet 'CaseEvent'"
+    }
+  }
+}
