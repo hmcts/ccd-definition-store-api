@@ -69,10 +69,4 @@
 		<cve>CVE-2020-23171</cve>
 	</suppress>
 
-	<suppress until="2021-09-25">
-		<cve>CVE-2021-22119</cve>
-		<cve>CVE-2021-28170</cve>
-	</suppress>
-
-
 </suppressions>
