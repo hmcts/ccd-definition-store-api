@@ -1,17 +1,17 @@
 {
-  "_guid_": "S-099.4",
-  "_extends_": "Import_Base_data",
-  "title": "Must successfully import a definition file where TTLIncrement column is missing",
-  "specs": [
-    "an active profile in CCD",
-    "contains missing TTLIncrement column"
-  ],
+	"_guid_": "S-100.3",
+	"_extends_": "Import_Base_data",
+	"title": "Must successfully import a definition file containing a blank value in TTL Increment Events column",
+	"specs": [
+		"an active profile in CCD",
+		"contains a blank value in TTL Increment Events column"
+	],
   "request": {
     "body": {
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_missing_TTL_Increment_Column.xlsx"
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
         }
       ]
     }
