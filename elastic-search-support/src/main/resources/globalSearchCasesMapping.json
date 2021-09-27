@@ -340,10 +340,13 @@
                             "DateOfBirth": {
                               "type": "date",
                               "ignore_malformed": true
+                            },
+                            "DateOfDeath": {
+                              "type": "date",
+                              "ignore_malformed": true
                             }
                           }
                         }
-
                       }
                     },
                     "classification": {
