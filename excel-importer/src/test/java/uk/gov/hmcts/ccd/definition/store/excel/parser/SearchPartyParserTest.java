@@ -34,6 +34,7 @@ class SearchPartyParserTest extends ParserTestBase {
     private static final String SEARCH_PARTY_ADDRESS_LINE_1 = "TestAddressLine1";
     private static final String SEARCH_PARTY_POST_CODE = "W23 3UJ";
     private static final String SEARCH_PARTY_DOB = "10/10/1920";
+    private static final String SEARCH_PARTY_DOD = "10/10/1920";
 
     private SearchPartyParser parser;
 
@@ -63,6 +64,7 @@ class SearchPartyParserTest extends ParserTestBase {
         assertEquals(SEARCH_PARTY_ADDRESS_LINE_1, searchPartyEntity.getSearchPartyAddressLine1());
         assertEquals(SEARCH_PARTY_POST_CODE, searchPartyEntity.getSearchPartyPostCode());
         assertEquals(SEARCH_PARTY_DOB, searchPartyEntity.getSearchPartyDob());
+        assertEquals(SEARCH_PARTY_DOD, searchPartyEntity.getSearchPartyDod());
     }
 
     @Test
@@ -100,6 +102,7 @@ class SearchPartyParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.SEARCH_PARTY_ADDRESS_LINE_1.toString(), SEARCH_PARTY_ADDRESS_LINE_1);
         item.addAttribute(ColumnName.SEARCH_PARTY_POST_CODE.toString(), SEARCH_PARTY_POST_CODE);
         item.addAttribute(ColumnName.SEARCH_PARTY_DOB.toString(), SEARCH_PARTY_DOB);
+        item.addAttribute(ColumnName.SEARCH_PARTY_DOD.toString(), SEARCH_PARTY_DOD);
         return item;
     }
 }

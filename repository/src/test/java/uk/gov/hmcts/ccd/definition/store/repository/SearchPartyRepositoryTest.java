@@ -36,6 +36,7 @@ public class SearchPartyRepositoryTest {
     private static final String SEARCH_PARTY_ADDRESS_LINE_1 = "Address Line 1";
     private static final String SEARCH_PARTY_POST_CODE = "Post Code";
     private static final String SEARCH_PARTY_DOB = "10/10/1910";
+    private static final String SEARCH_PARTY_DOD = "10/10/1910";
 
     @Autowired
     private SearchPartyRepository searchPartyRepository;
@@ -85,6 +86,7 @@ public class SearchPartyRepositoryTest {
         searchPartyEntity.setSearchPartyAddressLine1(SEARCH_PARTY_ADDRESS_LINE_1);
         searchPartyEntity.setSearchPartyPostCode(SEARCH_PARTY_POST_CODE);
         searchPartyEntity.setSearchPartyDob(SEARCH_PARTY_DOB);
+        searchPartyEntity.setSearchPartyDod(SEARCH_PARTY_DOD);
 
         return searchPartyRepository.save(searchPartyEntity);
     }

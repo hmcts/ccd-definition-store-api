@@ -43,6 +43,7 @@ class SearchPartyValidatorTest {
     private static final String TEST_EXPRESSION_ADDRESS_1 = "Address1";
     private static final String TEST_EXPRESSION_POSTCODE_1 = "Postcode1";
     private static final String TEST_EXPRESSION_DOB_1 = "DOB1";
+    private static final String TEST_EXPRESSION_DOD_1 = "DOD1";
 
     private static final String TEST_EXPRESSION_BAD = "BadTestExpression";
 
@@ -88,6 +89,8 @@ class SearchPartyValidatorTest {
                                               searchPartyEntity1.getSearchPartyPostCode());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_DOB,
                                               searchPartyEntity1.getSearchPartyDob());
+        verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_DOD,
+            searchPartyEntity1.getSearchPartyDod());
     }
 
     @DisplayName("should validate multiple searchPartyEntity values")
@@ -220,6 +223,25 @@ class SearchPartyValidatorTest {
         verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_DOB); //..but none for blank field
     }
 
+    @DisplayName("should validate as ok even if SearchPartyDod is blank")
+    @Test
+    void shouldValidateAsOkEvenIfSearchPartyDodIsBlank() {
+
+        // GIVEN
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        searchPartyEntity1.setSearchPartyDod("");
+
+        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntity();
+        searchPartyEntity2.setSearchPartyDod(null);
+
+        // WHEN
+        searchPartyValidator.validate(List.of(searchPartyEntity1, searchPartyEntity2), parseContext);
+
+        // THEN
+        verifyDotNotationValidatorCallMadeAtLeastOnce(); // verify at least one validation ..
+        verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_DOD); //..but none for blank field
+    }
+
     @DisplayName("throws exception if SearchPartyName validation fails")
     @Test
     void throwsExceptionIfSearchPartyNameValidationFails() {
@@ -308,6 +330,23 @@ class SearchPartyValidatorTest {
         assertEquals(expectedException, actualException);
     }
 
+    @DisplayName("throws exception if SearchPartyDod validation fails")
+    @Test
+    void throwsExceptionIfSearchPartyDodValidationFails() {
+
+        // GIVEN
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        searchPartyEntity1.setSearchPartyDod(TEST_EXPRESSION_BAD);
+        Exception expectedException = prepareMockDotNotationValidatorToThrow(ColumnName.SEARCH_PARTY_DOD);
+
+        // WHEN & THEN
+        Exception actualException = assertThrows(expectedException.getClass(), () ->
+            searchPartyValidator.validate(List.of(searchPartyEntity1), parseContext)
+        );
+
+        assertEquals(expectedException, actualException);
+    }
+
     private static SearchPartyEntity createBlankSearchPartyEntity() {
 
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
@@ -327,6 +366,7 @@ class SearchPartyValidatorTest {
         searchPartyEntity.setSearchPartyAddressLine1(TEST_EXPRESSION_ADDRESS_1);
         searchPartyEntity.setSearchPartyPostCode(TEST_EXPRESSION_POSTCODE_1);
         searchPartyEntity.setSearchPartyDob(TEST_EXPRESSION_DOB_1);
+        searchPartyEntity.setSearchPartyDod(TEST_EXPRESSION_DOD_1);
 
         return searchPartyEntity;
     }
