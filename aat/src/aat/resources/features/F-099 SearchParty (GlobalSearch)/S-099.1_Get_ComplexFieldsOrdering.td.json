@@ -19,6 +19,7 @@
 				{
 					"case_type_id": "FT_ComplexFieldsOrdering",
 					"search_party_dob": "Name",
+					"search_party_dod": null,
 					"search_party_post_code": "Name",
 					"search_party_address_line1": "Name",
 					"search_party_email_address": "Name",

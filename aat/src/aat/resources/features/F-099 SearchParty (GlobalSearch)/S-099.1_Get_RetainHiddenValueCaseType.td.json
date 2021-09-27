@@ -19,6 +19,7 @@
 				{
 					"case_type_id": "FT_RetainHiddenValue",
 					"search_party_dob": "TextField",
+          "search_party_dod": null,
 					"search_party_post_code": "TextField",
 					"search_party_address_line1": "TextField",
 					"search_party_email_address": "TextField",
@@ -29,6 +30,7 @@
 				{
 					"case_type_id": "FT_RetainHiddenValue",
 					"search_party_dob": "TextField",
+          "search_party_dod": null,
 					"search_party_post_code": "TextField",
 					"search_party_address_line1": "TextField",
 					"search_party_email_address": "TextField",
