@@ -29,6 +29,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -89,7 +90,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "case_type_id")
     private final List<StateEntity> states = new ArrayList<>();
 
-    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
     @Fetch(value = FetchMode.JOIN)
     @OrderBy("id")
     private final Set<CaseFieldEntity> caseFields = new LinkedHashSet<>();

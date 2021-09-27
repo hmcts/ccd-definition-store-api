@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Table(name = "display_group")
@@ -65,7 +66,7 @@ public class DisplayGroupEntity implements Serializable {
     @JoinColumn(name = "event_id")
     private EventEntity event;
 
-    @OneToMany(mappedBy = "displayGroup", fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "displayGroup", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.JOIN)
     @OrderBy("id")
     private final Set<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new LinkedHashSet<>();
@@ -194,5 +195,4 @@ public class DisplayGroupEntity implements Serializable {
     public void setAccessProfile(AccessProfileEntity accessProfile) {
         this.accessProfile = accessProfile;
     }
-
 }

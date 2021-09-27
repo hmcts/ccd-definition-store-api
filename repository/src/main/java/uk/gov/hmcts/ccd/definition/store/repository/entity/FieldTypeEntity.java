@@ -75,7 +75,7 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @Fetch(FetchMode.SUBSELECT)
     private final List<FieldTypeListItemEntity> listItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.JOIN)
     @OrderBy("id")
     private final Set<ComplexFieldEntity> complexFields = new LinkedHashSet<>();
@@ -238,4 +238,5 @@ public class FieldTypeEntity implements Serializable, Versionable {
             return this.baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX);
         }
     }
+
 }
