@@ -47,4 +47,9 @@
 		<cve>CVE-2007-1652</cve>
 	</suppress>
 
+	<!-- Temporary suppression. Remove in the fix PR. -->
+	<suppress>
+		<cve>CVE-2021-22147</cve>
+	</suppress>
+
 </suppressions>
