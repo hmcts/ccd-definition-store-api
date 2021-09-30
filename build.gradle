@@ -49,7 +49,7 @@ dependencyCheck {
 ext['elasticsearch.version'] = '6.8.17'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.4.5'
+ext['spring-security.version'] = '5.4.7'
 ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.2.16'
@@ -126,6 +126,8 @@ allprojects {
         compile "org.hibernate:hibernate-core:${hibernateVersion}"
         // Overriding transitive dependency commons-compress due to CVE failures
         compile "org.apache.commons:commons-compress:1.21"
+            // CVE-2021-28170
+        compile "org.glassfish:jakarta.el:4.0.1"
         testCompile "io.rest-assured:xml-path:${restAssuredVersion}"
         testCompile "io.rest-assured:json-path:${restAssuredVersion}"
         testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
@@ -270,7 +272,7 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.5.3-prerelease'
+        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.5.5-prerelease'
         testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.3.2'
         // https://mvnrepository.com/artifact/junit/junit
         compile group: 'junit', name: 'junit', version: '4.13.1'
