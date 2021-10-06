@@ -199,6 +199,10 @@
         "caseManagementCategory": {
           "type": "object",
           "properties": {
+            "list_items": {
+              "type": "object",
+              "enabled": false
+            },
             "value": {
               "type": "object",
               "properties": {
@@ -231,6 +235,10 @@
           }
         }
       }
+    },
+    "data_classification": {
+      "type": "object",
+      "enabled": false
     },
     "supplementary_data": {
       "type": "object",
