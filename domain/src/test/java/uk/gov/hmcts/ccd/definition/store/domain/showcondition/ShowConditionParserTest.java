@@ -186,6 +186,15 @@ class ShowConditionParserTest {
             .parseShowCondition("field1='AB' AND field2='BC' OR field3='CD'"));
     }
 
+    @Test
+    void shouldParseInjectedFields() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(
+            "[INJECTED_DATA.test]=\"Test\"");
+
+        assertThat(sc.getFields(), hasItems("[INJECTED_DATA.test]"));
+        assertEquals(0, sc.getFieldsWithSubtypes().size());
+    }
+
     private void assertShowCondition(ShowCondition showCondition) {
         assertEquals("SomeField=\"Some String\"", showCondition.getShowConditionExpression());
         assertTrue("SomeField", showCondition.getFields().contains("SomeField"));

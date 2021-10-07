@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.InjectedField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -60,7 +61,8 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
 
             showCondition.getFields().forEach(showConditionField -> {
                 if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)
-                    && !MetadataField.isMetadataField(showConditionField)) {
+                    && !(MetadataField.isMetadataField(showConditionField)
+                    || InjectedField.isInjectedField(showConditionField))) {
                     validationResult.addError(
                         new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
                 }
@@ -91,7 +93,8 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
 
                     showCondition.getFields().forEach(showConditionField -> {
                         if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)
-                            && !MetadataField.isMetadataField(showConditionField)) {
+                            && !(MetadataField.isMetadataField(showConditionField)
+                            || InjectedField.isInjectedField(showConditionField))) {
                             validationResult.addError(
                                 new DisplayGroupInvalidTabFieldShowCondition(showConditionField, caseField));
                         }

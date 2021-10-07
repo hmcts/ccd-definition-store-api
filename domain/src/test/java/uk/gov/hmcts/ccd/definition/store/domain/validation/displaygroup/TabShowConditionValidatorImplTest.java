@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.InjectedField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -565,6 +566,29 @@ public class TabShowConditionValidatorImplTest {
 
         ShowCondition sc = new ShowCondition.Builder()
             .showConditionExpression("parsedSC").field(MetadataField.STATE.getReference()).build();
+        when(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .thenReturn(sc);
+
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
+
+        assertThat(result.isValid(), is(true));
+    }
+
+
+    @Test
+    public void tabShowCondition_shouldValidateShowConditionForInjectedField() throws InvalidShowConditionException {
+        displayGroup.setShowCondition("someShowCondition");
+        displayGroup.setType(DisplayGroupType.TAB);
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference("SimpleType");
+        displayGroup.setCaseType(caseTypeEntity);
+
+        DisplayGroupCaseFieldEntity displayGroupCaseField = new DisplayGroupCaseFieldEntity();
+        displayGroupCaseField.setCaseField(caseFieldEntity("otherField"));
+        displayGroup.addDisplayGroupCaseField(displayGroupCaseField);
+
+        ShowCondition sc = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("[INJECTED_DATA.test]").build();
         when(mockShowConditionParser.parseShowCondition("someShowCondition"))
             .thenReturn(sc);
 
