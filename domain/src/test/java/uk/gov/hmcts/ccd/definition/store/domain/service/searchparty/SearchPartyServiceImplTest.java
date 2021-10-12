@@ -78,6 +78,7 @@ class SearchPartyServiceImplTest {
         searchPartyEntity.setSearchPartyAddressLine1("Test Address");
         searchPartyEntity.setSearchPartyPostCode("J21 2HS");
         searchPartyEntity.setSearchPartyDob("date of birth");
+        searchPartyEntity.setSearchPartyDod("date of death");
 
         return searchPartyEntity;
     }

@@ -102,6 +102,7 @@ public enum ColumnName {
     SEARCH_PARTY_ADDRESS_LINE_1("SearchPartyAddressLine1"),
     SEARCH_PARTY_POST_CODE("SearchPartyPostCode"),
     SEARCH_PARTY_DOB("SearchPartyDOB"),
+    SEARCH_PARTY_DOD("SearchPartyDOD"),
     OTHER_CASE_REFERENCE("OtherCaseReference"),
     EVENT_ENABLING_CONDITION("EventEnablingCondition");
 

@@ -1813,6 +1813,7 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(searchParty.getSearchPartyEmailAddress(), searchPartyEntity.getSearchPartyEmailAddress());
             assertEquals(searchParty.getSearchPartyPostCode(), searchPartyEntity.getSearchPartyPostCode());
             assertEquals(searchParty.getSearchPartyDob(), searchPartyEntity.getSearchPartyDob());
+            assertEquals(searchParty.getSearchPartyDod(), searchPartyEntity.getSearchPartyDod());
             assertEquals(searchParty.getLiveTo(), searchPartyEntity.getLiveTo());
             assertEquals(searchParty.getLiveFrom(), searchPartyEntity.getLiveFrom());
 
@@ -1832,6 +1833,7 @@ class  EntityToResponseDTOMapperTest {
             assertNull(searchParty.getSearchPartyEmailAddress());
             assertNull(searchParty.getSearchPartyPostCode());
             assertNull(searchParty.getSearchPartyDob());
+            assertNull(searchParty.getSearchPartyDod());
         }
 
     }

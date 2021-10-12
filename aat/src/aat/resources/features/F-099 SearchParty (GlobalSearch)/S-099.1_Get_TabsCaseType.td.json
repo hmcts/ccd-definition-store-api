@@ -19,6 +19,7 @@
 				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": "TextField1",
+          "search_party_dod": null,
 					"search_party_post_code": "TextField1",
 					"search_party_address_line1": "TextField1",
 					"search_party_email_address": "TextField1",
@@ -29,6 +30,7 @@
 				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": "TextField1",
+          "search_party_dod": null,
 					"search_party_post_code": "TextField1",
 					"search_party_address_line1": "TextField1",
 					"search_party_email_address": null,
@@ -39,6 +41,7 @@
 				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": "TextField1",
+          "search_party_dod": null,
 					"search_party_post_code": "TextField1",
 					"search_party_address_line1": null,
 					"search_party_email_address": "TextField1",
@@ -49,6 +52,7 @@
 				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": "TextField1",
+          "search_party_dod": null,
 					"search_party_post_code": null,
 					"search_party_address_line1": "TextField1",
 					"search_party_email_address": "TextField1",
@@ -59,6 +63,7 @@
 				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": null,
+          "search_party_dod": null,
 					"search_party_post_code": "TextField1",
 					"search_party_address_line1": "TextField1",
 					"search_party_email_address": "TextField1",

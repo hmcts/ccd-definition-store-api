@@ -47,6 +47,9 @@ public class SearchPartyEntity implements Serializable {
     @Column(name = "search_party_dob")
     private String searchPartyDob;
 
+    @Column(name = "search_party_dod")
+    private String searchPartyDod;
+
     public Integer getId() {
         return id;
     }
@@ -117,5 +120,13 @@ public class SearchPartyEntity implements Serializable {
 
     public void setSearchPartyDob(String searchPartyDob) {
         this.searchPartyDob = searchPartyDob;
+    }
+
+    public String getSearchPartyDod() {
+        return searchPartyDod;
+    }
+
+    public void setSearchPartyDod(String searchPartyDod) {
+        this.searchPartyDod = searchPartyDod;
     }
 }

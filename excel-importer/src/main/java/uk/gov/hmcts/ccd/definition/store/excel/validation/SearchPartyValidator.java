@@ -34,6 +34,7 @@ public class SearchPartyValidator {
             validateSearchPartyAddressLine1(parseContext, caseType, searchPartyEntity);
             validateSearchPartyPostCode(parseContext, caseType, searchPartyEntity);
             validateSearchPartyDob(parseContext, caseType, searchPartyEntity);
+            validateSearchPartyDod(parseContext, caseType, searchPartyEntity);
         });
 
     }
@@ -98,6 +99,17 @@ public class SearchPartyValidator {
 
         if (StringUtils.isNoneBlank(searchPartyDob)) {
             validateDotNotation(parseContext, caseType, ColumnName.SEARCH_PARTY_DOB, searchPartyDob);
+        }
+    }
+
+    private void validateSearchPartyDod(ParseContext parseContext,
+                                        String caseType,
+                                        SearchPartyEntity searchPartyEntity) {
+
+        String searchPartyDod = searchPartyEntity.getSearchPartyDod();
+
+        if (StringUtils.isNoneBlank(searchPartyDod)) {
+            validateDotNotation(parseContext, caseType, ColumnName.SEARCH_PARTY_DOD, searchPartyDod);
         }
     }
 
