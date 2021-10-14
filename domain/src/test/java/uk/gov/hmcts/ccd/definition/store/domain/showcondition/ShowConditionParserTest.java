@@ -77,6 +77,79 @@ class ShowConditionParserTest {
     }
 
     @Test
+    void shouldParseAndConditionsCorrectlyWithBothAndOr() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(
+            "field1= \"ABC AND XYZ\" AND field2=\"some value\" OR field3=\"some value\"");
+
+        assertThat(sc.getShowConditionExpression(),
+            is("field1=\"ABC AND XYZ\" AND field2=\"some value\" OR field3=\"some value\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2", "field3"));
+    }
+
+    @Test
+    void shouldParseAndConditionsCorrectlyWithBracketsForHierachy() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(
+            "field1= \"ABC AND XYZ\" AND (field2=\"some value\" OR field3=\"some value\")");
+
+        assertThat(sc.getShowConditionExpression(),
+            is("field1=\"ABC AND XYZ\" AND (field2=\"some value\" OR field3=\"some value\")"));
+        assertThat(sc.getFields(), hasItems("field1", "field2", "field3"));
+    }
+
+    @Test
+    void shouldParseAndConditionsCorrectlyWithBracketsInStringValue() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(
+            "field1= \"ABC AND XYZ\" AND field2=\"(some value)\" OR field3=\"some value\"");
+
+        assertThat(sc.getShowConditionExpression(),
+            is("field1=\"ABC AND XYZ\" AND field2=\"(some value)\" OR field3=\"some value\""));
+        assertThat(sc.getFields(), hasItems("field1", "field2", "field3"));
+    }
+
+    @Test
+    void shouldParseAndConditionsCorrectlyWithBracketsNested() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(
+            "field1=\"ABC AND XYZ\" AND ((field2=\"(some value)\" "
+                + "OR field3=\"some value\") OR field4=\"some value\")");
+
+        assertThat(sc.getShowConditionExpression(),
+            is("field1=\"ABC AND XYZ\" AND ((field2=\"(some value)\" "
+                + "OR field3=\"some value\") OR field4=\"some value\")"));
+        assertThat(sc.getFields(), hasItems("field1", "field2", "field3",  "field4"));
+    }
+
+    @Test
+    void shouldParseAndConditionsCorrectlyWithBracketsNestedDoubleClose() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(
+            "(YesNoField=\"No\" AND (TextField=\"no\" OR TextAreaField=\"no\")) OR NumberField=\"1\"");
+
+        assertThat(sc.getShowConditionExpression(),
+            is("(YesNoField=\"No\" AND (TextField=\"no\" OR TextAreaField=\"no\")) OR NumberField=\"1\""));
+        assertThat(sc.getFields(), hasItems("YesNoField", "TextField", "TextAreaField",  "NumberField"));
+    }
+
+    @Test
+    void shouldParseAndConditionsCorrectlyWithBracketsMixture() throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(
+            "field1= \"ABC AND XYZ\" AND (field2=\"(some value)\" OR field3=\"some value\")");
+
+        assertThat(sc.getShowConditionExpression(),
+            is("field1=\"ABC AND XYZ\" AND (field2=\"(some value)\" OR field3=\"some value\")"));
+        assertThat(sc.getFields(), hasItems("field1", "field2", "field3"));
+    }
+
+    @Test
+    void shouldThrowExceptionWithBracketsMixtureWrongLocation() {
+        assertInvalidShowCondition("field1= \"ABC AND XYZ\"  AND field2(=\"(some value)\" OR field3=\"some value\")");
+    }
+
+    @Test
+    void shouldThrowExceptionWithBracketsMixtureMissMatchOpeningClosing() {
+        assertInvalidShowCondition("field1= \"ABC AND XYZ\"  AND ((field2=\"(some value)\" OR field3=\"some value\")");
+    }
+
+
+    @Test
     void shouldThrowExceptionWhenAndConditionIsIncomplete() {
         assertThrows(InvalidShowConditionException.class, () -> classUnderTest
             .parseShowCondition("field1=\"ABC\" AND aa"));
