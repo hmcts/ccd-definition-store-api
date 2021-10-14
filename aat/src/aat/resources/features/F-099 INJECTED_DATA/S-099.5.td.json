@@ -5,7 +5,7 @@
 	"specs": [
 		"an active profile in CCD",
 		"contains correctly configured CaseEventToFields tab with a field in the FieldShowCondition column, value starting with INJECTED_DATA",
-    "has the 400 Bad Request code"
+    "has the 422 Bad Request code"
 	],
   "request": {
     "body": {
@@ -18,18 +18,15 @@
     }
   },
   "expectedResponse": {
-    "responseCode": 400,
+    "responseCode": 422,
     "responseMessage": "Bad Request",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
-      "Content-Type": "application/json"
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
     },
-    "body" : {
-      "timestamp" : "[[ANYTHING_PRESENT]]",
-      "status" : 400,
-      "error" : "Bad Request",
-      "message" : "Invalid Post State Condition CaseApproved(TextField=\"showmethemoney\" AND TextField3\"showpage5\")",
-      "path" : "/import"
+    "body": {
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- Unknown field '[INJECTED_DATA.TestField1]' for event 'createCase' in show condition: '[INJECTED_DATA.TestField1]=\"TTT\"' on tab 'CaseEventToFields'"
     }
   }
 }
