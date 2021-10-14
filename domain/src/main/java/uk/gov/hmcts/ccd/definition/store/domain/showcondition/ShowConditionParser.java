@@ -45,7 +45,8 @@ public class ShowConditionParser {
                 boolean containsOr = containsCondition(orConditionPattern.matcher(rawShowConditionString));
                 String conditionalOperator = (containsAnd && !containsOr) ? AND_OPERATOR : OR_OPERATOR;
                 List<String> conditionalOperatorList = new ArrayList<>();
-                String[] conditions = getConditions(rawShowConditionString, containsAnd, containsOr, conditionalOperatorList);
+                String[] conditions = getConditions(rawShowConditionString,
+                    containsAnd, containsOr, conditionalOperatorList);
                 validateParenthesis(rawShowConditionString, conditions);
                 Optional<ShowCondition> optShowCondition =
                     buildShowCondition(conditions, conditionalOperator, conditionalOperatorList);
@@ -64,7 +65,8 @@ public class ShowConditionParser {
         throw new InvalidShowConditionException(rawShowConditionString);
     }
 
-    private String[] getConditions(String rawShowConditionString, boolean containsAnd, boolean containsOr, List<String> conditionalOperatorList) {
+    private String[] getConditions(String rawShowConditionString,
+                                   boolean containsAnd, boolean containsOr, List<String> conditionalOperatorList) {
         String[] conditions;
         if (containsAnd && containsOr) {
             conditions = rawShowConditionString.split(BOTH_CONDITION_REGEX_SPLIT);
