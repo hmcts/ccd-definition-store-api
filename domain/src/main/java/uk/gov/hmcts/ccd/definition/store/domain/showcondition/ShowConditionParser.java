@@ -17,14 +17,13 @@ public class ShowConditionParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(ShowConditionParser.class);
 
+    private static final String BRACKET_REGEX = "[\\(|\\)]";
     private static final String AND_CONDITION_REGEX = "\\sAND\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String AND_OPERATOR = " AND ";
     private static final String OR_CONDITION_REGEX = "\\sOR\\s(?=(([^\"]*\"){2})*[^\"]*$)";
-    private static final String BOTH_CONDITION_REGEX =
-        "\\sAND\\s(?=(([^\"]*\"){2})*[^\"]*$)|\\sOR\\s(?=(([^\"]*\"){2})*[^\"]*$)";
+    private static final String BOTH_CONDITION_REGEX = "\\s(OR|AND)\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String BOTH_CONDITION_REGEX_SPLIT =
-        "((?=(\\sAND\\s(?=(([^\"]*\"){2})*[^\"]*$))|(\\sOR\\s(?=(([^\"]*\"){2})*[^\"]*$)))|"
-            + "(?<=(\\sAND\\s(?=(([^\"]*\"){2})*[^\"]*$))|(\\sOR\\s(?=(([^\"]*\"){2})*[^\"]*$))))";
+        "((?=(\\s(OR|AND)\\s(?=(([^\"]*\"){2})*[^\"]*$)))|(?<=(\\s(OR|AND)\\s(?=(([^\"]*\"){2})*[^\"]*$))))";
     private static final String OR_OPERATOR = " OR ";
     private static final Pattern EQUALITY_CONDITION_PATTERN_WITH_TRAILING_BRACKET = Pattern.compile(
         "\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\"\\)*)\\s*?");
@@ -44,26 +43,9 @@ public class ShowConditionParser {
 
                 boolean containsAnd = containsCondition(andConditionPattern.matcher(rawShowConditionString));
                 boolean containsOr = containsCondition(orConditionPattern.matcher(rawShowConditionString));
-                String conditionalOperator = AND_OPERATOR;
+                String conditionalOperator = (containsAnd && !containsOr) ? AND_OPERATOR : OR_OPERATOR;
                 List<String> conditionalOperatorList = new ArrayList<>();
-                String[] conditions;
-                if (containsAnd && containsOr) {
-                    conditions = rawShowConditionString.split(BOTH_CONDITION_REGEX_SPLIT);
-                    List<String> values = Arrays.asList(conditions);
-                    for (String value : values) {
-                        if (bothConditionPattern.matcher(value).find()) {
-                            conditionalOperatorList.add(value);
-                            conditions = ArrayUtils.removeElement(conditions, value);
-                        }
-                    }
-                } else if (containsOr) {
-                    conditions = rawShowConditionString.split(OR_CONDITION_REGEX);
-                    conditionalOperator = OR_OPERATOR;
-                } else if (containsAnd) {
-                    conditions = rawShowConditionString.split(AND_CONDITION_REGEX);
-                } else {
-                    conditions = rawShowConditionString.split(AND_CONDITION_REGEX);
-                }
+                String[] conditions = getConditions(rawShowConditionString, containsAnd, containsOr, conditionalOperatorList);
                 validateParenthesis(rawShowConditionString, conditions);
                 Optional<ShowCondition> optShowCondition =
                     buildShowCondition(conditions, conditionalOperator, conditionalOperatorList);
@@ -80,6 +62,27 @@ public class ShowConditionParser {
             // Do nothing; we're throwing InvalidShowConditionException below
         }
         throw new InvalidShowConditionException(rawShowConditionString);
+    }
+
+    private String[] getConditions(String rawShowConditionString, boolean containsAnd, boolean containsOr, List<String> conditionalOperatorList) {
+        String[] conditions;
+        if (containsAnd && containsOr) {
+            conditions = rawShowConditionString.split(BOTH_CONDITION_REGEX_SPLIT);
+            List<String> values = Arrays.asList(conditions);
+            for (String value : values) {
+                if (bothConditionPattern.matcher(value).find()) {
+                    conditionalOperatorList.add(value);
+                    conditions = ArrayUtils.removeElement(conditions, value);
+                }
+            }
+        } else if (containsOr) {
+            conditions = rawShowConditionString.split(OR_CONDITION_REGEX);
+        } else if (containsAnd) {
+            conditions = rawShowConditionString.split(AND_CONDITION_REGEX);
+        } else {
+            conditions = rawShowConditionString.split(AND_CONDITION_REGEX);
+        }
+        return conditions;
     }
 
     private boolean containsCondition(Matcher matcher) {
@@ -125,7 +128,7 @@ public class ShowConditionParser {
                                       String operator, final Matcher equalityMatcher) {
         showConditionBuilder
             .showConditionExpression(operator + parseEqualityCondition(equalityMatcher))
-            .field(getLeftHandSideOfEquals(equalityMatcher).replaceAll("\\(|\\)", ""));
+            .field(getLeftHandSideOfEquals(equalityMatcher).replaceAll(BRACKET_REGEX, ""));
         operator = conditionalOperator;
         return operator;
     }
@@ -150,33 +153,41 @@ public class ShowConditionParser {
         throws InvalidShowConditionException {
         if (rawConditionString.contains("(") || rawConditionString.contains(")")) {
             rawConditionString = rawConditionString.replace(" ", "");
-            boolean incorrectPosition = containsCondition(incorrectPoistionPattern.matcher(rawConditionString));
-            if (incorrectPosition) {
-                throw new InvalidShowConditionException(rawConditionString);
-            }
+            incorrectPosition(rawConditionString);
+            checkForMismatchInBrackets(rawConditionString, conditions);
+        }
+    }
 
-            long openBracketCounter = rawConditionString.codePoints().filter(ch -> ch == '(').count();
-            long closeBracketCounter = rawConditionString.codePoints().filter(ch -> ch == ')').count();
-            for (String string : conditions) {
-                Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN_WITHOUT_TRAILING_BRACKET.matcher(string);
-                Matcher notEqualityMatcher = NOT_EQUAL_CONDITION_PATTERN.matcher(string);
-                String value = "";
-                if (notEqualityMatcher.find()) {
-                    value = getRightHandSideOfEquals(notEqualityMatcher);
-                } else if (equalityMatcher.find()) {
-                    value = getRightHandSideOfEquals(equalityMatcher).trim();
-                }
-                for (int i = 0; i < value.length(); i++) {
-                    if (value.charAt(i) == '(') {
-                        openBracketCounter--;
-                    } else if (value.charAt(i) == ')') {
-                        closeBracketCounter--;
-                    }
+    private void checkForMismatchInBrackets(String rawConditionString, String[] conditions)
+        throws InvalidShowConditionException {
+        long openBracketCounter = rawConditionString.codePoints().filter(ch -> ch == '(').count();
+        long closeBracketCounter = rawConditionString.codePoints().filter(ch -> ch == ')').count();
+        for (String string : conditions) {
+            Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN_WITHOUT_TRAILING_BRACKET.matcher(string);
+            Matcher notEqualityMatcher = NOT_EQUAL_CONDITION_PATTERN.matcher(string);
+            String value = "";
+            if (notEqualityMatcher.find()) {
+                value = getRightHandSideOfEquals(notEqualityMatcher);
+            } else if (equalityMatcher.find()) {
+                value = getRightHandSideOfEquals(equalityMatcher).trim();
+            }
+            for (int i = 0; i < value.length(); i++) {
+                if (value.charAt(i) == '(') {
+                    openBracketCounter--;
+                } else if (value.charAt(i) == ')') {
+                    closeBracketCounter--;
                 }
             }
-            if (openBracketCounter != closeBracketCounter) {
-                throw new InvalidShowConditionException(rawConditionString);
-            }
+        }
+        if (openBracketCounter != closeBracketCounter) {
+            throw new InvalidShowConditionException(rawConditionString);
+        }
+    }
+
+    private void incorrectPosition(String rawConditionString) throws InvalidShowConditionException {
+        boolean incorrectPosition = containsCondition(incorrectPoistionPattern.matcher(rawConditionString));
+        if (incorrectPosition) {
+            throw new InvalidShowConditionException(rawConditionString);
         }
     }
 }
