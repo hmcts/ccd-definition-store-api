@@ -70,20 +70,20 @@ class ShowConditionParserTest {
     @Test
     void shouldParseAndConditionsCorrectly() throws InvalidShowConditionException {
         ShowCondition sc = classUnderTest.parseShowCondition(
-            "field1= \"ABC AND XYZ\"  AND field2=\"some value\" ");
+            "fieldA= \"ABC AND XYZ\"  AND fieldB=\"some value\" ");
 
-        assertThat(sc.getShowConditionExpression(), is("field1=\"ABC AND XYZ\" AND field2=\"some value\""));
-        assertThat(sc.getFields(), hasItems("field1", "field2"));
+        assertThat(sc.getShowConditionExpression(), is("fieldA=\"ABC AND XYZ\" AND fieldB=\"some value\""));
+        assertThat(sc.getFields(), hasItems("fieldA", "fieldB"));
     }
 
     @Test
     void shouldParseAndConditionsCorrectlyWithBothAndOr() throws InvalidShowConditionException {
         ShowCondition sc = classUnderTest.parseShowCondition(
-            "field1= \"ABC AND XYZ\" AND field2=\"some value\" OR field3=\"some value\"");
+            "fieldOne= \"ABC AND XYZ\" AND fieldTwo=\"some value\" OR fieldThree=\"some value\"");
 
         assertThat(sc.getShowConditionExpression(),
-            is("field1=\"ABC AND XYZ\" AND field2=\"some value\" OR field3=\"some value\""));
-        assertThat(sc.getFields(), hasItems("field1", "field2", "field3"));
+            is("fieldOne=\"ABC AND XYZ\" AND fieldTwo=\"some value\" OR fieldThree=\"some value\""));
+        assertThat(sc.getFields(), hasItems("fieldOne", "fieldTwo", "fieldThree"));
     }
 
     @Test
