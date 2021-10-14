@@ -1,0 +1,30 @@
+{
+	"_guid_": "S-099.1",
+	"_extends_": "F-099_Test_Base_data",
+	"title": "Import Definition file with [INJECTED_DATA.<value>] in FieldShowCondition column of the CaseTypeTab",
+	"specs": [
+    "an active profile in CCD",
+    "contains correctly configured CaseType tab with a field in the FieldShowCondition column, value starting with [INJECTED_DATA.]"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Case Definition data successfully imported"
+    }
+  }
+}
