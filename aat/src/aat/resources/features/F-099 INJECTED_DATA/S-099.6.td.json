@@ -4,7 +4,7 @@
 	"title": "must return a negative response in an attempt to import a definition file containing conditional event post state with invalid condition",
 	"specs": [
 		"an active profile in CCD",
-		"contains conditional event post state with invalid condition"
+		"contains correctly configured CaseEventToFields tab with a field in the PageShowCondition column, value starting with INJECTED_DATA"
 	],
   "request": {
     "body": {
