@@ -23,7 +23,7 @@ public class ShowConditionParser {
     private static final String OR_CONDITION_REGEX = "\\sOR\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String BOTH_CONDITION_REGEX = "\\s(OR|AND)\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String BOTH_CONDITION_REGEX_SPLIT =
-        "((?=(\\s(OR|AND)\\s(?=(([^\"]*\"){2})*[^\"]*$)))|(?<=(\\s(OR|AND)\\s(?=(([^\"]*\"){2})*[^\"]*$))))";
+        "((?=(" + BOTH_CONDITION_REGEX + ")))|(?<=(" + BOTH_CONDITION_REGEX + "))";
     private static final String OR_OPERATOR = " OR ";
     private static final Pattern EQUALITY_CONDITION_PATTERN_WITH_TRAILING_BRACKET = Pattern.compile(
         "\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\"\\)*)\\s*?");
