@@ -18,13 +18,17 @@ public class ShowConditionParser {
     private static final Logger LOG = LoggerFactory.getLogger(ShowConditionParser.class);
 
     private static final String BRACKET_REGEX = "[\\(|\\)]";
+    @SuppressWarnings("squid:S5998")
     private static final String BOTH_CONDITION_REGEX = "\\s(OR|AND)\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String BOTH_CONDITION_REGEX_SPLIT =
         "((?=(" + BOTH_CONDITION_REGEX + ")))|(?<=(" + BOTH_CONDITION_REGEX + "))";
+    @SuppressWarnings("squid:S5852")
     private static final Pattern EQUALITY_CONDITION_PATTERN_WITH_TRAILING_BRACKET = Pattern.compile(
         "\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\"\\)*)\\s*?");
+    @SuppressWarnings("squid:S5852")
     private static final Pattern NOT_EQUAL_CONDITION_PATTERN = Pattern.compile(
         "\\s*?(.*)\\s*?(!=|CONTAINS)\\s*?(\".*\")\\s*?");
+    @SuppressWarnings("squid:S5852")
     private static final Pattern EQUALITY_CONDITION_PATTERN_WITHOUT_TRAILING_BRACKET = Pattern.compile(
         "\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\")\\s*?");
     private static final String INCORRECT_POSITION_OF_PARENTHESIS_REGEX = "\\(=|=\\(|\\)=|=\\)|AND\\)|OR\\)";
