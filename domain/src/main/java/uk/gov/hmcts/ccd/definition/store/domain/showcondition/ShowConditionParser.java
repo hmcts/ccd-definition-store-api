@@ -60,14 +60,14 @@ public class ShowConditionParser {
 
     private String[] getConditions(String rawShowConditionString, List<String> conditionalOperatorList) {
         String[] conditions;
-            conditions = rawShowConditionString.split(BOTH_CONDITION_REGEX_SPLIT);
-            List<String> values = Arrays.asList(conditions);
-            for (String value : values) {
-                if (bothConditionPattern.matcher(value).find()) {
-                    conditionalOperatorList.add(value);
-                    conditions = ArrayUtils.removeElement(conditions, value);
-                }
+        conditions = rawShowConditionString.split(BOTH_CONDITION_REGEX_SPLIT);
+        List<String> values = Arrays.asList(conditions);
+        for (String value : values) {
+            if (bothConditionPattern.matcher(value).find()) {
+                conditionalOperatorList.add(value);
+                conditions = ArrayUtils.removeElement(conditions, value);
             }
+        }
         return conditions;
     }
 
@@ -149,7 +149,7 @@ public class ShowConditionParser {
         for (String string : conditions) {
             Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN_WITHOUT_TRAILING_BRACKET.matcher(string);
             String value = "";
-           if (equalityMatcher.find()) {
+            if (equalityMatcher.find()) {
                 value = getRightHandSideOfEquals(equalityMatcher).trim();
             }
             for (int i = 0; i < value.length(); i++) {

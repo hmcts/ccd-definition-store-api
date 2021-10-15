@@ -115,7 +115,7 @@ class ShowConditionParserTest {
         assertThat(sc.getShowConditionExpression(),
             is("field1=\"ABC AND XYZ\" AND ((field2=\"(some value)\" "
                 + "OR field3=\"some value\") OR field4=\"some value\")"));
-        assertThat(sc.getFields(), hasItems("field1", "field2", "field3",  "field4"));
+        assertThat(sc.getFields(), hasItems("field1", "field2", "field3", "field4"));
     }
 
     @Test
@@ -125,7 +125,7 @@ class ShowConditionParserTest {
 
         assertThat(sc.getShowConditionExpression(),
             is("(YesNoField=\"No\" AND (TextField=\"no\" OR TextAreaField=\"no\")) OR NumberField=\"1\""));
-        assertThat(sc.getFields(), hasItems("YesNoField", "TextField", "TextAreaField",  "NumberField"));
+        assertThat(sc.getFields(), hasItems("YesNoField", "TextField", "TextAreaField", "NumberField"));
     }
 
     @Test
@@ -212,11 +212,11 @@ class ShowConditionParserTest {
     void shouldParseMultipleContainsCorrectlyWithOR() throws InvalidShowConditionException {
         ShowCondition sc = classUnderTest.parseShowCondition(
             "field1 CONTAINS \"ABC,CDE,EFG,JKL\" OR  field2 CONTAINS"
-            + " \"1,3,5,7,88\"");
+                + " \"1,3,5,7,88\"");
 
         assertThat(sc.getShowConditionExpression(),
             is("field1CONTAINS\"ABC,CDE,EFG,JKL\" OR field2CONTAINS\"1,3,5,7,"
-            + "88\""));
+                + "88\""));
         assertThat(sc.getFields(), hasItems("field1", "field2"));
     }
 
