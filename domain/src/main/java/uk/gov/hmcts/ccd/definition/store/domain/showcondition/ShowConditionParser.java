@@ -17,7 +17,9 @@ public class ShowConditionParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(ShowConditionParser.class);
 
-    private static final String BRACKET_REGEX = "[\\(|\\)]";
+    private static final String BRACKET_REGEX = "[()]";
+    private static final char LEFT_BRACKET = '(';
+    private static final char RIGHT_BRACKET = ')';
     @SuppressWarnings("squid:S5998")
     private static final String BOTH_CONDITION_REGEX = "\\s(OR|AND)\\s(?=(([^\"]*\"){2})*[^\"]*$)";
     private static final String BOTH_CONDITION_REGEX_SPLIT =
@@ -34,14 +36,16 @@ public class ShowConditionParser {
     private static final String INCORRECT_POSITION_OF_PARENTHESIS_REGEX = "\\(=|=\\(|\\)=|=\\)|AND\\)|OR\\)";
     private static final String INCORRECT_POSITION_OF_CONDITION_REGEX = "^\\s?(AND|OR)\\s?";
 
-    private final Pattern bothConditionPattern = Pattern.compile(BOTH_CONDITION_REGEX);
-    private final Pattern incorrectPositionPattern = Pattern.compile(INCORRECT_POSITION_OF_PARENTHESIS_REGEX);
-    private final Pattern incorrectPositionConditionPattern = Pattern.compile(INCORRECT_POSITION_OF_CONDITION_REGEX);
+    private static final Pattern BRACKET_PATTERN = Pattern.compile(BRACKET_REGEX);
+    private static final Pattern BOTH_CONDITION_PATTERN = Pattern.compile(BOTH_CONDITION_REGEX);
+    private static final Pattern INCORRECT_POSITION_PATTERN = Pattern.compile(INCORRECT_POSITION_OF_PARENTHESIS_REGEX);
+    private static final Pattern INCORRECT_POSITION_CONDITION_PATTERN =
+        Pattern.compile(INCORRECT_POSITION_OF_CONDITION_REGEX);
 
     public ShowCondition parseShowCondition(String rawShowConditionString) throws InvalidShowConditionException {
         try {
             if (rawShowConditionString != null) {
-                incorrectPosition(rawShowConditionString, incorrectPositionConditionPattern);
+                validateCorrectPosition(rawShowConditionString, INCORRECT_POSITION_CONDITION_PATTERN);
                 List<String> conditionalOperatorList = new ArrayList<>();
                 String[] conditions = getConditions(rawShowConditionString, conditionalOperatorList);
                 validateParenthesis(rawShowConditionString, conditions);
@@ -63,13 +67,11 @@ public class ShowConditionParser {
     }
 
     private String[] getConditions(String rawShowConditionString, List<String> conditionalOperatorList) {
-        String[] conditions;
-        conditions = rawShowConditionString.split(BOTH_CONDITION_REGEX_SPLIT);
-        List<String> values = Arrays.asList(conditions);
-        for (String value : values) {
-            if (bothConditionPattern.matcher(value).find()) {
-                conditionalOperatorList.add(value);
-                conditions = ArrayUtils.removeElement(conditions, value);
+        String[] conditions = rawShowConditionString.split(BOTH_CONDITION_REGEX_SPLIT);
+        for (String condition : conditions) {
+            if (BOTH_CONDITION_PATTERN.matcher(condition).find()) {
+                conditionalOperatorList.add(condition);
+                conditions = ArrayUtils.removeElement(conditions, condition);
             }
         }
         return conditions;
@@ -139,17 +141,17 @@ public class ShowConditionParser {
 
     private void validateParenthesis(String rawConditionString, String[] conditions)
         throws InvalidShowConditionException {
-        if (rawConditionString.contains("(") || rawConditionString.contains(")")) {
+        if (containsCondition(BRACKET_PATTERN.matcher(rawConditionString))) {
             rawConditionString = rawConditionString.replace(" ", "");
-            incorrectPosition(rawConditionString, incorrectPositionPattern);
+            validateCorrectPosition(rawConditionString, INCORRECT_POSITION_PATTERN);
             checkForMismatchInBrackets(rawConditionString, conditions);
         }
     }
 
     private void checkForMismatchInBrackets(String rawConditionString, String[] conditions)
         throws InvalidShowConditionException {
-        long openBracketCounter = rawConditionString.codePoints().filter(ch -> ch == '(').count();
-        long closeBracketCounter = rawConditionString.codePoints().filter(ch -> ch == ')').count();
+        long openBracketCounter = rawConditionString.codePoints().filter(ch -> ch == LEFT_BRACKET).count();
+        long closeBracketCounter = rawConditionString.codePoints().filter(ch -> ch == RIGHT_BRACKET).count();
         for (String string : conditions) {
             Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN_WITHOUT_TRAILING_BRACKET.matcher(string);
             String value = "";
@@ -157,9 +159,9 @@ public class ShowConditionParser {
                 value = getRightHandSideOfEquals(equalityMatcher).trim();
             }
             for (int i = 0; i < value.length(); i++) {
-                if (value.charAt(i) == '(') {
+                if (value.charAt(i) == LEFT_BRACKET) {
                     openBracketCounter--;
-                } else if (value.charAt(i) == ')') {
+                } else if (value.charAt(i) == RIGHT_BRACKET) {
                     closeBracketCounter--;
                 }
             }
@@ -169,9 +171,9 @@ public class ShowConditionParser {
         }
     }
 
-    private void incorrectPosition(String rawConditionString, Pattern pattern) throws InvalidShowConditionException {
-        boolean incorrectPosition = containsCondition(pattern.matcher(rawConditionString));
-        if (incorrectPosition) {
+    private void validateCorrectPosition(String rawConditionString, Pattern pattern)
+        throws InvalidShowConditionException {
+        if (containsCondition(pattern.matcher(rawConditionString))) {
             throw new InvalidShowConditionException(rawConditionString);
         }
     }
