@@ -13,6 +13,9 @@ public enum InjectedField {
     }
 
     public static boolean isInjectedField(String reference) {
-        return Arrays.stream(values()).map(InjectedField::getReference).anyMatch(f -> reference.startsWith(f));
+        return Arrays.stream(values())
+            .map(InjectedField::getReference).anyMatch(
+                f -> reference.startsWith(f)
+                    && reference.endsWith("]"));
     }
 }
