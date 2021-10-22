@@ -4,7 +4,7 @@
 
 	<suppress>
 		<notes>
-				Declared as False positive on library com.nimbusds:lang-tag #3594 
+				Declared as False positive on library com.nimbusds:lang-tag #3594
 				https://github.com/jeremylong/DependencyCheck/issues/3594
 				CVE-2020-23171 Reference https://tools.hmcts.net/jira/browse/CCD-1868
 		</notes>
@@ -12,8 +12,8 @@
 		<cpe>cpe:/a:nim-lang:nim-lang</cpe>
 		<cve>CVE-2020-23171</cve>
 	</suppress>
-	
-	<suppress until="2021-10-25">
+
+	<suppress until="2021-11-25">
 		<notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security
 			(any version), see https://pivotal.io/security/cve-2018-1258
 			False
@@ -23,7 +23,7 @@
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
-	<suppress until="2021-10-25">
+	<suppress until="2021-11-25">
 		<notes>These CVE's are coming from Dhowden tag library and it impacts
 			only MP3/MP4/OGG/FLAC metadata parsing
 			library. Also it is declared as
@@ -37,7 +37,7 @@
 		<cve>CVE-2020-29245</cve>
 	</suppress>
 
-	<suppress until="2021-10-25">
+	<suppress until="2021-11-25">
 		<notes>Declared as False Positive on com.nimbusds:oauth2-oidc-sdk
 			#2866
 			https://github.com/jeremylong/DependencyCheck/issues/2866
@@ -50,6 +50,11 @@
 	<!-- Temporary suppression. Remove in the fix PR. -->
 	<suppress>
 		<cve>CVE-2021-22147</cve>
+	</suppress>
+
+	<suppress until="2021-11-25">
+		<notes>Suppress CVE affecting Tomcat temporarily until it can be addressed</notes>
+		<cve>CVE-2021-42340</cve>
 	</suppress>
 
 </suppressions>
