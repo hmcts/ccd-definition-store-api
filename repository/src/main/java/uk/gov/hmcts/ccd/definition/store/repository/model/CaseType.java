@@ -107,14 +107,12 @@ public class CaseType implements HasAcls {
 
     public String getCallbackGetCaseUrl() { return callbackGetCaseUrl; }
 
-    public void setCallbackGetCaseUrl(String CallbackGetCaseUrl) {
-        this.callbackGetCaseUrl = CallbackGetCaseUrl;
-    }
+    public void setCallbackGetCaseUrl(String callbackGetCaseUrl) { this.callbackGetCaseUrl = callbackGetCaseUrl; }
 
     public String getRetriesGetCaseUrl() { return retriesGetCaseUrl; }
 
-    public void setRetriesGetCaseUrl(String RetriesGetCaseUrl) {
-        this.retriesGetCaseUrl = RetriesGetCaseUrl;
+    public void setRetriesGetCaseUrl(String retriesGetCaseUrl) {
+        this.retriesGetCaseUrl = retriesGetCaseUrl;
     }
 
     public SecurityClassification getSecurityClassification() {
