@@ -151,7 +151,8 @@ public class CaseTypeParser {
 
     private WebhookEntity parseGetCaseWebhook(DefinitionDataItem caseTypeDefinition) {
 
-        return WebhookParser.parseWebhook(caseTypeDefinition, ColumnName.CALLBACK_GET_CASE_URL, ColumnName.RETRIES_GET_CASE_URL);
+        return WebhookParser.parseWebhook(caseTypeDefinition, ColumnName.CALLBACK_GET_CASE_URL,
+                                            ColumnName.RETRIES_GET_CASE_URL);
 
     }
 }
