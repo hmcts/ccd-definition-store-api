@@ -127,6 +127,7 @@ public class CaseTypeParser {
         caseType.setLiveFrom(caseTypeDefinition.getLocalDate(ColumnName.LIVE_FROM));
         caseType.setLiveTo(caseTypeDefinition.getLocalDate(ColumnName.LIVE_TO));
         caseType.setPrintWebhook(parsePrintWebhook(caseTypeDefinition));
+        caseType.setGetCaseWebhook(parseGetCaseWebhook(caseTypeDefinition));
 
         SecurityClassificationColumn securityClassificationColumn = caseTypeDefinition.getSecurityClassification();
         caseType.setSecurityClassification(securityClassificationColumn.getSecurityClassification());
@@ -146,5 +147,11 @@ public class CaseTypeParser {
         }
 
         return printWebhook;
+    }
+
+    private WebhookEntity parseGetCaseWebhook(DefinitionDataItem caseTypeDefinition) {
+
+        return WebhookParser.parseWebhook(caseTypeDefinition, ColumnName.CALLBACK_GET_CASE_URL, ColumnName.RETRIES_GET_CASE_URL);
+
     }
 }

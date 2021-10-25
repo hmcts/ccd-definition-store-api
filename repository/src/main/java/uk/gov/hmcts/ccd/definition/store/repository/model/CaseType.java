@@ -17,6 +17,10 @@ public class CaseType implements HasAcls {
     private List<CaseField> caseFields = new ArrayList<>();
     @JsonProperty("printable_document_url")
     private String printableDocumentsUrl;
+    @JsonProperty("callbackGetCaseUrl")
+    private String callbackGetCaseUrl;
+    @JsonProperty("retriesGetCaseUrl")
+    private String retriesGetCaseUrl;
     @JsonProperty("security_classification")
     private SecurityClassification securityClassification;
     private List<AccessControlList> acls = new ArrayList<>();
@@ -99,6 +103,18 @@ public class CaseType implements HasAcls {
 
     public void setPrintableDocumentsUrl(String printableDocumentsUrl) {
         this.printableDocumentsUrl = printableDocumentsUrl;
+    }
+
+    public String getCallbackGetCaseUrl() { return callbackGetCaseUrl; }
+
+    public void setCallbackGetCaseUrl(String CallbackGetCaseUrl) {
+        this.callbackGetCaseUrl = CallbackGetCaseUrl;
+    }
+
+    public String getRetriesGetCaseUrl() { return retriesGetCaseUrl; }
+
+    public void setRetriesGetCaseUrl(String RetriesGetCaseUrl) {
+        this.retriesGetCaseUrl = RetriesGetCaseUrl;
     }
 
     public SecurityClassification getSecurityClassification() {
