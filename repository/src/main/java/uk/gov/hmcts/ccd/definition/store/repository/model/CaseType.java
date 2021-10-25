@@ -105,11 +105,17 @@ public class CaseType implements HasAcls {
         this.printableDocumentsUrl = printableDocumentsUrl;
     }
 
-    public String getCallbackGetCaseUrl() { return callbackGetCaseUrl; }
+    public String getCallbackGetCaseUrl() {
+        return callbackGetCaseUrl;
+    }
 
-    public void setCallbackGetCaseUrl(String callbackGetCaseUrl) { this.callbackGetCaseUrl = callbackGetCaseUrl; }
+    public void setCallbackGetCaseUrl(String callbackGetCaseUrl) {
+        this.callbackGetCaseUrl = callbackGetCaseUrl;
+    }
 
-    public String getRetriesGetCaseUrl() { return retriesGetCaseUrl; }
+    public String getRetriesGetCaseUrl() {
+        return retriesGetCaseUrl;
+    }
 
     public void setRetriesGetCaseUrl(String retriesGetCaseUrl) {
         this.retriesGetCaseUrl = retriesGetCaseUrl;
