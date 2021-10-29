@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
+import lombok.extern.slf4j.Slf4j;
 import com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import com.microsoft.azure.storage.OperationContext;
 import com.microsoft.azure.storage.ResultContinuation;
 import com.microsoft.azure.storage.ResultSegment;
@@ -35,10 +35,9 @@ import java.util.stream.Collectors;
 import static java.util.Collections.sort;
 
 @Service
+@Slf4j
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
 public class AzureImportAuditsClient {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AzureImportAuditsClient.class);
 
     public static final String USER_ID = "UserID";
     public static final String CASE_TYPES = "CaseTypes";
@@ -75,20 +74,12 @@ public class AzureImportAuditsClient {
         String currentDateTime;
         Integer azureImportAuditsGetLimit = applicationParams.getAzureImportAuditsGetLimit();
 
-        int counter = 1;
+        int counter = azureImportAuditsGetLimit;
 
-        while (audits.size() < azureImportAuditsGetLimit) {
-            // audits.size() will be 0 initially new ArrayList etc.
-            // application.properties is defined as
-            // azure.storage.import_audits.get-limit=${AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT:20}
-            // i.e. get from environment or else default to 20
-            // ITHC (ithc.yaml) AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT: 0
-            // this is setting the environment variable AZURE_STORAGE_IMPORT_AUDITS_GET_LIMIT to 0
-            // When 20 and nothing in blob then this loop carries on indefinitely
+        while ((audits.size() < azureImportAuditsGetLimit) && counter > 0) {
 
             currentDateTime = localDateTime.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
 
-            //Should fetch current days, and historical 20 days definition files
             ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(currentDateTime,
                 FLAT_BLOB_LISTING,
                 ONLY_COMMITTED_BLOBS,
@@ -99,24 +90,16 @@ public class AzureImportAuditsClient {
 
             localDateTime = localDateTime.minus(1, ChronoUnit.DAYS);
 
-            // Only add to the audits array if ListBlobItems exist
             if (blobsPage != null && !blobsPage.getResults().isEmpty()) {
                 List<ImportAudit> auditsLastBatch = populateListOfAudits(blobsPage);
 
                 audits.addAll(auditsLastBatch);
+            } else {
+                log.error("No result segment(s) found for prefix {} "
+                        + currentDateTime);
             }
 
-            // cloudBlobContainer.listBlobsSegmented will return an empty list if prefixed value
-            // is not found, audits will remain at size 0.
-            // Need to break out of the while loop after processing max number of iterations.
-            if (counter == azureImportAuditsGetLimit) {
-                LOG.info("Exiting fetchLatestImportAudits, azureImportAuditsGetLimit:{}, "
-                        + "List<ImportAudit> size:{}",
-                    azureImportAuditsGetLimit, audits.size());
-                break;
-            }
-
-            counter++;
+            counter--;
         }
         sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
         return audits.stream().limit(azureImportAuditsGetLimit).collect(Collectors.toList());

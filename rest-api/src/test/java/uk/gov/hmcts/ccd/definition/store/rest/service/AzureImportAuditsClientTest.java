@@ -28,6 +28,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -61,9 +62,11 @@ public class AzureImportAuditsClientTest {
 
     private ResultSegment blobsPage;
 
+    final CloudBlobContainer cloudBlobContainer = mock(CloudBlobContainer.class);
+
     @Before
     public void setUp() throws StorageException {
-        final CloudBlobContainer cloudBlobContainer = mock(CloudBlobContainer.class);
+
         final ApplicationParams applicationParams = mock(ApplicationParams.class);
 
         b11 = mock(CloudBlockBlob.class);
@@ -159,6 +162,14 @@ public class AzureImportAuditsClientTest {
 
         final List<ImportAudit> audits = subject.fetchLatestImportAudits();
         assertThat(audits.size(), is(0));
+        verify(cloudBlobContainer, times(IMPORT_AUDITS_GET_LIMIT))
+            .listBlobsSegmented(anyString(),
+                eq(true),
+                any(EnumSet.class),
+                eq(Integer.MAX_VALUE),
+                eq(null),
+                eq(null),
+                eq(null));
     }
 
     private void verifyCloudBlockBlobBehaviour(CloudBlockBlob blob, BlobProperties properties) throws Exception {
