@@ -17,9 +17,9 @@ public class CaseType implements HasAcls {
     private List<CaseField> caseFields = new ArrayList<>();
     @JsonProperty("printable_document_url")
     private String printableDocumentsUrl;
-    @JsonProperty("callbackGetCaseUrl")
+    @JsonProperty("callback_get_case_url")
     private String callbackGetCaseUrl;
-    @JsonProperty("retriesGetCaseUrl")
+    @JsonProperty("retries_get_case_url")
     private String retriesGetCaseUrl;
     @JsonProperty("security_classification")
     private SecurityClassification securityClassification;

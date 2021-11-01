@@ -937,6 +937,8 @@
         }
       ],
       "printable_document_url": "[[ANYTHING_PRESENT]]",
+      "callback_get_case_url" : null,
+      "retries_get_case_url" : null,
       "security_classification": "PUBLIC"
     }
   }
