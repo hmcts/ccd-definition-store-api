@@ -75,8 +75,6 @@ public class SearchPartyRepositoryTest {
         );
     }
 
-
-
     private SearchPartyEntity createSearchPartyEntity(CaseTypeEntity caseType) {
         SearchPartyEntity searchPartyEntity = new SearchPartyEntity();
 
