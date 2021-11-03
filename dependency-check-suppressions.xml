@@ -52,9 +52,4 @@
 		<cve>CVE-2021-22147</cve>
 	</suppress>
 
-  <suppress until="2021-11-25">
-    <notes>Temp suppression to unblock pipeline.</notes>
-    <cve>CVE-2021-22096</cve>
-  </suppress>
-
 </suppressions>
