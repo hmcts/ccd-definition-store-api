@@ -76,7 +76,11 @@ public class AzureImportAuditsClient {
 
         int counter = azureImportAuditsGetLimit;
 
-        while ((audits.size() < azureImportAuditsGetLimit) && counter > 0) {
+        // Check 10 days at least + 5 days for each audit to collect.
+        int maxDaysToCheck = 10 + azureImportAuditsGetLimit * 5;
+        int daysChecked = 0;
+
+        while ((audits.size() < azureImportAuditsGetLimit) && (daysChecked <= maxDaysToCheck)) {
 
             currentDateTime = localDateTime.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
 
@@ -94,12 +98,13 @@ public class AzureImportAuditsClient {
                 List<ImportAudit> auditsLastBatch = populateListOfAudits(blobsPage);
 
                 audits.addAll(auditsLastBatch);
-            } else {
-                log.error("No result segment(s) found for prefix {} "
-                        + currentDateTime);
             }
 
-            counter--;
+            if (audits.isEmpty() && (daysChecked == maxDaysToCheck)) {
+                log.error("No import audits found over {} iterations", maxDaysToCheck);
+            }
+
+            daysChecked++;
         }
         sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
         return audits.stream().limit(azureImportAuditsGetLimit).collect(Collectors.toList());

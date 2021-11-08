@@ -66,7 +66,6 @@ public class AzureImportAuditsClientTest {
 
     @Before
     public void setUp() throws StorageException {
-
         final ApplicationParams applicationParams = mock(ApplicationParams.class);
 
         b11 = mock(CloudBlockBlob.class);
@@ -156,13 +155,17 @@ public class AzureImportAuditsClientTest {
     @Test
     public void shouldFetchNoImportAuditsWhenNoPrefixFound() throws Exception {
 
+        int maxDaysToCheck = 10 + IMPORT_AUDITS_GET_LIMIT * 5;
+        //maxDaysToCheck starts at 0
+        maxDaysToCheck = maxDaysToCheck + 1;
+
         when(blobsPage1.getResults()).thenReturn(newArrayList());
         when(blobsPage2.getResults()).thenReturn(newArrayList());
         when(blobsPage3.getResults()).thenReturn(newArrayList());
 
         final List<ImportAudit> audits = subject.fetchLatestImportAudits();
         assertThat(audits.size(), is(0));
-        verify(cloudBlobContainer, times(IMPORT_AUDITS_GET_LIMIT))
+        verify(cloudBlobContainer, times(maxDaysToCheck))
             .listBlobsSegmented(anyString(),
                 eq(true),
                 any(EnumSet.class),
