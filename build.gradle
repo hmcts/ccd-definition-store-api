@@ -69,7 +69,7 @@ ext {
     reformLogging= '5.1.1-BETA'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
-    tomcatVersion = '9.0.50!!'
+    tomcatVersion = '9.0.54!!'
     hibernateVersion = '5.4.24.Final!!'
     limits = [
             'instruction': 99,
