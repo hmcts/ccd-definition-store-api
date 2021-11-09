@@ -20,7 +20,7 @@ public class CaseType implements HasAcls {
     @JsonProperty("callback_get_case_url")
     private String callbackGetCaseUrl;
     @JsonProperty("retries_get_case_url")
-    private String retriesGetCaseUrl;
+    private List<Integer> retriesGetCaseUrl;
     @JsonProperty("security_classification")
     private SecurityClassification securityClassification;
     private List<AccessControlList> acls = new ArrayList<>();
@@ -113,11 +113,11 @@ public class CaseType implements HasAcls {
         this.callbackGetCaseUrl = callbackGetCaseUrl;
     }
 
-    public String getRetriesGetCaseUrl() {
+    public List<Integer> getRetriesGetCaseUrl() {
         return retriesGetCaseUrl;
     }
 
-    public void setRetriesGetCaseUrl(String retriesGetCaseUrl) {
+    public void setRetriesGetCaseUrl(List<Integer> retriesGetCaseUrl) {
         this.retriesGetCaseUrl = retriesGetCaseUrl;
     }
 
