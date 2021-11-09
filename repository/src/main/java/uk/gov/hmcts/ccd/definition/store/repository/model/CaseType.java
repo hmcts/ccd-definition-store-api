@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
@@ -114,7 +115,7 @@ public class CaseType implements HasAcls {
     }
 
     public List<Integer> getRetriesGetCaseUrl() {
-        return retriesGetCaseUrl;
+        return retriesGetCaseUrl == null ? Collections.emptyList() : retriesGetCaseUrl;
     }
 
     public void setRetriesGetCaseUrl(List<Integer> retriesGetCaseUrl) {
