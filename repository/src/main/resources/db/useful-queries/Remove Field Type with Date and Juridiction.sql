@@ -32,6 +32,17 @@ where
 group by 1, 2, 3
 order by 2 desc, 3 asc
 
+
+delete from field_type_list_item ftli
+where ftli.id in
+    (
+        select l.id from field_type_list_item l, field_type r
+        where
+            l.field_type_id=r.id
+            and r.created_at<=fieldTypeCreateAt
+            and r.jurisdiction_id != null
+    )
+
 delete from field_type ft where ft.jurisdiction_id!=null and created_at<=fieldTypeCreateAt
 
 delete from field_type ft where jurisdiction_id>0 and created_at<=fieldTypeCreateAt
