@@ -74,8 +74,6 @@ public class AzureImportAuditsClient {
         String currentDateTime;
         Integer azureImportAuditsGetLimit = applicationParams.getAzureImportAuditsGetLimit();
 
-        int counter = azureImportAuditsGetLimit;
-
         // Check 10 days at least + 5 days for each audit to collect.
         int maxDaysToCheck = 10 + azureImportAuditsGetLimit * 5;
         int daysChecked = 0;
@@ -100,11 +98,10 @@ public class AzureImportAuditsClient {
                 audits.addAll(auditsLastBatch);
             }
 
-            if (audits.isEmpty() && (daysChecked == maxDaysToCheck)) {
-                log.error("No import audits found over {} iterations", maxDaysToCheck);
-            }
-
             daysChecked++;
+        }
+        if (audits.isEmpty() && (daysChecked == maxDaysToCheck)) {
+            log.error("No import audits found over {} iterations", maxDaysToCheck);
         }
         sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
         return audits.stream().limit(azureImportAuditsGetLimit).collect(Collectors.toList());
