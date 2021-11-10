@@ -100,7 +100,7 @@ public class AzureImportAuditsClient {
 
             daysChecked++;
         }
-        if (audits.isEmpty() && (daysChecked == maxDaysToCheck)) {
+        if (audits.isEmpty()) {
             log.error("No import audits found over {} iterations", maxDaysToCheck);
         }
         sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
