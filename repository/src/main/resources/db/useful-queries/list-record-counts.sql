@@ -70,4 +70,13 @@ where
 group by 1, 2, 3
 order by 2 desc, 3 asc
 
+-- Query to return ALL case types for which a higher version already exists
+-- These should therefore be historical records
+SELECT ct.id, ct.created_at, ct.reference, ct.version FROM case_type ct INNER JOIN
+        (SELECT reference, MAX("version") AS MaxVersion
+        FROM case_type
+        GROUP BY reference) grouped_ct
+    ON ct.reference = grouped_ct.reference
+	AND (ct.version != grouped_ct.MaxVersion)
+
 
