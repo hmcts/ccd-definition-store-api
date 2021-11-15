@@ -1,47 +1,108 @@
--- Delete case type DO $$
+-- Delete case type
+-- This script does not guarantee retention of the most current
+-- version of any case type
+-- Use with caution
+DO $$
 DECLARE
-  caseTypeId constant varchar := '???';
+  --caseTypeReference is full name i.e. 'FT_MasterCaseType'
+  caseTypeReference constant varchar := '???';
 BEGIN
 
-  delete from event_case_field_complex_type where event_case_field_id in (
-  select id from event_case_field where event_id in
-    (
-        select id from event where case_type_id in (select id from case_type where reference = caseTypeId)
-    )
-  );
-  delete from event_case_field where event_id in (select id from event where case_type_id in (select id from case_type where reference = caseTypeId));
-  delete from challenge_question where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from display_group_case_field where display_group_id in (select id from display_group where case_type_id in (select id from case_type where reference = caseTypeId));
-  delete from case_field_acl where case_field_id in (select id from case_field where case_type_id in (select id from case_type where reference = caseTypeId));
-  delete from workbasket_case_field where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from workbasket_input_case_field where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from search_alias_field where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from search_result_case_field where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from search_input_case_field where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from search_cases_result_fields where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from complex_field_acl where case_field_id in (select id from case_field where case_type_id in (select id from case_type where reference = caseTypeId));
-  delete from case_field where case_type_id in (select id from case_type where reference = caseTypeId);
-
-  delete from display_group where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from event_webhook where event_id in (select id from event where case_type_id in (select id from case_type where reference = caseTypeId));
-
-  delete from webhook where id in (
-    select webhook_id from event_webhook where event_id in (
-        select id from event where case_type_id in (
-            select id from case_type where reference = caseTypeId
+  DELETE FROM event_case_field_complex_type WHERE event_case_field_id IN
+    (SELECT id FROM event_case_field WHERE event_id IN
+        (SELECT id FROM event WHERE case_type_id IN
+            (SELECT id from case_type WHERE reference = caseTypeReference)
         )
-    )
-  );
+    );
 
-  delete from event_pre_state where event_id in (select id from event where case_type_id in (select id from case_type where reference = caseTypeId));
-  delete from event_acl where event_id in (select id from event where case_type_id in (select id from case_type where reference = caseTypeId));
-  delete from event_post_state where case_event_id in (select id from event where case_type_id in (select id from case_type where reference = caseTypeId));
-  delete from event where case_type_id in (select id from case_type where reference = caseTypeId);
+  DELETE FROM event_case_field WHERE event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id from case_type WHERE reference = caseTypeReference)
+    );
 
-  delete from state_acl where state_id in (select id from state where case_type_id in (select id from case_type where reference = caseTypeId));
-  delete from state where case_type_id in (select id from case_type where reference = caseTypeId);
+  DELETE FROM challenge_question WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
 
-  delete from case_type_acl where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from role where case_type_id in (select id from case_type where reference = caseTypeId);
-  delete from case_type where reference = caseTypeId;
+  DELETE FROM display_group_case_field WHERE display_group_id IN
+    (SELECT id FROM display_group WHERE case_type_id IN
+        (SELECT id from case_type WHERE reference = caseTypeReference)
+    );
+
+  DELETE FROM case_field_acl WHERE case_field_id IN
+    (SELECT id FROM case_field WHERE case_type_id IN
+        (SELECT id from case_type WHERE reference = caseTypeReference)
+    );
+
+  DELETE FROM workbasket_case_field WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM workbasket_input_case_field WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM search_alias_field WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM search_result_case_field WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM search_input_case_field WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM search_cases_result_fields WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM complex_field_acl WHERE case_field_id IN
+    (SELECT id FROM case_field WHERE case_type_id IN
+        (SELECT id from case_type WHERE reference = caseTypeReference)
+    );
+
+  DELETE FROM case_field WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM display_group WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM event_webhook WHERE event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id from case_type WHERE reference = caseTypeReference)
+    );
+
+  DELETE FROM event_pre_state WHERE event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id from case_type WHERE reference = caseTypeReference)
+    );
+
+  DELETE FROM event_acl WHERE event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id from case_type WHERE reference = caseTypeReference)
+    );
+
+  DELETE FROM event_post_state WHERE case_event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id from case_type WHERE reference = caseTypeReference)
+    );
+
+  DELETE FROM event WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM state_acl WHERE state_id IN
+    (SELECT id FROM state WHERE case_type_id IN
+        (SELECT id from case_type WHERE reference = caseTypeReference)
+    );
+
+  DELETE FROM state WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM case_type_acl WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM role WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM role_to_access_profiles WHERE case_type_id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
+  DELETE FROM case_type WHERE id IN
+    (SELECT id from case_type WHERE reference = caseTypeReference);
+
 END $$;

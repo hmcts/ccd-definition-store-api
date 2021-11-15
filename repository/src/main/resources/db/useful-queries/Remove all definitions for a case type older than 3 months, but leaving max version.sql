@@ -1,70 +1,150 @@
--- Delete case type DO $$
+-- Delete case type by caseTypeReference retaining
+-- most current version and versions created within X months
+
+-- Agree with business any retention period for historical versions
+DO $$
 DECLARE
-  caseTypeId constant varchar := '???';
+  --caseTypeReference can be partial string for a like comparison
+  --i.e 'BEFTA_'
+  caseTypeReference constant varchar := '???';
+
 BEGIN
 
+  --view containing historical case type versions excluding the latest version
+  --These are possible candidates for deletion
   DROP VIEW IF EXISTS view__case_type_to_remove;
 
   CREATE or REPLACE VIEW view__case_type_to_remove AS
   (
     SELECT ct.id, ct.created_at, ct.reference, ct.version FROM case_type ct INNER JOIN
         (SELECT reference, MAX("version") AS MaxVersion
-        FROM case_type
-        GROUP BY reference) grouped_ct
+            FROM case_type
+            GROUP BY reference) grouped_ct
     ON ct.reference = grouped_ct.reference
-    AND (ct.version != grouped_ct.MaxVersion AND ct.created_at <= 'now'::timestamp - '3 MONTH'::interval)
+    AND (ct.version != grouped_ct.MaxVersion AND ct.created_at <= 'now'::timestamp - '3 MONTH'::INterval)
   );
 
-  delete from event_case_field_complex_type where event_case_field_id in (select id from event_case_field where event_id in
-        (select id from event where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId)));
+  --Store just the filtered case_type ids to be used for deletion purposes
+  CREATE TEMP TABLE tmp_case_type_ids ON COMMIT DROP AS
+    --SELECT id FROM view__case_type_to_remove WHERE reference like CONCAT('%', caseTypeReference, '%');
+    SELECT id FROM view__case_type_to_remove WHERE reference LIKE '%' || caseTypeReference || '%';
 
-  delete from event_case_field where event_id in (select id from event where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId));
+  --All DELETION queries below use ids stored in TEMP table 'tmp_case_type_ids'
 
-  delete from challenge_question where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM event_case_field_complex_type WHERE event_case_field_id IN
+    (SELECT id FROM event_case_field WHERE event_id IN
+        (SELECT id FROM event WHERE case_type_id IN
+            --(SELECT id FROM view__case_type_to_remove WHERE reference like CONCAT('%', caseTypeReference, '%'))
+            (SELECT id FROM tmp_case_type_ids)
+        )
+    );
 
-  delete from display_group_case_field where display_group_id in (select id from display_group where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId));
+  DELETE FROM event_case_field WHERE event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids)
 
-  delete from case_field_acl where case_field_id in (select id from case_field where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId));
+        --To remove all historical versions
+        --(SELECT id FROM view__case_type_to_remove)
+    );
 
-  delete from workbasket_case_field where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM challenge_question WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from workbasket_input_case_field where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM display_group_case_field WHERE display_group_id IN
+    (SELECT id FROM display_group WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids)
+    );
 
-  delete from search_alias_field where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM case_field_acl WHERE case_field_id IN
+    (SELECT id FROM case_field WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids)
+    );
 
-  delete from search_result_case_field where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM workbasket_case_field WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from search_input_case_field where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM workbasket_input_case_field WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from search_cases_result_fields where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM search_alias_field WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from complex_field_acl where case_field_id in (select id from case_field where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId));
+  DELETE FROM search_result_case_field WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from case_field where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM search_input_case_field WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from display_group where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM search_cases_result_fields WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from event_webhook where event_id in (select id from event where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId));
+  DELETE FROM complex_field_acl WHERE case_field_id IN
+    (SELECT id FROM case_field WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids)
+    );
 
-  delete from event_pre_state where event_id in (select id from event where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId));
+  --takes very long to complete
+  --fk_case_field_case_type_id is not indexed by default
+  DELETE FROM case_field WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from event_acl where event_id in (select id from event where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId));
+  DELETE FROM display_group WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from event_post_state where case_event_id in (select id from event where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId));
+  DELETE FROM noc_config WHERE case_type_id IN
+      (SELECT id FROM tmp_case_type_ids);
 
-  delete from event where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM event_webhook WHERE event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids)
+    );
 
-  delete from state_acl where state_id in (select id from state where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId));
+  DELETE FROM event_pre_state WHERE event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids)
+    );
 
-  delete from state where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM event_acl WHERE event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids)
+    );
 
-  delete from case_type_acl where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM event_post_state WHERE case_event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids)
+    );
 
-  delete from role where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  --Takes very long to complete
+  --fk_event_case_type_id is not indexed by default
+  DELETE FROM event WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
 
-  delete from role_to_access_profiles where case_type_id in (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM state_acl WHERE state_id IN
+    (SELECT id FROM state WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids)
+    );
 
-  delete from case_type where id IN (select id from view__case_type_to_remove where reference = caseTypeId);
+  DELETE FROM state WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
+
+  DELETE FROM case_type_acl WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
+
+  --Takes very long to complete (> 8min in AAT)
+  --fk_role_case_type_id_case_type_id is indexed by default
+  DELETE FROM role WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
+
+  DELETE FROM role_to_access_profiles WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
+
+  DELETE FROM noc_config WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids);
+
+  --Takes very long to complete
+  --fk_case_field_case_type_id is not indexed by default
+  DELETE FROM case_type WHERE id IN
+    (SELECT id FROM tmp_case_type_ids);
 
   DROP VIEW IF EXISTS view__case_type_to_remove;
 

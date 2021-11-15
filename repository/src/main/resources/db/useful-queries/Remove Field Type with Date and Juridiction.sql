@@ -3,48 +3,47 @@ DECLARE
   fieldTypeCreateAt constant varchar := 'yyyy-mm-dd';
 
 --list all field_type created on or before yyyy-mm-dd
-select count(*) from field_type where created_at<=fieldTypeCreateAt;
+SELECT COUNT(*) FROM field_type WHERE created_at<=fieldTypeCreateAt;
 
---list all field_type created on or before yyyy-mm-dd where jurisdiction_id is not null
-select * from field_type ft where ft.jurisdiction_id!=null and created_at<=fieldTypeCreateAt;
+--list all field_type created on or before yyyy-mm-dd WHERE jurisdiction_id is not null
+SELECT * FROM field_type ft WHERE ft.jurisdiction_id!=null AND created_at<=fieldTypeCreateAt;
 
---list all field_type created on or before yyyy-mm-dd where jurisdiction_id is null
-select count(*) from field_type ft where ft.jurisdiction_id=null and created_at<=fieldTypeCreateAt;
+--list all field_type created on or before yyyy-mm-dd WHERE jurisdiction_id is null
+SELECT COUNT(*) FROM field_type ft WHERE ft.jurisdiction_id=null AND created_at<=fieldTypeCreateAt;
 
 --aggregation of jurisdiction_id vs frequency
-select jurisdiction_id, count(*) from field_type group by 1;
+SELECT jurisdiction_id, COUNT(*) FROM field_type GROUP BY 1;
 
 --aggregation of jurisdiction_id vs frequency created on or before yyyy-mm-dd
-select jurisdiction_id, count(*) from field_type where created_at<=fieldTypeCreateAt group by 1;
+SELECT jurisdiction_id, COUNT(*) FROM field_type WHERE created_at<=fieldTypeCreateAt GROUP BY 1;
 
---list field_type used by a jurisdiction created on or before yyyy-mm-dd
-select count(*) from field_type ft where jurisdiction_id>0 and created_at<=fieldTypeCreateAt;
+--list field_type used BY a jurisdiction created on or before yyyy-mm-dd
+SELECT COUNT(*) FROM field_type ft WHERE jurisdiction_id>0 AND created_at<=fieldTypeCreateAt;
 
---list count of rows in table: field_type
-select count(*) from field_type;
+--list COUNT of rows IN table: field_type
+SELECT COUNT(*) FROM field_type;
 
---list case_type id, reference and created date where field type not used
-select ct.id, ct.reference, ct.created_at, count(cf.*) as "Case Field Count"
-from case_type ct, case_field cf
-where
+--list case_type id, reference AND created date WHERE field type not used
+SELECT ct.id, ct.reference, ct.created_at, COUNT(cf.*) AS "Case Field Count"
+FROM case_type ct, case_field cf
+WHERE
 	ct.id = cf.case_type_id
-    and (select count(*) from field_type ft where ft.id=cf.field_type_id)=0
-group by 1, 2, 3
-order by 2 desc, 3 asc
+    AND (SELECT COUNT(*) FROM field_type ft WHERE ft.id=cf.field_type_id)=0
+GROUP BY 1, 2, 3
+order BY 2 desc, 3 asc
 
-
-delete from field_type_list_item ftli
-where ftli.id in
+delete FROM field_type_list_item ftli
+WHERE ftli.id IN
     (
-        select l.id from field_type_list_item l, field_type r
-        where
+        SELECT l.id FROM field_type_list_item l, field_type r
+        WHERE
             l.field_type_id=r.id
-            and r.created_at<=fieldTypeCreateAt
-            and r.jurisdiction_id != null
+            AND r.created_at<=fieldTypeCreateAt
+            AND r.jurisdiction_id != null
     )
 
-delete from field_type ft where ft.jurisdiction_id!=null and created_at<=fieldTypeCreateAt
+delete FROM field_type ft WHERE ft.jurisdiction_id!=null AND created_at<=fieldTypeCreateAt
 
-delete from field_type ft where jurisdiction_id>0 and created_at<=fieldTypeCreateAt
+delete FROM field_type ft WHERE jurisdiction_id>0 AND created_at<=fieldTypeCreateAt
 
 
