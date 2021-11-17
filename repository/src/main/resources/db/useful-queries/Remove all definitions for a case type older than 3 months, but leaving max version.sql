@@ -26,15 +26,17 @@ BEGIN
 
   --Store just the filtered case_type ids to be used for deletion purposes
   CREATE TEMP TABLE tmp_case_type_ids ON COMMIT DROP AS
-    --SELECT id FROM view__case_type_to_remove WHERE reference like CONCAT('%', caseTypeReference, '%');
     SELECT id FROM view__case_type_to_remove WHERE reference LIKE '%' || caseTypeReference || '%';
 
   --All DELETION queries below use ids stored in TEMP table 'tmp_case_type_ids'
+  --To remove all historical versions (therefore not use the filtered list of ids within TEMP table)
+  --Replace tmp_case_type_ids with view__case_type_to_remove in all of the statements below. This will
+  --delete all historical versions older than X months (highest and most current version is not processed
+  --in this script.
 
   DELETE FROM event_case_field_complex_type WHERE event_case_field_id IN
     (SELECT id FROM event_case_field WHERE event_id IN
         (SELECT id FROM event WHERE case_type_id IN
-            --(SELECT id FROM view__case_type_to_remove WHERE reference like CONCAT('%', caseTypeReference, '%'))
             (SELECT id FROM tmp_case_type_ids)
         )
     );
@@ -42,9 +44,6 @@ BEGIN
   DELETE FROM event_case_field WHERE event_id IN
     (SELECT id FROM event WHERE case_type_id IN
         (SELECT id FROM tmp_case_type_ids)
-
-        --To remove all historical versions
-        --(SELECT id FROM view__case_type_to_remove)
     );
 
   DELETE FROM challenge_question WHERE case_type_id IN
