@@ -8,9 +8,9 @@ import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
@@ -19,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
@@ -26,6 +27,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @Api(value = "/api/data")
@@ -59,6 +61,17 @@ public class CaseDefinitionController {
     public CaseType dataCaseTypeIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
         return caseTypeService.findByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+    @GetMapping(value = "/data/case-types", produces = {"application/json"})
+    @ApiOperation(value = "Get caseTypes", response = CaseType.class, responseContainer = "List")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "A Case Type Schema"),
+        @ApiResponse(code = 200, message = "Unexpected error")
+    })
+    public List<CaseType> dataCaseTypeByIds(
+        @ApiParam(value = "List of case references references") @RequestParam("ids") List<String> ids) {
+        return caseTypeService.findByCaseTypeIds(ids);
     }
 
     @GetMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}",
@@ -141,5 +154,23 @@ public class CaseDefinitionController {
         required = true) @PathVariable("ctid")
                                                                  String id) {
         return caseTypeService.findVersionInfoByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+
+    @GetMapping(value = "/data/jurisdictions/case-type-ids")
+    @ApiOperation(value = "Get case-type-ids by jurisdiction's id", response = String.class, responseContainer = "List")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of cases ids")
+    })
+    public List<String> findCasesByJurisdictions(
+        @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
+
+        LOG.debug("received find jurisdictions request with ids: {}", idsOptional);
+        final var  jurisdictions = idsOptional.map(ids -> jurisdictionService.getAll(ids))
+            .orElseGet(jurisdictionService::getAll);
+
+        return jurisdictions.stream().flatMap(jurisdiction -> jurisdiction.getCaseTypes().stream().map(
+            caseTypeLite -> caseTypeLite.getId())
+        ).collect(Collectors.toList());
     }
 }
