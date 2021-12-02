@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
+import lombok.extern.slf4j.Slf4j;
 import com.google.common.collect.Lists;
+
 import com.microsoft.azure.storage.OperationContext;
 import com.microsoft.azure.storage.ResultContinuation;
 import com.microsoft.azure.storage.ResultSegment;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.sort;
 
 @Service
+@Slf4j
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
 public class AzureImportAuditsClient {
 
@@ -71,8 +74,14 @@ public class AzureImportAuditsClient {
         String currentDateTime;
         Integer azureImportAuditsGetLimit = applicationParams.getAzureImportAuditsGetLimit();
 
-        while (audits.size() < azureImportAuditsGetLimit) {
+        // Check 10 days at least + 5 days for each audit to collect.
+        int maxDaysToCheck = 10 + azureImportAuditsGetLimit * 5;
+        int daysChecked = 0;
+
+        while ((audits.size() < azureImportAuditsGetLimit) && (daysChecked <= maxDaysToCheck)) {
+
             currentDateTime = localDateTime.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
+
             ResultSegment<ListBlobItem> blobsPage = cloudBlobContainer.listBlobsSegmented(currentDateTime,
                 FLAT_BLOB_LISTING,
                 ONLY_COMMITTED_BLOBS,
@@ -80,10 +89,19 @@ public class AzureImportAuditsClient {
                 NO_CONTINUATION_TOKEN,
                 NO_OPTIONS,
                 NO_OP_CONTEXT);
-            localDateTime = localDateTime.minus(1, ChronoUnit.DAYS);
-            List<ImportAudit> auditsLastBatch = populateListOfAudits(blobsPage);
 
-            audits.addAll(auditsLastBatch);
+            localDateTime = localDateTime.minus(1, ChronoUnit.DAYS);
+
+            if (blobsPage != null && !blobsPage.getResults().isEmpty()) {
+                List<ImportAudit> auditsLastBatch = populateListOfAudits(blobsPage);
+
+                audits.addAll(auditsLastBatch);
+            }
+
+            daysChecked++;
+        }
+        if (audits.isEmpty()) {
+            log.error("No import audits found over {} iterations", maxDaysToCheck);
         }
         sort(audits, (o1, o2) -> o2.getOrder().compareTo(o1.getOrder()));
         return audits.stream().limit(azureImportAuditsGetLimit).collect(Collectors.toList());
