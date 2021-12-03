@@ -130,4 +130,20 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     }
 
 
+    @Test
+    public void returnsNoValidationErrorsWhenShowConditionIncludesInjectedField() throws InvalidShowConditionException {
+        String field = "[INJECTED_DATA.test]";
+        complexField.setShowCondition("someShowCondition");
+        FieldTypeEntity complexFieldType = mock(FieldTypeEntity.class);
+        when(complexFieldType.hasComplexField(field)).thenReturn(false);
+        complexField.setComplexFieldType(complexFieldType);
+        ShowCondition sc = new ShowCondition.Builder().showConditionExpression("parsedSC").field(field).build();
+        when(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .thenReturn(sc);
+
+        ValidationResult result = testObj.validate(complexField, mockValidationContext);
+
+        assertThat(result.isValid(), is(true));
+    }
+
 }
