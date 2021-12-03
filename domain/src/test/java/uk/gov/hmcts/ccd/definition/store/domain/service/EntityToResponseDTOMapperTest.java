@@ -373,6 +373,8 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(caseType.getName(), caseTypeEntity.getName());
             assertEquals(caseType.getSecurityClassification(), caseTypeEntity.getSecurityClassification());
             assertEquals(caseType.getPrintableDocumentsUrl(), caseTypeEntity.getPrintWebhook().getUrl());
+            assertEquals(caseType.getCallbackGetCaseUrl(), caseTypeEntity.getGetCaseWebhook().getUrl());
+            assertEquals(3, caseType.getRetriesGetCaseUrl().size());
 
             assertThat(caseType.getJurisdiction(), is(sameInstance(jurisdiction)));
 
@@ -407,12 +409,14 @@ class  EntityToResponseDTOMapperTest {
             assertNull(caseType.getName());
             assertNull(caseType.getSecurityClassification());
             assertNull(caseType.getPrintableDocumentsUrl());
+            assertNull(caseType.getCallbackGetCaseUrl());
             assertNull(caseType.getJurisdiction());
 
             assertEquals(0, caseType.getEvents().size());
             assertEquals(0, caseType.getStates().size());
             assertEquals(0, caseType.getAcls().size());
             assertEquals(0, caseType.getCaseFields().size());
+            assertEquals(0, caseType.getRetriesGetCaseUrl().size());
         }
 
         private CaseTypeEntity caseTypeEntity(JurisdictionEntity jurisdiction,
@@ -432,6 +436,11 @@ class  EntityToResponseDTOMapperTest {
             WebhookEntity webhookEntity = new WebhookEntity();
             webhookEntity.setUrl("Document Print URL");
             caseTypeEntity.setPrintWebhook(webhookEntity);
+
+            WebhookEntity getCaseWebhookEntity = new WebhookEntity();
+            getCaseWebhookEntity.setUrl("Get Case URL");
+            getCaseWebhookEntity.setTimeouts(asList(3, 5, 7));
+            caseTypeEntity.setGetCaseWebhook(getCaseWebhookEntity);
 
             caseTypeEntity.setJurisdiction(jurisdiction);
             caseTypeEntity.addEvents(events);

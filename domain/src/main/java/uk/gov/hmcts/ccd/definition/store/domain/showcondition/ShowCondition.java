@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.InjectedField;
 
 @ToString
 public class ShowCondition {
@@ -27,11 +28,12 @@ public class ShowCondition {
     }
 
     public List<String> getFieldsWithSubtypes() {
-        return fields.stream().filter(field -> field.contains(".")).collect(Collectors.toList());
+        return fields.stream().filter(field -> field.contains(".")
+            && !field.startsWith(InjectedField.INJECTED_DATA.getReference())).collect(Collectors.toList());
     }
 
     private static String dropSubtypes(String field) {
-        if (field.contains(".")) {
+        if (field.contains(".") && !field.startsWith(InjectedField.INJECTED_DATA.getReference())) {
             return field.substring(0, field.indexOf('.'));
         } else {
             return field;
