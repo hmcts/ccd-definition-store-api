@@ -3,8 +3,6 @@ package uk.gov.hmcts.ccd.definitionstore.befta;
 import uk.gov.hmcts.befta.dse.ccd.CcdEnvironment;
 import uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore;
 
-import java.util.Locale;
-
 public class HighLevelDataSetupApp extends DataLoaderToDefinitionStore {
 
     public HighLevelDataSetupApp(CcdEnvironment dataSetupEnvironment) {
