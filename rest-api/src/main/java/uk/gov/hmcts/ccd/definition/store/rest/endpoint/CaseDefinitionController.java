@@ -19,7 +19,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
