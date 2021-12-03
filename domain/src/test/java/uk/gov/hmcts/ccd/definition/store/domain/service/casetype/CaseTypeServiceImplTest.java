@@ -481,8 +481,10 @@ class CaseTypeServiceImplTest {
     class FindByCaseTypeIdTests {
 
         private static final String caseTypeId = "caseTypeID";
+        private final List<String> caseTypeIds = Arrays.asList(caseTypeId,caseTypeId);
         private final CaseType caseType = new CaseType();
         private final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        private final List<CaseTypeEntity> caseTypeEntities = Arrays.asList(caseTypeEntity,caseTypeEntity);
         private final CaseField metadataField = new CaseField();
 
         @BeforeEach
@@ -495,7 +497,19 @@ class CaseTypeServiceImplTest {
             when(caseTypeRepository.findCurrentVersionForReference(caseTypeId)).thenReturn(Optional.of(caseTypeEntity));
             when(dtoMapper.map(caseTypeEntity)).thenReturn(caseType);
             when(metadataFieldService.getCaseMetadataFields()).thenReturn(singletonList(metadataField));
+            when(caseTypeRepository.findAllLatestVersions(caseTypeIds)).thenReturn(caseTypeEntities);
         }
+
+        @Test
+        @DisplayName("Should call the mapper with the values returned from the repository and return the mapped value")
+        void shouldCallMapperAndReturnResult_whenRepositoryReturnsAList() {
+            List<CaseType> caseTypes = classUnderTest.findByCaseTypeIds(caseTypeIds);
+
+            verify(caseTypeRepository, times(1)).findAllLatestVersions(same(caseTypeIds));
+            verify(dtoMapper, times(2)).map(same(caseTypeEntity));
+            assertFalse(caseTypes.isEmpty());
+        }
+
 
         @Test
         @DisplayName("Should call the mapper with the value returned from the repository and return the mapped value")
