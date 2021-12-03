@@ -10,7 +10,7 @@ public class HighLevelDataSetupApp extends DataLoaderToDefinitionStore {
     }
 
     public static void main(String[] args) throws Throwable {
-        main(HighLevelDataSetupApp.class, args);
+        //main(HighLevelDataSetupApp.class, args);
     }
 
 }
