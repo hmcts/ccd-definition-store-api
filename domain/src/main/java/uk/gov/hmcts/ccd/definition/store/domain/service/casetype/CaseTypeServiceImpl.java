@@ -92,10 +92,9 @@ public class CaseTypeServiceImpl implements CaseTypeService {
 
     @Transactional
     @Override
-    public List<CaseType> findByCaseTypeIds(List<String> ids){
-
+    public List<CaseType> findByCaseTypeIds(List<String> ids) {
         return repository.findAllLatestVersions(ids).stream()
-            .map( caseTypeEntity -> dtoMapper.map(caseTypeEntity))
+            .map(caseTypeEntity -> dtoMapper.map(caseTypeEntity))
             .map(caseType -> addMetadataFields(caseType))
             .collect(Collectors.toList());
     }
