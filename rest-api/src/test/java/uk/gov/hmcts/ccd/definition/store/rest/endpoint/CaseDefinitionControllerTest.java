@@ -272,13 +272,13 @@ public class CaseDefinitionControllerTest {
         @Test
         @DisplayName("Should return the CaseType ids for Jurisdictions")
         public void shouldReturnCaseType_for_jurisdictions() {
-            val itemNames = Arrays.asList("get-test");
             val jurisdiction = new Jurisdiction();
             val caseTypeLittle = new CaseTypeLite();
             caseTypeLittle.setId("id");
             jurisdiction.setId("id");
             jurisdiction.setCaseTypes(Arrays.asList(caseTypeLittle));
             when(jurisdictionService.getAll(any())).thenReturn(Arrays.asList(jurisdiction));
+            val itemNames = Arrays.asList("get-test");
             val result = subject.findCasesByJurisdictions(Optional.of(itemNames));
             assertFalse(result.isEmpty());
         }
