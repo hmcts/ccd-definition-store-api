@@ -1,4 +1,4 @@
-@F-099
+@F-099 @Ignore
 Feature: F-099: Search Party (Global Search)
 
   Background:

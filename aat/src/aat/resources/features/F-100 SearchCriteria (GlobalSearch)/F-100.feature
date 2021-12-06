@@ -1,4 +1,4 @@
-@F-100
+@F-100 @Ignore
 Feature: F-100: Search Criteria (Global Search)
 
   Background:
