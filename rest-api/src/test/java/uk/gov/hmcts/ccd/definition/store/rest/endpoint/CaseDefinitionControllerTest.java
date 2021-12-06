@@ -16,6 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAcc
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
 
@@ -264,4 +265,36 @@ public class CaseDefinitionControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("Test the findCasesByJurisdictions method")
+    class FindCasesByJurisdictionsTests {
+
+        @Test
+        @DisplayName("Should return the CaseType ids for Jurisdictions")
+        public void shouldReturnCaseType_for_jurisdictions() {
+            val itemNames = Arrays.asList("get-test");
+            val jurisdiction = new Jurisdiction();
+            val caseTypeLittle = new CaseTypeLite();
+            caseTypeLittle.setId("id");
+            jurisdiction.setId("id");
+            jurisdiction.setCaseTypes(Arrays.asList(caseTypeLittle));
+            when(jurisdictionService.getAll(any())).thenReturn(Arrays.asList(jurisdiction));
+            val result = subject.findCasesByJurisdictions(Optional.of(itemNames));
+            assertFalse(result.isEmpty());
+        }
+
+
+        @Test
+        @DisplayName("Should return the CaseType ids")
+        public void shouldReturnCaseType() {
+            val jurisdiction = new Jurisdiction();
+            val caseTypeLittle = new CaseTypeLite();
+            caseTypeLittle.setId("id");
+            jurisdiction.setId("id");
+            jurisdiction.setCaseTypes(Arrays.asList(caseTypeLittle));
+            when(jurisdictionService.getAll()).thenReturn(Arrays.asList(jurisdiction));
+            val result = subject.findCasesByJurisdictions(Optional.empty());
+            assertFalse(result.isEmpty());
+        }
+    }
 }
