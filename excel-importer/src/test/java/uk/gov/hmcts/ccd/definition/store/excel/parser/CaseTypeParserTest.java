@@ -145,6 +145,32 @@ public class CaseTypeParserTest extends ParserTestBase {
         assertThat(printWebhook.getTimeouts().size(), is(0));
     }
 
+    @Test
+    public void shouldParseGetCaseWebhook_whenDataIsGood() {
+        final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
+        caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
+        caseTypeItem.addAttribute(ColumnName.NAME.toString(), "Test Address Book Case");
+        caseTypeItem.addAttribute(ColumnName.CALLBACK_GET_CASE_URL.toString(), "Get Case Test Url");
+        caseTypeItem.addAttribute(ColumnName.RETRIES_GET_CASE_URL.toString(), "6,8,7,5");
+
+        definitionSheet.addDataItem(caseTypeItem);
+        definitionSheets.put(SheetName.CASE_TYPE.getName(), definitionSheet);
+
+        final ParseResult<CaseTypeEntity> parseResult = caseTypeParser.parseAll(definitionSheets);
+        assertThat(parseResult.getAllResults().size(), is(1));
+
+        final CaseTypeEntity caseTypeEntity = parseResult.getAllResults().get(0);
+
+        assertThat(caseTypeEntity.getId(), is(nullValue()));
+        assertThat(caseTypeEntity.getJurisdiction(), is(jurisdiction));
+        assertThat(caseTypeEntity.getName(), is("Test Address Book Case"));
+        assertThat(caseTypeEntity.getReference(), is(CASE_TYPE_UNDER_TEST));
+
+        final WebhookEntity getCaseWebhook = caseTypeEntity.getGetCaseWebhook();
+        assertThat(getCaseWebhook.getUrl(), is("Get Case Test Url"));
+        assertThat(getCaseWebhook.getTimeouts().size(), is(4));
+    }
+
     @Test(expected = SpreadsheetParsingException.class)
     public void shouldFail_whenDuplicateCaseTypeId() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());

@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.InjectedField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -39,7 +40,8 @@ public class ComplexFieldEntityShowConditionValidatorImpl implements ComplexFiel
 
         showCondition.getFields().forEach(showConditionField -> {
             if (!complexField.getComplexFieldType().hasComplexField(showConditionField)
-                && !MetadataField.isMetadataField(showConditionField)) {
+                && !(MetadataField.isMetadataField(showConditionField)
+                || InjectedField.isInjectedField(showConditionField))) {
                 validationResult.addError(
                     new ComplexFieldShowConditionReferencesInvalidFieldError(showConditionField, complexField)
                 );
