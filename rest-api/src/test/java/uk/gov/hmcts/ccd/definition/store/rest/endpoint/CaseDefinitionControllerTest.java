@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +27,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
@@ -152,6 +156,32 @@ public class CaseDefinitionControllerTest {
             );
 
             assertEquals(caseTypeId, notFoundException.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("Test the dataCaseTypeByIds method")
+    class DataCaseTypeByIdsTests {
+
+        @Test
+        @DisplayName("Should return the CaseType List when the CaseType exists")
+        public void shouldReturnCaseType_whenCaseTypeExistsForId() {
+            val itemName = Arrays.asList("get-test");
+            CaseType caseTypeReturned = createCaseType(itemName.get(0), itemName.get(0));
+            when(caseTypeService.findByCaseTypeIds(anyList())).thenReturn(Arrays.asList(caseTypeReturned));
+            val result = subject.dataCaseTypeByIds(itemName);
+            assertFalse(result.isEmpty());
+            assertEquals(itemName.get(0), result.get(0).getId());
+            verify(caseTypeService).findByCaseTypeIds(itemName);
+        }
+
+        @Test
+        @DisplayName("Should throw a NotFoundException when the CaseType does not exist")
+        public void shouldThrowNotFoundException_whenCaseTypeDoesNotExist() {
+            val caseTypeIds = Arrays.asList("CaseTypeId");
+            val result = subject.dataCaseTypeByIds(caseTypeIds);
+            when(caseTypeService.findByCaseTypeIds(caseTypeIds)).thenReturn(Arrays.asList());
+            assertTrue(result.isEmpty());
         }
     }
 
