@@ -1,0 +1,32 @@
+{
+	"_guid_": "S-099.5",
+	"_extends_": "F-099_Test_Base_data",
+	"title": "must return a negative response in an attempt to import a definition file containing conditional event post state with invalid condition",
+	"specs": [
+		"an active profile in CCD",
+		"contains correctly configured CaseEventToFields tab with a field in the FieldShowCondition column, value starting with INJECTED_DATA",
+    "has the 422 Bad Request code"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_Invalid_FieldShow_InjectedData.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- Unknown field '[INJECTED_DATA.TestField1]' for event 'createCase' in show condition: '[INJECTED_DATA.TestField1]=\"TTT\"' on tab 'CaseEventToFields'"
+    }
+  }
+}

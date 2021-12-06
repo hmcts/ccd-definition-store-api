@@ -571,6 +571,8 @@
 				"retain_hidden_value" : null
 			} ],
 			"printable_document_url" : null,
+      "callback_get_case_url" : null,
+      "retries_get_case_url" : [],
 			"security_classification" : "PUBLIC"
 		}
 	}
