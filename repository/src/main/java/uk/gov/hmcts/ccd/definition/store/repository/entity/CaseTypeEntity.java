@@ -76,6 +76,10 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "print_webhook_id", nullable = true)
     private WebhookEntity printWebhook;
 
+    @ManyToOne(fetch = EAGER, cascade = ALL)
+    @JoinColumn(name = "get_case_webhook_id", nullable = true)
+    private WebhookEntity getCaseWebhook;
+
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
@@ -233,6 +237,14 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public void setPrintWebhook(WebhookEntity printWebhook) {
         this.printWebhook = printWebhook;
+    }
+
+    public WebhookEntity getGetCaseWebhook() {
+        return getCaseWebhook;
+    }
+
+    public void setGetCaseWebhook(WebhookEntity getCaseWebhook) {
+        this.getCaseWebhook = getCaseWebhook;
     }
 
     public List<CaseFieldEntity> getCaseFields() {
