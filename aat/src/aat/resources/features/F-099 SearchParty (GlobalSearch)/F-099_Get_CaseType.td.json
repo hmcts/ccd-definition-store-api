@@ -17,6 +17,8 @@
       "searchCriterias": "[[ANYTHING_PRESENT]]",
 			"case_fields": "[[ANYTHING_PRESENT]]",
 			"printable_document_url": "[[ANY_STRING_NULLABLE]]",
+      "callback_get_case_url" : "[[ANY_STRING_NULLABLE]]",
+      "retries_get_case_url" : "[[ANYTHING_PRESENT]]",
 			"security_classification": "PUBLIC"
 		}
 	}
