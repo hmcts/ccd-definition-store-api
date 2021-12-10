@@ -1,11 +1,11 @@
 {
-  "_guid_": "S-095.1",
-  "_extends_": "Import_Base_data",
-  "title": "Must successfully import a definition file containing a valid value in Publish Events column",
-  "specs": [
+	"_guid_": "S-099.1",
+	"_extends_": "F-099_Test_Base_data",
+	"title": "Import Definition file with [INJECTED_DATA.<value>] in FieldShowCondition column of the CaseTypeTab",
+	"specs": [
     "an active profile in CCD",
-    "contains a valid value configured in Publish Events column"
-  ],
+    "contains correctly configured CaseType tab with a field in the FieldShowCondition column, value starting with INJECTED_DATA"
+	],
   "request": {
     "body": {
       "arrayInMap": [

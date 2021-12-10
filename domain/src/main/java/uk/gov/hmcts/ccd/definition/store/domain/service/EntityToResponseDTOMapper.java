@@ -77,6 +77,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseTypeEntity.version", target = "version.number")
     @Mapping(source = "caseTypeEntity.liveFrom", target = "version.liveFrom")
     @Mapping(source = "caseTypeEntity.liveTo", target = "version.liveUntil")
+    @Mapping(source = "caseTypeEntity.getCaseWebhook.url", target = "callbackGetCaseUrl")
+    @Mapping(source = "caseTypeEntity.getCaseWebhook.timeouts", target = "retriesGetCaseUrl")
     @Mapping(
         expression = "java("
             + "           uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper.AuthorisationToAccessControlListMapper.map("
