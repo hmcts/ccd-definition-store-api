@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
@@ -85,11 +86,11 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "caseField")
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "caseField")
     @Fetch(value = FetchMode.SUBSELECT)
     private final List<CaseFieldACLEntity> caseFieldACLEntities = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_field_id")
     private final List<ComplexFieldACLEntity> complexFieldACLEntities = new ArrayList<>();
@@ -98,8 +99,23 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     @Type(type = "pgsql_datafieldtype_enum")
     private DataFieldType dataFieldType;
 
+    @Transient
+    private String oid = IdGenerator.createId();
+
+    public String getOid() {
+        return oid;
+    }
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
     public CaseFieldEntity() {
         this.dataFieldType = DataFieldType.CASE_DATA;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -248,4 +264,29 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         return  e.getAccessProfile().getReference().equalsIgnoreCase(accessProfile);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        CaseFieldEntity that = (CaseFieldEntity) o;
+        if (getId() != null) {
+            return Objects.equals(getId(), that.getId());
+        } else {
+            return Objects.equals(getOid(), that.getOid());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        if (getId() != null) {
+            return Objects.hash(getId());
+        } else {
+            return Objects.hash(getOid());
+        }
+    }
 }
