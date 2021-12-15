@@ -54,7 +54,7 @@ ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.2.16'
 //overriding log4j2 default version 2.7 because of vulnerability issues
-ext['log4j2.version'] = '2.15.0'
+ext['log4j2.version'] = '2.16.0'
 ext['spring-framework.version'] = '5.3.12'
 
 // end
