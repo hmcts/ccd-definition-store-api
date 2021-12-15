@@ -22,6 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageField;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -78,20 +79,20 @@ public class DisplayGroupAdapterService {
             wizardPage.setRetriesTimeoutMidEvent(webhookEntity.getTimeouts());
         });
 
-        List<String> allSubTypePossibilities = createAllSubtypeLeafCombinations(displayGroupEntity);
+        Set<String> allSubTypePossibilities = createAllSubtypeLeafCombinations(displayGroupEntity);
 
         wizardPage.setShowCondition(displayGroupEntity.getShowCondition());
         wizardPage.getWizardPageFields().addAll(
             displayGroupEntity.getDisplayGroupCaseFields().stream()
                 .map(displayGroupCaseFieldEntity -> createWizardCaseField(
                     displayGroupEntity, allSubTypePossibilities, displayGroupCaseFieldEntity))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet()));
 
         return wizardPage;
     }
 
     private WizardPageField createWizardCaseField(final DisplayGroupEntity displayGroupEntity,
-                                                  final List<String> allSubTypePossibilities,
+                                                  final Set<String> allSubTypePossibilities,
                                                   final DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity) {
         String reference = displayGroupCaseFieldEntity.getCaseField().getReference();
         WizardPageField wizardPageField = new WizardPageField();
@@ -118,19 +119,19 @@ public class DisplayGroupAdapterService {
         return wizardPageField;
     }
 
-    private List<String> determineHiddenFieldsOverrides(final List<String> allSubTypePossibilities,
+    private Set<String> determineHiddenFieldsOverrides(final Set<String> allSubTypePossibilities,
                                                         final DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity,
                                                         final WizardPageField wizardPageField) {
-        List<String> complexFieldOverrideIds = wizardPageField.getComplexFieldOverrides()
+        Set<String> complexFieldOverrideIds = wizardPageField.getComplexFieldOverrides()
             .stream()
             .map(WizardPageComplexFieldOverride::getComplexFieldElementId)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
 
         return allSubTypePossibilities.stream()
             .filter(e -> e.startsWith(displayGroupCaseFieldEntity.getCaseField().getReference() + '.'))
             .filter(e -> !e.equals(displayGroupCaseFieldEntity.getCaseField().getReference()))
             .filter(e -> !complexFieldOverrideIds.contains(e))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
     private WizardPageComplexFieldOverride createWizardPageComplexFieldOverride(
@@ -146,12 +147,12 @@ public class DisplayGroupAdapterService {
         return override;
     }
 
-    private List<String> createAllSubtypeLeafCombinations(final DisplayGroupEntity displayGroupEntity) {
+    private Set<String> createAllSubtypeLeafCombinations(final DisplayGroupEntity displayGroupEntity) {
         return displayGroupEntity.getEvent().getEventCaseFields() != null
             && !displayGroupEntity.getEvent().getEventCaseFields().isEmpty()
             ? caseFieldEntityUtil.buildDottedComplexFieldPossibilities(
                 displayGroupEntity.getEvent().getEventCaseFields().stream().map(EventCaseFieldEntity::getCaseField)
-                    .collect(Collectors.toList())) : Collections.emptyList();
+                    .collect(Collectors.toSet())) : Collections.emptySet();
     }
 
     private EventCaseFieldEntity getEventCaseFieldEntityByReference(String reference, EventEntity event) {

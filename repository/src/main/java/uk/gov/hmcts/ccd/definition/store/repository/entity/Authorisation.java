@@ -40,7 +40,7 @@ public abstract class Authorisation implements Serializable {
     @NotNull
     private Boolean delete;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private AccessProfileEntity accessProfile;
 
@@ -65,6 +65,10 @@ public abstract class Authorisation implements Serializable {
      */
     @Transient
     private String accessProfileId;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getId() {
         return id;
