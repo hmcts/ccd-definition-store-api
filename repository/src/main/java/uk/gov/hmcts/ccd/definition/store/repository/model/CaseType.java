@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
@@ -17,6 +18,10 @@ public class CaseType implements HasAcls {
     private List<CaseField> caseFields = new ArrayList<>();
     @JsonProperty("printable_document_url")
     private String printableDocumentsUrl;
+    @JsonProperty("callback_get_case_url")
+    private String callbackGetCaseUrl;
+    @JsonProperty("retries_get_case_url")
+    private List<Integer> retriesGetCaseUrl;
     @JsonProperty("security_classification")
     private SecurityClassification securityClassification;
     private List<AccessControlList> acls = new ArrayList<>();
@@ -99,6 +104,22 @@ public class CaseType implements HasAcls {
 
     public void setPrintableDocumentsUrl(String printableDocumentsUrl) {
         this.printableDocumentsUrl = printableDocumentsUrl;
+    }
+
+    public String getCallbackGetCaseUrl() {
+        return callbackGetCaseUrl;
+    }
+
+    public void setCallbackGetCaseUrl(String callbackGetCaseUrl) {
+        this.callbackGetCaseUrl = callbackGetCaseUrl;
+    }
+
+    public List<Integer> getRetriesGetCaseUrl() {
+        return retriesGetCaseUrl == null ? Collections.emptyList() : retriesGetCaseUrl;
+    }
+
+    public void setRetriesGetCaseUrl(List<Integer> retriesGetCaseUrl) {
+        this.retriesGetCaseUrl = retriesGetCaseUrl;
     }
 
     public SecurityClassification getSecurityClassification() {

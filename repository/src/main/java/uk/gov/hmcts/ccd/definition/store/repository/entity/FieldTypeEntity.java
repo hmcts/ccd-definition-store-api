@@ -22,11 +22,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static javax.persistence.GenerationType.SEQUENCE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
@@ -74,18 +75,18 @@ public class FieldTypeEntity implements Serializable, Versionable {
     @Fetch(FetchMode.SUBSELECT)
     private final List<FieldTypeListItemEntity> listItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "complexFieldType", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.JOIN)
     @OrderBy("id")
-    private final List<ComplexFieldEntity> complexFields = new ArrayList<>();
+    private final Set<ComplexFieldEntity> complexFields = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jurisdiction_id")
     private JurisdictionEntity jurisdiction;
 
-    private static final Set<String> FIXED_List_ITEMS = new HashSet<>(Arrays.asList(new String[] {"FixedList",
+    private static final Set<String> FIXED_List_ITEMS = new HashSet<>(Arrays.asList("FixedList",
         "MultiSelectList",
-        "FixedRadioList"}));
+        "FixedRadioList"));
 
     public Integer getId() {
         return id;
@@ -155,7 +156,7 @@ public class FieldTypeEntity implements Serializable, Versionable {
         return listItems;
     }
 
-    public List<ComplexFieldEntity> getComplexFields() {
+    public Set<ComplexFieldEntity> getComplexFields() {
         return complexFields;
     }
 
@@ -202,18 +203,18 @@ public class FieldTypeEntity implements Serializable, Versionable {
     }
 
     @Transient
-    public List<ComplexFieldEntity> getChildren() {
+    public Set<ComplexFieldEntity> getChildren() {
         if (this.baseFieldType == null) {
-            return emptyList();
+            return emptySet();
         } else if (this.baseFieldType.getReference().equalsIgnoreCase(BASE_COMPLEX)) {
             return this.complexFields;
         } else if (this.baseFieldType.getReference().equalsIgnoreCase(BASE_COLLECTION)) {
             if (this.collectionFieldType == null) {
-                return emptyList();
+                return emptySet();
             }
             return collectionFieldType.complexFields;
         } else {
-            return emptyList();
+            return emptySet();
         }
     }
 

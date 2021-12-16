@@ -6,8 +6,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -25,43 +27,43 @@ public class CaseFieldEntityUtil {
         return result;
     }
 
-    public List<String> buildDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities) {
+    public Set<String> buildDottedComplexFieldPossibilities(Set<? extends FieldEntity> caseFieldEntities) {
         return buildAllDottedComplexFieldPossibilities(caseFieldEntities, true);
     }
 
-    public List<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(
-        List<? extends FieldEntity> caseFieldEntities) {
+    public Set<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(
+        Set<? extends FieldEntity> caseFieldEntities) {
         return removeElementsThatAreCaseFields(buildAllDottedComplexFieldPossibilities(
             caseFieldEntities, false), caseFieldEntities);
     }
 
-    private List<String> buildAllDottedComplexFieldPossibilities(List<? extends FieldEntity> caseFieldEntities,
+    private Set<String> buildAllDottedComplexFieldPossibilities(Set<? extends FieldEntity> caseFieldEntities,
                                                                  boolean leavesOnly) {
-        List<String> allSubTypePossibilities = new ArrayList<>();
-        List<? extends FieldEntity> fieldEntities = caseFieldEntities.stream()
+        Set<String> allSubTypePossibilities = new HashSet<>();
+        Set<? extends FieldEntity> fieldEntities = caseFieldEntities.stream()
             .filter(Objects::nonNull)
-            .collect(Collectors.<FieldEntity>toList());
+            .collect(Collectors.<FieldEntity>toSet());
         prepare(allSubTypePossibilities, "", fieldEntities, leavesOnly);
         return allSubTypePossibilities;
     }
 
-    private List<String> removeElementsThatAreCaseFields(
-        List<String> allSubTypePossibilities, List<? extends FieldEntity> caseFieldEntities) {
+    private Set<String> removeElementsThatAreCaseFields(
+        Set<String> allSubTypePossibilities, Set<? extends FieldEntity> caseFieldEntities) {
         return allSubTypePossibilities.stream()
             .filter(e -> caseFieldEntities.stream().noneMatch(element -> element.getReference().equalsIgnoreCase(e)))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
-    private void prepare(List<String> allSubTypePossibilities,
+    private void prepare(Set<String> allSubTypePossibilities,
                          String startingString,
-                         List<? extends FieldEntity> caseFieldEntities, boolean leavesOnly) {
+                         Set<? extends FieldEntity> caseFieldEntities, boolean leavesOnly) {
 
         String concatenationCharacter = isBlank(startingString) ? "" : ".";
         caseFieldEntities.forEach(caseFieldEntity -> {
 
-            List<ComplexFieldEntity> complexFields;
+            Set<ComplexFieldEntity> complexFields;
             if (caseFieldEntity.getFieldType() == null) {
-                complexFields = Collections.emptyList();
+                complexFields = Collections.emptySet();
             } else if (isCollection(caseFieldEntity)) {
                 complexFields = caseFieldEntity.getFieldType().getCollectionFieldType().getComplexFields();
             } else {
@@ -75,7 +77,7 @@ public class CaseFieldEntityUtil {
 
             prepare(allSubTypePossibilities,
                 startingString + concatenationCharacter + caseFieldEntity.getReference(),
-                complexFields.stream().map(FieldEntity.class::cast).collect(Collectors.toList()), leavesOnly);
+                complexFields.stream().map(FieldEntity.class::cast).collect(Collectors.toSet()), leavesOnly);
         });
     }
 

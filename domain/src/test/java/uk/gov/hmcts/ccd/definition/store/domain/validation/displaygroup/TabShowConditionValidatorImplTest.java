@@ -573,6 +573,29 @@ public class TabShowConditionValidatorImplTest {
         assertThat(result.isValid(), is(true));
     }
 
+
+    @Test
+    public void tabShowCondition_shouldValidateShowConditionForInjectedField() throws InvalidShowConditionException {
+        displayGroup.setShowCondition("someShowCondition");
+        displayGroup.setType(DisplayGroupType.TAB);
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference("SimpleType");
+        displayGroup.setCaseType(caseTypeEntity);
+
+        DisplayGroupCaseFieldEntity displayGroupCaseField = new DisplayGroupCaseFieldEntity();
+        displayGroupCaseField.setCaseField(caseFieldEntity("otherField"));
+        displayGroup.addDisplayGroupCaseField(displayGroupCaseField);
+
+        ShowCondition sc = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("[INJECTED_DATA.test]").build();
+        when(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .thenReturn(sc);
+
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
+
+        assertThat(result.isValid(), is(true));
+    }
+
     private static FieldTypeEntity exampleFieldTypeEntityWithComplexFields() {
         return fieldTypeEntity("FullName",
             asList(

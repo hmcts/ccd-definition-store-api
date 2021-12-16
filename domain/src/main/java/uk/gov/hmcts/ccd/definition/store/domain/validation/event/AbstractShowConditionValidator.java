@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
-import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
@@ -31,7 +32,7 @@ abstract class  AbstractShowConditionValidator implements EventEntityValidator {
 
             ShowCondition showCondition = showConditionExtractor.parseShowCondition(enablingCondition);
 
-            List<String> allSubTypePossibilities = caseFieldEntityUtil
+            Set<String> allSubTypePossibilities = caseFieldEntityUtil
                 .buildDottedComplexFieldPossibilities(eventEntity.getCaseType().getCaseFields());
 
             showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
@@ -62,7 +63,7 @@ abstract class  AbstractShowConditionValidator implements EventEntityValidator {
     }
 
     private boolean forShowConditionFieldExistsAtLeastOneCaseFieldEntity(String showConditionField,
-                                                                         List<CaseFieldEntity> caseFieldEntities) {
+                                                                         Set<CaseFieldEntity> caseFieldEntities) {
         return caseFieldEntities
             .stream()
             .anyMatch(f -> f.getReference().equals(showConditionField));
