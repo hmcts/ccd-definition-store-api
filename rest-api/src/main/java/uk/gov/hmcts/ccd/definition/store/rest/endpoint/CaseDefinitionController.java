@@ -26,7 +26,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(value = "/api/data")
