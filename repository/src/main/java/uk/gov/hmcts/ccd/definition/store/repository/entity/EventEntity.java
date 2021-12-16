@@ -32,7 +32,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static org.hibernate.annotations.FetchMode.SUBSELECT;
 
@@ -82,7 +81,7 @@ public class EventEntity implements Serializable {
     @Column(name = "end_button_label")
     private String endButtonLabel;
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_event_id")
     private final List<EventPostStateEntity> postStates = new ArrayList<>();
@@ -91,7 +90,7 @@ public class EventEntity implements Serializable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
-    @ManyToMany(fetch = EAGER)
+    @ManyToMany(fetch = LAZY)
     @Fetch(value = SUBSELECT)
     @JoinTable(
         name = "event_pre_state",
@@ -106,11 +105,11 @@ public class EventEntity implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     private Map<WebhookType, EventWebhookEntity> webhooks = Maps.newHashMap();
 
-    @OneToMany(mappedBy = "event", fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "event", fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = SUBSELECT)
     private final List<EventCaseFieldEntity> eventCaseFields = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "event")
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "event")
     @Fetch(value = FetchMode.SUBSELECT)
     private final List<EventACLEntity> eventACLEntities = new ArrayList<>();
 

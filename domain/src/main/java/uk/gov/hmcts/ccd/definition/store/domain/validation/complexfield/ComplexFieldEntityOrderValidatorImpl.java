@@ -7,6 +7,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -36,7 +37,7 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
         List<ValidationError> validationErrors = newArrayList();
 
         if (complexField.isCompound()) {
-            List<ComplexFieldEntity> children = complexField.getFieldType().getChildren();
+            Set<ComplexFieldEntity> children = complexField.getFieldType().getChildren();
             children.forEach(childField -> {
                 if (childField.isCollectionFieldType()) {
                     validationErrors.addAll(validate(childField));
@@ -55,7 +56,7 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
     }
 
     private Optional<ValidationError> validateComplexField(ComplexFieldEntity complexFieldEntity,
-                                                           List<ComplexFieldEntity> children) {
+                                                           Set<ComplexFieldEntity> children) {
         Optional<ValidationError> validationErrorOptional = Optional.empty();
         List<ComplexFieldEntity> sortedFields = getSortedComplexFieldEntities(children);
         if (isChildOfComplexFieldMissingOrder(children, sortedFields)) {
@@ -74,12 +75,12 @@ public class ComplexFieldEntityOrderValidatorImpl implements CaseFieldComplexFie
         return range(0, sortedFields.size()).anyMatch(index -> sortedFields.get(index).getOrder() != index + 1);
     }
 
-    private boolean isChildOfComplexFieldMissingOrder(List<ComplexFieldEntity> children,
+    private boolean isChildOfComplexFieldMissingOrder(Set<ComplexFieldEntity> children,
                                                       List<ComplexFieldEntity> sortedFields) {
         return sortedFields.size() != 0 && sortedFields.size() != children.size();
     }
 
-    private List<ComplexFieldEntity> getSortedComplexFieldEntities(List<ComplexFieldEntity> children) {
+    private List<ComplexFieldEntity> getSortedComplexFieldEntities(Set<ComplexFieldEntity> children) {
         return children.stream()
             .filter(field -> field.getOrder() != null)
             .sorted(comparingInt(ComplexFieldEntity::getOrder))

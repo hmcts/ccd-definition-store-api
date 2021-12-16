@@ -7,11 +7,13 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.befta.BeftaMain;
 
-
 @RunWith(Cucumber.class)
-@CucumberOptions(plugin = "json:target/cucumber.json",
-    glue = "uk.gov.hmcts.befta.player",
-    features = {"classpath:features"})
+@CucumberOptions(
+    plugin = { "json:target/cucumber.json", "pretty" },
+    glue = { "uk.gov.hmcts.befta.player" },
+    features = { "classpath:features" },
+    tags = { "not @Ignore" }
+)
 public class DefinitionStoreBeftaRunner {
 
     private DefinitionStoreBeftaRunner() {
@@ -21,7 +23,10 @@ public class DefinitionStoreBeftaRunner {
 
     @BeforeClass
     public static void setUp() {
-        BeftaMain.setUp(new DefinitionStoreTestAutomationAdapter());
+        var taAdapter = new DefinitionStoreTestAutomationAdapter();
+        taAdapter.initialiseTestDataLoader();
+
+        BeftaMain.setUp(taAdapter);
     }
 
     @AfterClass
