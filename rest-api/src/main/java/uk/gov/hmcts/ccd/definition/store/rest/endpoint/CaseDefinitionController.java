@@ -65,11 +65,10 @@ public class CaseDefinitionController {
     @GetMapping(value = "/data/case-types", produces = {"application/json"})
     @ApiOperation(value = "Get caseTypes", response = CaseType.class, responseContainer = "List")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "A Case Type Schema"),
-        @ApiResponse(code = 200, message = "Unexpected error")
+        @ApiResponse(code = 200, message = "A Case Type Schema")
     })
     public List<CaseType> dataCaseTypeByIds(
-        @ApiParam(value = "List of case references references") @RequestParam("ids") List<String> ids) {
+        @ApiParam(value = "List of case type references") @RequestParam("ids") List<String> ids) {
         return caseTypeService.findByCaseTypeIds(ids);
     }
 
@@ -156,7 +155,7 @@ public class CaseDefinitionController {
     }
 
 
-    @GetMapping(value = "/data/jurisdictions/case-type-ids")
+    @GetMapping(value = "/data/ case-type-ids")
     @ApiOperation(value = "Get case-type-ids by jurisdiction's id", response = String.class, responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of cases ids")
@@ -165,11 +164,7 @@ public class CaseDefinitionController {
         @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
 
         LOG.debug("received find jurisdictions request with ids: {}", idsOptional);
-        final var  jurisdictions = idsOptional.map(ids -> jurisdictionService.getAll(ids))
-            .orElseGet(jurisdictionService::getAll);
-
-        return jurisdictions.stream().flatMap(jurisdiction -> jurisdiction.getCaseTypes().stream().map(
-            caseTypeLite -> caseTypeLite.getId())
-        ).collect(Collectors.toList());
+        return idsOptional.map(ids -> caseTypeService.findAllCaseTypeIdsByJurisdictionIds(ids))
+            .orElseGet(caseTypeService::findAllCaseTypeIds);
     }
 }

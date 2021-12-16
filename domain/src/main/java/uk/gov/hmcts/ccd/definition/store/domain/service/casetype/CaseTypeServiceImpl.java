@@ -101,6 +101,20 @@ public class CaseTypeServiceImpl implements CaseTypeService {
 
     @Transactional
     @Override
+    public List<String> findAllCaseTypeIdsByJurisdictionIds(List<String> jurisdictionReferences) {
+        return repository.findAllCaseTypeIdsByJurisdictionIds(
+            jurisdictionReferences.stream().map(String::toUpperCase).collect(toList())
+        );
+    }
+
+    @Transactional
+    @Override
+    public List<String> findAllCaseTypeIds() {
+        return repository.findAllCaseTypeIds();
+    }
+
+    @Transactional
+    @Override
     public Optional<CaseTypeVersionInformation> findVersionInfoByCaseTypeId(final String id) {
         return repository.findLastVersion(id)
             .map(CaseTypeVersionInformation::new);
