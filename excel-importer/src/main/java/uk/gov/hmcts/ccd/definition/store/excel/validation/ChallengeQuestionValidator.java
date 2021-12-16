@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,7 +198,7 @@ public class ChallengeQuestionValidator {
     }
 
     private void validateAttributes(String currentAttribute,
-                                    List<ComplexFieldEntity> complexFieldACLEntity,
+                                    Set<ComplexFieldEntity> complexFieldACLEntity,
                                     String[] attributesDotNotation,
                                     int currentIndex) {
         String errorMessage = ERROR_MESSAGE + " value: "
@@ -223,7 +224,7 @@ public class ChallengeQuestionValidator {
         }
     }
 
-    private Optional<ComplexFieldEntity> getComplexFieldEntity(List<ComplexFieldEntity> complexFieldACLEntity,
+    private Optional<ComplexFieldEntity> getComplexFieldEntity(Set<ComplexFieldEntity> complexFieldACLEntity,
                                                                String currentAttribute) {
         return complexFieldACLEntity.stream().filter(complexFieldACLEItem ->
                 complexFieldACLEItem.getReference().equals(currentAttribute)).findAny();

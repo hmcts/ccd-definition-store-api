@@ -1,11 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import java.util.Optional;
-
+import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.nullValue;
@@ -14,6 +18,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
@@ -29,6 +35,67 @@ class CaseFieldEntityTest {
     private static final String SURNAME = "Surname";
 
     private CaseFieldEntity debtorDetails;
+
+    @Test
+    void shouldEntityUniqueInSetWhenIdIsNull() {
+        CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+        assertNull(caseFieldEntity1.getId());
+        CaseFieldEntity caseFieldEntity2 = new CaseFieldEntity();
+        assertNull(caseFieldEntity1.getId());
+        assertNotEquals(caseFieldEntity1.getOid(), caseFieldEntity2.getOid());
+        Set<CaseFieldEntity> caseFieldEntitySet = new HashSet<>(Arrays.asList(caseFieldEntity1,caseFieldEntity2));
+        assertEquals(2, caseFieldEntitySet.size());
+    }
+
+    @Test
+    void shouldEntityUniqueInSetWhenObjectClonedAndIdIsNull() {
+        CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+        CaseFieldEntity caseFieldEntityCloned = SerializationUtils.clone(caseFieldEntity1);
+        assertEquals(caseFieldEntity1.getId(), caseFieldEntityCloned.getId());
+        assertEquals(caseFieldEntity1.getOid(), caseFieldEntityCloned.getOid());
+        Set<CaseFieldEntity> caseFieldEntitySet = new HashSet<>(Arrays.asList(caseFieldEntity1,caseFieldEntityCloned));
+        assertEquals(1, caseFieldEntitySet.size());
+    }
+
+    @Test
+    void shouldEntityUniqueInSetWhenIdIsNotNull() {
+        CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+        caseFieldEntity1.setId(1);
+        CaseFieldEntity caseFieldEntity2 = new CaseFieldEntity();
+        caseFieldEntity2.setId(2);
+        assertNotEquals(caseFieldEntity1.getOid(), caseFieldEntity2.getOid());
+        Set<CaseFieldEntity> caseFieldEntitySet = new HashSet<>(Arrays.asList(caseFieldEntity1, caseFieldEntity2));
+        assertEquals(2, caseFieldEntitySet.size());
+    }
+
+    @Test
+    void shouldEntityUniqueInSetWhenSameIdExists() {
+        CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+        caseFieldEntity1.setId(1);
+        CaseFieldEntity caseFieldEntity2 = new CaseFieldEntity();
+        caseFieldEntity2.setId(1);
+        assertNotEquals(caseFieldEntity1.getOid(), caseFieldEntity2.getOid());
+        Set<CaseFieldEntity> caseFieldEntitySet = new HashSet<>(Arrays.asList(caseFieldEntity1,caseFieldEntity2));
+        assertEquals(1, caseFieldEntitySet.size());
+    }
+
+    @Test
+    void shouldEntityRemovedFromSetSuccessfully() {
+        CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+        caseFieldEntity1.setId(1);
+        CaseFieldEntity caseFieldEntity2 = new CaseFieldEntity();
+        caseFieldEntity2.setId(2);
+        CaseFieldEntity caseFieldEntity3 = new CaseFieldEntity();
+        caseFieldEntity2.setId(3);
+        CaseFieldEntity caseFieldEntityCloned = SerializationUtils.clone(caseFieldEntity1);
+        Set<CaseFieldEntity> caseFieldEntitySet =
+            new HashSet<>(Arrays.asList(caseFieldEntity1,caseFieldEntity2, caseFieldEntity3, caseFieldEntityCloned));
+        assertEquals(3, caseFieldEntitySet.size());
+        assertTrue(caseFieldEntitySet.contains(caseFieldEntity2));
+        caseFieldEntitySet.remove(caseFieldEntity2);
+        assertEquals(2, caseFieldEntitySet.size());
+        assertFalse(caseFieldEntitySet.contains(caseFieldEntity2));
+    }
 
     @Nested
     @DisplayName("find by path tests")
