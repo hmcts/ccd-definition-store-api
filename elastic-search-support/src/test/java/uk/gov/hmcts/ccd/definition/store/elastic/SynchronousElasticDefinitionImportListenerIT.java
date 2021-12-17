@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
@@ -56,10 +58,16 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         CaseFieldEntity nonSearchableBaseTypeField = newTextField("NonSearchableTextField")
             .withSearchable(false).build();
         CaseFieldEntity nonSearchableComplexField = newComplexField("NonSearchableComplexField");
-        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
-            .getComplexFields().get(1).setSearchable(false);
-        nonSearchableComplexField.getFieldType().getComplexFields().get(0).getFieldType()
-            .getComplexFields().get(2).setSearchable(false);
+
+        Iterator<ComplexFieldEntity> iteratorComplexFields = nonSearchableComplexField.getFieldType()
+            .getComplexFields().iterator().next().getFieldType().getComplexFields().iterator();
+
+        for (int i = 0; iteratorComplexFields.hasNext() && i < 3; i++) {
+            ComplexFieldEntity item = iteratorComplexFields.next();
+            if (i > 0) {
+                item.setSearchable(false);
+            }
+        }
 
         CaseFieldEntity nonSearchableCollectionField = newCollectionField(
             "NonSearchableCollectionField", "NonSearchableCollectionType");
@@ -67,8 +75,16 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         CaseFieldEntity nonSearchableComplexCollectionField = newCollectionOfComplexField(
             "NonSearchableComplexCollectionField", "NonSearchableComplexCollectionType");
-        nonSearchableComplexCollectionField.getCollectionFieldType().getComplexFields().get(0).setSearchable(false);
-        nonSearchableComplexCollectionField.getCollectionFieldType().getComplexFields().get(2).setSearchable(false);
+
+        iteratorComplexFields = nonSearchableComplexCollectionField.getCollectionFieldType()
+            .getComplexFields().iterator();
+
+        for (int i = 0; iteratorComplexFields.hasNext() && i < 3; i++) {
+            ComplexFieldEntity item = iteratorComplexFields.next();
+            if (i != 1) {
+                item.setSearchable(false);
+            }
+        }
 
         CaseTypeEntity caseTypeEntity = caseTypeBuilder
             .addField(baseTypeField)

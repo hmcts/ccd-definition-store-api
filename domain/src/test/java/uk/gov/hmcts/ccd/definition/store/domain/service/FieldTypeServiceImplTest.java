@@ -57,8 +57,10 @@ public class FieldTypeServiceImplTest {
         final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
         doReturn(context).when(validationContextFactory).create();
 
-        final FieldTypeEntity type1 = new FieldTypeEntity();
-        final FieldTypeEntity type2 = new FieldTypeEntity();
+        FieldTypeEntity type1 = new FieldTypeEntity();
+        type1.setReference("type1");
+        FieldTypeEntity type2 = new FieldTypeEntity();
+        type2.setReference("type2");
 
         fieldTypeService.saveTypes(JURISDICTION, Arrays.asList(type1, type2));
 
@@ -74,8 +76,10 @@ public class FieldTypeServiceImplTest {
         final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
         doReturn(context).when(validationContextFactory).create();
 
-        final FieldTypeEntity type1 = new FieldTypeEntity();
-        final FieldTypeEntity type2 = new FieldTypeEntity();
+        FieldTypeEntity type1 = new FieldTypeEntity();
+        type1.setReference("type1");
+        FieldTypeEntity type2 = new FieldTypeEntity();
+        type2.setReference("type2");
 
         doReturn(validationResultWithError(validationErrorWithDefaultMessage("Invalid type")))
             .when(validator1).validate(context, type1);

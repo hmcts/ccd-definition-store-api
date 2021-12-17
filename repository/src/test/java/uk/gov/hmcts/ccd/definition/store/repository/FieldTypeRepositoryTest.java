@@ -16,6 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -188,13 +189,14 @@ public class FieldTypeRepositoryTest {
         assertThat(persistedType.getRegularExpression(), is(nullValue()));
         assertThat(persistedType.getComplexFields(), hasSize(2));
 
-        final ComplexFieldEntity persistedField1 = persistedType.getComplexFields().get(0);
+        Iterator<ComplexFieldEntity> complexFieldIterator = persistedType.getComplexFields().iterator();
+        final ComplexFieldEntity persistedField1 = complexFieldIterator.next();
         assertThat(persistedField1.getReference(), equalTo("Line1"));
         assertThat(persistedField1.getLabel(), equalTo("Line 1"));
         assertThat(persistedField1.getSecurityClassification(), equalTo(SecurityClassification.PUBLIC));
         assertThat(persistedField1.getFieldType().getReference(), equalTo("Text"));
 
-        final ComplexFieldEntity persistedField2 = persistedType.getComplexFields().get(1);
+        final ComplexFieldEntity persistedField2 = complexFieldIterator.next();
         assertThat(persistedField2.getReference(), equalTo("Line2"));
         assertThat(persistedField2.getLabel(), equalTo("Line 2"));
         assertThat(persistedField2.getSecurityClassification(), equalTo(SecurityClassification.PRIVATE));

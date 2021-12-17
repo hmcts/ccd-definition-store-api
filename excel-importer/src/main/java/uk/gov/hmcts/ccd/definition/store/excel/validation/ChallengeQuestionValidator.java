@@ -1,6 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import com.microsoft.applicationinsights.boot.dependencies.apachecommons.lang3.tuple.Triple;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ChallengeQuestionDisplayContextParameterValidator;
@@ -15,13 +23,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -186,6 +187,47 @@ public class ChallengeQuestionValidator {
                 + expression + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
                 + " value. The expression dot notation values should be valid caseTypes fields.");
         }
+    }
+
+    private void validateSingleExpression(String singleExpression,
+                                          String currentCaseType) {
+        if (singleExpression.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
+            String attribute = singleExpression.substring(0, singleExpression.indexOf(":"));
+            parseContext.getCaseFieldType(currentCaseType, attribute);
+        }
+    }
+
+    private void validateAttributes(String currentAttribute,
+                                    Set<ComplexFieldEntity> complexFieldACLEntity,
+                                    String[] attributesDotNotation,
+                                    int currentIndex) {
+        String errorMessage = ERROR_MESSAGE + " value: "
+            + currentAttribute + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
+            + " value, The expression dot notation values should be valid caseTypes fields.";
+
+        final Optional<ComplexFieldEntity> result = getComplexFieldEntity(complexFieldACLEntity, currentAttribute);
+
+        if (!result.isPresent()) {
+            if (currentIndex - 1 < 0) {
+                throw new InvalidImportException(errorMessage);
+            }
+            //It means that there is a parent component.;
+            final Optional<ComplexFieldEntity> parent = getComplexFieldEntity(
+                complexFieldACLEntity, attributesDotNotation[currentIndex - 1]);
+            if (parent.isPresent()) {
+                final Optional<ComplexFieldEntity> attributeDefinition = getComplexFieldEntity(
+                    parent.get().getFieldType().getComplexFields(), currentAttribute);
+                if (!attributeDefinition.isPresent()) {
+                    throw new InvalidImportException(errorMessage);
+                }
+            }
+        }
+    }
+
+    private Optional<ComplexFieldEntity> getComplexFieldEntity(Set<ComplexFieldEntity> complexFieldACLEntity,
+                                                               String currentAttribute) {
+        return complexFieldACLEntity.stream().filter(complexFieldACLEItem ->
+                complexFieldACLEItem.getReference().equals(currentAttribute)).findAny();
     }
 
     private void validateQuestionText(DefinitionDataItem definitionDataItem) {
