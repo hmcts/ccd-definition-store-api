@@ -8,8 +8,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 @Component
@@ -34,7 +34,7 @@ public class DotNotationValidator {
         }
     }
 
-    private Optional<ComplexFieldEntity> getComplexFieldEntity(List<ComplexFieldEntity> complexFieldEntities,
+    private Optional<ComplexFieldEntity> getComplexFieldEntity(Set<ComplexFieldEntity> complexFieldEntities,
                                                                String currentAttribute) {
         return complexFieldEntities.stream().filter(complexFieldEntity ->
             complexFieldEntity.getReference().equals(currentAttribute)).findAny();
@@ -66,7 +66,7 @@ public class DotNotationValidator {
             final FieldTypeEntity fieldType =
                 getTopLevelField(parseContext, sheetName, columnName, caseType, splitDotNotationExpression[0]);
 
-            List<ComplexFieldEntity> complexFieldsBelongingToParent = fieldType.getComplexFields();
+            Set<ComplexFieldEntity> complexFieldsBelongingToParent = fieldType.getComplexFields();
 
             // NB: start from depth = 1 to ignore top level field that is already processed
             for (int depth = 1; depth < splitDotNotationExpression.length; depth++) {
