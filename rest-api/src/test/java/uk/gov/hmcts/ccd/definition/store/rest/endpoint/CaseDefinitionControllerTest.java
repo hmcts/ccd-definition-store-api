@@ -277,7 +277,7 @@ public class CaseDefinitionControllerTest {
             caseTypeLittle.setId("id");
             jurisdiction.setId("id");
             jurisdiction.setCaseTypes(Arrays.asList(caseTypeLittle));
-            when(jurisdictionService.getAll(any())).thenReturn(Arrays.asList(jurisdiction));
+            when(caseTypeService.findAllCaseTypeIdsByJurisdictionIds(any())).thenReturn(Arrays.asList("ids"));
             val itemNames = Arrays.asList("get-test");
             val result = subject.findCasesByJurisdictions(Optional.of(itemNames));
             assertFalse(result.isEmpty());
@@ -292,7 +292,7 @@ public class CaseDefinitionControllerTest {
             caseTypeLittle.setId("id");
             jurisdiction.setId("id");
             jurisdiction.setCaseTypes(Arrays.asList(caseTypeLittle));
-            when(jurisdictionService.getAll()).thenReturn(Arrays.asList(jurisdiction));
+            when(caseTypeService.findAllCaseTypeIds()).thenReturn(Arrays.asList("ids"));
             val result = subject.findCasesByJurisdictions(Optional.empty());
             assertFalse(result.isEmpty());
         }
