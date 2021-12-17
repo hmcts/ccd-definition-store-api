@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
+import lombok.val;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -50,6 +51,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
@@ -162,7 +164,7 @@ class CaseTypeServiceImplTest {
 
             ValidationException validationException
                 = assertThrows(ValidationException.class, () -> classUnderTest.createAll(
-                    jurisdiction, caseTypeEntities, new HashSet<>()));
+                jurisdiction, caseTypeEntities, new HashSet<>()));
 
             ValidationResult validationResult = validationException.getValidationResult();
             assertFalse(validationResult.isValid());
@@ -215,7 +217,7 @@ class CaseTypeServiceImplTest {
 
             ValidationException validationException
                 = assertThrows(ValidationException.class, () -> classUnderTest.createAll(
-                    jurisdiction, caseTypeEntities, new HashSet<>()));
+                jurisdiction, caseTypeEntities, new HashSet<>()));
             verify(caseTypeRepository).findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_2);
 
             ValidationResult validationResult = validationException.getValidationResult();
@@ -481,10 +483,10 @@ class CaseTypeServiceImplTest {
     class FindByCaseTypeIdTests {
 
         private static final String caseTypeId = "caseTypeID";
-        private final List<String> caseTypeIds = Arrays.asList(caseTypeId,caseTypeId);
+        private final List<String> caseTypeIds = Arrays.asList(caseTypeId, caseTypeId);
         private final CaseType caseType = new CaseType();
         private final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-        private final List<CaseTypeEntity> caseTypeEntities = Arrays.asList(caseTypeEntity,caseTypeEntity);
+        private final List<CaseTypeEntity> caseTypeEntities = Arrays.asList(caseTypeEntity, caseTypeEntity);
         private final CaseField metadataField = new CaseField();
 
         @BeforeEach
@@ -608,6 +610,48 @@ class CaseTypeServiceImplTest {
                 .thenReturn(Optional.empty());
             String caseTypeId = classUnderTest.findDefinitiveCaseTypeId(CASE_TYPE_REFERENCE);
             assertNull(caseTypeId);
+        }
+    }
+
+    @Nested
+    class FindAllCaseTypeIdsByJurisdictionIds {
+
+        private static final String caseTypeId = "caseTypeID";
+        private final List<String> caseTypeIds = Arrays.asList(caseTypeId, caseTypeId);
+        private final List<String> result = Arrays.asList("result1", "result2");
+        private final CaseType caseType = new CaseType();
+        private final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        private final CaseField metadataField = new CaseField();
+
+        @BeforeEach
+        void setup() {
+            metadataField.setId(MetadataField.STATE.getReference());
+            FieldType fieldType = new FieldType();
+            fieldType.setType(BASE_FIXED_LIST);
+            metadataField.setFieldType(fieldType);
+
+            when(caseTypeRepository.findCurrentVersionForReference(caseTypeId)).thenReturn(Optional.of(caseTypeEntity));
+            when(dtoMapper.map(caseTypeEntity)).thenReturn(caseType);
+            when(metadataFieldService.getCaseMetadataFields()).thenReturn(singletonList(metadataField));
+            when(caseTypeRepository.findAllCaseTypeIdsByJurisdictionIds(anyList())).thenReturn(result);
+            when(caseTypeRepository.findAllCaseTypeIds()).thenReturn(result);
+        }
+
+        @Test
+        @DisplayName("Should call the caseTypeRepository once and return data.")
+        void shouldCallMapperAndReturnResult_whenRepositoryReturnsAList() {
+            val caseTypes = classUnderTest.findAllCaseTypeIdsByJurisdictionIds(caseTypeIds);
+            verify(caseTypeRepository, times(1)).findAllCaseTypeIdsByJurisdictionIds(anyList());
+            assertFalse(caseTypes.isEmpty());
+        }
+
+
+        @Test
+        @DisplayName("Should call the caseTypeRepository once and return data.")
+        void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
+            val caseTypes = classUnderTest.findAllCaseTypeIds();
+            verify(caseTypeRepository, times(1)).findAllCaseTypeIds();
+            assertFalse(caseTypes.isEmpty());
         }
     }
 }
