@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.InjectedField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -62,7 +63,8 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
         showCondition.getFields().forEach(showConditionField -> {
             if (!showConditionFieldExistsInAtLeastOneLayOutEntity(
                 showConditionField, allGenericLayouts)
-                && !MetadataField.isMetadataField(showConditionField)) {
+                && !(MetadataField.isMetadataField(showConditionField)
+                || InjectedField.isInjectedField(showConditionField))) {
                 validationResult.addError(buildError(entity, showConditionField, showConditionString));
             }
         });

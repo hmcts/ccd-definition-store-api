@@ -151,6 +151,21 @@ public class GenericLayoutShowConditionValidatorTest {
     }
 
     @Test
+    public void shouldNotThrowErrorForInjectedField() throws Exception {
+
+        entity.setShowCondition(SOME_SHOW_CONDITION);
+
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field("[INJECTED_DATA.test]").build();
+        when(showConditionExtractor.parseShowCondition(SOME_SHOW_CONDITION))
+            .thenReturn(validParsedShowCondition);
+
+        ValidationResult result = underTest.validate(entity, allGenericLayouts);
+
+        assertThat(result.isValid(), is(true));
+    }
+
+    @Test
     public void shouldValidateShowConditionForCustomComplexField() throws Exception {
 
         String matchingCaseFieldId = "complexName";

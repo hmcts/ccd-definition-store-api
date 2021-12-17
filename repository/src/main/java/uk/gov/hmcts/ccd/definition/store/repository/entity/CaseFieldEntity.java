@@ -86,11 +86,11 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "caseField")
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "caseField")
     @Fetch(value = FetchMode.SUBSELECT)
     private final List<CaseFieldACLEntity> caseFieldACLEntities = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_field_id")
     private final List<ComplexFieldACLEntity> complexFieldACLEntities = new ArrayList<>();
