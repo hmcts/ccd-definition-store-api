@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -16,15 +17,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesE
 
 public class RoleToAccessProfilesParser {
 
-    public List<RoleToAccessProfilesEntity> parse(Map<String, DefinitionSheet> definitionSheets,
-                                                  ParseContext parseContext) {
+    public List<RoleToAccessProfilesEntity> parse(final Map<String, DefinitionSheet> definitionSheets,
+                                                  final ParseContext parseContext) {
         try {
             final List<DefinitionDataItem> roleToAccessProfiles = definitionSheets
-                .get(SheetName.ROLE_TO_ACCESS_PROFILES.getName()).getDataItems();
-            return roleToAccessProfiles
-                .stream()
-                .map(questionItem ->
-                    createRoleToAccessProfileEntity(parseContext, questionItem)).collect(Collectors.toList());
+                .get(SheetName.ROLE_TO_ACCESS_PROFILES.getName())
+                .getDataItems();
+            return roleToAccessProfiles.stream()
+                .map(questionItem -> createRoleToAccessProfileEntity(parseContext, questionItem))
+                .collect(Collectors.toUnmodifiableList());
         } catch (InvalidImportException invalidImportException) {
             ValidationResult validationResult = new ValidationResult();
             validationResult.addError(new ValidationError(invalidImportException.getMessage()) {
@@ -37,12 +38,12 @@ public class RoleToAccessProfilesParser {
         }
     }
 
-    public RoleToAccessProfilesEntity createRoleToAccessProfileEntity(ParseContext parseContext,
-                                                                      DefinitionDataItem definitionDataItem) {
+    private RoleToAccessProfilesEntity createRoleToAccessProfileEntity(final ParseContext parseContext,
+                                                                       final DefinitionDataItem definitionDataItem) {
         RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
 
         final String caseType = definitionDataItem.getString(ColumnName.CASE_TYPE_ID);
-        CaseTypeEntity caseTypeEntity = parseContext.getCaseTypes()
+        final CaseTypeEntity caseTypeEntity = parseContext.getCaseTypes()
             .stream()
             .filter(entity -> entity.getReference().equals(caseType))
             .findAny()
@@ -52,16 +53,17 @@ public class RoleToAccessProfilesParser {
                 throw new InvalidImportException(message);
 
             });
-        roleToAccessProfilesEntity.setCaseType(caseTypeEntity);
 
+        roleToAccessProfilesEntity.setCaseType(caseTypeEntity);
         roleToAccessProfilesEntity.setRoleName(definitionDataItem.getString(ColumnName.ROLE_NAME));
         roleToAccessProfilesEntity.setLiveFrom(definitionDataItem.getDate(ColumnName.LIVE_FROM));
         roleToAccessProfilesEntity.setLiveTo(definitionDataItem.getDate(ColumnName.LIVE_TO));
         roleToAccessProfilesEntity.setReadOnly(definitionDataItem.getBooleanOrDefault(ColumnName.READ_ONLY, false));
         roleToAccessProfilesEntity.setDisabled(definitionDataItem.getBooleanOrDefault(ColumnName.DISABLED, false));
-        String accessProfiles = definitionDataItem.getString(ColumnName.ACCESS_PROFILES);
-        roleToAccessProfilesEntity.setAccessProfiles(accessProfiles);
+        roleToAccessProfilesEntity.setAccessProfiles(definitionDataItem.getString(ColumnName.ACCESS_PROFILES));
         roleToAccessProfilesEntity.setAuthorisation(definitionDataItem.getString(ColumnName.AUTHORISATION));
+        final String categories = definitionDataItem.getString(ColumnName.CASE_ACCESS_CATEGORIES);
+        roleToAccessProfilesEntity.setCaseAccessCategories(categories);
 
         return roleToAccessProfilesEntity;
     }

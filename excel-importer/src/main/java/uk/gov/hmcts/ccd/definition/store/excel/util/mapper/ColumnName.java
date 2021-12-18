@@ -99,7 +99,8 @@ public enum ColumnName {
     READ_ONLY("ReadOnly"),
     DISABLED("Disabled"),
     ACCESS_PROFILES("AccessProfiles"),
-    EVENT_ENABLING_CONDITION("EventEnablingCondition");
+    EVENT_ENABLING_CONDITION("EventEnablingCondition"),
+    CASE_ACCESS_CATEGORIES("CaseAccessCategories");
 
     private final String name;
     private final String[] aliases;
