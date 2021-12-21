@@ -154,7 +154,7 @@ public class CaseDefinitionController {
     }
 
 
-    @GetMapping(value = "/data/ case-type-ids")
+    @GetMapping(value = "/data/case-type-ids")
     @ApiOperation(value = "Get case-type-ids by jurisdiction's id", response = String.class, responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of cases ids")
