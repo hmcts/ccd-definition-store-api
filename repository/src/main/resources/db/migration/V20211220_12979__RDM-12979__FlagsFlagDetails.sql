@@ -46,15 +46,9 @@ values ('dateTimeCreated', 'Created Date', 'PUBLIC',
 
 --- Path and Path Collection ---
 INSERT INTO public.field_type (created_at, reference, base_field_type_id, version)
-VALUES (now(), 'Path', (select id
-from field_type
-where reference = 'Complex'
-and jurisdiction_id is null
-and version = (select max(version)
-from field_type
-where reference = 'Complex'
-and jurisdiction_id is null
-and base_field_type_id is null)), '1');
+VALUES (now(), 'Path',
+(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
+'1');
 
 INSERT INTO public.field_type (created_at, reference, base_field_type_id, collection_field_type_id, version)
 VALUES (now(), 'PathCollection',
