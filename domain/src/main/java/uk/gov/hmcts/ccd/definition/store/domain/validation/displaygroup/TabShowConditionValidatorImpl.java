@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.InjectedField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -47,9 +49,9 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                 return validationResult;
             }
 
-            List<String> allSubTypePossibilities = caseFieldEntityUtil
+            Set<String> allSubTypePossibilities = caseFieldEntityUtil
                 .buildDottedComplexFieldPossibilities(thisDisplayGroup.getCaseType().getCaseFields().stream()
-                    .map(FieldEntity.class::cast).collect(Collectors.toList()));
+                    .map(FieldEntity.class::cast).collect(Collectors.toSet()));
 
             showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
                 if (!allSubTypePossibilities.contains(showConditionField)) {
@@ -60,7 +62,8 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
 
             showCondition.getFields().forEach(showConditionField -> {
                 if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)
-                    && !MetadataField.isMetadataField(showConditionField)) {
+                    && !(MetadataField.isMetadataField(showConditionField)
+                    || InjectedField.isInjectedField(showConditionField))) {
                     validationResult.addError(
                         new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
                 }
@@ -79,7 +82,7 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                         return validationResult;
                     }
 
-                    List<String> allSubTypePossibilities = caseFieldEntityUtil
+                    Set<String> allSubTypePossibilities = caseFieldEntityUtil
                         .buildDottedComplexFieldPossibilities(thisDisplayGroup.getCaseType().getCaseFields());
 
                     showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
@@ -91,7 +94,8 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
 
                     showCondition.getFields().forEach(showConditionField -> {
                         if (!isInTabDisplayGroups(allTabDisplayGroups, showConditionField)
-                            && !MetadataField.isMetadataField(showConditionField)) {
+                            && !(MetadataField.isMetadataField(showConditionField)
+                            || InjectedField.isInjectedField(showConditionField))) {
                             validationResult.addError(
                                 new DisplayGroupInvalidTabFieldShowCondition(showConditionField, caseField));
                         }

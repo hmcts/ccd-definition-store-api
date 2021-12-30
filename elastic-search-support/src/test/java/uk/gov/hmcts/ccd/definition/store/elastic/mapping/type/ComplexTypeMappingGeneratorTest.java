@@ -20,8 +20,11 @@ import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
+
+import java.util.Iterator;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -74,8 +77,14 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     @Test
     public void shouldGenerateDataMappingForComplexTypeWithNonSearchableNestedField() {
         CaseFieldEntity complexField = newComplexField();
-        complexField.getFieldType().getComplexFields().get(1).setSearchable(false);
-
+        Iterator<ComplexFieldEntity> iterator = complexField.getFieldType().getComplexFields().iterator();
+        for (int i = 0; iterator.hasNext(); i++) {
+            ComplexFieldEntity item = iterator.next();
+            if (i == 1) {
+                item.setSearchable(false);
+                break;
+            }
+        }
         String result = complexTypeMapper.doDataMapping(complexField);
 
         assertThat(result, equalToJSONInFile(

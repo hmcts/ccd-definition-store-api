@@ -121,7 +121,6 @@ public class CaseTypeLiteRepositoryTest {
 
         assertEquals(1, caseTypeLiteEntity.getStates().size());
 
-        // additional query for states and acls (due to eager in StateEntity)
         SQLStatementCountValidator.assertSelectCount(3);
     }
 
