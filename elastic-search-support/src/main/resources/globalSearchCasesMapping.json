@@ -56,6 +56,18 @@
       "analyzer": "standard",
       "search_analyzer": "alphanumeric_string_analyzer"
     },
+    "case_access_category": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256,
+          "normalizer": "lowercase_normalizer"
+        }
+      },
+      "analyzer": "standard",
+      "search_analyzer": "alphanumeric_string_analyzer"
+    },
     "security_classification": {
       "type": "keyword",
       "normalizer": "lowercase_normalizer"

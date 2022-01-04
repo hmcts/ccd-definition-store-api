@@ -91,6 +91,7 @@ elasticsearch:
     created_date: ${elasticsearch.elasticMappings.defaultDate}
     last_modified: ${elasticsearch.elasticMappings.defaultDate}
     security_classification: ${elasticsearch.elasticMappings.defaultKeyword}
+    case_access_category:   ${elasticsearch.elasticMappings.defaultText}
     case_type_id: ${elasticsearch.elasticMappings.defaultText}
     last_state_modified_date: ${elasticsearch.elasticMappings.defaultDate}
 #    '[@timestamp]' brackets added for getting along with spring boot 2
