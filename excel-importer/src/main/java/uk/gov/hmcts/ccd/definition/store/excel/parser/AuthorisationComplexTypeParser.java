@@ -14,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.ACCESS_PROFILE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_FIELD_ID;
@@ -55,7 +56,7 @@ class AuthorisationComplexTypeParser implements AuthorisationParser {
             } else {
                 LOG.debug("Parsing access profiles for case type '{}': '{}' AuthorisationComplexTypes detected",
                     caseTypeReference, dataItems.size());
-                List<String> allPaths = caseFieldEntityUtil
+                Set<String> allPaths = caseFieldEntityUtil
                     .buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(caseType.getCaseFields());
                 for (DefinitionDataItem definition : dataItems) {
                     final String caseFieldReference = definition.getString(CASE_FIELD_ID);

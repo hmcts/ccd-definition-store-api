@@ -30,7 +30,7 @@ public class CaseTypeEntityFieldLabelValidatorTest {
     @BeforeEach
     void setUp() {
         caseField.setReference("case field");
-        caseType.getCaseFields().add(caseField);
+        caseType.addCaseField(caseField);
     }
 
     @Test
@@ -45,21 +45,21 @@ public class CaseTypeEntityFieldLabelValidatorTest {
     @DisplayName("should successfully validate placeholder if leaf element is simple type")
     void shouldSuccessfullyValidatePlaceholderIfLeafElementIsSimpleType() {
         caseField.setLabel("This is a value: ${complex.collection.nested.nested2.textField}");
-        caseType.getCaseFields().add(newComplexFieldWithCollectionOfNestedComplexFields());
+        caseType.addCaseField(newComplexFieldWithCollectionOfNestedComplexFields());
 
         ValidationResult validate = caseTypeEntityFieldLabelValidator.validate(caseType);
 
         assertTrue(validate.isValid());
 
         caseField.setLabel("This is a value: ${complex.collection.nested22}");
-        caseType.getCaseFields().add(newComplexFieldWithCollectionOfNestedComplexFields());
+        caseType.addCaseField(newComplexFieldWithCollectionOfNestedComplexFields());
 
         validate = caseTypeEntityFieldLabelValidator.validate(caseType);
 
         assertTrue(validate.isValid());
 
         caseField.setLabel("This is a value: ${complex.collection.nested23}");
-        caseType.getCaseFields().add(newComplexFieldWithCollectionOfNestedComplexFields());
+        caseType.addCaseField(newComplexFieldWithCollectionOfNestedComplexFields());
 
         validate = caseTypeEntityFieldLabelValidator.validate(caseType);
 
@@ -90,7 +90,7 @@ public class CaseTypeEntityFieldLabelValidatorTest {
     @DisplayName("should fail to validate placeholder if leaf element is complex type")
     void shouldFailToValidatePlaceholderIfLeafElementIsComplexType() {
         caseField.setLabel("This is a value: ${complex.collection.nested.nested2}");
-        caseType.getCaseFields().add(newComplexFieldWithCollectionOfNestedComplexFields());
+        caseType.addCaseField(newComplexFieldWithCollectionOfNestedComplexFields());
 
         ValidationResult validate = caseTypeEntityFieldLabelValidator.validate(caseType);
 
@@ -109,7 +109,7 @@ public class CaseTypeEntityFieldLabelValidatorTest {
     @DisplayName("should fail to validate placeholder if leaf element is collection type")
     void shouldFailToValidatePlaceholderIfLeafElementIsCollectionType() {
         caseField.setLabel("This is a value: ${complex.collection}");
-        caseType.getCaseFields().add(newComplexFieldWithCollectionOfNestedComplexFields());
+        caseType.addCaseField(newComplexFieldWithCollectionOfNestedComplexFields());
 
         ValidationResult validate = caseTypeEntityFieldLabelValidator.validate(caseType);
 

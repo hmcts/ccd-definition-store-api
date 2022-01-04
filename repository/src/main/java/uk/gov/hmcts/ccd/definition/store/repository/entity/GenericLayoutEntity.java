@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -38,7 +37,7 @@ public abstract class GenericLayoutEntity implements Serializable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseType;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_field_id", nullable = false)
     private CaseFieldEntity caseField;
 

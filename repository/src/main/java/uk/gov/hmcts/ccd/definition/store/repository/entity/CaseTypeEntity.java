@@ -5,8 +5,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
@@ -72,7 +75,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @Type(type = "pgsql_securityclassification_enum")
     private SecurityClassification securityClassification;
 
-    @ManyToOne(fetch = EAGER, cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "print_webhook_id", nullable = true)
     private WebhookEntity printWebhook;
 
@@ -80,40 +83,35 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "get_case_webhook_id", nullable = true)
     private WebhookEntity getCaseWebhook;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
-    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
     private final List<EventEntity> events = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "case_type_id")
     private final List<StateEntity> states = new ArrayList<>();
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
-    @Fetch(value = FetchMode.SUBSELECT)
-    private final List<CaseFieldEntity> caseFields = new ArrayList<>();
+    @Fetch(value = FetchMode.JOIN)
+    @OrderBy("id")
+    private final Set<CaseFieldEntity> caseFields = new LinkedHashSet<>();
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "case_type_id")
     private final List<CaseTypeACLEntity> caseTypeACLEntities = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<CaseRoleEntity> caseRoles = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<SearchAliasFieldEntity> searchAliasFields = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<RoleToAccessProfilesEntity> roleToAccessProfiles = new ArrayList<>();
 
@@ -247,7 +245,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
         this.getCaseWebhook = getCaseWebhook;
     }
 
-    public List<CaseFieldEntity> getCaseFields() {
+    public Set<CaseFieldEntity> getCaseFields() {
         return caseFields;
     }
 

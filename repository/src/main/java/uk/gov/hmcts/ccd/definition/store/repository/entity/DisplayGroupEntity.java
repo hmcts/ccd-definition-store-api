@@ -14,11 +14,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -65,15 +67,16 @@ public class DisplayGroupEntity implements Serializable {
     private EventEntity event;
 
     @OneToMany(mappedBy = "displayGroup", fetch = EAGER, cascade = ALL, orphanRemoval = true)
-    @Fetch(value = FetchMode.SUBSELECT)
-    private final List<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new ArrayList<>();
+    @Fetch(value = FetchMode.JOIN)
+    @OrderBy("id")
+    private final Set<DisplayGroupCaseFieldEntity> displayGroupCaseFields = new LinkedHashSet<>();
 
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(cascade = ALL, fetch = LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private AccessProfileEntity accessProfile;
 
 
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(cascade = ALL, fetch = LAZY)
     @JoinColumn(name = "webhook_mid_event_id")
     private WebhookEntity webhookMidEvent;
 
@@ -150,7 +153,7 @@ public class DisplayGroupEntity implements Serializable {
         displayGroupCaseFields.add(displayGroupField);
     }
 
-    public List<DisplayGroupCaseFieldEntity> getDisplayGroupCaseFields() {
+    public Set<DisplayGroupCaseFieldEntity> getDisplayGroupCaseFields() {
         return displayGroupCaseFields;
     }
 

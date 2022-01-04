@@ -10,9 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Table(name = "display_group_case_field")
 @Entity
@@ -48,6 +50,14 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
 
     @Column(name = "show_condition")
     private String showCondition;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public LocalDate getLiveFrom() {
         return liveFrom;
@@ -115,5 +125,42 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
 
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
+    }
+
+    @Transient
+    private String oid = IdGenerator.createId();
+
+    public String getOid() {
+        return oid;
+    }
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        DisplayGroupCaseFieldEntity that = (DisplayGroupCaseFieldEntity) o;
+        if (getId() != null) {
+            return Objects.equals(getId(), that.getId());
+        } else {
+            return Objects.equals(getOid(), that.getOid());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        if (getId() != null) {
+            return Objects.hash(getId());
+        } else {
+            return Objects.hash(getOid());
+        }
     }
 }
