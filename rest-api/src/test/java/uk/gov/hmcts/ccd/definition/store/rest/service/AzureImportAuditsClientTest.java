@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
@@ -27,10 +28,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class, BlobProperties.class})
 public class AzureImportAuditsClientTest {
@@ -59,9 +62,10 @@ public class AzureImportAuditsClientTest {
 
     private ResultSegment blobsPage;
 
+    final CloudBlobContainer cloudBlobContainer = mock(CloudBlobContainer.class);
+
     @Before
     public void setUp() throws StorageException {
-        final CloudBlobContainer cloudBlobContainer = mock(CloudBlobContainer.class);
         final ApplicationParams applicationParams = mock(ApplicationParams.class);
 
         b11 = mock(CloudBlockBlob.class);
@@ -146,6 +150,29 @@ public class AzureImportAuditsClientTest {
         verifyCloudBlockBlobBehaviour(b21, p21);
         verifyCloudBlockBlobBehaviour(b12, p12);
         verifyCloudBlockBlobBehaviour(b11, p11);
+    }
+
+    @Test
+    public void shouldFetchNoImportAuditsWhenNoPrefixFound() throws Exception {
+
+        int maxDaysToCheck = 10 + IMPORT_AUDITS_GET_LIMIT * 5;
+        //maxDaysToCheck starts at 0
+        maxDaysToCheck = maxDaysToCheck + 1;
+
+        when(blobsPage1.getResults()).thenReturn(newArrayList());
+        when(blobsPage2.getResults()).thenReturn(newArrayList());
+        when(blobsPage3.getResults()).thenReturn(newArrayList());
+
+        final List<ImportAudit> audits = subject.fetchLatestImportAudits();
+        assertThat(audits.size(), is(0));
+        verify(cloudBlobContainer, times(maxDaysToCheck))
+            .listBlobsSegmented(anyString(),
+                eq(true),
+                any(EnumSet.class),
+                eq(Integer.MAX_VALUE),
+                eq(null),
+                eq(null),
+                eq(null));
     }
 
     private void verifyCloudBlockBlobBehaviour(CloudBlockBlob blob, BlobProperties properties) throws Exception {
