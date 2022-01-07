@@ -167,7 +167,7 @@ class LayoutParserTest {
             .orElseThrow(() -> new RuntimeException("entity is not found by '" + reference + "'"));
         assertThat(entity.getCaseType(), is(caseTypeEntity));
         assertThat(entity.getDisplayGroupCaseFields().size(), is(1));
-        assertThat(entity.getDisplayGroupCaseFields().get(0).getCaseField(), is(caseFieldEntity));
+        assertThat(entity.getDisplayGroupCaseFields().iterator().next().getCaseField(), is(caseFieldEntity));
     }
 
     private CaseTypeEntity buildCaseTypeEntity() {

@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -319,7 +321,7 @@ public interface EntityToResponseDTOMapper {
             // Default constructor
         }
 
-        static List<AccessControlList> map(List<? extends Authorisation> authorisation) {
+        static List<AccessControlList> map(Collection<? extends Authorisation> authorisation) {
             return authorisation.stream()
                 .map(auth -> new AccessControlList(auth.getAccessProfile().getReference(),
                     auth.getCreate(),
@@ -372,9 +374,9 @@ public interface EntityToResponseDTOMapper {
             return new ArrayList<>();
         }
 
-        private static List<CaseField> getCaseFields(List<ComplexFieldEntity> complexFieldEntityList) {
+        private static List<CaseField> getCaseFields(Set<ComplexFieldEntity> complexFieldEntityList) {
             return complexFieldEntityList.stream()
-                .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
+                .map(EntityToResponseDTOMapper.INSTANCE::map)
                 .sorted(NULLS_LAST_ORDER_COMPARATOR)
                 .collect(Collectors.toList());
         }
