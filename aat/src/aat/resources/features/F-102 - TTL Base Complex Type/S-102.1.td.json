@@ -1,6 +1,6 @@
 {
 	"_guid_": "S-102.1",
-	"_extends_": "F-101_Test_Base_data",
+	"_extends_": "F-102_Test_Base_data",
 	"title": "must successfully import definition file",
 	"specs": [
     "contains correctly configured TTL Fields"

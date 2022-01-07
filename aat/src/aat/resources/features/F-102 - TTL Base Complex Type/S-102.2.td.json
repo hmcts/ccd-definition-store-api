@@ -1,6 +1,6 @@
 {
   "_guid_": "S-102.2",
-  "_extends_": "F-101_Test_Complex_Organisation",
+  "_extends_": "F-102_Test_Complex_Organisation",
   "title": "must return all details successfully for a case type containing ChangeOrganisationRequest fields",
   "specs": [
     "an active profile in CCD",
