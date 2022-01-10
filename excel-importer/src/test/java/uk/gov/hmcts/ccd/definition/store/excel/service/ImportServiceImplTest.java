@@ -33,6 +33,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_R
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_REGION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_WAYS_TO_PAY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
@@ -196,6 +197,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity caseLocationBaseType;
     private FieldTypeEntity regionBaseType;
     private FieldTypeEntity baseLocationBaseType;
+    private FieldTypeEntity waysToPayBaseType;
 
     @Before
     public void setup() {
@@ -254,6 +256,7 @@ public class ImportServiceImplTest {
         baseLocationBaseType = buildBaseType(BASE_BASE_LOCATION);
         dynamicRadioListBaseType = buildBaseType(BASE_DYNAMIC_RADIO_LIST);
         dynamicMultiSelectListBaseType = buildBaseType(BASE_DYNAMIC_MULTI_SELECT_LIST);
+        waysToPayBaseType = buildBaseType(BASE_WAYS_TO_PAY);
 
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
@@ -311,7 +314,8 @@ public class ImportServiceImplTest {
             regionBaseType,
             baseLocationBaseType,
             dynamicRadioListBaseType,
-            dynamicMultiSelectListBaseType));
+            dynamicMultiSelectListBaseType,
+            waysToPayBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -358,7 +362,8 @@ public class ImportServiceImplTest {
             changeOrganisationRequest,
             previousOrganisationBaseType,
             dynamicRadioListBaseType,
-            dynamicMultiSelectListBaseType));
+            dynamicMultiSelectListBaseType,
+            waysToPayBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
