@@ -197,6 +197,29 @@ public class PageShowConditionValidatorImplTest {
         assertThat(result.isValid(), is(true));
     }
 
+
+    @Test
+    public void successfullyValidatesShowConditionWithInjected() throws InvalidShowConditionException {
+        displayGroup.setShowCondition("someShowCondition");
+        displayGroup.setType(DisplayGroupType.PAGE);
+        String field = "[INJECTED_DATA.test]";
+        EventEntity event = mock(EventEntity.class);
+        when(event.hasField(field)).thenReturn(false);
+        displayGroup.setEvent(event);
+        ShowCondition validParsedShowCondition = new ShowCondition.Builder()
+            .showConditionExpression("parsedSC").field(field).build();
+        when(mockShowConditionParser.parseShowCondition("someShowCondition"))
+            .thenReturn(validParsedShowCondition);
+
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference("SimpleType");
+        displayGroup.setCaseType(caseTypeEntity);
+
+        ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
+
+        assertThat(result.isValid(), is(true));
+    }
+
     @Test
     public void returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidField()
         throws InvalidShowConditionException {

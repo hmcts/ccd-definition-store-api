@@ -312,8 +312,11 @@ class  EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(stateEntity3)).thenReturn(caseState3);
 
             CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+            caseFieldEntity1.setId(1);
             CaseFieldEntity caseFieldEntity2 = new CaseFieldEntity();
+            caseFieldEntity2.setId(2);
             CaseFieldEntity caseFieldEntity3 = new CaseFieldEntity();
+            caseFieldEntity3.setId(3);
             CaseField caseField1 = new CaseField();
             CaseField caseField2 = new CaseField();
             CaseField caseField3 = new CaseField();
@@ -363,6 +366,8 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(caseType.getName(), caseTypeEntity.getName());
             assertEquals(caseType.getSecurityClassification(), caseTypeEntity.getSecurityClassification());
             assertEquals(caseType.getPrintableDocumentsUrl(), caseTypeEntity.getPrintWebhook().getUrl());
+            assertEquals(caseType.getCallbackGetCaseUrl(), caseTypeEntity.getGetCaseWebhook().getUrl());
+            assertEquals(3, caseType.getRetriesGetCaseUrl().size());
 
             assertThat(caseType.getJurisdiction(), is(sameInstance(jurisdiction)));
 
@@ -397,12 +402,14 @@ class  EntityToResponseDTOMapperTest {
             assertNull(caseType.getName());
             assertNull(caseType.getSecurityClassification());
             assertNull(caseType.getPrintableDocumentsUrl());
+            assertNull(caseType.getCallbackGetCaseUrl());
             assertNull(caseType.getJurisdiction());
 
             assertEquals(0, caseType.getEvents().size());
             assertEquals(0, caseType.getStates().size());
             assertEquals(0, caseType.getAcls().size());
             assertEquals(0, caseType.getCaseFields().size());
+            assertEquals(0, caseType.getRetriesGetCaseUrl().size());
         }
 
         private CaseTypeEntity caseTypeEntity(JurisdictionEntity jurisdiction,
@@ -422,6 +429,11 @@ class  EntityToResponseDTOMapperTest {
             WebhookEntity webhookEntity = new WebhookEntity();
             webhookEntity.setUrl("Document Print URL");
             caseTypeEntity.setPrintWebhook(webhookEntity);
+
+            WebhookEntity getCaseWebhookEntity = new WebhookEntity();
+            getCaseWebhookEntity.setUrl("Get Case URL");
+            getCaseWebhookEntity.setTimeouts(asList(3, 5, 7));
+            caseTypeEntity.setGetCaseWebhook(getCaseWebhookEntity);
 
             caseTypeEntity.setJurisdiction(jurisdiction);
             caseTypeEntity.addEvents(events);
@@ -547,8 +559,11 @@ class  EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(jurisdictionEntity)).thenReturn(jurisdiction);
 
             EventLiteEntity eventEntity1 = new EventLiteEntity();
+            eventEntity1.setId(1);
             EventLiteEntity eventEntity2 = new EventLiteEntity();
+            eventEntity2.setId(2);
             EventLiteEntity eventEntity3 = new EventLiteEntity();
+            eventEntity3.setId(3);
             CaseEventLite caseEvent1 = new CaseEventLite();
             CaseEventLite caseEvent2 = new CaseEventLite();
             CaseEventLite caseEvent3 = new CaseEventLite();
@@ -580,7 +595,9 @@ class  EntityToResponseDTOMapperTest {
             eventEntity3.addEventACL(eventLiteACLEntity);
 
             StateACLEntity stateACLEntity1 = new StateACLEntity();
+            stateACLEntity1.setId(1);
             StateACLEntity stateACLEntity2 = new StateACLEntity();
+            stateACLEntity2.setId(2);
             stateACLEntity1.setAccessProfile(accessProfileEntity);
             stateACLEntity2.setAccessProfile(accessProfileEntity);
             stateEntity1.addStateACLEntities(asList(stateACLEntity1, stateACLEntity2));
@@ -1252,8 +1269,11 @@ class  EntityToResponseDTOMapperTest {
             displayGroupEntity.setOrder(69);
 
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity1 = new DisplayGroupCaseFieldEntity();
+            displayGroupCaseFieldEntity1.setId(1);
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity2 = new DisplayGroupCaseFieldEntity();
+            displayGroupCaseFieldEntity2.setId(2);
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity3 = new DisplayGroupCaseFieldEntity();
+            displayGroupCaseFieldEntity3.setId(3);
 
             CaseTypeTabField caseTypeTabField1 = new CaseTypeTabField();
             CaseTypeTabField caseTypeTabField2 = new CaseTypeTabField();
@@ -1767,7 +1787,8 @@ class  EntityToResponseDTOMapperTest {
         }
     }
 
-    private void assertAcls(List<? extends Authorisation> authorisation, List<AccessControlList> accessControlList) {
+    private void assertAcls(Collection<? extends Authorisation> authorisation,
+                            List<AccessControlList> accessControlList) {
         assertEquals(authorisation.size(), accessControlList.size());
         for (Authorisation authItem : authorisation) {
             assertThat(accessControlList,
