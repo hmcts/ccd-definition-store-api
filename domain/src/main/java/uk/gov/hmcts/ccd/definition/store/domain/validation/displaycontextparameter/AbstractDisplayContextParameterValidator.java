@@ -68,7 +68,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
     private void validateCaseFieldType(final T entity, final ValidationResult validationResult) {
         if (!allowedFieldTypes.isEmpty()
                 && !allowedFieldTypes.contains(getFieldType(entity)) && !isAllowedCollectionFieldType(entity)) {
-                validationResult.addError(unsupportedFieldTypeError(entity));
+            validationResult.addError(unsupportedFieldTypeError(entity));
         }
     }
 
