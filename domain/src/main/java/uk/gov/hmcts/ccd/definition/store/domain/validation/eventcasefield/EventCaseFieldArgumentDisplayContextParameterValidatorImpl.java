@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
-import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameter;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
@@ -8,7 +7,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparameter.AbstractDisplayContextParameterValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaycontextparameter.DisplayContextParameterValidatorFactory;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
-import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
@@ -44,9 +42,6 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImpl
     protected void validateDisplayContextParameterType(final DisplayContextParameter displayContextParameter,
                                                        final EventCaseFieldEntity entity,
                                                        final ValidationResult validationResult) {
-        if (!isSupportedForEventCaseField(displayContextParameter, entity)) {
-            validationResult.addError(unsupportedDisplayContextParameterTypeError(entity));
-        }
         super.validateDisplayContextParameterType(displayContextParameter, entity, validationResult);
     }
 
@@ -70,9 +65,4 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImpl
         return "CaseEventToFields";
     }
 
-    private boolean isSupportedForEventCaseField(final DisplayContextParameter displayContextParameter,
-                                                 final EventCaseFieldEntity entity) {
-        return DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.containsKey(entity.getDisplayContext())
-            && DISPLAY_CONTEXT_PARAMETER_TYPE_MAP.get(entity.getDisplayContext()) == displayContextParameter.getType();
-    }
 }
