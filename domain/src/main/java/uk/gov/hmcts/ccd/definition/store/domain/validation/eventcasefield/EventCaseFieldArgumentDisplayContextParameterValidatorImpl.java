@@ -19,7 +19,7 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImpl
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
         {DisplayContextParameterType.ARGUMENT};
-    private static final List<String> ALLOWED_FIELD_TYPES = null;
+    private static final List<String> ALLOWED_FIELD_TYPES = Collections.emptyList();
     private static final Map<DisplayContext, DisplayContextParameterType> DISPLAY_CONTEXT_PARAMETER_TYPE_MAP =
         new EnumMap<>(DisplayContext.class);
 
