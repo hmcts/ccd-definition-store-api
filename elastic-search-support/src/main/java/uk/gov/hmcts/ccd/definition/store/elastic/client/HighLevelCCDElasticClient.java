@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @Slf4j
+@SuppressWarnings("java:S1874")
 public class HighLevelCCDElasticClient implements CCDElasticClient {
 
     private static final String CASES_INDEX_SETTINGS_JSON = "/casesIndexSettings.json";

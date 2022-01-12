@@ -18,6 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClien
 @ComponentScan("uk.gov.hmcts.ccd.definition.store.elastic")
 @EnableConfigurationProperties(value = CcdElasticSearchProperties.class)
 @Slf4j
+@SuppressWarnings("java:S1874")
 public class ElasticSearchConfiguration {
 
     @Autowired
