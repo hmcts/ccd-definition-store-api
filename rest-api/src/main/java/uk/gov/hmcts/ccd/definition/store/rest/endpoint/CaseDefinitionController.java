@@ -8,11 +8,12 @@ import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.ForbiddenException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -23,8 +24,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -36,6 +40,7 @@ public class CaseDefinitionController {
     private JurisdictionService jurisdictionService;
     private final CaseRoleService caseRoleService;
     private final RoleToAccessProfileService roleToAccessProfilesService;
+    private IdamProfileClient idamProfileClient;
 
     @Autowired
     public CaseDefinitionController(CaseTypeService caseTypeService, JurisdictionService jurisdictionService,
@@ -54,12 +59,13 @@ public class CaseDefinitionController {
         response = CaseType.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
-        @ApiResponse(code = 200, message = "Unexpected error")
+        @ApiResponse(code = 403, message = "Unexpected error")
     })
     public CaseType dataCaseTypeIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
-        return caseTypeService.findByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
+        return compareRoles(id);
     }
+
 
     @GetMapping(value = "/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}",
         produces = {"application/json"})
@@ -141,5 +147,24 @@ public class CaseDefinitionController {
         required = true) @PathVariable("ctid")
                                                                  String id) {
         return caseTypeService.findVersionInfoByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+    private CaseType compareRoles(String id) {
+        final Optional<CaseType> caseTypeInfo = caseTypeService.findByCaseTypeId(id);
+        if (caseTypeInfo.isPresent()) {
+            List<RoleAssignment> rolesForCase = roleToAccessProfilesService.findRoleAssignmentsByCaseTypeId(id);
+            try {
+                String usersRoles = Arrays.toString(idamProfileClient.getLoggedInUserDetails().getRoles());
+                if (Objects.equals(usersRoles, rolesForCase.toString())) {
+                    return caseTypeInfo.get();
+                } else {
+                    throw new ForbiddenException(id);
+                }
+            } catch (Exception e) {
+                throw new ForbiddenException(id);
+            }
+        } else {
+            throw new NotFoundException(id);
+        }
     }
 }

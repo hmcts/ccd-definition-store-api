@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
@@ -30,7 +31,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -41,53 +41,66 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 @Transactional
 public class MultipleControllersEndpointIT extends BaseTest {
     private static final String WIZARD_PAGE_STRUCTURE_URL_1 =
-        "/api/display/wizard-page-structure/case-types/%s/event-triggers/%s";
+            "/api/display/wizard-page-structure/case-types/%s/event-triggers/%s";
     private static final String TABS_STRUCTURE_URL =
-        "/api/display/tab-structure/%s";
+            "/api/display/tab-structure/%s";
     private static final String ROLES_URL = "/api/user-roles/%s";
     private static final String WORKBASKET_INPUT_DEFINITION_URL = "/api/display/work-basket-input-definition/%s";
     private static final String JURISDICTIONS_URL = "/api/data/jurisdictions";
     private static final String CASE_TYPE_URL = "/api/data/case-type/%s";
+    private static final String Toke = "Bearer " +
+            "eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiYi9PNk92VnYxK3krV2dySDVVaTlXVGlvTHQwPSIsImFsZyI6IlJTMjU2In0" +
+            ".eyJzdWIiOiJ1c2VyLm5vX3JvbGVzQGdtYWlsLmNvbSIsImF1dGhfbGV2ZWwiOjAsImF1ZGl0VHJhY2tpbmdJZCI6ImMxZjhkYjZiLT" +
+            "M5YWMtNDY4My1iODk2LWIzMTYzODRiZTM5YiIsImlzcyI6Imh0dHA6Ly9mci1hbTo4MDgwL29wZW5hbS9vYXV0aDIvaG1jdHMiLCJ0b" +
+            "2tlbk5hbWUiOiJhY2Nlc3NfdG9rZW4iLCJ0b2tlbl90eXBlIjoiQmVhcmVyIiwiYXV0aEdyYW50SWQiOiJkM2ZhZmVmZC1hY2IxLTQ3" +
+            "ODUtYjQxNy1jYjYwODVkYTZmMmEiLCJhdWQiOiJjY2RfZ2F0ZXdheSIsIm5iZiI6MTY0MjEwNDU5OSwiZ3JhbnRfdHlwZSI6ImF1dGh" +
+            "vcml6YXRpb25fY29kZSIsInNjb3BlIjpbIm9wZW5pZCIsInByb2ZpbGUiLCJyb2xlcyJdLCJhdXRoX3RpbWUiOjE2NDIxMDQ1OTgwMD" +
+            "AsInJlYWxtIjoiL2htY3RzIiwiZXhwIjoxNjQyMTMzMzk5LCJpYXQiOjE2NDIxMDQ1OTksImV4cGlyZXNfaW4iOjI4ODAwLCJqdGkiO" +
+            "iI3MDY2NTVlNC04MGM5LTRjOWItYTIyZi02OTE5NzdkMWM1MmEifQ.A664UgmKwmjBjcqSkdSfZtmKhARh-aVJtOXh-QGkS7KEgwrWK" +
+            "" +
+            "p0wN1v02xnL31PLyMSFgXbM9xZ-DqNPmaRqp_i7D0SbH68D7KINYUANHfcOWJLU_a7k3lmWg5RbAnA6MxKMiBW5DExwEsF0RuAJnAQnG" +
+            "bg5HoFuQ542MRwZG7er284t7pMBa3ffVwkYFNu4350rEMThdVEFQPKMiXyz02anKHd06qQLvQ3vSW0G7-Yg6ccdCexMTrgMBNAUNh7rx" +
+            "b6fVAOzBFbgNajGcwItEc2boSFeKG_4oVdSRVfl1z4TTJN4qV6an-V9tK_kaRIn4f9wnZPoQweOygsxTizOTQ";
 
     @Test
     public void shouldReturnCaseType() throws Exception {
         try (final InputStream inputStream =
-                 new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
+                     new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-                .file(file)
-                .header(AUTHORIZATION, "Bearer testUser"))
-                .andReturn();
+                            .file(file)
+                            .header(AUTHORIZATION, Toke))
+                    .andReturn();
             assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
             final String CASE_TYPE = "TestAddressBookCase";
             final String URL = String.format(CASE_TYPE_URL, CASE_TYPE);
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.id").value(CASE_TYPE))
-                .andReturn();
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(jsonPath("$.id").value(CASE_TYPE))
+                    .andReturn();
 
             final CaseType caseType = mapper.readValue(result.getResponse()
-                .getContentAsString(), TypeFactory.defaultInstance().constructType(CaseType.class));
+                    .getContentAsString(), TypeFactory.defaultInstance().constructType(CaseType.class));
             assertAll(
-                () -> assertThat(caseType.getEvents().stream().filter(
-                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
-                    hasProperty("caseFields", hasItem(allOf(
-                        hasProperty("showSummaryContentOption", equalTo(2)),
-                        hasProperty("caseFieldId", containsString("PersonFirstName")))))),
-                () -> assertThat(caseType.getEvents().stream().filter(
-                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
-                    hasProperty("caseFields", hasItem(allOf(
-                        hasProperty("showSummaryContentOption", equalTo(1)),
-                        hasProperty("caseFieldId", containsString("PersonLastName")))))),
-                () -> assertThat(caseType.getEvents().stream().filter(
-                    e -> e.getId().equals("createCase")).findFirst().get(),
-                    hasProperty("showEventNotes", equalTo(true))),
-                () -> assertThat(caseType.getEvents().stream().filter(
-                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
-                    hasProperty("showEventNotes", equalTo(false))),
-                () -> assertThat(caseType.getEvents().stream().filter(
-                    e -> e.getId().equals("stopCase")).findFirst().get(),
-                    hasProperty("showEventNotes", nullValue()))
+                    () -> assertThat(caseType.getEvents().stream().filter(
+                                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                            hasProperty("caseFields", hasItem(allOf(
+                                    hasProperty("showSummaryContentOption", equalTo(2)),
+                                    hasProperty("caseFieldId", containsString("PersonFirstName")))))),
+                    () -> assertThat(caseType.getEvents().stream().filter(
+                                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                            hasProperty("caseFields", hasItem(allOf(
+                                    hasProperty("showSummaryContentOption", equalTo(1)),
+                                    hasProperty("caseFieldId", containsString("PersonLastName")))))),
+                    () -> assertThat(caseType.getEvents().stream().filter(
+                                    e -> e.getId().equals("createCase")).findFirst().get(),
+                            hasProperty("showEventNotes", equalTo(true))),
+                    () -> assertThat(caseType.getEvents().stream().filter(
+                                    e -> e.getId().equals("enterCaseIntoLegacy")).findFirst().get(),
+                            hasProperty("showEventNotes", equalTo(false))),
+                    () -> assertThat(caseType.getEvents().stream().filter(
+                                    e -> e.getId().equals("stopCase")).findFirst().get(),
+                            hasProperty("showEventNotes", nullValue()))
             );
         }
     }
@@ -98,28 +111,28 @@ public class MultipleControllersEndpointIT extends BaseTest {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andReturn();
+                        .file(file)
+                        .header(AUTHORIZATION, Toke))
+                .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestAddressBookCase";
         final String URL = String.format(WORKBASKET_INPUT_DEFINITION_URL, CASE_TYPE);
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
-            .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
+                .andReturn();
 
         final WorkbasketInputDefinition workbasketInputDefinition = mapper.readValue(
-            result.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
+                result.getResponse().getContentAsString(),
+                TypeFactory.defaultInstance().constructType(WorkbasketInputDefinition.class));
         assertAll(
-            () -> assertThat(workbasketInputDefinition.getFields(), hasSize(3)),
-            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
-                containsString("First Name")))),
-            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
-                containsString("Last Name")))),
-            () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
-                containsString("Address"))))
+                () -> assertThat(workbasketInputDefinition.getFields(), hasSize(3)),
+                () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
+                        containsString("First Name")))),
+                () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
+                        containsString("Last Name")))),
+                () -> assertThat(workbasketInputDefinition.getFields(), hasItem(hasProperty("label",
+                        containsString("Address"))))
         );
     }
 
@@ -128,34 +141,34 @@ public class MultipleControllersEndpointIT extends BaseTest {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andReturn();
+                        .file(file)
+                        .header(AUTHORIZATION, Toke))
+                .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestAddressBookCase";
         final String URL = String.format(TABS_STRUCTURE_URL, CASE_TYPE);
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
-            .andExpect(jsonPath("$.tabs").isArray())
-            .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
+                .andExpect(jsonPath("$.tabs").isArray())
+                .andReturn();
 
         CaseTabCollection caseTabCollection = mapper.readValue(result.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(CaseTabCollection.class));
+                TypeFactory.defaultInstance().constructType(CaseTabCollection.class));
         assertAll(
-            () -> assertThat(caseTabCollection.getTabs(), hasSize(5)),
-            () -> assertThat(caseTabCollection.getTabs(), hasItem(allOf(
-                hasProperty("showCondition", containsString("PersonLastName=\"Sparrow\"")),
-                hasProperty("id", containsString("NameTab")),
-                hasProperty("label", containsString("Name"))))),
-            () -> {
-                assertThat(caseTabCollection.getTabs().stream()
-                        .filter(t -> t.getId().equals("NameTab")).findFirst().get(),
-                    hasProperty("tabFields", hasItem(allOf(
-                        hasProperty("showCondition", containsString("PersonFirstName=\"Jack\"")),
-                        hasProperty("caseField",
-                            hasProperty("id", containsString("PersonLastName")))))));
-            }
+                () -> assertThat(caseTabCollection.getTabs(), hasSize(5)),
+                () -> assertThat(caseTabCollection.getTabs(), hasItem(allOf(
+                        hasProperty("showCondition", containsString("PersonLastName=\"Sparrow\"")),
+                        hasProperty("id", containsString("NameTab")),
+                        hasProperty("label", containsString("Name"))))),
+                () -> {
+                    assertThat(caseTabCollection.getTabs().stream()
+                                    .filter(t -> t.getId().equals("NameTab")).findFirst().get(),
+                            hasProperty("tabFields", hasItem(allOf(
+                                    hasProperty("showCondition", containsString("PersonFirstName=\"Jack\"")),
+                                    hasProperty("caseField",
+                                            hasProperty("id", containsString("PersonLastName")))))));
+                }
         );
     }
 
@@ -164,30 +177,30 @@ public class MultipleControllersEndpointIT extends BaseTest {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andReturn();
+                        .file(file)
+                        .header(AUTHORIZATION, Toke))
+                .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestAddressBookCase";
         final String eventType = "enterCaseIntoLegacy";
         final String URL = String.format(WIZARD_PAGE_STRUCTURE_URL_1, CASE_TYPE, eventType);
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
-            .andExpect(jsonPath("$.event_id").value(eventType))
-            .andExpect(jsonPath("$.wizard_pages").isArray())
-            .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
+                .andExpect(jsonPath("$.event_id").value(eventType))
+                .andExpect(jsonPath("$.wizard_pages").isArray())
+                .andReturn();
 
         WizardPageCollection wizardPageCollection = mapper.readValue(result.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
+                TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
         assertAll(
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(3)),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
-                containsString("Personal Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
-                containsString("Address Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
-                containsString("A Label"))))
+                () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(3)),
+                () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
+                        containsString("Personal Information")))),
+                () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
+                        containsString("Address Information")))),
+                () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
+                        containsString("A Label"))))
         );
     }
 
@@ -196,29 +209,29 @@ public class MultipleControllersEndpointIT extends BaseTest {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andReturn();
+                        .file(file)
+                        .header(AUTHORIZATION, Toke))
+                .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String CASE_TYPE = "TestComplexAddressBookCase";
         final String eventType = "createCase";
         final String URL = String.format(WIZARD_PAGE_STRUCTURE_URL_1, CASE_TYPE, eventType);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
-            .andExpect(jsonPath("$.event_id").value(eventType))
-            .andExpect(jsonPath("$.wizard_pages").isArray())
-            .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
+                .andExpect(jsonPath("$.event_id").value(eventType))
+                .andExpect(jsonPath("$.wizard_pages").isArray())
+                .andReturn();
         final WizardPageCollection wizardPageCollection = mapper.readValue(result.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
+                TypeFactory.defaultInstance().constructType(WizardPageCollection.class));
         assertAll(
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(1)),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
-                containsString("Contact Information")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(
-                hasProperty("id", containsString("createCaseContactPage")))),
-            () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("wizardPageFields",
-                hasItem(hasProperty("caseFieldId", containsString("ContectEmail"))))))
+                () -> assertThat(wizardPageCollection.getWizardPages(), hasSize(1)),
+                () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("label",
+                        containsString("Contact Information")))),
+                () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(
+                        hasProperty("id", containsString("createCaseContactPage")))),
+                () -> assertThat(wizardPageCollection.getWizardPages(), hasItem(hasProperty("wizardPageFields",
+                        hasItem(hasProperty("caseFieldId", containsString("ContectEmail"))))))
         );
     }
 
@@ -227,16 +240,16 @@ public class MultipleControllersEndpointIT extends BaseTest {
     public void shouldReturnUserRolesForDefinedRoles() throws Exception {
         final String URL = String.format(ROLES_URL, "CaseWorker1,CaseWorker2,CaseWorker3,Nayab,Fatih,Andrzej,Mario");
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
         final List<UserRole> userRoles = mapper.readValue(result.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
-            }));
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+                }));
         assertAll(
-            () -> assertThat(userRoles, hasSize(3)),
-            () -> assertThat(userRoles.get(0).getSecurityClassification(), is(PUBLIC)),
-            () -> assertThat(userRoles.get(1).getSecurityClassification(), is(PRIVATE)),
-            () -> assertThat(userRoles.get(2).getSecurityClassification(), is(RESTRICTED))
+                () -> assertThat(userRoles, hasSize(3)),
+                () -> assertThat(userRoles.get(0).getSecurityClassification(), is(PUBLIC)),
+                () -> assertThat(userRoles.get(1).getSecurityClassification(), is(PRIVATE)),
+                () -> assertThat(userRoles.get(2).getSecurityClassification(), is(RESTRICTED))
         );
     }
 
@@ -244,20 +257,20 @@ public class MultipleControllersEndpointIT extends BaseTest {
     public void shouldSaveUserRole() throws Exception {
         final String URL = ROLES_URL.substring(0, ROLES_URL.length() - 4);
         MvcResult result = mockMvc
-            .perform(MockMvcRequestBuilders
-                .put(URL)
-                .contentType("application/json")
-                .accept("application/json")
-                .content("{\"role\":\"to-delete-1\",\"security_classification\":\"PUBLIC\"}"))
-            .andExpect(MockMvcResultMatchers.status().isCreated())
-            .andReturn();
+                .perform(MockMvcRequestBuilders
+                        .put(URL)
+                        .contentType("application/json")
+                        .accept("application/json")
+                        .content("{\"role\":\"to-delete-1\",\"security_classification\":\"PUBLIC\"}"))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andReturn();
         final UserRole userRole = mapper.readValue(result.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(new TypeReference<UserRole>() {
-            }));
+                TypeFactory.defaultInstance().constructType(new TypeReference<UserRole>() {
+                }));
         assertAll(
-            () -> assertThat(userRole.getSecurityClassification(), is(PUBLIC)),
-            () -> assertThat(userRole.getRole(), is("to-delete-1")),
-            () -> assertThat(userRole.getId(), is(notNullValue()))
+                () -> assertThat(userRole.getSecurityClassification(), is(PUBLIC)),
+                () -> assertThat(userRole.getRole(), is("to-delete-1")),
+                () -> assertThat(userRole.getId(), is(notNullValue()))
         );
     }
 
@@ -265,13 +278,13 @@ public class MultipleControllersEndpointIT extends BaseTest {
     public void shouldReturnNoUserRolesWhenUndefinedRolesQueried() throws Exception {
         final String URL = String.format(ROLES_URL, "Nayab,Fatih,Andrzej,Mario");
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
         final List<UserRole> userRoles = mapper.readValue(result.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
-            }));
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<UserRole>>() {
+                }));
         assertAll(
-            () -> assertThat(userRoles, hasSize(0))
+                () -> assertThat(userRoles, hasSize(0))
         );
     }
 
@@ -291,26 +304,26 @@ public class MultipleControllersEndpointIT extends BaseTest {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
-            .file(file)
-            .header(AUTHORIZATION, "Bearer testUser"))
-            .andReturn();
+                        .file(file)
+                        .header(AUTHORIZATION, Toke))
+                .andReturn();
         assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
         final String URL = JURISDICTIONS_URL + "?ids=" + id;
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<Jurisdiction> jurisdictions = mapper.readValue(result.getResponse().getContentAsString(),
-            TypeFactory.defaultInstance().constructType(new TypeReference<List<Jurisdiction>>() {
-            }));
+                TypeFactory.defaultInstance().constructType(new TypeReference<List<Jurisdiction>>() {
+                }));
 
         assertAll(
-            () -> assertThat(jurisdictions, hasSize(1)),
-            () -> assertThat(jurisdictions, hasItem(
-                allOf(
-                    hasProperty("id", is("TEST")),
-                    hasProperty("name", is("Test"))
-                )))
+                () -> assertThat(jurisdictions, hasSize(1)),
+                () -> assertThat(jurisdictions, hasItem(
+                        allOf(
+                                hasProperty("id", is("TEST")),
+                                hasProperty("name", is("Test"))
+                        )))
         );
     }
 }
