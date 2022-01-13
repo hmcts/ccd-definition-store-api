@@ -67,6 +67,31 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
         );
     }
 
+    @Test
+    void shouldValidateEntityWithSheetName() {
+        EventCaseFieldArgumentDisplayContextParameterValidatorImpl eventCase
+            = new EventCaseFieldArgumentDisplayContextParameterValidatorImpl (displayContextParameterValidatorFactory);
+
+        EventCaseFieldEntity entity = new EventCaseFieldEntity();
+        entity.setCaseField(caseFieldEntity());
+
+        assertAll(
+            () -> assertThat(eventCase.getSheetName(entity), is("CaseEventToFields"))
+        );
+    }
+
+    @Test
+    void shouldValidateEntityWithCaseReference() {
+        EventCaseFieldArgumentDisplayContextParameterValidatorImpl eventCase
+            = new EventCaseFieldArgumentDisplayContextParameterValidatorImpl (displayContextParameterValidatorFactory);
+        EventCaseFieldEntity entity = new EventCaseFieldEntity();
+        entity.setCaseField(caseFieldEntity());
+
+        assertAll(
+            () -> assertThat(eventCase.getCaseFieldReference(entity), is("CASE_FIELD"))
+        );
+    }
+
     private static CaseFieldEntity caseFieldEntity() {
         return caseFieldEntity(fieldTypeEntity(FieldTypeUtils.BASE_TEXT));
     }
