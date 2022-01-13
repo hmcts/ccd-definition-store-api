@@ -70,7 +70,7 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
     @Test
     void shouldValidateEntityWithSheetName() {
         EventCaseFieldArgumentDisplayContextParameterValidatorImpl eventCase
-            = new EventCaseFieldArgumentDisplayContextParameterValidatorImpl (displayContextParameterValidatorFactory);
+            = new EventCaseFieldArgumentDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
 
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setCaseField(caseFieldEntity());
@@ -83,7 +83,7 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
     @Test
     void shouldValidateEntityWithCaseReference() {
         EventCaseFieldArgumentDisplayContextParameterValidatorImpl eventCase
-            = new EventCaseFieldArgumentDisplayContextParameterValidatorImpl (displayContextParameterValidatorFactory);
+            = new EventCaseFieldArgumentDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         entity.setCaseField(caseFieldEntity());
 
