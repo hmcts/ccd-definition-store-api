@@ -23,6 +23,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_D
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DYNAMIC_RADIO_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_EMAIL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FLAG_LAUNCHER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_LABEL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MONEY_GBP;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MULTI_SELECT_LIST;
@@ -196,6 +197,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity caseLocationBaseType;
     private FieldTypeEntity regionBaseType;
     private FieldTypeEntity baseLocationBaseType;
+    private FieldTypeEntity flagLauncherBaseType;
 
     @Before
     public void setup() {
@@ -254,7 +256,7 @@ public class ImportServiceImplTest {
         baseLocationBaseType = buildBaseType(BASE_BASE_LOCATION);
         dynamicRadioListBaseType = buildBaseType(BASE_DYNAMIC_RADIO_LIST);
         dynamicMultiSelectListBaseType = buildBaseType(BASE_DYNAMIC_MULTI_SELECT_LIST);
-
+        flagLauncherBaseType = buildBaseType(BASE_FLAG_LAUNCHER);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -311,7 +313,8 @@ public class ImportServiceImplTest {
             regionBaseType,
             baseLocationBaseType,
             dynamicRadioListBaseType,
-            dynamicMultiSelectListBaseType));
+            dynamicMultiSelectListBaseType,
+            flagLauncherBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -358,7 +361,8 @@ public class ImportServiceImplTest {
             changeOrganisationRequest,
             previousOrganisationBaseType,
             dynamicRadioListBaseType,
-            dynamicMultiSelectListBaseType));
+            dynamicMultiSelectListBaseType,
+            flagLauncherBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
