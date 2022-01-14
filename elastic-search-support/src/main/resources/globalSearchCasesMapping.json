@@ -63,6 +63,18 @@
     "data": {
       "type": "object",
       "properties": {
+        "CaseAccessCategory": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256,
+              "normalizer": "lowercase_normalizer"
+            }
+          },
+          "analyzer": "standard",
+          "search_analyzer": "alphanumeric_string_analyzer"
+        },
         "SearchCriteria": {
           "type": "object",
           "properties": {
