@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
+import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameter;
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class EventCaseFieldArgumentDisplayContextParameterValidatorImpl
@@ -38,7 +40,8 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImpl
     @Override
     public ValidationResult validate(EventCaseFieldEntity entity,
                                      EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext) {
-        return super.validate(entity, Collections.emptyList());
+        return shouldSkipValidatorForEntity(entity) ? new ValidationResult()
+            : super.validate(entity, Collections.emptyList());
     }
 
     @Override
@@ -46,6 +49,18 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImpl
                                                        final EventCaseFieldEntity entity,
                                                        final ValidationResult validationResult) {
         super.validateDisplayContextParameterType(displayContextParameter, entity, validationResult);
+    }
+
+    private boolean shouldSkipValidatorForEntity(EventCaseFieldEntity entity) {
+        final String displayContextParameter = getDisplayContextParameter(entity);
+        if (!Strings.isNullOrEmpty(displayContextParameter)) {
+            final Optional<DisplayContextParameterType> parameterType =
+                DisplayContextParameterType.getParameterTypeFor(displayContextParameter);
+            return parameterType
+                .map(t -> !(t.equals(DisplayContextParameterType.ARGUMENT)))
+                .orElse(true);
+        }
+        return true;
     }
 
     @Override

@@ -68,6 +68,20 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
     }
 
     @Test
+    void shouldValidateEntityWithDateTimeDisplayDisplayContextParameter() {
+        EventCaseFieldEntity entity = new EventCaseFieldEntity();
+        entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss)");
+        entity.setCaseField(caseFieldEntity());
+        entity.setDisplayContext(DisplayContext.READONLY);
+
+        final ValidationResult result = validator.validate(entity, eventCaseFieldEntityValidationContext);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(true))
+        );
+    }
+
+    @Test
     void shouldValidateEntityWithSheetName() {
         EventCaseFieldArgumentDisplayContextParameterValidatorImpl eventCase
             = new EventCaseFieldArgumentDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
