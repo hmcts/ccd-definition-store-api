@@ -20,15 +20,14 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -63,7 +62,7 @@ public class CaseDefinitionController {
     })
     public CaseType dataCaseTypeIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
-        return compareRoles(id);
+        return checkAndCompareAccessRoles(id);
     }
 
 
@@ -149,22 +148,32 @@ public class CaseDefinitionController {
         return caseTypeService.findVersionInfoByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
     }
 
-    private CaseType compareRoles(String id) {
+    private CaseType checkAndCompareAccessRoles(String id) {
         final Optional<CaseType> caseTypeInfo = caseTypeService.findByCaseTypeId(id);
         if (caseTypeInfo.isPresent()) {
-            List<RoleAssignment> rolesForCase = roleToAccessProfilesService.findRoleAssignmentsByCaseTypeId(id);
             try {
-                String usersRoles = Arrays.toString(idamProfileClient.getLoggedInUserDetails().getRoles());
-                if (Objects.equals(usersRoles, rolesForCase.toString())) {
+                boolean itshere = false;
+                List<String> usersRoles = List.of(idamProfileClient.getLoggedInUserDetails().getRoles());
+                final List<AccessControlList> accessControlList = caseTypeInfo.get().getAcls();
+                for (AccessControlList accessRole: accessControlList) {
+                    if (usersRoles.contains(accessRole.getRole())) {
+                        itshere = true;
+                        break;
+                    }
+                }
+                if (itshere) {
                     return caseTypeInfo.get();
                 } else {
+                    LOG.debug("User has no assigned role for:{}",id);
                     throw new ForbiddenException(id);
                 }
             } catch (Exception e) {
+                LOG.debug("Issue getting caseType:{}", id);
                 throw new ForbiddenException(id);
             }
         } else {
             throw new NotFoundException(id);
+
         }
     }
 }

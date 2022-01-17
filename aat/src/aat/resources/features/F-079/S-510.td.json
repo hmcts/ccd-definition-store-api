@@ -19,9 +19,12 @@
 	 "headers": {
 		"Connection": "keep-alive",
 		"Content-Encoding": "gzip",
-		"Content-Type": "application/json;charset=UTF-8",
+		"Content-Type": "application/json",
 		"Keep-Alive": "timeout=60",
 		"Transfer-Encoding": "chunked"
-	 }
+	 },
+		"body": {
+			"message": "Unauthorised access to:BEFTA_CASETYPE_3_3"
+		}
 	}
 }
