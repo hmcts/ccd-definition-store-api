@@ -104,7 +104,7 @@ task functional(type: Test) {
             args = [
                      '--threads', '1', // current definition-store tests do not support multiple threads
                      '--plugin', "json:${rootDir}/target/cucumber.json",
-                     '--tags', '@F-079',
+                     '--tags', 'not @Ignore',
                      '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features'
                    ]
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
