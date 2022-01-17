@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.ForbiddenException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules.CaseTypeValidationResult;
@@ -83,6 +84,16 @@ class ControllerExceptionHandlerTest {
 
         Assert.assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.BAD_REQUEST));
         Assert.assertThat(response.getBody().toString(), CoreMatchers.equalTo("Invalid request"));
+    }
+
+    @Test
+    void handleForbiddenRequests(){
+        final Map<String, String> details = handler.handleForbiddenAccess(new ForbiddenException(INNER_MESSAGE));
+
+        assertAll(
+                () -> assertThat(details, is(notNullValue())),
+                () -> assertThat(details.get("message"), equalTo("Unauthorised access to:" + INNER_MESSAGE))
+        );
     }
 
     @Nested

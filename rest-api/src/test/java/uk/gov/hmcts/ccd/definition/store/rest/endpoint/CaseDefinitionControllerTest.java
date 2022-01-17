@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -160,9 +159,10 @@ public class CaseDefinitionControllerTest {
     @DisplayName("Test the dataCaseTypeIdGet method")
     class DataCaseTypeIdGetTests {
 
-        @Disabled("Retrieving a case type requires a valid token") //FIXME:
+        @Test //FIXME: Retrieving a case type requires a valid token
         @DisplayName("Should return the CaseType when the CaseType exists")
         public void shouldReturnCaseType_whenCaseTypeExistsForId() {
+
             String itemName = "get-test";
             CaseType caseTypeReturned = createCaseType(itemName, itemName);
             when(caseTypeService.findByCaseTypeId(any())).thenReturn(Optional.of(caseTypeReturned));

@@ -50,7 +50,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     private static final String JURISDICTIONS_URL = "/api/data/jurisdictions";
     private static final String CASE_TYPE_URL = "/api/data/case-type/%s";
 
-    @Disabled("Retrieving a case type requires a valid token") //FIXME:
+    @Test //FIXME: Retrieving a case type requires a valid token
     public void shouldReturnCaseType() throws Exception {
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {

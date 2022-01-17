@@ -152,16 +152,16 @@ public class CaseDefinitionController {
         final Optional<CaseType> caseTypeInfo = caseTypeService.findByCaseTypeId(id);
         if (caseTypeInfo.isPresent()) {
             try {
-                boolean itshere = false;
+                boolean foundRole = false;
                 List<String> usersRoles = List.of(idamProfileClient.getLoggedInUserDetails().getRoles());
                 final List<AccessControlList> accessControlList = caseTypeInfo.get().getAcls();
                 for (AccessControlList accessRole: accessControlList) {
                     if (usersRoles.contains(accessRole.getRole())) {
-                        itshere = true;
+                        foundRole = true;
                         break;
                     }
                 }
-                if (itshere) {
+                if (foundRole) {
                     return caseTypeInfo.get();
                 } else {
                     LOG.debug("User has no assigned role for:{}",id);
