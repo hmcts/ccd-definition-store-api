@@ -41,6 +41,7 @@ public class CaseMappingGenerator extends MappingGenerator {
         return mapping;
     }
 
+
     private void propertiesMapping(JsonWriter jw) {
         log.info("generating case properties mapping");
         config.getCasePredefinedMappings().forEach(Unchecked.biConsumer((property, mapping) -> {
