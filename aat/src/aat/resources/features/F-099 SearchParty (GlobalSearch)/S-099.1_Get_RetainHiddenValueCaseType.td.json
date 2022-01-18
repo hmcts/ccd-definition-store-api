@@ -1,0 +1,44 @@
+{
+	"_guid_": "S-099.1_Get_RetainHiddenValueCaseType",
+	"_extends_": "F-099_Get_CaseType",
+
+	"specs": [
+		"fetch Retain Hidden Value Case Type Schema to verify comma separated complex field names in SearchPartyName column(AC4) and comma separated combination of top level field names and complex field names in SearchPartyName column(AC5)"
+	],
+
+	"request": {
+		"pathVariables": {
+			"id": "FT_RetainHiddenValue"
+		}
+	},
+
+	"expectedResponse": {
+		"body": {
+			"id": "FT_RetainHiddenValue",
+			"searchParties": [
+				{
+					"case_type_id": "FT_RetainHiddenValue",
+					"search_party_dob": "TextField",
+          "search_party_dod": null,
+					"search_party_post_code": "TextField",
+					"search_party_address_line1": "TextField",
+					"search_party_email_address": "TextField",
+					"live_from": "2017-01-01T00:00:00.000+00:00",
+					"live_to": null,
+					"search_party_name": "FamilyDetails.FatherFullName,FamilyDetails.MotherFullName"
+				},
+				{
+					"case_type_id": "FT_RetainHiddenValue",
+					"search_party_dob": "TextField",
+          "search_party_dod": null,
+					"search_party_post_code": "TextField",
+					"search_party_address_line1": "TextField",
+					"search_party_email_address": "TextField",
+					"live_from": "2017-01-01T00:00:00.000+00:00",
+					"live_to": null,
+					"search_party_name": "TextField,FamilyDetails.FatherFullName,TextField,FamilyDetails.MotherFullName"
+				}
+			]
+		}
+	}
+}

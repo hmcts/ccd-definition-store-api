@@ -107,6 +107,8 @@
 
 			"searchAliasFields": "[[ANYTHING_PRESENT]]",
       "roleToAccessProfiles": [],
+			"searchParties": [],
+      "searchCriterias": [],
 			"printable_document_url": null,
       "callback_get_case_url" : null,
       "retries_get_case_url" : [],

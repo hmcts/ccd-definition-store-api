@@ -27,13 +27,15 @@ public abstract class BaseChallengeQuestionTest {
         ParseContext parseContext = new ParseContext();
         final List<CaseRoleEntity> caseRoleEntities = new ArrayList<>();
 
+        // register a test case type
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference(CASE_TYPE);
         parseContext.registerCaseType(caseTypeEntity);
 
-        FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
-        fieldTypeEntity.setReference(FIELD_TYPE);
-        parseContext.addToAllTypes(fieldTypeEntity);
+        // register basic text field type
+        FieldTypeEntity fieldTypeEntityText = new FieldTypeEntity();
+        fieldTypeEntityText.setReference(FIELD_TYPE);
+        parseContext.addToAllTypes(fieldTypeEntityText);
 
         final CaseRoleEntity caseRoleEntity1 = new CaseRoleEntity();
         caseRoleEntity1.setReference("[DEFENDANT]");
@@ -46,30 +48,43 @@ public abstract class BaseChallengeQuestionTest {
         caseRoleEntities.add(caseRoleEntity2);
         parseContext.registerCaseRoles(caseRoleEntities);
 
-        //OrganisationField
+        // OrganisationField
         FieldTypeEntity fieldTypeEntityOrganisationFiled = new FieldTypeEntity();
         fieldTypeEntityOrganisationFiled.setReference("Organisation");
+        parseContext.addToAllTypes(fieldTypeEntityOrganisationFiled);
+
         ComplexFieldEntity organisationName = new ComplexFieldEntity();
         organisationName.setReference("OrganisationName");
+        organisationName.setFieldType(fieldTypeEntityText);
+
         ComplexFieldEntity organisationID = new ComplexFieldEntity();
         organisationID.setReference("OrganisationID");
+        organisationID.setFieldType(fieldTypeEntityText);
+
         fieldTypeEntityOrganisationFiled.addComplexFields(Arrays.asList(organisationName, organisationID));
         parseContext.registerCaseFieldType(CASE_TYPE, "OrganisationField", fieldTypeEntityOrganisationFiled);
 
         // OrganisationPolicyField
         FieldTypeEntity fieldTypeEntityOrganisation = new FieldTypeEntity();
         fieldTypeEntityOrganisation.setReference("OrganisationPolicy");
+        parseContext.addToAllTypes(fieldTypeEntityOrganisation);
 
         ComplexFieldEntity organisation = new ComplexFieldEntity();
         organisation.setReference("Organisation");
+        organisation.setFieldType(fieldTypeEntityOrganisationFiled);
+
         ComplexFieldEntity orgPolicyCaseAssignedRole = new ComplexFieldEntity();
         orgPolicyCaseAssignedRole.setReference("OrgPolicyCaseAssignedRole");
+        orgPolicyCaseAssignedRole.setFieldType(fieldTypeEntityText);
 
         ComplexFieldEntity orgPolicyReference = new ComplexFieldEntity();
         orgPolicyReference.setReference("OrgPolicyReference");
+        orgPolicyReference.setFieldType(fieldTypeEntityText);
+
         fieldTypeEntityOrganisation.addComplexFields(Arrays.asList(
             organisation, orgPolicyCaseAssignedRole, orgPolicyReference));
         parseContext.registerCaseFieldType(CASE_TYPE, "OrganisationPolicyField", fieldTypeEntityOrganisation);
+
         return parseContext;
     }
 
