@@ -17,6 +17,10 @@
 			"id": "FT_Tabs",
 			"searchParties": [
 				{
+				  "__ordering__": "unordered",
+				  "__elementId__": "search_party_name"
+				},
+				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": "TextField1",
           "search_party_dod": null,
