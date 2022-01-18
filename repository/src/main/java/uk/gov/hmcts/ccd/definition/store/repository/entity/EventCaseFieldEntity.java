@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 @Table(name = "event_case_field")
 @Entity
@@ -46,7 +46,7 @@ public class EventCaseFieldEntity implements Serializable {
     @JoinColumn(name = "case_field_id", nullable = false)
     private CaseFieldEntity caseField;
 
-    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "event_case_field_id")
     private final List<EventComplexTypeEntity> eventComplexTypes = new ArrayList<>();

@@ -8,6 +8,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -25,11 +28,12 @@ public class CaseFieldEntityUtilTest {
     @Test
     public void createsValidPossibilities() {
 
-        List<CaseFieldEntity> fieldTypeEntity = asList(caseFieldEntity("field1"),
-            caseFieldEntity("field2", exampleFieldTypeEntityWithComplexFields()),
-            caseFieldEntity("field3"));
+        Set<CaseFieldEntity> fieldTypeEntity =
+            Stream.of(caseFieldEntity("field1"),
+                caseFieldEntity("field2", exampleFieldTypeEntityWithComplexFields()),
+                caseFieldEntity("field3")).collect(Collectors.toSet());
 
-        List<String> result = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(fieldTypeEntity);
+        Set<String> result = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(fieldTypeEntity);
 
         assertThat(result.size(), is(6));
         assertTrue(result.contains("field1"));
@@ -43,11 +47,11 @@ public class CaseFieldEntityUtilTest {
     @Test
     public void createsValidPossibilitiesForComplexFieldInACollection() {
 
-        List<CaseFieldEntity> fieldTypeEntity = asList(caseFieldEntity("field1"),
+        Set<CaseFieldEntity> fieldTypeEntity = Stream.of(caseFieldEntity("field1"),
             caseFieldEntity("field2", exampleCollectionFieldTypeEntityWithComplexFields()),
-            caseFieldEntity("field3"));
+            caseFieldEntity("field3")).collect(Collectors.toSet());
 
-        List<String> result = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(fieldTypeEntity);
+        Set<String> result = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(fieldTypeEntity);
 
         assertThat(result.size(), is(6));
         assertTrue(result.contains("field1"));

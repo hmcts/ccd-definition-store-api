@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
@@ -106,7 +107,7 @@ public interface FieldEntity extends Serializable {
         return reduce(this.getFieldType().getChildren(), getPathElements(path));
     }
 
-    private Optional<FieldEntity> reduce(List<ComplexFieldEntity> caseFields, List<String> pathElements) {
+    private Optional<FieldEntity> reduce(Set<ComplexFieldEntity> caseFields, List<String> pathElements) {
         String firstPathElement = pathElements.get(0);
 
         Optional<FieldEntity> caseField = caseFields.stream()
@@ -121,7 +122,7 @@ public interface FieldEntity extends Serializable {
         if (pathElements.size() == 1) {
             return caseField;
         } else {
-            List<ComplexFieldEntity> complexFieldEntities = caseField.get().getFieldType().getChildren();
+            Set<ComplexFieldEntity> complexFieldEntities = caseField.get().getFieldType().getChildren();
 
             return reduce(complexFieldEntities, getPathElementsTail(pathElements));
         }
