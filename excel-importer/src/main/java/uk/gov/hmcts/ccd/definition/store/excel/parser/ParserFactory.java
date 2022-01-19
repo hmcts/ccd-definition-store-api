@@ -9,6 +9,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import java.util.concurrent.Executor;
 
@@ -21,6 +23,8 @@ public class ParserFactory {
     private final SpreadsheetValidator spreadsheetValidator;
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
+    private final SearchPartyValidator searchPartyValidator;
+    private final SearchCriteriaValidator searchCriteriaValidator;
     private final ApplicationParams applicationParams;
     private final Executor executor;
 
@@ -30,14 +34,18 @@ public class ParserFactory {
                          Map<MetadataField, MetadataCaseFieldEntityFactory> metadataCaseFieldEntityFactoryRegistry,
                          SpreadsheetValidator spreadsheetValidator,
                          HiddenFieldsValidator hiddenFieldsValidator,
-                         ChallengeQuestionParser challengeQuestionParser, ApplicationParams applicationParams,
-                         @Qualifier("validateExecutor") Executor executor) {
+                         ChallengeQuestionParser challengeQuestionParser,
+                         SearchPartyValidator searchPartyValidator,
+                         SearchCriteriaValidator searchCriteriaValidator,
+                         ApplicationParams applicationParams, @Qualifier("validateExecutor") Executor executor) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
         this.spreadsheetValidator = spreadsheetValidator;
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
+        this.searchPartyValidator = searchPartyValidator;
+        this.searchCriteriaValidator = searchCriteriaValidator;
         this.applicationParams = applicationParams;
         this.executor = executor;
     }
@@ -122,4 +130,21 @@ public class ParserFactory {
     public RoleToAccessProfilesValidator createAccessProfileValidator() {
         return new RoleToAccessProfilesValidator();
     }
+
+    public SearchPartyParser createNewSearchPartyParser() {
+        return new SearchPartyParser();
+    }
+
+    public SearchPartyValidator createNewSearchPartyValidator() {
+        return searchPartyValidator;
+    }
+
+    public SearchCriteriaParser createSearchCriteriaParser() {
+        return new SearchCriteriaParser();
+    }
+
+    public SearchCriteriaValidator createSearchCriteriaValidator() {
+        return searchCriteriaValidator;
+    }
+
 }

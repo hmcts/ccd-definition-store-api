@@ -1,0 +1,23 @@
+{
+  "_guid_": "S-100.1",
+  "_extends_": "Import_Base_data",
+  "title": "Must successfully import Definition file with correctly configured, single case field name in OtherCaseReference column of SearchCriteria tab",
+  "specs": [
+    "an active profile in CCD"
+  ],
+
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+        }
+      ]
+    }
+  },
+
+  "expectedResponse" : {
+    "_extends_" : "Case_Definition_Data_Import_Success"
+  }
+}

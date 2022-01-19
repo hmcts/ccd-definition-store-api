@@ -10,7 +10,7 @@ public class HighLevelDataSetupApp extends DataLoaderToDefinitionStore {
     }
 
     public static void main(String[] args) throws Throwable {
-        if (!args[0].toString().toLowerCase().equals("prod")) {
+        if (!args[0].toString().toLowerCase().equals("prod") && !args[0].toString().toLowerCase().equals("aat")) {
             main(HighLevelDataSetupApp.class, args);
         }
     }

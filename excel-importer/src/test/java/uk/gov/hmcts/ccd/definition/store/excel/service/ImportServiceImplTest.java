@@ -40,6 +40,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_CRITERIA;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -64,6 +66,8 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
@@ -75,6 +79,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
@@ -171,6 +177,18 @@ public class ImportServiceImplTest {
     private RoleToAccessProfileService roleToAccessProfileService;
 
     @Mock
+    private SearchCriteriaService searchCriteriaService;
+
+    @Mock
+    private SearchCriteriaValidator searchCriteriaValidator;
+
+    @Mock
+    private SearchPartyService searchPartyService;
+
+    @Mock
+    private SearchPartyValidator searchPartyValidator;
+
+    @Mock
     private ApplicationParams applicationParams;
 
     private FieldTypeEntity fixedTypeBaseType;
@@ -202,6 +220,8 @@ public class ImportServiceImplTest {
     private FieldTypeEntity caseLocationBaseType;
     private FieldTypeEntity regionBaseType;
     private FieldTypeEntity baseLocationBaseType;
+    private FieldTypeEntity searchPartyBaseType;
+    private FieldTypeEntity searchCriteriaBaseType;
 
     @Before
     public void setup() {
@@ -210,7 +230,8 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, applicationParams, executor);
+            challengeQuestionParser, searchPartyValidator, searchCriteriaValidator,
+            applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -229,7 +250,9 @@ public class ImportServiceImplTest {
             bannerService,
             jurisdictionUiConfigService,
             challengeQuestionTabService,
-            roleToAccessProfileService);
+            roleToAccessProfileService,
+            searchCriteriaService,
+            searchPartyService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -260,7 +283,8 @@ public class ImportServiceImplTest {
         baseLocationBaseType = buildBaseType(BASE_BASE_LOCATION);
         dynamicRadioListBaseType = buildBaseType(BASE_DYNAMIC_RADIO_LIST);
         dynamicMultiSelectListBaseType = buildBaseType(BASE_DYNAMIC_MULTI_SELECT_LIST);
-
+        searchPartyBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_PARTY);
+        searchCriteriaBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_CRITERIA);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -317,7 +341,9 @@ public class ImportServiceImplTest {
             regionBaseType,
             baseLocationBaseType,
             dynamicRadioListBaseType,
-            dynamicMultiSelectListBaseType));
+            dynamicMultiSelectListBaseType,
+            searchPartyBaseType,
+            searchCriteriaBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -364,7 +390,9 @@ public class ImportServiceImplTest {
             changeOrganisationRequest,
             previousOrganisationBaseType,
             dynamicRadioListBaseType,
-            dynamicMultiSelectListBaseType));
+            dynamicMultiSelectListBaseType,
+            searchPartyBaseType,
+            searchCriteriaBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -399,7 +427,8 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
-            hiddenFieldsValidator,challengeQuestionParser, applicationParams, executor);
+            hiddenFieldsValidator,challengeQuestionParser,
+            searchPartyValidator, searchCriteriaValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -418,7 +447,9 @@ public class ImportServiceImplTest {
             bannerService,
             jurisdictionUiConfigService,
             challengeQuestionTabService,
-            roleToAccessProfileService);
+            roleToAccessProfileService,
+            searchCriteriaService,
+            searchPartyService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 
