@@ -349,7 +349,7 @@ public class ImportServiceImplTest {
             dynamicRadioListBaseType,
             dynamicMultiSelectListBaseType,
             flagsBaseType,
-           waysToPayBaseType,
+            waysToPayBaseType,
             searchPartyBaseType,
             searchCriteriaBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
