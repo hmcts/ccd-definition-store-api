@@ -71,6 +71,5 @@ public class BaseTypeControllerTests extends BaseTest {
                 tuple("WaysToPay", "WaysToPay", null),
                 tuple("FlagLauncher", "FlagLauncher", null)
             );
-
     }
 }
