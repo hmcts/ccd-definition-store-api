@@ -17,6 +17,10 @@
 			"id": "FT_RetainHiddenValue",
 			"searchParties": [
 				{
+				  "__ordering__": "unordered",
+				  "__elementId__": "search_party_name"
+				},
+				{
 					"case_type_id": "FT_RetainHiddenValue",
 					"search_party_dob": "TextField",
           "search_party_dod": null,

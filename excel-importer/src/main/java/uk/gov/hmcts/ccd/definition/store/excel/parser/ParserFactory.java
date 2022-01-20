@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
+import java.util.concurrent.Executor;
 
 @Component
 public class ParserFactory {
@@ -24,6 +26,7 @@ public class ParserFactory {
     private final SearchPartyValidator searchPartyValidator;
     private final SearchCriteriaValidator searchCriteriaValidator;
     private final ApplicationParams applicationParams;
+    private final Executor executor;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
@@ -34,7 +37,7 @@ public class ParserFactory {
                          ChallengeQuestionParser challengeQuestionParser,
                          SearchPartyValidator searchPartyValidator,
                          SearchCriteriaValidator searchCriteriaValidator,
-                         ApplicationParams applicationParams) {
+                         ApplicationParams applicationParams, @Qualifier("validateExecutor") Executor executor) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
@@ -44,6 +47,7 @@ public class ParserFactory {
         this.searchPartyValidator = searchPartyValidator;
         this.searchCriteriaValidator = searchCriteriaValidator;
         this.applicationParams = applicationParams;
+        this.executor = executor;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -60,7 +64,7 @@ public class ParserFactory {
                 fieldTypeParser,
                 showConditionParser,
                 entityToDefinitionDataItemRegistry,
-                hiddenFieldsValidator),
+                hiddenFieldsValidator, executor),
             new CaseFieldTypeParser(context, fieldTypeParser)
         );
     }
