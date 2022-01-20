@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
@@ -40,6 +41,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_CRITERIA;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -61,10 +64,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
@@ -72,6 +80,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
@@ -107,6 +117,8 @@ public class ImportServiceImplTest {
     private static final String TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE = "TestComplexAddressBookCase";
 
     private ImportServiceImpl service;
+
+    private final Executor executor = Executors.newSingleThreadExecutor();
 
     @Mock
     private FieldTypeService fieldTypeService;
@@ -166,6 +178,18 @@ public class ImportServiceImplTest {
     private RoleToAccessProfileService roleToAccessProfileService;
 
     @Mock
+    private SearchCriteriaService searchCriteriaService;
+
+    @Mock
+    private SearchCriteriaValidator searchCriteriaValidator;
+
+    @Mock
+    private SearchPartyService searchPartyService;
+
+    @Mock
+    private SearchPartyValidator searchPartyValidator;
+
+    @Mock
     private ApplicationParams applicationParams;
 
     private FieldTypeEntity fixedTypeBaseType;
@@ -198,6 +222,8 @@ public class ImportServiceImplTest {
     private FieldTypeEntity regionBaseType;
     private FieldTypeEntity baseLocationBaseType;
     private FieldTypeEntity waysToPayBaseType;
+    private FieldTypeEntity searchPartyBaseType;
+    private FieldTypeEntity searchCriteriaBaseType;
 
     @Before
     public void setup() {
@@ -206,7 +232,8 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, applicationParams);
+            challengeQuestionParser, searchPartyValidator, searchCriteriaValidator,
+            applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -225,7 +252,9 @@ public class ImportServiceImplTest {
             bannerService,
             jurisdictionUiConfigService,
             challengeQuestionTabService,
-            roleToAccessProfileService);
+            roleToAccessProfileService,
+            searchCriteriaService,
+            searchPartyService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -257,7 +286,8 @@ public class ImportServiceImplTest {
         dynamicRadioListBaseType = buildBaseType(BASE_DYNAMIC_RADIO_LIST);
         dynamicMultiSelectListBaseType = buildBaseType(BASE_DYNAMIC_MULTI_SELECT_LIST);
         waysToPayBaseType = buildBaseType(BASE_WAYS_TO_PAY);
-
+        searchPartyBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_PARTY);
+        searchCriteriaBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_CRITERIA);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -315,7 +345,9 @@ public class ImportServiceImplTest {
             baseLocationBaseType,
             dynamicRadioListBaseType,
             dynamicMultiSelectListBaseType,
-            waysToPayBaseType));
+            waysToPayBaseType,
+            searchPartyBaseType,
+            searchCriteriaBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -363,7 +395,9 @@ public class ImportServiceImplTest {
             previousOrganisationBaseType,
             dynamicRadioListBaseType,
             dynamicMultiSelectListBaseType,
-            waysToPayBaseType));
+            waysToPayBaseType,
+            searchPartyBaseType,
+            searchCriteriaBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -398,7 +432,8 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
-            hiddenFieldsValidator,challengeQuestionParser, applicationParams);
+            hiddenFieldsValidator,challengeQuestionParser,
+            searchPartyValidator, searchCriteriaValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -417,7 +452,9 @@ public class ImportServiceImplTest {
             bannerService,
             jurisdictionUiConfigService,
             challengeQuestionTabService,
-            roleToAccessProfileService);
+            roleToAccessProfileService,
+            searchCriteriaService,
+            searchPartyService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 
@@ -427,6 +464,47 @@ public class ImportServiceImplTest {
         assertThat(warnings.size(), equalTo(2));
         assertThat(importWarnings, containsInAnyOrder("Warning1", "Warning2"));
         verify(spreadsheetParser).getImportWarnings();
+    }
+
+    @Test
+    public void shouldThrowMapperException() {
+        given(hiddenFieldsValidator.parseComplexTypesHiddenFields(any(), any())).willThrow(MapperException.class);
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(fixedTypeBaseType,
+            multiSelectBaseType,
+            complexType,
+            textBaseType,
+            numberBaseType,
+            emailBaseType,
+            yesNoBaseType,
+            dateBaseType,
+            dateTimeBaseType,
+            postCodeBaseType,
+            moneyGBPBaseType,
+            phoneUKBaseType,
+            textAreaBaseType,
+            collectionBaseType,
+            documentBaseType,
+            organisationBaseType,
+            organisationPolicyBaseType,
+            labelBaseType,
+            casePaymentHistoryViewerBaseType,
+            caseHistoryViewerBaseType,
+            fixedListRadioTypeBaseType,
+            dynamicListBaseType,
+            changeOrganisationRequest,
+            previousOrganisationBaseType,
+            dynamicRadioListBaseType,
+            dynamicMultiSelectListBaseType));
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
+
+        assertThrows(MapperException.class, () -> service.importFormDefinitions(inputStream));
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {
