@@ -56,6 +56,7 @@ elasticsearch:
     - Label
     - CasePaymentHistoryViewer
     - CaseHistoryViewer
+    - WaysToPay
   # typeMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.type-mappings.defaultText property
   typeMappings:
     Text: ${elasticsearch.elasticMappings.defaultText}

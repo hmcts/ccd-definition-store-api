@@ -38,6 +38,7 @@ public class FieldTypeUtils {
     public static final String BASE_BASE_LOCATION = "BaseLocation";
     public static final String BASE_DYNAMIC_RADIO_LIST = "DynamicRadioList";
     public static final String BASE_DYNAMIC_MULTI_SELECT_LIST = "DynamicMultiSelectList";
+    public static final String BASE_WAYS_TO_PAY = "WaysToPay";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference)
