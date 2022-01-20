@@ -35,7 +35,11 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
         when(challengeQuestionDisplayContextParameterValidator.validate(any(),any()))
             .thenReturn(new ValidationResult());
         parseContext = buildParseContext();
-        challengeQuestionValidator = new ChallengeQuestionValidator(challengeQuestionDisplayContextParameterValidator);
+
+        challengeQuestionValidator = new ChallengeQuestionValidator(
+            challengeQuestionDisplayContextParameterValidator,
+            new DotNotationValidator()
+        );
     }
 
     @Test

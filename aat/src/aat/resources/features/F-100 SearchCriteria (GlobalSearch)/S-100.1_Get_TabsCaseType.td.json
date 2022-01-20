@@ -1,0 +1,28 @@
+{
+  "_guid_": "S-100.1_Get_TabsCaseType",
+  "_extends_": "F-100_Get_CaseType",
+
+  "specs": [
+    "fetch Tabs Case Type Schema to verify blank value in the columns OtherCaseReference (AC7)"
+  ],
+
+  "request": {
+    "pathVariables": {
+      "id": "FT_Tabs"
+    }
+  },
+
+  "expectedResponse": {
+    "body": {
+      "id": "FT_Tabs",
+      "searchCriterias": [
+        {
+          "case_type_id": "FT_Tabs",
+          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_to": null,
+          "other_case_reference": null
+        }
+      ]
+    }
+  }
+}

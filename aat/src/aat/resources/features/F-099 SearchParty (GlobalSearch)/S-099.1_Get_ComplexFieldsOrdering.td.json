@@ -1,0 +1,33 @@
+{
+	"_guid_": "S-099.1_Get_ComplexFieldsOrdering",
+	"_extends_": "F-099_Get_CaseType",
+
+	"specs": [
+		"fetch Complex Fields Ordering Schema to verify single case field values in columns SearchPartyName(AC1), SearchPartyEmailAddress(AC6), SearchPartyAddressLine1(AC8), SearchPartyPostCode(AC10) and SearchPartyDoB(AC12)"
+	],
+
+	"request": {
+		"pathVariables": {
+			"id": "FT_ComplexFieldsOrdering"
+		}
+	},
+
+	"expectedResponse": {
+		"body": {
+			"id": "FT_ComplexFieldsOrdering",
+			"searchParties": [
+				{
+					"case_type_id": "FT_ComplexFieldsOrdering",
+					"search_party_dob": "Name",
+					"search_party_dod": null,
+					"search_party_post_code": "Name",
+					"search_party_address_line1": "Name",
+					"search_party_email_address": "Name",
+					"live_from": "2017-01-01T00:00:00.000+00:00",
+					"live_to": null,
+					"search_party_name": "Name"
+				}
+			]
+		}
+	}
+}
