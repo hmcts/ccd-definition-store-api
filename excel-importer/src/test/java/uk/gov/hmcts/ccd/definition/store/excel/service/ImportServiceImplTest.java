@@ -38,6 +38,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_W
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_FLAGS;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
@@ -219,6 +220,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity changeOrganisationRequest;
     private FieldTypeEntity previousOrganisationBaseType;
     private FieldTypeEntity caseLocationBaseType;
+    private FieldTypeEntity flagsBaseType;
     private FieldTypeEntity regionBaseType;
     private FieldTypeEntity baseLocationBaseType;
     private FieldTypeEntity waysToPayBaseType;
@@ -281,6 +283,7 @@ public class ImportServiceImplTest {
         changeOrganisationRequest = buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST);
         previousOrganisationBaseType = buildBaseType(PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION);
         caseLocationBaseType = buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION);
+        flagsBaseType = buildBaseType(PREDEFINED_COMPLEX_FLAGS);
         regionBaseType = buildBaseType(BASE_REGION);
         baseLocationBaseType = buildBaseType(BASE_BASE_LOCATION);
         dynamicRadioListBaseType = buildBaseType(BASE_DYNAMIC_RADIO_LIST);
@@ -345,6 +348,7 @@ public class ImportServiceImplTest {
             baseLocationBaseType,
             dynamicRadioListBaseType,
             dynamicMultiSelectListBaseType,
+            flagsBaseType,
             waysToPayBaseType,
             searchPartyBaseType,
             searchCriteriaBaseType));
