@@ -80,6 +80,9 @@
     },
     {
       "_extends_": "BaseWaysToPayFieldType"
+    },
+    {
+      "_extends_": "BaseFlagLauncherFieldType"
     }
   ]
 }

@@ -24,6 +24,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_D
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DYNAMIC_RADIO_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_EMAIL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FLAG_LAUNCHER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_LABEL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MONEY_GBP;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MULTI_SELECT_LIST;
@@ -224,6 +225,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity regionBaseType;
     private FieldTypeEntity baseLocationBaseType;
     private FieldTypeEntity waysToPayBaseType;
+    private FieldTypeEntity flagLauncherBaseType;
     private FieldTypeEntity searchPartyBaseType;
     private FieldTypeEntity searchCriteriaBaseType;
 
@@ -289,6 +291,7 @@ public class ImportServiceImplTest {
         dynamicRadioListBaseType = buildBaseType(BASE_DYNAMIC_RADIO_LIST);
         dynamicMultiSelectListBaseType = buildBaseType(BASE_DYNAMIC_MULTI_SELECT_LIST);
         waysToPayBaseType = buildBaseType(BASE_WAYS_TO_PAY);
+        flagLauncherBaseType = buildBaseType(BASE_FLAG_LAUNCHER);
         searchPartyBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_PARTY);
         searchCriteriaBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_CRITERIA);
 
@@ -350,6 +353,7 @@ public class ImportServiceImplTest {
             dynamicMultiSelectListBaseType,
             flagsBaseType,
             waysToPayBaseType,
+            flagLauncherBaseType,
             searchPartyBaseType,
             searchCriteriaBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
@@ -400,6 +404,7 @@ public class ImportServiceImplTest {
             dynamicRadioListBaseType,
             dynamicMultiSelectListBaseType,
             waysToPayBaseType,
+            flagLauncherBaseType,
             searchPartyBaseType,
             searchCriteriaBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
