@@ -36,6 +36,20 @@ class ApplicationConfiguration {
         return executor;
     }
 
+    @Bean("validateExecutor")
+    public Executor validateExecutor(@Value("${validate.executor.core.pool.size}") Integer corePoolSize,
+                                     @Value("${validate.executor.max.pool.size}") Integer maxPoolSize,
+                                     @Value("${validate.executor.prefix}") String prefix) {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(corePoolSize);
+        executor.setMaxPoolSize(maxPoolSize);
+        executor.setThreadNamePrefix(prefix);
+        executor.setAwaitTerminationMillis(1000);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.initialize();
+        return executor;
+    }
+
     @Bean
     public CacheManagerCustomizer<CaffeineCacheManager> cacheManagerCustomizer() {
         return cacheManager -> cacheManager.setAllowNullValues(false);

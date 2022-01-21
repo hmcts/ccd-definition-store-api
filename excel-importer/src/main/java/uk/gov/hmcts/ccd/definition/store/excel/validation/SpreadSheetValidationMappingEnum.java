@@ -17,7 +17,7 @@ public enum SpreadSheetValidationMappingEnum {
     FIXED_LISTS_LIST_ELEMENT_CODE("FixedLists", "ListElementCode", 150),
 
     COMPLEX_TYPES_LIST_ELEMENT_CODE("ComplexTypes", "ListElementCode", 70),
-    COMPLEX_TYPES_ELEMENT_LABEL("ComplexTypes", "ElementLabel", 200),
+    COMPLEX_TYPES_ELEMENT_LABEL("ComplexTypes", "ElementLabel", 500),
     COMPLEX_TYPES_FIELD_SHOW_CONDITION("ComplexTypes", "FieldShowCondition", 1000),
 
     CASE_TYPE_TAB_ID("CaseTypeTab", "ID", 70),
