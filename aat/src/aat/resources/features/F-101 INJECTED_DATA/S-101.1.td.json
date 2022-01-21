@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-099.1",
-	"_extends_": "F-099_Test_Base_data",
+	"_guid_": "S-101.1",
+	"_extends_": "F-101_Test_Base_data",
 	"title": "Import Definition file with [INJECTED_DATA.<value>] in FieldShowCondition column of the CaseTypeTab",
 	"specs": [
     "an active profile in CCD",
