@@ -24,7 +24,7 @@ java:
 
     ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-1260-es-master
 
-    USER_PROFILE_HOST: http://ccd-user-profile-api-pr-399.service.core-compute-preview.internal
+    USER_PROFILE_HOST: http://ccd-user-profile-api-pr-441.service.core-compute-preview.internal
 
     # ccd-test app-insights key - remove once testing is done
     APPINSIGHTS_INSTRUMENTATIONKEY: 2dcb834e-768e-4429-9050-ab15af959995
