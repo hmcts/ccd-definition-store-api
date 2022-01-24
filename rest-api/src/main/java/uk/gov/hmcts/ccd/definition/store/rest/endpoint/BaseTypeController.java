@@ -35,7 +35,6 @@ public class BaseTypeController {
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
     }
 
-    @Transactional
     @RequestMapping(value = "/base-types", method = RequestMethod.GET, produces = {"application/json"})
     @ApiOperation(value = "Fetch all Base Types", response = FieldType.class, responseContainer = "List")
     @ApiResponses(value = {
