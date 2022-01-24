@@ -45,6 +45,9 @@ class SearchPartyValidatorTest {
     private static final String TEST_EXPRESSION_DOB_1 = "DOB1";
     private static final String TEST_EXPRESSION_DOD_1 = "DOD1";
 
+    private static final String TEST_EXPRESSION_COLLECTION_FIELD_NAME_EMPTY = "";
+    private static final String TEST_EXPRESSION_COLLECTION_FIELD_NAME_1 = "Name1";
+
     private static final String TEST_EXPRESSION_BAD = "BadTestExpression";
 
     @Mock
@@ -73,7 +76,7 @@ class SearchPartyValidatorTest {
     void shouldValidateAllFields() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
 
         // WHEN
         searchPartyValidator.validate(List.of(searchPartyEntity1), parseContext);
@@ -90,7 +93,31 @@ class SearchPartyValidatorTest {
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_DOB,
                                               searchPartyEntity1.getSearchPartyDob());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_DOD,
-            searchPartyEntity1.getSearchPartyDod());
+                                              searchPartyEntity1.getSearchPartyDod());
+
+        verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME);
+    }
+
+    @DisplayName("should validate all fields")
+    @Test
+    void shouldOnlyValidateCollectionField() {
+
+        // GIVEN
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithCollectionField();
+
+        // WHEN
+        searchPartyValidator.validate(List.of(searchPartyEntity1), parseContext);
+
+        // THEN
+        verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_NAME);
+        verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_EMAIL_ADDRESS);
+        verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_ADDRESS_LINE_1);
+        verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_POST_CODE);
+        verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_DOB);
+        verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_DOD);
+
+        verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
+                                              searchPartyEntity1.getSearchPartyCollectionFieldName());
     }
 
     @DisplayName("should validate multiple searchPartyEntity values")
@@ -133,10 +160,10 @@ class SearchPartyValidatorTest {
     void shouldValidateAsOkEvenIfSearchPartyNameIsBlank() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyName("");
 
-        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity2.setSearchPartyName(null);
 
         // WHEN
@@ -152,10 +179,10 @@ class SearchPartyValidatorTest {
     void shouldValidateAsOkEvenIfSearchPartyEmailAddressIsBlank() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyEmailAddress("");
 
-        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity2.setSearchPartyEmailAddress(null);
 
         // WHEN
@@ -171,10 +198,10 @@ class SearchPartyValidatorTest {
     void shouldValidateAsOkEvenIfSearchPartyAddressLine1IsBlank() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyAddressLine1("");
 
-        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity2.setSearchPartyAddressLine1(null);
 
         // WHEN
@@ -190,10 +217,10 @@ class SearchPartyValidatorTest {
     void shouldValidateAsOkEvenIfSearchPartyPostCodeIsBlank() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyPostCode("");
 
-        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity2.setSearchPartyPostCode(null);
 
         // WHEN
@@ -209,10 +236,10 @@ class SearchPartyValidatorTest {
     void shouldValidateAsOkEvenIfSearchPartyDobIsBlank() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyDob("");
 
-        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity2.setSearchPartyDob(null);
 
         // WHEN
@@ -228,10 +255,10 @@ class SearchPartyValidatorTest {
     void shouldValidateAsOkEvenIfSearchPartyDodIsBlank() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyDod("");
 
-        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity2 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity2.setSearchPartyDod(null);
 
         // WHEN
@@ -247,7 +274,7 @@ class SearchPartyValidatorTest {
     void throwsExceptionIfSearchPartyNameValidationFails() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyName(
             // NB: 1 good expression and 1 bad expression
             TEST_EXPRESSION_NAME_SINGLE_1 + NAME_FIELD_SEPARATOR + TEST_EXPRESSION_BAD
@@ -267,7 +294,7 @@ class SearchPartyValidatorTest {
     void throwsExceptionIfSearchPartyEmailAddressValidationFails() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyEmailAddress(TEST_EXPRESSION_BAD);
         Exception expectedException = prepareMockDotNotationValidatorToThrow(ColumnName.SEARCH_PARTY_EMAIL_ADDRESS);
 
@@ -284,7 +311,7 @@ class SearchPartyValidatorTest {
     void throwsExceptionIfSearchPartyAddressLine1ValidationFails() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyAddressLine1(TEST_EXPRESSION_BAD);
         Exception expectedException = prepareMockDotNotationValidatorToThrow(ColumnName.SEARCH_PARTY_ADDRESS_LINE_1);
 
@@ -301,7 +328,7 @@ class SearchPartyValidatorTest {
     void throwsExceptionIfSearchPartyPostCodeValidationFails() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyPostCode(TEST_EXPRESSION_BAD);
         Exception expectedException = prepareMockDotNotationValidatorToThrow(ColumnName.SEARCH_PARTY_POST_CODE);
 
@@ -318,7 +345,7 @@ class SearchPartyValidatorTest {
     void throwsExceptionIfSearchPartyDobValidationFails() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyDob(TEST_EXPRESSION_BAD);
         Exception expectedException = prepareMockDotNotationValidatorToThrow(ColumnName.SEARCH_PARTY_DOB);
 
@@ -335,7 +362,7 @@ class SearchPartyValidatorTest {
     void throwsExceptionIfSearchPartyDodValidationFails() {
 
         // GIVEN
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntity();
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
         searchPartyEntity1.setSearchPartyDod(TEST_EXPRESSION_BAD);
         Exception expectedException = prepareMockDotNotationValidatorToThrow(ColumnName.SEARCH_PARTY_DOD);
 
@@ -358,7 +385,7 @@ class SearchPartyValidatorTest {
         return searchPartyEntity;
     }
 
-    private static SearchPartyEntity createPopulatedSearchPartyEntity() {
+    private static SearchPartyEntity createPopulatedSearchPartyEntityWithoutCollectionField() {
 
         SearchPartyEntity searchPartyEntity = createBlankSearchPartyEntity();
         searchPartyEntity.setSearchPartyName(TEST_EXPRESSION_NAME_SINGLE_1);
@@ -367,6 +394,21 @@ class SearchPartyValidatorTest {
         searchPartyEntity.setSearchPartyPostCode(TEST_EXPRESSION_POSTCODE_1);
         searchPartyEntity.setSearchPartyDob(TEST_EXPRESSION_DOB_1);
         searchPartyEntity.setSearchPartyDod(TEST_EXPRESSION_DOD_1);
+        searchPartyEntity.setSearchPartyCollectionFieldName(TEST_EXPRESSION_COLLECTION_FIELD_NAME_EMPTY);
+
+        return searchPartyEntity;
+    }
+
+    private static SearchPartyEntity createPopulatedSearchPartyEntityWithCollectionField() {
+
+        SearchPartyEntity searchPartyEntity = createBlankSearchPartyEntity();
+        searchPartyEntity.setSearchPartyName(TEST_EXPRESSION_NAME_SINGLE_1);
+        searchPartyEntity.setSearchPartyEmailAddress(TEST_EXPRESSION_EMAIL_1);
+        searchPartyEntity.setSearchPartyAddressLine1(TEST_EXPRESSION_ADDRESS_1);
+        searchPartyEntity.setSearchPartyPostCode(TEST_EXPRESSION_POSTCODE_1);
+        searchPartyEntity.setSearchPartyDob(TEST_EXPRESSION_DOB_1);
+        searchPartyEntity.setSearchPartyDod(TEST_EXPRESSION_DOD_1);
+        searchPartyEntity.setSearchPartyCollectionFieldName(TEST_EXPRESSION_COLLECTION_FIELD_NAME_1);
 
         return searchPartyEntity;
     }
