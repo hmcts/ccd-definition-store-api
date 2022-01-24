@@ -124,12 +124,11 @@ public class SearchPartyValidator {
         String spCollectionFieldName = searchPartyEntity.getSearchPartyCollectionFieldName();
 
         if (StringUtils.isNoneBlank(spCollectionFieldName)) {
-            // split CSV of fields
-            Arrays.asList(spCollectionFieldName.split(NAME_FIELD_SEPARATOR))
-                .forEach(expression ->
-                    validateDotNotation(parseContext, caseType, ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
-                        expression.trim())
-                );
+            validateDotNotation(parseContext,
+                caseType,
+                ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
+                spCollectionFieldName
+            );
         }
     }
 
