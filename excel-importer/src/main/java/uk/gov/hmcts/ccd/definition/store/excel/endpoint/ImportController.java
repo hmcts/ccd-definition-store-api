@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.excel.endpoint;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +32,6 @@ public class ImportController {
         this.processUploadServiceImpl = processUploadServiceImpl;
     }
 
-    @Transactional
     @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
     public ResponseEntity processUpload(@RequestParam("file") MultipartFile file) throws IOException {
         return processUploadServiceImpl.processUpload(file);
