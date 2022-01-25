@@ -3,7 +3,7 @@
 	"_extends_": "F-099_Get_CaseType",
 
 	"specs": [
-		"fetch Tabs Case Type Schema to verify blank value in the columns SearchPartyName(AC25), SearchPartyEmailAddress(AC26), SearchPartyAddressLine1(AC27), SearchPartyDoB(AC28) and SearchPartyPostCode(AC29)"
+		"fetch Tabs Case Type Schema to verify blank value in the columns SearchPartyName(AC25), SearchPartyEmailAddress(AC26), SearchPartyAddressLine1(AC27), SearchPartyDoB(AC28), SearchPartyPostCode(AC29) and SearchPartyCollectionFieldName"
 	],
 
 	"request": {
