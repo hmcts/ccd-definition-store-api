@@ -8,5 +8,6 @@ import java.io.IOException;
 public interface ProcessUploadService {
     String SUCCESSFULLY_CREATED = "Case Definition data successfully imported";
     String IMPORT_WARNINGS_HEADER = "Definition-Import-Warnings";
+    String IMPORT_FILE_ERROR = "No file present or file has zero length";
     ResponseEntity processUpload(MultipartFile file) throws IOException;
 }

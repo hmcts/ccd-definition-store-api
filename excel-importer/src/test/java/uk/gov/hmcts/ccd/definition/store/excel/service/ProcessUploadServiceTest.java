@@ -28,6 +28,7 @@ import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.excel.service.ProcessUploadService.IMPORT_FILE_ERROR;
 
 class ProcessUploadServiceTest {
 
@@ -71,6 +72,16 @@ class ProcessUploadServiceTest {
         verify(fileStorageService).uploadFile(file, metadata);
         assertEquals(result.getStatusCode(), HttpStatus.CREATED);
         assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
+    }
+
+    @DisplayName("Upload - Green non-path, Azure enabled")
+    @Test
+    void invalidUploadAzureEnabled() throws Exception {
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
+        final IOException
+            exception =
+            assertThrows(IOException.class, () -> processUploadService.processUpload(null));
+        assertThat(exception.getMessage(), is(IMPORT_FILE_ERROR));
     }
 
     @DisplayName("Upload - Green path, Azure disabled")

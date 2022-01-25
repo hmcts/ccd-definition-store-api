@@ -41,7 +41,7 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
     public ResponseEntity processUpload(MultipartFile file) throws IOException {
 
         if (file == null || file.getSize() == 0) {
-            throw new IOException("No file present or file has zero length");
+            throw new IOException(IMPORT_FILE_ERROR);
         } else {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try (final InputStream inputStream = file.getInputStream()) {
