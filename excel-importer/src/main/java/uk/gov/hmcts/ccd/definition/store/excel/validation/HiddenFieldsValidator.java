@@ -19,11 +19,13 @@ public class HiddenFieldsValidator {
                                                  Map<String, DefinitionSheet> definitionSheets) {
         final DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
         final DefinitionSheet caseFields = definitionSheets.get(SheetName.CASE_FIELD.getName());
+        final String definitionItemId = definitionDataItem.getId();
+
         List<DefinitionDataItem> caseFieldList =
             caseFields.getDataItems().stream().filter(caseFieldDataItem ->
-                definitionDataItem.getId().equals(caseFieldDataItem
+                definitionItemId.equals(caseFieldDataItem
                     .getString(ColumnName.FIELD_TYPE))
-                    || definitionDataItem.getId().equals(caseFieldDataItem
+                    || definitionItemId.equals(caseFieldDataItem
                     .getString(ColumnName.FIELD_TYPE_PARAMETER))).collect(toList());
 
         List<DefinitionDataItem> caseEventToFieldListFiltered = new ArrayList<>();
@@ -172,8 +174,8 @@ public class HiddenFieldsValidator {
                 caseEventToFieldList.stream().filter(dataItem ->
                     dataItem.getString(ColumnName.FIELD_SHOW_CONDITION) != null).collect(toList());
             if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())) {
-                match = (caseEventToFieldListFiltered.stream().anyMatch(dataItem ->
-                    Boolean.TRUE.equals(dataItem.getRetainHiddenValue()))) ? false : true;
+                match = caseEventToFieldListFiltered.stream().noneMatch(dataItem ->
+                    Boolean.TRUE.equals(dataItem.getRetainHiddenValue()));
             } else {
                 match = false;
             }
@@ -194,8 +196,8 @@ public class HiddenFieldsValidator {
             String caseFieldShowConditionValue = definitionDataItem1.getFieldShowCondition();
             if (definitionDataItem.getRetainHiddenValue() != null
                 && definitionDataItem.getFieldShowCondition() != null) {
-                return (caseFieldRetainHiddenValue == null
-                    || Boolean.FALSE.equals(caseFieldRetainHiddenValue)) ? true : false;
+                return caseFieldRetainHiddenValue == null
+                    || Boolean.FALSE.equals(caseFieldRetainHiddenValue);
             } else if (definitionDataItem.getRetainHiddenValue() != null
                 && definitionDataItem.getFieldShowCondition() == null) {
                 if (Boolean.TRUE.equals(definitionDataItem.getRetainHiddenValue())
@@ -203,7 +205,7 @@ public class HiddenFieldsValidator {
                     || Boolean.FALSE.equals(caseFieldRetainHiddenValue))) {
                     return false;
                 } else {
-                    return caseFieldShowConditionValue == null ? false : true;
+                    return caseFieldShowConditionValue != null;
                 }
             } else {
                 return (Boolean.FALSE.equals(caseFieldRetainHiddenValue)
