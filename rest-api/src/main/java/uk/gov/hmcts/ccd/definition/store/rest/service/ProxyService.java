@@ -8,7 +8,6 @@ import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultHttpResponseParserFactory;
 import org.apache.http.impl.conn.ManagedHttpClientConnectionFactory;
@@ -44,7 +43,7 @@ public class ProxyService {
         try {
             return httpClient.execute(request, httpResponse -> EntityUtils.toString(httpResponse.getEntity()));
         } finally {
-                httpClient.close();
+            httpClient.close();
         }
     }
 
