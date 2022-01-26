@@ -84,6 +84,19 @@ class ProcessUploadServiceTest {
         assertThat(exception.getMessage(), is(IMPORT_FILE_ERROR));
     }
 
+    @DisplayName("Upload - Green non-path due to file zero, Azure enabled")
+    @Test
+    void invalidUploadAzureEnabledDueToFileZero() {
+        String str = "";
+        byte[] bytes = str.getBytes();
+        val fileTest = new MockMultipartFile("name",bytes);
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
+        final IOException
+            exception =
+            assertThrows(IOException.class, () -> processUploadService.processUpload(fileTest));
+        assertThat(exception.getMessage(), is(IMPORT_FILE_ERROR));
+    }
+
     @DisplayName("Upload - Green path, Azure disabled")
     @Test
     void validUploadAzureDisabled() throws Exception {
@@ -118,5 +131,15 @@ class ProcessUploadServiceTest {
         assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
         assertEquals(result.getHeaders().get(processUploadService.IMPORT_WARNINGS_HEADER),
             Arrays.asList(firstWarning, secondWarning));
+    }
+
+    @DisplayName("Upload - No Green path due to null values")
+    @Test
+    void invalidUploadDueToNullValues() throws Exception {
+        val processUploadServiceTest =
+            new ProcessUploadServiceImpl(importService, null, null);
+        val result = processUploadServiceTest.processUpload(file);
+        assertEquals(result.getStatusCode(), HttpStatus.CREATED);
+        assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
     }
 }
