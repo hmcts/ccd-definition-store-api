@@ -172,7 +172,8 @@
 					"search_party_email_address": "TextFieldFName",
 					"live_from": "2017-01-01T00:00:00.000+00:00",
 					"live_to": null,
-					"search_party_name": "TextFieldFName,TextFieldMName,TextFieldLName"
+					"search_party_name": "TextFieldFName,TextFieldMName,TextFieldLName",
+          "search_party_collection_field_name": "TextFieldFName"
 				}
 			],
       "searchCriterias" : [

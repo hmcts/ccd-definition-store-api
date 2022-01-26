@@ -29,8 +29,9 @@
 					"search_party_email_address": "TextField1",
 					"live_from": "2017-01-01T00:00:00.000+00:00",
 					"live_to": null,
-					"search_party_name": null
-				},
+					"search_party_name": null,
+          "search_party_collection_field_name": null
+        },
 				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": "TextField1",
@@ -40,8 +41,9 @@
 					"search_party_email_address": null,
 					"live_from": "2017-01-01T00:00:00.000+00:00",
 					"live_to": null,
-					"search_party_name": "TextField1"
-				},
+					"search_party_name": "TextField1",
+          "search_party_collection_field_name": null
+        },
 				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": "TextField1",
@@ -51,8 +53,9 @@
 					"search_party_email_address": "TextField1",
 					"live_from": "2017-01-01T00:00:00.000+00:00",
 					"live_to": null,
-					"search_party_name": "TextField2"
-				},
+					"search_party_name": "TextField2",
+          "search_party_collection_field_name": null
+        },
 				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": "TextField1",
@@ -62,8 +65,9 @@
 					"search_party_email_address": "TextField1",
 					"live_from": "2017-01-01T00:00:00.000+00:00",
 					"live_to": null,
-					"search_party_name": "TextField3"
-				},
+					"search_party_name": "TextField3",
+          "search_party_collection_field_name": null
+        },
 				{
 					"case_type_id": "FT_Tabs",
 					"search_party_dob": null,
@@ -73,8 +77,21 @@
 					"search_party_email_address": "TextField1",
 					"live_from": "2017-01-01T00:00:00.000+00:00",
 					"live_to": null,
-					"search_party_name": "TextField4"
-				}
+					"search_party_name": "TextField4",
+          "search_party_collection_field_name": null
+        },
+        {
+          "case_type_id": "FT_Tabs",
+          "search_party_dob": "TextField1",
+          "search_party_dod": null,
+          "search_party_post_code": "TextField1",
+          "search_party_address_line1": "TextField1",
+          "search_party_email_address": "TextField1",
+          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_to": null,
+          "search_party_name": "TextField5",
+          "search_party_collection_field_name": null
+        }
 			]
 		}
 	}
