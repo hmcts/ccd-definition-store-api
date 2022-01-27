@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,9 +16,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAcc
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +28,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
@@ -156,6 +161,32 @@ public class CaseDefinitionControllerTest {
     }
 
     @Nested
+    @DisplayName("Test the dataCaseTypeByIds method")
+    class DataCaseTypeByIdsTests {
+
+        @Test
+        @DisplayName("Should return the CaseType List when the CaseType exists")
+        public void shouldReturnCaseType_whenCaseTypeExistsForId() {
+            val itemName = Arrays.asList("get-test");
+            CaseType caseTypeReturned = createCaseType(itemName.get(0), itemName.get(0));
+            when(caseTypeService.findByCaseTypeIds(anyList())).thenReturn(Arrays.asList(caseTypeReturned));
+            val result = subject.dataCaseTypeByIds(itemName);
+            assertFalse(result.isEmpty());
+            assertEquals(itemName.get(0), result.get(0).getId());
+            verify(caseTypeService).findByCaseTypeIds(itemName);
+        }
+
+        @Test
+        @DisplayName("Should throw a NotFoundException when the CaseType does not exist")
+        public void shouldThrowNotFoundException_whenCaseTypeDoesNotExist() {
+            val caseTypeIds = Arrays.asList("CaseTypeId");
+            val result = subject.dataCaseTypeByIds(caseTypeIds);
+            when(caseTypeService.findByCaseTypeIds(caseTypeIds)).thenReturn(Arrays.asList());
+            assertTrue(result.isEmpty());
+        }
+    }
+
+    @Nested
     @DisplayName("Test the dataCaseTypeIdGet method")
     class DataCaseTypeIdGetTests {
 
@@ -234,4 +265,36 @@ public class CaseDefinitionControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("Test the findCasesByJurisdictions method")
+    class FindCasesByJurisdictionsTests {
+
+        @Test
+        @DisplayName("Should return the CaseType ids for Jurisdictions")
+        public void shouldReturnCaseType_for_jurisdictions() {
+            val jurisdiction = new Jurisdiction();
+            val caseTypeLittle = new CaseTypeLite();
+            caseTypeLittle.setId("id");
+            jurisdiction.setId("id");
+            jurisdiction.setCaseTypes(Arrays.asList(caseTypeLittle));
+            when(caseTypeService.findAllCaseTypeIdsByJurisdictionIds(any())).thenReturn(Arrays.asList("ids"));
+            val itemNames = Arrays.asList("get-test");
+            val result = subject.findCasesByJurisdictions(Optional.of(itemNames));
+            assertFalse(result.isEmpty());
+        }
+
+
+        @Test
+        @DisplayName("Should return the CaseType ids")
+        public void shouldReturnCaseType() {
+            val jurisdiction = new Jurisdiction();
+            val caseTypeLittle = new CaseTypeLite();
+            caseTypeLittle.setId("id");
+            jurisdiction.setId("id");
+            jurisdiction.setCaseTypes(Arrays.asList(caseTypeLittle));
+            when(caseTypeService.findAllCaseTypeIds()).thenReturn(Arrays.asList("ids"));
+            val result = subject.findCasesByJurisdictions(Optional.empty());
+            assertFalse(result.isEmpty());
+        }
+    }
 }

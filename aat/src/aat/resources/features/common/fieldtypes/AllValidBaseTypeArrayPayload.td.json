@@ -77,6 +77,12 @@
     },
     {
       "_extends_": "BaseDynamicMultiSelectListFieldType"
+    },
+    {
+      "_extends_": "BaseWaysToPayFieldType"
+    },
+    {
+      "_extends_": "BaseFlagLauncherFieldType"
     }
   ]
 }

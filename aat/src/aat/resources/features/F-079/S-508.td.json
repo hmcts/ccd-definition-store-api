@@ -401,6 +401,8 @@
       ],
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
       "roleToAccessProfiles" : [ ],
+      "searchParties" : [ ],
+      "searchCriterias" : [ ],
       "case_fields": [
         {
           "__operator__": "equivalent",

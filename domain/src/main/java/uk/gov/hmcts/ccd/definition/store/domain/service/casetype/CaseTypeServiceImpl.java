@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -87,6 +88,29 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         return repository.findCurrentVersionForReference(id)
             .map(dtoMapper::map)
             .map(this::addMetadataFields);
+    }
+
+    @Transactional
+    @Override
+    public List<CaseType> findByCaseTypeIds(List<String> ids) {
+        return repository.findAllLatestVersions(ids).stream()
+            .map(caseTypeEntity -> dtoMapper.map(caseTypeEntity))
+            .map(caseType -> addMetadataFields(caseType))
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public List<String> findAllCaseTypeIdsByJurisdictionIds(List<String> jurisdictionReferences) {
+        return repository.findAllCaseTypeIdsByJurisdictionIds(
+            jurisdictionReferences.stream().map(String::toUpperCase).collect(toList())
+        );
+    }
+
+    @Transactional
+    @Override
+    public List<String> findAllCaseTypeIds() {
+        return repository.findAllCaseTypeIds();
     }
 
     @Transactional

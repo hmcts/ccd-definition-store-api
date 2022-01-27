@@ -21,11 +21,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
+
 @Slf4j
 @SuppressWarnings("java:S1874")
 public class HighLevelCCDElasticClient implements CCDElasticClient {
 
     private static final String CASES_INDEX_SETTINGS_JSON = "/casesIndexSettings.json";
+    private static final String GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON = "/globalSearchCasesIndexSettings.json";
     protected CcdElasticSearchProperties config;
 
     protected RestHighLevelClient elasticClient;
@@ -41,7 +44,9 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         log.info("creating index {} with alias {}", indexName, alias);
         CreateIndexRequest request = new CreateIndexRequest(indexName);
         request.alias(new Alias(alias));
-        request.settings(casesIndexSettings());
+        String file = (alias.equalsIgnoreCase(GLOBAL_SEARCH))
+            ? GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON : CASES_INDEX_SETTINGS_JSON;
+        request.settings(casesIndexSettings(file));
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
         log.info("index created: {}", createIndexResponse.isAcknowledged());
         return createIndexResponse.isAcknowledged();
@@ -84,9 +89,9 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         return elasticClient.indices().getAlias(request, RequestOptions.DEFAULT);
     }
 
-    private Settings.Builder casesIndexSettings() throws IOException {
-        try (InputStream inputStream = getClass().getResourceAsStream(CASES_INDEX_SETTINGS_JSON)) {
-            Settings.Builder settings = Settings.builder().loadFromStream(CASES_INDEX_SETTINGS_JSON,
+    private Settings.Builder casesIndexSettings(String file) throws IOException {
+        try (InputStream inputStream = getClass().getResourceAsStream(file)) {
+            Settings.Builder settings = Settings.builder().loadFromStream(file,
                 inputStream, false);
             settings.put("index.number_of_shards", config.getIndexShards());
             settings.put("index.number_of_replicas", config.getIndexShardsReplicas());

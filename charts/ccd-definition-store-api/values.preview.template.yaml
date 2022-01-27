@@ -28,6 +28,6 @@ java:
 
     # ccd-test app-insights key - remove once testing is done
     APPINSIGHTS_INSTRUMENTATIONKEY: 2dcb834e-768e-4429-9050-ab15af959995
-    
+
   postgresql:
     enabled: true

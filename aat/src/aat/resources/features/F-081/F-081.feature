@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-347 @Smoke
+@S-347 @Smoke @Ignore
 Scenario: must return 200 with List of jurisdictions
 
     Given a user with [an active profile in CCD]
