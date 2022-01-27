@@ -1,0 +1,57 @@
+{
+  "_guid_": "S-097.8",
+  "_extends_": "Get_CaseType",
+
+  "title": "Return the new CaseAccessCategories column as part of the Get RoleToAccessProfiles operation from Definitions store",
+
+  "specs": [
+    "an active profile in CCD",
+    "Get RoleToAccessProfiles",
+    "Definition store API",
+    "contains the newly defined field - CaseAccessCategories"
+  ],
+
+  "request": {
+    "pathVariables": {
+      "id": "FT_CaseAccessCategories"
+    }
+  },
+
+  "expectedResponse": {
+    "body": {
+      "id": "FT_CaseAccessCategories",
+      "description": "Case Type for testing CaseAccessCategories",
+      "version": {
+        "number": "[[ANY_INTEGER_NOT_NULLABLE]]",
+        "live_from": "[[ANYTHING_PRESENT]]",
+        "live_until": null
+      },
+      "name": "[[ANYTHING_PRESENT]]",
+      "jurisdiction": "[[ANYTHING_PRESENT]]",
+      "events": "[[ANYTHING_PRESENT]]",
+      "states": "[[ANYTHING_PRESENT]]",
+      "acls": "[[ANYTHING_PRESENT]]",
+      "searchAliasFields": [],
+      "roleToAccessProfiles": [
+        {
+          "case_type_id": "FT_CaseAccessCategories",
+          "disabled": false,
+          "read_only": true,
+          "authorisations": "auth1",
+          "access_profiles": "caseworker-befta_master",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_to": null,
+          "role_name": "Role1",
+          "case_access_categories": "TestValue"
+        }
+      ],
+      "searchParties": [],
+      "searchCriterias": [],
+      "case_fields": "[[ANYTHING_PRESENT]]",
+      "printable_document_url": null,
+      "callback_get_case_url" : null,
+      "retries_get_case_url" : [],
+      "security_classification": "PUBLIC"
+    }
+  }
+}
