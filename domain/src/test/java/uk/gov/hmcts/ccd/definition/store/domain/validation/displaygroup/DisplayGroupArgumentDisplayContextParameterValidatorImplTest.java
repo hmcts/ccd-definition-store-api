@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,13 +13,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
 
-    private DisplayGroupCaseFieldValidator validator;
+    private DisplayGroupArgumentDisplayContextParameterValidatorImpl validator;
     private static final String TEST_ARGUMENT = "#ARGUMENT(TestArgument)";
 
     @Mock
@@ -32,7 +31,7 @@ public class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        validator = new DisplayGroupDateTimeDisplayContextParameterValidatorImpl(
+        validator = new DisplayGroupArgumentDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);
         when(displayContextParameterValidatorFactory.getValidator(Mockito.any()))
             .thenReturn(displayContextParameterValidator);
@@ -40,17 +39,12 @@ public class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
 
     @Test
     void shouldValidateEntityWithNoDisplayContextParameter() {
-        DisplayGroupArgumentDisplayContextParameterValidatorImpl argumentDisplayContextParameterValidator
-            = new DisplayGroupArgumentDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
-
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setCaseField(caseFieldEntity());
 
-        final ValidationResult result = argumentDisplayContextParameterValidator.validate(entity);
+        final ValidationResult result = validator.validate(entity);
 
-        assertAll(
-            () -> MatcherAssert.assertThat(result.isValid(), is(true))
-        );
+        assertTrue(result.isValid());
     }
 
     @Test
@@ -61,66 +55,57 @@ public class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
 
         final ValidationResult result = validator.validate(entity);
 
-        assertAll(
-            () -> MatcherAssert.assertThat(result.isValid(), is(true))
-        );
+        assertTrue(result.isValid());
     }
 
     @Test
     void shouldReturnSheetName() {
-        DisplayGroupArgumentDisplayContextParameterValidatorImpl argumentDisplayContextParameterValidator
-            = new DisplayGroupArgumentDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
-
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setCaseField(caseFieldEntity());
 
-        assertAll(
-            () -> MatcherAssert.assertThat(argumentDisplayContextParameterValidator.getSheetName(entity),
-                is("CaseTypeTab"))
-        );
+        assertEquals(validator.getSheetName(entity), "CaseTypeTab");
     }
 
     @Test
-    void shouldReturnCaseReference() {
-        DisplayGroupArgumentDisplayContextParameterValidatorImpl argumentDisplayContextParameterValidator
-            = new DisplayGroupArgumentDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
-
+    void shouldReturnCaseReferenceWhenPresent() {
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setCaseField(caseFieldEntity());
 
-        assertAll(
-            () -> MatcherAssert.assertThat(argumentDisplayContextParameterValidator.getCaseFieldReference(entity),
-                is("CASE_FIELD"))
-        );
+        assertEquals(validator.getCaseFieldReference(entity), "CASE_FIELD");
+    }
+
+    @Test
+    void shouldReturnEmptyCaseReferenceWhenNotSet() {
+        DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
+        assertTrue(validator.getCaseFieldReference(entity).isEmpty());
     }
 
     @Test
     void shouldReturnFieldType() {
-        DisplayGroupArgumentDisplayContextParameterValidatorImpl argumentDisplayContextParameterValidator
-            = new DisplayGroupArgumentDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
-
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setCaseField(caseFieldEntity());
 
-        assertAll(
-            () -> MatcherAssert.assertThat(argumentDisplayContextParameterValidator.getFieldTypeEntity(entity)
-                .getReference(), is(FieldTypeUtils.BASE_TEXT))
-        );
+        assertEquals(validator.getFieldTypeEntity(entity).getReference(), FieldTypeUtils.BASE_TEXT);
     }
 
     @Test
     void shouldReturnDisplayContextParameter() {
-        DisplayGroupArgumentDisplayContextParameterValidatorImpl argumentDisplayContextParameterValidator
-            = new DisplayGroupArgumentDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
-
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setDisplayContextParameter(TEST_ARGUMENT);
         entity.setCaseField(caseFieldEntity());
 
-        assertAll(
-            () -> MatcherAssert.assertThat(argumentDisplayContextParameterValidator.getDisplayContextParameter(entity),
-                is(TEST_ARGUMENT))
-        );
+        assertEquals(validator.getDisplayContextParameter(entity), TEST_ARGUMENT);
+    }
+
+    @Test
+    void shouldValidateEntityWithDateTimeDisplayDisplayContextParameter() {
+        DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
+        entity.setDisplayContextParameter("#DATETIMEDISPLAY(hhmmss)");
+        entity.setCaseField(caseFieldEntity());
+
+        final ValidationResult result = validator.validate(entity);
+
+        assertTrue(result.isValid());
     }
 
     private static CaseFieldEntity caseFieldEntity() {
