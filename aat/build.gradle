@@ -6,7 +6,7 @@ dependencyCheck {
 }
 
 dependencies {
-    compile (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '3.1.4') {
+    compile (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
         exclude group: 'com.google.guava', module: 'guava'
     }
     compile group: 'org.awaitility', name: 'awaitility', version: '3.1.6'
