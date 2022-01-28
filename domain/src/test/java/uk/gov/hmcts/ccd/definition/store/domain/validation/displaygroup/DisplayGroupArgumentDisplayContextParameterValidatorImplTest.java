@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
+class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
 
     private DisplayGroupArgumentDisplayContextParameterValidatorImpl validator;
     private static final String TEST_ARGUMENT = "#ARGUMENT(TestArgument)";
@@ -63,7 +63,7 @@ public class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setCaseField(caseFieldEntity());
 
-        assertEquals(validator.getSheetName(entity), "CaseTypeTab");
+        assertEquals("CaseTypeTab", validator.getSheetName(entity));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setCaseField(caseFieldEntity());
 
-        assertEquals(validator.getCaseFieldReference(entity), "CASE_FIELD");
+        assertEquals("CASE_FIELD", validator.getCaseFieldReference(entity));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         entity.setCaseField(caseFieldEntity());
 
-        assertEquals(validator.getFieldTypeEntity(entity).getReference(), FieldTypeUtils.BASE_TEXT);
+        assertEquals(FieldTypeUtils.BASE_TEXT, validator.getFieldTypeEntity(entity).getReference());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
         entity.setDisplayContextParameter(TEST_ARGUMENT);
         entity.setCaseField(caseFieldEntity());
 
-        assertEquals(validator.getDisplayContextParameter(entity), TEST_ARGUMENT);
+        assertEquals(TEST_ARGUMENT, validator.getDisplayContextParameter(entity));
     }
 
     @Test
