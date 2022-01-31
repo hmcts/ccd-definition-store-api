@@ -71,6 +71,7 @@ ext {
     groovyVersion = '3.0.2!!'
     tomcatVersion = '9.0.54!!'
     hibernateVersion = '5.4.24.Final!!'
+    feignJackson = '11.6'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -210,10 +211,10 @@ subprojects { subproject ->
         compile "org.springframework.boot:spring-boot-starter-oauth2-client"
         compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
 
-//        implementation "io.github.openfeign:feign-httpclient:10.7.0"
+        implementation "io.github.openfeign:feign-httpclient:${feignJackson}"
 
         compile('org.springframework.boot:spring-boot-starter-web')
-        compile('org.springframework.boot:spring-boot-starter-data-jpa')
+        compile('org.springframework.boot:spring-boot-starter-data-jpa:2.6.3')
 
         compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
         compile group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
@@ -222,7 +223,7 @@ subprojects { subproject ->
         compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
         compile('org.springframework.boot:spring-boot-starter-cache')
 
-        compile "org.flywaydb:flyway-core:6.5.7"
+        compile 'org.flywaydb:flyway-core:8.4.2'
 
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
 
@@ -261,8 +262,8 @@ subprojects { subproject ->
         testCompile 'org.mockito:mockito-junit-jupiter:3.6.0'
         testCompile 'com.github.npathai:hamcrest-optional:2.0.0'
         testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-//        testCompile 'io.github.openfeign:feign-jackson:10.7.0'
-//        testCompile 'io.github.openfeign.form:feign-form:3.8.0'
+        testCompile "io.github.openfeign:feign-jackson:${feignJackson}"
+        testCompile 'io.github.openfeign.form:feign-form:3.8.0'
         testCompile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
