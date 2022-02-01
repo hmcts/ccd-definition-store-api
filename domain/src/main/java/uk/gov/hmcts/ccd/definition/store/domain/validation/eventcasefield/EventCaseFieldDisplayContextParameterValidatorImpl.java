@@ -29,7 +29,8 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
         ValidationResult validationResult = new ValidationResult();
 
         if (Strings.isNullOrEmpty(eventCaseFieldEntity.getDisplayContextParameter())
-            || isDisplayContextParameterDateTimeType(eventCaseFieldEntity)) {
+            || isDisplayContextParameterDateTimeType(eventCaseFieldEntity)
+            || isDisplayContextParameterArgumentType(eventCaseFieldEntity)) {
             return validationResult;
         }
 
@@ -78,6 +79,11 @@ public class EventCaseFieldDisplayContextParameterValidatorImpl implements Event
         return DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter())
             .map(t -> t == DisplayContextParameterType.DATETIMEDISPLAY
                 || t == DisplayContextParameterType.DATETIMEENTRY).orElse(false);
+    }
+
+    private boolean isDisplayContextParameterArgumentType(EventCaseFieldEntity entity) {
+        return DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter())
+            .map(t -> t == DisplayContextParameterType.ARGUMENT).orElse(false);
     }
 
     private boolean isFieldTypeNotTableOrList(EventCaseFieldEntity eventCaseFieldEntity) {
