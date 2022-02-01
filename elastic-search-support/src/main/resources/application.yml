@@ -29,6 +29,12 @@ elasticsearch:
                        "document_url":{
                           "type":"text",
                           "index":false
+                       },
+                       "category_id":{
+                          "type":"text"
+                       },
+                       "upload_timestamp":{
+                          "type":"date"
                        }
                     }
                  }'
