@@ -166,3 +166,25 @@ Feature: F-099: Search Party (Global Search)
     Then a negative response is received
     And the response has all other details as expected
     And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
+
+  @S-099.15
+  Scenario: Import Definition file with a non-collection type in the "SearchPartyCollectionFieldName" column of the SearchParty tab
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
+    And the request [contains correctly configured SearchParty tab with valid case field names in SearchPartyEmailAddress, SearchPartyDoB, SearchPartyAddressLine1 and SearchPartyPostCode columns]
+    And the request [contains non-collection type in the SearchPartyCollectionFieldName column]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-099.16
+  Scenario: Import Definition file with a non-complex type referenced in the "SearchPartyCollectionFieldName" column of the SearchParty tab
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
+    And the request [contains correctly configured SearchParty tab with valid case field names in SearchPartyEmailAddress, SearchPartyDoB, SearchPartyAddressLine1 and SearchPartyPostCode columns]
+    And the request [contains non-complex type referenced in the SearchPartyCollectionFieldName column]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected

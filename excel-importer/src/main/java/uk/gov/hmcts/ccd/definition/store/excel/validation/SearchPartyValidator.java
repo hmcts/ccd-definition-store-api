@@ -3,18 +3,28 @@ package uk.gov.hmcts.ccd.definition.store.excel.validation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class SearchPartyValidator {
 
     protected static final String NAME_FIELD_SEPARATOR = ",";
+    private static final String COLLECTION_FIELD_TYPE = "Collection";
+    private static final String ERROR_MESSAGE = "SearchPartyTab Invalid value '%s' "
+        + "is not a valid SearchPartyCollectionFieldName value "
+        + "as it does not reference a collection of a complex type.";
 
     @Autowired
     private final DotNotationValidator dotNotationValidator;
@@ -31,6 +41,8 @@ public class SearchPartyValidator {
 
             if (StringUtils.isNoneBlank(searchPartyEntity.getSearchPartyCollectionFieldName())) {
                 validateSearchPartyCollectionFieldName(parseContext, caseType, searchPartyEntity);
+
+                validateDataType(parseContext, caseType, searchPartyEntity.getSearchPartyCollectionFieldName());
             } else {
                 validateSearchPartyName(parseContext, caseType, searchPartyEntity);
                 validateSearchPartyEmailAddress(parseContext, caseType, searchPartyEntity);
@@ -41,6 +53,19 @@ public class SearchPartyValidator {
             }
         });
 
+    }
+
+    private void validateDataType(final ParseContext parseContext,
+                                  final String caseType,
+                                  final String searchPartyCollectionFieldValue) {
+        final FieldTypeEntity caseFieldType = parseContext.getCaseFieldType(caseType, searchPartyCollectionFieldValue);
+        final Set<ComplexFieldEntity> complexFields = Optional.ofNullable(caseFieldType.getCollectionFieldType())
+            .map(FieldTypeEntity::getComplexFields)
+            .orElse(Collections.emptySet());
+
+        if (!COLLECTION_FIELD_TYPE.equals(caseFieldType.getBaseFieldType().getReference()) || complexFields.isEmpty()) {
+            throw new InvalidImportException(String.format(ERROR_MESSAGE, searchPartyCollectionFieldValue));
+        }
     }
 
     private void validateSearchPartyName(ParseContext parseContext,
@@ -121,13 +146,13 @@ public class SearchPartyValidator {
                                          String caseType,
                                          SearchPartyEntity searchPartyEntity) {
 
-        String spCollectionFieldName = searchPartyEntity.getSearchPartyCollectionFieldName();
+        String spCollectionFieldValue = searchPartyEntity.getSearchPartyCollectionFieldName();
 
-        if (StringUtils.isNoneBlank(spCollectionFieldName)) {
+        if (StringUtils.isNoneBlank(spCollectionFieldValue)) {
             validateDotNotation(parseContext,
                 caseType,
                 ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
-                spCollectionFieldName
+                spCollectionFieldValue
             );
         }
     }

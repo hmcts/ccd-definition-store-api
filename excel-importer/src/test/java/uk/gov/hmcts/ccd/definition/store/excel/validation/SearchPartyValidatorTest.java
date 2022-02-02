@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,16 +14,20 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
@@ -83,17 +89,17 @@ class SearchPartyValidatorTest {
 
         // THEN
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_NAME,
-                                              searchPartyEntity1.getSearchPartyName());
+            searchPartyEntity1.getSearchPartyName());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_EMAIL_ADDRESS,
-                                              searchPartyEntity1.getSearchPartyEmailAddress());
+            searchPartyEntity1.getSearchPartyEmailAddress());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_ADDRESS_LINE_1,
-                                              searchPartyEntity1.getSearchPartyAddressLine1());
+            searchPartyEntity1.getSearchPartyAddressLine1());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_POST_CODE,
-                                              searchPartyEntity1.getSearchPartyPostCode());
+            searchPartyEntity1.getSearchPartyPostCode());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_DOB,
-                                              searchPartyEntity1.getSearchPartyDob());
+            searchPartyEntity1.getSearchPartyDob());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_DOD,
-                                              searchPartyEntity1.getSearchPartyDod());
+            searchPartyEntity1.getSearchPartyDod());
 
         verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME);
     }
@@ -101,8 +107,10 @@ class SearchPartyValidatorTest {
     @DisplayName("should validate all fields")
     @Test
     void shouldOnlyValidateCollectionField() {
-
         // GIVEN
+        FieldTypeEntity caseFieldType = createFieldTypeEntity();
+        doReturn(caseFieldType).when(parseContext).getCaseFieldType(CASE_TYPE, TEST_EXPRESSION_COLLECTION_FIELD_NAME_1);
+
         SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithCollectionField();
 
         // WHEN
@@ -118,6 +126,30 @@ class SearchPartyValidatorTest {
 
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
                                               searchPartyEntity1.getSearchPartyCollectionFieldName());
+    }
+
+    @DisplayName("should raise exception when SearchPartyCollectionFieldName is not a collection or complex type")
+    @ParameterizedTest
+    @ValueSource(strings = {"NonCollection", "Collection"})
+    void shouldValidateSearchPartyCollectionFieldNamePart1(final String fieldType) {
+        // GIVEN
+        FieldTypeEntity collectionCaseFieldType = new FieldTypeEntity();
+        collectionCaseFieldType.setReference(fieldType);
+
+        FieldTypeEntity caseFieldType = new FieldTypeEntity();
+        caseFieldType.setBaseFieldType(collectionCaseFieldType);
+        caseFieldType.setCollectionFieldType(collectionCaseFieldType);
+
+        doReturn(caseFieldType).when(parseContext).getCaseFieldType(CASE_TYPE, TEST_EXPRESSION_COLLECTION_FIELD_NAME_1);
+
+        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithCollectionField();
+
+        // WHEN/THEN
+        assertThatExceptionOfType(InvalidImportException.class)
+            .isThrownBy(() -> searchPartyValidator.validate(List.of(searchPartyEntity1), parseContext))
+            .withMessage("SearchPartyTab Invalid value 'Name1' "
+                + "is not a valid SearchPartyCollectionFieldName value as it does not"
+                + " reference a collection of a complex type.");
     }
 
     @DisplayName("should validate multiple searchPartyEntity values")
@@ -397,6 +429,18 @@ class SearchPartyValidatorTest {
         searchPartyEntity.setSearchPartyCollectionFieldName(TEST_EXPRESSION_COLLECTION_FIELD_NAME_EMPTY);
 
         return searchPartyEntity;
+    }
+
+    private static FieldTypeEntity createFieldTypeEntity() {
+        FieldTypeEntity collectionCaseFieldType = new FieldTypeEntity();
+        collectionCaseFieldType.setReference("Collection");
+        collectionCaseFieldType.addComplexFields(List.of(new ComplexFieldEntity()));
+
+        FieldTypeEntity caseFieldType = new FieldTypeEntity();
+        caseFieldType.setBaseFieldType(collectionCaseFieldType);
+        caseFieldType.setCollectionFieldType(collectionCaseFieldType);
+
+        return caseFieldType;
     }
 
     private static SearchPartyEntity createPopulatedSearchPartyEntityWithCollectionField() {
