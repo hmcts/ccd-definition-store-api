@@ -155,9 +155,9 @@ public class CaseEventField {
     }
 
     /**
-     * whenever we want to publish this event field.
+     * allows services to define the default value of top level case fields.
      **/
-    @ApiModelProperty(value = "allows services to define the default value of the CaseAccessCategory")
+    @ApiModelProperty(value = "allows services to define the default value of top level case fields")
     @JsonProperty("default_value")
     public String getDefaultValue() {
         return defaultValue;

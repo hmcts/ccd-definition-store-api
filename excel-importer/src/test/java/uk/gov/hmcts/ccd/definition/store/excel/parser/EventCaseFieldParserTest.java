@@ -67,7 +67,7 @@ public class EventCaseFieldParserTest {
         String originalShowCondition = "Original Show Condition";
         String label = "label";
         String hint = "hint";
-        String defaultValue = "";
+        String defaultValue = "defaultValue";
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(

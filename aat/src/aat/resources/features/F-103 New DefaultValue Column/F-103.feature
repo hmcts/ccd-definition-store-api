@@ -5,6 +5,15 @@ Feature: F-103: New DefaultValue Column
     Given an appropriate test context as detailed in the test data source
 
   @S-103.1
+  Scenario: Import Definition file with correctly configured DefaultValue in the CaseEventToFields tab
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains a correctly configured default value]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a positive response is received
+    And the response has all other details as expected
+
+  @S-103.2
   Scenario: Import Definition file with blank values in the DefaultValue column of the CaseEventToFields tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -13,7 +22,7 @@ Feature: F-103: New DefaultValue Column
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-103.2
+  @S-103.3
   Scenario: Import Definition file without the DefaultValue column in the CaseEventToFields tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values

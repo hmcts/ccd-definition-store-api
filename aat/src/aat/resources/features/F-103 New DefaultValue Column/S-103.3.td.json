@@ -1,17 +1,17 @@
 {
-	"_guid_": "S-103.1",
+	"_guid_": "S-103.3",
 	"_extends_": "Import_Base_data",
-	"title": "Import Definition file with correctly configured DefaultValue in the CaseEventToFields tab",
+	"title": "Import Definition file without the DefaultValue column in the CaseEventToFields tab",
 	"specs": [
 		"an active profile in CCD",
-		"contains a correctly configured default value"
+		"contains a missing default value column"
 	],
   "request": {
     "body": {
       "arrayInMap": [
         {
           "key": "file",
-          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_Missing_CaseEventToFields_DefaultValue_Column.xlsx"
         }
       ]
     }

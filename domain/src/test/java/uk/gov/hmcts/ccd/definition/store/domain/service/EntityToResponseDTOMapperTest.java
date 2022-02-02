@@ -129,7 +129,7 @@ class  EntityToResponseDTOMapperTest {
             eventCaseFieldEntity.setRetainHiddenValue(true);
             eventCaseFieldEntity.setPublish(true);
             eventCaseFieldEntity.setPublishAs("PublishAs test");
-            eventCaseFieldEntity.setDefaultValue("");
+            eventCaseFieldEntity.setDefaultValue("DefaultValue test");
 
             CaseEventField caseEventField = spyOnClassUnderTest.map(
                 eventCaseFieldEntity
