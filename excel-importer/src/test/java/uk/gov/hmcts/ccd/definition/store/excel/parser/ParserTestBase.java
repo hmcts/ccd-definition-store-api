@@ -1,13 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import ch.qos.logback.classic.spi.LoggingEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.mockito.ArgumentCaptor;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
-import static org.junit.Assert.fail;
 
 abstract class ParserTestBase {
 
@@ -26,11 +23,4 @@ abstract class ParserTestBase {
         definitionSheet = new DefinitionSheet();
     }
 
-    protected void assertLogged(final ArgumentCaptor<LoggingEvent> captorLoggingEvent, final String message) {
-        if (!captorLoggingEvent.getAllValues()
-            .stream()
-            .anyMatch(e -> e.getFormattedMessage().equals(message))) {
-            fail("No event matches " + message);
-        }
-    }
 }
