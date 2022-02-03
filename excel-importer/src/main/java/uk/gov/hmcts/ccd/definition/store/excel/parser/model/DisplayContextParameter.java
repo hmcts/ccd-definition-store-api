@@ -5,7 +5,8 @@ public class DisplayContextParameter {
         TABLE("#TABLE("),
         LIST("#LIST("),
         DATETIMEDISPLAY("#DATETIMEDISPLAY("),
-        DATETIMEENTRY("#DATETIMEENTRY(");
+        DATETIMEENTRY("#DATETIMEENTRY("),
+        ARGUMENT("#ARGUMENT(");
 
         private String value;
 
