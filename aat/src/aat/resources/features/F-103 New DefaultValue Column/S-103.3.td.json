@@ -11,7 +11,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_Missing_CaseEventToFields_DefaultValue_Column.xlsx"
+          "localFilePath": "build/tmp/definition_files_copy/CCD_BEFTA_JURISDICTION2.xlsx"
         }
       ]
     }
