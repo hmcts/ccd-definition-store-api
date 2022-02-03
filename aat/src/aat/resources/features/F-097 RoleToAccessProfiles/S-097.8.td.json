@@ -2,7 +2,7 @@
   "_guid_": "S-097.8",
   "_extends_": "Get_CaseType",
 
-  "title": "Return the new CaseAccessCategories column as part of the Get RoleToAccessProfiles operation from Definitions store",
+  "title": "Return the new CaseAccessCategories column as part of the Get Case Type operation from Definitions store",
 
   "specs": [
     "an active profile in CCD",

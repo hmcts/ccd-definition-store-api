@@ -68,7 +68,7 @@ Feature: F-097: Role To Access Profiles
     And the response has all other details as expected
 
   @S-097.8
-  Scenario: Return the new CaseAccessCategories column as part of the Get RoleToAccessProfiles operation from Definitions store
+  Scenario: Return the new CaseAccessCategories column as part of the Get Case Type operation from Definitions store
     Given a user with [an active profile in CCD]
     And a call [to import definition file] will get the expected response as in [Import_BEFTA_Master_Definition]
 

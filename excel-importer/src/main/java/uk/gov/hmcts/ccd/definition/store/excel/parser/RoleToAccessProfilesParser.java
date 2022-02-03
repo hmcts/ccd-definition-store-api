@@ -24,7 +24,7 @@ public class RoleToAccessProfilesParser {
                 .get(SheetName.ROLE_TO_ACCESS_PROFILES.getName())
                 .getDataItems();
             return roleToAccessProfiles.stream()
-                .map(questionItem -> createRoleToAccessProfileEntity(parseContext, questionItem))
+                .map(roleToAccessProfile -> createRoleToAccessProfileEntity(parseContext, roleToAccessProfile))
                 .collect(Collectors.toUnmodifiableList());
         } catch (InvalidImportException invalidImportException) {
             ValidationResult validationResult = new ValidationResult();
@@ -62,8 +62,9 @@ public class RoleToAccessProfilesParser {
         roleToAccessProfilesEntity.setDisabled(definitionDataItem.getBooleanOrDefault(ColumnName.DISABLED, false));
         roleToAccessProfilesEntity.setAccessProfiles(definitionDataItem.getString(ColumnName.ACCESS_PROFILES));
         roleToAccessProfilesEntity.setAuthorisation(definitionDataItem.getString(ColumnName.AUTHORISATION));
-        final String categories = definitionDataItem.getString(ColumnName.CASE_ACCESS_CATEGORIES);
-        roleToAccessProfilesEntity.setCaseAccessCategories(categories);
+        roleToAccessProfilesEntity.setCaseAccessCategories(
+            definitionDataItem.getString(ColumnName.CASE_ACCESS_CATEGORIES)
+        );
 
         return roleToAccessProfilesEntity;
     }

@@ -11,7 +11,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_Missing_RoleToAccessProfiles_CaseAccessCategories_Column.xlsx"
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_Master_Definition_Missing_RoleToAccessProfiles_CaseAccessCategories_Column.xlsx"
         }
       ]
     }
