@@ -66,6 +66,9 @@ public class SearchPartyValidator {
         if (!COLLECTION_FIELD_TYPE.equals(caseFieldType.getBaseFieldType().getReference()) || complexFields.isEmpty()) {
             throw new InvalidImportException(String.format(ERROR_MESSAGE, searchPartyCollectionFieldValue));
         }
+
+        // TODO: move out of here
+        dotNotationValidator.aVoid(complexFields, SheetName.SEARCH_PARTY, ColumnName.SEARCH_PARTY_NAME, "todo");
     }
 
     private void validateSearchPartyName(ParseContext parseContext,
