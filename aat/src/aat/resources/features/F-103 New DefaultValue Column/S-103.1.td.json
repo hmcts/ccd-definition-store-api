@@ -1,30 +1,79 @@
 {
 	"_guid_": "S-103.1",
-	"_extends_": "Import_Base_data",
+  "_extends_": "Get_CaseType",
 	"title": "Import Definition file with correctly configured DefaultValue in the CaseEventToFields tab",
 	"specs": [
 		"an active profile in CCD",
-		"contains a correctly configured default value"
+		"contains the newly defined field - DefaultValue"
 	],
   "request": {
-    "body": {
-      "arrayInMap": [
-        {
-          "key": "file",
-          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
-        }
-      ]
+    "pathVariables": {
+      "id": "FT_CaseAccessCategories"
     }
   },
   "expectedResponse": {
-    "_extends_": "Common_201_Response",
-    "headers": {
-      "Content-Encoding": "[[ANYTHING_PRESENT]]",
-      "Content-Type": "application/json",
-      "Content-Length": "[[ANYTHING_PRESENT]]"
-    },
     "body": {
-      "__plainTextValue__" : "Case Definition data successfully imported"
+      "id": "FT_CaseAccessCategories",
+      "description": "Case Type for testing CaseAccessCategories",
+      "version": {
+        "number": "[[ANY_INTEGER_NOT_NULLABLE]]",
+        "live_from": "[[ANYTHING_PRESENT]]",
+        "live_until": null
+      },
+      "name": "[[ANYTHING_PRESENT]]",
+      "jurisdiction": "[[ANYTHING_PRESENT]]",
+      "events" : [ {
+        "id" : "CREATE",
+        "name" : "Create a case",
+        "description" : "Create a case",
+        "order" : "[[ANYTHING_PRESENT]]",
+        "case_fields" : [ {
+          "case_field_id" : "TextField",
+          "display_context" : "OPTIONAL",
+          "display_context_parameter" : null,
+          "retain_hidden_value" : null,
+          "show_condition" : null,
+          "show_summary_change_option" : "[[ANYTHING_PRESENT]]",
+          "show_summary_content_option" : null,
+          "label" : null,
+          "hint_text" : null,
+          "publish" : "[[ANYTHING_PRESENT]]",
+          "publish_as" : null,
+          "default_value" : "DefaultValue test",
+          "case_fields_complex" : "[[ANYTHING_PRESENT]]"
+        } ],
+        "pre_states" : "[[ANYTHING_PRESENT]]",
+        "post_states" : [ {
+          "enabling_condition" : null,
+          "priority" : "[[ANYTHING_PRESENT]]",
+          "post_state_reference" : "CaseCreated"
+        } ],
+        "callback_url_about_to_start_event" : null,
+        "retries_timeout_about_to_start_event" : "[[ANYTHING_PRESENT]]",
+        "callback_url_about_to_submit_event" : null,
+        "retries_timeout_url_about_to_submit_event" : "[[ANYTHING_PRESENT]]",
+        "callback_url_submitted_event" : null,
+        "retries_timeout_url_submitted_event" : "[[ANYTHING_PRESENT]]",
+        "security_classification" : "[[ANYTHING_PRESENT]]",
+        "acls" : "[[ANYTHING_PRESENT]]",
+        "show_summary" : "[[ANYTHING_PRESENT]]",
+        "publish" : "[[ANYTHING_PRESENT]]",
+        "show_event_notes" : null,
+        "can_save_draft" : "[[ANYTHING_PRESENT]]",
+        "end_button_label" : null,
+        "event_enabling_condition" : null
+      } ],
+      "states": "[[ANYTHING_PRESENT]]",
+      "acls": "[[ANYTHING_PRESENT]]",
+      "searchAliasFields": [],
+      "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
+      "searchParties": [],
+      "searchCriterias": [],
+      "case_fields": "[[ANYTHING_PRESENT]]",
+      "printable_document_url": null,
+      "callback_get_case_url" : null,
+      "retries_get_case_url" : [],
+      "security_classification": "PUBLIC"
     }
   }
 }
