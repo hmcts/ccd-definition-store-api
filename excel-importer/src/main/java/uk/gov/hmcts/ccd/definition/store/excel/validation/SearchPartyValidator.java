@@ -20,7 +20,6 @@ import java.util.Set;
 @Component
 public class SearchPartyValidator {
 
-    protected static final String NAME_FIELD_SEPARATOR = ",";
     private static final String COLLECTION_FIELD_TYPE = "Collection";
     private static final String ERROR_MESSAGE = "SearchPartyTab Invalid value '%s' "
         + "is not a valid SearchPartyCollectionFieldName value "
@@ -42,7 +41,7 @@ public class SearchPartyValidator {
             if (StringUtils.isNoneBlank(searchPartyEntity.getSearchPartyCollectionFieldName())) {
                 validateSearchPartyCollectionFieldName(parseContext, caseType, searchPartyEntity);
 
-                validateDataType(parseContext, caseType, searchPartyEntity.getSearchPartyCollectionFieldName());
+                validateDataType(parseContext, caseType, searchPartyEntity);
             } else {
                 validateSearchPartyName(parseContext, caseType, searchPartyEntity);
                 validateSearchPartyEmailAddress(parseContext, caseType, searchPartyEntity);
@@ -57,19 +56,25 @@ public class SearchPartyValidator {
 
     private void validateDataType(final ParseContext parseContext,
                                   final String caseType,
-                                  final String searchPartyCollectionFieldValue) {
-        final FieldTypeEntity caseFieldType = parseContext.getCaseFieldType(caseType, searchPartyCollectionFieldValue);
+                                  final SearchPartyEntity searchPartyEntity) {
+
+        final String expression = searchPartyEntity.getSearchPartyCollectionFieldName();
+        final String[] split = dotNotationValidator.dotSeparatorSplitFunction.apply(expression);
+
+        final FieldTypeEntity caseFieldType = parseContext.getCaseFieldType(caseType, split[split.length - 1]);
         final Set<ComplexFieldEntity> complexFields = Optional.ofNullable(caseFieldType.getCollectionFieldType())
             .map(FieldTypeEntity::getComplexFields)
             .orElse(Collections.emptySet());
 
-        if (!COLLECTION_FIELD_TYPE.equals(caseFieldType.getBaseFieldType().getReference()) || complexFields.isEmpty()) {
-            throw new InvalidImportException(String.format(ERROR_MESSAGE, searchPartyCollectionFieldValue));
+        if (!COLLECTION_FIELD_TYPE.equals(caseFieldType.getBaseFieldType().getReference()) && complexFields.isEmpty()) {
+            throw new InvalidImportException(String.format(ERROR_MESSAGE, expression));
         }
 
-        // TODO: move out of here
-        dotNotationValidator.aVoid(complexFields, SheetName.SEARCH_PARTY, ColumnName.SEARCH_PARTY_NAME, "todo");
+        validateSearchPartyName(complexFields, caseType, searchPartyEntity.getSearchPartyName());
+        validateSearchPartyEmailAddress(complexFields, caseType, searchPartyEntity.getSearchPartyEmailAddress());
+        validateSearchPartyAddressLine1(complexFields, caseType, searchPartyEntity.getSearchPartyAddressLine1());
     }
+
 
     private void validateSearchPartyName(ParseContext parseContext,
                                          String caseType,
@@ -77,13 +82,20 @@ public class SearchPartyValidator {
 
         String spName = searchPartyEntity.getSearchPartyName();
 
-        if (StringUtils.isNoneBlank(spName)) {
-            // split CSV of fields
-            Arrays.asList(spName.split(NAME_FIELD_SEPARATOR))
-                .forEach(expression ->
-                    validateDotNotation(parseContext, caseType, ColumnName.SEARCH_PARTY_NAME, expression.trim())
-                );
-        }
+        Arrays.asList(dotNotationValidator.commaSeparatorSplitFunction.apply(spName))
+            .forEach(expression ->
+                validateDotNotation(parseContext, caseType, ColumnName.SEARCH_PARTY_NAME, expression)
+            );
+    }
+
+    private void validateSearchPartyName(Set<ComplexFieldEntity> complexFields,
+                                         final String caseType,
+                                         String searchPartyName) {
+        // split CSV of fields
+        Arrays.asList(dotNotationValidator.commaSeparatorSplitFunction.apply(searchPartyName))
+            .forEach(expression ->
+                validateDotNotation(complexFields, caseType, ColumnName.SEARCH_PARTY_NAME, expression)
+            );
     }
 
     private void validateSearchPartyEmailAddress(ParseContext parseContext,
@@ -101,6 +113,12 @@ public class SearchPartyValidator {
         }
     }
 
+    private void validateSearchPartyEmailAddress(final Set<ComplexFieldEntity> complexFields,
+                                                 final String caseType,
+                                                 final String searchPartyEmailAddress) {
+        validateDotNotation(complexFields, caseType, ColumnName.SEARCH_PARTY_EMAIL_ADDRESS, searchPartyEmailAddress);
+    }
+
     private void validateSearchPartyAddressLine1(ParseContext parseContext,
                                                  String caseType,
                                                  SearchPartyEntity searchPartyEntity) {
@@ -110,6 +128,12 @@ public class SearchPartyValidator {
         if (StringUtils.isNoneBlank(spAddressLine1)) {
             validateDotNotation(parseContext, caseType, ColumnName.SEARCH_PARTY_ADDRESS_LINE_1, spAddressLine1);
         }
+    }
+
+    private void validateSearchPartyAddressLine1(final Set<ComplexFieldEntity> complexFields,
+                                                 final String caseType,
+                                                 final String searchPartyAddressLine1) {
+            validateDotNotation(complexFields, caseType, ColumnName.SEARCH_PARTY_ADDRESS_LINE_1, searchPartyAddressLine1);
     }
 
     private void validateSearchPartyPostCode(ParseContext parseContext,
@@ -124,8 +148,8 @@ public class SearchPartyValidator {
     }
 
     private void validateSearchPartyDob(ParseContext parseContext,
-                                             String caseType,
-                                             SearchPartyEntity searchPartyEntity) {
+                                        String caseType,
+                                        SearchPartyEntity searchPartyEntity) {
 
         String searchPartyDob = searchPartyEntity.getSearchPartyDob();
 
@@ -146,8 +170,8 @@ public class SearchPartyValidator {
     }
 
     private void validateSearchPartyCollectionFieldName(ParseContext parseContext,
-                                         String caseType,
-                                         SearchPartyEntity searchPartyEntity) {
+                                                        String caseType,
+                                                        SearchPartyEntity searchPartyEntity) {
 
         String spCollectionFieldValue = searchPartyEntity.getSearchPartyCollectionFieldName();
 
@@ -172,6 +196,21 @@ public class SearchPartyValidator {
             caseType,
             expression
         );
+    }
+
+    private void validateDotNotation(Set<ComplexFieldEntity> complexFields,
+                                     String caseType,
+                                     ColumnName columnName,
+                                     String expression) {
+        if (StringUtils.isNoneBlank(expression.strip())) {
+            dotNotationValidator.aVoid(
+                complexFields,
+                caseType,
+                SheetName.SEARCH_PARTY,
+                columnName,
+                expression.strip()
+            );
+        }
     }
 
 }
