@@ -36,6 +36,15 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
     }
 
     @Test
+    public void shouldNotFireValidationErrorWhenArgumentDisplayContextParameter() {
+        DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#ARGUMENT(TEST ARGUMENT)");
+        ValidationResult validationResult
+            = new DisplayGroupDisplayContextParamValidator().validate(entity);
+
+        assertTrue(validationResult.isValid());
+    }
+
+    @Test
     public void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
         DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#TABLE(firstname)");
         ValidationResult validationResult
