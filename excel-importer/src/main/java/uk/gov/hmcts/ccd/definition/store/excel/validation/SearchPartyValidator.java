@@ -123,13 +123,12 @@ public class SearchPartyValidator {
 
         String spCollectionFieldName = searchPartyEntity.getSearchPartyCollectionFieldName();
 
-        if (StringUtils.isNoneBlank(spCollectionFieldName)) {
-            validateDotNotation(parseContext,
-                caseType,
-                ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
-                spCollectionFieldName
-            );
-        }
+        validateDotNotation(parseContext,
+            caseType,
+            ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
+            spCollectionFieldName
+        );
+
     }
 
     private void validateDotNotation(ParseContext parseContext,

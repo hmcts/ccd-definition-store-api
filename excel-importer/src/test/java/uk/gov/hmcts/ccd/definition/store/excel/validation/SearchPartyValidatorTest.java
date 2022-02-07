@@ -71,9 +71,9 @@ class SearchPartyValidatorTest {
         );
     }
 
-    @DisplayName("should validate all fields")
+    @DisplayName("should validate all fields without collection field")
     @Test
-    void shouldValidateAllFields() {
+    void shouldValidateAllFieldsWithoutCollectionField() {
 
         // GIVEN
         SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
@@ -98,9 +98,10 @@ class SearchPartyValidatorTest {
         verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME);
     }
 
+    // TODO: Update in 13106
     @DisplayName("should validate all fields")
     @Test
-    void shouldOnlyValidateCollectionField() {
+    void shouldValidateAllFields() {
 
         // GIVEN
         SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithCollectionField();
