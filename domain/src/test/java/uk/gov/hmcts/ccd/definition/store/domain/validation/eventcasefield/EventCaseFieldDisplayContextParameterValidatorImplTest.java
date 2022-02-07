@@ -37,6 +37,15 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
     }
 
     @Test
+    public void shouldNotFireValidationErrorWhenArgumentDisplayContextParameter() {
+        EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#ARGUMENT(testArgument)");
+        ValidationResult validationResult
+            = new EventCaseFieldDisplayContextParameterValidatorImpl().validate(eventCaseFieldEntity, null);
+
+        assertTrue(validationResult.isValid());
+    }
+
+    @Test
     public void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#TABLE(firstname)");
         eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);
