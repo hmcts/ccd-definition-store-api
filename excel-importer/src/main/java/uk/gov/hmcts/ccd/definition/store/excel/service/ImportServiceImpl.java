@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
@@ -90,6 +92,7 @@ public class ImportServiceImpl implements ImportService {
     private final RoleToAccessProfileService roleToAccessProfileService;
     private final SearchCriteriaService searchCriteriaService;
     private final SearchPartyService searchPartyService;
+    private final CategoryTabService categoryTabService;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -109,7 +112,7 @@ public class ImportServiceImpl implements ImportService {
                              ChallengeQuestionTabService challengeQuestionTabService,
                              RoleToAccessProfileService roleToAccessProfileService,
                              SearchCriteriaService searchCriteriaService,
-                             SearchPartyService searchPartyService) {
+                             SearchPartyService searchPartyService, CategoryTabService categoryTabService) {
 
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
@@ -129,6 +132,7 @@ public class ImportServiceImpl implements ImportService {
         this.roleToAccessProfileService = roleToAccessProfileService;
         this.searchCriteriaService = searchCriteriaService;
         this.searchPartyService = searchPartyService;
+        this.categoryTabService = categoryTabService;
     }
 
     /**
@@ -288,6 +292,7 @@ public class ImportServiceImpl implements ImportService {
             challengeQuestionTabService.saveAll(newChallengeQuestionEntities);
             logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
         }
+        processCategoryTab(definitionSheets, parseContext);
 
         parseRoleToAccessProfiles(definitionSheets, parseContext);
 
@@ -296,6 +301,14 @@ public class ImportServiceImpl implements ImportService {
         parseSearchParty(definitionSheets, parseContext);
 
         return metadata;
+    }
+
+    public void processCategoryTab(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
+        if (definitionSheets.get(SheetName.CATEGORIES.getName()) != null) {
+            val categoriesParser = parserFactory.createCategoriesParser();
+            val categoriesEntities = categoriesParser.parse(definitionSheets,parseContext);
+            categoryTabService.saveAll(categoriesEntities);
+        }
     }
 
     private void parseRoleToAccessProfiles(Map<String, DefinitionSheet> definitionSheets,

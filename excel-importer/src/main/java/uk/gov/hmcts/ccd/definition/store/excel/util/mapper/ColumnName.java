@@ -106,7 +106,10 @@ public enum ColumnName {
     SEARCH_PARTY_DOB("SearchPartyDOB"),
     SEARCH_PARTY_DOD("SearchPartyDOD"),
     OTHER_CASE_REFERENCE("OtherCaseReference"),
-    EVENT_ENABLING_CONDITION("EventEnablingCondition");
+    EVENT_ENABLING_CONDITION("EventEnablingCondition"),
+    CATEGORY_ID("CategoryID"),
+    CATEGORY_LABEL("CategoryLabel"),
+    PARENTCATEGORY_ID("ParentCategoryID");
 
     private final String name;
     private final String[] aliases;

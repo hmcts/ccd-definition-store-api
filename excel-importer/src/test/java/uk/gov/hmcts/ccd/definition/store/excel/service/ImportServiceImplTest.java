@@ -236,7 +236,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, searchPartyValidator, searchCriteriaValidator,
+            challengeQuestionParser, categoriesParser, searchPartyValidator, searchCriteriaValidator,
             applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
@@ -258,7 +258,7 @@ public class ImportServiceImplTest {
             challengeQuestionTabService,
             roleToAccessProfileService,
             searchCriteriaService,
-            searchPartyService);
+            searchPartyService, categoryTabService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -442,7 +442,7 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
             hiddenFieldsValidator,challengeQuestionParser,
-            searchPartyValidator, searchCriteriaValidator, applicationParams, executor);
+                categoriesParser, searchPartyValidator, searchCriteriaValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -463,7 +463,7 @@ public class ImportServiceImplTest {
             challengeQuestionTabService,
             roleToAccessProfileService,
             searchCriteriaService,
-            searchPartyService);
+            searchPartyService, categoryTabService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

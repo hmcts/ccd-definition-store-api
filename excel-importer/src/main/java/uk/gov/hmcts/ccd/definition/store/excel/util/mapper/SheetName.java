@@ -31,7 +31,8 @@ public enum SheetName {
     CHALLENGE_QUESTION_TAB("ChallengeQuestion"),
     ROLE_TO_ACCESS_PROFILES("RoleToAccessProfiles"),
     SEARCH_PARTY("SearchParty"),
-    SEARCH_CRITERIA("SearchCriteria");
+    SEARCH_CRITERIA("SearchCriteria"),
+    CATEGORIES("Categories");
 
     private final String name;
 
