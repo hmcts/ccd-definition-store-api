@@ -66,11 +66,12 @@ ext {
     springfoxSwaggerVersion = '3.0.0'
     hamcrestVersion = '1.3'
     powermockVersion = '2.0.0-beta.5'
-    reformLogging= '5.1.1-BETA'
+    reformLogging= '5.1.9'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
     tomcatVersion = '9.0.54!!'
     hibernateVersion = '5.4.24.Final!!'
+    feignJackson = '11.6'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -95,7 +96,6 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        jcenter()
         maven {
             url  "https://jitpack.io"
         }
@@ -194,15 +194,15 @@ subprojects { subproject ->
 
     dependencies {
         compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
-        compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
-        compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
-        compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
+        compile group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
+        compile group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
+        compile 'com.github.hmcts:properties-volume-spring-boot-starter:0.0.4'
 
         compile group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
-        compile (group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.1') {
+        compile (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
             exclude group: 'com.google.guava', module: 'guava'
         }
-        compile (group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '1.3.1') {
+        compile (group: 'com.github.hmcts', name: 'idam-java-client', version: '2.0.1') {
             exclude group: 'com.google.guava', module: 'guava'
         }
 
@@ -211,7 +211,7 @@ subprojects { subproject ->
         compile "org.springframework.boot:spring-boot-starter-oauth2-client"
         compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
 
-        implementation "io.github.openfeign:feign-httpclient:10.7.0"
+        implementation "io.github.openfeign:feign-httpclient:${feignJackson}"
 
         compile('org.springframework.boot:spring-boot-starter-web')
         compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -223,7 +223,7 @@ subprojects { subproject ->
         compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
         compile('org.springframework.boot:spring-boot-starter-cache')
 
-        compile "org.flywaydb:flyway-core:6.5.7"
+        compile 'org.flywaydb:flyway-core:6.5.7'
 
         compile group: 'javax.inject', name: 'javax.inject', version: '1'
 
@@ -262,7 +262,7 @@ subprojects { subproject ->
         testCompile 'org.mockito:mockito-junit-jupiter:3.6.0'
         testCompile 'com.github.npathai:hamcrest-optional:2.0.0'
         testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-        testCompile 'io.github.openfeign:feign-jackson:10.7.0'
+        testCompile "io.github.openfeign:feign-jackson:${feignJackson}"
         testCompile 'io.github.openfeign.form:feign-form:3.8.0'
         testCompile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
         testCompile "org.exparity:hamcrest-date:2.0.4"
@@ -270,7 +270,8 @@ subprojects { subproject ->
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
         testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.10.0-prerelease'
-        testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.3.2'
+        testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.1'
+        testCompile group: 'commons-lang', name: 'commons-lang', version: '2.6'
         // https://mvnrepository.com/artifact/junit/junit
         compile group: 'junit', name: 'junit', version: '4.13.1'
         testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
