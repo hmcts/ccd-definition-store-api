@@ -35,7 +35,7 @@ public class CategoryParser {
         try {
 
             val categoriesItems = definitionSheets
-                .get(SheetName.CATEGORIES.getName()).getDataItems();
+                .get(SheetName.CATEGORY.getName()).getDataItems();
             categoryValidator.validate(parseContext, categoriesItems);
             final List<CategoryEntity> newCategoriesEntities = categoriesItems
                 .stream()

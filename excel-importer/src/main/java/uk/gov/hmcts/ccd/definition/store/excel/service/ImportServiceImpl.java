@@ -304,7 +304,7 @@ public class ImportServiceImpl implements ImportService {
     }
 
     public void parseCategoryTab(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
-        if (definitionSheets.get(SheetName.CATEGORIES.getName()) != null) {
+        if (definitionSheets.get(SheetName.CATEGORY.getName()) != null) {
             val categoriesParser = parserFactory.createCategoriesParser();
             val categoriesEntities = categoriesParser.parse(definitionSheets,parseContext);
             categoryTabService.saveAll(categoriesEntities);
