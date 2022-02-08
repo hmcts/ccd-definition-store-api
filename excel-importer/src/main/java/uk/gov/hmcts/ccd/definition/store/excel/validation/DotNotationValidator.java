@@ -61,20 +61,20 @@ public class DotNotationValidator {
         return complexFieldEntities.stream().filter(complexFieldEntity ->
             complexFieldEntity.getReference().equals(currentAttribute)).findAny();
     }
-
-    public ComplexFieldEntity findComplexFieldEntity(final Set<ComplexFieldEntity> complexFieldEntities,
-                                                      final String attribute,
-                                                      final String caseType,
-                                                      final SheetName sheetName,
-                                                      final ColumnName columnName) {
-        return complexFieldEntities.stream()
-            .filter(complexFieldEntity -> complexFieldEntity.getReference().equals(attribute))
-            .findAny()
-            .orElseThrow(() -> new InvalidImportException(
-                    String.format(ERROR_MESSAGE, sheetName, attribute, columnName, caseType)
-                )
-            );
-    }
+//
+//    public ComplexFieldEntity findComplexFieldEntity(final Set<ComplexFieldEntity> complexFieldEntities,
+//                                                      final String attribute,
+//                                                      final String caseType,
+//                                                      final SheetName sheetName,
+//                                                      final ColumnName columnName) {
+//        return complexFieldEntities.stream()
+//            .filter(complexFieldEntity -> complexFieldEntity.getReference().equals(attribute))
+//            .findAny()
+//            .orElseThrow(() -> new InvalidImportException(
+//                    String.format(ERROR_MESSAGE, sheetName, attribute, columnName, caseType)
+//                )
+//            );
+//    }
 
     private FieldTypeEntity getTopLevelField(ParseContext parseContext,
                                              SheetName sheetName,
@@ -107,7 +107,7 @@ public class DotNotationValidator {
 
             final Set<ComplexFieldEntity> complexFieldsBelongingToParent = fieldType.getComplexFields();
 
-            anotherVoid(aa.toArray(String[]::new), complexFieldsBelongingToParent, caseType, sheetName, columnName);
+            performCheck(aa.toArray(String[]::new), complexFieldsBelongingToParent, caseType, sheetName, columnName);
 
         } catch (InvalidImportException invalidImportException) {
             // throw a new Exception using original full expression (nb: previous exception already logged)
@@ -115,21 +115,21 @@ public class DotNotationValidator {
         }
     }
 
-    public void aVoid(Set<ComplexFieldEntity> parentComplexFields,
-                      String caseType,
-                       SheetName sheetName,
-                       ColumnName columnName,
-                       String expression) {
+    public void checkDotNotationField(final Set<ComplexFieldEntity> parentComplexFields,
+                                      final String caseType,
+                                      final SheetName sheetName,
+                                      final ColumnName columnName,
+                                      final String expression) {
         final String[] splitDotNotationExpression = dotSeparatorSplitFunction.apply(expression);
 
-        anotherVoid(splitDotNotationExpression, parentComplexFields, caseType, sheetName, columnName);
+        performCheck(splitDotNotationExpression, parentComplexFields, caseType, sheetName, columnName);
     }
 
-    private void anotherVoid(final String[] splitDotNotationExpression,
-                             final Set<ComplexFieldEntity> parentComplexFields,
-                             final String caseType,
-                             final SheetName sheetName,
-                             final ColumnName columnName) {
+    private void performCheck(final String[] splitDotNotationExpression,
+                              final Set<ComplexFieldEntity> parentComplexFields,
+                              final String caseType,
+                              final SheetName sheetName,
+                              final ColumnName columnName) {
         Set<ComplexFieldEntity> complexFieldsBelongingToParent = parentComplexFields;
 
         for (String currentAttribute : splitDotNotationExpression) {
