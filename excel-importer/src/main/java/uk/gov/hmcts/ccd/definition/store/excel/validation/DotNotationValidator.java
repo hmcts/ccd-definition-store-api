@@ -62,6 +62,20 @@ public class DotNotationValidator {
             complexFieldEntity.getReference().equals(currentAttribute)).findAny();
     }
 
+    public ComplexFieldEntity findComplexFieldEntity(final Set<ComplexFieldEntity> complexFieldEntities,
+                                                      final String attribute,
+                                                      final String caseType,
+                                                      final SheetName sheetName,
+                                                      final ColumnName columnName) {
+        return complexFieldEntities.stream()
+            .filter(complexFieldEntity -> complexFieldEntity.getReference().equals(attribute))
+            .findAny()
+            .orElseThrow(() -> new InvalidImportException(
+                    String.format(ERROR_MESSAGE, sheetName, attribute, columnName, caseType)
+                )
+            );
+    }
+
     private FieldTypeEntity getTopLevelField(ParseContext parseContext,
                                              SheetName sheetName,
                                              ColumnName columnName,
@@ -84,13 +98,16 @@ public class DotNotationValidator {
         try {
             // use split with -1 limit to force inclusion of empty values
             final String[] splitDotNotationExpression = dotSeparatorSplitFunction.apply(expression);
+            // NB: start from depth = 1 to ignore top level field that is already processed
+            final List<String> aa = Arrays.asList(splitDotNotationExpression)
+                .subList(1, splitDotNotationExpression.length);
 
             final FieldTypeEntity fieldType =
                 getTopLevelField(parseContext, sheetName, columnName, caseType, splitDotNotationExpression[0]);
 
             final Set<ComplexFieldEntity> complexFieldsBelongingToParent = fieldType.getComplexFields();
 
-            anotherVoid(splitDotNotationExpression, complexFieldsBelongingToParent, caseType, sheetName, columnName);
+            anotherVoid(aa.toArray(String[]::new), complexFieldsBelongingToParent, caseType, sheetName, columnName);
 
         } catch (InvalidImportException invalidImportException) {
             // throw a new Exception using original full expression (nb: previous exception already logged)
@@ -115,10 +132,7 @@ public class DotNotationValidator {
                              final ColumnName columnName) {
         Set<ComplexFieldEntity> complexFieldsBelongingToParent = parentComplexFields;
 
-        // NB: start from depth = 1 to ignore top level field that is already processed
-        for (int depth = 1; depth < splitDotNotationExpression.length; depth++) {
-
-            String currentAttribute = splitDotNotationExpression[depth];
+        for (String currentAttribute : splitDotNotationExpression) {
 
             // search complexFields belonging to parent for current attribute
             final Optional<ComplexFieldEntity> result =

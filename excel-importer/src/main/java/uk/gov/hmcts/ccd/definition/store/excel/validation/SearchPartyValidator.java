@@ -59,20 +59,48 @@ public class SearchPartyValidator {
                                   final SearchPartyEntity searchPartyEntity) {
 
         final String expression = searchPartyEntity.getSearchPartyCollectionFieldName();
-        final String[] split = dotNotationValidator.dotSeparatorSplitFunction.apply(expression);
+        final String[] segments = dotNotationValidator.dotSeparatorSplitFunction.apply(expression);
 
-        final FieldTypeEntity caseFieldType = parseContext.getCaseFieldType(caseType, split[split.length - 1]);
-        final Set<ComplexFieldEntity> complexFields = Optional.ofNullable(caseFieldType.getCollectionFieldType())
-            .map(FieldTypeEntity::getComplexFields)
-            .orElse(Collections.emptySet());
+        final FieldTypeEntity caseFieldType = parseContext.getCaseFieldType(caseType, segments[0]);
+        FieldTypeEntity result = caseFieldType;
 
-        if (!COLLECTION_FIELD_TYPE.equals(caseFieldType.getBaseFieldType().getReference()) && complexFields.isEmpty()) {
+        Set<ComplexFieldEntity> complexFields = caseFieldType.getComplexFields();
+        final List<String> aa = Arrays.asList(segments)
+            .subList(1, segments.length);
+
+        for (String segment : aa) {
+            final ComplexFieldEntity complexFieldEntity = dotNotationValidator.findComplexFieldEntity(
+                complexFields,
+                segment,
+                caseType,
+                SheetName.SEARCH_PARTY,
+                ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME
+            );
+
+            result = complexFieldEntity.getFieldType();
+        }
+
+        if (!COLLECTION_FIELD_TYPE.equals(result.getBaseFieldType().getReference())) {
             throw new InvalidImportException(String.format(ERROR_MESSAGE, expression));
         }
 
-        validateSearchPartyName(complexFields, caseType, searchPartyEntity.getSearchPartyName());
-        validateSearchPartyEmailAddress(complexFields, caseType, searchPartyEntity.getSearchPartyEmailAddress());
-        validateSearchPartyAddressLine1(complexFields, caseType, searchPartyEntity.getSearchPartyAddressLine1());
+
+
+
+//        final FieldTypeEntity caseFieldType = parseContext.getCaseFieldType(caseType, segments[segments.length - 1]);
+//        final Set<ComplexFieldEntity> complexFields = Optional.ofNullable(caseFieldType.getCollectionFieldType())
+//            .map(FieldTypeEntity::getComplexFields)
+//            .orElse(Collections.emptySet());
+//
+//        if (!COLLECTION_FIELD_TYPE.equals(caseFieldType.getBaseFieldType().getReference()) && complexFields.isEmpty()) {
+//            throw new InvalidImportException(String.format(ERROR_MESSAGE, expression));
+//        }
+
+        final Set<ComplexFieldEntity> complexFields1 = result.getCollectionFieldType().getComplexFields();
+
+        validateSearchPartyName(complexFields1, caseType, searchPartyEntity.getSearchPartyName());
+        validateSearchPartyEmailAddress(complexFields1, caseType, searchPartyEntity.getSearchPartyEmailAddress());
+        validateSearchPartyAddressLine1(complexFields1, caseType, searchPartyEntity.getSearchPartyAddressLine1());
     }
 
 
