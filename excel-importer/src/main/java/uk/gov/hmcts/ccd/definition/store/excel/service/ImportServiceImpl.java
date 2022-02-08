@@ -292,7 +292,7 @@ public class ImportServiceImpl implements ImportService {
             challengeQuestionTabService.saveAll(newChallengeQuestionEntities);
             logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
         }
-        processCategoryTab(definitionSheets, parseContext);
+        parseCategoryTab(definitionSheets, parseContext);
 
         parseRoleToAccessProfiles(definitionSheets, parseContext);
 
@@ -303,7 +303,7 @@ public class ImportServiceImpl implements ImportService {
         return metadata;
     }
 
-    public void processCategoryTab(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
+    public void parseCategoryTab(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
         if (definitionSheets.get(SheetName.CATEGORIES.getName()) != null) {
             val categoriesParser = parserFactory.createCategoriesParser();
             val categoriesEntities = categoriesParser.parse(definitionSheets,parseContext);
