@@ -110,7 +110,9 @@ public class SearchPartyValidator {
             .map(FieldTypeEntity::getComplexFields)
             .orElse(Collections.emptySet());
 
-        final String dataType = fieldTypeEntity.getBaseFieldType().getReference();
+        final String dataType = Optional.ofNullable(fieldTypeEntity.getBaseFieldType())
+            .map(FieldTypeEntity::getReference)
+            .orElse(null);
 
         validateDataType(complexFields, dataType, searchPartyEntity.getSearchPartyCollectionFieldName());
 
