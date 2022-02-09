@@ -51,7 +51,6 @@ class RoleToAccessProfilesValidatorTest {
         Assertions.assertThrows(ValidationException.class, () -> validator.validate(createEntities(), parseContext));
     }
 
-
     @Test
     void shouldNotThrowExceptionWhenAccessProfileFound() {
         AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
@@ -64,7 +63,7 @@ class RoleToAccessProfilesValidatorTest {
         AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
         when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.of(accessProfileEntity));
         Assertions.assertThrows(ValidationException.class, () -> validator
-            .validate(createDuplicateRoleNameAndCaseTypeEntities(), parseContext));
+            .validate(createDuplicateRoleNameAndCaseAccessCategoryCaseTypeEntities(), parseContext));
     }
 
     @Test
@@ -75,30 +74,42 @@ class RoleToAccessProfilesValidatorTest {
             .validate(createEntityWithEmptyRoleName(), parseContext));
     }
 
+    @Test
+    void shouldThrowExceptionOnEmptyCaseAccessCategory() {
+        AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
+        when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.of(accessProfileEntity));
+        Assertions.assertThrows(ValidationException.class, () -> validator
+            .validate(createEntityWithEmptyCaseAccessCategory(), parseContext));
+    }
+
     private List<RoleToAccessProfilesEntity> createEntities() {
         RoleToAccessProfilesEntity entity1 = mock(RoleToAccessProfilesEntity.class);
         when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
         when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
         when(entity1.getRoleName()).thenReturn("Role1");
+        when(entity1.getCaseAccessCategories()).thenReturn("Standard/Claim");
 
         RoleToAccessProfilesEntity entity2 = mock(RoleToAccessProfilesEntity.class);
         when(entity2.getAccessProfiles()).thenReturn("caseworker");
         when(entity2.getCaseType()).thenReturn(caseTypeEntity2);
         when(entity2.getRoleName()).thenReturn("Role2");
+        when(entity2.getCaseAccessCategories()).thenReturn("Standard/Claim");
 
         return Lists.newArrayList(entity1, entity2);
     }
 
-    private List<RoleToAccessProfilesEntity> createDuplicateRoleNameAndCaseTypeEntities() {
+    private List<RoleToAccessProfilesEntity> createDuplicateRoleNameAndCaseAccessCategoryCaseTypeEntities() {
         RoleToAccessProfilesEntity entity1 = mock(RoleToAccessProfilesEntity.class);
         when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
         when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
         when(entity1.getRoleName()).thenReturn("Role1");
+        when(entity1.getCaseAccessCategories()).thenReturn("Standard/Claim");
 
         RoleToAccessProfilesEntity entity2 = mock(RoleToAccessProfilesEntity.class);
         when(entity2.getAccessProfiles()).thenReturn("caseworker");
         when(entity2.getCaseType()).thenReturn(caseTypeEntity1);
         when(entity2.getRoleName()).thenReturn("Role1");
+        when(entity2.getCaseAccessCategories()).thenReturn("Standard/Claim");
 
         return Lists.newArrayList(entity1, entity2);
     }
@@ -110,6 +121,16 @@ class RoleToAccessProfilesValidatorTest {
         when(entity1.getRoleName()).thenReturn("");
 
         return Lists.newArrayList(entity1);
+    }
+
+    private List<RoleToAccessProfilesEntity> createEntityWithEmptyCaseAccessCategory() {
+        RoleToAccessProfilesEntity entity1 = mock(RoleToAccessProfilesEntity.class);
+        when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
+        when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
+        when(entity1.getRoleName()).thenReturn("Role");
+        when(entity1.getCaseAccessCategories()).thenReturn("");
+
+        return Lists.newArrayList(entity1, entity1);
     }
 
 }
