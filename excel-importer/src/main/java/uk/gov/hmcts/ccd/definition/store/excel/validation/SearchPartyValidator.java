@@ -114,12 +114,12 @@ public class SearchPartyValidator {
 
         validateDataType(complexFields, dataType, searchPartyEntity.getSearchPartyCollectionFieldName());
 
-        validateSearchPartyName(complexFields, caseType, searchPartyEntity.getSearchPartyName());
-        validateSearchPartyEmailAddress(complexFields, caseType, searchPartyEntity.getSearchPartyEmailAddress());
-        validateSearchPartyAddressLine1(complexFields, caseType, searchPartyEntity.getSearchPartyAddressLine1());
-        validateSearchPartyPostCode(complexFields, caseType, searchPartyEntity.getSearchPartyPostCode());
-        validateSearchPartyDob(complexFields, caseType, searchPartyEntity.getSearchPartyDob());
-        validateSearchPartyDod(complexFields, caseType, searchPartyEntity.getSearchPartyDod());
+        validateSearchPartyName(complexFields, searchPartyEntity.getSearchPartyName());
+        validateSearchPartyEmailAddress(complexFields, searchPartyEntity.getSearchPartyEmailAddress());
+        validateSearchPartyAddressLine1(complexFields, searchPartyEntity.getSearchPartyAddressLine1());
+        validateSearchPartyPostCode(complexFields, searchPartyEntity.getSearchPartyPostCode());
+        validateSearchPartyDob(complexFields, searchPartyEntity.getSearchPartyDob());
+        validateSearchPartyDod(complexFields, searchPartyEntity.getSearchPartyDod());
     }
 
     private void validateSearchPartyName(ParseContext parseContext,
@@ -135,12 +135,11 @@ public class SearchPartyValidator {
     }
 
     private void validateSearchPartyName(final Set<ComplexFieldEntity> complexFields,
-                                         final String caseType,
                                          final String searchPartyName) {
         // split CSV of fields
         Arrays.asList(COMMA_SEPARATOR_SPLIT_FUNCTION.apply(searchPartyName))
             .forEach(expression ->
-                validateDotNotation(complexFields, caseType, ColumnName.SEARCH_PARTY_NAME, expression)
+                validateDotNotation(complexFields, ColumnName.SEARCH_PARTY_NAME, expression)
             );
     }
 
@@ -160,9 +159,8 @@ public class SearchPartyValidator {
     }
 
     private void validateSearchPartyEmailAddress(final Set<ComplexFieldEntity> complexFields,
-                                                 final String caseType,
                                                  final String searchPartyEmailAddress) {
-        validateDotNotation(complexFields, caseType, ColumnName.SEARCH_PARTY_EMAIL_ADDRESS, searchPartyEmailAddress);
+        validateDotNotation(complexFields, ColumnName.SEARCH_PARTY_EMAIL_ADDRESS, searchPartyEmailAddress);
     }
 
     private void validateSearchPartyAddressLine1(ParseContext parseContext,
@@ -177,14 +175,12 @@ public class SearchPartyValidator {
     }
 
     private void validateSearchPartyAddressLine1(final Set<ComplexFieldEntity> complexFields,
-                                                 final String caseType,
                                                  final String searchPartyAddressLine1) {
-            validateDotNotation(
-                complexFields,
-                caseType,
-                ColumnName.SEARCH_PARTY_ADDRESS_LINE_1,
-                searchPartyAddressLine1
-            );
+        validateDotNotation(
+            complexFields,
+            ColumnName.SEARCH_PARTY_ADDRESS_LINE_1,
+            searchPartyAddressLine1
+        );
     }
 
     private void validateSearchPartyPostCode(ParseContext parseContext,
@@ -199,11 +195,9 @@ public class SearchPartyValidator {
     }
 
     private void validateSearchPartyPostCode(final Set<ComplexFieldEntity> complexFields,
-                                             final String caseType,
                                              final String searchPartyPostCode) {
         validateDotNotation(
             complexFields,
-            caseType,
             ColumnName.SEARCH_PARTY_POST_CODE,
             searchPartyPostCode
         );
@@ -221,9 +215,8 @@ public class SearchPartyValidator {
     }
 
     private void validateSearchPartyDob(final Set<ComplexFieldEntity> complexFields,
-                                        final String caseType,
                                         final String searchPartyDob) {
-        validateDotNotation(complexFields, caseType, ColumnName.SEARCH_PARTY_DOB, searchPartyDob);
+        validateDotNotation(complexFields, ColumnName.SEARCH_PARTY_DOB, searchPartyDob);
     }
 
     private void validateSearchPartyDod(ParseContext parseContext,
@@ -238,9 +231,8 @@ public class SearchPartyValidator {
     }
 
     private void validateSearchPartyDod(Set<ComplexFieldEntity> complexFields,
-                                        String caseType,
                                         String searchPartyDod) {
-        validateDotNotation(complexFields, caseType, ColumnName.SEARCH_PARTY_DOD, searchPartyDod);
+        validateDotNotation(complexFields, ColumnName.SEARCH_PARTY_DOD, searchPartyDod);
     }
 
     private void validateSearchPartyCollectionFieldName(ParseContext parseContext,
@@ -262,23 +254,23 @@ public class SearchPartyValidator {
                                      ColumnName columnName,
                                      String expression) {
 
-        dotNotationValidator.validate(
-            parseContext,
-            SheetName.SEARCH_PARTY,
-            columnName,
-            caseType,
-            expression
-        );
+        if (StringUtils.isNoneBlank(expression.strip())) {
+            dotNotationValidator.validate(
+                parseContext,
+                SheetName.SEARCH_PARTY,
+                columnName,
+                caseType,
+                expression
+            );
+        }
     }
 
     private void validateDotNotation(Set<ComplexFieldEntity> complexFields,
-                                     String caseType,
                                      ColumnName columnName,
                                      String expression) {
         if (StringUtils.isNoneBlank(expression.strip())) {
             dotNotationValidator.checkDotNotationField(
                 complexFields,
-                caseType,
                 SheetName.SEARCH_PARTY,
                 columnName,
                 expression.strip()
