@@ -32,11 +32,11 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator.NAME_FIELD_SEPARATOR;
 
 @DisplayName("SearchPartyValidator")
 @ExtendWith(MockitoExtension.class)
 class SearchPartyValidatorTest {
+    private static final String NAME_FIELD_SEPARATOR = ",";
 
     private static final String CASE_TYPE = "TestCaseType";
 
@@ -77,9 +77,9 @@ class SearchPartyValidatorTest {
         );
     }
 
-    @DisplayName("should validate all fields")
+    @DisplayName("should validate all fields without collection field")
     @Test
-    void shouldValidateAllFields() {
+    void shouldValidateAllFieldsWithoutCollectionField() {
 
         // GIVEN
         SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithoutCollectionField();
@@ -89,24 +89,25 @@ class SearchPartyValidatorTest {
 
         // THEN
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_NAME,
-            searchPartyEntity1.getSearchPartyName());
+                                              searchPartyEntity1.getSearchPartyName());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_EMAIL_ADDRESS,
-            searchPartyEntity1.getSearchPartyEmailAddress());
+                                              searchPartyEntity1.getSearchPartyEmailAddress());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_ADDRESS_LINE_1,
-            searchPartyEntity1.getSearchPartyAddressLine1());
+                                              searchPartyEntity1.getSearchPartyAddressLine1());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_POST_CODE,
-            searchPartyEntity1.getSearchPartyPostCode());
+                                              searchPartyEntity1.getSearchPartyPostCode());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_DOB,
-            searchPartyEntity1.getSearchPartyDob());
+                                              searchPartyEntity1.getSearchPartyDob());
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_DOD,
-            searchPartyEntity1.getSearchPartyDod());
+                                              searchPartyEntity1.getSearchPartyDod());
 
         verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME);
     }
 
     @DisplayName("should validate all fields")
     @Test
-    void shouldOnlyValidateCollectionField() {
+    void shouldValidateAllFields() {
+
         // GIVEN
         FieldTypeEntity caseFieldType = createFieldTypeEntity();
         doReturn(caseFieldType).when(parseContext).getCaseFieldType(CASE_TYPE, TEST_EXPRESSION_COLLECTION_FIELD_NAME_1);

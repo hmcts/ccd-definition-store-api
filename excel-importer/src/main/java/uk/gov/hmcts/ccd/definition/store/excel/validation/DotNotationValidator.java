@@ -21,13 +21,12 @@ import java.util.stream.Collectors;
 public class DotNotationValidator {
 
     protected static final String DOT_SEPARATOR = ".";
-    private static final String COMMA_SEPARATOR = ",";
 
     // format: "{SheetName}Tab Invalid value '{expression}' is not a valid {ColumnName} value.... "
     protected static final String ERROR_MESSAGE = "%sTab Invalid value '%s' is not a valid %s value. "
         + "The expression dot notation values should be valid caseTypes fields. CaseTypeID = %s";
 
-    private final BiFunction<String, String, String[]> spitFunction = (expression, separator) -> {
+    public static final BiFunction<String, String, String[]> SPIT_FUNCTION = (expression, separator) -> {
         final String[] split = Optional.ofNullable(expression)
             .map(x -> x.split(Pattern.quote(separator), -1))
             .orElse(new String[0]);
@@ -38,10 +37,8 @@ public class DotNotationValidator {
 
         return filtered.toArray(String[]::new);
     };
-    public final Function<String, String[]> dotSeparatorSplitFunction =
-        expression -> spitFunction.apply(expression, DOT_SEPARATOR);
-    public final Function<String, String[]> commaSeparatorSplitFunction =
-        expression -> spitFunction.apply(expression, COMMA_SEPARATOR);
+    public static final Function<String, String[]> DOT_SEPARATOR_SPLIT_FUNCTION =
+        expression -> SPIT_FUNCTION.apply(expression, DOT_SEPARATOR);
 
     public void validate(ParseContext parseContext,
                          SheetName sheetName,
@@ -56,10 +53,24 @@ public class DotNotationValidator {
         }
     }
 
-    private Optional<ComplexFieldEntity> getComplexFieldEntity(Set<ComplexFieldEntity> complexFieldEntities,
-                                                               String currentAttribute) {
-        return complexFieldEntities.stream().filter(complexFieldEntity ->
-            complexFieldEntity.getReference().equals(currentAttribute)).findAny();
+//    private Optional<ComplexFieldEntity> getComplexFieldEntity(Set<ComplexFieldEntity> complexFieldEntities,
+//                                                               String currentAttribute) {
+//        return complexFieldEntities.stream().filter(complexFieldEntity ->
+//            complexFieldEntity.getReference().equals(currentAttribute)).findAny();
+//    }
+
+    public ComplexFieldEntity findComplexFieldEntity(final Set<ComplexFieldEntity> complexFieldEntities,
+                                                     final String attribute,
+                                                     final String caseType,
+                                                     final SheetName sheetName,
+                                                     final ColumnName columnName) {
+        return complexFieldEntities.stream()
+            .filter(complexFieldEntity -> complexFieldEntity.getReference().equals(attribute))
+            .findAny()
+            .orElseThrow(() -> new InvalidImportException(
+                    String.format(ERROR_MESSAGE, sheetName, attribute, columnName, caseType)
+                )
+            );
     }
 
     private FieldTypeEntity getTopLevelField(ParseContext parseContext,
@@ -83,14 +94,17 @@ public class DotNotationValidator {
 
         try {
             // use split with -1 limit to force inclusion of empty values
-            final String[] splitDotNotationExpression = dotSeparatorSplitFunction.apply(expression);
+            final String[] splitDotNotationExpression = DOT_SEPARATOR_SPLIT_FUNCTION.apply(expression);
+            // NB: start from depth = 1 to ignore top level field that is already processed
+            final List<String> aa = Arrays.asList(splitDotNotationExpression)
+                .subList(1, splitDotNotationExpression.length);
 
             final FieldTypeEntity fieldType =
                 getTopLevelField(parseContext, sheetName, columnName, caseType, splitDotNotationExpression[0]);
 
             final Set<ComplexFieldEntity> complexFieldsBelongingToParent = fieldType.getComplexFields();
 
-            anotherVoid(splitDotNotationExpression, complexFieldsBelongingToParent, caseType, sheetName, columnName);
+            performCheck(aa.toArray(String[]::new), complexFieldsBelongingToParent, caseType, sheetName, columnName);
 
         } catch (InvalidImportException invalidImportException) {
             // throw a new Exception using original full expression (nb: previous exception already logged)
@@ -98,40 +112,45 @@ public class DotNotationValidator {
         }
     }
 
-    public void aVoid(Set<ComplexFieldEntity> parentComplexFields,
-                      String caseType,
-                       SheetName sheetName,
-                       ColumnName columnName,
-                       String expression) {
-        final String[] splitDotNotationExpression = dotSeparatorSplitFunction.apply(expression);
+    public void checkDotNotationField(final Set<ComplexFieldEntity> parentComplexFields,
+                                      final String caseType,
+                                      final SheetName sheetName,
+                                      final ColumnName columnName,
+                                      final String expression) {
+        final String[] splitDotNotationExpression = DOT_SEPARATOR_SPLIT_FUNCTION.apply(expression);
 
-        anotherVoid(splitDotNotationExpression, parentComplexFields, caseType, sheetName, columnName);
+        performCheck(splitDotNotationExpression, parentComplexFields, caseType, sheetName, columnName);
     }
 
-    private void anotherVoid(final String[] splitDotNotationExpression,
-                             final Set<ComplexFieldEntity> parentComplexFields,
-                             final String caseType,
-                             final SheetName sheetName,
-                             final ColumnName columnName) {
+    private void performCheck(final String[] splitDotNotationExpression,
+                              final Set<ComplexFieldEntity> parentComplexFields,
+                              final String caseType,
+                              final SheetName sheetName,
+                              final ColumnName columnName) {
         Set<ComplexFieldEntity> complexFieldsBelongingToParent = parentComplexFields;
 
-        // NB: start from depth = 1 to ignore top level field that is already processed
-        for (int depth = 1; depth < splitDotNotationExpression.length; depth++) {
+        for (String currentAttribute : splitDotNotationExpression) {
 
-            String currentAttribute = splitDotNotationExpression[depth];
+            final ComplexFieldEntity result = findComplexFieldEntity(
+                complexFieldsBelongingToParent,
+                currentAttribute,
+                caseType,
+                sheetName,
+                columnName
+            );
 
             // search complexFields belonging to parent for current attribute
-            final Optional<ComplexFieldEntity> result =
-                getComplexFieldEntity(complexFieldsBelongingToParent, currentAttribute);
-
-            if (result.isEmpty()) {
-                throw new InvalidImportException(
-                    String.format(ERROR_MESSAGE, sheetName, currentAttribute, columnName, caseType)
-                );
-            } else {
+//            final Optional<ComplexFieldEntity> result =
+//                getComplexFieldEntity(complexFieldsBelongingToParent, currentAttribute);
+//
+//            if (result.isEmpty()) {
+//                throw new InvalidImportException(
+//                    String.format(ERROR_MESSAGE, sheetName, currentAttribute, columnName, caseType)
+//                );
+//            } else {
                 // update fields list based on new field type
-                complexFieldsBelongingToParent = result.get().getFieldType().getComplexFields();
-            }
+                complexFieldsBelongingToParent = result.getFieldType().getComplexFields();
+//            }
         }
     }
 
