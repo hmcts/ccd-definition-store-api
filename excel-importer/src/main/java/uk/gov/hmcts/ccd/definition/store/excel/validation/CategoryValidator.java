@@ -34,14 +34,14 @@ public class CategoryValidator {
 
     public void validate(ParseContext parseContext, List<DefinitionDataItem> categoryItems) {
         this.parseContext = parseContext;
-        val pairCaseTypeCategory = createCategoryIdCaseTypePair(categoryItems);
         validateUniqueCategoriesIds(categoryItems);
         validateUniqueDisplayOrder(categoryItems);
-        categoryItems.forEach( element-> validate(element,pairCaseTypeCategory));
+        val pairCaseTypeCategory = createCategoryIdCaseTypePair(categoryItems);
+        categoryItems.forEach(element -> validate(element, pairCaseTypeCategory));
     }
 
     private void validate(DefinitionDataItem definitionDataItem,Map<String,String> pairCaseTypeCategory) {
-        val caseTypeEntity = validateCaseType(definitionDataItem);
+        validateCaseType(definitionDataItem);
         validateCategoryId(definitionDataItem);
         validateCategoryLabel(definitionDataItem);
         validateDisplayOrder(definitionDataItem);
@@ -56,8 +56,8 @@ public class CategoryValidator {
             val currentCaseType = definitionDataItem.getString(ColumnName.CASE_TYPE_ID);
             val parentCaseType = pairCaseTypeCategory.get(parentCategoryId);
             validateNullValue(parentCaseType,
-                ERROR_MESSAGE + "value: " + parentCategoryId + "is not a category id.");
-            if(!currentCaseType.equals(parentCaseType)){
+                ERROR_MESSAGE + "value: " + parentCategoryId + " is not a category id.");
+            if (!currentCaseType.equals(parentCaseType)) {
                 throw new InvalidImportException(
                     ERROR_MESSAGE + "ParentCategoryID: " + parentCategoryId + " belongs to a different case type."
                 );
@@ -65,9 +65,9 @@ public class CategoryValidator {
         }
     }
 
-    private void validateUniqueCategoriesIds(List<DefinitionDataItem> questionItems) {
+    private void validateUniqueCategoriesIds(List<DefinitionDataItem> categoryItems) {
         final Map<Pair<String, String>, List<DefinitionDataItem>> caseTypeCategoryItems =
-            questionItems
+            categoryItems
                 .stream()
                 .collect(groupingBy(p ->
                     Pair.of(
@@ -78,7 +78,8 @@ public class CategoryValidator {
         caseTypeCategoryItems.keySet()
             .forEach(pair -> {
                 if (caseTypeCategoryItems.get(pair).size() > 1) {
-                    throw new InvalidImportException(ColumnName.CATEGORY_ID + " cannot be duplicated within case type.");
+                    throw new InvalidImportException(
+                        ColumnName.CATEGORY_ID + " value:" + pair + " cannot be duplicated within case type.");
                 }
             });
     }
@@ -101,9 +102,9 @@ public class CategoryValidator {
         );
     }
 
-    private void validateUniqueDisplayOrderForItems(List<DefinitionDataItem> questionItems, List<ColumnName> fields) {
+    private void validateUniqueDisplayOrderForItems(List<DefinitionDataItem> categoryItems, List<ColumnName> fields) {
         Map<Triple<String, String, String>, List<DefinitionDataItem>> challengeQuestionDisplayOrder =
-            questionItems
+            categoryItems
                 .stream()
                 .collect(groupingBy(p ->
                     Triple.of(

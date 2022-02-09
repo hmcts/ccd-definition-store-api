@@ -33,15 +33,11 @@ public class CategoryParser {
     public List<CategoryEntity> parse(Map<String, DefinitionSheet> definitionSheets,
                                       ParseContext parseContext) {
         try {
-
-            val categoriesItems = definitionSheets
-                .get(SheetName.CATEGORY.getName()).getDataItems();
+            val categoriesItems = definitionSheets.get(SheetName.CATEGORY.getName()).getDataItems();
             categoryValidator.validate(parseContext, categoriesItems);
             final List<CategoryEntity> newCategoriesEntities = categoriesItems
-                .stream()
-                .map(questionItem -> {
-                    val categoriesEntity = createCategoriesEntity(parseContext, questionItem);
-                    //categoryValidator.validateDisplayContext(categoriesEntity);
+                .stream().map(categoryItems -> {
+                    val categoriesEntity = createCategoriesEntity(parseContext, categoryItems);
                     return categoriesEntity;
                 }).collect(Collectors.toList());
             return newCategoriesEntities;
