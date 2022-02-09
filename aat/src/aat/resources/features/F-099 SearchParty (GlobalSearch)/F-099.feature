@@ -11,11 +11,12 @@ Feature: F-099: Search Party (Global Search)
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a positive response is received
     And the response has all other details as expected
-    And a call [fetch Complex Fields Ordering Schema to verify single case field values in columns SearchPartyName(AC1), SearchPartyEmailAddress(AC6), SearchPartyAddressLine1(AC8), SearchPartyPostCode(AC10), SearchPartyDoB(AC12) and SearchPartyCollectionFieldName] will get the expected response as in [S-099.1_Get_ComplexFieldsOrdering].
+    And a call [fetch Complex Fields Ordering Schema to verify single case field values in columns SearchPartyName(AC1), SearchPartyEmailAddress(AC6), SearchPartyAddressLine1(AC8), SearchPartyPostCode(AC10) and SearchPartyDoB(AC12)] will get the expected response as in [S-099.1_Get_ComplexFieldsOrdering].
     And a call [fetch Multiple Pages Case Type Schema to verify comma separated case field names in SearchPartyName column(AC5)] will get the expected response as in [S-099.1_Get_MultiplePagesCaseType].
     And a call [fetch Conditionals Case Type Schema to verify complex field name in columns SearchPartyName(AC3), SearchPartyEmailAddress(AC7), SearchPartyAddressLine1(AC9), SearchPartyPostCode(AC11), SearchPartyDob(AC13)] will get the expected response as in [S-099.1_Get_ConditionalsCaseType]
     And a call [fetch Retain Hidden Value Case Type Schema to verify comma separated complex field names in SearchPartyName column(AC4) and comma separated combination of top level field names and complex field names in SearchPartyName column(AC5)] will get the expected response as in [S-099.1_Get_RetainHiddenValueCaseType]
     And a call [fetch Tabs Case Type Schema to verify blank value in the columns SearchPartyName(AC25), SearchPartyEmailAddress(AC26), SearchPartyAddressLine1(AC27), SearchPartyDoB(AC28), SearchPartyPostCode(AC29) and SearchPartyCollectionFieldName] will get the expected response as in [S-099.1_Get_TabsCaseType]
+    And a call [fetch Global Search Case Type Schema to verify blank value in the columns SearchPartyCollectionFieldName] will get the expected response as in [S-099.1_Get_GlobalSearchCaseType]
 
   @S-099.2 @AC-14
   Scenario: Import Definition file with in-correct value in "CaseTypeId" column of the SearchParty tab

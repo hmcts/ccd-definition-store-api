@@ -12,16 +12,26 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+
+import static uk.gov.hmcts.ccd.definition.store.excel.validation.DotNotationValidator.DOT_SEPARATOR_SPLIT_FUNCTION;
+import static uk.gov.hmcts.ccd.definition.store.excel.validation.DotNotationValidator.SPIT_FUNCTION;
 
 @Component
 public class SearchPartyValidator {
+    private static final String COMMA_SEPARATOR = ",";
 
     private static final String COLLECTION_FIELD_TYPE = "Collection";
     private static final String ERROR_MESSAGE = "SearchPartyTab Invalid value '%s' "
         + "is not a valid SearchPartyCollectionFieldName value "
         + "as it does not reference a collection of a complex type.";
+
+    private static final Function<String, String[]> COMMA_SEPARATOR_SPLIT_FUNCTION =
+        expression -> SPIT_FUNCTION.apply(expression, COMMA_SEPARATOR);
 
     @Autowired
     private final DotNotationValidator dotNotationValidator;
@@ -67,7 +77,7 @@ public class SearchPartyValidator {
                                                 final SearchPartyEntity searchPartyEntity) {
 
         final String expression = searchPartyEntity.getSearchPartyCollectionFieldName();
-        final String[] segments = dotNotationValidator.dotSeparatorSplitFunction.apply(expression);
+        final String[] segments = DOT_SEPARATOR_SPLIT_FUNCTION.apply(expression);
 
         FieldTypeEntity result = parseContext.getCaseFieldType(caseType, segments[0]);
 
@@ -96,7 +106,10 @@ public class SearchPartyValidator {
                                                                final String caseType,
                                                                final SearchPartyEntity searchPartyEntity) {
         final FieldTypeEntity fieldTypeEntity = findFieldTypeEntity(parseContext, caseType, searchPartyEntity);
-        final Set<ComplexFieldEntity> complexFields = fieldTypeEntity.getCollectionFieldType().getComplexFields();
+        final Set<ComplexFieldEntity> complexFields = Optional.ofNullable(fieldTypeEntity.getCollectionFieldType())
+            .map(FieldTypeEntity::getComplexFields)
+            .orElse(Collections.emptySet());
+
         final String dataType = fieldTypeEntity.getBaseFieldType().getReference();
 
         validateDataType(complexFields, dataType, searchPartyEntity.getSearchPartyCollectionFieldName());
@@ -115,7 +128,7 @@ public class SearchPartyValidator {
 
         String spName = searchPartyEntity.getSearchPartyName();
 
-        Arrays.asList(dotNotationValidator.commaSeparatorSplitFunction.apply(spName))
+        Arrays.asList(COMMA_SEPARATOR_SPLIT_FUNCTION.apply(spName))
             .forEach(expression ->
                 validateDotNotation(parseContext, caseType, ColumnName.SEARCH_PARTY_NAME, expression)
             );
@@ -125,7 +138,7 @@ public class SearchPartyValidator {
                                          final String caseType,
                                          final String searchPartyName) {
         // split CSV of fields
-        Arrays.asList(dotNotationValidator.commaSeparatorSplitFunction.apply(searchPartyName))
+        Arrays.asList(COMMA_SEPARATOR_SPLIT_FUNCTION.apply(searchPartyName))
             .forEach(expression ->
                 validateDotNotation(complexFields, caseType, ColumnName.SEARCH_PARTY_NAME, expression)
             );
@@ -234,15 +247,14 @@ public class SearchPartyValidator {
                                                         String caseType,
                                                         SearchPartyEntity searchPartyEntity) {
 
-        String spCollectionFieldValue = searchPartyEntity.getSearchPartyCollectionFieldName();
+        String spCollectionFieldName = searchPartyEntity.getSearchPartyCollectionFieldName();
 
-        if (StringUtils.isNoneBlank(spCollectionFieldValue)) {
-            validateDotNotation(parseContext,
-                caseType,
-                ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
-                spCollectionFieldValue
-            );
-        }
+        validateDotNotation(parseContext,
+            caseType,
+            ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
+            spCollectionFieldName
+        );
+
     }
 
     private void validateDotNotation(ParseContext parseContext,

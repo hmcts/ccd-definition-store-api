@@ -3,7 +3,7 @@
 	"_extends_": "F-099_Get_CaseType",
 
 	"specs": [
-		"fetch Complex Fields Ordering Schema to verify single case field values in columns SearchPartyName(AC1), SearchPartyEmailAddress(AC6), SearchPartyAddressLine1(AC8), SearchPartyPostCode(AC10), SearchPartyDoB(AC12) and SearchPartyCollectionFieldName"
+		"fetch Complex Fields Ordering Schema to verify single case field values in columns SearchPartyName(AC1), SearchPartyEmailAddress(AC6), SearchPartyAddressLine1(AC8), SearchPartyPostCode(AC10) and SearchPartyDoB(AC12)"
 	],
 
 	"request": {

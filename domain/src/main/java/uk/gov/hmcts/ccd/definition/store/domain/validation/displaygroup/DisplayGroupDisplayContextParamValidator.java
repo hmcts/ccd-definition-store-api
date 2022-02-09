@@ -20,7 +20,8 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
         ValidationResult validationResult = new ValidationResult();
 
         if (Strings.isNullOrEmpty(
-            entity.getDisplayContextParameter()) || isDisplayContextParameterDateTimeType(entity)) {
+            entity.getDisplayContextParameter()) || isDisplayContextParameterDateTimeType(entity)
+            || isDisplayContextParameterArgumentType(entity)) {
             return validationResult;
         }
 
@@ -34,7 +35,7 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
             if (isFieldTypeNotTableOrList(entity)) {
                 validationResult.addError(
                     new ValidationError("DisplayContextParameter text should "
-                        + "begin with #LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(") {
+                        + "begin with #LIST(, #TABLE(, #DATETIMEENTRY(, #DATETIMEDISPLAY( or #ARGUMENT(") {
                     });
             } else {
                 String removeBeginingSection = entity.getDisplayContextParameter().indexOf(LIST_PREFIX) > -1
@@ -68,6 +69,11 @@ public class DisplayGroupDisplayContextParamValidator implements DisplayGroupCas
         return DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter())
             .map(t -> t == DisplayContextParameterType.DATETIMEDISPLAY
                 || t == DisplayContextParameterType.DATETIMEENTRY).orElse(false);
+    }
+
+    private boolean isDisplayContextParameterArgumentType(DisplayGroupCaseFieldEntity entity) {
+        return DisplayContextParameterType.getParameterTypeFor(entity.getDisplayContextParameter())
+            .map(t -> t == DisplayContextParameterType.ARGUMENT).orElse(false);
     }
 
     private boolean isFieldTypeNotTableOrList(DisplayGroupCaseFieldEntity entity) {
