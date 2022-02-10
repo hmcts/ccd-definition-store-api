@@ -15,7 +15,10 @@
 	"expectedResponse": {
 		"body": {
 			"id": "FT_GlobalSearch",
-			"searchParties": ["${[scenarioContext][siblingContexts][globalSearchSchemaSnapshot][testData][actualResponse][body][searchParties][0]}"]
+			"searchParties": ["${[scenarioContext][siblingContexts][globalSearchSchemaSnapshot][testData][actualResponse][body][searchParties][0]}",
+                        "${[scenarioContext][siblingContexts][globalSearchSchemaSnapshot][testData][actualResponse][body][searchParties][1]}",
+                        "${[scenarioContext][siblingContexts][globalSearchSchemaSnapshot][testData][actualResponse][body][searchParties][2]}",
+                        "${[scenarioContext][siblingContexts][globalSearchSchemaSnapshot][testData][actualResponse][body][searchParties][3]}"]
 		}
 	}
 }

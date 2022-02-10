@@ -34,7 +34,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "SearchPartyTab Invalid value 'InvalidDOD'' is not a valid SearchPartyDOB value. The expression dot notation values should be valid caseTypes fields."
+      "__plainTextValue__": "SearchPartyTab Invalid value 'InvalidDOD' is not a valid SearchPartyDOD value. The expression dot notation values should be valid caseTypes fields."
     }
   }
 }

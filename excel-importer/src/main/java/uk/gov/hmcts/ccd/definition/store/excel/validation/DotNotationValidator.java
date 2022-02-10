@@ -105,9 +105,14 @@ public class DotNotationValidator {
                                       final SheetName sheetName,
                                       final ColumnName columnName,
                                       final String expression) {
-        final String[] splitDotNotationExpression = DOT_SEPARATOR_SPLIT_FUNCTION.apply(expression);
+        try {
+            final String[] splitDotNotationExpression = DOT_SEPARATOR_SPLIT_FUNCTION.apply(expression);
 
-        performCheck(splitDotNotationExpression, parentComplexFields, sheetName, columnName);
+            performCheck(splitDotNotationExpression, parentComplexFields, sheetName, columnName);
+        } catch (InvalidImportException invalidImportException) {
+            // throw a new Exception using original full expression (nb: previous exception already logged)
+            throw new InvalidImportException(String.format(ERROR_MESSAGE, sheetName, expression, columnName));
+        }
     }
 
     private void performCheck(final String[] splitDotNotationExpression,

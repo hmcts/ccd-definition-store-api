@@ -28,7 +28,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "SearchPartyTab Invalid value 'InvalidCollectionFieldName' is not a valid SearchPartyCollectionFieldName value. The expression dot notation values should be valid caseTypes fields."
+      "__plainTextValue__": "SearchPartyTab Invalid value 'NonComplexType' is not a valid SearchPartyCollectionFieldName value as it does not reference a collection of a complex type."
     }
   }
 }
