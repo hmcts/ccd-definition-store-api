@@ -53,7 +53,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
 
     @Test
     public void testParse() {
-        final List<CategoryEntity> categoryEntities =
+        val categoryEntities =
             categoryParser.parse(createDefinitionSheets(), parseContext);
 
         assertThat(categoryEntities.size(), is(1));
