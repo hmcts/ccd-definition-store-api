@@ -23,6 +23,11 @@ class RoleToAccessProfilesValidatorTest {
 
     private static final String CASE_TYPE_ID_1 = "TestCaseTypeID_1";
     private static final String CASE_TYPE_ID_2 = "TestCaseTypeID_2";
+    private static final String STANDARD_CLAIM = "Standard/Claim";
+    private static final String STANDARD_LEGAL = "Standard/Legal";
+    private static final String ACCESS_CASEWORKER_CITIZEN = "caseworker,citizen";
+    private static final String ACCESS_CASEWORKER = "caseworker";
+    private static final String ROLE1 = "Role1";
 
     private RoleToAccessProfilesValidator validator;
     private ParseContext  parseContext;
@@ -75,62 +80,80 @@ class RoleToAccessProfilesValidatorTest {
     }
 
     @Test
-    void shouldThrowExceptionOnEmptyCaseAccessCategory() {
+    void shouldThrowExceptionOnEmptyCaseAccessCategoriesWhenRoleNameAndCaseTypeDuplicated() {
         AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
         when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.of(accessProfileEntity));
         Assertions.assertThrows(ValidationException.class, () -> validator
-            .validate(createEntityWithEmptyCaseAccessCategory(), parseContext));
+            .validate(createDuplicateEntitiesWithEmptyCaseAccessCategories(), parseContext));
     }
+
+    @Test
+    void shouldNotThrowExceptionWhenOnlyCaseAccessCategoriesAreUnique() {
+        AccessProfileEntity accessProfileEntity = mock(AccessProfileEntity.class);
+        when(parseContext.getAccessProfile(anyString(), anyString())).thenReturn(Optional.of(accessProfileEntity));
+        validator.validate(createEntityWithOnlyDifferentCaseAccessCategories(), parseContext);
+    }
+
 
     private List<RoleToAccessProfilesEntity> createEntities() {
         RoleToAccessProfilesEntity entity1 = mock(RoleToAccessProfilesEntity.class);
-        when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
+        when(entity1.getAccessProfiles()).thenReturn(ACCESS_CASEWORKER_CITIZEN);
         when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
-        when(entity1.getRoleName()).thenReturn("Role1");
-        when(entity1.getCaseAccessCategories()).thenReturn("Standard/Claim");
+        when(entity1.getRoleName()).thenReturn(ROLE1);
+        when(entity1.getCaseAccessCategories()).thenReturn(STANDARD_CLAIM);
 
         RoleToAccessProfilesEntity entity2 = mock(RoleToAccessProfilesEntity.class);
-        when(entity2.getAccessProfiles()).thenReturn("caseworker");
+        when(entity2.getAccessProfiles()).thenReturn(ACCESS_CASEWORKER);
         when(entity2.getCaseType()).thenReturn(caseTypeEntity2);
         when(entity2.getRoleName()).thenReturn("Role2");
-        when(entity2.getCaseAccessCategories()).thenReturn("Standard/Claim");
+        when(entity2.getCaseAccessCategories()).thenReturn(STANDARD_CLAIM);
 
         return Lists.newArrayList(entity1, entity2);
     }
 
     private List<RoleToAccessProfilesEntity> createDuplicateRoleNameAndCaseAccessCategoryCaseTypeEntities() {
         RoleToAccessProfilesEntity entity1 = mock(RoleToAccessProfilesEntity.class);
-        when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
+        when(entity1.getAccessProfiles()).thenReturn(ACCESS_CASEWORKER_CITIZEN);
         when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
-        when(entity1.getRoleName()).thenReturn("Role1");
-        when(entity1.getCaseAccessCategories()).thenReturn("Standard/Claim");
+        when(entity1.getRoleName()).thenReturn(ROLE1);
+        when(entity1.getCaseAccessCategories()).thenReturn(STANDARD_CLAIM);
 
-        RoleToAccessProfilesEntity entity2 = mock(RoleToAccessProfilesEntity.class);
-        when(entity2.getAccessProfiles()).thenReturn("caseworker");
-        when(entity2.getCaseType()).thenReturn(caseTypeEntity1);
-        when(entity2.getRoleName()).thenReturn("Role1");
-        when(entity2.getCaseAccessCategories()).thenReturn("Standard/Claim");
-
-        return Lists.newArrayList(entity1, entity2);
+        return Lists.newArrayList(entity1, entity1);
     }
 
     private List<RoleToAccessProfilesEntity> createEntityWithEmptyRoleName() {
         RoleToAccessProfilesEntity entity1 = mock(RoleToAccessProfilesEntity.class);
-        when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
+        when(entity1.getAccessProfiles()).thenReturn(ACCESS_CASEWORKER_CITIZEN);
         when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
         when(entity1.getRoleName()).thenReturn("");
 
         return Lists.newArrayList(entity1);
     }
 
-    private List<RoleToAccessProfilesEntity> createEntityWithEmptyCaseAccessCategory() {
+    private List<RoleToAccessProfilesEntity> createDuplicateEntitiesWithEmptyCaseAccessCategories() {
         RoleToAccessProfilesEntity entity1 = mock(RoleToAccessProfilesEntity.class);
-        when(entity1.getAccessProfiles()).thenReturn("caseworker,citizen");
+        when(entity1.getAccessProfiles()).thenReturn(ACCESS_CASEWORKER_CITIZEN);
         when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
-        when(entity1.getRoleName()).thenReturn("Role");
+        when(entity1.getRoleName()).thenReturn(ROLE1);
         when(entity1.getCaseAccessCategories()).thenReturn("");
 
         return Lists.newArrayList(entity1, entity1);
+    }
+
+    private List<RoleToAccessProfilesEntity> createEntityWithOnlyDifferentCaseAccessCategories() {
+        RoleToAccessProfilesEntity entity1 = mock(RoleToAccessProfilesEntity.class);
+        when(entity1.getAccessProfiles()).thenReturn(ACCESS_CASEWORKER_CITIZEN);
+        when(entity1.getCaseType()).thenReturn(caseTypeEntity1);
+        when(entity1.getRoleName()).thenReturn(ROLE1);
+        when(entity1.getCaseAccessCategories()).thenReturn(STANDARD_CLAIM);
+
+        RoleToAccessProfilesEntity entity2 = mock(RoleToAccessProfilesEntity.class);
+        when(entity2.getAccessProfiles()).thenReturn(ACCESS_CASEWORKER_CITIZEN);
+        when(entity2.getCaseType()).thenReturn(caseTypeEntity1);
+        when(entity2.getRoleName()).thenReturn(ROLE1);
+        when(entity2.getCaseAccessCategories()).thenReturn(STANDARD_LEGAL);
+
+        return Lists.newArrayList(entity1, entity2);
     }
 
 }

@@ -32,8 +32,8 @@ public class RoleToAccessProfilesValidator {
                 String roleNameCaseTypeAccessCategory = entity.getRoleName() + entity.getCaseType().getReference()
                     + entity.getCaseAccessCategories();
                 if (uniqueRoleNameCaseTypeCaseAccessCategoryList.contains(roleNameCaseTypeAccessCategory)) {
-                    String message = String.format("RoleName and AccessCategory must be unique within a case type in "
-                            + "the sheet '%s'",
+                    String message = String.format("RoleName and CaseAccessCategories must be unique within a case type"
+                            + " in the sheet '%s'",
                         SheetName.ROLE_TO_ACCESS_PROFILES);
                     createErrorMessage(validationResult, message);
                     throw new ValidationException(validationResult);
