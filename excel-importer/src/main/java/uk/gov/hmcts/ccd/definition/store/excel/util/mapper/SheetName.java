@@ -32,7 +32,7 @@ public enum SheetName {
     ROLE_TO_ACCESS_PROFILES("RoleToAccessProfiles"),
     SEARCH_PARTY("SearchParty"),
     SEARCH_CRITERIA("SearchCriteria"),
-    CATEGORY("Category");
+    CATEGORY("Categories");
 
     private final String name;
 
