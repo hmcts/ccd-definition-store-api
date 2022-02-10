@@ -123,12 +123,12 @@ public class CategoryValidator {
 
     private void validateCategoryId(DefinitionDataItem definitionDataItem) {
         final String id = definitionDataItem.getString(ColumnName.CATEGORY_ID);
-        validateNullValue(id, ERROR_MESSAGE + "value:" + id + " category id cannot be null.");
+        validateNullValue(id, ERROR_MESSAGE + "value: " + id + " category id cannot be null.");
     }
 
     private void validateCategoryLabel(DefinitionDataItem definitionDataItem) {
         final String id = definitionDataItem.getString(ColumnName.CATEGORY_LABEL);
-        validateNullValue(id, ERROR_MESSAGE + "value:" + id + " category label cannot be null.");
+        validateNullValue(id, ERROR_MESSAGE + "value: " + id + " category label cannot be null.");
     }
 
     private void validateDisplayOrder(DefinitionDataItem definitionDataItem) {

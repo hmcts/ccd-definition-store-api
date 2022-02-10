@@ -30,6 +30,7 @@ public class CategoryValidatorTest {
     private static final String CASE_TYPE2 = "FT_MultiplePages";
     private static final String ERROR_CASE_TYPE_PARENT = "CategoryTab Invalid ParentCategoryID";
     private static final String CASE_TYPE_NOT_FOUND = "It cannot be found in the spreadsheet";
+    private static final String INVALID_VALUE = "CategoryTab Invalid value";
 
     private CategoryValidator categoryValidator;
     private DefinitionDataItem definitionDataItem;
@@ -37,22 +38,18 @@ public class CategoryValidatorTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        parseContext = new ParseContext();
         parseContext = buildParseContext();
         categoryValidator = new CategoryValidator();
         definitionDataItem = buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE, CATEGORY_ID,
             CATEGORY_LABEL, DISPLAY_ORDER, NO_PARENT);
     }
 
-
     protected ParseContext buildParseContext() {
         val parseContext = new ParseContext();
         val caseTypeEntity1 = new CaseTypeEntity();
         val caseTypeEntity = new CaseTypeEntity();
-
         caseTypeEntity.setReference(CASE_TYPE);
         caseTypeEntity1.setReference(CASE_TYPE2);
-
         parseContext.registerCaseType(caseTypeEntity);
         parseContext.registerCaseType(caseTypeEntity1);
         return parseContext;
@@ -182,7 +179,6 @@ public class CategoryValidatorTest {
         }
     }
 
-
     // Invalid definition - Case type
     @Test(expected = InvalidImportException.class)
     public void failForReferenceInvalidCaseType() {
@@ -199,6 +195,57 @@ public class CategoryValidatorTest {
             );
         } catch (Exception exception) {
             assertThat(exception.getMessage(), containsString(CASE_TYPE_NOT_FOUND));
+            throw exception;
+        }
+    }
+
+    // Invalid definition - CategoryID
+    @Test(expected = InvalidImportException.class)
+    public void failForReferenceInvalidCategoryID() {
+        try {
+            categoryValidator.validate(parseContext, Lists.newArrayList(
+                definitionDataItem,
+
+                buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
+                    null, "translatedEvidence", 110, NO_PARENT)
+                )
+            );
+        } catch (Exception exception) {
+            assertThat(exception.getMessage(), containsString(INVALID_VALUE));
+            throw exception;
+        }
+    }
+
+    // Invalid definition - Category label
+    @Test(expected = InvalidImportException.class)
+    public void failForReferenceInvalidCategoryLabel() {
+        try {
+            categoryValidator.validate(parseContext, Lists.newArrayList(
+                definitionDataItem,
+
+                buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
+                    "translatedEvidence", null, 110, NO_PARENT)
+                )
+            );
+        } catch (Exception exception) {
+            assertThat(exception.getMessage(), containsString(INVALID_VALUE));
+            throw exception;
+        }
+    }
+
+    // Invalid definition - Display order
+    @Test(expected = InvalidImportException.class)
+    public void failForReferenceInvalidDisplayOrder() {
+        try {
+            categoryValidator.validate(parseContext, Lists.newArrayList(
+                definitionDataItem,
+
+                buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
+                    "translatedEvidence", "translatedEvidence", null, NO_PARENT)
+                )
+            );
+        } catch (Exception exception) {
+            assertThat(exception.getMessage(), containsString(INVALID_VALUE));
             throw exception;
         }
     }
