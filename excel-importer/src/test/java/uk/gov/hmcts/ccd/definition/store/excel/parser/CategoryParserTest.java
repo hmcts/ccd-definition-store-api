@@ -14,11 +14,9 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.CategoryValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
@@ -40,7 +38,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
 
 
     @Mock
-    private CategoryValidator CategoryValidator;
+    private CategoryValidator categoryValidator;
     private CategoryParser categoryParser;
     private ParseContext parseContext;
 
@@ -48,7 +46,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         parseContext = buildParseContext();
-        this.categoryParser = new CategoryParser(CategoryValidator);
+        this.categoryParser = new CategoryParser(categoryValidator);
     }
 
     @Test
@@ -66,7 +64,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
     @Test(expected = ValidationException.class)
     public void failDueToDuplicatedIDs() {
         doThrow(new ValidationException(new ValidationResult()))
-            .when(CategoryValidator)
+            .when(categoryValidator)
             .validate(any(), any());
         categoryParser.parse(createDefinitionSheets(), parseContext);
     }
