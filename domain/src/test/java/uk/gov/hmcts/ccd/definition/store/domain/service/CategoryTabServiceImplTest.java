@@ -11,7 +11,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.CategoryTabRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
