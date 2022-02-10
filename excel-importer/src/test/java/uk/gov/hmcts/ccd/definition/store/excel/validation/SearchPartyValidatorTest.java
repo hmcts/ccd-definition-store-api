@@ -56,6 +56,8 @@ class SearchPartyValidatorTest {
 
     private static final String TEST_EXPRESSION_BAD = "BadTestExpression";
 
+    private static final String COLLECTION_DATA_TYPE = "Collection";
+
     @Mock
     private DotNotationValidator dotNotationValidator;
 
@@ -112,10 +114,10 @@ class SearchPartyValidatorTest {
         FieldTypeEntity caseFieldType = createFieldTypeEntity();
         doReturn(caseFieldType).when(parseContext).getCaseFieldType(CASE_TYPE, TEST_EXPRESSION_COLLECTION_FIELD_NAME_1);
 
-        SearchPartyEntity searchPartyEntity1 = createPopulatedSearchPartyEntityWithCollectionField();
+        SearchPartyEntity searchPartyEntity = createPopulatedSearchPartyEntityWithCollectionField();
 
         // WHEN
-        searchPartyValidator.validate(List.of(searchPartyEntity1), parseContext);
+        searchPartyValidator.validate(List.of(searchPartyEntity), parseContext);
 
         // THEN
         verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_NAME);
@@ -126,7 +128,7 @@ class SearchPartyValidatorTest {
         verifyDotNotationValidatorCallNeverMadeFor(ColumnName.SEARCH_PARTY_DOD);
 
         verifyDotNotationValidatorCallMadeFor(ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
-                                              searchPartyEntity1.getSearchPartyCollectionFieldName());
+                                              searchPartyEntity.getSearchPartyCollectionFieldName());
     }
 
     @DisplayName("should raise exception when SearchPartyCollectionFieldName is not a collection or complex type")
@@ -434,7 +436,7 @@ class SearchPartyValidatorTest {
 
     private static FieldTypeEntity createFieldTypeEntity() {
         FieldTypeEntity collectionCaseFieldType = new FieldTypeEntity();
-        collectionCaseFieldType.setReference("Collection");
+        collectionCaseFieldType.setReference(COLLECTION_DATA_TYPE);
         collectionCaseFieldType.addComplexFields(List.of(new ComplexFieldEntity()));
 
         FieldTypeEntity caseFieldType = new FieldTypeEntity();
