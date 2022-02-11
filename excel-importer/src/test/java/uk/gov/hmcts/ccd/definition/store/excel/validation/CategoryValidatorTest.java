@@ -190,12 +190,12 @@ public class CategoryValidatorTest {
     // Invalid definition - CategoryID
     @Test
     public void failForReferenceInvalidCategoryID() {
-        val invalidPropertyException = assertThrows(InvalidImportException.class, () -> categoryValidator.validate(parseContext, Lists.newArrayList(
-            definitionDataItem,
-
-            buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
-                null, "translatedEvidence", 110, NO_PARENT)
-            )
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
+            categoryValidator.validate(parseContext, Lists.newArrayList(
+                definitionDataItem,
+                buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
+                    null, "translatedEvidence", 110, NO_PARENT)
+                )
         ));
         assertThat(invalidPropertyException.getMessage(), containsString(INVALID_VALUE));
     }
