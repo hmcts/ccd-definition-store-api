@@ -2,7 +2,7 @@
 
 CREATE SEQUENCE public.category_id_seq
     START WITH 1
-    INCREMENT BY 50
+    INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
@@ -23,4 +23,4 @@ CREATE TABLE public.category (
 ALTER SEQUENCE public.category_id_seq OWNED BY public.category.id;
 
 ALTER TABLE ONLY public.category
-ADD CONSTRAINT fk_case_field_category FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
+ADD CONSTRAINT fk_category_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
