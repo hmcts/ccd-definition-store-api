@@ -40,7 +40,7 @@ public class CategoryValidator {
         categoryItems.forEach(element -> validate(element, pairCaseTypeCategory));
     }
 
-    private void validate(DefinitionDataItem definitionDataItem,Map<String,String> pairCaseTypeCategory) {
+    private void validate(DefinitionDataItem definitionDataItem,Map<String, List<String>> pairCaseTypeCategory) {
         validateCaseType(definitionDataItem);
         validateCategoryId(definitionDataItem);
         validateCategoryLabel(definitionDataItem);
@@ -49,18 +49,20 @@ public class CategoryValidator {
     }
 
     private void validateParentCategoryID(DefinitionDataItem definitionDataItem,
-                                          Map<String, String> pairCaseTypeCategory) {
+                                          Map<String, List<String>> pairCaseTypeCategory) {
 
         val parentCategoryId = definitionDataItem.getString(ColumnName.PARENT_CATEGORY_ID);
         if (!StringUtils.isEmpty(parentCategoryId)) {
+            val error = new InvalidImportException(
+                ERROR_MESSAGE + "ParentCategoryID: " + parentCategoryId + " belongs to a different case type."
+            );
             val currentCaseType = definitionDataItem.getString(ColumnName.CASE_TYPE_ID);
-            val parentCaseType = pairCaseTypeCategory.get(parentCategoryId);
-            validateNullValue(parentCaseType,
-                ERROR_MESSAGE + "value: " + parentCategoryId + " is not a category id.");
-            if (!currentCaseType.equals(parentCaseType)) {
-                throw new InvalidImportException(
-                    ERROR_MESSAGE + "ParentCategoryID: " + parentCategoryId + " belongs to a different case type."
-                );
+            val listOfCategoriesIdsForACaseType = pairCaseTypeCategory.get(currentCaseType);
+
+            if (listOfCategoriesIdsForACaseType.isEmpty() |
+                !listOfCategoriesIdsForACaseType.contains(parentCategoryId)) {
+
+                throw error;
             }
         }
     }
@@ -84,11 +86,13 @@ public class CategoryValidator {
             });
     }
 
-    private Map<String, String> createCategoryIdCaseTypeMap(List<DefinitionDataItem> categoryItems) {
+    private Map<String, List<String>> createCategoryIdCaseTypeMap(List<DefinitionDataItem> categoryItems) {
 
-        return categoryItems.stream().map(pair ->
-            Pair.of(pair.getString(ColumnName.CATEGORY_ID), pair.getString(ColumnName.CASE_TYPE_ID))
-        ).collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+        return  categoryItems.stream().map(pair ->
+            Pair.of(pair.getString(ColumnName.CASE_TYPE_ID),pair.getString(ColumnName.CATEGORY_ID))
+        ).collect(
+            Collectors.groupingBy(Pair::getKey,Collectors.mapping(Pair::getValue, Collectors.toList())
+        ));
     }
 
     private void validateUniqueDisplayOrder(List<DefinitionDataItem> categories) {

@@ -77,6 +77,18 @@ public class CategoryValidatorTest {
         categoryValidator.validate(parseContext, Lists.newArrayList(definitionDataItem));
     }
 
+    // Example 1.1- valid defined Categories with many cases types with the same categories IDs
+    @Test
+    public void testValidateCategoryTabWithSameCategoriesIdsForDifferentCasesTypes() {
+        categoryValidator.validate(parseContext, Lists.newArrayList(
+
+            buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE2,
+                CATEGORY_ID, "translatedEvidence", 120, CATEGORY_ID),
+
+            definitionDataItem
+        ));
+    }
+
     // Example 6 - Invalid definition - Same categoryID defined in the sub-categories
     @Test
     public void failSameCategoryIDDefinedForSubCategories() {
