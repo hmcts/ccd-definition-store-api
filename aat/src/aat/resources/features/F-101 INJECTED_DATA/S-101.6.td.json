@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-099.6",
-	"_extends_": "F-099_Test_Base_data",
+	"_guid_": "S-101.6",
+	"_extends_": "F-101_Test_Base_data",
 	"title": "must return a negative response in an attempt to import a definition file containing conditional event post state with invalid condition",
 	"specs": [
 		"an active profile in CCD",

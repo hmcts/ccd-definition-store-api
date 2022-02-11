@@ -1,0 +1,7 @@
+{
+  "_guid_": "BaseFlagLauncherFieldType",
+  "_extends_": "CommonFieldType",
+
+  "id": "FlagLauncher",
+  "type": "FlagLauncher"
+}
