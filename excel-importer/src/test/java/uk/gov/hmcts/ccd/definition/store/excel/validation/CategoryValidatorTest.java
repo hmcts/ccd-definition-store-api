@@ -14,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CategoryValidatorTest {
 
@@ -66,7 +67,7 @@ public class CategoryValidatorTest {
         definitionDataItem.addAttribute(ColumnName.CATEGORY_ID, categoryID);
         definitionDataItem.addAttribute(ColumnName.DISPLAY_ORDER, displayOder);
         definitionDataItem.addAttribute(ColumnName.CATEGORY_LABEL, categoryLabel);
-        definitionDataItem.addAttribute(ColumnName.PARENTCATEGORY_ID, parentCategoryId);
+        definitionDataItem.addAttribute(ColumnName.PARENT_CATEGORY_ID, parentCategoryId);
         return definitionDataItem;
     }
 
@@ -77,9 +78,10 @@ public class CategoryValidatorTest {
     }
 
     // Example 6 - Invalid definition - Same categoryID defined in the sub-categories
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void failSameCategoryIDDefinedForSubCategories() {
-        try {
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
+
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
@@ -89,17 +91,15 @@ public class CategoryValidatorTest {
                 buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
                     "translatedEvidence", "XXX", 120, CATEGORY_ID)
                 )
-            );
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), containsString(DUPLICATED_CATEGORY_ID_ERROR));
-            throw exception;
-        }
+            )
+        );
+        assertThat(invalidPropertyException.getMessage(), containsString(DUPLICATED_CATEGORY_ID_ERROR));
     }
 
     // Example 5 - Invalid definition - Same categoryID defined in the main categories
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void failSameCategoryIdDefinedForCategories() {
-        try {
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
@@ -112,17 +112,14 @@ public class CategoryValidatorTest {
                 buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
                     "translatedEvidence", "XXX", 120, NO_PARENT)
                 )
-            );
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), containsString(DUPLICATED_CATEGORY_ID_ERROR));
-            throw exception;
-        }
+            ));
+        assertThat(invalidPropertyException.getMessage(), containsString(DUPLICATED_CATEGORY_ID_ERROR));
     }
 
     // Example 4 - Invalid definition - Non Unique Display Order in the sub-categories
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void failNonUniqueDisplayOrderForSubCategories() {
-        try {
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
@@ -132,17 +129,15 @@ public class CategoryValidatorTest {
                 buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
                     "divorceDocs", "divorceDocs", 110, CATEGORY_ID)
                 )
-            );
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), containsString(DISPLAY_ERROR));
-            throw exception;
-        }
+            ));
+
+        assertThat(invalidPropertyException.getMessage(), containsString(DISPLAY_ERROR));
     }
 
     // Example 3 - Invalid definition - Non Unique Display Order on the main categories
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void failNonUniqueDisplayOrderMainCategories() {
-        try {
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
@@ -152,17 +147,14 @@ public class CategoryValidatorTest {
                 buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
                     "divorceDocs", "divorceDocs", 110, NO_PARENT)
                 )
-            );
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), containsString(DISPLAY_ERROR));
-            throw exception;
-        }
+            ));
+        assertThat(invalidPropertyException.getMessage(), containsString(DISPLAY_ERROR));
     }
 
     // Example 2 - Invalid definition - reference to parent category id of another case type
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void failForReferenceToParentCategoryIdOfCaseType() {
-        try {
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
@@ -172,17 +164,14 @@ public class CategoryValidatorTest {
                 buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
                     "divorceDocs", "divorceDocs", 150, "translatedEvidence")
                 )
-            );
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), containsString(ERROR_CASE_TYPE_PARENT));
-            throw exception;
-        }
+            ));
+        assertThat(invalidPropertyException.getMessage(), containsString(ERROR_CASE_TYPE_PARENT));
     }
 
     // Invalid definition - Case type
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void failForReferenceInvalidCaseType() {
-        try {
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
@@ -192,61 +181,50 @@ public class CategoryValidatorTest {
                 buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
                     "divorceDocs", "divorceDocs", 150, "translatedEvidence")
                 )
-            );
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), containsString(CASE_TYPE_NOT_FOUND));
-            throw exception;
-        }
+            ));
+
+        assertThat(invalidPropertyException.getMessage(), containsString(CASE_TYPE_NOT_FOUND));
+
     }
 
     // Invalid definition - CategoryID
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void failForReferenceInvalidCategoryID() {
-        try {
-            categoryValidator.validate(parseContext, Lists.newArrayList(
-                definitionDataItem,
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () -> categoryValidator.validate(parseContext, Lists.newArrayList(
+            definitionDataItem,
 
-                buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
-                    null, "translatedEvidence", 110, NO_PARENT)
-                )
-            );
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), containsString(INVALID_VALUE));
-            throw exception;
-        }
+            buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
+                null, "translatedEvidence", 110, NO_PARENT)
+            )
+        ));
+        assertThat(invalidPropertyException.getMessage(), containsString(INVALID_VALUE));
     }
 
     // Invalid definition - Category label
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void failForReferenceInvalidCategoryLabel() {
-        try {
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
                 buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
                     "translatedEvidence", null, 110, NO_PARENT)
                 )
-            );
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), containsString(INVALID_VALUE));
-            throw exception;
-        }
+            ));
+        assertThat(invalidPropertyException.getMessage(), containsString(INVALID_VALUE));
     }
 
     // Invalid definition - Display order
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void failForReferenceInvalidDisplayOrder() {
-        try {
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
                 buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
                     "translatedEvidence", "translatedEvidence", null, NO_PARENT)
                 )
-            );
-        } catch (Exception exception) {
-            assertThat(exception.getMessage(), containsString(INVALID_VALUE));
-            throw exception;
-        }
+            ));
+        assertThat(invalidPropertyException.getMessage(), containsString(INVALID_VALUE));
     }
 }

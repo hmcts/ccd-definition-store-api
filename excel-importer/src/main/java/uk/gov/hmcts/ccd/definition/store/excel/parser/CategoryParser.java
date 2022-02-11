@@ -23,7 +23,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEn
 @Component
 public class CategoryParser {
 
-    private CategoryValidator categoryValidator;
+    private final CategoryValidator categoryValidator;
 
     @Autowired
     public CategoryParser(CategoryValidator categoryValidator) {
@@ -36,10 +36,9 @@ public class CategoryParser {
             val categoriesItems = definitionSheets.get(SheetName.CATEGORY.getName()).getDataItems();
             categoryValidator.validate(parseContext, categoriesItems);
             final List<CategoryEntity> newCategoriesEntities = categoriesItems
-                .stream().map(categoryItems -> {
-                    val categoriesEntity = createCategoriesEntity(parseContext, categoryItems);
-                    return categoriesEntity;
-                }).collect(Collectors.toList());
+                .stream().map(categoryItems ->
+                    createCategoriesEntity(parseContext, categoryItems)
+                ).collect(Collectors.toList());
             return newCategoriesEntities;
         } catch (InvalidImportException invalidImportException) {
             ValidationResult validationResult = new ValidationResult();
@@ -69,7 +68,7 @@ public class CategoryParser {
         categoriesEntity.setLiveFrom(definitionDataItem.getLocalDate(ColumnName.LIVE_FROM));
         categoriesEntity.setLiveTo(definitionDataItem.getLocalDate(ColumnName.LIVE_TO));
         categoriesEntity.setDisplayOrder(definitionDataItem.getInteger(ColumnName.DISPLAY_ORDER));
-        categoriesEntity.setParentCategoryId(definitionDataItem.getString(ColumnName.PARENTCATEGORY_ID));
+        categoriesEntity.setParentCategoryId(definitionDataItem.getString(ColumnName.PARENT_CATEGORY_ID));
         categoriesEntity.setCategoryLabel(definitionDataItem.getString(ColumnName.CATEGORY_LABEL));
         categoriesEntity.setCategoryId(definitionDataItem.getString(ColumnName.CATEGORY_ID));
         return categoriesEntity;

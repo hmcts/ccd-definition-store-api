@@ -36,7 +36,7 @@ public class CategoryValidator {
         this.parseContext = parseContext;
         validateUniqueCategoriesIds(categoryItems);
         validateUniqueDisplayOrder(categoryItems);
-        val pairCaseTypeCategory = createCategoryIdCaseTypePair(categoryItems);
+        val pairCaseTypeCategory = createCategoryIdCaseTypeMap(categoryItems);
         categoryItems.forEach(element -> validate(element, pairCaseTypeCategory));
     }
 
@@ -51,7 +51,7 @@ public class CategoryValidator {
     private void validateParentCategoryID(DefinitionDataItem definitionDataItem,
                                           Map<String, String> pairCaseTypeCategory) {
 
-        val parentCategoryId = definitionDataItem.getString(ColumnName.PARENTCATEGORY_ID);
+        val parentCategoryId = definitionDataItem.getString(ColumnName.PARENT_CATEGORY_ID);
         if (!StringUtils.isEmpty(parentCategoryId)) {
             val currentCaseType = definitionDataItem.getString(ColumnName.CASE_TYPE_ID);
             val parentCaseType = pairCaseTypeCategory.get(parentCategoryId);
@@ -84,7 +84,7 @@ public class CategoryValidator {
             });
     }
 
-    private Map<String, String> createCategoryIdCaseTypePair(List<DefinitionDataItem> categoryItems) {
+    private Map<String, String> createCategoryIdCaseTypeMap(List<DefinitionDataItem> categoryItems) {
 
         return categoryItems.stream().map(pair ->
             Pair.of(pair.getString(ColumnName.CATEGORY_ID), pair.getString(ColumnName.CASE_TYPE_ID))
@@ -98,12 +98,12 @@ public class CategoryValidator {
         );
 
         validateUniqueDisplayOrderForItems(
-            categories, Arrays.asList(ColumnName.CASE_TYPE_ID, ColumnName.PARENTCATEGORY_ID, ColumnName.DISPLAY_ORDER)
+            categories, Arrays.asList(ColumnName.CASE_TYPE_ID, ColumnName.PARENT_CATEGORY_ID, ColumnName.DISPLAY_ORDER)
         );
     }
 
     private void validateUniqueDisplayOrderForItems(List<DefinitionDataItem> categoryItems, List<ColumnName> fields) {
-        Map<Triple<String, String, String>, List<DefinitionDataItem>> challengeQuestionDisplayOrder =
+        Map<Triple<String, String, String>, List<DefinitionDataItem>> categoriesDisplayOrder =
             categoryItems
                 .stream()
                 .collect(groupingBy(p ->
@@ -113,9 +113,9 @@ public class CategoryValidator {
                         p.getString(fields.get(2))
                     )));
 
-        challengeQuestionDisplayOrder.keySet()
+        categoriesDisplayOrder.keySet()
             .forEach(triple -> {
-                if (challengeQuestionDisplayOrder.get(triple).size() > 1) {
+                if (categoriesDisplayOrder.get(triple).size() > 1) {
                     throw new InvalidImportException(DISPLAY_ORDER_ERROR);
                 }
             });

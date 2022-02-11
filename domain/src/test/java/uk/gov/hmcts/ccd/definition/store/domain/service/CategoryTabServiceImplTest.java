@@ -20,12 +20,12 @@ public class CategoryTabServiceImplTest {
 
     @Mock
     private CategoryTabRepository categoryTabRepository;
-    private CategoryTabServiceImpl challengeQuestionTabServiceImpl;
+    private CategoryTabServiceImpl categoryTabServiceImpl;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.challengeQuestionTabServiceImpl = new CategoryTabServiceImpl(categoryTabRepository);
+        this.categoryTabServiceImpl = new CategoryTabServiceImpl(categoryTabRepository);
     }
 
     @DisplayName("should save all CategoryEntity")
@@ -35,7 +35,7 @@ public class CategoryTabServiceImplTest {
             new CategoryEntity(), new CategoryEntity());
 
         when(categoryTabRepository.saveAll(entities)).thenReturn(entities);
-        challengeQuestionTabServiceImpl.saveAll(entities);
+        categoryTabServiceImpl.saveAll(entities);
         verify(categoryTabRepository).saveAll(entities);
     }
 }

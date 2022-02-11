@@ -81,7 +81,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
         definitionDataItem.addAttribute(ColumnName.CATEGORY_ID, categoryID);
         definitionDataItem.addAttribute(ColumnName.DISPLAY_ORDER, displayOder);
         definitionDataItem.addAttribute(ColumnName.CATEGORY_LABEL, categoryLabel);
-        definitionDataItem.addAttribute(ColumnName.PARENTCATEGORY_ID, parentCategoryId);
+        definitionDataItem.addAttribute(ColumnName.PARENT_CATEGORY_ID, parentCategoryId);
         return definitionDataItem;
     }
 
