@@ -29,7 +29,7 @@ import static javax.persistence.FetchType.LAZY;
 public class EventComplexTypeEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_case_field_complex_type_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)
