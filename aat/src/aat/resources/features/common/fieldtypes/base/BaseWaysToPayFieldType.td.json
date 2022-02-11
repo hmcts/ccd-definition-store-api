@@ -1,0 +1,7 @@
+{
+  "_guid_": "BaseWaysToPayFieldType",
+  "_extends_": "CommonFieldType",
+
+  "id": "WaysToPay",
+  "type": "WaysToPay"
+}
