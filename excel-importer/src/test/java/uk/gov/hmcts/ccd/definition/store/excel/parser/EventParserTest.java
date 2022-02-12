@@ -1,21 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.core.Appender;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.common.TestLoggerUtils;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -29,18 +23,21 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntit
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.excel.common.TestLoggerUtils.assertLogged;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventParserTest extends ParserTestBase {
@@ -50,9 +47,6 @@ public class EventParserTest extends ParserTestBase {
     private EventParser eventParser;
     private DefinitionSheet caseEventToFieldsSheet;
     private DefinitionSheet caseEventToComplexTypesSheet;
-
-    @Mock
-    private Appender mockAppender;
 
     @Mock
     private EventCaseFieldParser eventCaseFieldParser;
@@ -66,8 +60,7 @@ public class EventParserTest extends ParserTestBase {
     @Mock
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
-    @Captor
-    private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
+    private ListAppender<ILoggingEvent> listAppender;
 
     private boolean assertEntityAddedToRegistry = true;
 
@@ -99,17 +92,12 @@ public class EventParserTest extends ParserTestBase {
         caseEventToComplexTypesSheet = new DefinitionSheet();
         definitionSheets.put(SheetName.CASE_EVENT_TO_COMPLEX_TYPES.getName(), caseEventToComplexTypesSheet);
 
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(
-            ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        root.addAppender(mockAppender);
-        root.setLevel(Level.INFO);
+        listAppender = TestLoggerUtils.setupLogger();
     }
 
     @After
     public void teardown() {
-        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(
-            ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-        root.detachAppender(mockAppender);
+        TestLoggerUtils.teardownLogger();
 
         if (assertEntityAddedToRegistry) {
             verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(entity, item);
@@ -213,7 +201,7 @@ public class EventParserTest extends ParserTestBase {
 
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
 
-        verify(eventCaseFieldParser).parseEventCaseField(eq(CASE_TYPE_UNDER_TEST), eq(caseEventToFieldsDataItem));
+        verify(eventCaseFieldParser).parseEventCaseField(CASE_TYPE_UNDER_TEST, caseEventToFieldsDataItem);
 
         assertThat(eventEntities.size(), is(1));
         entity = new ArrayList<>(eventEntities).get(0);
@@ -234,8 +222,7 @@ public class EventParserTest extends ParserTestBase {
         assertThat(entity.getPostStates().size(), is(0));
         assertThat(entity.getPreStates(), empty());
 
-        verify(mockAppender, atLeastOnce()).doAppend(captorLoggingEvent.capture());
-        assertLogged(captorLoggingEvent,
+        assertLogged(listAppender,
             "Parsing event case fields for case type Some Case Type and event event id: No event case fields found");
     }
 

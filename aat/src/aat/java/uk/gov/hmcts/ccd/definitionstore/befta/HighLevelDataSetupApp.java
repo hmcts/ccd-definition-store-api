@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definitionstore.befta;
 
 import uk.gov.hmcts.befta.dse.ccd.CcdEnvironment;
 import uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore;
+import uk.gov.hmcts.befta.util.BeftaUtils;
 
 public class HighLevelDataSetupApp extends DataLoaderToDefinitionStore {
 
@@ -15,4 +16,14 @@ public class HighLevelDataSetupApp extends DataLoaderToDefinitionStore {
         }
     }
 
+    @Override
+    protected boolean shouldTolerateDataSetupFailure() {
+        return true;
+    }
+
+    @Override
+    public void createRoleAssignments() {
+        // Do not create role assignments.
+        BeftaUtils.defaultLog("Will NOT create role assignments!");
+    }
 }
