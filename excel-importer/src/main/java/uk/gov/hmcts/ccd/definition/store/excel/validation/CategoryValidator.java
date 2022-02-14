@@ -60,8 +60,8 @@ public class CategoryValidator {
             val currentCaseType = definitionDataItem.getString(ColumnName.CASE_TYPE_ID);
             val listOfCategoriesIdsForACaseType = pairCaseTypeCategory.get(currentCaseType);
 
-            if (listOfCategoriesIdsForACaseType.isEmpty() |
-                !listOfCategoriesIdsForACaseType.contains(parentCategoryId)) {
+            if (listOfCategoriesIdsForACaseType.isEmpty()
+                | !listOfCategoriesIdsForACaseType.contains(parentCategoryId)) {
 
                 throw error;
             }
