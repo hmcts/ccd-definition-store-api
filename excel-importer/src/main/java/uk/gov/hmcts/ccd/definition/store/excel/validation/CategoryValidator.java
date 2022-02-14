@@ -22,7 +22,6 @@ import static java.util.stream.Collectors.groupingBy;
 @Component
 public class CategoryValidator {
 
-    private ParseContext parseContext;
     private static final String ERROR_MESSAGE = "CategoryTab Invalid ";
     private static final String NOT_VALID = " is not a valid ";
     private static final String DISPLAY_ORDER_ERROR = "DisplayOrder cannot be duplicated within case type"
@@ -33,15 +32,17 @@ public class CategoryValidator {
     }
 
     public void validate(ParseContext parseContext, List<DefinitionDataItem> categoryItems) {
-        this.parseContext = parseContext;
         validateUniqueCategoriesIds(categoryItems);
         validateUniqueDisplayOrder(categoryItems);
         val pairCaseTypeCategory = createCategoryIdCaseTypeMap(categoryItems);
-        categoryItems.forEach(element -> validate(element, pairCaseTypeCategory));
+        categoryItems.forEach(element -> validate(element, pairCaseTypeCategory,parseContext));
     }
 
-    private void validate(DefinitionDataItem definitionDataItem,Map<String, List<String>> pairCaseTypeCategory) {
-        validateCaseType(definitionDataItem);
+    private void validate(DefinitionDataItem definitionDataItem,Map<String, List<String>> pairCaseTypeCategory,
+                          ParseContext parseContext
+
+    ) {
+        validateCaseType(definitionDataItem,parseContext);
         validateCategoryId(definitionDataItem);
         validateCategoryLabel(definitionDataItem);
         validateDisplayOrder(definitionDataItem);
@@ -145,7 +146,7 @@ public class CategoryValidator {
         }
     }
 
-    private CaseTypeEntity validateCaseType(DefinitionDataItem categoryItem) {
+    private CaseTypeEntity validateCaseType(DefinitionDataItem categoryItem, ParseContext parseContext) {
         final String caseType = categoryItem.getString(ColumnName.CASE_TYPE_ID);
         Optional<CaseTypeEntity> caseTypeEntityOptional = parseContext.getCaseTypes()
             .stream()
