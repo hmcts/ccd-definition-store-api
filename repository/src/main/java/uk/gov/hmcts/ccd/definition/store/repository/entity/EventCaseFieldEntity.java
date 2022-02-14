@@ -82,6 +82,8 @@ public class EventCaseFieldEntity implements Serializable {
     @Column(name = "publish_as")
     private String publishAs;
 
+    @Column(name = "default_value")
+    private String defaultValue;
 
     public DisplayContext getDisplayContext() {
         return displayContext;
@@ -190,5 +192,13 @@ public class EventCaseFieldEntity implements Serializable {
 
     public void setPublishAs(String publishAs) {
         this.publishAs = publishAs;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 }
