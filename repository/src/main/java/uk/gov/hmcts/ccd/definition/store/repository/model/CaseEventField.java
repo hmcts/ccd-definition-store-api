@@ -21,6 +21,7 @@ public class CaseEventField {
     private String hintText = null;
     private Boolean publish;
     private String publishAs;
+    private String defaultValue;
     private List<CaseEventFieldComplex> caseEventFieldComplex = new ArrayList<>();
 
     /**
@@ -151,6 +152,19 @@ public class CaseEventField {
 
     public void setPublish(Boolean publish) {
         this.publish = publish;
+    }
+
+    /**
+     * allows services to define the default value of top level case fields.
+     **/
+    @ApiModelProperty(value = "allows services to define the default value of top level case fields")
+    @JsonProperty("default_value")
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     /**
