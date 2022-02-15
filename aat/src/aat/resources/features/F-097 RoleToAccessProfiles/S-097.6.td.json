@@ -1,0 +1,19 @@
+{
+  "_guid_": "S-097.6",
+  "_extends_": "Import_BEFTA_Master_Definition",
+  "title": "Import Definition file with blank values in the CaseAccessCategories column of the RoleToAccessProfiles tab",
+  "specs": [
+    "contains a blank CaseAccessCategories value"
+  ],
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Case Definition data successfully imported"
+    }
+  }
+}
