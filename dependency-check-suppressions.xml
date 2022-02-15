@@ -46,7 +46,7 @@
 		<cve>CVE-2007-1652</cve>
 	</suppress>
 
-	<!-- Suppress temporarily -->
+	<!-- Temporary suppression before fix -->
 	<suppress>
 		<cve>CVE-2021-44832</cve>
 		<cve>CVE-2021-42550</cve>

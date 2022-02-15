@@ -49,6 +49,10 @@
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
                 {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "NotesReason",
                   "hint": null,
                   "label": null,
@@ -166,6 +170,10 @@
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
                 {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "OrgPolicyReference",
                   "hint": null,
                   "label": null,
@@ -216,6 +224,10 @@
               "display_context": "COMPLEX",
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
+                {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
                 {
                   "reference": "OrganisationName",
                   "hint": null,
@@ -281,6 +293,10 @@
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
                 {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "NotesReason",
                   "hint": null,
                   "label": null,
@@ -398,6 +414,10 @@
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
                 {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "OrgPolicyReference",
                   "hint": null,
                   "label": null,
@@ -448,6 +468,10 @@
               "display_context": "COMPLEX",
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
+                {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
                 {
                   "reference": "OrganisationName",
                   "hint": null,
