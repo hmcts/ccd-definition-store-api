@@ -52,6 +52,7 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
         validateDisplayContextForPublish(eventCaseFieldDefinition, eventCaseField);
         eventCaseField.setPublish(eventCaseFieldDefinition.getBooleanOrDefault(ColumnName.PUBLISH, false));
         eventCaseField.setPublishAs(eventCaseFieldDefinition.getString(ColumnName.PUBLISH_AS));
+        eventCaseField.setDefaultValue(eventCaseFieldDefinition.getString(ColumnName.DEFAULT_VALUE));
 
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(
             eventCaseField, eventCaseFieldDefinition);

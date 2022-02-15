@@ -17,4 +17,5 @@ public class RoleToAccessProfiles {
     private Date liveFrom;
     private Date liveTo;
     private String roleName;
+    private String caseAccessCategories;
 }
