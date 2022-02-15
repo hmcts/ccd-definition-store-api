@@ -23,7 +23,7 @@ public enum SpreadSheetValidationMappingEnum {
     CASE_TYPE_TAB_ID("CaseTypeTab", "ID", 70),
 
     EVENT_TO_COMPLEX_TYPES_LIST_ELEMENT_CODE("EventToComplexTypes", "ListElementCode", 70),
-    EVENT_TO_COMPLEX_TYPES_EVENT_ELEMENT_LABEL("EventToComplexTypes", "EventElementLabel", 200),
+    EVENT_TO_COMPLEX_TYPES_EVENT_ELEMENT_LABEL("EventToComplexTypes", "EventElementLabel", 500),
     EVENT_TO_COMPLEX_TYPES_FIELD_SHOW_CONDITION("EventToComplexTypes", "FieldShowCondition", 1000),
 
     CASE_TYPE_TAB_TAB_ID("CaseTypeTab", "TabID", 70),
