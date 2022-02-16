@@ -25,13 +25,13 @@ public class DotNotationValidator {
     protected static final String ERROR_MESSAGE = "%sTab Invalid value '%s' is not a valid %s value. "
         + "The expression dot notation values should be valid caseTypes fields.";
 
-    public static final BiFunction<String, String, String[]> SPIT_FUNCTION =
+    protected static final BiFunction<String, String, String[]> SPLIT_FUNCTION =
         (expression, separator) -> Optional.ofNullable(expression)
             .map(x -> x.split(Pattern.quote(separator), -1))
             .orElse(new String[0]);
 
-    public static final Function<String, String[]> DOT_SEPARATOR_SPLIT_FUNCTION =
-        expression -> SPIT_FUNCTION.apply(expression, DOT_SEPARATOR);
+    private static final Function<String, String[]> DOT_SEPARATOR_SPLIT_FUNCTION =
+        expression -> SPLIT_FUNCTION.apply(expression, DOT_SEPARATOR);
 
     public void validate(ParseContext parseContext,
                          SheetName sheetName,
@@ -39,14 +39,39 @@ public class DotNotationValidator {
                          String caseType,
                          String expression) {
 
-        if (!expression.contains(DOT_SEPARATOR)) {
-            getTopLevelField(parseContext, sheetName, columnName, caseType, expression);
-        } else {
-            checkDotNotationField(parseContext, sheetName, columnName, caseType, expression);
+        validateAndLoadFieldType(parseContext, sheetName, columnName, caseType, expression);
+    }
+
+    public void validate(final FieldTypeEntity parentComplexType,
+                         final SheetName sheetName,
+                         final ColumnName columnName,
+                         final String expression) {
+        try {
+            final String[] splitDotNotationExpression = DOT_SEPARATOR_SPLIT_FUNCTION.apply(expression);
+
+            // NB: find will throw exception if not found
+            findDotNotationFieldType(parentComplexType, splitDotNotationExpression, sheetName, columnName);
+
+        } catch (InvalidImportException invalidImportException) {
+            // throw a new Exception using original full expression (nb: previous exception already logged)
+            throw new InvalidImportException(String.format(ERROR_MESSAGE, sheetName, expression, columnName));
         }
     }
 
-    public ComplexFieldEntity findComplexFieldEntity(final Set<ComplexFieldEntity> complexFieldEntities,
+    public FieldTypeEntity validateAndLoadFieldType(ParseContext parseContext,
+                                                    SheetName sheetName,
+                                                    ColumnName columnName,
+                                                    String caseType,
+                                                    String expression) {
+
+        if (!expression.contains(DOT_SEPARATOR)) {
+            return getTopLevelField(parseContext, sheetName, columnName, caseType, expression);
+        } else {
+            return getDotNotationField(parseContext, sheetName, columnName, caseType, expression);
+        }
+    }
+
+    private ComplexFieldEntity findComplexFieldEntity(final Set<ComplexFieldEntity> complexFieldEntities,
                                                      final String attribute,
                                                      final SheetName sheetName,
                                                      final ColumnName columnName) {
@@ -72,26 +97,24 @@ public class DotNotationValidator {
         }
     }
 
-    private void checkDotNotationField(ParseContext parseContext,
-                                       SheetName sheetName,
-                                       ColumnName columnName,
-                                       String caseType,
-                                       String expression) {
+    private FieldTypeEntity getDotNotationField(ParseContext parseContext,
+                                                SheetName sheetName,
+                                                ColumnName columnName,
+                                                String caseType,
+                                                String expression) {
         try {
-            // use split with -1 limit to force inclusion of empty values
             final String[] splitDotNotationExpression = DOT_SEPARATOR_SPLIT_FUNCTION.apply(expression);
+
+            final FieldTypeEntity topLevelFieldType =
+                getTopLevelField(parseContext, sheetName, columnName, caseType, splitDotNotationExpression[0]);
+
             // NB: start from depth = 1 to ignore top level field that is already processed
             final List<String> segments = Arrays.asList(splitDotNotationExpression)
                 .subList(1, splitDotNotationExpression.length);
 
-            final FieldTypeEntity fieldType =
-                getTopLevelField(parseContext, sheetName, columnName, caseType, splitDotNotationExpression[0]);
-
-            final Set<ComplexFieldEntity> complexFieldsBelongingToParent = fieldType.getComplexFields();
-
-            performCheck(
+            return findDotNotationFieldType(
+                topLevelFieldType,
                 segments.toArray(String[]::new),
-                complexFieldsBelongingToParent,
                 sheetName,
                 columnName
             );
@@ -101,36 +124,26 @@ public class DotNotationValidator {
         }
     }
 
-    public void checkDotNotationField(final Set<ComplexFieldEntity> parentComplexFields,
-                                      final SheetName sheetName,
-                                      final ColumnName columnName,
-                                      final String expression) {
-        try {
-            final String[] splitDotNotationExpression = DOT_SEPARATOR_SPLIT_FUNCTION.apply(expression);
-
-            performCheck(splitDotNotationExpression, parentComplexFields, sheetName, columnName);
-        } catch (InvalidImportException invalidImportException) {
-            // throw a new Exception using original full expression (nb: previous exception already logged)
-            throw new InvalidImportException(String.format(ERROR_MESSAGE, sheetName, expression, columnName));
-        }
-    }
-
-    private void performCheck(final String[] splitDotNotationExpression,
-                              final Set<ComplexFieldEntity> parentComplexFields,
-                              final SheetName sheetName,
-                              final ColumnName columnName) {
-        Set<ComplexFieldEntity> complexFieldsBelongingToParent = parentComplexFields;
+    private FieldTypeEntity findDotNotationFieldType(final FieldTypeEntity parentComplexFieldType,
+                                                     final String[] splitDotNotationExpression,
+                                                     final SheetName sheetName,
+                                                     final ColumnName columnName) {
+        FieldTypeEntity currentFieldType = parentComplexFieldType;
 
         for (String currentAttribute : splitDotNotationExpression) {
-            final ComplexFieldEntity result = findComplexFieldEntity(
-                complexFieldsBelongingToParent,
+
+            // search complex fields to find next attribute
+            final ComplexFieldEntity complexField = findComplexFieldEntity(
+                currentFieldType.getComplexFields(),
                 currentAttribute,
                 sheetName,
                 columnName
             );
 
-            complexFieldsBelongingToParent = result.getFieldType().getComplexFields();
+            currentFieldType = complexField.getFieldType();
         }
+
+        return currentFieldType;
     }
 
 }

@@ -7,7 +7,13 @@
     "contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column",
     "contains correctly configured SearchParty tab with valid case field names in SearchPartyEmailAddress, SearchPartyDoB, SearchPartyAddressLine1 and SearchPartyPostCode columns",
     "contains non-complex type referenced in the SearchPartyCollectionFieldName column"
-   ],
+  ],
+
+  "prerequisites": [
+    {
+      "globalSearchSchemaSnapshot": "F-099_Get_GlobalSearchSchemaSnapshot"
+    }
+  ],
 
   "request": {
     "body": {
