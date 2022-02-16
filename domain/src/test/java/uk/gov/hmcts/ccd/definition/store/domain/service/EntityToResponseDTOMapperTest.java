@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -139,6 +140,7 @@ class  EntityToResponseDTOMapperTest {
             eventCaseFieldEntity.setRetainHiddenValue(true);
             eventCaseFieldEntity.setPublish(true);
             eventCaseFieldEntity.setPublishAs("PublishAs test");
+            eventCaseFieldEntity.setDefaultValue("DefaultValue test");
 
             CaseEventField caseEventField = spyOnClassUnderTest.map(
                 eventCaseFieldEntity
@@ -159,7 +161,9 @@ class  EntityToResponseDTOMapperTest {
                 () -> assertEquals("publish", eventCaseFieldEntity.getPublish(),
                                    caseEventField.getPublish()),
                 () -> assertEquals("publishAs", eventCaseFieldEntity.getPublishAs(),
-                                   caseEventField.getPublishAs())
+                                   caseEventField.getPublishAs()),
+                () -> assertEquals("defaultValue", eventCaseFieldEntity.getDefaultValue(),
+                                   caseEventField.getDefaultValue())
             );
         }
 
@@ -1739,42 +1743,49 @@ class  EntityToResponseDTOMapperTest {
 
         @Test
         void testMapRoleToAccessProfileEntity() {
+            final Date liveFrom = Date.from(Instant.now().minus(1, ChronoUnit.DAYS));
+            final Date liveTo = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
+
             RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
             roleToAccessProfilesEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
             roleToAccessProfilesEntity.setRoleName("judge");
-            roleToAccessProfilesEntity.setLiveFrom(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
-            roleToAccessProfilesEntity.setLiveTo(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+            roleToAccessProfilesEntity.setLiveFrom(liveFrom);
+            roleToAccessProfilesEntity.setLiveTo(liveTo);
             roleToAccessProfilesEntity.setReadOnly(true);
             roleToAccessProfilesEntity.setDisabled(true);
             roleToAccessProfilesEntity.setAuthorisation("auth1,auth2");
             roleToAccessProfilesEntity.setAccessProfiles("caseworker-befta_master,caseworker-befta_master-solicitor");
+            roleToAccessProfilesEntity.setCaseAccessCategories("Cat1,Cat2");
 
-            RoleToAccessProfiles roleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
+            final RoleToAccessProfiles actualRoleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
-            assertEquals(roleToAccessProfiles.getCaseTypeId(), roleToAccessProfilesEntity.getCaseType().getReference());
-            assertEquals(roleToAccessProfiles.getRoleName(), roleToAccessProfilesEntity.getRoleName());
-            assertEquals(roleToAccessProfiles.getLiveTo(), roleToAccessProfilesEntity.getLiveTo());
-            assertEquals(roleToAccessProfiles.getLiveFrom(), roleToAccessProfilesEntity.getLiveFrom());
-            assertEquals(roleToAccessProfiles.getReadOnly(), roleToAccessProfilesEntity.getReadOnly());
-            assertEquals(roleToAccessProfiles.getDisabled(), roleToAccessProfilesEntity.getDisabled());
-            assertEquals(roleToAccessProfiles.getAuthorisations(), roleToAccessProfilesEntity.getAuthorisation());
-            assertEquals(roleToAccessProfiles.getAccessProfiles(), roleToAccessProfilesEntity.getAccessProfiles());
+            Assertions.assertThat(actualRoleToAccessProfiles)
+                .isNotNull()
+                .satisfies(actual -> {
+                    Assertions.assertThat(actual.getCaseTypeId()).isEqualTo("CaseTypeReference");
+                    Assertions.assertThat(actual.getRoleName()).isEqualTo("judge");
+                    Assertions.assertThat(actual.getLiveFrom()).isEqualTo(liveFrom);
+                    Assertions.assertThat(actual.getLiveTo()).isEqualTo(liveTo);
+                    Assertions.assertThat(actual.getReadOnly()).isTrue();
+                    Assertions.assertThat(actual.getDisabled()).isTrue();
+                    Assertions.assertThat(actual.getAuthorisations()).isEqualTo("auth1,auth2");
+                    Assertions.assertThat(actual.getAccessProfiles())
+                        .isEqualTo("caseworker-befta_master,caseworker-befta_master-solicitor");
+                    Assertions.assertThat(actual.getCaseAccessCategories()).isEqualTo("Cat1,Cat2");
+                });
         }
 
         @Test
         void testMapEmptyRoleToAccessProfileEntity() {
-            RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
+            final RoleToAccessProfiles expectedRoleToAccessProfiles = new RoleToAccessProfiles();
 
-            RoleToAccessProfiles roleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
+            final RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
 
-            assertNull(roleToAccessProfiles.getAccessProfiles());
-            assertNull(roleToAccessProfiles.getCaseTypeId());
-            assertNull(roleToAccessProfiles.getAuthorisations());
-            assertNull(roleToAccessProfiles.getDisabled());
-            assertNull(roleToAccessProfiles.getReadOnly());
-            assertNull(roleToAccessProfiles.getLiveFrom());
-            assertNull(roleToAccessProfiles.getLiveTo());
-            assertNull(roleToAccessProfiles.getRoleName());
+            final RoleToAccessProfiles actualRoleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
+
+            Assertions.assertThat(actualRoleToAccessProfiles)
+                .isNotNull()
+                .isEqualTo(expectedRoleToAccessProfiles);
         }
     }
 
