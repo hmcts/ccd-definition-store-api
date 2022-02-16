@@ -100,13 +100,15 @@ public class TestHelper {
     public EventCaseFieldEntity createEventCaseField(CaseFieldEntity caseField,
                                                      DisplayContext displayContext,
                                                      String showCondition,
-                                                     Boolean ssco) {
+                                                     Boolean ssco,
+                                                     String defaultValue) {
         EventCaseFieldEntity ecf = new EventCaseFieldEntity();
         ecf.setCaseField(caseField);
         ecf.setDisplayContext(displayContext);
         ecf.setShowCondition(showCondition);
         ecf.setShowSummaryChangeOption(ssco);
         ecf.setPublish(false);
+        ecf.setDefaultValue(defaultValue);
         return ecf;
     }
 
