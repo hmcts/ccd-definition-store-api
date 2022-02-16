@@ -91,7 +91,7 @@ public class CategoryValidator {
 
         return categoryItems.stream().map(pair -> {
                 val caseTypeId = pair.getString(ColumnName.CASE_TYPE_ID);
-                validateNullValue(caseTypeId, ERROR_MESSAGE + "value: " + caseTypeId + " category id cannot be null.");
+                validateNullValue(caseTypeId, ERROR_MESSAGE + "value: " + caseTypeId + " CaseTypeId cannot be null.");
                 return Pair.of(pair.getString(ColumnName.CASE_TYPE_ID), pair.getString(ColumnName.CATEGORY_ID));
             }
         ).collect(
