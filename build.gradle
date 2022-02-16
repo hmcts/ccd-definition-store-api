@@ -54,8 +54,8 @@ ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.2.16'
 //overriding log4j2 default version 2.7 because of vulnerability issues
-ext['log4j2.version'] = '2.17.0'
-ext['spring-framework.version'] = '5.3.12'
+ext['log4j2.version'] = '2.17.1'
+ext['spring-framework.version'] = '5.3.15'
 
 // end
 
@@ -69,7 +69,7 @@ ext {
     reformLogging= '5.1.9'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
-    tomcatVersion = '9.0.54!!'
+    tomcatVersion = '9.0.58!!'
     hibernateVersion = '5.4.24.Final!!'
     feignJackson = '11.6'
     limits = [
@@ -235,6 +235,10 @@ subprojects { subproject ->
         // CVE-2021-29425
         compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.1'
+        
+        // CVE-2021-42550
+        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
