@@ -29,9 +29,9 @@ public class CategoryValidatorTest {
     private static final String DUPLICATED_CATEGORY_ID_ERROR = "cannot be duplicated within case type.";
     private static final String DISPLAY_ERROR = "DisplayOrder cannot be duplicated";
     private static final String CASE_TYPE2 = "FT_MultiplePages";
-    private static final String ERROR_CASE_TYPE_PARENT = "CategoryTab Invalid ParentCategoryID";
+    private static final String ERROR_CASE_TYPE_PARENT = "Categories tab Invalid ParentCategoryID";
     private static final String CASE_TYPE_NOT_FOUND = "It cannot be found in the spreadsheet";
-    private static final String INVALID_VALUE = "CategoryTab Invalid value";
+    private static final String INVALID_VALUE = "Categories tab Invalid value";
 
     private CategoryValidator categoryValidator;
     private DefinitionDataItem definitionDataItem;
@@ -228,13 +228,27 @@ public class CategoryValidatorTest {
 
     // Invalid definition - Display order
     @Test
-    public void failForReferenceInvalidDisplayOrder() {
+    public void failForInvalidDisplayOrder() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
                 buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
                     "translatedEvidence", "translatedEvidence", null, NO_PARENT)
+                )
+            ));
+        assertThat(invalidPropertyException.getMessage(), containsString(INVALID_VALUE));
+    }
+
+    // Invalid definition - Display order
+    @Test
+    public void failForNegativeDisplayOrder() {
+        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
+            categoryValidator.validate(parseContext, Lists.newArrayList(
+                definitionDataItem,
+
+                buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE,
+                    "translatedEvidence", "translatedEvidence", -1, NO_PARENT)
                 )
             ));
         assertThat(invalidPropertyException.getMessage(), containsString(INVALID_VALUE));

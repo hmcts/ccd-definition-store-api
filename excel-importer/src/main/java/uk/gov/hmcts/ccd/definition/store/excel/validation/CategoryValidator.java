@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.groupingBy;
 @Component
 public class CategoryValidator {
 
-    private static final String ERROR_MESSAGE = "CategoryTab Invalid ";
+    private static final String ERROR_MESSAGE = "Categories tab Invalid ";
     private static final String NOT_VALID = " is not a valid ";
     private static final String DISPLAY_ORDER_ERROR = "DisplayOrder cannot be duplicated within case type"
         + " category and parent category in Category tab";
@@ -89,8 +89,11 @@ public class CategoryValidator {
 
     private Map<String, List<String>> createCategoryIdCaseTypeMap(List<DefinitionDataItem> categoryItems) {
 
-        return  categoryItems.stream().map(pair ->
-            Pair.of(pair.getString(ColumnName.CASE_TYPE_ID),pair.getString(ColumnName.CATEGORY_ID))
+        return categoryItems.stream().map(pair -> {
+                val caseTypeId = pair.getString(ColumnName.CASE_TYPE_ID);
+                validateNullValue(caseTypeId, ERROR_MESSAGE + "value: " + caseTypeId + " category id cannot be null.");
+                return Pair.of(pair.getString(ColumnName.CASE_TYPE_ID), pair.getString(ColumnName.CATEGORY_ID));
+            }
         ).collect(
             Collectors.groupingBy(Pair::getKey,Collectors.mapping(Pair::getValue, Collectors.toList())
         ));
@@ -139,7 +142,9 @@ public class CategoryValidator {
     private void validateDisplayOrder(DefinitionDataItem definitionDataItem) {
         final String displayOrder = definitionDataItem.getString(ColumnName.DISPLAY_ORDER);
         try {
-            Integer.parseInt(displayOrder);
+            if (Integer.parseInt(displayOrder) < 0) {
+                throw new NumberFormatException();
+            }
         } catch (NumberFormatException numberFormatException) {
             throw new InvalidImportException(
                 ERROR_MESSAGE + "value: " + displayOrder + NOT_VALID + "DisplayOrder.");
