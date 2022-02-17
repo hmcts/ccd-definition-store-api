@@ -128,6 +128,9 @@ allprojects {
         compile "org.apache.commons:commons-compress:1.21"
             // CVE-2021-28170
         compile "org.glassfish:jakarta.el:4.0.1"
+        // CVE-2021-42550
+        compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+        compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
         testCompile "io.rest-assured:xml-path:${restAssuredVersion}"
         testCompile "io.rest-assured:json-path:${restAssuredVersion}"
         testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
@@ -235,10 +238,6 @@ subprojects { subproject ->
         // CVE-2021-29425
         compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.1'
-        
-        // CVE-2021-42550
-        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
-        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
