@@ -29,12 +29,16 @@ public class SearchPartyValidator {
         searchPartyEntities.forEach(searchPartyEntity -> {
             String caseType = searchPartyEntity.getCaseType().getReference();
 
-            validateSearchPartyName(parseContext, caseType, searchPartyEntity);
-            validateSearchPartyEmailAddress(parseContext, caseType, searchPartyEntity);
-            validateSearchPartyAddressLine1(parseContext, caseType, searchPartyEntity);
-            validateSearchPartyPostCode(parseContext, caseType, searchPartyEntity);
-            validateSearchPartyDob(parseContext, caseType, searchPartyEntity);
-            validateSearchPartyDod(parseContext, caseType, searchPartyEntity);
+            if (StringUtils.isNoneBlank(searchPartyEntity.getSearchPartyCollectionFieldName())) {
+                validateSearchPartyCollectionFieldName(parseContext, caseType, searchPartyEntity);
+            } else {
+                validateSearchPartyName(parseContext, caseType, searchPartyEntity);
+                validateSearchPartyEmailAddress(parseContext, caseType, searchPartyEntity);
+                validateSearchPartyAddressLine1(parseContext, caseType, searchPartyEntity);
+                validateSearchPartyPostCode(parseContext, caseType, searchPartyEntity);
+                validateSearchPartyDob(parseContext, caseType, searchPartyEntity);
+                validateSearchPartyDod(parseContext, caseType, searchPartyEntity);
+            }
         });
 
     }
@@ -111,6 +115,20 @@ public class SearchPartyValidator {
         if (StringUtils.isNoneBlank(searchPartyDod)) {
             validateDotNotation(parseContext, caseType, ColumnName.SEARCH_PARTY_DOD, searchPartyDod);
         }
+    }
+
+    private void validateSearchPartyCollectionFieldName(ParseContext parseContext,
+                                         String caseType,
+                                         SearchPartyEntity searchPartyEntity) {
+
+        String spCollectionFieldName = searchPartyEntity.getSearchPartyCollectionFieldName();
+
+        validateDotNotation(parseContext,
+            caseType,
+            ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME,
+            spCollectionFieldName
+        );
+
     }
 
     private void validateDotNotation(ParseContext parseContext,
