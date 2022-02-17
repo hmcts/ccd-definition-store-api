@@ -15,7 +15,8 @@ Feature: F-099: Search Party (Global Search)
     And a call [fetch Multiple Pages Case Type Schema to verify comma separated case field names in SearchPartyName column(AC5)] will get the expected response as in [S-099.1_Get_MultiplePagesCaseType].
     And a call [fetch Conditionals Case Type Schema to verify complex field name in columns SearchPartyName(AC3), SearchPartyEmailAddress(AC7), SearchPartyAddressLine1(AC9), SearchPartyPostCode(AC11), SearchPartyDob(AC13)] will get the expected response as in [S-099.1_Get_ConditionalsCaseType]
     And a call [fetch Retain Hidden Value Case Type Schema to verify comma separated complex field names in SearchPartyName column(AC4) and comma separated combination of top level field names and complex field names in SearchPartyName column(AC5)] will get the expected response as in [S-099.1_Get_RetainHiddenValueCaseType]
-    And a call [fetch Tabs Case Type Schema to verify blank value in the columns SearchPartyName(AC25), SearchPartyEmailAddress(AC26), SearchPartyAddressLine1(AC27), SearchPartyDoB(AC28) and SearchPartyPostCode(AC29)] will get the expected response as in [S-099.1_Get_TabsCaseType]
+    And a call [fetch Tabs Case Type Schema to verify blank value in the columns SearchPartyName(AC25), SearchPartyEmailAddress(AC26), SearchPartyAddressLine1(AC27), SearchPartyDoB(AC28), SearchPartyPostCode(AC29) and SearchPartyCollectionFieldName] will get the expected response as in [S-099.1_Get_TabsCaseType]
+    And a call [fetch Global Search Case Type Schema to verify blank value in the columns SearchPartyCollectionFieldName] will get the expected response as in [S-099.1_Get_GlobalSearchCaseType]
 
   @S-099.2 @AC-14
   Scenario: Import Definition file with in-correct value in "CaseTypeId" column of the SearchParty tab
@@ -138,6 +139,30 @@ Feature: F-099: Search Party (Global Search)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains SearchParty tab with a invalid complex element name in the SearchPartyName column]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+    And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
+
+  @S-099.13
+  Scenario: Import Definition file with invalid complex case field name in the "SearchPartyCollectionFieldName" column of the SearchParty tab
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
+    And the request [contains correctly configured SearchParty tab with valid case field names in SearchPartyEmailAddress, SearchPartyDoB, SearchPartyAddressLine1 and SearchPartyPostCode columns]
+    And the request [contains invalid complex field name in the SearchPartyCollectionFieldName column]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+    And a call [verify search party data has not been updated] will get the expected response as in [F-099_VerifyComplexFieldsOrderingSnapshotUnchanged].
+
+  @S-099.14
+  Scenario: Import Definition file with invalid top level case field name in the "SearchPartyCollectionFieldName" column of the SearchParty tab
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains correctly configured SearchParty tab with valid case field names in the SearchPartyName column]
+    And the request [contains correctly configured SearchParty tab with valid case field names in SearchPartyEmailAddress, SearchPartyDoB, SearchPartyAddressLine1 and SearchPartyPostCode columns]
+    And the request [contains invalid top level case field name in the SearchPartyCollectionFieldName column]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
     And the response has all other details as expected
