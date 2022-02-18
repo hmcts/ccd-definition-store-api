@@ -1,6 +1,6 @@
 {
 	"_guid_": "S-104.3",
-	"_extends_": "F-094_Definition_Import_Test_Base_data",
+	"_extends_": "F-104_Definition_Import_Test_Base_data",
 	"title": "must return a negative response in an attempt to import a definition file with null CaseTypeId",
 	"specs": [
     "an active profile in CCD",

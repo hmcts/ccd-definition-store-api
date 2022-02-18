@@ -66,3 +66,13 @@ Feature: F-104 Categories
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
     And the response has all other details as expected
+
+  @S-104.8
+  Scenario: Must return a negative response in an attempt to import a definition file with null CategoryLabel
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains categories with null CategoryLabel]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+

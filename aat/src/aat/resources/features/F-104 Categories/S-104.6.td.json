@@ -1,6 +1,6 @@
 {
 	"_guid_": "S-104.6",
-	"_extends_": "F-094_Definition_Import_Test_Base_data",
+	"_extends_": "F-104_Definition_Import_Test_Base_data",
 	"title": "must return a negative response in an attempt to import a definition file with negative display order",
 	"specs": [
     "an active profile in CCD",
