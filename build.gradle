@@ -54,8 +54,8 @@ ext['jackson.version'] = '2.10.3'
 ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.2.16'
 //overriding log4j2 default version 2.7 because of vulnerability issues
-ext['log4j2.version'] = '2.17.0'
-ext['spring-framework.version'] = '5.3.12'
+ext['log4j2.version'] = '2.17.1'
+ext['spring-framework.version'] = '5.3.15'
 
 // end
 
@@ -69,7 +69,7 @@ ext {
     reformLogging= '5.1.9'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
-    tomcatVersion = '9.0.54!!'
+    tomcatVersion = '9.0.58!!'
     hibernateVersion = '5.4.24.Final!!'
     feignJackson = '11.6'
     limits = [
@@ -128,6 +128,9 @@ allprojects {
         compile "org.apache.commons:commons-compress:1.21"
             // CVE-2021-28170
         compile "org.glassfish:jakarta.el:4.0.1"
+        // CVE-2021-42550
+        compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+        compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
         testCompile "io.rest-assured:xml-path:${restAssuredVersion}"
         testCompile "io.rest-assured:json-path:${restAssuredVersion}"
         testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
