@@ -15,6 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
@@ -52,6 +53,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTab;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTabField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Category;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ChallengeQuestion;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ComplexACL;
 import uk.gov.hmcts.ccd.definition.store.repository.model.EventPostState;
@@ -321,6 +323,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")
     RoleAssignment roleToAccessProfilesEntityToRoleAssignment(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
 
+    @Mapping(source = "caseType.reference", target = "caseTypeId")
+    Category map(CategoryEntity categoryEntity);
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)

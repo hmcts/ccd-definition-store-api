@@ -21,6 +21,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
@@ -64,6 +65,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTab;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeTabField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Category;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ChallengeQuestion;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ComplexACL;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
@@ -125,6 +127,13 @@ class  EntityToResponseDTOMapperTest {
         caseTypeEntity.setReference(reference);
         return caseTypeEntity;
     }
+    private CaseTypeLiteEntity caseTypeLiteEntity(String reference) {
+        CaseTypeLiteEntity caseTypeLiteEntity = new CaseTypeLiteEntity();
+        caseTypeLiteEntity.setReference(reference);
+        return caseTypeLiteEntity;
+    }
+
+
 
     @Nested
     @DisplayName("Should return a CaseEventField which matches the EventCaseFieldEntity")
@@ -1868,6 +1877,52 @@ class  EntityToResponseDTOMapperTest {
             assertNull(searchParty.getSearchPartyDob());
             assertNull(searchParty.getSearchPartyDod());
             assertNull(searchParty.getSearchPartyCollectionFieldName());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Should return Category model whose fields match those in the CategoryEntity")
+    class MapCategoryTests {
+
+
+        @Test
+        void testMapCategoryEntity() {
+            CategoryEntity categoryEntity = new CategoryEntity();
+            categoryEntity.setCategoryId("221");
+            categoryEntity.setCategoryLabel("Category Label");
+            categoryEntity.setParentCategoryId("Order");
+            categoryEntity.setLiveFrom(LocalDate.parse(LIVE_FROM));
+            categoryEntity.setLiveTo(LocalDate.parse(LIVE_TO));
+            categoryEntity.setDisplayOrder(1);
+            categoryEntity.setCaseType(caseTypeLiteEntity("CaseTypeReference"));
+
+
+            Category category = classUnderTest.map(categoryEntity);
+
+            assertEquals(categoryEntity.getCategoryId(), category.getCategoryId());
+            assertEquals(categoryEntity.getCategoryLabel(), category.getCategoryLabel());
+            assertEquals(categoryEntity.getParentCategoryId(), category.getParentCategoryId());
+            assertEquals(categoryEntity.getLiveFrom(), category.getLiveFrom());
+            assertEquals(categoryEntity.getLiveTo(), category.getLiveTo());
+            assertEquals(categoryEntity.getDisplayOrder(), category.getDisplayOrder());
+            assertEquals(categoryEntity.getCaseType(), categoryEntity.getCaseType());
+
+        }
+
+        @Test
+        void testMapEmptyCategoryEntity() {
+            CategoryEntity categoryEntity = new CategoryEntity();
+
+            Category category = classUnderTest.map(categoryEntity);
+
+            assertNull(category.getCategoryId());
+            assertNull(category.getCategoryLabel());
+            assertNull(category.getParentCategoryId());
+            assertNull(category.getLiveFrom());
+            assertNull(category.getLiveTo());
+            assertNull(category.getDisplayOrder());
+            assertNull(category.getCaseTypeId());
         }
 
     }
