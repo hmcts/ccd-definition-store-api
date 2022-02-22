@@ -125,6 +125,11 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "case_type_id")
     private final List<SearchPartyEntity> searchParties = new ArrayList<>();
 
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private final List<CategoryEntity> categories = new ArrayList<>();
+
     public Integer getId() {
         return id;
     }
@@ -320,5 +325,9 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public List<SearchPartyEntity> getSearchParties() {
         return searchParties;
+    }
+
+    public List<CategoryEntity> getCategories() {
+        return categories;
     }
 }
