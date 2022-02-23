@@ -1905,7 +1905,7 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(categoryEntity.getLiveFrom(), category.getLiveFrom());
             assertEquals(categoryEntity.getLiveTo(), category.getLiveTo());
             assertEquals(categoryEntity.getDisplayOrder(), category.getDisplayOrder());
-            assertEquals(categoryEntity.getCaseType(), categoryEntity.getCaseType());
+            assertEquals(categoryEntity.getCaseType(), category.getCaseType());
 
         }
 
