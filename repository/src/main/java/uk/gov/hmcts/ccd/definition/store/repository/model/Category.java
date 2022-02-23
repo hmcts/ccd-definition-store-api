@@ -17,4 +17,5 @@ public class Category {
     private LocalDate liveTo;
     private Integer displayOrder;
     private String caseTypeId;
+
 }

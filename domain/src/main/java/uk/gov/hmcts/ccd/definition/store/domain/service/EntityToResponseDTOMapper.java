@@ -319,12 +319,12 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseType.reference", target = "caseTypeId")
     SearchParty map(SearchPartyEntity searchPartyEntity);
 
+    @Mapping(source = "caseType.reference", target = "caseTypeId")
+    Category map(CategoryEntity categoryEntity);
+
     @Mapping(source = "caseType.reference", target = "id")
     @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")
     RoleAssignment roleToAccessProfilesEntityToRoleAssignment(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
-
-    @Mapping(source = "caseType.reference", target = "caseTypeId")
-    Category map(CategoryEntity categoryEntity);
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
