@@ -127,13 +127,6 @@ class  EntityToResponseDTOMapperTest {
         caseTypeEntity.setReference(reference);
         return caseTypeEntity;
     }
-    private CaseTypeLiteEntity caseTypeLiteEntity(String reference) {
-        CaseTypeLiteEntity caseTypeLiteEntity = new CaseTypeLiteEntity();
-        caseTypeLiteEntity.setReference(reference);
-        return caseTypeLiteEntity;
-    }
-
-
 
     @Nested
     @DisplayName("Should return a CaseEventField which matches the EventCaseFieldEntity")
@@ -1888,14 +1881,20 @@ class  EntityToResponseDTOMapperTest {
 
         @Test
         void testMapCategoryEntity() {
+            CaseTypeLiteEntity caseTypeLiteEntity = new CaseTypeLiteEntity();
+            caseTypeLiteEntity.setVersion(100);
+            caseTypeLiteEntity.setReference("CaseTypeReference");
+            caseTypeLiteEntity.setName("Name");
+            caseTypeLiteEntity.addState(new StateEntity());
+
             CategoryEntity categoryEntity = new CategoryEntity();
-            categoryEntity.setCategoryId("221");
-            categoryEntity.setCategoryLabel("Category Label");
-            categoryEntity.setParentCategoryId("Order");
+            categoryEntity.setCategoryId("Cat1,Cat2");
+            categoryEntity.setCategoryLabel("CategoryLabel");
+            categoryEntity.setParentCategoryId("ParentCat1");
             categoryEntity.setLiveFrom(LocalDate.parse(LIVE_FROM));
             categoryEntity.setLiveTo(LocalDate.parse(LIVE_TO));
             categoryEntity.setDisplayOrder(1);
-            categoryEntity.setCaseType(caseTypeLiteEntity("CaseTypeReference"));
+            categoryEntity.setCaseType(caseTypeLiteEntity);
 
 
             Category category = classUnderTest.map(categoryEntity);
