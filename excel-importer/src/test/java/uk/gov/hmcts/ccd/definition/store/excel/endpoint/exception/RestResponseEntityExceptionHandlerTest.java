@@ -120,7 +120,7 @@ public class RestResponseEntityExceptionHandlerTest {
         FeignException.FeignServerException ex = new FeignException.FeignServerException(
             HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",
             Request.create(Request.HttpMethod.GET, "Internal Server Error", Map.of(), new byte[0],
-                Charset.defaultCharset(), null), new byte[0]);
+                Charset.defaultCharset(), null), new byte[0], Map.of());
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         exceptionHandler.handleFeignServerException(ex, response);
@@ -132,7 +132,8 @@ public class RestResponseEntityExceptionHandlerTest {
     public void handleFeignServerException_shouldReturn5xx() throws IOException {
         FeignException.FeignServerException ex = new FeignException.FeignServerException(
             HttpStatus.GATEWAY_TIMEOUT.value(), "Gateway Timeout", Request.create(Request.HttpMethod.GET,
-            "Gateway Timeout", Map.of(), new byte[0], Charset.defaultCharset(), null), new byte[0]);
+            "Gateway Timeout", Map.of(), new byte[0], Charset.defaultCharset(), null), new byte[0],
+            Map.of());
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         exceptionHandler.handleFeignServerException(ex, response);
