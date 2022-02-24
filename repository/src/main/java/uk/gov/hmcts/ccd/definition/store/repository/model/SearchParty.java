@@ -19,5 +19,6 @@ public class SearchParty {
     private Date liveFrom;
     private Date liveTo;
     private String searchPartyName;
+    private String searchPartyCollectionFieldName;
 
 }

@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
-import java.util.Date;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -49,6 +49,9 @@ public class SearchPartyEntity implements Serializable {
 
     @Column(name = "search_party_dod")
     private String searchPartyDod;
+
+    @Column(name = "search_party_collection_field_name")
+    private String searchPartyCollectionFieldName;
 
     public Integer getId() {
         return id;
@@ -128,5 +131,13 @@ public class SearchPartyEntity implements Serializable {
 
     public void setSearchPartyDod(String searchPartyDod) {
         this.searchPartyDod = searchPartyDod;
+    }
+
+    public String getSearchPartyCollectionFieldName() {
+        return searchPartyCollectionFieldName;
+    }
+
+    public void setSearchPartyCollectionFieldName(String searchPartyCollectionFieldName) {
+        this.searchPartyCollectionFieldName = searchPartyCollectionFieldName;
     }
 }
