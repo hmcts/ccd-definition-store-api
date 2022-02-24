@@ -47,6 +47,9 @@ public class RoleToAccessProfilesEntity implements Serializable {
     @Column(name = "disabled")
     private Boolean disabled;
 
+    @Column(name = "case_access_categories")
+    private String caseAccessCategories;
+
     public Integer getId() {
         return id;
     }
@@ -117,5 +120,13 @@ public class RoleToAccessProfilesEntity implements Serializable {
 
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
+    }
+
+    public String getCaseAccessCategories() {
+        return caseAccessCategories;
+    }
+
+    public void setCaseAccessCategories(String caseAccessCategories) {
+        this.caseAccessCategories = caseAccessCategories;
     }
 }
