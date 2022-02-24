@@ -1,0 +1,1 @@
+ALTER TABLE ONLY public.search_party DROP CONSTRAINT unique_search_party_name_case_type_id_search_party;

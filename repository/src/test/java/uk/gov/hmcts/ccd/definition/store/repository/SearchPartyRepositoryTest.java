@@ -38,6 +38,8 @@ public class SearchPartyRepositoryTest {
     private static final String SEARCH_PARTY_DOB = "10/10/1910";
     private static final String SEARCH_PARTY_DOD = "10/10/1910";
 
+    private static final String SEARCH_PARTY_COLLECTION_FIELD_NAME = "Name";
+
     @Autowired
     private SearchPartyRepository searchPartyRepository;
 
@@ -85,6 +87,7 @@ public class SearchPartyRepositoryTest {
         searchPartyEntity.setSearchPartyPostCode(SEARCH_PARTY_POST_CODE);
         searchPartyEntity.setSearchPartyDob(SEARCH_PARTY_DOB);
         searchPartyEntity.setSearchPartyDod(SEARCH_PARTY_DOD);
+        searchPartyEntity.setSearchPartyCollectionFieldName(SEARCH_PARTY_COLLECTION_FIELD_NAME);
 
         return searchPartyRepository.save(searchPartyEntity);
     }
