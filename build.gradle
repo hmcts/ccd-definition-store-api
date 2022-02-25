@@ -272,7 +272,9 @@ subprojects { subproject ->
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.10.18-prerelease'
+
+        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.10.19'
+
         testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.1'
         testCompile group: 'commons-lang', name: 'commons-lang', version: '2.6'
         // https://mvnrepository.com/artifact/junit/junit
