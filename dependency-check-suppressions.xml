@@ -3,9 +3,9 @@
 
 	<suppress until="2022-03-25">
 		<notes>
-				Declared as False positive on library com.nimbusds:lang-tag #3594
-				https://github.com/jeremylong/DependencyCheck/issues/3594
-				CVE-2020-23171 Reference https://tools.hmcts.net/jira/browse/CCD-1868
+			Declared as False positive on library com.nimbusds:lang-tag #3594
+			https://github.com/jeremylong/DependencyCheck/issues/3594
+			CVE-2020-23171 Reference https://tools.hmcts.net/jira/browse/CCD-1868
 		</notes>
 		<packageUrl regex="true">^pkg:maven/com\.nimbusds/lang\-tag@.*$</packageUrl>
 		<cpe>cpe:/a:nim-lang:nim-lang</cpe>
