@@ -4,14 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.map.MultiKeyMap;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,6 +56,11 @@ public class ParseContext {
      * Accumulate CaseRoles by case type and case role ID for subsequent linking to event states.
      */
     private final Map<String, Map<String, CaseRoleEntity>> caseRolesByCaseTypes = Maps.newHashMap();
+
+    /**
+     * Accumulate Field types by case type and category IDs for subsequent linking to case fields.
+     */
+    private final Map<String, Map<String, CategoryEntity>> categoryByCaseTypes = Maps.newHashMap();
 
     /**
      * Store metadata fields for linking to layouts.
@@ -149,6 +147,37 @@ public class ParseContext {
         }
 
         caseTypeStates.put(state.getReference(), state);
+
+        return this;
+    }
+
+    public CategoryEntity getCategory(String caseTypeId, String categoryId) {
+        final Map<String, CategoryEntity> caseType = categoryByCaseTypes.get(caseTypeId);
+
+        if (null == caseType) {
+            throw new SpreadsheetParsingException("No types registered for case type: " + caseTypeId);
+        }
+
+        final CategoryEntity category = caseType.get(categoryId);
+
+        if (null == category) {
+            throw new SpreadsheetParsingException(
+                String.format("No types registered for category ID: %s/%s", caseTypeId, categoryId));
+        }
+
+        return category;
+    }
+
+    public ParseContext registerCaseTypeForCategory(String caseTypeId, CategoryEntity categoryEntity) {
+        categoryByCaseTypes.computeIfAbsent(caseTypeId, k -> Maps.newHashMap());
+
+        final Map<String, CategoryEntity> categoryStates = categoryByCaseTypes.get(caseTypeId);
+
+        if (categoryStates.containsKey(categoryEntity.getCategoryId())) {
+            throw new SpreadsheetParsingException("State already registered for ID: " + categoryEntity.getCategoryId());
+        }
+
+        categoryStates.put(categoryEntity.getCategoryId(), categoryEntity);
 
         return this;
     }
