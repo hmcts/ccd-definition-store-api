@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
@@ -22,6 +19,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfiles
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -98,6 +101,34 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
                                            FileStorageException fileStorageException) throws IOException {
         log.error("Exception thrown: {}", fileStorageException.getMessage(), fileStorageException);
         response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
+    @ExceptionHandler(FeignException.FeignServerException.class)
+    @ResponseBody
+    public void handleFeignServerException(FeignException.FeignServerException exception, HttpServletResponse response)
+        throws IOException {
+        log.error(exception.getMessage(), exception);
+
+        int status = exception.status();
+        if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+            status = HttpStatus.BAD_GATEWAY.value();
+        }
+
+        response.sendError(status);
+    }
+
+    @ExceptionHandler(HttpServerErrorException.class)
+    @ResponseBody
+    public void handleHttpServerErrorException(HttpServerErrorException exception, HttpServletResponse response)
+        throws IOException {
+        log.error(exception.getMessage(), exception);
+
+        int status = exception.getRawStatusCode();
+        if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+            status = HttpStatus.BAD_GATEWAY.value();
+        }
+
+        response.sendError(status);
     }
 
     private String flattenExceptionMessages(RuntimeException ex) {
