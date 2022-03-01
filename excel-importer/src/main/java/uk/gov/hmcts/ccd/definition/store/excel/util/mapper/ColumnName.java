@@ -109,6 +109,9 @@ public enum ColumnName {
     SEARCH_PARTY_COLLECTION_FIELD_NAME("SearchPartyCollectionFieldName"),
     OTHER_CASE_REFERENCE("OtherCaseReference"),
     EVENT_ENABLING_CONDITION("EventEnablingCondition"),
+    CATEGORY_ID("CategoryID"),
+    CATEGORY_LABEL("CategoryLabel"),
+    PARENT_CATEGORY_ID("ParentCategoryID"),
     CASE_ACCESS_CATEGORIES("CaseAccessCategories");
 
     private final String name;
