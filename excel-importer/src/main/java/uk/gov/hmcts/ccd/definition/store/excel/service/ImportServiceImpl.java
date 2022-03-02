@@ -272,8 +272,6 @@ public class ImportServiceImpl implements ImportService {
             challengeQuestionTabService.saveAll(newChallengeQuestionEntities);
             logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
         }
-        //Original parser position
-        //parseCategoryTab(definitionSheets, parseContext);
 
         parseRoleToAccessProfiles(definitionSheets, parseContext);
 
