@@ -176,6 +176,15 @@
 					"search_party_collection_field_name": null
 				}
 			],
+			"categories" : [ {
+				"category_id" : "translatedDivorceDocs",
+				"category_label" : "[[ANYTHING_PRESENT]]",
+				"parent_category_id" : null,
+				"live_from": "2017-01-01T00:00:00.000+00:00",
+				"live_to" : "2017-01-01",
+				"display_order" : "[[ANYTHING_PRESENT]]",
+				"case_type_id" : "FT_MultiplePages"
+			} ],
       "searchCriterias" : [
         {
           "case_type_id": "FT_MultiplePages",

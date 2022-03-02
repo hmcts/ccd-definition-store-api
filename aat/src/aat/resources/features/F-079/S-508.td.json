@@ -402,6 +402,7 @@
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
       "roleToAccessProfiles" : [ ],
       "searchParties" : [ ],
+      "categories" : [ ],
       "searchCriterias" : [ ],
       "case_fields": [
         {
