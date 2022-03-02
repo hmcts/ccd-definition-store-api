@@ -90,8 +90,8 @@
 			"searchAliasFields" : [ ],
       "roleToAccessProfiles" : [ ],
 			"searchParties" : [ ],
-			"categories:": [ ],
       "searchCriterias" : [ ],
+      "categories" : [ ],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",
