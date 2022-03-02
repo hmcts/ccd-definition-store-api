@@ -83,10 +83,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFac
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -100,6 +96,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuesti
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.CategoryIdValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -191,6 +192,9 @@ public class ImportServiceImplTest {
     private SearchCriteriaValidator searchCriteriaValidator;
 
     @Mock
+    private CategoryIdValidator categoryIdValidator;
+
+    @Mock
     private SearchPartyService searchPartyService;
 
     @Mock
@@ -245,7 +249,7 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
             challengeQuestionParser, categoryParser, searchPartyValidator, searchCriteriaValidator,
-            applicationParams, executor);
+            categoryIdValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -450,7 +454,8 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
             hiddenFieldsValidator,challengeQuestionParser,
-            categoryParser, searchPartyValidator, searchCriteriaValidator, applicationParams, executor);
+            categoryParser, searchPartyValidator, searchCriteriaValidator, categoryIdValidator,
+            applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 

@@ -30,7 +30,21 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionUiConfigParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.LayoutParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.RoleToAccessProfilesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SearchCriteriaParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SearchPartyParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
@@ -39,7 +53,18 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
@@ -182,11 +207,6 @@ public class ImportServiceImpl implements ImportService {
             .findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
 
         /*
-            4.1 - category tab
-         */
-        parseCategoryTab(definitionSheets, parseContext);
-
-        /*
             4.2 - Case Type
          */
         logger.debug("Importing spreadsheet: Case types...");
@@ -272,6 +292,9 @@ public class ImportServiceImpl implements ImportService {
             challengeQuestionTabService.saveAll(newChallengeQuestionEntities);
             logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
         }
+
+        parseCategoryTab(definitionSheets, parseContext);
+        parserFactory.createCategoryIdValidator().validate(parseContext);
 
         parseRoleToAccessProfiles(definitionSheets, parseContext);
 

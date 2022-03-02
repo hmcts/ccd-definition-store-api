@@ -4,7 +4,15 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.map.MultiKeyMap;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -152,20 +160,13 @@ public class ParseContext {
     }
 
     public CategoryEntity getCategory(String caseTypeId, String categoryId) {
-        final Map<String, CategoryEntity> caseType = categoryByCaseTypes.get(caseTypeId);
+        final Map<String, CategoryEntity> categories = categoryByCaseTypes.get(caseTypeId);
 
-        if (null == caseType) {
-            throw new SpreadsheetParsingException("No types registered for case type: " + caseTypeId);
+        if (null == categories) {
+            return null;
         }
 
-        final CategoryEntity category = caseType.get(categoryId);
-
-        if (null == category) {
-            throw new SpreadsheetParsingException(
-                String.format("No types registered for category ID: %s/%s", caseTypeId, categoryId));
-        }
-
-        return category;
+        return categories.get(categoryId);
     }
 
     public ParseContext registerCaseTypeForCategory(String caseTypeId, CategoryEntity categoryEntity) {

@@ -8,7 +8,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificationColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -84,25 +83,9 @@ public class CaseFieldParser {
         caseField.setLiveFrom(caseFieldDefinition.getLocalDate(ColumnName.LIVE_FROM));
         caseField.setLiveTo(caseFieldDefinition.getLocalDate(ColumnName.LIVE_TO));
         caseField.setSearchable(caseFieldDefinition.getBooleanOrDefault(ColumnName.SEARCHABLE, true));
-        setCaseFieldCategory(caseField, caseFieldDefinition, caseTypeId);
+        caseField.setCategory(caseFieldDefinition.getString(ColumnName.CATEGORY_ID));
 
         return caseField;
-    }
-
-    private void setCaseFieldCategory(CaseFieldEntity caseField, DefinitionDataItem caseFieldDefinition,
-                                      String caseTypeId) {
-        String category = caseFieldDefinition.getString(ColumnName.CATEGORY_ID);
-        if(category != null) {
-            if ((caseField.getFieldType().getBaseFieldType().getReference().equals(FieldTypeUtils.BASE_COLLECTION) &&
-                caseField.getFieldType().getCollectionFieldType().getReference().equals(FieldTypeUtils.BASE_DOCUMENT) ||
-                caseField.getFieldType().getBaseFieldType().getReference().equals(FieldTypeUtils.BASE_DOCUMENT))) {
-
-                caseField.setCategory(parseContext.getCategory(caseTypeId, category).getCategoryId());
-            }
-            else {
-                throw new SpreadsheetParsingException("FILL ME IN LATER");
-            }
-        }
     }
 
 }

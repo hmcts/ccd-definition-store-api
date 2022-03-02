@@ -221,9 +221,13 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         this.dataFieldType = dataFieldType;
     }
 
-    public String getCategory(){ return category;}
+    public String getCategory() {
+        return category;
+    }
 
-    public void setCategory(String category){ this.category = category; }
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public CaseFieldEntity addCaseFieldACL(final CaseFieldACLEntity caseFieldACLEntity) {
         caseFieldACLEntity.setCaseField(this);
@@ -269,7 +273,7 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         if (e.getAccessProfile().getReference() == null) {
             return false;
         }
-        return  e.getAccessProfile().getReference().equalsIgnoreCase(accessProfile);
+        return e.getAccessProfile().getReference().equalsIgnoreCase(accessProfile);
     }
 
     @Override
