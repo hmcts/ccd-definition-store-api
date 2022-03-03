@@ -184,7 +184,7 @@
 				"parent_category_id" : null,
 				"live_from": "2017-01-01",
 				"live_to" : "2017-01-01",
-				"display_order" : "130",
+				"display_order" : 130,
 				"case_type_id" : "FT_MultiplePages"
 			} ],
       "searchCriterias" : [
