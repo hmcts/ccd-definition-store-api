@@ -175,7 +175,8 @@ public class ParseContext {
         final Map<String, CategoryEntity> categoryStates = categoryByCaseTypes.get(caseTypeId);
 
         if (categoryStates.containsKey(categoryEntity.getCategoryId())) {
-            throw new SpreadsheetParsingException("State already registered for ID: " + categoryEntity.getCategoryId());
+            throw new SpreadsheetParsingException("Category already registered for ID: "
+                + categoryEntity.getCategoryId());
         }
 
         categoryStates.put(categoryEntity.getCategoryId(), categoryEntity);

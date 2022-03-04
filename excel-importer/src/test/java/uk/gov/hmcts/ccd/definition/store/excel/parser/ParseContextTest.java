@@ -1,10 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
@@ -17,7 +19,6 @@ import java.util.Set;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -55,7 +56,7 @@ public class ParseContextTest {
         parseContext.registerCaseFieldForCaseType("caseTypeId", caseField);
 
         final CaseFieldEntity retrieved = parseContext.getCaseFieldForCaseType("caseTypeId", "case field id");
-        assertThat(retrieved, is(caseField));
+        Assert.assertThat(retrieved, is(caseField));
     }
 
     @Test
@@ -66,7 +67,7 @@ public class ParseContextTest {
 
         final FieldTypeEntity retrieved = parseContext.getCaseFieldType("caseTypeId", "fieldId");
 
-        assertThat(retrieved, is(fieldType));
+        Assert.assertThat(retrieved, is(fieldType));
     }
 
     @Test(expected = SpreadsheetParsingException.class)
@@ -92,7 +93,7 @@ public class ParseContextTest {
 
         final StateEntity retrieved = parseContext.getStateForCaseType("case type id", "some state id");
 
-        assertThat(retrieved, is(state));
+        Assert.assertThat(retrieved, is(state));
 
     }
 
@@ -117,7 +118,7 @@ public class ParseContextTest {
         final JurisdictionEntity j = mock(JurisdictionEntity.class);
         parseContext.setJurisdiction(j);
 
-        assertThat(parseContext.getJurisdiction(), is(j));
+        Assert.assertThat(parseContext.getJurisdiction(), is(j));
     }
 
     @Test
@@ -130,8 +131,8 @@ public class ParseContextTest {
         parseContext.registerCaseType(t1);
 
         final Set<CaseTypeEntity> caseTypes = parseContext.getCaseTypes();
-        assertThat(caseTypes.size(), is(2));
-        assertThat(caseTypes, containsInAnyOrder(t1, t2));
+        Assert.assertThat(caseTypes.size(), is(2));
+        Assert.assertThat(caseTypes, containsInAnyOrder(t1, t2));
     }
 
     @Test(expected = SpreadsheetParsingException.class)
@@ -210,7 +211,7 @@ public class ParseContextTest {
     @Test
     public void shouldGetEmpty_whenGetBaseTypeNotExist() {
         final Optional<FieldTypeEntity> type = parseContext.getBaseType("type");
-        assertThat(type, isEmpty());
+        Assert.assertThat(type, isEmpty());
     }
 
     @Test
@@ -221,7 +222,7 @@ public class ParseContextTest {
 
         parseContext.addBaseTypes(Arrays.asList(t));
         final Optional<FieldTypeEntity> type = parseContext.getBaseType("ngitb");
-        assertThat(type.get(), is(t));
+        Assert.assertThat(type.get(), is(t));
     }
 
     @Test
@@ -232,14 +233,14 @@ public class ParseContextTest {
 
         parseContext.addToAllTypes(Arrays.asList(t));
         final Optional<FieldTypeEntity> type = parseContext.getType("ngitb");
-        assertThat(type.get(), is(t));
+        Assert.assertThat(type.get(), is(t));
     }
 
     @Test
     public void shouldGetEmpty_whenGetTypeNotExist() {
 
         final Optional<FieldTypeEntity> type = parseContext.getType("ngitb");
-        assertThat(type, isEmpty());
+        Assert.assertThat(type, isEmpty());
     }
 
     @Test
@@ -255,6 +256,38 @@ public class ParseContextTest {
 
         CaseFieldEntity response = parseContext.getCaseFieldForCaseType("caseTypeId", metadataFieldName);
 
-        assertThat(response, is(metadataField));
+        Assert.assertThat(response, is(metadataField));
+    }
+
+    @Test
+    public void testRegisterCaseTypeForCategory() {
+
+        final CategoryEntity category = new CategoryEntity();
+        category.setCategoryId("A");
+
+        parseContext.registerCaseTypeForCategory("caseTypeId", category);
+
+        Assert.assertEquals(parseContext.getCategory("caseTypeId", category.getCategoryId()), category);
+    }
+
+    @Test(expected = SpreadsheetParsingException.class)
+    public void testRegisterCaseTypeForCategoryWithSameIdTwiceShouldFail() {
+
+        final CategoryEntity category = new CategoryEntity();
+        category.setCategoryId("Category");
+
+        parseContext.registerCaseTypeForCategory("caseTypeId", category);
+
+        try {
+            parseContext.registerCaseTypeForCategory("caseTypeId", category);
+        } catch (SpreadsheetParsingException ex) {
+            Assertions.assertThat(ex).hasMessage("Category already registered for ID: Category");
+            throw ex;
+        }
+    }
+
+    @Test
+    public void testGetCategoryWhenEmpty() {
+        Assert.assertNull(parseContext.getCategory("caseTypeId", "Category"));
     }
 }

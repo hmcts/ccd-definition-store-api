@@ -32,8 +32,9 @@ public class CategoryIdValidator {
             if (fieldType.getReference().equals(FieldTypeUtils.BASE_DOCUMENT)
                 || (fieldType.getBaseFieldType() != null
                 && fieldType.getCollectionFieldType() != null
+                && fieldType.getBaseFieldType().getReference().equals(FieldTypeUtils.BASE_COLLECTION)
                 && fieldType.getCollectionFieldType().getReference().equals(FieldTypeUtils.BASE_DOCUMENT)
-                && fieldType.getBaseFieldType().getReference().equals(FieldTypeUtils.BASE_COLLECTION))
+                )
             ) {
                 if (parseContext.getCategory(caseTypeId, categoryId) == null) {
                     throw new InvalidImportException(
@@ -50,7 +51,7 @@ public class CategoryIdValidator {
         for (CaseTypeEntity caseType : parseContext.getCaseTypes()) {
             for (CaseFieldEntity caseField : caseType.getCaseFields()) {
                 validate(parseContext, SheetName.CASE_FIELD, caseType.getReference(),
-                    caseField.getCategory(), caseField.getFieldType());
+                    caseField.getCategoryId(), caseField.getFieldType());
             }
         }
     }

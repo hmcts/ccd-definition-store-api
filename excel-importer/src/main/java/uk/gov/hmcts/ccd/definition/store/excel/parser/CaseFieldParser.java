@@ -83,7 +83,7 @@ public class CaseFieldParser {
         caseField.setLiveFrom(caseFieldDefinition.getLocalDate(ColumnName.LIVE_FROM));
         caseField.setLiveTo(caseFieldDefinition.getLocalDate(ColumnName.LIVE_TO));
         caseField.setSearchable(caseFieldDefinition.getBooleanOrDefault(ColumnName.SEARCHABLE, true));
-        caseField.setCategory(caseFieldDefinition.getString(ColumnName.CATEGORY_ID));
+        caseField.setCategoryId(caseFieldDefinition.getString(ColumnName.CATEGORY_ID));
 
         return caseField;
     }

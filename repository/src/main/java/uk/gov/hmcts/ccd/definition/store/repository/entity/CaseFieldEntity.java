@@ -99,9 +99,8 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     @Type(type = "pgsql_datafieldtype_enum")
     private DataFieldType dataFieldType;
 
-    //TODO check if using String or CategoryEntity
     @Column(name = "category_id")
-    private String category;
+    private String categoryId;
 
     @Transient
     private String oid = IdGenerator.createId();
@@ -221,12 +220,12 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         this.dataFieldType = dataFieldType;
     }
 
-    public String getCategory() {
-        return category;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public CaseFieldEntity addCaseFieldACL(final CaseFieldACLEntity caseFieldACLEntity) {

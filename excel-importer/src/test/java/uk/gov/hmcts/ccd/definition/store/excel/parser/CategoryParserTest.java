@@ -59,6 +59,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
         assertThat(categoryEntities.get(0).getCategoryLabel(), is(CATEGORY_LABEL));
         assertThat(categoryEntities.get(0).getDisplayOrder(), is(DISPLAY_ORDER));
         assertThat(categoryEntities.get(0).getParentCategoryId(), is(NO_PARENT));
+        assertThat(parseContext.getCategory(CASE_TYPE, CATEGORY_ID), is(categoryEntities.get(0)));
     }
 
     @Test(expected = ValidationException.class)
