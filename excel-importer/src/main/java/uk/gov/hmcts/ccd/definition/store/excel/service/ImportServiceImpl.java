@@ -207,7 +207,7 @@ public class ImportServiceImpl implements ImportService {
             .findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
 
         /*
-            4.2 - Case Type
+            4- Case Type
          */
         logger.debug("Importing spreadsheet: Case types...");
 
