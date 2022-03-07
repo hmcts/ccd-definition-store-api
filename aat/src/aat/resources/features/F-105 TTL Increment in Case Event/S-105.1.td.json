@@ -1,11 +1,13 @@
 {
-  "_guid_": "S-104.1",
+  "_guid_": "S-105.1",
   "_extends_": "Import_Base_data",
   "title": "Must successfully import a definition file containing a valid value in TTL Increment Events column",
+
   "specs": [
     "an active profile in CCD",
     "contains a valid value configured in TTL Increment Events column"
   ],
+
   "request": {
     "body": {
       "arrayInMap": [
@@ -16,6 +18,7 @@
       ]
     }
   },
+
   "expectedResponse": {
     "_extends_": "Common_201_Response",
     "headers": {

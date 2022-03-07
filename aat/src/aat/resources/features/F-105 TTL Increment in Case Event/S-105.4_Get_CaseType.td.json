@@ -1,5 +1,5 @@
 {
-  "_guid_": "S-104.4_Get_CaseType",
+  "_guid_": "S-105.4_Get_CaseType",
   "_extends_": "Get_CaseType",
 
   "specs" : [
@@ -11,6 +11,7 @@
       "id": "FT_MultiplePages"
     }
   },
+
   "expectedResponse": {
     "body" : {
       "id" : "FT_MultiplePages",
