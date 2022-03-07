@@ -61,7 +61,8 @@
         "show_event_notes" : null,
         "can_save_draft" : "[[ANYTHING_PRESENT]]",
         "end_button_label" : null,
-        "event_enabling_condition" : null
+        "event_enabling_condition" : null,
+        "ttl_increment" : null
       } ],
       "states": "[[ANYTHING_PRESENT]]",
       "acls": "[[ANYTHING_PRESENT]]",

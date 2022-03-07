@@ -18,8 +18,7 @@ Feature: F-102: 'TTL' Base Complex Type
     Given a user with [an active profile in CCD],
     When a request is prepared with appropriate values,
     And the request [contains id of a case type with TTl fields],
-    And it  is submitted to call the [Get Case Type Details] operation of [CCD Definition Store],
+    And it is submitted to call the [Fetch a Case Type Schema] operation of [CCD Definition Store],
     Then a positive response is received,
     And the response [contains all details of the case type requested],
     And the response has all other details as expected.
-

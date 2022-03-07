@@ -123,7 +123,7 @@
 				} ],
 				"show_summary" : true,
 				"publish" : true,
-				"ttl_increment" : 1,
+				"ttl_increment" : null,
 				"show_event_notes" : null,
 				"can_save_draft" : null,
 				"end_button_label" : null
