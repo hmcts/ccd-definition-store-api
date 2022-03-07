@@ -208,8 +208,8 @@ subprojects { subproject ->
             exclude group: 'com.google.guava', module: 'guava'
         }
 
-        compile "org.springframework.security:spring-security-web:5.6.1"
-        compile "org.springframework.security:spring-security-config:5.6.1"
+        compile "org.springframework.security:spring-security-web"
+        compile "org.springframework.security:spring-security-config"
         compile "org.springframework.boot:spring-boot-starter-oauth2-client"
         compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
         implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.1'
