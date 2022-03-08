@@ -237,7 +237,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id":  null
 				},
 				{
 					"metadata": false,
@@ -272,7 +273,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -307,7 +309,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -342,7 +345,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -377,7 +381,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -412,7 +417,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -447,7 +453,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -474,7 +481,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -501,7 +509,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -528,7 +537,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -555,7 +565,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -582,7 +593,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -609,7 +621,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -636,7 +649,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				}
 			],
 			"printable_document_url": null,
