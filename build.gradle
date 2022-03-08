@@ -130,6 +130,7 @@ allprojects {
         // CVE-2021-42550
         compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
         compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
+        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.1'
         testCompile "io.rest-assured:xml-path:${restAssuredVersion}"
         testCompile "io.rest-assured:json-path:${restAssuredVersion}"
         testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
@@ -212,7 +213,6 @@ subprojects { subproject ->
         compile "org.springframework.security:spring-security-config"
         compile "org.springframework.boot:spring-boot-starter-oauth2-client"
         compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
-        implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.1'
 
         implementation "io.github.openfeign:feign-httpclient:${feignJackson}"
 
