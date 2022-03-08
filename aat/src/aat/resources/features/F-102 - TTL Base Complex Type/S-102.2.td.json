@@ -171,6 +171,23 @@
         "retain_hidden_value" : null
       }, {
         "metadata" : false,
+        "id" : "CaseLinkCollection",
+        "case_type_id" : "FT_MasterCaseType",
+        "label" : "Collection of CaseLink",
+        "hint_text" : null,
+        "field_type" : "[[ANYTHING_PRESENT]]",
+        "hidden" : false,
+        "security_classification" : "PUBLIC",
+        "live_from" : "[[ANYTHING_PRESENT]]",
+        "live_until" : null,
+        "acls" : "[[ANYTHING_PRESENT]]",
+        "complexACLs" : [ ],
+        "order" : null,
+        "show_condition" : null,
+        "display_context_parameter" : null,
+        "retain_hidden_value" : null
+      }, {
+        "metadata" : false,
         "id" : "CaseLinkField",
         "case_type_id" : "FT_MasterCaseType",
         "label" : "Case Link Field",
