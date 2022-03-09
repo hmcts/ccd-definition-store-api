@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 @Component
@@ -26,13 +27,19 @@ public class CategoryIdValidator {
     public void validate(ParseContext parseContext) {
         for (CaseTypeEntity caseType : parseContext.getCaseTypes()) {
             for (CaseFieldEntity caseField : caseType.getCaseFields()) {
-                validate(parseContext, SheetName.CASE_FIELD, caseType.getReference(),
+                validateCaseField(parseContext, SheetName.CASE_FIELD, caseType.getReference(),
                     caseField.getCategoryId(), caseField.getFieldType());
+            }
+        }
+        for (FieldTypeEntity complexType : parseContext.getComplexTypes()) {
+            for(ComplexFieldEntity complexField : complexType.getComplexFields()) {
+                validateComplexField(parseContext, complexField);
             }
         }
     }
 
-    private void validate(ParseContext parseContext,
+    //TODO remove sheetname
+    private void validateCaseField(ParseContext parseContext,
                           SheetName sheetName,
                           String caseTypeId,
                           String categoryId,
@@ -49,6 +56,28 @@ public class CategoryIdValidator {
             if (parseContext.getCategory(caseTypeId, categoryId) == null) {
                 throw new InvalidImportException(
                     String.format(ERROR_MESSAGE_INVALID_CATEGORY, sheetName, categoryId));
+            }
+        }
+    }
+
+    //TODO String null is empty
+    private void validateComplexField(ParseContext parseContext,
+                                   ComplexFieldEntity complexField) {
+
+        String categoryId = complexField.getCategoryId();
+
+
+        //If category is null then that is valid value
+        if (categoryId != null) {
+            //invalid if category is Document or Collection of Document
+            if (!validFieldType(complexField.getFieldType())) {
+                throw new InvalidImportException(
+                    String.format(ERROR_MESSAGE_INVALID_FIELD_TYPE, SheetName.COMPLEX_TYPES, categoryId));
+            }
+            //Invalid if categoryId does not match an Id in the categories tab
+            if (!parseContext.checkCategoryExists(categoryId)) {
+                throw new InvalidImportException(
+                    String.format(ERROR_MESSAGE_INVALID_CATEGORY, SheetName.COMPLEX_TYPES, categoryId));
             }
         }
     }
