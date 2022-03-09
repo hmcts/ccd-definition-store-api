@@ -1,21 +1,24 @@
 {
-  "_guid_": "S-104.1",
+  "_guid_": "S-105.4",
   "_extends_": "Import_Base_data",
-  "title": "Must successfully import a definition file containing a valid value in TTL Increment Events column",
+  "title": "Must successfully import a definition file where TTLIncrement column is missing",
+
   "specs": [
     "an active profile in CCD",
-    "contains a valid value configured in TTL Increment Events column"
+    "contains missing TTLIncrement column"
   ],
+
   "request": {
     "body": {
       "arrayInMap": [
         {
           "key": "file",
-          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+          "localFilePath": "build/tmp/definition_files_copy/CCD_BEFTA_JURISDICTION2.xlsx"
         }
       ]
     }
   },
+
   "expectedResponse": {
     "_extends_": "Common_201_Response",
     "headers": {

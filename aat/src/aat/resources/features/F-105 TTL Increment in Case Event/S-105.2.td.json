@@ -1,11 +1,13 @@
 {
-	"_guid_": "S-104.2",
+	"_guid_": "S-105.2",
 	"_extends_": "Import_Base_data",
 	"title": "Must return a negative response in an attempt to import a definition file containing a invalid value TTLIncrement Events column",
-	"specs": [
+
+  "specs": [
 		"an active profile in CCD",
 		"contains a invalid value configured in TTLIncrement Events column"
 	],
+
   "request": {
     "body": {
       "arrayInMap": [
@@ -16,6 +18,7 @@
       ]
     }
   },
+
   "expectedResponse": {
     "responseCode": 400,
     "responseMessage": "Bad Request",

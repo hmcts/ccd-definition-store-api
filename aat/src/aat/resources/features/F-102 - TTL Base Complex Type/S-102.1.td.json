@@ -1,10 +1,13 @@
 {
-	"_guid_": "S-102.1",
-	"_extends_": "F-102_Test_Base_data",
-	"title": "must successfully import definition file",
-	"specs": [
+  "_guid_": "S-102.1",
+  "_extends_": "Import_Base_data",
+  "title": "Must successfully import a definition file that contains TTL fields",
+
+  "specs": [
+		"an active profile in CCD",
     "contains correctly configured TTL Fields"
-	],
+  ],
+
   "request": {
     "body": {
       "arrayInMap": [
@@ -15,6 +18,7 @@
       ]
     }
   },
+
   "expectedResponse": {
     "_extends_": "Common_201_Response",
     "headers": {
