@@ -1,10 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
@@ -15,9 +16,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -25,12 +28,12 @@ public class ParseContextTest {
 
     private ParseContext parseContext;
 
-    @Before
+    @BeforeEach
     public void setup() {
         parseContext = new ParseContext();
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenRegisterCaseFieldTypeAgainForCaseType() {
 
         final CaseFieldEntity caseField = mock(CaseFieldEntity.class);
@@ -38,12 +41,9 @@ public class ParseContextTest {
 
         parseContext.registerCaseFieldForCaseType("caseTypeId", caseField);
 
-        try {
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.registerCaseFieldForCaseType("caseTypeId", caseField);
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("Case field already registered for ID: case field id");
-            throw ex;
-        }
+        }, "Case field already registered for ID: case field id");
     }
 
     @Test
@@ -69,18 +69,16 @@ public class ParseContextTest {
         assertThat(retrieved, is(fieldType));
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenRegisterCaseFieldTypeAgain() {
 
         final FieldTypeEntity fieldType = mock(FieldTypeEntity.class);
         parseContext.registerCaseFieldType("caseTypeId", "fieldId", fieldType);
 
-        try {
-            parseContext.registerCaseFieldType("caseTypeId", "fieldId", fieldType);
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("Type already registered for field: fieldId");
-            throw ex;
-        }
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
+                parseContext.registerCaseFieldType("caseTypeId", "fieldId", fieldType);
+            }, "Type already registered for field: fieldId"
+        );
     }
 
     @Test
@@ -96,19 +94,16 @@ public class ParseContextTest {
 
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenRegisterStateForCaseTypeAgain() {
 
         final StateEntity state = mock(StateEntity.class);
         given(state.getReference()).willReturn("some state id");
         parseContext.registerStateForCaseType("case type id", state);
 
-        try {
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.registerStateForCaseType("case type id", state);
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("State already registered for ID: some state id");
-            throw ex;
-        }
+        }, "State already registered for ID: some state id");
     }
 
     @Test
@@ -134,66 +129,51 @@ public class ParseContextTest {
         assertThat(caseTypes, containsInAnyOrder(t1, t2));
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenCaseTypeNotRegistered() {
-        try {
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.getCaseFieldType("ngitb", "case field");
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("No types registered for case type: ngitb");
-            throw ex;
-        }
+        }, "No types registered for case type: ngitb");
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenCaseFieldNotRegistered() {
-        try {
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
             final FieldTypeEntity f = mock(FieldTypeEntity.class);
             parseContext.registerCaseFieldType("ngitb", "case_field", f);
             parseContext.getCaseFieldType("ngitb", "case field");
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("No types registered for case field ID: ngitb/case field");
-            throw ex;
-        }
+        }, "No types registered for case field ID: ngitb/case field");
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenCaseTypeNotRegisteredForState() {
-        try {
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.getStateForCaseType("ngitb", "state");
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("No states registered for case type: ngitb");
-            throw ex;
-        }
+        }, "No states registered for case type: ngitb");
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenStateNotRegistered() {
-        try {
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
             final StateEntity s = mock(StateEntity.class);
             given(s.getReference()).willReturn("State");
 
             parseContext.registerStateForCaseType("ngitb", s);
             parseContext.getStateForCaseType("ngitb", "state");
 
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("No state registered for state ID: ngitb/state");
-            throw ex;
-        }
+        }, "No state registered for state ID: ngitb/state");
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenCaseTypeNotRegisteredFormCaseField() {
-        try {
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.getCaseFieldForCaseType("ngitb", "state");
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("No case fields registered for case type: ngitb");
-            throw ex;
-        }
+        }, "No case fields registered for case type: ngitb");
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenCaseFieldNotRegisteredForCaseType() {
-        try {
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
 
             final CaseFieldEntity o = mock(CaseFieldEntity.class);
             given(o.getReference()).willReturn("CF");
@@ -201,10 +181,7 @@ public class ParseContextTest {
             parseContext.registerCaseFieldForCaseType("ngitb", o);
             parseContext.getCaseFieldForCaseType("ngitb", "cf");
 
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("Unknown field cf for case type ngitb");
-            throw ex;
-        }
+        }, "Unknown field cf for case type ngitb");
     }
 
     @Test
@@ -256,5 +233,34 @@ public class ParseContextTest {
         CaseFieldEntity response = parseContext.getCaseFieldForCaseType("caseTypeId", metadataFieldName);
 
         assertThat(response, is(metadataField));
+    }
+
+    @Test
+    public void testRegisterCaseTypeForCategory() {
+
+        final CategoryEntity category = new CategoryEntity();
+        category.setCategoryId("A");
+
+        parseContext.registerCaseTypeForCategory("caseTypeId", category);
+
+        assertEquals(parseContext.getCategory("caseTypeId", category.getCategoryId()), category);
+    }
+
+    @Test
+    public void testRegisterCaseTypeForCategoryWithSameIdTwiceShouldFail() {
+
+        final CategoryEntity category = new CategoryEntity();
+        category.setCategoryId("Category");
+
+        parseContext.registerCaseTypeForCategory("caseTypeId", category);
+
+        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
+            parseContext.registerCaseTypeForCategory("caseTypeId", category);
+        }, "Category already registered for ID: Category");
+    }
+
+    @Test
+    public void testGetCategoryWhenEmpty() {
+        assertNull(parseContext.getCategory("caseTypeId", "Category"));
     }
 }

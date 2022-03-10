@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
@@ -59,6 +59,14 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
         assertThat(categoryEntities.get(0).getCategoryLabel(), is(CATEGORY_LABEL));
         assertThat(categoryEntities.get(0).getDisplayOrder(), is(DISPLAY_ORDER));
         assertThat(categoryEntities.get(0).getParentCategoryId(), is(NO_PARENT));
+    }
+
+    @Test
+    public void testParseRegisteredCategory() {
+        val categoryEntities =
+            categoryParser.parse(createDefinitionSheets(), parseContext);
+
+        assertThat(parseContext.getCategory(CASE_TYPE, CATEGORY_ID), is(categoryEntities.get(0)));
     }
 
     @Test(expected = ValidationException.class)
