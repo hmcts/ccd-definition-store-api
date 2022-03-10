@@ -111,7 +111,7 @@
               "hint_text": null,
               "publish": "[[ANYTHING_PRESENT]]",
               "publish_as": null,
-              "default_value": "[[ANYTHING_PRESENT]]",
+              "default_value": null,
               "case_fields_complex": []
             },
             {
@@ -126,7 +126,7 @@
               "hint_text": null,
               "publish": "[[ANYTHING_PRESENT]]",
               "publish_as": null,
-              "default_value": "[[ANYTHING_PRESENT]]",
+              "default_value": null,
               "case_fields_complex": "[[ANYTHING_PRESENT]]"
             }
           ],
