@@ -4,399 +4,397 @@
             "casetypea_cases": {}
         },
         "mappings": {
-            "_doc": {
-                "dynamic": "true",
-                "properties": {
-                    "@timestamp": {
-                        "type": "object",
-                        "enabled": false
-                    },
-                    "@version": {
-                        "type": "object",
-                        "enabled": false
-                    },
-                    "case_type_id": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
-                        }
-                    },
-                    "created_date": {
-                        "type": "date",
-                        "ignore_malformed": true
-                    },
-                    "data": {
-                        "properties": {
-                            "CollectionField": {
-                                "properties": {
-                                    "id": {
-                                        "type": "object",
-                                        "enabled": false
-                                    },
-                                    "value": {
-                                        "type": "text",
-                                        "fields": {
-                                            "keyword": {
-                                                "type": "keyword",
-                                                "ignore_above": 256,
-                                                "normalizer": "lowercase_normalizer"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "ComplexCollectionField": {
-                                "properties": {
-                                    "id": {
-                                        "type": "object",
-                                        "enabled": false
-                                    },
-                                    "value": {
-                                        "properties": {
-                                            "Dob": {
-                                                "type": "date",
-                                                "ignore_malformed": true
-                                            },
-                                            "Forename": {
-                                                "type": "text",
-                                                "fields": {
-                                                    "keyword": {
-                                                        "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
-                                                    }
-                                                }
-                                            },
-                                            "Surname": {
-                                                "type": "text",
-                                                "fields": {
-                                                    "keyword": {
-                                                        "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "ComplexField": {
-                                "properties": {
-                                    "ComplexFieldPerson": {
-                                        "properties": {
-                                            "Dob": {
-                                                "type": "date",
-                                                "ignore_malformed": true
-                                            },
-                                            "Forename": {
-                                                "type": "text",
-                                                "fields": {
-                                                    "keyword": {
-                                                        "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
-                                                    }
-                                                }
-                                            },
-                                            "Surname": {
-                                                "type": "text",
-                                                "fields": {
-                                                    "keyword": {
-                                                        "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "NonSearchableCollectionField": {
-                                "type": "object",
-                                "enabled": false
-                            },
-                            "NonSearchableComplexCollectionField": {
-                                "properties": {
-                                    "id": {
-                                        "type": "object",
-                                        "enabled": false
-                                    },
-                                    "value": {
-                                        "properties": {
-                                            "Dob": {
-                                                "type": "object",
-                                                "enabled": false
-                                            },
-                                            "Forename": {
-                                                "type": "object",
-                                                "enabled": false
-                                            },
-                                            "Surname": {
-                                                "type": "text",
-                                                "fields": {
-                                                    "keyword": {
-                                                        "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "NonSearchableComplexField": {
-                                "properties": {
-                                    "NonSearchableComplexFieldPerson": {
-                                        "properties": {
-                                            "Dob": {
-                                                "type": "object",
-                                                "enabled": false
-                                            },
-                                            "Forename": {
-                                                "type": "text",
-                                                "fields": {
-                                                    "keyword": {
-                                                        "type": "keyword",
-                                                        "ignore_above": 256,
-                                                        "normalizer": "lowercase_normalizer"
-                                                    }
-                                                }
-                                            },
-                                            "Surname": {
-                                                "type": "object",
-                                                "enabled": false
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "NonSearchableTextField": {
-                                "type": "object",
-                                "enabled": false
-                            },
-                            "TextField": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256,
-                                        "normalizer": "lowercase_normalizer"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "data_classification": {
-                        "properties": {
-                            "CollectionField": {
-                                "properties": {
-                                    "classification": {
-                                        "type": "keyword"
-                                    },
-                                    "value": {
-                                        "properties": {
-                                            "classification": {
-                                                "type": "keyword"
-                                            },
-                                            "id": {
-                                                "type": "object",
-                                                "enabled": false
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "ComplexCollectionField": {
-                                "properties": {
-                                    "classification": {
-                                        "type": "keyword"
-                                    },
-                                    "value": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "object",
-                                                "enabled": false
-                                            },
-                                            "value": {
-                                                "properties": {
-                                                    "Dob": {
-                                                        "type": "keyword"
-                                                    },
-                                                    "Forename": {
-                                                        "type": "keyword"
-                                                    },
-                                                    "Surname": {
-                                                        "type": "keyword"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "ComplexField": {
-                                "properties": {
-                                    "classification": {
-                                        "type": "keyword"
-                                    },
-                                    "value": {
-                                        "properties": {
-                                            "ComplexFieldPerson": {
-                                                "properties": {
-                                                    "classification": {
-                                                        "type": "keyword"
-                                                    },
-                                                    "value": {
-                                                        "properties": {
-                                                            "Dob": {
-                                                                "type": "keyword"
-                                                            },
-                                                            "Forename": {
-                                                                "type": "keyword"
-                                                            },
-                                                            "Surname": {
-                                                                "type": "keyword"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "NonSearchableCollectionField": {
-                                "type": "object",
-                                "enabled": false
-                            },
-                            "NonSearchableComplexCollectionField": {
-                                "properties": {
-                                    "classification": {
-                                        "type": "keyword"
-                                    },
-                                    "value": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "object",
-                                                "enabled": false
-                                            },
-                                            "value": {
-                                                "properties": {
-                                                    "Dob": {
-                                                        "type": "object",
-                                                        "enabled": false
-                                                    },
-                                                    "Forename": {
-                                                        "type": "object",
-                                                        "enabled": false
-                                                    },
-                                                    "Surname": {
-                                                        "type": "keyword"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "NonSearchableComplexField": {
-                                "properties": {
-                                    "classification": {
-                                        "type": "keyword"
-                                    },
-                                    "value": {
-                                        "properties": {
-                                            "NonSearchableComplexFieldPerson": {
-                                                "properties": {
-                                                    "classification": {
-                                                        "type": "keyword"
-                                                    },
-                                                    "value": {
-                                                        "properties": {
-                                                            "Dob": {
-                                                                "type": "object",
-                                                                "enabled": false
-                                                            },
-                                                            "Forename": {
-                                                                "type": "keyword"
-                                                            },
-                                                            "Surname": {
-                                                                "type": "object",
-                                                                "enabled": false
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "NonSearchableTextField": {
-                                "type": "object",
-                                "enabled": false
-                            },
-                            "TextField": {
-                                "type": "keyword"
-                            }
-                        }
-                    },
-                    "id": {
-                        "type": "long"
-                    },
-                    "index_id": {
-                        "type": "object",
-                        "enabled": false
-                    },
-                    "jurisdiction": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
-                        }
-                    },
-                    "last_modified": {
-                        "type": "date",
-                        "ignore_malformed": true
-                    },
-                    "last_state_modified_date": {
-                        "type": "date",
-                        "ignore_malformed": true
-                    },
-                  "reference": {
+            "dynamic": "true",
+            "properties": {
+                "@timestamp": {
+                    "type": "object",
+                    "enabled": false
+                },
+                "@version": {
+                    "type": "object",
+                    "enabled": false
+                },
+                "case_type_id": {
                     "type": "text",
                     "fields": {
-                      "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256,
-                        "normalizer": "lowercase_normalizer"
-                      }
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
+                        }
+                    }
+                },
+                "created_date": {
+                    "type": "date",
+                    "ignore_malformed": true
+                },
+                "data": {
+                    "properties": {
+                        "CollectionField": {
+                            "properties": {
+                                "id": {
+                                    "type": "object",
+                                    "enabled": false
+                                },
+                                "value": {
+                                    "type": "text",
+                                    "fields": {
+                                        "keyword": {
+                                            "type": "keyword",
+                                            "ignore_above": 256,
+                                            "normalizer": "lowercase_normalizer"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "ComplexCollectionField": {
+                            "properties": {
+                                "id": {
+                                    "type": "object",
+                                    "enabled": false
+                                },
+                                "value": {
+                                    "properties": {
+                                        "Dob": {
+                                            "type": "date",
+                                            "ignore_malformed": true
+                                        },
+                                        "Forename": {
+                                            "type": "text",
+                                            "fields": {
+                                                "keyword": {
+                                                    "type": "keyword",
+                                                    "ignore_above": 256,
+                                                    "normalizer": "lowercase_normalizer"
+                                                }
+                                            }
+                                        },
+                                        "Surname": {
+                                            "type": "text",
+                                            "fields": {
+                                                "keyword": {
+                                                    "type": "keyword",
+                                                    "ignore_above": 256,
+                                                    "normalizer": "lowercase_normalizer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "ComplexField": {
+                            "properties": {
+                                "ComplexFieldPerson": {
+                                    "properties": {
+                                        "Dob": {
+                                            "type": "date",
+                                            "ignore_malformed": true
+                                        },
+                                        "Forename": {
+                                            "type": "text",
+                                            "fields": {
+                                                "keyword": {
+                                                    "type": "keyword",
+                                                    "ignore_above": 256,
+                                                    "normalizer": "lowercase_normalizer"
+                                                }
+                                            }
+                                        },
+                                        "Surname": {
+                                            "type": "text",
+                                            "fields": {
+                                                "keyword": {
+                                                    "type": "keyword",
+                                                    "ignore_above": 256,
+                                                    "normalizer": "lowercase_normalizer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "NonSearchableCollectionField": {
+                            "type": "object",
+                            "enabled": false
+                        },
+                        "NonSearchableComplexCollectionField": {
+                            "properties": {
+                                "id": {
+                                    "type": "object",
+                                    "enabled": false
+                                },
+                                "value": {
+                                    "properties": {
+                                        "Dob": {
+                                            "type": "object",
+                                            "enabled": false
+                                        },
+                                        "Forename": {
+                                            "type": "object",
+                                            "enabled": false
+                                        },
+                                        "Surname": {
+                                            "type": "text",
+                                            "fields": {
+                                                "keyword": {
+                                                    "type": "keyword",
+                                                    "ignore_above": 256,
+                                                    "normalizer": "lowercase_normalizer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "NonSearchableComplexField": {
+                            "properties": {
+                                "NonSearchableComplexFieldPerson": {
+                                    "properties": {
+                                        "Dob": {
+                                            "type": "object",
+                                            "enabled": false
+                                        },
+                                        "Forename": {
+                                            "type": "text",
+                                            "fields": {
+                                                "keyword": {
+                                                    "type": "keyword",
+                                                    "ignore_above": 256,
+                                                    "normalizer": "lowercase_normalizer"
+                                                }
+                                            }
+                                        },
+                                        "Surname": {
+                                            "type": "object",
+                                            "enabled": false
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "NonSearchableTextField": {
+                            "type": "object",
+                            "enabled": false
+                        },
+                        "TextField": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256,
+                                    "normalizer": "lowercase_normalizer"
+                                }
+                            }
+                        }
+                    }
+                },
+                "data_classification": {
+                    "properties": {
+                        "CollectionField": {
+                            "properties": {
+                                "classification": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "properties": {
+                                        "classification": {
+                                            "type": "keyword"
+                                        },
+                                        "id": {
+                                            "type": "object",
+                                            "enabled": false
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "ComplexCollectionField": {
+                            "properties": {
+                                "classification": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "object",
+                                            "enabled": false
+                                        },
+                                        "value": {
+                                            "properties": {
+                                                "Dob": {
+                                                    "type": "keyword"
+                                                },
+                                                "Forename": {
+                                                    "type": "keyword"
+                                                },
+                                                "Surname": {
+                                                    "type": "keyword"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "ComplexField": {
+                            "properties": {
+                                "classification": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "properties": {
+                                        "ComplexFieldPerson": {
+                                            "properties": {
+                                                "classification": {
+                                                    "type": "keyword"
+                                                },
+                                                "value": {
+                                                    "properties": {
+                                                        "Dob": {
+                                                            "type": "keyword"
+                                                        },
+                                                        "Forename": {
+                                                            "type": "keyword"
+                                                        },
+                                                        "Surname": {
+                                                            "type": "keyword"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "NonSearchableCollectionField": {
+                            "type": "object",
+                            "enabled": false
+                        },
+                        "NonSearchableComplexCollectionField": {
+                            "properties": {
+                                "classification": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "object",
+                                            "enabled": false
+                                        },
+                                        "value": {
+                                            "properties": {
+                                                "Dob": {
+                                                    "type": "object",
+                                                    "enabled": false
+                                                },
+                                                "Forename": {
+                                                    "type": "object",
+                                                    "enabled": false
+                                                },
+                                                "Surname": {
+                                                    "type": "keyword"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "NonSearchableComplexField": {
+                            "properties": {
+                                "classification": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "properties": {
+                                        "NonSearchableComplexFieldPerson": {
+                                            "properties": {
+                                                "classification": {
+                                                    "type": "keyword"
+                                                },
+                                                "value": {
+                                                    "properties": {
+                                                        "Dob": {
+                                                            "type": "object",
+                                                            "enabled": false
+                                                        },
+                                                        "Forename": {
+                                                            "type": "keyword"
+                                                        },
+                                                        "Surname": {
+                                                            "type": "object",
+                                                            "enabled": false
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "NonSearchableTextField": {
+                            "type": "object",
+                            "enabled": false
+                        },
+                        "TextField": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "id": {
+                    "type": "long"
+                },
+                "index_id": {
+                    "type": "object",
+                    "enabled": false
+                },
+                "jurisdiction": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
+                        }
+                    }
+                },
+                "last_modified": {
+                    "type": "date",
+                    "ignore_malformed": true
+                },
+                "last_state_modified_date": {
+                    "type": "date",
+                    "ignore_malformed": true
+                },
+                "reference": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
+                        }
                     },
                     "analyzer": "standard",
                     "search_analyzer": "case_id_analyzer"
-                  },
-                    "security_classification": {
-                        "type": "keyword",
-                        "normalizer": "lowercase_normalizer"
-                    },
-                    "state": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
+                },
+                "security_classification": {
+                    "type": "keyword",
+                    "normalizer": "lowercase_normalizer"
+                },
+                "state": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
                         }
                     }
                 }
@@ -404,6 +402,13 @@
         },
         "settings": {
             "index": {
+                "routing": {
+                    "allocation": {
+                        "include": {
+                            "_tier_preference": "data_content"
+                        }
+                    }
+                },
                 "mapping": {
                     "total_fields": {
                         "limit": "8000"
@@ -411,16 +416,44 @@
                 },
                 "number_of_shards": "8",
                 "provided_name": "casetypea_cases-000001",
-                "creation_date": "1597237922227",
+                "creation_date": "1641989757672",
                 "analysis": {
                     "filter": {
+                        "shingle_filter": {
+                            "max_shingle_size": "3",
+                            "min_shingle_size": "2",
+                            "output_unigrams": "true",
+                            "type": "shingle"
+                        },
                         "whitespace_remove": {
                             "pattern": " ",
                             "type": "pattern_replace",
                             "replacement": ""
+                        },
+                        "hyphen_remove": {
+                            "pattern": "-",
+                            "type": "pattern_replace",
+                            "replacement": ""
+                        }
+                    },
+                    "normalizer": {
+                        "lowercase_normalizer": {
+                            "filter": [
+                                "lowercase",
+                                "asciifolding"
+                            ],
+                            "type": "custom",
+                            "char_filter": []
                         }
                     },
                     "analyzer": {
+                        "case_id_analyzer": {
+                            "filter": [
+                                "hyphen_remove"
+                            ],
+                            "type": "custom",
+                            "tokenizer": "keyword"
+                        },
                         "phone_number_analyzer": {
                             "filter": [
                                 "shingle_filter",
@@ -429,22 +462,12 @@
                             "type": "custom",
                             "tokenizer": "keyword"
                         }
-                    },
-                    "normalizer": {
-                        "lowercase_normalizer": {
-                            "type": "custom",
-                            "char_filter": [],
-                            "filter": [
-                                "lowercase",
-                                "asciifolding"
-                            ]
-                        }
                     }
                 },
                 "number_of_replicas": "3",
-                "uuid": "HKTIccGoTIimBVhqkUAFqw",
+                "uuid": "IdWeDCh_Q0qG4JQSw62iJw",
                 "version": {
-                    "created": "6040299"
+                    "created": "7110199"
                 }
             }
         }

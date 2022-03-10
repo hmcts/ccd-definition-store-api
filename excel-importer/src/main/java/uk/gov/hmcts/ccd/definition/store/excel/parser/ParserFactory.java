@@ -23,6 +23,7 @@ public class ParserFactory {
     private final SpreadsheetValidator spreadsheetValidator;
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
+    private final CategoryParser categoryParser;
     private final SearchPartyValidator searchPartyValidator;
     private final SearchCriteriaValidator searchCriteriaValidator;
     private final ApplicationParams applicationParams;
@@ -35,7 +36,7 @@ public class ParserFactory {
                          SpreadsheetValidator spreadsheetValidator,
                          HiddenFieldsValidator hiddenFieldsValidator,
                          ChallengeQuestionParser challengeQuestionParser,
-                         SearchPartyValidator searchPartyValidator,
+                         CategoryParser categoryParser, SearchPartyValidator searchPartyValidator,
                          SearchCriteriaValidator searchCriteriaValidator,
                          ApplicationParams applicationParams, @Qualifier("validateExecutor") Executor executor) {
         this.showConditionParser = showConditionParser;
@@ -44,6 +45,7 @@ public class ParserFactory {
         this.spreadsheetValidator = spreadsheetValidator;
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
+        this.categoryParser = categoryParser;
         this.searchPartyValidator = searchPartyValidator;
         this.searchCriteriaValidator = searchCriteriaValidator;
         this.applicationParams = applicationParams;
@@ -147,4 +149,7 @@ public class ParserFactory {
         return searchCriteriaValidator;
     }
 
+    public CategoryParser createCategoriesParser() {
+        return categoryParser;
+    }
 }
