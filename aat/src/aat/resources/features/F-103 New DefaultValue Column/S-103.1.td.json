@@ -97,8 +97,23 @@
           "id": "CREATE",
           "name": "Create a case",
           "description": "Create a case",
-          "order": "[[ANYTHING_PRESENT]]",
+          "order": 1,
           "case_fields": [
+            {
+              "case_field_id": "CaseAccessCategory",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": "[[ANYTHING_PRESENT]]",
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "publish": "[[ANYTHING_PRESENT]]",
+              "publish_as": null,
+              "default_value": "[[ANYTHING_PRESENT]]",
+              "case_fields_complex": []
+            },
             {
               "case_field_id": "TextField",
               "display_context": "OPTIONAL",
@@ -111,7 +126,7 @@
               "hint_text": null,
               "publish": "[[ANYTHING_PRESENT]]",
               "publish_as": null,
-              "default_value": "DefaultValue test",
+              "default_value": "[[ANYTHING_PRESENT]]",
               "case_fields_complex": "[[ANYTHING_PRESENT]]"
             }
           ],
