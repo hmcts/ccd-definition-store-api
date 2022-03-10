@@ -35,7 +35,7 @@
           "read_only": true,
           "authorisations": "auth1",
           "access_profiles": "caseworker-befta_master",
-          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_to": null,
           "role_name": "Role1",
           "case_access_categories": "TestValue"
@@ -46,7 +46,7 @@
           "read_only": false,
           "authorisations": "auth1",
           "access_profiles": "caseworker-befta_master",
-          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_to": null,
           "role_name": "Role1",
           "case_access_categories": "Civil/Standard,Criminal/Serious"
@@ -57,7 +57,7 @@
           "read_only": false,
           "authorisations": null,
           "access_profiles": "caseworker-befta_master",
-          "live_from": "2017-01-01T00:00:00.000+00:00",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
           "live_to": null,
           "role_name": "idam:caseworker-befta_master",
           "case_access_categories": "Civil/Standard,Criminal/Serious"
