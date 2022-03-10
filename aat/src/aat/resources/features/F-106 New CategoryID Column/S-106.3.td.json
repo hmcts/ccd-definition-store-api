@@ -7,7 +7,11 @@
     "contains filled in CategoryID for Document value",
     "contains filled in CategoryID for Document Collection value",
     "contains null CategoryID for Document value",
-    "contains null CategoryID for Document Collection value"
+    "contains null CategoryID for Document Collection value",
+    "contains filled in CategoryID for Document ComplexType value",
+    "contains filled in CategoryID for Document Collection ComplexType value",
+    "contains null CategoryID for Document ComplexType value",
+    "contains null CategoryID for Document Collection ComplexType value"
   ],
   "request": {
     "pathVariables": {
@@ -65,7 +69,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : "evidenceDocs"
-      }, {
+      },
+        {
         "metadata" : false,
         "id" : "CollectionDocumentField",
         "case_type_id" : "FT_CaseFileView",
@@ -107,7 +112,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : "evidenceDocs"
-      }, {
+      },
+        {
         "metadata" : false,
         "id" : "DocumentFieldNoCategory",
         "case_type_id" : "FT_CaseFileView",
@@ -140,7 +146,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : null
-      }, {
+      },
+        {
         "metadata" : false,
         "id" : "CollectionDocumentFieldNoCategory",
         "case_type_id" : "FT_CaseFileView",
@@ -182,7 +189,162 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : null
-      }, {
+      },
+        {
+          "metadata" : false,
+          "id" : "CategorisedDocumentComplexType",
+          "case_type_id" : "FT_CaseFileView",
+          "label" : "Categorised Document",
+          "hint_text" : null,
+          "field_type" : {
+            "id" : "CategorisedDocument",
+            "type" : "Complex",
+            "min" : null,
+            "max" : null,
+            "regular_expression" : null,
+            "fixed_list_items" : [ ],
+            "complex_fields" : [ {
+              "metadata" : false,
+              "id" : "DocumentField",
+              "case_type_id" : null,
+              "label" : "Document Field",
+              "hint_text" : null,
+              "field_type" : {
+                "id" : "Document",
+                "type" : "Document",
+                "min" : null,
+                "max" : null,
+                "regular_expression" : null,
+                "fixed_list_items" : [ ],
+                "complex_fields" : [ ],
+                "collection_field_type" : null
+              },
+              "hidden" : null,
+              "security_classification" : "PUBLIC",
+              "live_from" : null,
+              "live_until" : null,
+              "acls" : null,
+              "complexACLs" : [ ],
+              "order" : null,
+              "show_condition" : null,
+              "display_context_parameter" : null,
+              "retain_hidden_value" : null,
+              "category_id" : null
+            }, {
+              "metadata" : false,
+              "id" : "CollectionDocumentField",
+              "case_type_id" : null,
+              "label" : "CollectionDocumentField",
+              "hint_text" : null,
+              "field_type" : {
+                "id" : "[[ANYTHING_PRESENT]]",
+                "type" : "Collection",
+                "min" : null,
+                "max" : null,
+                "regular_expression" : null,
+                "fixed_list_items" : [ ],
+                "complex_fields" : [ ],
+                "collection_field_type" : {
+                  "id" : "Document",
+                  "type" : "Document",
+                  "min" : null,
+                  "max" : null,
+                  "regular_expression" : null,
+                  "fixed_list_items" : [ ],
+                  "complex_fields" : [ ],
+                  "collection_field_type" : null
+                }
+              },
+              "hidden" : null,
+              "security_classification" : "PUBLIC",
+              "live_from" : null,
+              "live_until" : null,
+              "acls" : null,
+              "complexACLs" : [ ],
+              "order" : null,
+              "show_condition" : null,
+              "display_context_parameter" : null,
+              "retain_hidden_value" : null,
+              "category_id" : null
+            }, {
+              "metadata" : false,
+              "id" : "DocumentFieldNoCategory",
+              "case_type_id" : null,
+              "label" : "DocumentFieldNoCategory",
+              "hint_text" : null,
+              "field_type" : {
+                "id" : "Document",
+                "type" : "Document",
+                "min" : null,
+                "max" : null,
+                "regular_expression" : null,
+                "fixed_list_items" : [ ],
+                "complex_fields" : [ ],
+                "collection_field_type" : null
+              },
+              "hidden" : null,
+              "security_classification" : "PUBLIC",
+              "live_from" : null,
+              "live_until" : null,
+              "acls" : null,
+              "complexACLs" : [ ],
+              "order" : null,
+              "show_condition" : null,
+              "display_context_parameter" : null,
+              "retain_hidden_value" : null,
+              "category_id" : null
+            }, {
+              "metadata" : false,
+              "id" : "CollectionDocumentFieldNoCategory",
+              "case_type_id" : null,
+              "label" : "CollectionDocumentFieldNoCategory",
+              "hint_text" : null,
+              "field_type" : {
+                "id" : "[[ANYTHING_PRESENT]]",
+                "type" : "Collection",
+                "min" : null,
+                "max" : null,
+                "regular_expression" : null,
+                "fixed_list_items" : [ ],
+                "complex_fields" : [ ],
+                "collection_field_type" : {
+                  "id" : "Document",
+                  "type" : "Document",
+                  "min" : null,
+                  "max" : null,
+                  "regular_expression" : null,
+                  "fixed_list_items" : [ ],
+                  "complex_fields" : [ ],
+                  "collection_field_type" : null
+                }
+              },
+              "hidden" : null,
+              "security_classification" : "PUBLIC",
+              "live_from" : null,
+              "live_until" : null,
+              "acls" : null,
+              "complexACLs" : [ ],
+              "order" : null,
+              "show_condition" : null,
+              "display_context_parameter" : null,
+              "retain_hidden_value" : null,
+              "category_id" : null
+            } ],
+            "collection_field_type" : null
+          },
+          "hidden" : false,
+          "security_classification" : "PUBLIC",
+          "live_from" : "2017-01-01",
+          "live_until" : null,
+          "acls" : [ ],
+          "complexACLs" : [ ],
+          "order" : null,
+          "show_condition" : null,
+          "display_context_parameter" : null,
+          "retain_hidden_value" : null,
+          "category_id" : null
+        },
+        {
         "metadata" : true,
         "id" : "[STATE]",
         "case_type_id" : "FT_CaseFileView",
@@ -213,7 +375,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : null
-      }, {
+      },
+        {
         "metadata" : true,
         "id" : "[CASE_REFERENCE]",
         "case_type_id" : null,
@@ -240,7 +403,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : null
-      }, {
+      },
+        {
         "metadata" : true,
         "id" : "[LAST_STATE_MODIFIED_DATE]",
         "case_type_id" : null,
@@ -267,7 +431,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : null
-      }, {
+      },
+        {
         "metadata" : true,
         "id" : "[LAST_MODIFIED_DATE]",
         "case_type_id" : null,
@@ -294,7 +459,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : null
-      }, {
+      },
+        {
         "metadata" : true,
         "id" : "[CREATED_DATE]",
         "case_type_id" : null,
@@ -321,7 +487,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : null
-      }, {
+      },
+        {
         "metadata" : true,
         "id" : "[SECURITY_CLASSIFICATION]",
         "case_type_id" : null,
@@ -348,7 +515,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : null
-      }, {
+      },
+        {
         "metadata" : true,
         "id" : "[CASE_TYPE]",
         "case_type_id" : null,
@@ -375,7 +543,8 @@
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
         "category_id" : null
-      }, {
+      },
+        {
         "metadata" : true,
         "id" : "[JURISDICTION]",
         "case_type_id" : null,
