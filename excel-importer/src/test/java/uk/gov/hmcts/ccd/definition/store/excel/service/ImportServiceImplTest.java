@@ -40,6 +40,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_Y
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_FLAGS;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_LINK_REASON;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
@@ -236,6 +237,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity flagLauncherBaseType;
     private FieldTypeEntity searchPartyBaseType;
     private FieldTypeEntity searchCriteriaBaseType;
+    private FieldTypeEntity linkReasonBaseType;
 
     @Before
     public void setup() {
@@ -302,6 +304,7 @@ public class ImportServiceImplTest {
         flagLauncherBaseType = buildBaseType(BASE_FLAG_LAUNCHER);
         searchPartyBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_PARTY);
         searchCriteriaBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_CRITERIA);
+        linkReasonBaseType = buildBaseType(PREDEFINED_COMPLEX_LINK_REASON);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -363,7 +366,8 @@ public class ImportServiceImplTest {
             waysToPayBaseType,
             flagLauncherBaseType,
             searchPartyBaseType,
-            searchCriteriaBaseType));
+            searchCriteriaBaseType,
+            linkReasonBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -414,7 +418,8 @@ public class ImportServiceImplTest {
             waysToPayBaseType,
             flagLauncherBaseType,
             searchPartyBaseType,
-            searchCriteriaBaseType));
+            searchCriteriaBaseType,
+            linkReasonBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
