@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import lombok.val;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -13,14 +13,19 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 public class CategoryIdValidatorTest {
 
-    private ParseContext parseContext;
+    private static final String COLLECTION_OF_DOCUMENT = "CollectionOfDocument";
     private static final String CASE_TYPE = "FT_MasterCaseType";
+    private static final String COLLECTION = "Collection";
+    private static final String DIVORCE_DOCS = "divorceDocs";
+    private static final String DOCUMENT = "Document";
+    private static final String DIVORCE_DOCUMENT = "divorceDocument";
+    private static final String TEXT_STRING = "TEXT";
 
+    private ParseContext parseContext;
     private CategoryIdValidator categoryValidator;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         categoryValidator = new CategoryIdValidator();
     }
 
@@ -38,12 +43,12 @@ public class CategoryIdValidatorTest {
     public CaseFieldEntity buildCaseTypeDocumentReference(String reference, String collectionType, String category) {
         CaseFieldEntity caseField = new CaseFieldEntity();
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
-        if (!reference.equals("Collection")) {
+        if (!reference.equals(COLLECTION)) {
             fieldTypeEntity.setReference(reference);
         } else {
             FieldTypeEntity baseFieldTypeEntity = new FieldTypeEntity();
             FieldTypeEntity collectionFieldTypeEntity = new FieldTypeEntity();
-            fieldTypeEntity.setReference("CollectionOfDocument");
+            fieldTypeEntity.setReference(COLLECTION_OF_DOCUMENT);
             baseFieldTypeEntity.setReference(reference);
             collectionFieldTypeEntity.setReference(collectionType);
             fieldTypeEntity.setBaseFieldType(baseFieldTypeEntity);
@@ -56,82 +61,89 @@ public class CategoryIdValidatorTest {
 
     @Test
     public void testValidateCategoryNull() {
-        parseContext = buildParseContext("Text", null, null);
+        parseContext = buildParseContext(TEXT_STRING, null, null);
 
         CategoryEntity category1 = new CategoryEntity();
-        category1.setCategoryId("divorceDocs");
+        category1.setCategoryId(DIVORCE_DOCS);
         parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
         categoryValidator.validate(parseContext);
     }
 
     @Test
     public void testValidateFieldTypeDocument() {
-        parseContext = buildParseContext("Document", null, "divorceDocs");
+        parseContext = buildParseContext(DOCUMENT, null, DIVORCE_DOCS);
 
         CategoryEntity category1 = new CategoryEntity();
-        category1.setCategoryId("divorceDocs");
+        category1.setCategoryId(DIVORCE_DOCS);
         parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
         categoryValidator.validate(parseContext);
     }
 
     @Test
     public void testValidateFieldTypeCollectionOfDocument() {
-        parseContext = buildParseContext("Collection", "Document", "divorceDocs");
+        parseContext = buildParseContext(COLLECTION, DOCUMENT, DIVORCE_DOCS);
 
         CategoryEntity category1 = new CategoryEntity();
-        category1.setCategoryId("divorceDocs");
-        parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
-        categoryValidator.validate(parseContext);
-    }
-
-    @Test(expected = InvalidImportException.class)
-    public void testValidateFieldTypeDocumentInvalidCategoryThrowException() {
-        parseContext = buildParseContext("Document", null, "divorceDocument");
-
-        CategoryEntity category1 = new CategoryEntity();
-        category1.setCategoryId("divorceDoc");
-        parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
-        categoryValidator.validate(parseContext);
-    }
-
-    @Test(expected = InvalidImportException.class)
-    public void testValidateFieldTypeCollectionOfDocumentInvalidCategoryThrowException() {
-        parseContext = buildParseContext("Collection", "Document", "divorceDocument");
-
-        CategoryEntity category1 = new CategoryEntity();
-        category1.setCategoryId("divorceDoc");
+        category1.setCategoryId(DIVORCE_DOCS);
         parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
         categoryValidator.validate(parseContext);
     }
 
     @Test
+    public void testValidateFieldTypeDocumentInvalidCategoryThrowException() {
+        parseContext = buildParseContext(DOCUMENT, null, DIVORCE_DOCUMENT);
+
+        CategoryEntity category1 = new CategoryEntity();
+        category1.setCategoryId(DIVORCE_DOCS);
+        parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
+        Assertions.assertThrows(InvalidImportException.class, () -> {
+            categoryValidator.validate(parseContext);
+        });
+    }
+
+    @Test
+    public void testValidateFieldTypeCollectionOfDocumentInvalidCategoryThrowException() {
+        parseContext = buildParseContext(COLLECTION, DOCUMENT, DIVORCE_DOCUMENT);
+
+        CategoryEntity category1 = new CategoryEntity();
+        category1.setCategoryId(DIVORCE_DOCS);
+        parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
+        Assertions.assertThrows(InvalidImportException.class, () -> {
+            categoryValidator.validate(parseContext);
+        });
+    }
+
+    @Test
     public void testValidateFieldTypeCollectionOfDocumentNullCategory() {
-        parseContext = buildParseContext("Collection", "Document", null);
+        parseContext = buildParseContext(COLLECTION, DOCUMENT, null);
 
         CategoryEntity category1 = new CategoryEntity();
-        category1.setCategoryId("divorceDoc");
+        category1.setCategoryId(DIVORCE_DOCS);
         parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
         categoryValidator.validate(parseContext);
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void testValidateFieldTypeNotDocumentValidCategoryThrowException() {
-        parseContext = buildParseContext("Text", null, "divorceDoc");
+        parseContext = buildParseContext(TEXT_STRING, null, DIVORCE_DOCS);
 
         CategoryEntity category1 = new CategoryEntity();
-        category1.setCategoryId("divorceDoc");
+        category1.setCategoryId(DIVORCE_DOCS);
         parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
-        categoryValidator.validate(parseContext);
+        Assertions.assertThrows(InvalidImportException.class, () -> {
+            categoryValidator.validate(parseContext);
+        });
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void testValidateFieldTypeCollectionOfTextValidCategoryThrowException() {
-        parseContext = buildParseContext("Collection", "Text", "divorceDoc");
+        parseContext = buildParseContext(COLLECTION, TEXT_STRING, DIVORCE_DOCS);
 
         CategoryEntity category1 = new CategoryEntity();
-        category1.setCategoryId("divorceDoc");
+        category1.setCategoryId(DIVORCE_DOCS);
         parseContext.registerCaseTypeForCategory(CASE_TYPE, category1);
-        categoryValidator.validate(parseContext);
+        Assertions.assertThrows(InvalidImportException.class, () -> {
+            categoryValidator.validate(parseContext);
+        });
     }
-
 }

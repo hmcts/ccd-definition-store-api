@@ -169,7 +169,7 @@ public class ParseContext {
         return categories.get(categoryId);
     }
 
-    public ParseContext registerCaseTypeForCategory(String caseTypeId, CategoryEntity categoryEntity) {
+    public void registerCaseTypeForCategory(String caseTypeId, CategoryEntity categoryEntity) {
         categoryByCaseTypes.computeIfAbsent(caseTypeId, k -> Maps.newHashMap());
 
         final Map<String, CategoryEntity> categoryStates = categoryByCaseTypes.get(caseTypeId);
@@ -180,8 +180,6 @@ public class ParseContext {
         }
 
         categoryStates.put(categoryEntity.getCategoryId(), categoryEntity);
-
-        return this;
     }
 
     public StateEntity getStateForCaseType(String caseTypeId, String stateId) {
