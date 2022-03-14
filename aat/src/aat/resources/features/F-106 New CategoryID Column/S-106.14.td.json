@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "ComplexTypesTab Invalid value 'evidenceDocs' is not a valid CategoryID value. Category cannot be found."
+      "__plainTextValue__": "ComplexTypesTab Invalid value 'evidenceDocs' is not a valid CategoryID value. Category not permitted for this field type."
     }
   }
 }

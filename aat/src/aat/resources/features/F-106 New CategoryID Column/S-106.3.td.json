@@ -229,8 +229,9 @@
               "show_condition" : null,
               "display_context_parameter" : null,
               "retain_hidden_value" : null,
-              "category_id" : null
-            }, {
+              "category_id" : "evidenceDocs"
+            },
+              {
               "metadata" : false,
               "id" : "CollectionDocumentField",
               "case_type_id" : null,
@@ -265,8 +266,9 @@
               "show_condition" : null,
               "display_context_parameter" : null,
               "retain_hidden_value" : null,
-              "category_id" : null
-            }, {
+              "category_id" : "evidenceDocs"
+            },
+              {
               "metadata" : false,
               "id" : "DocumentFieldNoCategory",
               "case_type_id" : null,
@@ -293,7 +295,8 @@
               "display_context_parameter" : null,
               "retain_hidden_value" : null,
               "category_id" : null
-            }, {
+            },
+              {
               "metadata" : false,
               "id" : "CollectionDocumentFieldNoCategory",
               "case_type_id" : null,

@@ -171,11 +171,10 @@ public class ParseContext {
     }
 
     public boolean checkCategoryExists(String categoryId) {
-        return categoryByCaseTypes.values()
-            .stream().anyMatch(categoriesByCaseType ->
-                 categoriesByCaseType.values().stream().anyMatch(
-                     categoryEntity -> categoryId.equals(categoryEntity.getCategoryId())));
-
+        return categoryByCaseTypes.values().stream()
+                .flatMap(categoryEntityMap -> categoryEntityMap.values().stream())
+                .map(CategoryEntity::getCategoryId)
+                .anyMatch(catId -> catId.equals(categoryId));
     }
 
     public void registerCaseTypeForCategory(String caseTypeId, CategoryEntity categoryEntity) {
