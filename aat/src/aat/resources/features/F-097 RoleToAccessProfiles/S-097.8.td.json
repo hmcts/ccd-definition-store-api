@@ -1,22 +1,18 @@
 {
   "_guid_": "S-097.8",
   "_extends_": "Get_CaseType",
-
   "title": "Return the new CaseAccessCategories column as part of the Get Case Type operation from Definitions store",
-
   "specs": [
     "an active profile in CCD",
     "Get RoleToAccessProfiles",
     "Definition store API",
     "contains the newly defined field - CaseAccessCategories"
   ],
-
   "request": {
     "pathVariables": {
       "id": "FT_CaseAccessCategories"
     }
   },
-
   "expectedResponse": {
     "body": {
       "id": "FT_CaseAccessCategories",
@@ -43,14 +39,36 @@
           "live_to": null,
           "role_name": "Role1",
           "case_access_categories": "TestValue"
+        },
+        {
+          "case_type_id": "FT_CaseAccessCategories",
+          "disabled": false,
+          "read_only": false,
+          "authorisations": "auth1",
+          "access_profiles": "caseworker-befta_master",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_to": null,
+          "role_name": "Role1",
+          "case_access_categories": "Civil/Standard,Criminal/Serious"
+        },
+        {
+          "case_type_id": "FT_CaseAccessCategories",
+          "disabled": false,
+          "read_only": false,
+          "authorisations": null,
+          "access_profiles": "caseworker-befta_master",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_to": null,
+          "role_name": "idam:caseworker-befta_master",
+          "case_access_categories": "Civil/Standard,Criminal/Serious"
         }
       ],
       "searchParties": [],
       "searchCriterias": [],
       "case_fields": "[[ANYTHING_PRESENT]]",
       "printable_document_url": null,
-      "callback_get_case_url" : null,
-      "retries_get_case_url" : [],
+      "callback_get_case_url": null,
+      "retries_get_case_url": [],
       "security_classification": "PUBLIC"
     }
   }
