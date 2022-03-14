@@ -18,7 +18,7 @@ public class EventPostStateEntity implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_post_state_id_seq")
     private Integer id;
 
     @Column(name = "enabling_condition", nullable = false)
