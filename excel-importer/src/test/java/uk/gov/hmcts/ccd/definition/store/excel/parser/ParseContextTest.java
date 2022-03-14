@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import com.sun.source.tree.AssertTree;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
+import javax.validation.constraints.AssertTrue;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
@@ -19,6 +21,7 @@ import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.BDDMockito.given;
@@ -262,5 +265,44 @@ public class ParseContextTest {
     @Test
     public void testGetCategoryWhenEmpty() {
         assertNull(parseContext.getCategory("caseTypeId", "Category"));
+    }
+
+    @Test
+    public void testGetComplexTypes(){
+        FieldTypeEntity fieldTypeEntity1 = new FieldTypeEntity();
+        fieldTypeEntity1.setReference("Entity1");
+        FieldTypeEntity complexEntity = new FieldTypeEntity();
+        complexEntity.setReference("Complex");
+        fieldTypeEntity1.setBaseFieldType(complexEntity);
+
+        FieldTypeEntity fieldTypeEntity2 = new FieldTypeEntity();
+        fieldTypeEntity2.setReference("Entity2");
+        FieldTypeEntity notComplexEntity = new FieldTypeEntity();
+        notComplexEntity.setReference("NotComplex");
+        fieldTypeEntity2.setBaseFieldType(notComplexEntity);
+
+        parseContext.addToAllTypes(fieldTypeEntity1);
+        parseContext.addToAllTypes(fieldTypeEntity2);
+
+        assertEquals(1, parseContext.getComplexTypes().size());
+    }
+
+    @Test
+    public void testGetComplexTypesEmpty(){
+        assertEquals(0, parseContext.getComplexTypes().size());
+    }
+
+    @Test
+    public void testIsCheckCategoryExists(){
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setCategoryId("A");
+        String caseTypeId = "CaseTypeId";
+        parseContext.registerCaseTypeForCategory(caseTypeId, categoryEntity);
+        Assertions.assertTrue(parseContext.checkCategoryExists("A"));
+    }
+
+    @Test
+    public void testIsCheckCategoryDoesNotExists(){
+        Assertions.assertFalse(parseContext.checkCategoryExists("A"));
     }
 }
