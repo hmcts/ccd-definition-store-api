@@ -172,9 +172,9 @@ public class ParseContext {
 
     public boolean checkCategoryExists(String categoryId) {
         return categoryByCaseTypes.values().stream()
-                .flatMap(categoryEntityMap -> categoryEntityMap.values().stream())
-                .map(CategoryEntity::getCategoryId)
-                .anyMatch(catId -> catId.equals(categoryId));
+            .flatMap(categoryEntityMap -> categoryEntityMap.values().stream())
+            .map(CategoryEntity::getCategoryId)
+            .anyMatch(catId -> catId.equals(categoryId));
     }
 
     public void registerCaseTypeForCategory(String caseTypeId, CategoryEntity categoryEntity) {
@@ -339,7 +339,7 @@ public class ParseContext {
         this.missingAccessProfiles.add(missingAccessProfile);
     }
 
-    public List<FieldTypeEntity> getComplexTypes()  {
+    public List<FieldTypeEntity> getComplexTypes() {
         return allTypes.values().stream()
             .filter(fieldType -> fieldType.getBaseFieldType() != null && fieldType.isComplexFieldType())
             .collect(Collectors.toList());

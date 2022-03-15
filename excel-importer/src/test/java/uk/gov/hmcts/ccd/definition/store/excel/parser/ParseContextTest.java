@@ -263,4 +263,43 @@ public class ParseContextTest {
     public void testGetCategoryWhenEmpty() {
         assertNull(parseContext.getCategory("caseTypeId", "Category"));
     }
+
+    @Test
+    public void testGetComplexTypes() {
+        FieldTypeEntity fieldTypeEntity1 = new FieldTypeEntity();
+        fieldTypeEntity1.setReference("Entity1");
+        FieldTypeEntity complexEntity = new FieldTypeEntity();
+        complexEntity.setReference("Complex");
+        fieldTypeEntity1.setBaseFieldType(complexEntity);
+
+        FieldTypeEntity fieldTypeEntity2 = new FieldTypeEntity();
+        fieldTypeEntity2.setReference("Entity2");
+        FieldTypeEntity notComplexEntity = new FieldTypeEntity();
+        notComplexEntity.setReference("NotComplex");
+        fieldTypeEntity2.setBaseFieldType(notComplexEntity);
+
+        parseContext.addToAllTypes(fieldTypeEntity1);
+        parseContext.addToAllTypes(fieldTypeEntity2);
+
+        assertEquals(1, parseContext.getComplexTypes().size());
+    }
+
+    @Test
+    public void testGetComplexTypesEmpty() {
+        assertEquals(0, parseContext.getComplexTypes().size());
+    }
+
+    @Test
+    public void testIsCheckCategoryExists() {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setCategoryId("A");
+        String caseTypeId = "CaseTypeId";
+        parseContext.registerCaseTypeForCategory(caseTypeId, categoryEntity);
+        Assertions.assertTrue(parseContext.checkCategoryExists("A"));
+    }
+
+    @Test
+    public void testIsCheckCategoryDoesNotExists() {
+        Assertions.assertFalse(parseContext.checkCategoryExists("A"));
+    }
 }
