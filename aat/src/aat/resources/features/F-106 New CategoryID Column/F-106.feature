@@ -65,8 +65,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.6
   @AC-9
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response
-            (Same as AC3 but CategoryID is defined for a field type Text)
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response (Same as AC3 but CategoryID is defined for a field type Text)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a CategoryID in the Categories tab being referenced as a Text value in the CaseField tab]
@@ -76,8 +75,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.7
   @AC-10
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response
-            (Same as AC3 but CategoryID is defined for a field type TextArea)
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response (Same as AC3 but CategoryID is defined for a field type TextArea)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a CategoryID in the Categories tab being referenced as a TextArea value in the CaseField tab]
@@ -87,8 +85,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.8
   @AC-11
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response
-            (Same as AC3 but CategoryID is defined for a field type Collection of Text)
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response (Same as AC3 but CategoryID is defined for a field type Collection of Text)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a CategoryID in the Categories tab being referenced as a Collection of type Text value in the CaseField tab]
@@ -98,8 +95,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.9
   @AC-12
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response
-            (Same as AC3 but CategoryID is defined for a field type YesOrNo)
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response (Same as AC3 but CategoryID is defined for a field type YesOrNo)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a CategoryID in the Categories tab being referenced as a YesOrNo value in the CaseField tab]
@@ -149,8 +145,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.14
   @AC-21
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in ComplexTypes tab – should return 400 response
-  (Same as AC3 but CategoryID is defined for a field type Text)
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in ComplexTypes tab – should return 400 response (Same as AC3 but CategoryID is defined for a field type Text)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a CategoryID in the Categories tab being referenced as a Text value in the ComplexTypes tab]
@@ -160,8 +155,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.15
   @AC-22
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in ComplexTypes tab – should return 400 response
-  (Same as AC3 but CategoryID is defined for a field type TextArea)
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in ComplexTypes tab – should return 400 response (Same as AC3 but CategoryID is defined for a field type TextArea)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a CategoryID in the Categories tab being referenced as a TextArea value in the ComplexTypes tab]
@@ -171,8 +165,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.16
   @AC-23
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in ComplexTypes tab – should return 400 response
-  (Same as AC3 but CategoryID is defined for a field type Collection of Text)
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in ComplexTypes tab – should return 400 response (Same as AC3 but CategoryID is defined for a field type Collection of Text)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a CategoryID in the Categories tab being referenced as a Collection of type Text value in the ComplexTypes tab]
@@ -182,8 +175,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.17
   @AC-24
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in ComplexTypes tab – should return 400 response
-  (Same as AC3 but CategoryID is defined for a field type YesOrNo)
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in ComplexTypes tab – should return 400 response (Same as AC3 but CategoryID is defined for a field type YesOrNo)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a CategoryID in the Categories tab being referenced as a YesOrNo value in the ComplexTypes tab]
