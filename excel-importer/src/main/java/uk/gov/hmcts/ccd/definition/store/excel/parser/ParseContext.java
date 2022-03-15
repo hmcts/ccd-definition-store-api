@@ -339,8 +339,8 @@ public class ParseContext {
         this.missingAccessProfiles.add(missingAccessProfile);
     }
 
-    public List<FieldTypeEntity> getComplexTypes(){
-     return allTypes.values().stream()
+    public List<FieldTypeEntity> getComplexTypes()  {
+        return allTypes.values().stream()
             .filter(fieldType -> fieldType.getBaseFieldType() != null && fieldType.isComplexFieldType())
             .collect(Collectors.toList());
     }

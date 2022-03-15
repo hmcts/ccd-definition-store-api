@@ -32,7 +32,7 @@ public class CategoryIdValidator {
             }
         }
         for (FieldTypeEntity complexType : parseContext.getComplexTypes()) {
-            for(ComplexFieldEntity complexField : complexType.getComplexFields()) {
+            for (ComplexFieldEntity complexField : complexType.getComplexFields()) {
                 validateComplexField(parseContext, complexField);
             }
         }
