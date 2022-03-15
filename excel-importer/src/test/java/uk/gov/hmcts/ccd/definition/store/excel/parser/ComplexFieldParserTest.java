@@ -89,16 +89,16 @@ public class ComplexFieldParserTest extends ParserTestBase {
             .parse(COMPLEX_LIST_ELEMENT_CODE, definitionSheet.getDataItems().get(0))).thenReturn(resultEntry);
 
         ParseResult<FieldTypeEntity> parseResult = complexFieldTypeParser.parse(definitionSheets);
+
         FieldTypeEntity complexType =
             parseResult.getAllResults().get(1);
-        ComplexFieldEntity complexFieldEntity =
-            parseResult.getAllResults().get(1).getComplexFields().iterator().next();
 
         assertEquals(COMPLEX_ID, complexType.getReference());
         assertEquals(complexBaseType, complexType.getBaseFieldType());
         assertEquals(jurisdiction, complexType.getJurisdiction());
 
-
+        ComplexFieldEntity complexFieldEntity =
+            parseResult.getAllResults().get(1).getComplexFields().iterator().next();
         assertEquals(COMPLEX_LIST_ELEMENT_CODE, complexFieldEntity.getReference());
         assertEquals(fieldTypeEntity2, complexFieldEntity.getFieldType());
         assertEquals(SecurityClassification.PUBLIC, complexFieldEntity.getSecurityClassification());

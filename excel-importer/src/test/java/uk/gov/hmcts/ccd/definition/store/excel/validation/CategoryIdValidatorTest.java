@@ -6,7 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 public class CategoryIdValidatorTest {
 
@@ -58,7 +62,6 @@ public class CategoryIdValidatorTest {
     }
 
     protected ParseContext buildParseContextComplexType(String reference, String collectionType, String category) {
-        val parseContext = new ParseContext();
         val fieldTypeEntity1 = new FieldTypeEntity();
         val fieldTypeEntity2 = new FieldTypeEntity();
 
@@ -67,11 +70,13 @@ public class CategoryIdValidatorTest {
         fieldTypeEntity1.setBaseFieldType(fieldTypeEntity2);
         fieldTypeEntity1.getComplexFields().add(buildComplexTypeDocumentReference(reference, collectionType, category));
 
+        ParseContext parseContext = new ParseContext();
         parseContext.addToAllTypes(fieldTypeEntity1);
         return parseContext;
     }
 
-    public ComplexFieldEntity buildComplexTypeDocumentReference(String reference, String collectionType, String category) {
+    public ComplexFieldEntity buildComplexTypeDocumentReference(String reference, String collectionType,
+                                                                String category) {
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         if (!reference.equals(COLLECTION)) {

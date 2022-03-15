@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import com.microsoft.applicationinsights.boot.dependencies.apachecommons.lang3.StringUtils;
-import org.apache.poi.util.StringUtil;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
@@ -34,16 +33,16 @@ public class CategoryIdValidator {
             }
         }
         for (FieldTypeEntity complexType : parseContext.getComplexTypes()) {
-            for(ComplexFieldEntity complexField : complexType.getComplexFields()) {
+            for (ComplexFieldEntity complexField : complexType.getComplexFields()) {
                 validateComplexField(parseContext, complexField);
             }
         }
     }
 
     private void validateCaseField(ParseContext parseContext,
-                          String caseTypeId,
-                          String categoryId,
-                          FieldTypeEntity fieldType) {
+                                   String caseTypeId,
+                                   String categoryId,
+                                   FieldTypeEntity fieldType) {
 
         //If category is null then that is valid value
         if (!StringUtils.isEmpty(categoryId)) {
@@ -62,7 +61,7 @@ public class CategoryIdValidator {
     }
 
     private void validateComplexField(ParseContext parseContext,
-                                   ComplexFieldEntity complexField) {
+                                      ComplexFieldEntity complexField) {
 
         String categoryId = complexField.getCategoryId();
 
