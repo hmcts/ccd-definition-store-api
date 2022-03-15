@@ -55,7 +55,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.5
   @AC-6
-  Scenario: Same as AC4, but CategoryID does not exist in the Categories tab – should return 422 when operation is submitted.
+  Scenario: Same as AC4, but CategoryID does not exist in the Categories tab – should return 400 when operation is submitted.
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a missing CategoryID in the Categories tab being referenced as a Document Collection value in the CaseField tab]
@@ -65,7 +65,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.6
   @AC-9
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 422 response
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response
             (Same as AC3 but CategoryID is defined for a field type Text)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -76,7 +76,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.7
   @AC-10
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 422 response
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response
             (Same as AC3 but CategoryID is defined for a field type TextArea)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -87,7 +87,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.8
   @AC-11
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 422 response
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response
             (Same as AC3 but CategoryID is defined for a field type Collection of Text)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -98,7 +98,7 @@ Feature: F-106 New CategoryId Column
 
   @S-106.9
   @AC-12
-  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 422 response
+  Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in CaseField tab – should return 400 response
             (Same as AC3 but CategoryID is defined for a field type YesOrNo)
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -181,7 +181,7 @@ Feature: F-106 New CategoryId Column
     And the response has all other details as expected
 
   @S-106.17
-  @AC-24 @GS
+  @AC-24
   Scenario: Import definition file with valid CategoryID column, but for field type other than Document type in ComplexTypes tab – should return 400 response
   (Same as AC3 but CategoryID is defined for a field type YesOrNo)
     Given a user with [an active profile in CCD]
