@@ -37,6 +37,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_T
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_WAYS_TO_PAY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASELINK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_FLAGS;
@@ -238,6 +239,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity searchPartyBaseType;
     private FieldTypeEntity searchCriteriaBaseType;
     private FieldTypeEntity linkReasonBaseType;
+    private FieldTypeEntity caseLinkBaseType;
 
     @Before
     public void setup() {
@@ -305,6 +307,7 @@ public class ImportServiceImplTest {
         searchPartyBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_PARTY);
         searchCriteriaBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_CRITERIA);
         linkReasonBaseType = buildBaseType(PREDEFINED_COMPLEX_LINK_REASON);
+        caseLinkBaseType = buildBaseType(PREDEFINED_COMPLEX_CASELINK);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -367,7 +370,8 @@ public class ImportServiceImplTest {
             flagLauncherBaseType,
             searchPartyBaseType,
             searchCriteriaBaseType,
-            linkReasonBaseType));
+            linkReasonBaseType,
+            caseLinkBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
@@ -419,7 +423,8 @@ public class ImportServiceImplTest {
             flagLauncherBaseType,
             searchPartyBaseType,
             searchCriteriaBaseType,
-            linkReasonBaseType));
+            linkReasonBaseType,
+            caseLinkBaseType));
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
         CaseFieldEntity caseRef = new CaseFieldEntity();
         caseRef.setReference("[CASE_REFERENCE]");
