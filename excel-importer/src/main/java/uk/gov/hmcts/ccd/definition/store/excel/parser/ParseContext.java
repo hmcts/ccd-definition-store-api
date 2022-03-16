@@ -66,7 +66,7 @@ public class ParseContext {
     private final Map<String, Map<String, CaseRoleEntity>> caseRolesByCaseTypes = Maps.newHashMap();
 
     /**
-     * Accumulate Field types by case type and category IDs for subsequent linking to case fields.
+     * Accumulate Categories by case type and category IDs for subsequent linking to case fields.
      */
     private final Map<String, Map<String, CategoryEntity>> categoryByCaseTypes = Maps.newHashMap();
 

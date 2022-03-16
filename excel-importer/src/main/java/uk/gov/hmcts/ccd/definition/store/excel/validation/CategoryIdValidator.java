@@ -12,16 +12,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 @Component
 public class CategoryIdValidator {
-    protected static final String ERROR_MESSAGE =
+    private static final String ERROR_MESSAGE =
         "%sTab Invalid value '%s' is not a valid " + ColumnName.CATEGORY_ID + " value. ";
-    protected static final String ERROR_MESSAGE_INVALID_CATEGORY =
+    private static final String ERROR_MESSAGE_INVALID_CATEGORY =
         ERROR_MESSAGE + "Category cannot be found.";
-    protected static final String ERROR_MESSAGE_INVALID_FIELD_TYPE =
+    private static final String ERROR_MESSAGE_INVALID_FIELD_TYPE =
         ERROR_MESSAGE + "Category not permitted for this field type.";
 
-
-    public CategoryIdValidator() {
-    }
 
     public void validate(ParseContext parseContext) {
         for (CaseTypeEntity caseType : parseContext.getCaseTypes()) {
@@ -53,7 +50,7 @@ public class CategoryIdValidator {
         }
     }
 
-    public boolean validFieldType(FieldTypeEntity fieldType) {
+    boolean validFieldType(FieldTypeEntity fieldType) {
         return fieldType.getReference().equals(FieldTypeUtils.BASE_DOCUMENT)
             || (fieldType.getBaseFieldType() != null
             && fieldType.getCollectionFieldType() != null
