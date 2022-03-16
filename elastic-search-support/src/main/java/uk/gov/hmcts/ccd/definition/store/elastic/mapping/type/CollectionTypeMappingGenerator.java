@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
@@ -49,7 +50,7 @@ public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
                 jw.beginObject();
                 jw.name(PROPERTIES);
                 jw.beginObject();
-                List<ComplexFieldEntity> complexFields = collectionField.getFieldType()
+                Set<ComplexFieldEntity> complexFields = collectionField.getFieldType()
                     .getCollectionFieldType().getComplexFields();
                 List<ComplexFieldEntity> notIgnoredFields = complexFields.stream()
                     .filter(f -> !shouldIgnore(f)).collect(toList());

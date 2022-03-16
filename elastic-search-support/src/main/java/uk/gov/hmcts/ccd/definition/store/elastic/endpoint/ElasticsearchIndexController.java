@@ -11,12 +11,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.model.IndicesCreationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -32,18 +32,21 @@ import static uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIn
 public class ElasticsearchIndexController {
 
     public static final String ELASTIC_INDEX_URI = "/elastic-support/index";
+    public static final String GS_ELASTIC_INDEX_URI = "/elastic-support/global-search/index";
 
     private final CaseTypeRepository caseTypeRepository;
     private final ElasticDefinitionImportListener elasticDefinitionImportListener;
+    private final ElasticGlobalSearchListener elasticGlobalSearchListener;
 
     @Autowired
     public ElasticsearchIndexController(CaseTypeRepository caseTypeRepository,
-                                        ElasticDefinitionImportListener elasticDefinitionImportListener) {
+                                        ElasticDefinitionImportListener elasticDefinitionImportListener,
+                                        ElasticGlobalSearchListener elasticGlobalSearchListener) {
         this.caseTypeRepository = caseTypeRepository;
         this.elasticDefinitionImportListener = elasticDefinitionImportListener;
+        this.elasticGlobalSearchListener = elasticGlobalSearchListener;
     }
 
-    @Transactional
     @PostMapping(ELASTIC_INDEX_URI)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Builds the Elasticsearch indices for all known case types, using their latest version. This API can "
@@ -67,9 +70,23 @@ public class ElasticsearchIndexController {
         return new IndicesCreationResult(caseTypesToIndex);
     }
 
+    @PostMapping(GS_ELASTIC_INDEX_URI)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation("Builds the Elasticsearch index for Global Search.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Global Search Elasticsearch index has been created successfully."),
+        @ApiResponse(code = 400, message = "An error occurred during creation of index"),
+        @ApiResponse(code = 404, message = "Endpoint is disabled")
+    })
+    public void createGlobalSearchElasticsearchIndex() {
+        log.info("Creating Elasticsearch index for Global search.");
+        elasticGlobalSearchListener.initialiseElasticSearchForGlobalSearch();
+    }
+
     @GetMapping("/elastic-support/case-types")
     @ApiOperation("Returns the list of unique case type references across all jurisdictions.")
     public List<String> getAllCaseTypeReferences() {
         return caseTypeRepository.findAllCaseTypeIds();
     }
+
 }

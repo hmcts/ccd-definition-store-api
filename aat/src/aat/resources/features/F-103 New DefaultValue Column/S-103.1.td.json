@@ -1,0 +1,170 @@
+{
+  "_guid_": "S-103.1",
+  "_extends_": "Get_CaseType",
+  "title": "Import Definition file with correctly configured DefaultValue in the CaseEventToFields tab",
+  "specs": [
+    "an active profile in CCD",
+    "contains the newly defined field - DefaultValue"
+  ],
+  "request": {
+    "pathVariables": {
+      "id": "FT_CaseAccessCategories"
+    }
+  },
+  "expectedResponse": {
+    "body": {
+      "id": "FT_CaseAccessCategories",
+      "description": "Case Type for testing CaseAccessCategories",
+      "version": {
+        "number": "[[ANY_INTEGER_NOT_NULLABLE]]",
+        "live_from": "[[ANYTHING_PRESENT]]",
+        "live_until": null
+      },
+      "name": "[[ANYTHING_PRESENT]]",
+      "jurisdiction": "[[ANYTHING_PRESENT]]",
+      "events": [
+        {
+          "id": "UPDATE",
+          "name": "Update a case",
+          "description": "Update a case",
+          "order": "[[ANYTHING_PRESENT]]",
+          "case_fields": [
+            {
+              "case_field_id": "CaseAccessCategory",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": "[[ANYTHING_PRESENT]]",
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "publish": "[[ANYTHING_PRESENT]]",
+              "publish_as": null,
+              "default_value": null,
+              "case_fields_complex": "[[ANYTHING_PRESENT]]"
+            },
+            {
+              "case_field_id": "TextField",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": true,
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "publish": false,
+              "publish_as": null,
+              "default_value": null,
+              "case_fields_complex": []
+            }
+          ],
+          "pre_states": [
+            "*"
+          ],
+          "post_states": [
+            {
+              "enabling_condition": null,
+              "priority": 99,
+              "post_state_reference": "*"
+            }
+          ],
+          "callback_url_about_to_start_event": null,
+          "retries_timeout_about_to_start_event": [],
+          "callback_url_about_to_submit_event": null,
+          "retries_timeout_url_about_to_submit_event": [],
+          "callback_url_submitted_event": null,
+          "retries_timeout_url_submitted_event": [],
+          "security_classification": "PUBLIC",
+          "acls": [
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            }
+          ],
+          "show_summary": true,
+          "publish": false,
+          "show_event_notes": null,
+          "can_save_draft": false,
+          "end_button_label": null,
+          "event_enabling_condition": null
+        },
+        {
+          "id": "CREATE",
+          "name": "Create a case",
+          "description": "Create a case",
+          "order": 1,
+          "case_fields": [
+            {
+              "case_field_id": "CaseAccessCategory",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": "[[ANYTHING_PRESENT]]",
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "publish": "[[ANYTHING_PRESENT]]",
+              "publish_as": null,
+              "default_value": null,
+              "case_fields_complex": []
+            },
+            {
+              "case_field_id": "TextField",
+              "display_context": "OPTIONAL",
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "show_condition": null,
+              "show_summary_change_option": "[[ANYTHING_PRESENT]]",
+              "show_summary_content_option": null,
+              "label": null,
+              "hint_text": null,
+              "publish": "[[ANYTHING_PRESENT]]",
+              "publish_as": null,
+              "default_value": null,
+              "case_fields_complex": "[[ANYTHING_PRESENT]]"
+            }
+          ],
+          "pre_states": "[[ANYTHING_PRESENT]]",
+          "post_states": [
+            {
+              "enabling_condition": null,
+              "priority": "[[ANYTHING_PRESENT]]",
+              "post_state_reference": "CaseCreated"
+            }
+          ],
+          "callback_url_about_to_start_event": null,
+          "retries_timeout_about_to_start_event": "[[ANYTHING_PRESENT]]",
+          "callback_url_about_to_submit_event": null,
+          "retries_timeout_url_about_to_submit_event": "[[ANYTHING_PRESENT]]",
+          "callback_url_submitted_event": null,
+          "retries_timeout_url_submitted_event": "[[ANYTHING_PRESENT]]",
+          "security_classification": "[[ANYTHING_PRESENT]]",
+          "acls": "[[ANYTHING_PRESENT]]",
+          "show_summary": "[[ANYTHING_PRESENT]]",
+          "publish": "[[ANYTHING_PRESENT]]",
+          "show_event_notes": null,
+          "can_save_draft": "[[ANYTHING_PRESENT]]",
+          "end_button_label": null,
+          "event_enabling_condition": null
+        }
+      ],
+      "states": "[[ANYTHING_PRESENT]]",
+      "acls": "[[ANYTHING_PRESENT]]",
+      "searchAliasFields": [],
+      "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
+      "searchParties": [],
+      "searchCriterias": [],
+      "case_fields": "[[ANYTHING_PRESENT]]",
+      "printable_document_url": null,
+      "callback_get_case_url": null,
+      "retries_get_case_url": [],
+      "security_classification": "PUBLIC"
+    }
+  }
+}

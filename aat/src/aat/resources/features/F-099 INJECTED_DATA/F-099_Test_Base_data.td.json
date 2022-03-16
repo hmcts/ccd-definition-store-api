@@ -1,6 +1,0 @@
-{
-  "_guid_": "F-099_Test_Base_data",
-  "_extends_": "Post_Operation_Base_Data_on_Definition_Store",
-
-  "operationName": "Import definition file"
-}

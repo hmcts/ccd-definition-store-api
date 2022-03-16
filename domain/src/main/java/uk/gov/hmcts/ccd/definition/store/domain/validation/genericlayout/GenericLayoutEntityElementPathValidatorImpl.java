@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -39,9 +40,9 @@ public class GenericLayoutEntityElementPathValidatorImpl implements GenericLayou
         if (entity.getCaseField() != null && entity.getCaseType() != null
             && isNotBlank(entity.getCaseFieldElementPath())) {
             if (entity.getCaseField().isComplexFieldType() || entity.getCaseField().isCollectionFieldType()) {
-                List<CaseFieldEntity> caseFields = entity.getCaseType().getCaseFields();
+                Set<CaseFieldEntity> caseFields = entity.getCaseType().getCaseFields();
 
-                List<String> allPaths = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(caseFields);
+                Set<String> allPaths = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(caseFields);
                 if (!allPaths.contains(entity.getCaseField().getReference() + '.' + entity.getCaseFieldElementPath())) {
                     validationResult.addError(invalidPathError(entity));
                 }

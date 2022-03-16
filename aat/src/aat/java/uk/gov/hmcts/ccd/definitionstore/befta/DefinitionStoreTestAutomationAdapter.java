@@ -30,7 +30,15 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
 
     public void initialiseTestDataLoader() {
         if (testDataLoader == null) {
-            testDataLoader = new DataLoaderToDefinitionStore(this, VALID_CCD_TEST_DEFINITIONS_PATH);
+            testDataLoader = new DataLoaderToDefinitionStore(this, VALID_CCD_TEST_DEFINITIONS_PATH) {
+
+                @Override
+                protected void createRoleAssignment(String resource, String filename) {
+                    // Do not create role assignments.
+                    BeftaUtils.defaultLog("Will NOT create role assignments!");
+                }
+
+            };
 
             BeftaUtils.defaultLog(String.format(
                 "Copy valid def files generated from a JSON template to a temporary location for use in FTAs: '%s'",

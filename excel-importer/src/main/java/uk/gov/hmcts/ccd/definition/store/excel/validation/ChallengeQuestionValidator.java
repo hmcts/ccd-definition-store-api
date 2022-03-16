@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ChallengeQuestionDisplayContextParameterValidator;
@@ -17,6 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportE
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
@@ -31,24 +32,29 @@ public class ChallengeQuestionValidator {
     private ParseContext parseContext;
     private static final String ANSWER_MAIN_SEPARATOR = ",";
     private static final String ANSWER_FIELD_SEPARATOR = "|";
-    private static final String ANSWER_FIELD_DOT_SEPARATOR = ".";
     private static final String ANSWER_FIELD_ROLE_SEPARATOR = ":";
     private static final String ANSWER_FIELD_MATCHER
         = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
     private static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
     private static final String NOT_VALID = " is not a valid ";
-    private ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
+
+
+    private final ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
+    private final DotNotationValidator dotNotationValidator;
 
     @Autowired
     public ChallengeQuestionValidator(
-        ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator) {
+        ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator,
+        DotNotationValidator dotNotationValidator) {
+
         this.challengeQuestionDisplayContextParameterValidator = challengeQuestionDisplayContextParameterValidator;
+        this.dotNotationValidator = dotNotationValidator;
     }
 
     public void validateDisplayContext(ChallengeQuestionTabEntity challengeQuestionTabEntity) {
         final ValidationResult validationResult = challengeQuestionDisplayContextParameterValidator.validate(
             challengeQuestionTabEntity,
-            Collections.EMPTY_LIST
+            Collections.emptyList()
         );
         if (!validationResult.isValid()) {
             throw new ValidationException(validationResult);
@@ -119,9 +125,9 @@ public class ChallengeQuestionValidator {
         final String[] answersRules = answers.split(ANSWER_MAIN_SEPARATOR);
 
         if (answersRules.length > 0 && answersRules.length != 1) {
-            Arrays.asList(answersRules).stream().forEach(currentAnswerExpression -> {
-                validateAnswerExpression(definitionDataItem, caseTypeEntity, currentAnswerExpression);
-            });
+            Arrays.asList(answersRules).forEach(currentAnswerExpression ->
+                validateAnswerExpression(definitionDataItem, caseTypeEntity, currentAnswerExpression)
+            );
         } else {
             validateAnswerExpression(definitionDataItem, caseTypeEntity, answers);
         }
@@ -133,22 +139,24 @@ public class ChallengeQuestionValidator {
         String errorMessage = ERROR_MESSAGE + " value: %s"
             + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
             + ", Please check the expression format and the roles.";
+
         final String[] answersFields = currentAnswerExpression.split(Pattern.quote(ANSWER_FIELD_SEPARATOR));
-        Arrays.asList(answersFields).stream().forEach(answersField -> {
-            //validate the format.
+        Arrays.asList(answersFields).forEach(answersField -> {
+            // validate the format.
             if (!answersField.matches(ANSWER_FIELD_MATCHER)) {
                 throw new InvalidImportException(String.format(errorMessage, answersField));
             }
-            //validate the roles.
+            // validate the roles.
             if (answersField.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
                 final String role = answersField.split(ANSWER_FIELD_ROLE_SEPARATOR)[1];
                 final Optional<AccessProfileEntity> result = this.parseContext.getAccessProfile(
                     caseTypeEntity.getReference(),
                     role);
-                if (!result.isPresent()) {
+                if (result.isEmpty()) {
                     throw new InvalidImportException(String.format(errorMessage, answersField));
                 }
             }
+
             // validate dot notation content.
             validateAnswerFieldExpression(definitionDataItem.getString(ColumnName.CASE_TYPE_ID), answersField);
         });
@@ -156,31 +164,24 @@ public class ChallengeQuestionValidator {
 
     private void validateAnswerFieldExpression(String currentCaseType, String expression) {
         // remove previous validated ${} notation
-        final String dotNotationExpression = expression.replace("$", "")
+        String dotNotationExpression = expression.replace("$", "")
             .replace("{", "")
             .replace("}", "");
 
+        // remove role
+        if (dotNotationExpression.contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
+            dotNotationExpression = dotNotationExpression.substring(0, dotNotationExpression.indexOf(":"));
+        }
+
         try {
-            if (!dotNotationExpression.contains(ANSWER_FIELD_DOT_SEPARATOR)) {
-                validateSingleExpression(dotNotationExpression, currentCaseType);
-            } else {
-                final String[] splittedDotNotationExpression = dotNotationExpression
-                    .split(Pattern.quote(ANSWER_FIELD_DOT_SEPARATOR));
-                final FieldTypeEntity fieldType = parseContext.getCaseFieldType(
-                    currentCaseType,
-                    splittedDotNotationExpression[0]);
-                final String[] attributesDotNotation = Arrays.copyOfRange(
-                    splittedDotNotationExpression, 1, splittedDotNotationExpression.length);
-                IntStream.range(0, attributesDotNotation.length).forEach(index -> {
-                    // Remove Role is needed.
-                    if (attributesDotNotation[index].contains(ANSWER_FIELD_ROLE_SEPARATOR)) {
-                        attributesDotNotation[index] = attributesDotNotation[index]
-                            .substring(0, attributesDotNotation[index].indexOf(":"));
-                    }
-                    validateAttributes(
-                        attributesDotNotation[index], fieldType.getComplexFields(), attributesDotNotation, index);
-                });
-            }
+            // validate using common validator for dot notation
+            dotNotationValidator.validate(
+                this.parseContext,
+                SheetName.CHALLENGE_QUESTION_TAB,
+                ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD,
+                currentCaseType,
+                dotNotationExpression);
+
         } catch (Exception spe) {
             throw new InvalidImportException(ERROR_MESSAGE + " value: "
                 + expression + NOT_VALID + ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD
@@ -197,7 +198,7 @@ public class ChallengeQuestionValidator {
     }
 
     private void validateAttributes(String currentAttribute,
-                                    List<ComplexFieldEntity> complexFieldACLEntity,
+                                    Set<ComplexFieldEntity> complexFieldACLEntity,
                                     String[] attributesDotNotation,
                                     int currentIndex) {
         String errorMessage = ERROR_MESSAGE + " value: "
@@ -223,7 +224,7 @@ public class ChallengeQuestionValidator {
         }
     }
 
-    private Optional<ComplexFieldEntity> getComplexFieldEntity(List<ComplexFieldEntity> complexFieldACLEntity,
+    private Optional<ComplexFieldEntity> getComplexFieldEntity(Set<ComplexFieldEntity> complexFieldACLEntity,
                                                                String currentAttribute) {
         return complexFieldACLEntity.stream().filter(complexFieldACLEItem ->
                 complexFieldACLEItem.getReference().equals(currentAttribute)).findAny();

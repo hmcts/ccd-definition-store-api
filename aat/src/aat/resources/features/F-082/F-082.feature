@@ -1,5 +1,5 @@
 #============================================
-@F-082
+@F-082 @Smoke
 Feature: F-082: Get Case Type by Jurisdiction
 #============================================
 
@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-082.1 @Ignore # disable temporarily
+@S-082.1
 Scenario: must return 200
 
     Given a user with [an active profile in CCD]

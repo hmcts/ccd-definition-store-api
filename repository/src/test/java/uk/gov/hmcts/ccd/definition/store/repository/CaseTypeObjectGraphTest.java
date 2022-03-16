@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -112,7 +113,7 @@ public class CaseTypeObjectGraphTest {
         caseType.addCaseField(cf);
 
         final EventEntity e1 = createEvent("eid", "ename", 0, SecurityClassification.PRIVATE);
-        e1.addEventCaseField(helper.createEventCaseField(cf, DisplayContext.READONLY, "showCond", true));
+        e1.addEventCaseField(helper.createEventCaseField(cf, DisplayContext.READONLY, "showCond", true, ""));
         final EventEntity e2 = createEvent("eid2", "ename2", 1, SecurityClassification.RESTRICTED);
         final StateEntity s1 = createState("stateId", "stateName", "desc", 3, TODAY, TOMORROW);
         final StateEntity s2 = createState("stateId2", "stateName2", "desc2", 3, TODAY, TOMORROW);
@@ -198,12 +199,13 @@ public class CaseTypeObjectGraphTest {
         assertThat(fetchedState1.getReference(), equalTo("stateId"));
         assertThat(fetchedState1.getLiveFrom(), equalTo(TODAY));
         assertThat(fetchedState1.getLiveTo(), equalTo(TOMORROW));
-        assertStateAccessProfileEntity(fetchedState1, stateACLEntity1, fetchedState1.getStateACLEntities().get(0));
-        assertStateAccessProfileEntity(fetchedState1, stateACLEntity2, fetchedState1.getStateACLEntities().get(1));
+        Iterator<StateACLEntity> stateIterator = fetchedState1.getStateACLEntities().iterator();
+        assertStateAccessProfileEntity(fetchedState1, stateACLEntity1, stateIterator.next());
+        assertStateAccessProfileEntity(fetchedState1, stateACLEntity2, stateIterator.next());
 
         // Check case field
         assertThat(fetched.getCaseFields(), hasSize(1));
-        final CaseFieldEntity caseField = fetched.getCaseFields().get(0);
+        final CaseFieldEntity caseField = fetched.getCaseFields().iterator().next();
         assertThat(caseField.getReference(), equalTo(CASE_FIELD_REFERENCE));
         assertThat(caseField.getLabel(), equalTo(CASE_FIELD_LABEL));
         assertThat(caseField.getFieldType().getReference(), is(fieldType.getReference()));
@@ -212,7 +214,7 @@ public class CaseTypeObjectGraphTest {
 
         // Check security classifications can be updated
         fetched.setSecurityClassification(SecurityClassification.RESTRICTED);
-        fetched.getCaseFields().get(0).setSecurityClassification(SecurityClassification.PRIVATE);
+        fetched.getCaseFields().iterator().next().setSecurityClassification(SecurityClassification.PRIVATE);
         fetched.getEvents().get(0).setSecurityClassification(SecurityClassification.PUBLIC);
 
         // Check authorisation case types
@@ -258,7 +260,7 @@ public class CaseTypeObjectGraphTest {
         assertNotNull(optionalfetched.get());
         CaseTypeEntity fetchedAltered = optionalfetched.get();
         assertThat(fetchedAltered.getSecurityClassification(), equalTo(SecurityClassification.RESTRICTED));
-        assertThat(fetchedAltered.getCaseFields().get(0).getSecurityClassification(),
+        assertThat(fetchedAltered.getCaseFields().iterator().next().getSecurityClassification(),
             equalTo(SecurityClassification.PRIVATE));
         assertThat(fetchedAltered.getEvents().get(0).getSecurityClassification(),
             equalTo(SecurityClassification.PUBLIC));

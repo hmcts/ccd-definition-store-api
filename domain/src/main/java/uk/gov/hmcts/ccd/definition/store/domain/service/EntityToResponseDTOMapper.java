@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -30,7 +32,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigE
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
@@ -59,7 +63,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCriteria;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchParty;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
@@ -305,6 +311,12 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "authorisation", target = "authorisations")
     RoleToAccessProfiles map(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
 
+    @Mapping(source = "caseType.reference", target = "caseTypeId")
+    SearchCriteria map(SearchCriteriaEntity searchCriteriaEntity);
+
+    @Mapping(source = "caseType.reference", target = "caseTypeId")
+    SearchParty map(SearchPartyEntity searchPartyEntity);
+
     @Mapping(source = "caseType.reference", target = "id")
     @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")
     RoleAssignment roleToAccessProfilesEntityToRoleAssignment(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
@@ -319,7 +331,7 @@ public interface EntityToResponseDTOMapper {
             // Default constructor
         }
 
-        static List<AccessControlList> map(List<? extends Authorisation> authorisation) {
+        static List<AccessControlList> map(Collection<? extends Authorisation> authorisation) {
             return authorisation.stream()
                 .map(auth -> new AccessControlList(auth.getAccessProfile().getReference(),
                     auth.getCreate(),
@@ -372,9 +384,9 @@ public interface EntityToResponseDTOMapper {
             return new ArrayList<>();
         }
 
-        private static List<CaseField> getCaseFields(List<ComplexFieldEntity> complexFieldEntityList) {
+        private static List<CaseField> getCaseFields(Set<ComplexFieldEntity> complexFieldEntityList) {
             return complexFieldEntityList.stream()
-                .map(complexFieldEntity -> EntityToResponseDTOMapper.INSTANCE.map(complexFieldEntity))
+                .map(EntityToResponseDTOMapper.INSTANCE::map)
                 .sorted(NULLS_LAST_ORDER_COMPARATOR)
                 .collect(Collectors.toList());
         }

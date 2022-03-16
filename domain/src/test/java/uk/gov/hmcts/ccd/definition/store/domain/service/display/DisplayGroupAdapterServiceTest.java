@@ -111,11 +111,11 @@ class DisplayGroupAdapterServiceTest {
             assertThat(displayGroupEntity.getDisplayGroupCaseFields().size(),
                 is(wizardPage.getWizardPageFields().size()));
 
-            assertEquals(displayGroupEntity.getDisplayGroupCaseFields().get(0).getCaseField().getReference(),
+            assertEquals(displayGroupEntity.getDisplayGroupCaseFields().iterator().next().getCaseField().getReference(),
                 wizardPage.getWizardPageFields().get(0).getCaseFieldId());
-            assertEquals(displayGroupEntity.getDisplayGroupCaseFields().get(0).getOrder(),
+            assertEquals(displayGroupEntity.getDisplayGroupCaseFields().iterator().next().getOrder(),
                 wizardPage.getWizardPageFields().get(0).getOrder());
-            assertEquals(displayGroupEntity.getDisplayGroupCaseFields().get(0).getColumnNumber(),
+            assertEquals(displayGroupEntity.getDisplayGroupCaseFields().iterator().next().getColumnNumber(),
                 wizardPage.getWizardPageFields().get(0).getPageColumnNumber());
         }
 

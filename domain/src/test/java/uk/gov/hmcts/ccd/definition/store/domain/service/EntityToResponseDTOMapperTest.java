@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -40,7 +41,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigE
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SortOrder;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
@@ -70,7 +73,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCasesResultField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchCriteria;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchInputField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.SearchParty;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultsField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResultField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
@@ -115,6 +120,12 @@ class  EntityToResponseDTOMapperTest {
         spyOnClassUnderTest = spy(classUnderTest);
     }
 
+    private CaseTypeEntity caseTypeEntity(String reference) {
+        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        caseTypeEntity.setReference(reference);
+        return caseTypeEntity;
+    }
+
     @Nested
     @DisplayName("Should return a CaseEventField which matches the EventCaseFieldEntity")
     class MapEventCaseFieldEntity {
@@ -129,6 +140,7 @@ class  EntityToResponseDTOMapperTest {
             eventCaseFieldEntity.setRetainHiddenValue(true);
             eventCaseFieldEntity.setPublish(true);
             eventCaseFieldEntity.setPublishAs("PublishAs test");
+            eventCaseFieldEntity.setDefaultValue("DefaultValue test");
 
             CaseEventField caseEventField = spyOnClassUnderTest.map(
                 eventCaseFieldEntity
@@ -149,7 +161,9 @@ class  EntityToResponseDTOMapperTest {
                 () -> assertEquals("publish", eventCaseFieldEntity.getPublish(),
                                    caseEventField.getPublish()),
                 () -> assertEquals("publishAs", eventCaseFieldEntity.getPublishAs(),
-                                   caseEventField.getPublishAs())
+                                   caseEventField.getPublishAs()),
+                () -> assertEquals("defaultValue", eventCaseFieldEntity.getDefaultValue(),
+                                   caseEventField.getDefaultValue())
             );
         }
 
@@ -312,8 +326,11 @@ class  EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(stateEntity3)).thenReturn(caseState3);
 
             CaseFieldEntity caseFieldEntity1 = new CaseFieldEntity();
+            caseFieldEntity1.setId(1);
             CaseFieldEntity caseFieldEntity2 = new CaseFieldEntity();
+            caseFieldEntity2.setId(2);
             CaseFieldEntity caseFieldEntity3 = new CaseFieldEntity();
+            caseFieldEntity3.setId(3);
             CaseField caseField1 = new CaseField();
             CaseField caseField2 = new CaseField();
             CaseField caseField3 = new CaseField();
@@ -556,8 +573,11 @@ class  EntityToResponseDTOMapperTest {
             when(spyOnClassUnderTest.map(jurisdictionEntity)).thenReturn(jurisdiction);
 
             EventLiteEntity eventEntity1 = new EventLiteEntity();
+            eventEntity1.setId(1);
             EventLiteEntity eventEntity2 = new EventLiteEntity();
+            eventEntity2.setId(2);
             EventLiteEntity eventEntity3 = new EventLiteEntity();
+            eventEntity3.setId(3);
             CaseEventLite caseEvent1 = new CaseEventLite();
             CaseEventLite caseEvent2 = new CaseEventLite();
             CaseEventLite caseEvent3 = new CaseEventLite();
@@ -589,7 +609,9 @@ class  EntityToResponseDTOMapperTest {
             eventEntity3.addEventACL(eventLiteACLEntity);
 
             StateACLEntity stateACLEntity1 = new StateACLEntity();
+            stateACLEntity1.setId(1);
             StateACLEntity stateACLEntity2 = new StateACLEntity();
+            stateACLEntity2.setId(2);
             stateACLEntity1.setAccessProfile(accessProfileEntity);
             stateACLEntity2.setAccessProfile(accessProfileEntity);
             stateEntity1.addStateACLEntities(asList(stateACLEntity1, stateACLEntity2));
@@ -1072,12 +1094,6 @@ class  EntityToResponseDTOMapperTest {
             return complexFieldACLEntity;
         }
 
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(reference);
-            return caseTypeEntity;
-        }
-
     }
 
     @Nested
@@ -1261,8 +1277,11 @@ class  EntityToResponseDTOMapperTest {
             displayGroupEntity.setOrder(69);
 
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity1 = new DisplayGroupCaseFieldEntity();
+            displayGroupCaseFieldEntity1.setId(1);
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity2 = new DisplayGroupCaseFieldEntity();
+            displayGroupCaseFieldEntity2.setId(2);
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity3 = new DisplayGroupCaseFieldEntity();
+            displayGroupCaseFieldEntity3.setId(3);
 
             CaseTypeTabField caseTypeTabField1 = new CaseTypeTabField();
             CaseTypeTabField caseTypeTabField2 = new CaseTypeTabField();
@@ -1667,7 +1686,7 @@ class  EntityToResponseDTOMapperTest {
             ChallengeQuestionTabEntity challengeQuestionEntity = new ChallengeQuestionTabEntity();
             challengeQuestionEntity.setAnswerField("Answer Field");
             challengeQuestionEntity.setAnswerFieldType(fieldTypeEntity("FieldTypeReference"));
-            challengeQuestionEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+            challengeQuestionEntity.setCaseType(caseTypeEntity("Reference"));
             challengeQuestionEntity.setChallengeQuestionId("ChallengeQuestionId");
             challengeQuestionEntity.setDisplayContextParameter("DisplayContextParameter");
             challengeQuestionEntity.setId(1);
@@ -1713,7 +1732,7 @@ class  EntityToResponseDTOMapperTest {
 
         private CaseTypeLiteEntity caseTypeEntity(String reference) {
             CaseTypeLiteEntity caseTypeEntity = new CaseTypeLiteEntity();
-            caseTypeEntity.setReference("Reference");
+            caseTypeEntity.setReference(reference);
             return caseTypeEntity;
         }
     }
@@ -1724,50 +1743,133 @@ class  EntityToResponseDTOMapperTest {
 
         @Test
         void testMapRoleToAccessProfileEntity() {
+            final Date liveFrom = Date.from(Instant.now().minus(1, ChronoUnit.DAYS));
+            final Date liveTo = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
+
             RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
             roleToAccessProfilesEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
             roleToAccessProfilesEntity.setRoleName("judge");
-            roleToAccessProfilesEntity.setLiveFrom(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
-            roleToAccessProfilesEntity.setLiveTo(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+            roleToAccessProfilesEntity.setLiveFrom(liveFrom);
+            roleToAccessProfilesEntity.setLiveTo(liveTo);
             roleToAccessProfilesEntity.setReadOnly(true);
             roleToAccessProfilesEntity.setDisabled(true);
             roleToAccessProfilesEntity.setAuthorisation("auth1,auth2");
             roleToAccessProfilesEntity.setAccessProfiles("caseworker-befta_master,caseworker-befta_master-solicitor");
+            roleToAccessProfilesEntity.setCaseAccessCategories("Cat1,Cat2");
 
-            RoleToAccessProfiles roleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
+            final RoleToAccessProfiles actualRoleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
-            assertEquals(roleToAccessProfiles.getCaseTypeId(), roleToAccessProfilesEntity.getCaseType().getReference());
-            assertEquals(roleToAccessProfiles.getRoleName(), roleToAccessProfilesEntity.getRoleName());
-            assertEquals(roleToAccessProfiles.getLiveTo(), roleToAccessProfilesEntity.getLiveTo());
-            assertEquals(roleToAccessProfiles.getLiveFrom(), roleToAccessProfilesEntity.getLiveFrom());
-            assertEquals(roleToAccessProfiles.getReadOnly(), roleToAccessProfilesEntity.getReadOnly());
-            assertEquals(roleToAccessProfiles.getDisabled(), roleToAccessProfilesEntity.getDisabled());
-            assertEquals(roleToAccessProfiles.getAuthorisations(), roleToAccessProfilesEntity.getAuthorisation());
-            assertEquals(roleToAccessProfiles.getAccessProfiles(), roleToAccessProfilesEntity.getAccessProfiles());
+            Assertions.assertThat(actualRoleToAccessProfiles)
+                .isNotNull()
+                .satisfies(actual -> {
+                    Assertions.assertThat(actual.getCaseTypeId()).isEqualTo("CaseTypeReference");
+                    Assertions.assertThat(actual.getRoleName()).isEqualTo("judge");
+                    Assertions.assertThat(actual.getLiveFrom()).isEqualTo(liveFrom);
+                    Assertions.assertThat(actual.getLiveTo()).isEqualTo(liveTo);
+                    Assertions.assertThat(actual.getReadOnly()).isTrue();
+                    Assertions.assertThat(actual.getDisabled()).isTrue();
+                    Assertions.assertThat(actual.getAuthorisations()).isEqualTo("auth1,auth2");
+                    Assertions.assertThat(actual.getAccessProfiles())
+                        .isEqualTo("caseworker-befta_master,caseworker-befta_master-solicitor");
+                    Assertions.assertThat(actual.getCaseAccessCategories()).isEqualTo("Cat1,Cat2");
+                });
         }
 
         @Test
         void testMapEmptyRoleToAccessProfileEntity() {
-            RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
+            final RoleToAccessProfiles expectedRoleToAccessProfiles = new RoleToAccessProfiles();
 
-            RoleToAccessProfiles roleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
+            final RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();
 
-            assertNull(roleToAccessProfiles.getAccessProfiles());
-            assertNull(roleToAccessProfiles.getCaseTypeId());
-            assertNull(roleToAccessProfiles.getAuthorisations());
-            assertNull(roleToAccessProfiles.getDisabled());
-            assertNull(roleToAccessProfiles.getReadOnly());
-            assertNull(roleToAccessProfiles.getLiveFrom());
-            assertNull(roleToAccessProfiles.getLiveTo());
-            assertNull(roleToAccessProfiles.getRoleName());
+            final RoleToAccessProfiles actualRoleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
+
+            Assertions.assertThat(actualRoleToAccessProfiles)
+                .isNotNull()
+                .isEqualTo(expectedRoleToAccessProfiles);
+        }
+    }
+
+
+    @Nested
+    @DisplayName("Should return SearchCriteria model whose fields match those in the SearchCriteriaEntity")
+    class MapSearchCriteriaTests {
+
+        @Test
+        void testMapSearchCriteriaEntity() {
+            SearchCriteriaEntity searchCriteriaEntity = new SearchCriteriaEntity();
+            searchCriteriaEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+            searchCriteriaEntity.setOtherCaseReference("OtherCaseReference");
+            searchCriteriaEntity.setLiveFrom(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+            searchCriteriaEntity.setLiveTo(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
+
+            SearchCriteria searchCriteria = classUnderTest.map(searchCriteriaEntity);
+
+            assertEquals(searchCriteria.getCaseTypeId(), searchCriteriaEntity.getCaseType().getReference());
+            assertEquals(searchCriteria.getOtherCaseReference(), searchCriteriaEntity.getOtherCaseReference());
+            assertEquals(searchCriteria.getLiveTo(), searchCriteriaEntity.getLiveTo());
+            assertEquals(searchCriteria.getLiveFrom(), searchCriteriaEntity.getLiveFrom());
         }
 
+        @Test
+        void testMapEmptyRoleToAccessProfileEntity() {
+            SearchCriteriaEntity searchCriteriaEntity = new SearchCriteriaEntity();
 
-        private CaseTypeEntity caseTypeEntity(String reference) {
-            CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-            caseTypeEntity.setReference(reference);
-            return caseTypeEntity;
+            SearchCriteria searchCriteria = classUnderTest.map(searchCriteriaEntity);
+
+            assertNull(searchCriteria.getCaseTypeId());
+            assertNull(searchCriteria.getLiveFrom());
+            assertNull(searchCriteria.getLiveTo());
+            assertNull(searchCriteria.getOtherCaseReference());
         }
+
+    }
+
+
+    @Nested
+    @DisplayName("Should return SearchParty model whose fields match those in the SearchPartyEntity")
+    class MapSearchPartyTests {
+
+
+        @Test
+        void testMapSearchPartyEntity() {
+            SearchPartyEntity searchPartyEntity = new SearchPartyEntity();
+            searchPartyEntity.setCaseType(caseTypeEntity("CaseTypeReference"));
+
+
+            SearchParty searchParty = classUnderTest.map(searchPartyEntity);
+
+            assertEquals(searchParty.getCaseTypeId(), searchPartyEntity.getCaseType().getReference());
+            assertEquals(searchParty.getSearchPartyName(), searchPartyEntity.getSearchPartyName());
+            assertEquals(searchParty.getSearchPartyAddressLine1(), searchPartyEntity.getSearchPartyAddressLine1());
+            assertEquals(searchParty.getSearchPartyEmailAddress(), searchPartyEntity.getSearchPartyEmailAddress());
+            assertEquals(searchParty.getSearchPartyPostCode(), searchPartyEntity.getSearchPartyPostCode());
+            assertEquals(searchParty.getSearchPartyDob(), searchPartyEntity.getSearchPartyDob());
+            assertEquals(searchParty.getSearchPartyDod(), searchPartyEntity.getSearchPartyDod());
+            assertEquals(searchParty.getLiveTo(), searchPartyEntity.getLiveTo());
+            assertEquals(searchParty.getLiveFrom(), searchPartyEntity.getLiveFrom());
+            assertEquals(searchParty.getSearchPartyCollectionFieldName(),
+                searchPartyEntity.getSearchPartyCollectionFieldName());
+
+        }
+
+        @Test
+        void testMapEmptySearchPartyEntity() {
+            SearchPartyEntity searchPartyEntity = new SearchPartyEntity();
+
+            SearchParty searchParty = classUnderTest.map(searchPartyEntity);
+
+            assertNull(searchParty.getCaseTypeId());
+            assertNull(searchParty.getLiveFrom());
+            assertNull(searchParty.getLiveTo());
+            assertNull(searchParty.getSearchPartyName());
+            assertNull(searchParty.getSearchPartyAddressLine1());
+            assertNull(searchParty.getSearchPartyEmailAddress());
+            assertNull(searchParty.getSearchPartyPostCode());
+            assertNull(searchParty.getSearchPartyDob());
+            assertNull(searchParty.getSearchPartyDod());
+            assertNull(searchParty.getSearchPartyCollectionFieldName());
+        }
+
     }
 
     private void assertComplexACLs(List<ComplexFieldACLEntity> authorisation, List<ComplexACL> accessControlList) {
@@ -1776,7 +1878,8 @@ class  EntityToResponseDTOMapperTest {
         }
     }
 
-    private void assertAcls(List<? extends Authorisation> authorisation, List<AccessControlList> accessControlList) {
+    private void assertAcls(Collection<? extends Authorisation> authorisation,
+                            List<AccessControlList> accessControlList) {
         assertEquals(authorisation.size(), accessControlList.size());
         for (Authorisation authItem : authorisation) {
             assertThat(accessControlList,

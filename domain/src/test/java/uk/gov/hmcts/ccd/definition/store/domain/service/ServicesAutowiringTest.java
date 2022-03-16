@@ -53,6 +53,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CategoryTabRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.ChallengeQuestionTabRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DraftDefinitionRepositoryDecorator;
@@ -63,6 +64,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionUiConfigRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfilesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SearchPartyRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
@@ -253,6 +256,13 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
 
         @Bean
         @Primary
+        public CategoryTabRepository categoryTabRepository() {
+            return mock(CategoryTabRepository.class);
+        }
+
+
+        @Bean
+        @Primary
         public BannerRepository bannerRepository() {
             return mock(BannerRepository.class);
         }
@@ -357,6 +367,18 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public RoleToAccessProfilesRepository roleToAccessProfileRepository() {
             return mock(RoleToAccessProfilesRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public SearchCriteriaRepository getSearchCriteriaRepository() {
+            return mock(SearchCriteriaRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public SearchPartyRepository searchPartyRepository() {
+            return mock(SearchPartyRepository.class);
         }
     }
 }

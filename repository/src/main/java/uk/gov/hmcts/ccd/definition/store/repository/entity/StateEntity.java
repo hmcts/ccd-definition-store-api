@@ -12,12 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -28,7 +29,7 @@ public class StateEntity implements Serializable, Referencable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "state_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)
@@ -54,8 +55,9 @@ public class StateEntity implements Serializable, Referencable {
     private CaseTypeEntity caseType;
 
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "stateEntity")
-    @Fetch(value = FetchMode.SUBSELECT)
-    private final List<StateACLEntity> stateACLEntities = new ArrayList<>();
+    @Fetch(value = FetchMode.JOIN)
+    @OrderBy("id")
+    private final Set<StateACLEntity> stateACLEntities = new LinkedHashSet<>();
 
     @Column(name = "title_display")
     private String titleDisplay;
@@ -121,7 +123,7 @@ public class StateEntity implements Serializable, Referencable {
         return caseType;
     }
 
-    public List<StateACLEntity> getStateACLEntities() {
+    public Set<StateACLEntity> getStateACLEntities() {
         return stateACLEntities;
     }
 

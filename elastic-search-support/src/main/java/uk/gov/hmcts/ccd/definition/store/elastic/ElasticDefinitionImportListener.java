@@ -54,7 +54,6 @@ public abstract class ElasticDefinitionImportListener {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
-
                 if (!elasticClient.aliasExists(baseIndexName)) {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     String alias = baseIndexName;

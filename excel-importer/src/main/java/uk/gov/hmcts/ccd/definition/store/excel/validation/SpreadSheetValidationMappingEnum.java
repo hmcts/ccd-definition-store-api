@@ -17,13 +17,13 @@ public enum SpreadSheetValidationMappingEnum {
     FIXED_LISTS_LIST_ELEMENT_CODE("FixedLists", "ListElementCode", 150),
 
     COMPLEX_TYPES_LIST_ELEMENT_CODE("ComplexTypes", "ListElementCode", 70),
-    COMPLEX_TYPES_ELEMENT_LABEL("ComplexTypes", "ElementLabel", 200),
+    COMPLEX_TYPES_ELEMENT_LABEL("ComplexTypes", "ElementLabel", 500),
     COMPLEX_TYPES_FIELD_SHOW_CONDITION("ComplexTypes", "FieldShowCondition", 1000),
 
     CASE_TYPE_TAB_ID("CaseTypeTab", "ID", 70),
 
     EVENT_TO_COMPLEX_TYPES_LIST_ELEMENT_CODE("EventToComplexTypes", "ListElementCode", 70),
-    EVENT_TO_COMPLEX_TYPES_EVENT_ELEMENT_LABEL("EventToComplexTypes", "EventElementLabel", 200),
+    EVENT_TO_COMPLEX_TYPES_EVENT_ELEMENT_LABEL("EventToComplexTypes", "EventElementLabel", 500),
     EVENT_TO_COMPLEX_TYPES_FIELD_SHOW_CONDITION("EventToComplexTypes", "FieldShowCondition", 1000),
 
     CASE_TYPE_TAB_TAB_ID("CaseTypeTab", "TabID", 70),

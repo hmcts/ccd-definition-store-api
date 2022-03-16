@@ -29,7 +29,10 @@ public enum SheetName {
     SEARCH_ALIAS("SearchAlias"),
     BANNER("Banner"),
     CHALLENGE_QUESTION_TAB("ChallengeQuestion"),
-    ROLE_TO_ACCESS_PROFILES("RoleToAccessProfiles");
+    ROLE_TO_ACCESS_PROFILES("RoleToAccessProfiles"),
+    SEARCH_PARTY("SearchParty"),
+    SEARCH_CRITERIA("SearchCriteria"),
+    CATEGORY("Categories");
 
     private final String name;
 
