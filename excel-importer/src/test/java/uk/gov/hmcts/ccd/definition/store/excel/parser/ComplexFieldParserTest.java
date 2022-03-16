@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ComplexFieldParserTest extends ParserTestBase {
+class ComplexFieldParserTest extends ParserTestBase {
 
     private static final String COMPLEX_ID = "Address";
     private static final String COMPLEX_LIST_ELEMENT_CODE = "AddressLine1";
@@ -57,7 +57,7 @@ public class ComplexFieldParserTest extends ParserTestBase {
 
 
     @BeforeEach
-    public void setup() throws InvalidShowConditionException {
+    void setup() throws InvalidShowConditionException {
         init();
         parseContext = new ParseContext();
         jurisdiction = new JurisdictionEntity();
@@ -79,7 +79,7 @@ public class ComplexFieldParserTest extends ParserTestBase {
     }
 
     @Test
-    public void testComplexParser() {
+    void testComplexParser() {
         FieldTypeEntity fieldTypeEntity2 = new FieldTypeEntity();
         final ParseResult.Entry<FieldTypeEntity> resultEntry = ParseResult.Entry.createNew(fieldTypeEntity2);
 

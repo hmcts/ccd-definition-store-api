@@ -1,7 +1,7 @@
 {
   "_guid_": "S-106.15",
   "_extends_": "Import_Base_data",
-  "title": "Import Definition file without the CategoryID column in the ComplexTypes tab",
+  "title": "Import Definition file containing CategoryID in the Categories tab being referenced as a TextArea value in the ComplexTypes tab",
   "specs": [
     "an active profile in CCD",
     "contains a CategoryID in the Categories tab being referenced as a TextArea value in the ComplexTypes tab"

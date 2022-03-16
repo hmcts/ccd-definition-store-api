@@ -19,8 +19,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -262,7 +264,7 @@ class ParseContextTest {
     }
 
     @Test
-    public void testGetComplexTypes() {
+    void testGetComplexTypes() {
         FieldTypeEntity fieldTypeEntity1 = new FieldTypeEntity();
         fieldTypeEntity1.setReference("Entity1");
         FieldTypeEntity complexEntity = new FieldTypeEntity();
@@ -279,24 +281,29 @@ class ParseContextTest {
         parseContext.addToAllTypes(fieldTypeEntity2);
 
         assertEquals(1, parseContext.getComplexTypes().size());
+        assertTrue(parseContext.getComplexTypes().contains(fieldTypeEntity1));
     }
 
     @Test
-    public void testGetComplexTypesEmpty() {
+    void testGetComplexTypesEmpty() {
         assertEquals(0, parseContext.getComplexTypes().size());
     }
 
     @Test
-    public void testIsCheckCategoryExists() {
+    void testIsCheckCategoryExists() {
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setCategoryId("A");
         String caseTypeId = "CaseTypeId";
         parseContext.registerCaseTypeForCategory(caseTypeId, categoryEntity);
-        Assertions.assertTrue(parseContext.checkCategoryExists("A"));
+        assertTrue(parseContext.checkCategoryExists("A"));
     }
 
     @Test
-    public void testIsCheckCategoryDoesNotExists() {
-        Assertions.assertFalse(parseContext.checkCategoryExists("A"));
+    void testIsCheckCategoryDoesNotExists() {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setCategoryId("B");
+        String caseTypeId = "CaseTypeId";
+        parseContext.registerCaseTypeForCategory(caseTypeId, categoryEntity);
+        assertFalse(parseContext.checkCategoryExists("A"));
     }
 }
