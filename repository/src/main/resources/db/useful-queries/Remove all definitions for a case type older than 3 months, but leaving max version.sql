@@ -6,7 +6,8 @@ DO $$
 DECLARE
   --caseTypeReference can be partial string for a like comparison
   --i.e 'BEFTA_'
-  caseTypeReference constant varchar := '???';
+  --caseTypeReference constant varchar := 'FT_';
+  caseTypeReferences constant text[] := array['FT_GlobalSearch','FT_CRUD_3','FT_DateTimeFormats','FT_CRUD_5','FT_NoCAutoApprovalCaseType','FT_MasterCaseType','FT_Tabs','FT_NoCCaseType','FT_ConditionalPostState','FT_ComplexFieldsOrdering','FT_Regex','FT_DynamicFieldCaseType','FT_CRUD_4','FT_RetainHiddenValue','FT_Questions','FT_CRUD_2','FT_WBSortOrder','FT_CRUD','FT_CaseViewCallbackMessages','FT_CaseAccessCategories_2','FT_NoCWithoutEventsCaseType','FT_MultiplePages','FT_CaseAccessCategories_1','FT_ComplexCRUD','FT_ComplexOrganisation','FT_CaseAccessCategories','FT_CRUD_6','FT_ComplexCollectionComplex','FT_Conditionals','FT_NoCases','FT_CaseProgression'];
 
 BEGIN
 
@@ -26,7 +27,8 @@ BEGIN
 
   --Store just the filtered case_type ids to be used for deletion purposes
   CREATE TEMP TABLE tmp_case_type_ids ON COMMIT DROP AS
-    SELECT id FROM view__case_type_to_remove WHERE reference LIKE '%' || caseTypeReference || '%';
+    --SELECT id FROM view__case_type_to_remove WHERE reference LIKE '%' || caseTypeReference || '%';
+    SELECT id FROM view__case_type_to_remove WHERE reference = any(caseTypeReferences);
 
   --All DELETION queries below use ids stored in TEMP table 'tmp_case_type_ids'
   --To remove all historical versions (therefore not use the filtered list of ids within TEMP table)
