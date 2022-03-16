@@ -443,6 +443,7 @@ public class ImportServiceImplTest {
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
+        verify(categoryIdValidator).validate(any(ParseContext.class));
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
     }
 

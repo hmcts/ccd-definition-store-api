@@ -36,7 +36,12 @@
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": [],
       "searchCriterias": [],
-      "case_fields" : [ {
+      "case_fields" : [
+        {
+          "__ordering__": "UNORDERED",
+          "__elementId__": "id"
+        },
+        {
         "metadata" : false,
         "id" : "DocumentField",
         "case_type_id" : "FT_CaseFileView",

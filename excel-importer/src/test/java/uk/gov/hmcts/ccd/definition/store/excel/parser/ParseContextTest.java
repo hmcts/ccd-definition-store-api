@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -21,33 +20,34 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-public class ParseContextTest {
+class ParseContextTest {
 
     private ParseContext parseContext;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         parseContext = new ParseContext();
     }
 
     @Test
-    public void shouldFail_whenRegisterCaseFieldTypeAgainForCaseType() {
+    void shouldFail_whenRegisterCaseFieldTypeAgainForCaseType() {
 
         final CaseFieldEntity caseField = mock(CaseFieldEntity.class);
         given(caseField.getReference()).willReturn("case field id");
 
         parseContext.registerCaseFieldForCaseType("caseTypeId", caseField);
 
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
+        assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.registerCaseFieldForCaseType("caseTypeId", caseField);
         }, "Case field already registered for ID: case field id");
     }
 
     @Test
-    public void shouldRegisterAndGetCaseFieldForCaseType() {
+    void shouldRegisterAndGetCaseFieldForCaseType() {
 
         final CaseFieldEntity caseField = mock(CaseFieldEntity.class);
         given(caseField.getReference()).willReturn("case field id");
@@ -59,7 +59,7 @@ public class ParseContextTest {
     }
 
     @Test
-    public void shouldRegisterAndGetCaseFieldType() {
+    void shouldRegisterAndGetCaseFieldType() {
 
         final FieldTypeEntity fieldType = mock(FieldTypeEntity.class);
         parseContext.registerCaseFieldType("caseTypeId", "fieldId", fieldType);
@@ -70,19 +70,19 @@ public class ParseContextTest {
     }
 
     @Test
-    public void shouldFail_whenRegisterCaseFieldTypeAgain() {
+    void shouldFail_whenRegisterCaseFieldTypeAgain() {
 
         final FieldTypeEntity fieldType = mock(FieldTypeEntity.class);
         parseContext.registerCaseFieldType("caseTypeId", "fieldId", fieldType);
 
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
+        assertThrows(SpreadsheetParsingException.class, () -> {
                 parseContext.registerCaseFieldType("caseTypeId", "fieldId", fieldType);
             }, "Type already registered for field: fieldId"
         );
     }
 
     @Test
-    public void shouldRegisterAndGetStateForCaseType() {
+    void shouldRegisterAndGetStateForCaseType() {
 
         final StateEntity state = mock(StateEntity.class);
         given(state.getReference()).willReturn("some state id");
@@ -95,19 +95,19 @@ public class ParseContextTest {
     }
 
     @Test
-    public void shouldFail_whenRegisterStateForCaseTypeAgain() {
+    void shouldFail_whenRegisterStateForCaseTypeAgain() {
 
         final StateEntity state = mock(StateEntity.class);
         given(state.getReference()).willReturn("some state id");
         parseContext.registerStateForCaseType("case type id", state);
 
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
+        assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.registerStateForCaseType("case type id", state);
         }, "State already registered for ID: some state id");
     }
 
     @Test
-    public void shouldSetAndGetJurisdiction() {
+    void shouldSetAndGetJurisdiction() {
 
         final JurisdictionEntity j = mock(JurisdictionEntity.class);
         parseContext.setJurisdiction(j);
@@ -116,7 +116,7 @@ public class ParseContextTest {
     }
 
     @Test
-    public void shouldRegisterAndGetCaseType() {
+    void shouldRegisterAndGetCaseType() {
         final CaseTypeEntity t1 = mock(CaseTypeEntity.class);
         final CaseTypeEntity t2 = mock(CaseTypeEntity.class);
 
@@ -130,69 +130,68 @@ public class ParseContextTest {
     }
 
     @Test
-    public void shouldFail_whenCaseTypeNotRegistered() {
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
+    void shouldFail_whenCaseTypeNotRegistered() {
+        assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.getCaseFieldType("ngitb", "case field");
         }, "No types registered for case type: ngitb");
     }
 
     @Test
-    public void shouldFail_whenCaseFieldNotRegistered() {
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
-            final FieldTypeEntity f = mock(FieldTypeEntity.class);
-            parseContext.registerCaseFieldType("ngitb", "case_field", f);
-            parseContext.getCaseFieldType("ngitb", "case field");
-        }, "No types registered for case field ID: ngitb/case field");
+    void shouldFail_whenCaseFieldNotRegistered() {
+        final FieldTypeEntity f = mock(FieldTypeEntity.class);
+        parseContext.registerCaseFieldType("ngitb", "case_field", f);
+
+        assertThrows(SpreadsheetParsingException.class,
+            () -> parseContext.getCaseFieldType("ngitb", "case field"),
+            "No types registered for case field ID: ngitb/case field");
     }
 
     @Test
-    public void shouldFail_whenCaseTypeNotRegisteredForState() {
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
-            parseContext.getStateForCaseType("ngitb", "state");
-        }, "No states registered for case type: ngitb");
+    void shouldFail_whenCaseTypeNotRegisteredForState() {
+        final CaseFieldEntity o = mock(CaseFieldEntity.class);
+        given(o.getReference()).willReturn("CF");
+        parseContext.registerCaseFieldForCaseType("ngitb", o);
+        assertThrows(SpreadsheetParsingException.class,
+            () -> parseContext.getStateForCaseType("ngitb", "state"),
+            "No states registered for case type: ngitb");
     }
 
     @Test
-    public void shouldFail_whenStateNotRegistered() {
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
-            final StateEntity s = mock(StateEntity.class);
-            given(s.getReference()).willReturn("State");
+    void shouldFail_whenStateNotRegistered() {
+        final StateEntity s = mock(StateEntity.class);
+        given(s.getReference()).willReturn("State");
 
-            parseContext.registerStateForCaseType("ngitb", s);
-            parseContext.getStateForCaseType("ngitb", "state");
+        parseContext.registerStateForCaseType("ngitb", s);
 
-        }, "No state registered for state ID: ngitb/state");
+        assertThrows(SpreadsheetParsingException.class,
+            () -> parseContext.getStateForCaseType("ngitb", "state"),
+            "No state registered for state ID: ngitb/state");
     }
 
     @Test
-    public void shouldFail_whenCaseTypeNotRegisteredFormCaseField() {
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
+    void shouldFail_whenCaseTypeNotRegisteredFormCaseField() {
+        assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.getCaseFieldForCaseType("ngitb", "state");
         }, "No case fields registered for case type: ngitb");
     }
 
     @Test
-    public void shouldFail_whenCaseFieldNotRegisteredForCaseType() {
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
+    void shouldFail_whenCaseFieldNotRegisteredForCaseType() {
+        assertThrows(SpreadsheetParsingException.class, () -> {
 
-            final CaseFieldEntity o = mock(CaseFieldEntity.class);
-            given(o.getReference()).willReturn("CF");
-
-            parseContext.registerCaseFieldForCaseType("ngitb", o);
             parseContext.getCaseFieldForCaseType("ngitb", "cf");
 
         }, "Unknown field cf for case type ngitb");
     }
 
     @Test
-    public void shouldGetEmpty_whenGetBaseTypeNotExist() {
+    void shouldGetEmpty_whenGetBaseTypeNotExist() {
         final Optional<FieldTypeEntity> type = parseContext.getBaseType("type");
         assertThat(type, isEmpty());
     }
 
     @Test
-    public void shouldAddAndGetBaseType() {
-
+    void shouldAddAndGetBaseType() {
         final FieldTypeEntity t = mock(FieldTypeEntity.class);
         given(t.getReference()).willReturn("ngitb");
 
@@ -202,8 +201,7 @@ public class ParseContextTest {
     }
 
     @Test
-    public void shouldAddToAllTypesAndGet() {
-
+    void shouldAddToAllTypesAndGet() {
         final FieldTypeEntity t = mock(FieldTypeEntity.class);
         given(t.getReference()).willReturn("ngitb");
 
@@ -213,14 +211,13 @@ public class ParseContextTest {
     }
 
     @Test
-    public void shouldGetEmpty_whenGetTypeNotExist() {
-
+    void shouldGetEmpty_whenGetTypeNotExist() {
         final Optional<FieldTypeEntity> type = parseContext.getType("ngitb");
         assertThat(type, isEmpty());
     }
 
     @Test
-    public void shouldReturnMetadataField_whenGetCaseFieldForCaseTypeIsMetadataField() {
+    void shouldReturnMetadataField_whenGetCaseFieldForCaseTypeIsMetadataField() {
         String metadataFieldName = "[METADATA]";
         CaseFieldEntity caseField = new CaseFieldEntity();
         caseField.setReference("TEST");
@@ -236,7 +233,7 @@ public class ParseContextTest {
     }
 
     @Test
-    public void testRegisterCaseTypeForCategory() {
+    void testRegisterCaseTypeForCategory() {
 
         final CategoryEntity category = new CategoryEntity();
         category.setCategoryId("A");
@@ -247,20 +244,20 @@ public class ParseContextTest {
     }
 
     @Test
-    public void testRegisterCaseTypeForCategoryWithSameIdTwiceShouldFail() {
+    void testRegisterCaseTypeForCategoryWithSameIdTwiceShouldFail() {
 
         final CategoryEntity category = new CategoryEntity();
         category.setCategoryId("Category");
 
         parseContext.registerCaseTypeForCategory("caseTypeId", category);
 
-        Assertions.assertThrows(SpreadsheetParsingException.class, () -> {
+        assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.registerCaseTypeForCategory("caseTypeId", category);
         }, "Category already registered for ID: Category");
     }
 
     @Test
-    public void testGetCategoryWhenEmpty() {
+    void testGetCategoryWhenEmpty() {
         assertNull(parseContext.getCategory("caseTypeId", "Category"));
     }
 
