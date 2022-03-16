@@ -65,7 +65,7 @@ withNightlyPipeline(type, product, component) {
     //enableFortifyScan()
     enableDbMigration('ccd')
     disableLegacyDeployment()
-    enableMutationTest()
+    //enableMutationTest()
     enableHighLevelDataSetup()
 
     //after('fortify-scan') {
