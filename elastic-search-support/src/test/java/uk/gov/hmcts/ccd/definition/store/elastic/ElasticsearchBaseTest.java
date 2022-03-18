@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import org.apache.http.util.EntityUtils;
+import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -45,7 +46,7 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
     private String elasticResponseAsString(String method, String endpoint) throws IOException {
         return EntityUtils.toString(elasticClient
             .getLowLevelClient()
-            .performRequest(method, endpoint)
+            .performRequest(new Request(method, endpoint))
             .getEntity());
     }
 
