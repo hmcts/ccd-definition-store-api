@@ -145,6 +145,12 @@ BEGIN
   DELETE FROM case_type WHERE id IN
     (SELECT id FROM tmp_case_type_ids);
 
+  DELETE FROM search_criteria WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
+
+  DELETE FROM search_party WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
+
   DROP VIEW IF EXISTS view__case_type_to_remove;
 
 END $$;
