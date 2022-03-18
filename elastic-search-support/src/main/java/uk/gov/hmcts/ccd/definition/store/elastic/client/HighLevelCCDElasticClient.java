@@ -12,7 +12,7 @@ import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 
@@ -24,6 +24,7 @@ import java.util.Collections;
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
 
 @Slf4j
+@SuppressWarnings("java:S1874")
 public class HighLevelCCDElasticClient implements CCDElasticClient {
 
     private static final String CASES_INDEX_SETTINGS_JSON = "/casesIndexSettings.json";
