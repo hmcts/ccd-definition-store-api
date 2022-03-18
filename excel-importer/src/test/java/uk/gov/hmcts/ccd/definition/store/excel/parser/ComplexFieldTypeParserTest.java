@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ComplexFieldParserTest extends ParserTestBase {
+class ComplexFieldTypeParserTest extends ParserTestBase {
 
     private static final String COMPLEX_ID = "Address";
     private static final String COMPLEX_LIST_ELEMENT_CODE = "AddressLine1";
