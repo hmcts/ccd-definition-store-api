@@ -528,6 +528,9 @@
       ],
       "states": [
         {
+          "__ordering__": "UNORDERED"
+        },
+        {
           "id": "CaseUpdated",
           "name": "Updated case",
           "description": null,
