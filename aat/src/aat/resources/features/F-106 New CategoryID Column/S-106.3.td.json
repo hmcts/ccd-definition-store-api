@@ -1,13 +1,17 @@
 {
   "_guid_": "S-106.3",
   "_extends_": "Get_CaseType",
-  "title": "Import Definition file with correctly configured CategoryID in the CaseField tab",
+  "title": "Import definition file with valid CategoryID column in CaseField and ComplexType tabs",
   "specs": [
     "an active profile in CCD",
     "contains filled in CategoryID for Document value",
     "contains filled in CategoryID for Document Collection value",
     "contains null CategoryID for Document value",
-    "contains null CategoryID for Document Collection value"
+    "contains null CategoryID for Document Collection value",
+    "contains filled in CategoryID for Document ComplexType value",
+    "contains filled in CategoryID for Document Collection ComplexType value",
+    "contains null CategoryID for Document ComplexType value",
+    "contains null CategoryID for Document Collection ComplexType value"
   ],
   "request": {
     "pathVariables": {
@@ -230,7 +234,7 @@
               "show_condition" : null,
               "display_context_parameter" : null,
               "retain_hidden_value" : null,
-              "category_id" : "[[ANY_NULLABLE]]"
+              "category_id" : "evidenceDocs"
             },
               {
               "metadata" : false,
@@ -267,7 +271,7 @@
               "show_condition" : null,
               "display_context_parameter" : null,
               "retain_hidden_value" : null,
-              "category_id" : "[[ANY_NULLABLE]]"
+              "category_id" : "evidenceDocs"
             },
               {
               "metadata" : false,
@@ -295,7 +299,7 @@
               "show_condition" : null,
               "display_context_parameter" : null,
               "retain_hidden_value" : null,
-              "category_id" : "[[ANY_NULLABLE]]"
+              "category_id" : null
             },
               {
               "metadata" : false,
@@ -332,7 +336,7 @@
               "show_condition" : null,
               "display_context_parameter" : null,
               "retain_hidden_value" : null,
-              "category_id" : "[[ANY_NULLABLE]]"
+              "category_id" : null
             } ],
             "collection_field_type" : null
           },

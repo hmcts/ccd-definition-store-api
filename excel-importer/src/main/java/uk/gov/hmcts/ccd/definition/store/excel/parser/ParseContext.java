@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -167,6 +168,13 @@ public class ParseContext {
         }
 
         return categories.get(categoryId);
+    }
+
+    public boolean checkCategoryExists(String categoryId) {
+        return categoryByCaseTypes.values().stream()
+            .flatMap(categoryEntityMap -> categoryEntityMap.values().stream())
+            .map(CategoryEntity::getCategoryId)
+            .anyMatch(catId -> catId.equals(categoryId));
     }
 
     public void registerCaseTypeForCategory(String caseTypeId, CategoryEntity categoryEntity) {
@@ -329,5 +337,11 @@ public class ParseContext {
 
     public void addMissingAccessProfile(String missingAccessProfile) {
         this.missingAccessProfiles.add(missingAccessProfile);
+    }
+
+    public List<FieldTypeEntity> getComplexTypes() {
+        return allTypes.values().stream()
+            .filter(fieldType -> fieldType.getBaseFieldType() != null && fieldType.isComplexFieldType())
+            .collect(Collectors.toList());
     }
 }
