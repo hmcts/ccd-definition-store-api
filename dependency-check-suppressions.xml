@@ -62,4 +62,11 @@
 		<cve>CVE-2020-36518</cve>
 	</suppress>
 
+	<suppress until="2022-04-25">
+		<notes><![CDATA[
+   file name: pom
+   ]]></notes>
+		<cve>CVE-2022-26336</cve>
+	</suppress>
+
 </suppressions>
