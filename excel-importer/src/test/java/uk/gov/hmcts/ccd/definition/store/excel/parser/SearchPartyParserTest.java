@@ -36,6 +36,8 @@ class SearchPartyParserTest extends ParserTestBase {
     private static final String SEARCH_PARTY_DOB = "10/10/1920";
     private static final String SEARCH_PARTY_DOD = "10/10/1920";
 
+    private static final String SEARCH_PARTY_COLLECTION_FIELD_NAME = "Name";
+
     private SearchPartyParser parser;
 
     @BeforeEach
@@ -65,6 +67,7 @@ class SearchPartyParserTest extends ParserTestBase {
         assertEquals(SEARCH_PARTY_POST_CODE, searchPartyEntity.getSearchPartyPostCode());
         assertEquals(SEARCH_PARTY_DOB, searchPartyEntity.getSearchPartyDob());
         assertEquals(SEARCH_PARTY_DOD, searchPartyEntity.getSearchPartyDod());
+        assertEquals(SEARCH_PARTY_COLLECTION_FIELD_NAME, searchPartyEntity.getSearchPartyCollectionFieldName());
     }
 
     @Test
@@ -103,6 +106,7 @@ class SearchPartyParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.SEARCH_PARTY_POST_CODE.toString(), SEARCH_PARTY_POST_CODE);
         item.addAttribute(ColumnName.SEARCH_PARTY_DOB.toString(), SEARCH_PARTY_DOB);
         item.addAttribute(ColumnName.SEARCH_PARTY_DOD.toString(), SEARCH_PARTY_DOD);
+        item.addAttribute(ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME.toString(), SEARCH_PARTY_COLLECTION_FIELD_NAME);
         return item;
     }
 }

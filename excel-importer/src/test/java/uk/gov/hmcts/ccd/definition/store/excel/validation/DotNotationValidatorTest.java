@@ -28,10 +28,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.excel.common.TestLoggerUtils.assertLogged;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 
 @DisplayName("DotNotationValidator")
 @ExtendWith(MockitoExtension.class)
@@ -58,14 +62,14 @@ class DotNotationValidatorTest {
         TestLoggerUtils.teardownLogger();
     }
 
-    @ParameterizedTest(name = "should validate expression if field exists - #{index} - `{0}`")
+    @ParameterizedTest(name = "should validate expression if field exists in ParseContext - #{index} - `{0}`")
     @ValueSource(strings = {
         "SimpleText",
         "TopLevel.Text",
         "TopLevel.Child.Text",
         "TopLevel.Child.Grandchild.Text"
     })
-    void shouldValidateExpressionIfFieldExists(String expression) {
+    void shouldValidateExpressionIfFieldExistsInParseContext(String expression) {
 
         // GIVEN
         String topLevelField = expression.split(Pattern.quote(DotNotationValidator.DOT_SEPARATOR))[0];
@@ -84,9 +88,53 @@ class DotNotationValidatorTest {
         verify(parseContext).getCaseFieldType(CASE_TYPE, topLevelField);
     }
 
-    @ParameterizedTest(name = "throws exception if expression field does not exist - #{index} - `{0}`")
-    @ArgumentsSource(BadExpressionArgumentsProvider.class)
-    void throwsExceptionWhenExpressionFieldDoesNotExist(String expression, String badField) {
+    @ParameterizedTest(name = "should validate and load FieldType if field exists in ParseContext - #{index} - `{0}`")
+    @ArgumentsSource(ValidExpressionWithFieldTypeArgumentsProvider.class)
+    void shouldValidateAndLoadFieldTypeIfFieldExistsInParseContext(String expression, String expectedFieldTypeRef) {
+
+        // GIVEN
+
+        // WHEN
+        FieldTypeEntity fieldTypeEntity = dotNotationValidator.validateAndLoadFieldType(
+            this.parseContext,
+            SHEET_NAME,
+            COLUMN_NAME,
+            CASE_TYPE,
+            expression
+        );
+
+        // THEN
+        assertNotNull(fieldTypeEntity);
+        assertEquals(expectedFieldTypeRef, fieldTypeEntity.getReference());
+    }
+
+    @ParameterizedTest(name = "should validate expression if field exists in ComplexType - #{index} - `{0}`")
+    @ValueSource(strings = {
+        "Text",
+        "Child.Text",
+        "Child.Grandchild.Text"
+    })
+    void shouldValidateExpressionIfFieldExistsInComplexType(String expression) {
+
+        // GIVEN
+        FieldTypeEntity complexField = getTestComplexType();
+
+        // WHEN
+        dotNotationValidator.validate(
+            complexField,
+            SHEET_NAME,
+            COLUMN_NAME,
+            expression
+        );
+
+        // THEN
+        // NB: just looking for no exception: so just verify premise that we started with a complex type
+        assertTrue(complexField.isComplexFieldType());
+    }
+
+    @ParameterizedTest(name = "throws exception if expression field does not exist in ParseContext - #{index} - `{0}`")
+    @ArgumentsSource(BadExpressionsForValidationFromParseContextArgumentsProvider.class)
+    void throwsExceptionWhenExpressionFieldDoesNotExistInParseContext(String expression, String badField) {
 
         // GIVEN
         String expectedFullErrorMessage = getExpectedErrorMessage(expression);
@@ -110,12 +158,86 @@ class DotNotationValidatorTest {
         assertLogged(listAppender, expectedFullErrorMessage);
     }
 
+    @ParameterizedTest(
+        name = "throws exception if expression field does not exist and loading FieldType - #{index} - `{0}`"
+    )
+    @ArgumentsSource(BadExpressionsForValidationFromParseContextArgumentsProvider.class)
+    void throwsExceptionWhenExpressionFieldDoesNotExistAndLoadingFieldType(String expression, String badField) {
+
+        // GIVEN
+        String expectedFullErrorMessage = getExpectedErrorMessage(expression);
+
+        // WHEN & THEN
+        InvalidImportException invalidImportException = assertThrows(InvalidImportException.class,
+            () -> dotNotationValidator.validateAndLoadFieldType(
+                parseContext,
+                SHEET_NAME,
+                COLUMN_NAME,
+                CASE_TYPE,
+                expression
+            )
+        );
+
+        assertEquals(expectedFullErrorMessage, invalidImportException.getMessage());
+
+        // verify issue logged identifying the problematic field ....
+        assertLogged(listAppender, getExpectedErrorMessage(badField));
+        // ...  and also identifying full expression (if different)
+        assertLogged(listAppender, expectedFullErrorMessage);
+    }
+
+    @ParameterizedTest(name = "throws exception if expression field does not exist in ComplexType - #{index} - `{0}`")
+    @ArgumentsSource(BadExpressionsForValidationFromComplexTypeArgumentsProvider.class)
+    void throwsExceptionWhenExpressionFieldDoesNotExistInComplexType(String expression, String badField) {
+
+        // GIVEN
+        FieldTypeEntity complexField = getTestComplexType();
+        String expectedFullErrorMessage = getExpectedErrorMessage(expression);
+
+        // WHEN & THEN
+        InvalidImportException invalidImportException = assertThrows(InvalidImportException.class,
+            () -> dotNotationValidator.validate(
+                complexField,
+                SHEET_NAME,
+                COLUMN_NAME,
+                expression
+            )
+        );
+
+        assertEquals(expectedFullErrorMessage, invalidImportException.getMessage());
+
+        // verify issue logged identifying the problematic field ....
+        assertLogged(listAppender, getExpectedErrorMessage(badField));
+        // ...  and also identifying full expression (if different)
+        assertLogged(listAppender, expectedFullErrorMessage);
+    }
 
     private static String getExpectedErrorMessage(String expression) {
         return String.format(DotNotationValidator.ERROR_MESSAGE, SHEET_NAME, expression, COLUMN_NAME);
     }
 
-    private static class BadExpressionArgumentsProvider implements ArgumentsProvider {
+    private FieldTypeEntity getTestComplexType() {
+        // load test complex type (i.e. `TopLevel`) from test parseContext
+        return this.parseContext.getCaseFieldType(CASE_TYPE, "TopLevel");
+    }
+
+    private static class ValidExpressionWithFieldTypeArgumentsProvider implements ArgumentsProvider {
+        @Override
+        public Stream<Arguments> provideArguments(ExtensionContext context) {
+            return Stream.of(
+                // Arguments :: expression, expectedFieldTypeReference
+
+                // NB: see references in `buildParseContext`
+
+                Arguments.of("SimpleText", "Text"),
+                Arguments.of("TopLevel", "TopLevelField"),
+                Arguments.of("TopLevel.Child", "ChildField"),
+                Arguments.of("TopLevel.Child.Grandchild", "GrandchildField")
+            );
+        }
+    }
+
+    private static class BadExpressionsForValidationFromParseContextArgumentsProvider implements ArgumentsProvider {
         @Override
         public Stream<Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
@@ -163,7 +285,50 @@ class DotNotationValidatorTest {
         }
     }
 
-    public static ParseContext buildParseContext() {
+    private static class BadExpressionsForValidationFromComplexTypeArgumentsProvider implements ArgumentsProvider {
+        @Override
+        public Stream<Arguments> provideArguments(ExtensionContext context) {
+            return Stream.of(
+                // Arguments :: expression, badField
+
+                // NB: same as `BadExpressionsForValidationFromParseContextArgumentsProvider' but with TopLevel removed
+
+                // blank fields
+                Arguments.of("", ""), // assume match always required as calling code can choose not to validate blanks
+                Arguments.of(".Text", ""),
+                Arguments.of("Child..Text", ""),
+
+                // blank complex field properties
+                Arguments.of(".", ""),
+                Arguments.of("Child.", ""),
+                Arguments.of("Child.Grandchild.", ""),
+                Arguments.of("Child.Grandchild.Text.", ""),
+
+                // bad fields (i.e. reference does not exist)
+                Arguments.of("BadChild.Text", "BadChild"),
+                Arguments.of("Child.BadGrandchild.Text", "BadGrandchild"),
+
+                // bad complex field properties (i.e. reference does not exist)
+                Arguments.of("BadProperty", "BadProperty"),
+                Arguments.of("Child.BadProperty", "BadProperty"),
+                Arguments.of("Child.Grandchild.BadProperty", "BadProperty"),
+                Arguments.of("Child.Grandchild.Text.BadProperty", "BadProperty"),
+
+                // bad spaces - before
+                Arguments.of(" ", " "),
+                Arguments.of(" Child.Text", " Child"),
+                Arguments.of("Child. Grandchild.Text", " Grandchild"),
+                Arguments.of("Child.Grandchild. Text", " Text"),
+
+                // bad spaces - after
+                Arguments.of("Child .Text", "Child "),
+                Arguments.of("Child.Grandchild .Text", "Grandchild "),
+                Arguments.of("Child.Grandchild.Text ", "Text ")
+            );
+        }
+    }
+
+    private ParseContext buildParseContext() {
         ParseContext parseContext = spy(new ParseContext());
 
         // register a test case type
@@ -173,15 +338,17 @@ class DotNotationValidatorTest {
 
         // register basic text field type
         FieldTypeEntity textFieldType = new FieldTypeEntity();
-        textFieldType.setReference("Text");
+        textFieldType.setReference(BASE_TEXT);
         parseContext.addToAllTypes(textFieldType);
 
         // register complex fields
         // :: i.e. TopLevel.Child.Grandchild
+        FieldTypeEntity baseComplexType = buildBaseComplexType();
 
         // :: register grandchild complex type
         FieldTypeEntity grandchildFieldType = new FieldTypeEntity();
         grandchildFieldType.setReference("GrandchildField");
+        grandchildFieldType.setBaseFieldType(baseComplexType);
         parseContext.addToAllTypes(grandchildFieldType);
         // :: Grandchild -> text
         ComplexFieldEntity grandchildTextField = new ComplexFieldEntity();
@@ -193,6 +360,7 @@ class DotNotationValidatorTest {
         // :: register child complex type
         FieldTypeEntity childFieldType = new FieldTypeEntity();
         childFieldType.setReference("ChildField");
+        childFieldType.setBaseFieldType(baseComplexType);
         parseContext.addToAllTypes(childFieldType);
         // :: child -> text
         ComplexFieldEntity childTextField = new ComplexFieldEntity();
@@ -208,6 +376,7 @@ class DotNotationValidatorTest {
         // :: register top level complex type
         FieldTypeEntity topLevelFieldType = new FieldTypeEntity();
         topLevelFieldType.setReference("TopLevelField");
+        topLevelFieldType.setBaseFieldType(baseComplexType);
         parseContext.addToAllTypes(topLevelFieldType);
         // :: top level -> text
         ComplexFieldEntity topLevelTextField = new ComplexFieldEntity();
@@ -227,4 +396,11 @@ class DotNotationValidatorTest {
         return parseContext;
     }
 
+    private FieldTypeEntity buildBaseComplexType() {
+
+        FieldTypeEntity baseComplexType = new FieldTypeEntity();
+        baseComplexType.setReference(BASE_COMPLEX);
+
+        return baseComplexType;
+    }
 }

@@ -36,6 +36,15 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
     }
 
     @Test
+    public void shouldNotFireValidationErrorWhenArgumentDisplayContextParameter() {
+        DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#ARGUMENT(TEST ARGUMENT)");
+        ValidationResult validationResult
+            = new DisplayGroupDisplayContextParamValidator().validate(entity);
+
+        assertTrue(validationResult.isValid());
+    }
+
+    @Test
     public void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
         DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#TABLE(firstname)");
         ValidationResult validationResult
@@ -71,7 +80,7 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
         assertEquals("Display context parameter is not of type collection",
             validationResult.getValidationErrors().get(0).getDefaultMessage());
         assertEquals("DisplayContextParameter text should begin with "
-                + "#LIST(, #TABLE(, #DATETIMEENTRY( or #DATETIMEDISPLAY(",
+                + "#LIST(, #TABLE(, #DATETIMEENTRY(, #DATETIMEDISPLAY( or #ARGUMENT(",
             validationResult.getValidationErrors().get(1).getDefaultMessage());
     }
 
