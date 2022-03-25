@@ -18,6 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClien
 @ComponentScan("uk.gov.hmcts.ccd.definition.store.elastic")
 @EnableConfigurationProperties(value = CcdElasticSearchProperties.class)
 @Slf4j
+@SuppressWarnings("java:S1874")
 public class ElasticSearchConfiguration {
 
     @Autowired
@@ -33,8 +34,7 @@ public class ElasticSearchConfiguration {
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public RestHighLevelClient restHighLevelClient() {
-        RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort()))
-            .setMaxRetryTimeoutMillis(60000);
+        RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort()));
         RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
             requestConfigBuilder.setConnectTimeout(5000)
                 .setSocketTimeout(60000);
