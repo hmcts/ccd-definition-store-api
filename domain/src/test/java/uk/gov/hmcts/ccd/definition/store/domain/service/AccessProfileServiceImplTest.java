@@ -94,12 +94,12 @@ class AccessProfileServiceImplTest {
             givenEntityWithRole(role);
 
             doReturn(Optional.empty()).when(repository).findTopByReference(role);
-            doReturn(mockAccessProfileEntity).when(repository).save(argumentCaptor.capture());
+            doReturn(mockAccessProfileEntity).when(repository).saveAndFlush(argumentCaptor.capture());
 
             final UserRole saved = service.saveRole(mockUserRole).getResponseBody();
             final AccessProfileEntity captured = argumentCaptor.getValue();
 
-            verify(repository).save(any(AccessProfileEntity.class));
+            verify(repository).saveAndFlush(any(AccessProfileEntity.class));
             assertThat(captured.getReference(), is(role));
             assertThat(captured.getSecurityClassification(), is(RESTRICTED));
 
@@ -126,12 +126,12 @@ class AccessProfileServiceImplTest {
             givenEntityWithRole(role, PUBLIC, savedEntity);
 
             doReturn(Optional.of(mockAccessProfileEntity)).when(repository).findTopByReference(role);
-            doReturn(savedEntity).when(repository).save(argumentCaptor.capture());
+            doReturn(savedEntity).when(repository).saveAndFlush(argumentCaptor.capture());
 
             final UserRole saved = service.saveRole(mockUserRole).getResponseBody();
             final AccessProfileEntity captured = argumentCaptor.getValue();
 
-            verify(repository).save(any(AccessProfileEntity.class));
+            verify(repository).saveAndFlush(any(AccessProfileEntity.class));
             assertThat(captured.getReference(), is(role));
 
             verify(mockAccessProfileEntity).setSecurityClassification(PUBLIC);
@@ -157,12 +157,12 @@ class AccessProfileServiceImplTest {
             givenEntityWithRole(role);
 
             doReturn(Optional.empty()).when(repository).findTopByReference(role);
-            doReturn(mockAccessProfileEntity).when(repository).save(argumentCaptor.capture());
+            doReturn(mockAccessProfileEntity).when(repository).saveAndFlush(argumentCaptor.capture());
 
             final UserRole saved = service.createRole(mockUserRole).getResponseBody();
             final AccessProfileEntity captured = argumentCaptor.getValue();
 
-            verify(repository).save(any(AccessProfileEntity.class));
+            verify(repository).saveAndFlush(any(AccessProfileEntity.class));
             assertThat(captured.getReference(), is(role));
             assertThat(captured.getSecurityClassification(), is(RESTRICTED));
 
