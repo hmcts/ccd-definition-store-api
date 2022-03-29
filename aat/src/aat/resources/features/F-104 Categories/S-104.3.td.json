@@ -1,0 +1,31 @@
+{
+	"_guid_": "S-104.3",
+	"_extends_": "F-104_Definition_Import_Test_Base_data",
+	"title": "must return a negative response in an attempt to import a definition file with null CaseTypeId",
+	"specs": [
+    "an active profile in CCD",
+    "contains categories with null CaseTypeId"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/categories/BEFTA_Master_Definition_null_CaseTypeId_Categories_tab.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- Categories tab Invalid value: null CaseTypeId cannot be null."
+    }
+  }
+}

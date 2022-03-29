@@ -4,101 +4,99 @@
             "casetypea_cases": {}
         },
         "mappings": {
-            "_doc": {
-                "dynamic": "true",
-                "properties": {
-                    "@timestamp": {
-                        "type": "object",
-                        "enabled": false
-                    },
-                    "@version": {
-                        "type": "object",
-                        "enabled": false
-                    },
-                    "case_type_id": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
+            "dynamic": "true",
+            "properties": {
+                "@timestamp": {
+                    "type": "object",
+                    "enabled": false
+                },
+                "@version": {
+                    "type": "object",
+                    "enabled": false
+                },
+                "case_type_id": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
                         }
-                    },
-                    "created_date": {
-                        "type": "date",
-                        "ignore_malformed": true
-                    },
-                    "data": {
-                        "properties": {
-                            "TextField1": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256,
-                                        "normalizer": "lowercase_normalizer"
-                                    }
+                    }
+                },
+                "created_date": {
+                    "type": "date",
+                    "ignore_malformed": true
+                },
+                "data": {
+                    "properties": {
+                        "TextField1": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256,
+                                    "normalizer": "lowercase_normalizer"
                                 }
                             }
                         }
-                    },
-                    "data_classification": {
-                        "properties": {
-                            "TextField1": {
-                                "type": "keyword"
-                            }
+                    }
+                },
+                "data_classification": {
+                    "properties": {
+                        "TextField1": {
+                            "type": "keyword"
                         }
-                    },
-                    "id": {
-                        "type": "long"
-                    },
-                    "index_id": {
-                        "type": "object",
-                        "enabled": false
-                    },
-                    "jurisdiction": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
-                        }
-                    },
-                    "last_modified": {
-                        "type": "date",
-                        "ignore_malformed": true
-                    },
-                    "last_state_modified_date": {
-                        "type": "date",
-                        "ignore_malformed": true
-                    },
-                  "reference": {
+                    }
+                },
+                "id": {
+                    "type": "long"
+                },
+                "index_id": {
+                    "type": "object",
+                    "enabled": false
+                },
+                "jurisdiction": {
                     "type": "text",
                     "fields": {
-                      "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256,
-                        "normalizer": "lowercase_normalizer"
-                      }
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
+                        }
+                    }
+                },
+                "last_modified": {
+                    "type": "date",
+                    "ignore_malformed": true
+                },
+                "last_state_modified_date": {
+                    "type": "date",
+                    "ignore_malformed": true
+                },
+                "reference": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
+                        }
                     },
                     "analyzer": "standard",
                     "search_analyzer": "case_id_analyzer"
-                  },
-                    "security_classification": {
-                        "type": "keyword",
-                        "normalizer": "lowercase_normalizer"
-                    },
-                    "state": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
+                },
+                "security_classification": {
+                    "type": "keyword",
+                    "normalizer": "lowercase_normalizer"
+                },
+                "state": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
                         }
                     }
                 }
@@ -106,6 +104,13 @@
         },
         "settings": {
             "index": {
+                "routing": {
+                    "allocation": {
+                        "include": {
+                            "_tier_preference": "data_content"
+                        }
+                    }
+                },
                 "mapping": {
                     "total_fields": {
                         "limit": "8000"
@@ -113,16 +118,44 @@
                 },
                 "number_of_shards": "8",
                 "provided_name": "casetypea_cases-000001",
-                "creation_date": "1597243707039",
+                "creation_date": "1641989922211",
                 "analysis": {
                     "filter": {
+                        "shingle_filter": {
+                            "max_shingle_size": "3",
+                            "min_shingle_size": "2",
+                            "output_unigrams": "true",
+                            "type": "shingle"
+                        },
                         "whitespace_remove": {
                             "pattern": " ",
                             "type": "pattern_replace",
                             "replacement": ""
+                        },
+                        "hyphen_remove": {
+                            "pattern": "-",
+                            "type": "pattern_replace",
+                            "replacement": ""
+                        }
+                    },
+                    "normalizer": {
+                        "lowercase_normalizer": {
+                            "filter": [
+                                "lowercase",
+                                "asciifolding"
+                            ],
+                            "type": "custom",
+                            "char_filter": []
                         }
                     },
                     "analyzer": {
+                        "case_id_analyzer": {
+                            "filter": [
+                                "hyphen_remove"
+                            ],
+                            "type": "custom",
+                            "tokenizer": "keyword"
+                        },
                         "phone_number_analyzer": {
                             "filter": [
                                 "shingle_filter",
@@ -131,22 +164,12 @@
                             "type": "custom",
                             "tokenizer": "keyword"
                         }
-                    },
-                    "normalizer": {
-                        "lowercase_normalizer": {
-                            "type": "custom",
-                            "char_filter": [],
-                            "filter": [
-                                "lowercase",
-                                "asciifolding"
-                            ]
-                        }
                     }
                 },
                 "number_of_replicas": "3",
-                "uuid": "TRTl0PvSS_iDklw3sLo8Tw",
+                "uuid": "D61I5CUHQdiXlI-xdTTLMQ",
                 "version": {
-                    "created": "6040299"
+                    "created": "7110199"
                 }
             }
         }
@@ -156,100 +179,99 @@
             "casetypeb_cases": {}
         },
         "mappings": {
-            "_doc": {
-                "dynamic": "true",
-                "properties": {
-                    "@timestamp": {
-                        "type": "object",
-                        "enabled": false
-                    },
-                    "@version": {
-                        "type": "object",
-                        "enabled": false
-                    },
-                    "case_type_id": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
+            "dynamic": "true",
+            "properties": {
+                "@timestamp": {
+                    "type": "object",
+                    "enabled": false
+                },
+                "@version": {
+                    "type": "object",
+                    "enabled": false
+                },
+                "case_type_id": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
                         }
-                    },
-                    "created_date": {
-                        "type": "date",
-                        "ignore_malformed": true
-                    },
-                    "data": {
-                        "properties": {
-                            "TextField2": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256,
-                                        "normalizer": "lowercase_normalizer"
-                                    }
+                    }
+                },
+                "created_date": {
+                    "type": "date",
+                    "ignore_malformed": true
+                },
+                "data": {
+                    "properties": {
+                        "TextField2": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256,
+                                    "normalizer": "lowercase_normalizer"
                                 }
                             }
                         }
-                    },
-                    "data_classification": {
-                        "properties": {
-                            "TextField2": {
-                                "type": "keyword"
-                            }
+                    }
+                },
+                "data_classification": {
+                    "properties": {
+                        "TextField2": {
+                            "type": "keyword"
                         }
-                    },
-                    "id": {
-                        "type": "long"
-                    },
-                    "index_id": {
-                        "type": "object",
-                        "enabled": false
-                    },
-                    "jurisdiction": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
-                        }
-                    },
-                    "last_modified": {
-                        "type": "date",
-                        "ignore_malformed": true
-                    },
-                    "last_state_modified_date": {
-                        "type": "date",
-                        "ignore_malformed": true
-                    },
-                  "reference": {
+                    }
+                },
+                "id": {
+                    "type": "long"
+                },
+                "index_id": {
+                    "type": "object",
+                    "enabled": false
+                },
+                "jurisdiction": {
                     "type": "text",
                     "fields": {
-                      "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256,
-                        "normalizer": "lowercase_normalizer"
-                      }
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
+                        }
+                    }
+                },
+                "last_modified": {
+                    "type": "date",
+                    "ignore_malformed": true
+                },
+                "last_state_modified_date": {
+                    "type": "date",
+                    "ignore_malformed": true
+                },
+                "reference": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
+                        }
                     },
                     "analyzer": "standard",
                     "search_analyzer": "case_id_analyzer"
-                  },
-                    "security_classification": {
-                        "type": "keyword"
-                    },
-                    "state": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256,
-                                "normalizer": "lowercase_normalizer"
-                            }
+                },
+                "security_classification": {
+                    "type": "keyword",
+                    "normalizer": "lowercase_normalizer"
+                },
+                "state": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256,
+                            "normalizer": "lowercase_normalizer"
                         }
                     }
                 }
@@ -257,6 +279,13 @@
         },
         "settings": {
             "index": {
+                "routing": {
+                    "allocation": {
+                        "include": {
+                            "_tier_preference": "data_content"
+                        }
+                    }
+                },
                 "mapping": {
                     "total_fields": {
                         "limit": "8000"
@@ -264,16 +293,44 @@
                 },
                 "number_of_shards": "8",
                 "provided_name": "casetypeb_cases-000001",
-                "creation_date": "1597243708413",
+                "creation_date": "1641989924628",
                 "analysis": {
                     "filter": {
+                        "shingle_filter": {
+                            "max_shingle_size": "3",
+                            "min_shingle_size": "2",
+                            "output_unigrams": "true",
+                            "type": "shingle"
+                        },
                         "whitespace_remove": {
                             "pattern": " ",
                             "type": "pattern_replace",
                             "replacement": ""
+                        },
+                        "hyphen_remove": {
+                            "pattern": "-",
+                            "type": "pattern_replace",
+                            "replacement": ""
+                        }
+                    },
+                    "normalizer": {
+                        "lowercase_normalizer": {
+                            "filter": [
+                                "lowercase",
+                                "asciifolding"
+                            ],
+                            "type": "custom",
+                            "char_filter": []
                         }
                     },
                     "analyzer": {
+                        "case_id_analyzer": {
+                            "filter": [
+                                "hyphen_remove"
+                            ],
+                            "type": "custom",
+                            "tokenizer": "keyword"
+                        },
                         "phone_number_analyzer": {
                             "filter": [
                                 "shingle_filter",
@@ -282,22 +339,12 @@
                             "type": "custom",
                             "tokenizer": "keyword"
                         }
-                    },
-                    "normalizer": {
-                        "lowercase_normalizer": {
-                            "type": "custom",
-                            "char_filter": [],
-                            "filter": [
-                                "lowercase",
-                                "asciifolding"
-                            ]
-                        }
                     }
                 },
                 "number_of_replicas": "3",
-                "uuid": "4GtroooxRmaqYNlkWLwzDg",
+                "uuid": "9AAtNVEtSmumeR1EBnH14Q",
                 "version": {
-                    "created": "6040299"
+                    "created": "7110199"
                 }
             }
         }
