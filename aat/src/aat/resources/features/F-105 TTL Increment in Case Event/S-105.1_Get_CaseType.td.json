@@ -261,8 +261,8 @@
           "ttl_increment" : 20
         }, {
           "id" : "updateMidEventModifiedSuspendedTTL",
-          "name" : "Update modified SuspendedTTL",
-          "description" : "Update a case modifying Suspended TTL",
+          "name" : "Update midevent SuspendedTTL",
+          "description" : "Update a case midevent Suspended TTL",
           "order" : 1,
           "case_fields" : "[[ANYTHING_PRESENT]]",
           "pre_states" : "[[ANYTHING_PRESENT]]",
@@ -284,8 +284,8 @@
           "ttl_increment" : 20
         }, {
           "id" : "updateMidEventModifiedSystemTTL",
-          "name" : "Update modified SystemTTL",
-          "description" : "Update a case modifying System TTL",
+          "name" : "Update midevent SystemTTL",
+          "description" : "Update a case midevent System TTL",
           "order" : 1,
           "case_fields" : "[[ANYTHING_PRESENT]]",
           "pre_states" : "[[ANYTHING_PRESENT]]",
@@ -330,8 +330,8 @@
           "ttl_increment" : 20
         }, {
           "id" : "updateMidEventModifiedOverrideTTL",
-          "name" : "Update modified OverrideTTL",
-          "description" : "Update a case modifying Override TTL",
+          "name" : "Update midevent OverrideTTL",
+          "description" : "Update a case midevent Override TTL",
           "order" : 1,
           "case_fields" : "[[ANYTHING_PRESENT]]",
           "pre_states" : "[[ANYTHING_PRESENT]]",
