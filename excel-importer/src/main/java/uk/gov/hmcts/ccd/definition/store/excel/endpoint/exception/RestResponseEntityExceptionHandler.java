@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -103,6 +104,20 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
         response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
+    @ExceptionHandler(FeignException.FeignClientException.class)
+    @ResponseBody
+    public void handleFeignClientException(FeignException.FeignClientException exception, HttpServletResponse response)
+        throws IOException {
+        log.error(exception.getMessage(), exception);
+
+        int status = exception.status();
+        if (status != HttpStatus.UNAUTHORIZED.value()) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+        }
+
+        response.sendError(status);
+    }
+
     @ExceptionHandler(FeignException.FeignServerException.class)
     @ResponseBody
     public void handleFeignServerException(FeignException.FeignServerException exception, HttpServletResponse response)
@@ -126,6 +141,20 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
         int status = exception.getRawStatusCode();
         if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             status = HttpStatus.BAD_GATEWAY.value();
+        }
+
+        response.sendError(status);
+    }
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    @ResponseBody
+    public void handleHttpClientErrorException(HttpClientErrorException exception, HttpServletResponse response)
+        throws IOException {
+        log.error(exception.getMessage(), exception);
+
+        int status = exception.getRawStatusCode();
+        if (status != HttpStatus.UNAUTHORIZED.value()) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
         response.sendError(status);

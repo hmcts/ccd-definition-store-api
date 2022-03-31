@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
@@ -116,6 +117,28 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
+    public void handleHttpClientErrorException_shouldReturn401() throws IOException {
+        HttpClientErrorException ex = new HttpClientErrorException(
+            HttpStatus.UNAUTHORIZED, "Unauthorized");
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        exceptionHandler.handleHttpClientErrorException(ex, response);
+
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
+    }
+
+    @Test
+    public void handleHttpClientErrorException_shouldReturn500IfReceived400() throws IOException {
+        HttpClientErrorException ex = new HttpClientErrorException(
+            HttpStatus.BAD_REQUEST, "Bad Request");
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        exceptionHandler.handleHttpClientErrorException(ex, response);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+    }
+
+    @Test
     public void handleFeignServerException_shouldSwitch500_502() throws IOException {
         FeignException.FeignServerException ex = new FeignException.FeignServerException(
             HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",
@@ -139,6 +162,32 @@ public class RestResponseEntityExceptionHandlerTest {
         exceptionHandler.handleFeignServerException(ex, response);
 
         assertEquals(HttpStatus.GATEWAY_TIMEOUT.value(), response.getStatus());
+    }
+
+    @Test
+    public void handleFeignClientException_shouldReturn401() throws IOException {
+        FeignException.FeignClientException ex = new FeignException.FeignClientException(
+            HttpStatus.UNAUTHORIZED.value(), "UNAUTHORIZED",
+            Request.create(Request.HttpMethod.GET, "UNAUTHORIZED", Map.of(), new byte[0],
+                Charset.defaultCharset(), null), new byte[0], Map.of());
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        exceptionHandler.handleFeignClientException(ex, response);
+
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
+    }
+
+    @Test
+    public void handleFeignClientException_shouldReturn500IfReceived400() throws IOException {
+        FeignException.FeignClientException ex = new FeignException.FeignClientException(
+            HttpStatus.BAD_REQUEST.value(), "Bad Request",
+            Request.create(Request.HttpMethod.GET, "Bad Request", Map.of(), new byte[0],
+                Charset.defaultCharset(), null), new byte[0], Map.of());
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        exceptionHandler.handleFeignClientException(ex, response);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
     }
 
 }
