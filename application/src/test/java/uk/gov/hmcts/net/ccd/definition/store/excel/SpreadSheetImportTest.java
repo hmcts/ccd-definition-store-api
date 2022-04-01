@@ -171,8 +171,7 @@ public class SpreadSheetImportTest extends BaseTest {
             // Check the error response message.
             assertThat("Incorrect HTTP response",
                 result.getResponse().getContentAsString(),
-                allOf(containsString("Problem updating user profile"),
-                    containsString("403 Forbidden")));
+                containsString("403 Forbidden"));
         }
     }
 

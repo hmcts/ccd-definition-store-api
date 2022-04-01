@@ -117,25 +117,25 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleHttpClientErrorException_shouldReturn401() throws IOException {
+    public void handleHttpClientErrorException_shouldReturn401() {
         HttpClientErrorException ex = new HttpClientErrorException(
             HttpStatus.UNAUTHORIZED, "Unauthorized");
 
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        exceptionHandler.handleHttpClientErrorException(ex, response);
+        final ResponseEntity<Object> response = exceptionHandler
+            .handleHttpClientErrorException(ex, mock(WebRequest.class));
 
-        assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
-    public void handleHttpClientErrorException_shouldReturn500IfReceived400() throws IOException {
+    public void handleHttpClientErrorException_shouldReturn500IfReceived400() {
         HttpClientErrorException ex = new HttpClientErrorException(
             HttpStatus.BAD_REQUEST, "Bad Request");
 
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        exceptionHandler.handleHttpClientErrorException(ex, response);
+        final ResponseEntity<Object> response = exceptionHandler
+            .handleHttpClientErrorException(ex, mock(WebRequest.class));
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
@@ -165,29 +165,29 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleFeignClientException_shouldReturn401() throws IOException {
+    public void handleFeignClientException_shouldReturn401() {
         FeignException.FeignClientException ex = new FeignException.FeignClientException(
             HttpStatus.UNAUTHORIZED.value(), "UNAUTHORIZED",
             Request.create(Request.HttpMethod.GET, "UNAUTHORIZED", Map.of(), new byte[0],
                 Charset.defaultCharset(), null), new byte[0], Map.of());
 
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        exceptionHandler.handleFeignClientException(ex, response);
+        final ResponseEntity<Object> response = exceptionHandler
+            .handleFeignClientException(ex, mock(WebRequest.class));
 
-        assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
-    public void handleFeignClientException_shouldReturn500IfReceived400() throws IOException {
+    public void handleFeignClientException_shouldReturn500IfReceived400() {
         FeignException.FeignClientException ex = new FeignException.FeignClientException(
             HttpStatus.BAD_REQUEST.value(), "Bad Request",
             Request.create(Request.HttpMethod.GET, "Bad Request", Map.of(), new byte[0],
                 Charset.defaultCharset(), null), new byte[0], Map.of());
 
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        exceptionHandler.handleFeignClientException(ex, response);
+        final ResponseEntity<Object> response = exceptionHandler
+            .handleFeignClientException(ex, mock(WebRequest.class));
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
 }

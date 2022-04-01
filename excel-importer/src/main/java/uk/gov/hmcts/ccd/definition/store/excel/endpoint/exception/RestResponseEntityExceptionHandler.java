@@ -106,8 +106,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(FeignException.FeignClientException.class)
     @ResponseBody
-    public void handleFeignClientException(FeignException.FeignClientException exception, HttpServletResponse response)
-        throws IOException {
+    public ResponseEntity<Object> handleFeignClientException(FeignException.FeignClientException exception,
+                                                             WebRequest request) {
         log.error(exception.getMessage(), exception);
 
         int status = exception.status();
@@ -115,7 +115,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
-        response.sendError(status);
+        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
+            HttpStatus.valueOf(status), request);
     }
 
     @ExceptionHandler(FeignException.FeignServerException.class)
@@ -148,8 +149,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(HttpClientErrorException.class)
     @ResponseBody
-    public void handleHttpClientErrorException(HttpClientErrorException exception, HttpServletResponse response)
-        throws IOException {
+    public ResponseEntity<Object> handleHttpClientErrorException(HttpClientErrorException exception,
+                                                                 WebRequest request) {
         log.error(exception.getMessage(), exception);
 
         int status = exception.getRawStatusCode();
@@ -157,7 +158,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
-        response.sendError(status);
+        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
+            HttpStatus.valueOf(status), request);
     }
 
     private String flattenExceptionMessages(RuntimeException ex) {
