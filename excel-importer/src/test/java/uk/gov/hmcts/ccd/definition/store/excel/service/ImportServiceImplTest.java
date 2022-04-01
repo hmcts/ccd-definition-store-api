@@ -51,6 +51,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_CRITERIA;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_TTL;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -452,6 +453,7 @@ public class ImportServiceImplTest {
             buildBaseType(PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK),
             buildBaseType(PREDEFINED_COMPLEX_ADDRESS_UK),
             buildBaseType(PREDEFINED_COMPLEX_ORDER_SUMMARY),
-            buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION));
+            buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION),
+            buildBaseType(PREDEFINED_COMPLEX_TTL));
     }
 }
