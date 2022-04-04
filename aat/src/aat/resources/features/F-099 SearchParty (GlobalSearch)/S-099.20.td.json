@@ -1,0 +1,40 @@
+{
+  "_guid_": "S-099.20",
+  "_extends_": "Import_Base_data",
+  "title": "Import Definition file with a valid collection field in the \"SearchPartyCollectionFieldName\" and invalid top level case field name in the \"SearchPartyPostCode\" column of the SearchParty tab",
+  "specs": [
+    "an active profile in CCD",
+    "contains correctly configured SearchParty tab with valid case field name in the SearchPartyCollectionFieldName column",
+    "contains correctly configured SearchParty tab with valid case field names in SearchPartyName, SearchPartyEmailAddress, SearchPartyDoD, SearchPartyAddressLine1 and SearchPartyDob columns",
+    "contains invalid top level case field name in the SearchPartyPostCode column"
+   ],
+
+  "prerequisites": [
+    {
+      "globalSearchSchemaSnapshot": "F-099_Get_GlobalSearchSchemaSnapshot"
+    }
+  ],
+
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/GlobalSearch/BEFTA_Master_Definition_GlobalSearch_SearchPartyCollectionFieldName_InvalidSearchPartyPostCode_Schema.xlsx"
+        }
+      ]
+    }
+  },
+
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Type": "plain/text",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "SearchPartyTab Invalid value 'InvalidPostCode' is not a valid SearchPartyPostCode value. The expression dot notation values should be valid caseTypes fields."
+    }
+  }
+}

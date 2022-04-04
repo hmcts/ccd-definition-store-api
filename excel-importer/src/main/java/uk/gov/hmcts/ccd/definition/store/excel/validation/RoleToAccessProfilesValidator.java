@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
@@ -22,23 +21,24 @@ public class RoleToAccessProfilesValidator {
     public void validate(final List<RoleToAccessProfilesEntity> roleToAccessProfileEntities,
                          final ParseContext parseContext) {
 
-        final List<Pair<String, String>> roleNameCaseTypePairs = new ArrayList<>();
+        final List<String> uniqueRoleNameCaseTypeCaseAccessCategoryList = new ArrayList<>();
+
         roleToAccessProfileEntities.stream()
             .forEach(entity -> {
                 ValidationResult validationResult = new ValidationResult();
 
                 validateRoleNameAndAccessProfile(validationResult, entity);
 
-                Pair<String, String> roleNameCaseTypePair = Pair
-                    .of(entity.getRoleName(), entity.getCaseType().getReference());
-                if (roleNameCaseTypePairs.contains(roleNameCaseTypePair)) {
-                    String message = String.format("RoleName must be unique within a case type in the sheet '%s'",
+                String roleNameCaseTypeAccessCategory = entity.getRoleName() + entity.getCaseType().getReference()
+                    + entity.getCaseAccessCategories();
+                if (uniqueRoleNameCaseTypeCaseAccessCategoryList.contains(roleNameCaseTypeAccessCategory)) {
+                    String message = String.format("RoleName and CaseAccessCategories must be unique within a case type"
+                            + " in the sheet '%s'",
                         SheetName.ROLE_TO_ACCESS_PROFILES);
                     createErrorMessage(validationResult, message);
                     throw new ValidationException(validationResult);
                 }
-                roleNameCaseTypePairs.add(roleNameCaseTypePair);
-
+                uniqueRoleNameCaseTypeCaseAccessCategoryList.add(roleNameCaseTypeAccessCategory);
                 validate(entity, parseContext, validationResult);
             });
     }

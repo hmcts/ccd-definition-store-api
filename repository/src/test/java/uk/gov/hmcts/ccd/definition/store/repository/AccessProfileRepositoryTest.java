@@ -121,7 +121,7 @@ public class AccessProfileRepositoryTest {
         final CaseRoleEntity entity = new CaseRoleEntity();
         entity.setReference(CASE_ROLE_REFERENCE);
         entity.setSecurityClassification(RESTRICTED);
-        caseRoleRepository.save(entity);
+        caseRoleRepository.saveAndFlush(entity);
     }
 
     @Test
@@ -176,7 +176,7 @@ public class AccessProfileRepositoryTest {
         final AccessProfileEntity entity = new AccessProfileEntity();
         entity.setReference("xyz = '3'");
         entity.setSecurityClassification(RESTRICTED);
-        accessProfileRepository.save(entity);
+        accessProfileRepository.saveAndFlush(entity);
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType, AccessProfileEntity accessProfile) {
