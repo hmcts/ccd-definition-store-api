@@ -65,6 +65,8 @@ public class SearchPartyParser {
         searchPartyEntity.setSearchPartyPostCode(definitionDataItem.getString(ColumnName.SEARCH_PARTY_POST_CODE));
         searchPartyEntity.setSearchPartyDob(definitionDataItem.getString(ColumnName.SEARCH_PARTY_DOB));
         searchPartyEntity.setSearchPartyDod(definitionDataItem.getString(ColumnName.SEARCH_PARTY_DOD));
+        searchPartyEntity.setSearchPartyCollectionFieldName(
+            definitionDataItem.getString(ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME));
 
         return searchPartyEntity;
     }

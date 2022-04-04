@@ -41,6 +41,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_TTL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_CRITERIA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
 
@@ -230,7 +231,7 @@ public class FieldTypeRepositoryTest {
 
         List<FieldTypeEntity> predefinedComplexTypes = fieldTypeRepository.findPredefinedComplexTypes();
 
-        assertEquals(13, predefinedComplexTypes.size());
+        assertEquals(14, predefinedComplexTypes.size());
 
         assertThat(predefinedComplexTypes, hasItems(
             fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL),
@@ -245,7 +246,8 @@ public class FieldTypeRepositoryTest {
             fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_LOCATION),
             fieldTypeWithReference(PREDEFINED_COMPLEX_FLAGS),
             fieldTypeWithReference(PREDEFINED_COMPLEX_SEARCH_PARTY),
-            fieldTypeWithReference(PREDEFINED_COMPLEX_SEARCH_CRITERIA)
+            fieldTypeWithReference(PREDEFINED_COMPLEX_SEARCH_CRITERIA),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_TTL)
             )
         );
     }

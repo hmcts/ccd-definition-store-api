@@ -74,6 +74,7 @@
 				} ],
 				"show_summary" : true,
 				"publish" : false,
+				"ttl_increment" : null,
 				"show_event_notes" : null,
 				"can_save_draft" : null,
 				"end_button_label" : null
@@ -122,6 +123,7 @@
 				} ],
 				"show_summary" : true,
 				"publish" : true,
+				"ttl_increment" : null,
 				"show_event_notes" : null,
 				"can_save_draft" : null,
 				"end_button_label" : null
@@ -166,13 +168,14 @@
 				{
 					"case_type_id": "FT_MultiplePages",
 					"search_party_dob": "TextFieldFName",
-          "search_party_dod" : null,
+					"search_party_dod" : null,
 					"search_party_post_code": "TextFieldFName",
 					"search_party_address_line1": "TextFieldFName",
 					"search_party_email_address": "TextFieldFName",
 					"live_from": "2017-01-01T00:00:00.000+00:00",
 					"live_to": null,
-					"search_party_name": "TextFieldFName,TextFieldMName,TextFieldLName"
+					"search_party_name": "TextFieldFName,TextFieldMName,TextFieldLName",
+					"search_party_collection_field_name": null
 				}
 			],
       "searchCriterias" : [

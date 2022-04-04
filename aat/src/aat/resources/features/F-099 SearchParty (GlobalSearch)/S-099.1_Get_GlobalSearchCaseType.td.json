@@ -1,0 +1,81 @@
+{
+	"_guid_": "S-099.1_Get_GlobalSearchCaseType",
+	"_extends_": "F-099_Get_CaseType",
+
+	"specs": [
+		"fetch Global Search Case Type Schema to verify blank value in the columns SearchPartyCollectionFieldName"
+	],
+
+	"request": {
+		"pathVariables": {
+			"id": "FT_GlobalSearch"
+		}
+	},
+
+	"expectedResponse": {
+		"body": {
+			"id": "FT_GlobalSearch",
+      "searchParties" : [
+        {
+          "__ordering__": "unordered"
+        },
+        {
+        "case_type_id" : "FT_GlobalSearch",
+        "search_party_dob" : "dateOfBirth",
+        "search_party_dod" : "dateOfDeath",
+        "search_party_post_code" : "PostCode",
+        "search_party_address_line1" : "Address.AddressLine1",
+        "search_party_email_address" : "Email",
+        "live_from" : "2017-01-01T00:00:00.000+00:00",
+        "live_to" : null,
+        "search_party_name" : "FirstName,LastName",
+        "search_party_collection_field_name" : null
+      }, {
+        "case_type_id" : "FT_GlobalSearch",
+        "search_party_dob" : "dateOfBirthText",
+        "search_party_dod" : "dateOfDeathText",
+        "search_party_post_code" : null,
+        "search_party_address_line1" : null,
+        "search_party_email_address" : null,
+        "live_from" : "2017-01-01T00:00:00.000+00:00",
+        "live_to" : null,
+        "search_party_name" : "OtherName",
+        "search_party_collection_field_name" : null
+      }, {
+        "case_type_id" : "FT_GlobalSearch",
+        "search_party_dob" : "IndividualDateOfBirth",
+        "search_party_dod" : "IndividualDateOfDeath",
+        "search_party_post_code" : "IndividualAddress.PostCode",
+        "search_party_address_line1" : "IndividualAddress.AddressLine1",
+        "search_party_email_address" : "IndividualEmail",
+        "live_from" : "2017-01-01T00:00:00.000+00:00",
+        "live_to" : null,
+        "search_party_name" : "IndividualLastName,IndividualFirstName",
+        "search_party_collection_field_name" : "GroupOfPeople.Members"
+      }, {
+        "case_type_id" : "FT_GlobalSearch",
+        "search_party_dob" : "IndividualDateOfBirth",
+        "search_party_dod" : "IndividualDateOfDeath",
+        "search_party_post_code" : "IndividualAddress.PostCode",
+        "search_party_address_line1" : "IndividualAddress.AddressLine1",
+        "search_party_email_address" : "IndividualEmail",
+        "live_from" : "2017-01-01T00:00:00.000+00:00",
+        "live_to" : null,
+        "search_party_name" : "IndividualFirstName,IndividualLastName",
+        "search_party_collection_field_name" : "ListOfPeople"
+      }, {
+        "case_type_id" : "FT_GlobalSearch",
+        "search_party_dob" : "IndividualDateOfBirthText",
+        "search_party_dod" : "IndividualDateOfDeathText",
+        "search_party_post_code" : null,
+        "search_party_address_line1" : null,
+        "search_party_email_address" : null,
+        "live_from" : "2017-01-01T00:00:00.000+00:00",
+        "live_to" : null,
+        "search_party_name" : "IndividualOtherName",
+        "search_party_collection_field_name" : "ListOfPeople"
+        }
+      ]
+    }
+	}
+}

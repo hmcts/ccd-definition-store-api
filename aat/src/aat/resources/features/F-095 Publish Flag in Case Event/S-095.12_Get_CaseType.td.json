@@ -49,6 +49,10 @@
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
                 {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "NotesReason",
                   "hint": null,
                   "label": null,
@@ -165,6 +169,10 @@
               "display_context": "COMPLEX",
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
+                {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
                 {
                   "reference": "OrgPolicyReference",
                   "hint": null,
@@ -217,6 +225,10 @@
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
                 {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "OrganisationName",
                   "hint": null,
                   "label": "Updated Organisation Name",
@@ -263,6 +275,7 @@
           ],
           "show_summary": true,
           "publish": true,
+          "ttl_increment": null,
           "show_event_notes": null,
           "can_save_draft": null,
           "end_button_label": null,
@@ -279,6 +292,10 @@
               "display_context": "COMPLEX",
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
+                {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
                 {
                   "reference": "NotesReason",
                   "hint": null,
@@ -397,6 +414,10 @@
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
                 {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "OrgPolicyReference",
                   "hint": null,
                   "label": null,
@@ -448,6 +469,10 @@
               "_extends_" : "CaseEventField",
               "case_fields_complex": [
                 {
+                  "__ordering__": "UNORDERED",
+                  "__elementId__": "reference"
+                },
+                {
                   "reference": "OrganisationName",
                   "hint": null,
                   "label": null,
@@ -496,6 +521,7 @@
           ],
           "show_summary": true,
           "publish": true,
+          "ttl_increment": null,
           "show_event_notes": null,
           "can_save_draft": null,
           "end_button_label": null,
@@ -503,6 +529,9 @@
         }
       ],
       "states": [
+        {
+          "__ordering__": "UNORDERED"
+        },
         {
           "id": "CaseUpdated",
           "name": "Updated case",
