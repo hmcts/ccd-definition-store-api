@@ -32,6 +32,7 @@ public class CaseEvent implements HasAcls {
     private Boolean canSaveDraft = null;
     private String endButtonLabel = null;
     private String eventEnablingCondition;
+    private Integer ttlIncrement = null;
 
     /**
      * id of a particular case event.
@@ -236,6 +237,16 @@ public class CaseEvent implements HasAcls {
 
     public void setPublish(Boolean publish) {
         this.publish = publish;
+    }
+
+    @ApiModelProperty(value = "if present the event should set the SystemTTL")
+    @JsonProperty("ttl_increment")
+    public Integer getTtlIncrement() {
+        return ttlIncrement;
+    }
+
+    public void setTtlIncrement(Integer ttlIncrement) {
+        this.ttlIncrement = ttlIncrement;
     }
 
     /**
