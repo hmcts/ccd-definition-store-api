@@ -63,8 +63,8 @@ abstract class  AbstractShowConditionValidator implements EventEntityValidator {
                 if (!forShowConditionFieldExistsAtLeastOneCaseFieldEntity(
                     showConditionField,
                     eventEntity.getCaseType().getCaseFields())
-                    && !(MetadataField.isMetadataField(showConditionField)
-                            || isInjectedField(showConditionField, isSupportingInjectedData))) {
+                    && !MetadataField.isMetadataField(showConditionField)
+                    && !isInjectedField(showConditionField, isSupportingInjectedData)) {
                     validationResult.addError(getValidationError(
                         showConditionField,
                         eventEntity,
@@ -78,11 +78,7 @@ abstract class  AbstractShowConditionValidator implements EventEntityValidator {
     }
 
     private boolean isInjectedField(String showConditionField, boolean isSupportingInjectedData) {
-        if (isSupportingInjectedData) {
-            return InjectedField.isInjectedField(showConditionField);
-        }
-
-        return false;
+        return isSupportingInjectedData && InjectedField.isInjectedField(showConditionField);
     }
 
     private boolean forShowConditionFieldExistsAtLeastOneCaseFieldEntity(String showConditionField,
