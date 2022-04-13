@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 import java.time.LocalDate;
 
@@ -59,18 +60,17 @@ public class JsonUtilsTest {
         assertThat(JsonUtils.fromNode(s, LocalDate.class), is(LocalDate.of(2020, 02, 20)));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = MismatchedInputException.class)
     public void shouldFail_whenObjectCannotBeMappedAsJsonNode() throws Throwable {
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final JsonNode s = JsonUtils.toJsonNodeTree(date);
 
         try {
             JsonUtils.fromNode(s, String.class);
-        } catch (AssertionError ex) {
+        } catch (IllegalArgumentException ex) {
             final Throwable cause = ex.getCause();
             assertThat(cause, instanceOf(JsonMappingException.class));
-            Assertions.assertThat(cause).hasMessageContaining(
-                "Cannot deserialize value of type `java.lang.String` from Array value");
+            Assertions.assertThat(cause).hasMessageContaining("Cannot deserialize value of type `java.lang.String` from Array value");
             throw cause;
         }
     }
