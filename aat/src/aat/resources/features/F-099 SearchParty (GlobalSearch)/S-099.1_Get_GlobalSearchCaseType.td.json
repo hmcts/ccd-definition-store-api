@@ -15,7 +15,11 @@
 	"expectedResponse": {
 		"body": {
 			"id": "FT_GlobalSearch",
-      "searchParties" : [ {
+      "searchParties" : [
+        {
+          "__ordering__": "unordered"
+        },
+        {
         "case_type_id" : "FT_GlobalSearch",
         "search_party_dob" : "dateOfBirth",
         "search_party_dod" : "dateOfDeath",

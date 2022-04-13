@@ -29,7 +29,7 @@ public class StateEntity implements Serializable, Referencable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "state_id_seq")
     private Integer id;
 
     @Column(name = "reference", nullable = false)

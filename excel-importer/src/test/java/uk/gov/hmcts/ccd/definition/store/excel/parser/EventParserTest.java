@@ -311,6 +311,16 @@ public class EventParserTest extends ParserTestBase {
         assertThat(entity.getPublish(), is(false));
     }
 
+    @Test
+    public void shouldAssignTtlIncrementValueFromColumn() {
+        item.addAttribute(ColumnName.TTL_INCREMENT.toString(), 1);
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertThat(entity.getTtlIncrement(), is(1));
+    }
+
     private void assertEvent(final EventEntity entity) {
         assertThat(entity.getReference(), is(EVENT_ID));
         assertThat(entity.getName(), is("event name"));
