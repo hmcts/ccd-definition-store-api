@@ -2,9 +2,9 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 import java.time.LocalDate;
 
@@ -70,7 +70,8 @@ public class JsonUtilsTest {
         } catch (IllegalArgumentException ex) {
             final Throwable cause = ex.getCause();
             assertThat(cause, instanceOf(JsonMappingException.class));
-            Assertions.assertThat(cause).hasMessageContaining("Cannot deserialize value of type `java.lang.String` from Array value");
+            Assertions.assertThat(cause).hasMessageContaining(
+                "Cannot deserialize value of type `java.lang.String` from Array value");
             throw cause;
         }
     }
