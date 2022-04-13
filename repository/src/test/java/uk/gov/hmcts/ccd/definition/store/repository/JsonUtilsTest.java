@@ -69,7 +69,8 @@ public class JsonUtilsTest {
         } catch (AssertionError ex) {
             final Throwable cause = ex.getCause();
             assertThat(cause, instanceOf(JsonMappingException.class));
-            Assertions.assertThat(cause).hasMessageContaining("Cannot deserialize value of type `java.lang.String` from Array value");
+            Assertions.assertThat(cause).hasMessageContaining(
+                "Cannot deserialize value of type `java.lang.String` from Array value");
             throw cause;
         }
     }
