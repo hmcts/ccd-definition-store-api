@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -66,7 +67,7 @@ public class ParseContext {
     private final Map<String, Map<String, CaseRoleEntity>> caseRolesByCaseTypes = Maps.newHashMap();
 
     /**
-     * Accumulate Field types by case type and category IDs for subsequent linking to case fields.
+     * Accumulate Categories by case type and category IDs for subsequent linking to case fields.
      */
     private final Map<String, Map<String, CategoryEntity>> categoryByCaseTypes = Maps.newHashMap();
 
@@ -167,6 +168,13 @@ public class ParseContext {
         }
 
         return categories.get(categoryId);
+    }
+
+    public boolean checkCategoryExists(String categoryId) {
+        return categoryByCaseTypes.values().stream()
+            .flatMap(categoryEntityMap -> categoryEntityMap.values().stream())
+            .map(CategoryEntity::getCategoryId)
+            .anyMatch(catId -> catId.equals(categoryId));
     }
 
     public void registerCaseTypeForCategory(String caseTypeId, CategoryEntity categoryEntity) {
@@ -329,5 +337,11 @@ public class ParseContext {
 
     public void addMissingAccessProfile(String missingAccessProfile) {
         this.missingAccessProfiles.add(missingAccessProfile);
+    }
+
+    public List<FieldTypeEntity> getComplexTypes() {
+        return allTypes.values().stream()
+            .filter(fieldType -> fieldType.getBaseFieldType() != null && fieldType.isComplexFieldType())
+            .collect(Collectors.toList());
     }
 }
