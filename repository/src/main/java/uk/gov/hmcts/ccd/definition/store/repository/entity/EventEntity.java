@@ -125,6 +125,9 @@ public class EventEntity implements Serializable {
     @Column(name = "publish")
     private Boolean publish;
 
+    @Column(name = "ttl_increment")
+    private Integer ttlIncrement;
+
     public Integer getId() {
         return id;
     }
@@ -309,6 +312,14 @@ public class EventEntity implements Serializable {
 
     public void setPublish(Boolean publish) {
         this.publish = publish;
+    }
+
+    public Integer getTtlIncrement() {
+        return ttlIncrement;
+    }
+
+    public void setTtlIncrement(Integer ttlIncrement) {
+        this.ttlIncrement = ttlIncrement;
     }
 
     public List<EventPostStateEntity> getPostStates() {
