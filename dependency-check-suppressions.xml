@@ -52,14 +52,6 @@
   </suppress>
   
 	<suppress until="2022-05-25">
-    		<notes><![CDATA[
-   			file name: spring-security-core-5.4.7.jar
-   		]]></notes>
-    		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
-    		<vulnerabilityName>CWE-862: Missing Authorization</vulnerabilityName>
-  </suppress>
-  
-	<suppress until="2022-05-25">
 		<notes><![CDATA[
    file name: postgresql-42.2.16.jar
    ]]></notes>
