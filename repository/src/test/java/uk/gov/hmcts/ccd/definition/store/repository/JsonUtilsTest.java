@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -21,18 +22,12 @@ public class JsonUtilsTest {
         assertThat(JsonUtils.fromString(s, String.class), is("NGITB"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldFail_whenObjectsCannotBeMappedFromString() {
+    @Test
+    public void shouldGetObject_whenFromStringToLocalDate() {
 
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final String s = JsonUtils.toString(date);
-
-        try {
-            JsonUtils.fromString(s, LocalDate.class);
-        } catch (IllegalArgumentException ex) {
-            Assertions.assertThat(ex).hasMessageContaining(" cannot be transformed to Json object");
-            throw ex;
-        }
+        assertThat(JsonUtils.fromString(s, LocalDate.class), is(LocalDate.of(2020, 02, 20)));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -56,23 +51,16 @@ public class JsonUtilsTest {
         assertThat(JsonUtils.fromNode(node, String.class), is("NGITB"));
     }
 
-    @Test(expected = JsonMappingException.class)
-    public void shouldFail_whenObjectsCannotBeMappedJsonNode() throws Throwable {
+    @Test
+    public void shouldGetObject_whenFromJsonNodeToLocalDate() {
 
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final JsonNode s = JsonUtils.toJsonNodeTree(date);
 
-        try {
-            JsonUtils.fromNode(s, LocalDate.class);
-        } catch (IllegalArgumentException ex) {
-            final Throwable cause = ex.getCause();
-            assertThat(cause, instanceOf(JsonMappingException.class));
-            Assertions.assertThat(cause).hasMessageContaining("Cannot construct instance of `java.time.LocalDate`");
-            throw cause;
-        }
+        assertThat(JsonUtils.fromNode(s, LocalDate.class), is(LocalDate.of(2020, 02, 20)));
     }
 
-    @Test(expected = JsonMappingException.class)
+    @Test(expected = MismatchedInputException.class)
     public void shouldFail_whenObjectCannotBeMappedAsJsonNode() throws Throwable {
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final JsonNode s = JsonUtils.toJsonNodeTree(date);
@@ -83,7 +71,7 @@ public class JsonUtilsTest {
             final Throwable cause = ex.getCause();
             assertThat(cause, instanceOf(JsonMappingException.class));
             Assertions.assertThat(cause).hasMessageContaining(
-                "Cannot deserialize instance of `java.lang.String` out of START_OBJECT token");
+                "Cannot deserialize value of type `java.lang.String` from Array value");
             throw cause;
         }
     }
