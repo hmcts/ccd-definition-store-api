@@ -23,7 +23,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.apache.commons:commons-collections4:4.1"
     compile "org.apache.commons:commons-lang3:3.11"
-    compile "org.apache.poi:poi-ooxml:4.1.2"
+    compile "org.apache.poi:poi-ooxml:5.2.1"
 }
 
 bootJar {
