@@ -193,6 +193,11 @@ subprojects { subproject ->
     }
 
     dependencies {
+        implementation group: 'org.apache.poi', name: 'poi', version: '5.2.2'
+        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
+        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '5.2.2'
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+
         compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
         compile group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
         compile group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
