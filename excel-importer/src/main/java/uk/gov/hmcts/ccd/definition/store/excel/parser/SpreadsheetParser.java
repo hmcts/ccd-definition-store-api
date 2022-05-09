@@ -64,7 +64,7 @@ public class SpreadsheetParser {
                     while (!validRow && cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
                         if (cell != null
-                            && cell.getCellTypeEnum() != CellType.BLANK
+                            && cell.getCellType() != CellType.BLANK
                             && !((XSSFCell) cell).getRawValue().isEmpty()) {
                             validRow = true;
                         }
@@ -103,7 +103,7 @@ public class SpreadsheetParser {
                             DefinitionDataItem dataItem = new DefinitionDataItem(definitionSheet.getName());
                             validCellIterator.forEachRemaining(cell -> {
                                 final Object cellValue;
-                                switch (cell.getCellTypeEnum()) {
+                                switch (cell.getCellType()) {
                                     case BOOLEAN:
                                         cellValue = cell.getBooleanCellValue();
                                         break;
