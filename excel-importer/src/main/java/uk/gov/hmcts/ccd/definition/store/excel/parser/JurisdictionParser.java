@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.Translation.Translations;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;

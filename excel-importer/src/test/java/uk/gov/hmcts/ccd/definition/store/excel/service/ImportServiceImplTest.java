@@ -73,7 +73,6 @@ import java.util.concurrent.Executors;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.translation.TranslationService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;

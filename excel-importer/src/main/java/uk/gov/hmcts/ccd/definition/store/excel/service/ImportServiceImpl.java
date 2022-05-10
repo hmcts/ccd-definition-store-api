@@ -27,10 +27,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabServ
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.translation.TranslationService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.Translation.Translations;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
@@ -222,9 +220,7 @@ public class ImportServiceImpl implements ImportService {
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
         List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
-        // Add Translation service
         caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingAccessProfiles()); // runs validation
-        translationService.getPhrasesToTranslate(caseTypes);
         logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 
         logger.info("Importing spreadsheet: Case types: OK: {} case types imported", caseTypes.size());
@@ -308,6 +304,9 @@ public class ImportServiceImpl implements ImportService {
         parseSearchCriteria(definitionSheets, parseContext);
 
         parseSearchParty(definitionSheets, parseContext);
+
+        Map<String, String> textToTranslateMap = translationService.processDefinitionSheets(definitionSheets);
+        // send the map to translation service
 
         return metadata;
     }
