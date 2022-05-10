@@ -73,6 +73,7 @@ import java.util.concurrent.Executors;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.translation.TranslationService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
@@ -203,6 +204,9 @@ public class ImportServiceImplTest {
     @Mock
     private ApplicationParams applicationParams;
 
+    @Mock
+    private TranslationService translationService;
+
     private FieldTypeEntity fixedTypeBaseType;
     private FieldTypeEntity multiSelectBaseType;
     private FieldTypeEntity complexType;
@@ -268,7 +272,8 @@ public class ImportServiceImplTest {
             challengeQuestionTabService,
             roleToAccessProfileService,
             searchCriteriaService,
-            searchPartyService, categoryTabService);
+            searchPartyService, categoryTabService,
+            translationService);
 
         fixedTypeBaseType = buildBaseType(BASE_FIXED_LIST);
         dynamicListBaseType = buildBaseType(BASE_DYNAMIC_LIST);
@@ -413,7 +418,8 @@ public class ImportServiceImplTest {
             challengeQuestionTabService,
             roleToAccessProfileService,
             searchCriteriaService,
-            searchPartyService, categoryTabService);
+            searchPartyService, categoryTabService,
+            translationService);
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 

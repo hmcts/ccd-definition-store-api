@@ -1,11 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.Translation.Translations;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class JurisdictionParser {
@@ -22,5 +24,12 @@ public class JurisdictionParser {
         jurisdiction.setLiveTo(jurisdictionItem.getDate(ColumnName.LIVE_TO));
 
         return jurisdiction;
+    }
+
+    public HashMap<String, String> parseToTranslate(JurisdictionEntity parsedJurisdiction,
+                                                    HashMap<String,String> textToTranslate) {
+        textToTranslate.put(parsedJurisdiction.getName(),"");
+        textToTranslate.put(parsedJurisdiction.getDescription(),"");
+        return textToTranslate;
     }
 }

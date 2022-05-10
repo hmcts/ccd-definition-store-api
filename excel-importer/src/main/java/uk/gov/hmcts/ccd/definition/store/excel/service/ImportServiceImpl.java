@@ -11,6 +11,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,8 +27,10 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabServ
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.translation.TranslationService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.Translation.Translations;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
@@ -93,6 +96,7 @@ public class ImportServiceImpl implements ImportService {
     private final SearchCriteriaService searchCriteriaService;
     private final SearchPartyService searchPartyService;
     private final CategoryTabService categoryTabService;
+    private final TranslationService translationService;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -112,7 +116,8 @@ public class ImportServiceImpl implements ImportService {
                              ChallengeQuestionTabService challengeQuestionTabService,
                              RoleToAccessProfileService roleToAccessProfileService,
                              SearchCriteriaService searchCriteriaService,
-                             SearchPartyService searchPartyService, CategoryTabService categoryTabService) {
+                             SearchPartyService searchPartyService, CategoryTabService categoryTabService,
+                             TranslationService translationService) {
 
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
@@ -133,6 +138,7 @@ public class ImportServiceImpl implements ImportService {
         this.searchCriteriaService = searchCriteriaService;
         this.searchPartyService = searchPartyService;
         this.categoryTabService = categoryTabService;
+        this.translationService = translationService;
     }
 
     /**
@@ -154,6 +160,7 @@ public class ImportServiceImpl implements ImportService {
         spreadsheetValidator.validate(definitionSheets);
 
         final ParseContext parseContext = new ParseContext();
+        HashMap<String,String> textToTranslate = new HashMap<>();
         parseContext.registerAccessProfiles(accessProfileRepository.findAll());
 
         /*
@@ -164,6 +171,7 @@ public class ImportServiceImpl implements ImportService {
         final JurisdictionParser jurisdictionParser = parserFactory.createJurisdictionParser();
         JurisdictionEntity parsedJurisdiction = jurisdictionParser.parse(definitionSheets);
         JurisdictionEntity jurisdiction = importJurisdiction(parsedJurisdiction);
+        jurisdictionParser.parseToTranslate(parsedJurisdiction, textToTranslate);
         parseContext.setJurisdiction(jurisdiction);
 
         logger.info("Importing spreadsheet: Jurisdiction {} : OK ", jurisdiction.getReference());
@@ -214,8 +222,9 @@ public class ImportServiceImpl implements ImportService {
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
         List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
+        // Add Translation service
         caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingAccessProfiles()); // runs validation
-
+        translationService.getPhrasesToTranslate(caseTypes);
         logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 
         logger.info("Importing spreadsheet: Case types: OK: {} case types imported", caseTypes.size());
