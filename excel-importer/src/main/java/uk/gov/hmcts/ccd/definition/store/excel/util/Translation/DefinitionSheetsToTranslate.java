@@ -3,61 +3,62 @@ package uk.gov.hmcts.ccd.definition.store.excel.util.Translation;
 import org.springframework.stereotype.Component;
 
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.CASE_EVENT_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.CASE_EVENT_TO_FIELDS_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.CASE_FIELD_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.CASE_TYPE_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.CASE_TYPE_TAB_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.CHALLENGE_QUESTION_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.COMPLEX_TYPES_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.EVENT_TO_COMPLEX_TYPES_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.FIXED_LISTS_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.JURISDICTION_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.SEARCH_CASES_RESULT_FIELDS_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.SEARCH_INPUT_FIELDS_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.SEARCH_RESULT_FIELDS_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.STATE_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.WORK_BASKET_INPUT_FIELDS_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.constants.Constants.WORK_BASKET_RESULT_FIELDS_TAB;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT_TO_COMPLEX_TYPES;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT_TO_FIELDS;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE_TAB;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CHALLENGE_QUESTION_TAB;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.COMPLEX_TYPES;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.FIXED_LISTS;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.JURISDICTION;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_CASES_RESULT_FIELDS;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_INPUT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_RESULT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_RESULT_FIELDS;
 
 @Component
 public class DefinitionSheetsToTranslate {
 
-    public Map<String, List<ColumnName>> generateSheetAndValues() {
-        Map<String, List<ColumnName>> definitionSheetMap = new HashMap();
+    public Map<SheetName, List<ColumnName>> generateSheetAndValues() {
+        Map<SheetName, List<ColumnName>> definitionSheetMap = new HashMap();
         // create list for CaseEvent
         List<ColumnName> caseEventColumns = new ArrayList();
         caseEventColumns.add(ColumnName.NAME);
         caseEventColumns.add(ColumnName.DESCRIPTION);
-        definitionSheetMap.put(CASE_EVENT_TAB, caseEventColumns);
+        definitionSheetMap.put(CASE_EVENT, caseEventColumns);
 
         // create list for CaseEventToFields
         List<ColumnName> caseEventToFieldsColumns = new ArrayList();
         caseEventToFieldsColumns.add(ColumnName.PAGE_LABEL);
-        definitionSheetMap.put(CASE_EVENT_TO_FIELDS_TAB, caseEventToFieldsColumns);
+        definitionSheetMap.put(CASE_EVENT_TO_FIELDS, caseEventToFieldsColumns);
 
         // create list for CaseField
         List<ColumnName> caseFieldColumns = new ArrayList();
         caseFieldColumns.add(ColumnName.LABEL);
         caseFieldColumns.add(ColumnName.HINT_TEXT);
-        definitionSheetMap.put(CASE_FIELD_TAB, caseFieldColumns);
+        definitionSheetMap.put(CASE_FIELD, caseFieldColumns);
 
         // create list for CaseType
         List<ColumnName> caseTypeColumns = new ArrayList();
         caseTypeColumns.add(ColumnName.NAME);
         caseTypeColumns.add(ColumnName.DESCRIPTION);
-        definitionSheetMap.put(CASE_TYPE_TAB, caseTypeColumns);
+        definitionSheetMap.put(CASE_TYPE, caseTypeColumns);
 
         // create list for CaseTypeTab
         List<ColumnName> caseTypeTabColumns = new ArrayList();
         caseTypeTabColumns.add(ColumnName.TAB_LABEL);
-        definitionSheetMap.put(CASE_TYPE_TAB_TAB, caseTypeTabColumns);
+        definitionSheetMap.put(CASE_TYPE_TAB, caseTypeTabColumns);
 
         //TODO verify tab name
         // create list for ChallengeQuestionTab
@@ -69,55 +70,55 @@ public class DefinitionSheetsToTranslate {
         List<ColumnName> complexTypesColumns = new ArrayList();
         complexTypesColumns.add(ColumnName.ELEMENT_LABEL);
         complexTypesColumns.add(ColumnName.HINT_TEXT);
-        definitionSheetMap.put(COMPLEX_TYPES_TAB, complexTypesColumns);
+        definitionSheetMap.put(COMPLEX_TYPES, complexTypesColumns);
 
         // create list for eventToComplexTypes
         List<ColumnName> eventToComplexTypesColumns = new ArrayList();
         eventToComplexTypesColumns.add(ColumnName.EVENT_ELEMENT_LABEL);
         eventToComplexTypesColumns.add(ColumnName.EVENT_HINT_TEXT);
-        definitionSheetMap.put(EVENT_TO_COMPLEX_TYPES_TAB, eventToComplexTypesColumns);
+        definitionSheetMap.put(CASE_EVENT_TO_COMPLEX_TYPES, eventToComplexTypesColumns);
 
         // create list for FixedLists
         List<ColumnName> fixedListsColumns = new ArrayList();
         fixedListsColumns.add(ColumnName.LIST_ELEMENT);
-        definitionSheetMap.put(FIXED_LISTS_TAB, fixedListsColumns);
+        definitionSheetMap.put(FIXED_LISTS, fixedListsColumns);
 
         // create list for Jurisdiction
         List<ColumnName> jurisdictionColumns = new ArrayList();
         jurisdictionColumns.add(ColumnName.NAME);
         jurisdictionColumns.add(ColumnName.DESCRIPTION);
-        definitionSheetMap.put(JURISDICTION_TAB, jurisdictionColumns);
+        definitionSheetMap.put(JURISDICTION, jurisdictionColumns);
 
         // create list for SearchCasesResultFields
         List<ColumnName> searchCasesResultFieldsColumns = new ArrayList();
         searchCasesResultFieldsColumns.add(ColumnName.LABEL);
-        definitionSheetMap.put(SEARCH_CASES_RESULT_FIELDS_TAB, searchCasesResultFieldsColumns);
+        definitionSheetMap.put(SEARCH_CASES_RESULT_FIELDS, searchCasesResultFieldsColumns);
 
         // create list for SearchInputFields
         List<ColumnName> searchInputFieldsColumns = new ArrayList();
         searchInputFieldsColumns.add(ColumnName.LABEL);
-        definitionSheetMap.put(SEARCH_INPUT_FIELDS_TAB, searchInputFieldsColumns);
+        definitionSheetMap.put(SEARCH_INPUT_FIELD, searchInputFieldsColumns);
 
         // create list for SearchResultFields
         List<ColumnName> searchResultFieldsColumns = new ArrayList();
         searchResultFieldsColumns.add(ColumnName.LABEL);
-        definitionSheetMap.put(SEARCH_RESULT_FIELDS_TAB, searchResultFieldsColumns);
+        definitionSheetMap.put(SEARCH_RESULT_FIELD, searchResultFieldsColumns);
 
         // create list for State
         List<ColumnName> stateColumns = new ArrayList();
         stateColumns.add(ColumnName.NAME);
         stateColumns.add(ColumnName.DESCRIPTION);
-        definitionSheetMap.put(STATE_TAB, stateColumns);
+        definitionSheetMap.put(STATE, stateColumns);
 
         // create list for WorkBasketInputFields
         List<ColumnName> workBasketInputFieldsColumns = new ArrayList();
         workBasketInputFieldsColumns.add(ColumnName.LABEL);
-        definitionSheetMap.put(WORK_BASKET_INPUT_FIELDS_TAB, workBasketInputFieldsColumns);
+        definitionSheetMap.put(WORK_BASKET_INPUT_FIELD, workBasketInputFieldsColumns);
 
         // create list for WorkBasketResultFields
         List<ColumnName> workBasketResultFieldsColumns = new ArrayList();
         workBasketResultFieldsColumns.add(ColumnName.LABEL);
-        definitionSheetMap.put(WORK_BASKET_RESULT_FIELDS_TAB, searchResultFieldsColumns);
+        definitionSheetMap.put(WORK_BASKET_RESULT_FIELDS, searchResultFieldsColumns);
 
         return definitionSheetMap;
     }
