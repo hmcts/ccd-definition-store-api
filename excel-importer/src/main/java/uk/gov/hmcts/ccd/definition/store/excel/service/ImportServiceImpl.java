@@ -158,7 +158,6 @@ public class ImportServiceImpl implements ImportService {
         spreadsheetValidator.validate(definitionSheets);
 
         final ParseContext parseContext = new ParseContext();
-        HashMap<String,String> textToTranslate = new HashMap<>();
         parseContext.registerAccessProfiles(accessProfileRepository.findAll());
 
         /*
@@ -169,7 +168,6 @@ public class ImportServiceImpl implements ImportService {
         final JurisdictionParser jurisdictionParser = parserFactory.createJurisdictionParser();
         JurisdictionEntity parsedJurisdiction = jurisdictionParser.parse(definitionSheets);
         JurisdictionEntity jurisdiction = importJurisdiction(parsedJurisdiction);
-        jurisdictionParser.parseToTranslate(parsedJurisdiction, textToTranslate);
         parseContext.setJurisdiction(jurisdiction);
 
         logger.info("Importing spreadsheet: Jurisdiction {} : OK ", jurisdiction.getReference());
@@ -221,6 +219,7 @@ public class ImportServiceImpl implements ImportService {
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
         List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
         caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingAccessProfiles()); // runs validation
+
         logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 
         logger.info("Importing spreadsheet: Case types: OK: {} case types imported", caseTypes.size());
