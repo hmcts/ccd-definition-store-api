@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.InjectedField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -26,22 +25,9 @@ abstract class  AbstractShowConditionValidator implements EventEntityValidator {
         this.caseFieldEntityUtil = caseFieldEntityUtil;
     }
 
-    protected void validateShowConditionFieldsSupportInjectedData(EventEntity eventEntity,
-                                               ValidationResult validationResult,
-                                               String enablingCondition) {
-        validateShowConditionFields(eventEntity, validationResult, enablingCondition, true);
-    }
-
     protected void validateShowConditionFields(EventEntity eventEntity,
                                                ValidationResult validationResult,
                                                String enablingCondition) {
-        validateShowConditionFields(eventEntity, validationResult, enablingCondition, false);
-    }
-
-    private void validateShowConditionFields(EventEntity eventEntity,
-                                               ValidationResult validationResult,
-                                               String enablingCondition,
-                                             boolean isSupportingInjectedData) {
         try {
 
             ShowCondition showCondition = showConditionExtractor.parseShowCondition(enablingCondition);
@@ -63,8 +49,7 @@ abstract class  AbstractShowConditionValidator implements EventEntityValidator {
                 if (!forShowConditionFieldExistsAtLeastOneCaseFieldEntity(
                     showConditionField,
                     eventEntity.getCaseType().getCaseFields())
-                    && !MetadataField.isMetadataField(showConditionField)
-                    && !isInjectedField(showConditionField, isSupportingInjectedData)) {
+                    && !MetadataField.isMetadataField(showConditionField)) {
                     validationResult.addError(getValidationError(
                         showConditionField,
                         eventEntity,
@@ -75,10 +60,6 @@ abstract class  AbstractShowConditionValidator implements EventEntityValidator {
         } catch (InvalidShowConditionException e) {
             // this is handled during parsing. here no exceptions will be thrown
         }
-    }
-
-    private boolean isInjectedField(String showConditionField, boolean isSupportingInjectedData) {
-        return isSupportingInjectedData && InjectedField.isInjectedField(showConditionField);
     }
 
     private boolean forShowConditionFieldExistsAtLeastOneCaseFieldEntity(String showConditionField,

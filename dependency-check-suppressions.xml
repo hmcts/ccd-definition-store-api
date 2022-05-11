@@ -64,14 +64,6 @@
 
 	<suppress until="2022-05-25">
 		<notes><![CDATA[
-   file name: elasticsearch-7.16.2.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.elasticsearch/elasticsearch@.*$</packageUrl>
-		<vulnerabilityName>CVE-2022-23708</vulnerabilityName>
-	</suppress>
-
-	<suppress until="2022-05-25">
-		<notes><![CDATA[
    file name: spring-core-5.3.18.jar
    ]]></notes>
 		<packageUrl regex="true">^pkg:maven/org\.springframework/spring\-core@.*$</packageUrl>
